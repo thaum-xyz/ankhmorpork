@@ -1,0 +1,61 @@
+---
+- name: Gather variables for each operating system
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_lsb.id | lower }}.yml"
+  tags:
+    - always
+
+- name: Configure raspberry overlays
+  template:
+    src: "config.txt.j2"
+    dest: "{{ rpi_config_file }}"
+  notify: reboot
+
+# More in https://raspberrypi.stackexchange.com/questions/98078/poe-hat-fan-activation-on-os-other-than-raspbian
+- name: Add PoE fan udev rule [Ubuntu]
+  template:
+    src: fan.rules.j2
+    dest: /etc/udev/rules.d/50-rpi-fan.rules
+  when: ansible_lsb.id  == "Ubuntu"
+  notify: reload udev rules
+
+- name: Enable cgroups
+  lineinfile:
+    path: "{{ rpi_cmdline_file }}"
+    regexp: "{{ rpi_cmdline_last_regex }}"
+    line: '\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
+    backrefs: true
+  notify: reboot
+
+- meta: flush_handlers
+
+- name: Set tmpfs mountpoints
+  mount:
+    src: tmpfs
+    name: "{{ item.src }}"
+    fstype: tmpfs
+    opts: "defaults,{{ item.options }}"
+    state: mounted
+  with_items:
+    - {src: "/run", options: "nodev,noexec,nosuid,size=10%"}
+    - {src: "/tmp", options: "nodev,nosuid,size=10%"}
+    - {src: "/var/log", options: "nodev,noexec,nosuid,size=10%"}
+
+- name: Disable bluetooth and wifi
+  copy:
+    dest: /etc/modprobe.d/raspi-blacklist.conf
+    content: |
+      # wifi
+      blacklist brcmfmac
+      blacklist brcmutil
+      # bluetooth
+      blacklist btbcm
+      blacklist hci_uart
+  notify: reboot
+
+- include_tasks: swap.yml
+
+- include_tasks: logspam.yml
+
+- meta: flush_handlers

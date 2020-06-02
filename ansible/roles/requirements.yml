@@ -1,0 +1,13 @@
+---
+- name: cloudalchemy.node-exporter
+- name: paulfantom.rpi_exporter
+- name: oefenweb.locales
+  version: v1.0.37
+- name: jnv.unattended-upgrades
+  version: v1.7.1
+- name: dev-sec.ssh-hardening
+  version: 9.0.0
+- name: geerlingguy.nfs
+- name: bertvv.samba
+  version: v2.7.1
+

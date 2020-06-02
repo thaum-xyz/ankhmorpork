@@ -1,0 +1,7 @@
+---
+- name: reload udev rules
+  command: udevadm control --reload-rules
+
+- name: reboot
+  throttle: 1
+  reboot:

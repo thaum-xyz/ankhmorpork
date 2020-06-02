@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+    metallb.universe.tf/allow-shared-ip: multimedia-svc
+  labels:
+    app.kubernetes.io/name: plex
+  name: plex
+  namespace: multimedia
+spec:
+  externalTrafficPolicy: Cluster
+  loadBalancerIP: 192.168.2.24
+  ports:
+  - name: plex
+    port: 32400
+    protocol: TCP
+    targetPort: plex
+  selector:
+    app.kubernetes.io/name: plex
+  sessionAffinity: None
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: plex
+  name: plex-metrics
+  namespace: multimedia
+spec:
+  loadBalancerIP: None
+  ports:
+  - name: metrics
+    port: 9594
+    protocol: TCP
+    targetPort: metrics
+  selector:
+    app.kubernetes.io/name: plex

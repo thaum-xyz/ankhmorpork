@@ -1,0 +1,92 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: nextcloud
+spec:
+  description: Nextcloud
+  destinations:
+  - namespace: nextcloud
+    server: 'https://kubernetes.default.svc'
+  sourceRepos:
+  - 'https://github.com/thaum-xyz/ankhmorpork.git'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mysql
+spec:
+  destination:
+    namespace: nextcloud
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/nextcloud/mysql
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: nextcloud
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+spec:
+  destination:
+    namespace: nextcloud
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/nextcloud/redis
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: nextcloud
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nextcloud
+spec:
+  destination:
+    namespace: nextcloud
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/nextcloud/nextcloud
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: nextcloud
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: proxy
+spec:
+  destination:
+    namespace: nextcloud
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/nextcloud/proxy
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: nextcloud
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+

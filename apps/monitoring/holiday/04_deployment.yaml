@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: holiday-exporter
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: holiday-exporter
+    app.kubernetes.io/component: exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: holiday-exporter
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: holiday-exporter
+    spec:
+      containers:
+      - env:
+        - name: TZ
+          value: Europe/Berlin
+        name: holiday-exporter
+        image: allangood/holiday_exporter
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 9137
+            name: http-holiday
+        readinessProbe:
+          tcpSocket:
+            port: http-holiday
+          initialDelaySeconds: 1
+          failureThreshold: 5
+          timeoutSeconds: 10
+        volumeMounts:
+          - mountPath: /etc/holiday_exporter.yaml
+            name: config
+            subPath: holiday_exporter.yaml
+            readOnly: true
+        resources:
+          requests:
+            memory: 18Mi
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: holiday-exporter-config
+          name: config
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"

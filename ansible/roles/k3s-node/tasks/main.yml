@@ -1,0 +1,16 @@
+---
+- name: Copy K3s service file
+  template:
+    src: "k3s.service.j2"
+    dest: "{{ k3s_systemd_dir }}/k3s-node.service"
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart k3s node
+
+- meta: flush_handlers
+
+- name: Enable and check K3s service
+  systemd:
+    name: k3s-node
+    state: started

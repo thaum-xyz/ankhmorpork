@@ -1,0 +1,7 @@
+---
+system_mountpoints:
+  - description: k3s storage data
+    before: k3s.service
+    device: "/dev/disk/by-uuid/6f7f2bba-5f96-4710-a9e7-cd40d229a512"
+    mountpoint: "/var/lib/rancher"
+    type: "ext4"

@@ -1,0 +1,22 @@
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ghost
+  namespace: adrianna
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: 50M
+spec:
+  tls:
+  - hosts:
+    - twoflower.ankhmorpork.thaum.xyz
+    secretName: ghost-tls
+  rules:
+  - host: twoflower.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: ghost
+          servicePort: 2368

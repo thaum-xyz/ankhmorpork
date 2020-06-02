@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: eagle
+    app.kubernetes.io/component: exporter
+  name: eagle
+  namespace: monitoring
+spec:
+  ports:
+  - name: metrics
+    port: 8080
+    protocol: TCP
+    targetPort: metrics
+  selector:
+    app.kubernetes.io/name: eagle
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: eagle
+    app.kubernetes.io/component: exporter
+  name: eagle
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: eagle
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: eagle
+    spec:
+      containers:
+      - image: quay.io/paulfantom/eagle:master
+        imagePullPolicy: Always
+        name: eagle
+        args:
+        - "-tempo=100"
+        - "-explode-samples-scraped=false"
+        - "-label-name-explosion=false"
+        ports:
+          - containerPort: 8080
+            name: metrics
+      restartPolicy: Always

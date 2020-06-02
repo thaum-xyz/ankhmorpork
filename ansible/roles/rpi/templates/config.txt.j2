@@ -1,0 +1,25 @@
+{{ ansible_managed | comment }}
+hdmi_force_hotplug=0
+enable_uart=0
+
+start_x=0
+disable_camera_led=1
+gpu_mem={{ rpi_gpu_mem }}
+
+dtparam=audio=off
+
+[all]
+dtoverlay=pi3-disable-wifi
+dtoverlay=pi3-disable-bt
+
+dtparam=pwr_led_trigger=heartbeat
+dtparam={% for point in rpi_fan %}poe_fan_temp{{ loop.index0 }}={{ point.temp }},poe_fan_temp{{ loop.index0 }}_hyst={{ point.hyst }}{% if not loop.last %},{% endif %}{% endfor %}
+
+# In theory this should help with unstable PoE HATs
+max_usb_current=1
+
+dtparam=spi=off
+
+[pi4]
+dtoverlay=vc4-fkms-v3d
+max_framebuffers=2

@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: heimdall
+  name: heimdall
+  namespace: heimdall
+spec:
+  ports:
+  - name: http-heimdall
+    port: 80
+    protocol: TCP
+    targetPort: http-heimdall
+  selector:
+    app.kubernetes.io/name: heimdall
+  sessionAffinity: None

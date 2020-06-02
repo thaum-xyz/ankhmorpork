@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: "nextcloud"
+  name: "mysql-data"
+  labels:
+    app.kubernetes.io/name: mysql
+    app.kubernetes.io/part-of: nextcloud
+    app.kubernetes.io/component: database
+spec:
+  storageClassName: "local-path"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "7Gi"

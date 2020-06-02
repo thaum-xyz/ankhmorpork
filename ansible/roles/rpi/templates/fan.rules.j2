@@ -1,0 +1,4 @@
+{% for point in rpi_fan %}
+SUBSYSTEM=="thermal",KERNEL=="thermal_zone0",ATTR{trip_point_{{ loop.index0 }}_temp}="{{ point.temp }}"
+SUBSYSTEM=="thermal",KERNEL=="thermal_zone0",ATTR{trip_point_{{ loop.index0 }}_hyst}="{{ point.hyst }}"
+{% endfor %}

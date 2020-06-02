@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: oauth2-proxy
+  name: oauth2-proxy
+  namespace: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: oauth2-proxy
+    spec:
+      containers:
+      - args:
+        - --provider=google
+        - --email-domain=krupa.net.pl
+        - --cookie-domain=.ankhmorpork.thaum.xyz
+        - --whitelist-domain=.ankhmorpork.thaum.xyz
+        - --pass-host-header=true
+        #- --set-authorization-header=true
+        # - --pass-authorization-header=true
+        - --set-xauthrequest=true
+        #- --pass-user-headers=true
+        - --pass-basic-auth=false
+        #- --reverse-proxy=true
+        - --http-address=0.0.0.0:4180
+        env:
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: oauth-creds
+              key: client_id
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oauth-creds
+              key: client_secret
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oauth-creds
+              key: client_cookie
+        image: quay.io/paulfantom/ankhmorpork:oauth2-proxy
+        imagePullPolicy: Always
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          requests:
+            memory: 15Mi

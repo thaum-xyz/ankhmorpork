@@ -1,0 +1,114 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: mysql
+    app.kubernetes.io/part-of: nextcloud
+    app.kubernetes.io/component: database
+  name: mysql
+  namespace: nextcloud
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mysql
+      app.kubernetes.io/part-of: nextcloud
+      app.kubernetes.io/component: database
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mysql
+        app.kubernetes.io/part-of: nextcloud
+        app.kubernetes.io/component: database
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_RANDOM_ROOT_PASSWORD
+          value: "yes"
+        - name: MYSQL_DATABASE
+          value: "cloud"
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mysql_pass
+              name: credentials
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              key: mysql_user
+              name: credentials
+        image: mariadb:latest
+        imagePullPolicy: IfNotPresent
+        name: mysql
+        args:
+        - '--transaction-isolation=READ-COMMITTED'
+        - '--binlog-format=ROW'
+        ports:
+        - containerPort: 3306
+          name: mysql
+        # livenessProbe:
+        #   exec:
+        #     command:
+        #     - sh
+        #     - -c
+        #     - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
+        #   initialDelaySeconds: 30
+        #   timeoutSeconds: 5
+        # readinessProbe:
+        #   exec:
+        #     command:
+        #     - sh
+        #     - -c
+        #     - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: data
+        resources:
+          requests:
+            memory: 430Mi
+      - env:
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              key: mysql_user
+              name: credentials
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mysql_pass
+              name: credentials
+        - name: DATA_SOURCE_NAME
+          value: "$(MYSQL_USER):$(MYSQL_PASS)@(127.0.0.1:3306)/cloud"
+        image: quay.io/prometheus/mysqld-exporter:latest
+        imagePullPolicy: IfNotPresent
+        name: mysql-exporter
+        args:
+        - "--collect.info_schema.innodb_metrics"
+        - "--collect.info_schema.userstats"
+        - "--collect.perf_schema.eventsstatements"
+        - "--collect.perf_schema.indexiowaits"
+        - "--collect.perf_schema.tableiowaits"
+        ports:
+        - containerPort: 9104
+          name: metrics
+        resources:
+          requests:
+            memory: 10Mi
+          limits:
+            memory: 20Mi
+      restartPolicy: Always
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: mysql-data
+      nodeSelector:
+        node-role.kubernetes.io/storage: "true"
+        kubernetes.io/hostname: "nas"
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"

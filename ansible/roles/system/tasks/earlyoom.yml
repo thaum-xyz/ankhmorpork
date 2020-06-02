@@ -1,0 +1,12 @@
+---
+- name: Set earlyoom configuration
+  template:
+    src: earlyoom.j2
+    dest: /etc/default/earlyoom
+  notify: restart earlyoom
+
+- name: Make sure earlyoom is started
+  systemd:
+    name: earlyoom
+    state: started
+    enabled: true

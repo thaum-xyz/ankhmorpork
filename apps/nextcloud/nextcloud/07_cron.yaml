@@ -1,0 +1,96 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: nextcloud
+  name: cron
+  namespace: nextcloud
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nextcloud
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nextcloud
+    spec:
+      containers:
+      - env:
+        - name: NEXTCLOUD_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: credentials
+              key: admin_user
+        - name: NEXTCLOUD_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: credentials
+              key: admin_pass
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: credentials
+              key: mysql_user
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: credentials
+              key: mysql_pass
+        envFrom:
+        - configMapRef:
+            name: nextcloud-envs
+        image: nextcloud:18-fpm
+        name: cron
+        command:
+        - /cron.sh
+        volumeMounts:
+        - name: php-config
+          mountPath: /etc/php/conf.d
+        - name: web
+          mountPath: /var/www/html
+        - name: apps
+          mountPath: /var/www/html/custom_apps
+        - name: theme
+          mountPath: /var/www/html/themes/mytheme
+        - name: config
+          mountPath: /var/www/html/config
+        - name: data
+          mountPath: /var/www/html/data
+        - name: cron
+          mountPath: /var/spool/cron/crontabs
+        resources:
+          requests:
+            memory: 270Mi
+      restartPolicy: Always
+      volumes:
+      - name: php-config
+        configMap:
+          name: php-config
+      - name: cron
+        configMap:
+          name: cron-config
+      - name: data
+        hostPath:
+          path: /srv/nextcloud/data
+      - name: web
+        persistentVolumeClaim:
+          claimName: nextcloud-files
+      - name: apps
+        persistentVolumeClaim:
+          claimName: nextcloud-apps
+      - name: theme
+        persistentVolumeClaim:
+          claimName: nextcloud-theme
+      - name: config
+        persistentVolumeClaim:
+          claimName: nextcloud-config
+      nodeSelector:
+        node-role.kubernetes.io/storage: "true"
+        kubernetes.io/hostname: "nas"
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"

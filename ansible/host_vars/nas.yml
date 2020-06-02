@@ -1,0 +1,58 @@
+---
+# k3s_extra_agent_args: "--node-label node-role.kubernetes.io/storage=true --node-taint node-role.kubernetes.io/storage=true:NoSchedule"
+
+samba_domain_master: true
+samba_local_master: true
+samba_guest_account: paulfantom
+samba_netbios_name: NAS
+samba_server_string: Ankhmorpork fileserver
+samba_shares:
+  - name: torrents
+    path: /srv/torrents
+    guest_ok: true
+    public: true
+    browseable: true
+    writable: true
+  - name: mymultimedia
+    path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
+    guest_ok: true
+    public: true
+    browseable: true
+    writable: false
+
+system_mountpoints:
+  - description: main streaming storage data
+    before: docker.service
+    device: "/dev/vg_storage/netflix"
+    mountpoint: "/srv/netflix"
+    type: "xfs"
+  - description: main cloud service data
+    before: docker.service
+    device: "/dev/vg_storage/nextcloud"
+    mountpoint: "/srv/nextcloud"
+    type: "xfs"
+
+  - description: torrent hot cache mount
+    before: docker.service
+    device: "/dev/vg_fast/torrents"
+    mountpoint: "/srv/torrents"
+    type: "xfs"
+  - description: docker data
+    before: docker.service
+    device: "/dev/vg_fast/docker"
+    mountpoint: "/var/lib/docker"
+    type: "ext4"
+  - description: kubernetes NFS storage
+    before: nfs-server.service k3s-node.service
+    device: "/dev/vg_fast/kube_nfs"
+    mountpoint: "/srv/kubernetes/nfs"
+    type: "ext4"
+  - description: kubernetes local storage
+    before: docker.service k3s-node.service
+    device: "/dev/vg_fast/kube_local"
+    mountpoint: "/var/lib/rancher/k3s/storage"
+    type: "ext4"
+
+nfs_exports:
+  - "/mnt/sbc/vetinari 192.168.2.0/24(rw,sync,no_subtree_check,no_root_squash)"
+  - "/srv/kubernetes/nfs *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"

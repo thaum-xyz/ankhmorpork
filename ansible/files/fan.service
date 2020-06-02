@@ -1,0 +1,12 @@
+[Unit]
+Description=Fan controller
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/bin/fan.py
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=default.target
+

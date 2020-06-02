@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: local-path-config
+  namespace: kube-system
+data:
+  config.json: |-
+    {
+      "nodePathMap":
+        [
+          {
+            "node":"DEFAULT_PATH_FOR_NON_LISTED_NODES",
+            "paths":["/var/lib/rancher/k3s/storage"]
+          },
+          {
+            "node":"nas",
+            "paths":["/var/lib/rancher/k3s/storage"]
+          }
+        ]
+    }

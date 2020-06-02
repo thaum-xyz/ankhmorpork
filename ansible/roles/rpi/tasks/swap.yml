@@ -1,0 +1,19 @@
+---
+- name: disable swap
+  package:
+    name: dphys-swapfile
+    state: absent
+  when: rpi_swap_size == 0
+
+- block:
+  - name: add swap management software
+    package:
+      name: dphys-swapfile
+      state: present
+
+  - name: set swap file size
+    replace:
+      path: /etc/dphys-swapfile
+      regexp: "^CONF_SWAPSIZE=(.*)$"
+      replace: "CONF_SWAPSIZE={{ rpi_swap_size }}"
+  when: rpi_swap_size != 0

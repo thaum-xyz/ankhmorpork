@@ -1,0 +1,22 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: unifi
+spec:
+  destination:
+    namespace: unifi
+    server: 'https://kubernetes.default.svc'
+  source:
+    directory:
+      jsonnet: {}
+      recurse: true
+    path: apps/unifi
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+

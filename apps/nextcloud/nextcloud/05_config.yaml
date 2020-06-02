@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: phpfpm-config
+  namespace: nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+data:
+  status.conf: |
+    [www]
+    pm.status_path = /status
+  www.conf: |
+    [www]
+    user = www-data
+    group = www-data
+    listen = 127.0.0.1:9000
+    pm = dynamic
+    pm.max_children = 42
+    pm.start_servers = 12
+    pm.min_spare_servers = 6
+    pm.max_spare_servers = 18
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-config
+  namespace: nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+data:
+  memory-limit.ini: |
+    memory_limit=1024M
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-envs
+  namespace: nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+data:
+  NEXTCLOUD_TRUSTED_DOMAINS: "cloud.krupa.net.pl"
+  NEXTCLOUD_TABLE_PREFIX: "oc_"
+  MYSQL_HOST: 'mysql.nextcloud.svc.cluster.local'
+  REDIS_HOST: 'redis.nextcloud.svc.cluster.local'
+  REDIS_PORT: '6379'
+  TRUSTED_PROXIES: "127.0.0.1 192.168.2.6"
+  NC_mysql.utf8mb4: "true"
+  NC_enable_avatars: "false"
+  SMTP_SECURE: "tls"
+  SMTP_PORT: "587"
+  SMTP_AUTHTYPE: "PLAIN"
+  MYSQL_DATABASE: "cloud"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cron-config
+  namespace: nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+data:
+  www-data: |
+    */5 * * * * php -f /var/www/html/cron.php
+    30  2 * * * php -f /var/www/html/occ preview:pre-generate
+

@@ -1,0 +1,27 @@
+---
+- hosts: all
+  become: true
+  any_errors_fatal: true
+  roles:
+  - { role: oefenweb.locales, when: (ansible_os_family == "Debian") }
+  - { role: jnv.unattended-upgrades, when: (ansible_os_family == "Debian") }
+  - dev-sec.ssh-hardening
+  - cloudalchemy.node-exporter
+  - system
+  tasks:
+  - name: Reboot PC once a week
+    cron:
+      cron_file: /etc/crontab
+      name: reboot
+      user: root
+      day: "4"
+      hour: "3"
+      minute: "43"
+      job: reboot
+    when: reboot_enabled is defined
+
+- hosts: raspberry
+  become: true
+  any_errors_fatal: true
+  roles:
+  - rpi

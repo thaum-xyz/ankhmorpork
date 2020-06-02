@@ -1,0 +1,121 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: plex
+  name: plex
+  namespace: multimedia
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: plex
+  serviceName: plex
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: plex
+    spec:
+      hostname: nas
+      containers:
+      - env:
+        - name: TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: plex-creds
+        name: plex-metrics
+        image: quay.io/paulfantom/plex_exporter
+        imagePullPolicy: IfNotPresent
+        args:
+        - "--token=$(TOKEN)"
+        - "--plex-server=http://127.0.0.1:32400"
+        #- "--auto-discover"
+        ports:
+        - containerPort: 9594
+          name: metrics
+        resources:
+          requests:
+            memory: 9Mi
+          limits:
+            memory: 20Mi
+      - env:
+        - name: TZ
+          value: "Europe/Berlin"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: ALLOWED_NETWORKS
+          value: "192.168.2.0/24,10.42.0.0/16"
+        - name: PLEX_CLAIM
+          valueFrom:
+            secretKeyRef:
+              key: claim
+              name: plex-creds
+        image: plexinc/pms-docker:latest
+        name: plex
+        ports:
+        - containerPort: 32400
+          name: plex
+        readinessProbe:
+          httpGet:
+            path: /identity
+            port: 32400
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /identity
+            port: 32400
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+        volumeMounts:
+        - mountPath: /config
+          name: appdata
+        - mountPath: /data/movies
+          name: movies
+        - mountPath: /data/tv
+          name: tv
+        - mountPath: /data/mymultimedia
+          name: mymultimedia
+          readOnly: true
+        resources:
+          requests:
+            memory: 2000Mi
+      restartPolicy: Always
+      volumes:
+      - name: movies
+        hostPath:
+          path: /srv/netflix/movies
+      - name: tv
+        hostPath:
+          path: /srv/netflix/tv
+      - name: mymultimedia
+        hostPath:
+          path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
+      - hostPath:
+          path: /etc/localtime
+          type: ""
+        name: localtime
+      nodeSelector:
+        node-role.kubernetes.io/storage: "true"
+        kubernetes.io/hostname: "nas"
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+  volumeClaimTemplates:
+  - metadata:
+      name: appdata
+      namespace: multimedia
+    spec:
+      storageClassName: "local-path"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 30Gi

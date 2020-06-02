@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghost
+  labels:
+    app.kubernetes.io/name: ghost
+  namespace: blog
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ghost
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ghost
+    spec:
+      containers:
+      - name: ghost
+        imagePullPolicy: Always
+        image: ghost
+        ports:
+          - name: http
+            containerPort: 2368
+        env:
+          - name: url
+            value: https://blog.ankhmorpork.thaum.xyz
+        livenessProbe:
+          tcpSocket:
+            port: 2368
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 5
+        volumeMounts:
+          - mountPath: /var/lib/ghost/content
+            name: content
+        resources:
+          requests:
+            memory: 90M
+      volumes:
+        - name: content
+          persistentVolumeClaim:
+            claimName: ghost

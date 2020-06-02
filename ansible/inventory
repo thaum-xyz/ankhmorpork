@@ -1,0 +1,31 @@
+nas      ansible_user=paulfantom ansible_host=192.168.2.3  network=fast
+master01 ansible_user=pi         ansible_host=192.168.2.11 network=slow ansible_connection=local
+node01   ansible_user=ubuntu     ansible_host=192.168.2.12 network=fast
+node02   ansible_user=paulfantom ansible_host=192.168.2.13 network=slow
+node03   ansible_user=ubuntu     ansible_host=192.168.2.14 network=fast
+node04   ansible_user=ubuntu     ansible_host=192.168.2.15 network=slow
+node05   ansible_user=ubuntu     ansible_host=192.168.2.16 network=fast
+
+[raspberry]
+master01
+node01
+node03
+node04
+node05
+
+[storage]
+nas
+
+[k3s-master]
+master01
+
+[k3s-node]
+nas
+node0[1:5]
+
+[k3s:children]
+k3s-master
+k3s-node
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,103 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transmission
+  namespace: multimedia
+  labels:
+    app.kubernetes.io/name: transmission
+    # app.kubernetes.io/version:
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: transmission
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: transmission
+    spec:
+      containers:
+      - env:
+        - name: TRANSMISSION_ADDR
+          value: "http://127.0.0.1:9091"
+        image: metalmatze/transmission-exporter
+        name: metrics-exporter
+        ports:
+        - containerPort: 19091
+          name: metrics
+        resources:
+          requests:
+            memory: 9Mi
+          limits:
+            memory: 20Mi
+      - envFrom:
+        - configMapRef:
+            name: transmission-config
+            optional: false
+        image: haugene/transmission-openvpn:latest-alpine
+        name: transmission
+        ports:
+        - containerPort: 9091
+          name: http-api
+        readinessProbe:
+          tcpSocket:
+            port: http-api
+          initialDelaySeconds: 10
+          failureThreshold: 5
+          timeoutSeconds: 10
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+            - NET_ADMIN
+        volumeMounts:
+          - mountPath: /data/incomplete
+            name: incomplete
+          - mountPath: /data/completed
+            name: completed
+          - mountPath: /dev/net/tun
+            name: tunnel
+          - mountPath: /etc/localtime
+            name: localtime
+            readOnly: true
+          - mountPath: /config/openvpn-credentials.txt
+            name: vpncreds
+            subPath: openvpn-credentials.txt
+        resources:
+          requests:
+            memory: 35Mi
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+        - 208.67.222.222
+        - 208.67.220.220
+      restartPolicy: Always
+      volumes:
+      - name: vpncreds
+        secret:
+          secretName: transmission-vpn-creds
+      - name: incomplete
+        hostPath:
+          path: /srv/torrents/incomplete
+      - name: completed
+        hostPath:
+          path: /srv/torrents/completed
+      - hostPath:
+          path: /dev/net/tun
+          type: ""
+        name: tunnel
+      - hostPath:
+          path: /etc/localtime
+          type: ""
+        name: localtime
+      nodeSelector:
+        node-role.kubernetes.io/storage: "true"
+        kubernetes.io/hostname: "nas"
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"

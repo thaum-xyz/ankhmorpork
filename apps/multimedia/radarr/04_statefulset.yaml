@@ -1,0 +1,81 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: radarr
+  namespace: multimedia
+  labels:
+    app.kubernetes.io/name: radarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: radarr
+  serviceName: radarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: radarr
+    spec:
+      containers:
+      - env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        name: radarr
+        image: linuxserver/radarr
+        ports:
+          - containerPort: 7878
+            name: http-radarr
+        readinessProbe:
+          tcpSocket:
+            port: http-radarr
+          failureThreshold: 5
+          timeoutSeconds: 10
+        volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /etc/localtime
+            name: localtime
+            readOnly: true
+          - mountPath: /movies
+            name: data
+          - mountPath: /data/completed
+            name: downloads
+        resources:
+          requests:
+            memory: 400Mi
+      restartPolicy: Always
+      volumes:
+      - name: data
+        hostPath:
+          path: /srv/netflix/movies
+      - name: downloads
+        hostPath:
+          path: /srv/torrents/completed
+      - hostPath:
+          path: /etc/localtime
+          type: ""
+        name: localtime
+      nodeSelector:
+        node-role.kubernetes.io/storage: "true"
+        kubernetes.io/hostname: "nas"
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+  volumeClaimTemplates:
+  - metadata:
+      name: config
+      namespace: multimedia
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "nfs-client"
+    spec:
+      storageClassName: "nfs-client"
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 100Mi

@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/part-of: nextcloud
+    app.kubernetes.io/component: database
+  name: redis
+  namespace: nextcloud
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/part-of: nextcloud
+      app.kubernetes.io/component: database
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis
+        app.kubernetes.io/part-of: nextcloud
+        app.kubernetes.io/component: database
+    spec:
+      containers:
+      - image: redis:alpine
+        name: redis
+        ports:
+        - containerPort: 6379
+          name: redis
+        resources:
+          requests:
+            memory: 5Mi
+      - env:
+        - name: REDIS_ADDR
+          value: "127.0.0.1"
+        image: oliver006/redis_exporter
+        name: redis-exporter
+        ports:
+        - containerPort: 9121
+          name: metrics
+        resources:
+          requests:
+            memory: 13Mi
+          limits:
+            memory: 20Mi
+      #securityContext:
+      #  sysctls:
+      #  - name: "net.core.somaxconn"
+      #    value: "512"
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"

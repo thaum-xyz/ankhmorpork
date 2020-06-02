@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: transmission-config
+  namespace: multimedia
+data:
+  LOCAL_NETWORK: 192.168.2.0/24
+  PUID: "1000"
+  PGID: "1000"
+  DOCKER_LOG: "true"
+  OPENVPN_OPTS: "--inactive 3600 --ping 10 --ping-exit 60 --mssfix 1452"
+  OPENVPN_PROVIDER: "NORDVPN"
+  NORDVPN_COUNTRY: "CH"
+  TRANSMISSION_WEB_UI: "combustion"
+  TRANSMISSION_RATIO_LIMIT: "0.01"
+  TRANSMISSION_RATIO_LIMIT_ENABLED: "true"
+  TRANSMISSION_RPC_HOST_WHITELIST_ENABLED: "false"
+  WEBPROXY_ENABLED: "false"
+  # CREATE_TUN_DEVICE: "true"

@@ -1,0 +1,18 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: nginx-locations
+  namespace: nextcloud
+spec:
+  encryptedData:
+    pzptg.conf: AgCwWtcfjVUHGy8Owvaopv49UYjban8srFHdFvm6ci9/UQazSKmZsuY68+H47/fj7GNNSpZICQe3DYbdsfhjFKZfOd6D75DuanvSN99DdoRjdPH9FcqxnesLmhNlFOB+rQxx9qb85UCUXXYknrIKcApYgfApBeBfY8BMHCNUoKpSZr9KmUvwfwenjVGfIfEiWFBb/5IViwNxpWaWYmsjxZdLgu9eRduwOuW85qcUSvVTsTk9mA9IN5xS3t8VuGUDXUCiHlz5S8EJaDQRkmbT3rUUdtGFJ0qZp1v5cvuYMLn4sDjLzoCWO4PsjOdS1gYMQlx1zM0TBcjsCwcJdFfdBdoGBepDyy+ivqDlrLtxXl+zR2uuzEnBwikwk8ML0LUvAtuoe68CObKD63e0gthTlItNH2RjcJgk1NrXsfqBqzf2TD0Z3Y4DrF3a89twX5Sz7x7jEYtOZyQ9xUDpiWcm1E0/zINO4419VS8bQLH9pilOZ+SKzXtPuDts6Urt+vujH58Oaxbqy9pS93geAn7z3AeS+/3SMvGbvxsCRS1/tJrCP89fkalLYAb2M55ozYDDOsJcoDEdHrpo+f+455KjKCBkI/zeJvzb9DYOMCjd9QLPXV/iyvziLgkGvvPDQHD8H9577nSGS9njpDiW1FbnI47GMXhhTEImKg1/KkuhznRofccsJnX+MOAXmtTe8pqQ6jYAZs9quvvPtD1O0q+uXaWFMoQYJpvdmg4EO7Gk+m4Vn2GhhvMhjnQovMGYBurELnNvASl2mJVx6wnsQMkDgMFp0H1mTjp4Qb89ixERM9Nlk9lLaRjyNCD6k3OfQ2hUdbujMZ4OWbqd3HcOeMxFshs7OyLMMa1o4I0=
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: proxy
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/part-of: nextcloud
+      name: nginx-locations
+      namespace: nextcloud

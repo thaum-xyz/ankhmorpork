@@ -1,0 +1,11 @@
+---
+system_packages:
+  - vim
+  - lsof
+  - tree
+  - curl
+  - htop
+  - haveged
+  - libffi-dev
+  - libssl-dev
+  - earlyoom

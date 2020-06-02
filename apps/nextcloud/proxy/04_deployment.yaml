@@ -1,0 +1,81 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/part-of: nextcloud
+    app.kubernetes.io/component: proxy
+  name: nginx
+  namespace: nextcloud
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/part-of: nextcloud
+      app.kubernetes.io/component: proxy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/part-of: nextcloud
+        app.kubernetes.io/component: proxy
+    spec:
+      containers:
+      - image: nginx:alpine
+        name: nginx
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: locations
+          mountPath: /etc/nginx/locations
+        - name: web
+          mountPath: /var/www/html
+          # readOnly: true
+        - name: apps
+          mountPath: /var/www/html/custom_apps
+          # readOnly: true
+        resources:
+          requests:
+            memory: 16Mi
+      - image: nginx/nginx-prometheus-exporter:0.7.0
+        name: nginx-exporter
+        args:
+        - "-nginx.scrape-uri"
+        - "http://127.0.0.1:8080/stub_status"
+        ports:
+        - containerPort: 9113
+          name: metrics
+        resources:
+          requests:
+            memory: 8Mi
+          limits:
+            memory: 20Mi
+      restartPolicy: Always
+      volumes:
+      - name: config
+        configMap:
+          name: nginx-config
+      - name: locations
+        secret:
+          secretName: nginx-locations
+      - name: web
+        persistentVolumeClaim:
+          claimName: nextcloud-files
+      - name: apps
+        persistentVolumeClaim:
+          claimName: nextcloud-apps
+      # FIXME: node selector can be dropped after fixing issues with DNS on NAS
+      nodeSelector:
+        node-role.kubernetes.io/storage: "true"
+        kubernetes.io/hostname: "nas"
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"

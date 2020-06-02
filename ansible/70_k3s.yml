@@ -1,0 +1,60 @@
+---
+- hosts: k3s
+  become: true
+  any_errors_fatal: true
+  roles:
+    - k3s-prereq
+    - k3s-download
+  tasks:
+    - name: Use legacy iptables on debian systems
+      alternatives:
+        name: iptables
+        path: /usr/sbin/iptables-legacy
+      when: ansible_os_family == 'Debian'
+
+- hosts: k3s-master
+  become: true
+  any_errors_fatal: true
+  roles:
+    - k3s-master
+  tasks:
+    - name: Create .kube directory on deployer host
+      file:
+        path: "/root/.kube"
+        state: directory
+      delegate_to: localhost
+      run_once: true
+      when: ansible_user == "root"
+
+    - name: Get kube config to deployer host
+      fetch:
+        src: "/home/pi/.kube/config"
+        dest: "/root/.kube/config"
+        flat: true
+      when: ansible_user == "root"
+
+    - name: Remove local provisioner manifests as those are managed externally
+      file:
+        path: "/var/lib/rancher/k3s/server/manifests/local-storage.yaml"
+        state: "absent"
+
+- hosts: k3s-node
+  become: true
+  serial: 2
+  roles:
+    - k3s-node
+  pre_tasks:
+  - name: Install packages needed for PV providers
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - "{{ 'nfs-common' if (ansible_os_family | lower == 'debian') else 'nfs-utils' }}"
+  - name: Check if systemd-resolvd is used
+    stat:
+      path: /run/systemd/resolve/resolv.conf
+    register: resolv
+  - name: Use resolv.conf provided by systemd-resolved
+    set_fact:
+      k3s_extra_agent_args: "{{ k3s_extra_agent_args }} --resolv-conf /run/systemd/resolve/resolv.conf"
+    when: resolv.stat.exists

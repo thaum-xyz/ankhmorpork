@@ -1,0 +1,10 @@
+---
+rpi_gpu_mem: 16
+
+rpi_swap_size: 400
+
+rpi_fan:
+  - temp: 70000
+    hyst: 10000
+  - temp: 82000
+    hyst: 15000

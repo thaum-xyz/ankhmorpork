@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: kubeseal
+    app.kubernetes.io/part-of: kubeseal
+  name: kubeseal
+  namespace: kube-system
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: kubeseal
+    app.kubernetes.io/part-of: kubeseal

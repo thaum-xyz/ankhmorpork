@@ -1,0 +1,12 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  labels:
+    app.kubernetes.io/name: nfs-client-provisioner
+  name: nfs-client
+provisioner: thaum.xyz/nfs-client-provisioner
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+parameters:
+  archiveOnDelete: "true"

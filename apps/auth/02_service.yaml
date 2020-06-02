@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: oauth2-proxy
+  name: oauth2-proxy
+  namespace: auth
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: proxy
+  selector:
+    app.kubernetes.io/name: oauth2-proxy

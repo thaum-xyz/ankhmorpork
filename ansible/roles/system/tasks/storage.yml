@@ -1,0 +1,6 @@
+---
+- name: Setup systemd mount points
+  template:
+    src: "systemd-mount.j2"
+    dest: "/etc/systemd/system/{{ item.mountpoint[1:] | replace('/','-') }}.mount"
+  with_items: "{{ system_mountpoints }}"

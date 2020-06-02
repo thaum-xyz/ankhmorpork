@@ -1,0 +1,7 @@
+---
+system_hostname: "{{ inventory_hostname }}"
+system_healthcheck_url: ""
+
+system_mountpoints: []
+
+system_earlyoom_params: "-r 60"

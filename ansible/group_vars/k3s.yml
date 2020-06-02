@@ -1,0 +1,13 @@
+---
+rpi_swap_size: 0
+
+k3s_version: v1.17.5+k3s1
+k3s_master_ip: "{{ hostvars[groups['k3s-master'][0]]['ansible_default_ipv4']['address'] }}"
+k3s_extra_server_args: "--no-deploy servicelb --no-deploy traefik --node-taint node-role.kubernetes.io/master=true:NoSchedule"
+# k3s_extra_server_args: "--no-deploy servicelb --no-deploy traefik --no-deploy metrics-server"
+k3s_token: "{{ hostvars[groups['k3s-master'][0]]['token'] }}"
+
+# k3s_extra_agent_args: "--kubelet-arg system-reserved=cpu=100m,memory=200Mi --kubelet-arg kube-reserved=cpu=100m,memory=200Mi --node-label node.kubernetes.io/network-type={{ network }}"
+k3s_extra_agent_args: "--kubelet-arg system-reserved=cpu=100m,memory=200Mi --kubelet-arg kube-reserved=cpu=100m,memory=200Mi"
+
+system_earlyoom_params: "-r 60 -m 4"
