@@ -1,0 +1,9 @@
+roles/*
+!roles/requirements.yml
+!roles/system/*
+!roles/system
+!roles/rpi/*
+!roles/rpi
+*.retry
+.kube
+bin/

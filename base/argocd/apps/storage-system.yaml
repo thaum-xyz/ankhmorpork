@@ -1,17 +1,34 @@
 ---
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: AppProject
 metadata:
   name: storage-system
+spec:
+  description: Storage Providers
+  destinations:
+  - namespace: storage-system
+    server: 'https://kubernetes.default.svc'
+  sourceRepos:
+  - 'https://github.com/thaum-xyz/ankhmorpork.git'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfs-client
 spec:
   destination:
     namespace: storage-system
     server: 'https://kubernetes.default.svc'
   source:
-    path: base/storage-system
+    path: base/storage-system/nfs-client
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
-  project: default
+  project: storage-system
   syncPolicy:
     automated:
       prune: false
