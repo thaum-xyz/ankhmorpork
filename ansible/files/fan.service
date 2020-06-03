@@ -6,6 +6,7 @@ ExecStart=/usr/bin/python3 /usr/local/bin/fan.py
 Environment=PYTHONUNBUFFERED=1
 Restart=on-failure
 User=root
+Nice=-5
 
 [Install]
 WantedBy=default.target
