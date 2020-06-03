@@ -12,7 +12,7 @@ FAN_TACH   = 23    # Fan's tachometer output pin
 FAN_PULSES = 2     # Noctua fans puts out two pluses per revolution
 FAN_FREQ   = 100   # Shall be 25kHz. See README.md
 
-INTERVAL = 5
+INTERVAL = 1
 MIN_DUTY = 22  # Shouldn't be less than 20
 MAX_TEMP = 75
 
