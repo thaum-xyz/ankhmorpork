@@ -47,6 +47,9 @@ spec:
         ports:
         - containerPort: 9000
           name: phpfpm
+        readinessProbe:
+          tcpSocket:
+            port: phpfpm
         volumeMounts:
         - name: phpfpm-config
           mountPath: /etc/php-fpm.d
