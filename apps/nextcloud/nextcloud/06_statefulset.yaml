@@ -42,7 +42,7 @@ spec:
         envFrom:
         - configMapRef:
             name: nextcloud-envs
-        image: nextcloud:18-fpm
+        image: nextcloud:19.0.0-fpm
         name: nextcloud
         ports:
         - containerPort: 9000
