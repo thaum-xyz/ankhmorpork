@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configmapsecret-controller
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: configmapsecret-controller
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: configmapsecret-controller
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: configmapsecret-controller
+    spec:
+      containers:
+        - name: controller
+          image: mzinc/configmapsecret-controller:v0.3.0
+          command:
+            - /configmapsecret-controller
+            - --health-addr=:9090
+            - --metrics-addr=:9091
+            - --enable-leader-election
+          ports:
+            - name: http-health
+              containerPort: 9090
+            - name: http-metrics
+              containerPort: 9091
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http-health
+          resources:
+            limits:
+              memory: 50Mi
+            requests:
+              memory: 50Mi
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      serviceAccountName: configmapsecret-controller

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: configmapsecret-controller
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: configmapsecret-controller
+spec:
+  selector:
+    app.kubernetes.io/name: configmapsecret-controller
+  ports:
+    - name: http-metrics
+      port: 9091
+      targetPort: http-metrics
