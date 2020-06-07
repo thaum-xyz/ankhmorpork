@@ -15,8 +15,8 @@ spec:
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: default
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
+#  syncPolicy:
+#    automated:
+#      prune: false
+#      selfHeal: false
 
