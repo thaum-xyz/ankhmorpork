@@ -4,8 +4,8 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: unifi-poller
-    app.kubernetes.io/version: 2.0.0
     app.kubernetes.io/component: exporter
+    app.kubernetes.io/managed-by: argocd
   name: unifi-poller
   namespace: unifi
 spec:
@@ -17,6 +17,9 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: unifi-poller
+        app.kubernetes.io/version: 2.0.0
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/managed-by: argocd
     spec:
       containers:
       - env:
