@@ -2,7 +2,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: copier
+  name: backup
   namespace: unifi
 spec:
   successfulJobsHistoryLimit: 1
@@ -12,7 +12,7 @@ spec:
     spec:
       template:
         spec:
-          containers:
+          initContainers:
           - name: copier
             image: quay.io/paulfantom/rsync
             command:
@@ -28,13 +28,26 @@ spec:
                 mountPath: /unifi
               - name: ssh
                 mountPath: /root/.ssh
+          containers:
+          - name: restic
+            image: quay.io/paulfantom/backup
+            env:
+              - name: DATA_DIRECTORY
+                value: "/unifi"
+              - name: PUSHGATEWAY_URL
+                value: "http://push.monitoring.svc:9091"
+            envFrom:
+              - secretRef:
+                  name: restic-repository
+            volumeMounts:
+              - name: backups
+                mountPath: /unifi
+                readOnly: true
           volumes:
             - name: backups
-              persistentVolumeClaim:
-                claimName: backups
+              emptyDir: {}
             - name: ssh
               secret:
                 secretName: sshprivkey
                 defaultMode: 0400
           restartPolicy: OnFailure
-
