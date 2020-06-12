@@ -1,0 +1,33 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup
+  namespace: homeassistant
+spec:
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  schedule: "43 1 * * *"  # At 01:43
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: restic
+            image: quay.io/paulfantom/restic-mysql
+            env:
+              - name: DATA_DIRECTORY
+                value: "/backup"
+              - name: PUSHGATEWAY_URL
+                value: "http://push.monitoring.svc:9091"
+            envFrom:
+              - secretRef:
+                  name: restic-repository
+            volumeMounts:
+              - name: content
+                mountPath: /backup
+                readOnly: true
+          volumes:
+            - name: content
+              persistentVolumeClaim:
+                claimName: homeassistant-config
+          restartPolicy: OnFailure
