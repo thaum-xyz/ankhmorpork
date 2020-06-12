@@ -1,0 +1,83 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup
+  namespace: nextcloud
+spec:
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  schedule: "43 2 * * *"  # At 02:43
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: files
+            image: quay.io/paulfantom/restic-mysql
+            env:
+              - name: DATA_DIRECTORY
+                value: "/backup"
+              - name: PUSHGATEWAY_URL
+                value: "http://push.monitoring.svc:9091"
+            envFrom:
+              - secretRef:
+                  name: restic-repository-files
+            volumeMounts:
+              - name: files
+                mountPath: /backup
+                readOnly: true
+          - name: web
+            image: quay.io/paulfantom/restic-mysql
+            env:
+              - name: DATA_DIRECTORY
+                value: "/backup"
+              - name: PUSHGATEWAY_URL
+                value: "http://push.monitoring.svc:9091"
+            envFrom:
+              - secretRef:
+                  name: restic-repository-web
+            volumeMounts:
+              - name: apps
+                mountPath: /backup/custom_apps
+                readOnly: true
+              - name: config
+                mountPath: /backup/config
+                readOnly: true
+              - name: theme
+                mountPath: /backup/themes/mytheme
+                readOnly: true
+          - name: db
+            image: quay.io/paulfantom/restic-mysql
+            env:
+              - name: PUSHGATEWAY_URL
+                value: "http://push.monitoring.svc:9091"
+              - name: MYSQL_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: credentials
+                    key: mysql_user
+              - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: credentials
+                    key: mysql_pass
+            envFrom:
+              - configMapRef:
+                  name: nextcloud-envs
+              - secretRef:
+                  name: restic-repository-db
+          volumes:
+            - name: files
+              persistentVolumeClaim:
+                claimName: nextcloud-files
+            - name: apps
+              persistentVolumeClaim:
+                claimName: nextcloud-apps
+            - name: config
+              persistentVolumeClaim:
+                claimName: nextcloud-config
+            - name: theme
+              persistentVolumeClaim:
+                claimName: nextcloud-theme
+          restartPolicy: OnFailure
+
