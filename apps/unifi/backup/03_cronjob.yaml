@@ -30,7 +30,7 @@ spec:
                 mountPath: /root/.ssh
           containers:
           - name: restic
-            image: quay.io/paulfantom/backup
+            image: quay.io/paulfantom/restic-mysql
             env:
               - name: DATA_DIRECTORY
                 value: "/unifi"
