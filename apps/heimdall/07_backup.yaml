@@ -6,6 +6,7 @@ metadata:
 spec:
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
   schedule: "13 1 * * sun"  # At 01:13
   jobTemplate:
     spec:

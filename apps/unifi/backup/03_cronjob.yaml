@@ -7,6 +7,7 @@ metadata:
 spec:
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
   schedule: "6 6 * * sun"  # At 06:06 on Sunday
   jobTemplate:
     spec:
@@ -25,7 +26,7 @@ spec:
               - "/unifi/"
             volumeMounts:
               - name: backups
-                mountPath: /unifi
+                mountPath: /backup
               - name: ssh
                 mountPath: /root/.ssh
           containers:
@@ -33,7 +34,7 @@ spec:
             image: quay.io/paulfantom/restic-mysql
             env:
               - name: DATA_DIRECTORY
-                value: "/unifi"
+                value: "/backup"
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
             envFrom:
