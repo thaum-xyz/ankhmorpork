@@ -1,0 +1,64 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metrics
+  namespace: dns
+  annotations:
+    prometheus.io/port: "9153"
+    prometheus.io/scrape: "true"
+spec:
+  selector:
+    app.kubernetes.io/name: coredns
+  ports:
+  - name: metrics
+    port: 9153
+    protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+    metallb.universe.tf/allow-shared-ip: dns-svc
+  labels:
+    app.kubernetes.io/name: coredns
+  name: dns-tcp
+  namespace: dns
+spec:
+  externalTrafficPolicy: Cluster
+  type: LoadBalancer
+  loadBalancerIP: 192.168.2.20
+  selector:
+    app.kubernetes.io/name: coredns
+  ports:
+  - name: dns
+    port: 53
+    protocol: TCP
+    targetPort: dns
+  sessionAffinity: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+    metallb.universe.tf/allow-shared-ip: dns-svc
+    prometheus.io/port: "9153"
+    prometheus.io/scrape: "true"
+  labels:
+    app.kubernetes.io/name: coredns
+  name: dns-udp
+  namespace: dns
+spec:
+  externalTrafficPolicy: Cluster
+  type: LoadBalancer
+  loadBalancerIP: 192.168.2.20
+  selector:
+    app.kubernetes.io/name: coredns
+  ports:
+  - name: dns-udp
+    port: 53
+    protocol: UDP
+    targetPort: dns-udp

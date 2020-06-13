@@ -97,7 +97,7 @@ spec:
           name: dns-udp
           protocol: UDP
         - containerPort: 443
-          name: pihole-ssl
+          name: pihole-https
           protocol: TCP
         #- containerPort: 67
         #  name: client-udp
