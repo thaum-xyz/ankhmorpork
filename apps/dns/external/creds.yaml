@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  password: U1hQRCR3NW1xN09GIzRvMkpvSA==
+  username: dGhhdW0ueHl6LWFua2ht
+kind: Secret
+metadata:
+  name: credentials
+  namespace: dns
+type: Opaque
