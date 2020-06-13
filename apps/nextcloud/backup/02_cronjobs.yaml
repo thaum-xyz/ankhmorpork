@@ -24,7 +24,7 @@ spec:
               - secretRef:
                   name: restic-repository-files
             volumeMounts:
-              - name: files
+              - name: data
                 mountPath: /backup
                 readOnly: true
           - name: web
@@ -38,6 +38,9 @@ spec:
               - secretRef:
                   name: restic-repository-web
             volumeMounts:
+              - name: web
+                mountPath: /backup
+                readOnly: true
               - name: apps
                 mountPath: /backup/custom_apps
                 readOnly: true
@@ -68,7 +71,10 @@ spec:
               - secretRef:
                   name: restic-repository-db
           volumes:
-            - name: files
+            - name: data
+              hostPath:
+                path: /srv/nextcloud/data
+            - name: web
               persistentVolumeClaim:
                 claimName: nextcloud-files
             - name: apps
@@ -81,4 +87,11 @@ spec:
               persistentVolumeClaim:
                 claimName: nextcloud-theme
           restartPolicy: OnFailure
-
+          nodeSelector:
+            node-role.kubernetes.io/storage: "true"
+            kubernetes.io/hostname: "nas"
+          tolerations:
+          - key: "node-role.kubernetes.io/storage"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
