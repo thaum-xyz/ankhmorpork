@@ -24,7 +24,7 @@ spec:
     path: apps/dns/external
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
-  project: default
+  project: dns
   syncPolicy:
     automated:
       prune: false
@@ -42,7 +42,7 @@ spec:
     path: apps/dns/local
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
-  project: default
+  project: dns
   syncPolicy:
     automated:
       prune: false
