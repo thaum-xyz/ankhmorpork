@@ -19,16 +19,14 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: homeassistant
-        app.kubernetes.io/version: 0.111.1
+        app.kubernetes.io/version: 0.111.2
         app.kubernetes.io/component: server
         app.kubernetes.io/managed-by: argocd
     spec:
-      hostNetwork: true
-      privileged: true
       containers:
       #- image: homeassistant/raspberrypi3-64-homeassistant
       #- image: homeassistant/odroid-c2-homeassistant:0.109.4
-      - image: homeassistant/aarch64-homeassistant:0.111.1
+      - image: homeassistant/aarch64-homeassistant:0.111.2
         name: homeassistant
         ports:
         - name: webui
@@ -51,12 +49,15 @@ spec:
         # Enable for Z-wave support
         # securityContext:
         #   privileged: true
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: config
           mountPath: /config
         resources:
           requests:
             memory: 800M
+      hostNetwork: true
       volumes:
         - name: config
           persistentVolumeClaim:
