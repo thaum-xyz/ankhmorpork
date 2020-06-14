@@ -1,2 +1,4 @@
 ---
 reboot_enabled: true
+
+rpi_bt: true
