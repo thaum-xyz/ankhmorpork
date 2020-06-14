@@ -1,0 +1,15 @@
+kind: pipeline
+name: validation
+
+steps:
+- name: kubeval-apps
+  image: garethr/kubeval
+  depends_on: [clone]
+  commands:
+    - kubeval --skip-kinds SealedSecret --strict -d apps/
+- name: kubeval-base
+  image: garethr/kubeval
+  depends_on: [clone]
+  commands:
+    - kubeval --skip-kinds SealedSecret,Application,CustomResourceDefinition,ClusterIssuer,AppProject --strict -d base/
+
