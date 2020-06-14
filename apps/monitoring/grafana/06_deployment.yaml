@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: grafana
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: grafana
+    spec:
+      containers:
+      - env:
+        - name: GF_SERVER_ROOT_URL
+          value: "https://grafana.ankhmorpork.thaum.xyz"
+        - name: GF_AUTH_ANONYMOUS_ENABLED
+          value: "false"
+        - name: GF_AUTH_DISABLE_LOGIN_FORM
+          value: "true"
+        - name: GF_AUTH_SIGNOUT_REDIRECT_URL
+          value: "https://auth.ankhmorpork.thaum.xyz/oauth2?logout=true"
+        - name: GF_AUTH_BASIC_ENABLED
+          value: "false"
+        - name: GF_AUTH_PROXY_AUTO_SIGN_UP
+          value: "false"
+        - name: GF_AUTH_PROXY_ENABLED
+          value: "true"
+        - name: GF_AUTH_PROXY_HEADER_NAME
+          value: "X-Auth-Request-Email"
+        - name: GF_AUTH_PROXY_HEADER_PROPERTY
+          value: "username"
+        - name: GF_AUTH_PROXY_HEADERS
+          value: "Email:X-Auth-Request-Email"
+        - name: GF_SNAPSHOTS_EXTERNAL_ENABLED
+          value: "false"
+        image: grafana/grafana:7.0.1
+        name: grafana
+        ports:
+        - containerPort: 3000
+          name: http-grafana
+        # readinessProbe:
+        #   httpGet:
+        #     path: /api/health
+        #     port: http-grafana
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-storage
+        - mountPath: /etc/grafana/provisioning/datasources
+          name: grafana-datasources
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: grafana
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-data
+      - name: grafana-datasources
+        configMap:
+          name: grafana-datasources

@@ -64,7 +64,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: apps/monitoring/grafana
-    repoURL: 'https://github.com/paulfantom/ankhmorpork.thaum.xyz.git'
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
   syncPolicy:
