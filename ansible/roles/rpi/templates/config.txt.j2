@@ -9,8 +9,12 @@ gpu_mem={{ rpi_gpu_mem }}
 dtparam=audio=off
 
 [all]
+{% if not rpi_wifi %}
 dtoverlay=pi3-disable-wifi
+{% endif %}
+{% if not rpi_bt %}
 dtoverlay=pi3-disable-bt
+{% endif %}
 
 dtparam=pwr_led_trigger=heartbeat
 dtparam={% for point in rpi_fan %}poe_fan_temp{{ loop.index0 }}={{ point.temp }},poe_fan_temp{{ loop.index0 }}_hyst={{ point.hyst }}{% if not loop.last %},{% endif %}{% endfor %}

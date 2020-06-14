@@ -42,16 +42,18 @@
     - {src: "/tmp", options: "nodev,nosuid,size=10%"}
     - {src: "/var/log", options: "nodev,noexec,nosuid,size=10%"}
 
-- name: Disable bluetooth and wifi
+- name: Control wifi and bluetooth enablement
   copy:
     dest: /etc/modprobe.d/raspi-blacklist.conf
     content: |
-      # wifi
+      {% if not rpi_wifi %}
       blacklist brcmfmac
       blacklist brcmutil
-      # bluetooth
+      {% endif %}
+      {% if not rpi_bt %}
       blacklist btbcm
       blacklist hci_uart
+      {% endif %}
   notify: reboot
 
 - include_tasks: swap.yml
