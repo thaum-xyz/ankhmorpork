@@ -2,6 +2,7 @@
 
 METRICS_FILE="/var/lib/node_exporter/deployment.prom"
 REPO_DIR=$(pwd)
+RUN_AS="root"
 
 metrics() {
     echo "INFO: Updating metrics"
@@ -36,17 +37,15 @@ EOF
 }
 
 update_repo() {
-	local owner
-	owner=$(stat --format '%U' .git)
 	echo "INFO: Updating code repository"
 	# Clean repository and revert all local changes as well as 10 prev commits
-	su "$owner" -c "git clean -xfd"
-	su "$owner" -c "git reset --hard HEAD"
+	su "$RUN_AS" -c "git clean -xfd"
+	su "$RUN_AS" -c "git reset --hard HEAD"
 
 	## Synchronize repository
 	prev=$(git rev-parse HEAD)
-	su "$owner" -c "git reset --hard HEAD~10"
-	su "$owner" -c "git pull"
+	su "$RUN_AS" -c "git reset --hard HEAD~10"
+	su "$RUN_AS" -c "git pull"
 
 	if git diff --name-only --diff-filter=AMDR --cached "${prev}" | grep -q "ansible"; then
 		return 1
@@ -70,8 +69,8 @@ update_hosts() {
 	fi
 
 	cd "${REPO_DIR}/ansible"
-	ansible-galaxy install $params -r roles/requirements.yml
-	ansible-playbook 00_site.yml 3>&1
+	su "$RUN_AS" ansible-galaxy install $params -r roles/requirements.yml
+	su "$RUN_AS" ansible-playbook 00_site.yml 3>&1 || exit 1
 }
 
 START="$(date +%s)"
@@ -89,6 +88,7 @@ fi
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 REPO_DIR="$(pwd)"
+RUN_AS="$(stat --format '%U' .git)"
 
 if update_repo; then
 	UPDATE_STATE=0
