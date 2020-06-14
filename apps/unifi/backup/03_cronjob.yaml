@@ -23,7 +23,7 @@ spec:
               - -e
               - 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
               - "root@192.168.2.7:/data/autobackup/"
-              - "/unifi/"
+              - "/backup/"
             volumeMounts:
               - name: backups
                 mountPath: /backup
@@ -42,7 +42,7 @@ spec:
                   name: restic-repository
             volumeMounts:
               - name: backups
-                mountPath: /unifi
+                mountPath: /backup
                 readOnly: true
           volumes:
             - name: backups
