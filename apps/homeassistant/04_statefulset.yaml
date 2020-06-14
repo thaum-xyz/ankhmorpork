@@ -23,6 +23,8 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/managed-by: argocd
     spec:
+      hostNetwork: true
+      privileged: true
       containers:
       #- image: homeassistant/raspberrypi3-64-homeassistant
       #- image: homeassistant/odroid-c2-homeassistant:0.109.4
