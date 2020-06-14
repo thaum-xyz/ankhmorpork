@@ -5,6 +5,7 @@
     log_file: /var/log/deploy/deployment.log
     deploy_script: "{{ playbook_dir }}/../deploy.sh"
     ara_server: "http://192.168.2.25:8000"
+    pgw_server: "http://192.168.2.21:9091"
   handlers:
   - name: reload systemd
     systemd:
@@ -19,13 +20,13 @@
     file:
       state: directory
       path: "{{ log_file | dirname }}"
-      owner: root
-      group: root
+      owner: pi
+      group: pi
       mode: 0755
   - name: Add tmpfiles.d entry to create log dir on boot
     copy:
       content: |
-        D {{ log_file | dirname }} 0755 root root - -
+        D {{ log_file | dirname }} 0755 pi pi - -
       dest: /etc/tmpfiles.d/deploy.conf
   - name: Log rotation setup
     copy:
@@ -49,8 +50,10 @@
         [Service]
         Type=simple
         Nice=-19
+        User=pi
+        Group=pi
         Environment=PATH=/usr/local/bin:/usr/bin:/bin
-        ExecStart={{ deploy_script }} {{ ara_server }}
+        ExecStart={{ deploy_script }} {{ ara_server }} {{ pgw_server }}
         StandardOutput=file:{{ log_file }}
         StandardError=file:{{ log_file }}
         SyslogIdentifier=deploy
