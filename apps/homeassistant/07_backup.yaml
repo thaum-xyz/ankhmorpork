@@ -18,6 +18,10 @@ spec:
             env:
               - name: DATA_DIRECTORY
                 value: "/backup"
+              - name: NAMESPACE
+                value: "homeassistant"
+              - name: INSTANCE
+                value: "backup"
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
             envFrom:

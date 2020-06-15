@@ -18,6 +18,10 @@ spec:
             env:
               - name: DATA_DIRECTORY
                 value: "/backup"
+              - name: NAMESPACE
+                value: "nextcloud"
+              - name: INSTANCE
+                value: "files"
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
             envFrom:
@@ -32,6 +36,10 @@ spec:
             env:
               - name: DATA_DIRECTORY
                 value: "/backup"
+              - name: NAMESPACE
+                value: "nextcloud"
+              - name: INSTANCE
+                value: "web"
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
             envFrom:
@@ -55,6 +63,10 @@ spec:
             env:
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
+              - name: NAMESPACE
+                value: "nextcloud"
+              - name: INSTANCE
+                value: "db"
               - name: MYSQL_USER
                 valueFrom:
                   secretKeyRef:
