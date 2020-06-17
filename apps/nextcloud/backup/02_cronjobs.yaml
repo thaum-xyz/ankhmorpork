@@ -10,6 +10,7 @@ spec:
   schedule: "43 2 * * *"  # At 02:43
   jobTemplate:
     spec:
+      backoffLimit: 1
       template:
         spec:
           containers:
