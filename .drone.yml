@@ -12,4 +12,9 @@ steps:
   depends_on: [clone]
   commands:
     - kubeval --skip-kinds SealedSecret,Application,CustomResourceDefinition,ClusterIssuer,AppProject --strict -d base/
-
+- name: pluto
+  image: renaultdigital/pluto
+  depends_on: [clone]
+  commands:
+  # - pluto detect-files --target-versions k8s=v1.18.0 -d base/ apps/
+    - pluto detect-files --target-versions k8s=v1.18.0 -d apps/
