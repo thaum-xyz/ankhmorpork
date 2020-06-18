@@ -4,6 +4,9 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/version: 19.0.0
+    app.kubernetes.io/part-of: nextcloud
+    app.kubernetes.io/component: server
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -16,6 +19,9 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: nextcloud
+        app.kubernetes.io/version: 19.0.0
+        app.kubernetes.io/part-of: nextcloud
+        app.kubernetes.io/component: server
     spec:
       containers:
       - env:
