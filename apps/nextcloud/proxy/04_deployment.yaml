@@ -25,6 +25,7 @@ spec:
       containers:
       - image: nginx:alpine
         name: nginx
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
           name: http
@@ -36,14 +37,14 @@ spec:
           mountPath: /etc/nginx/locations
         - name: web
           mountPath: /var/www/html
-          # readOnly: true
+          readOnly: true
         - name: apps
           mountPath: /var/www/html/custom_apps
-          # readOnly: true
+          readOnly: true
         resources:
           requests:
             memory: 16Mi
-      - image: nginx/nginx-prometheus-exporter:0.7.0
+      - image: nginx/nginx-prometheus-exporter:0.8.0
         name: nginx-exporter
         args:
         - "-nginx.scrape-uri"
