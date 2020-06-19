@@ -46,7 +46,7 @@ spec:
             secretKeyRef:
               name: oauth-creds
               key: client_cookie
-        image: quay.io/paulfantom/ankhmorpork:oauth2-proxy
+        image: quay.io/paulfantom/oauth2-proxy
         imagePullPolicy: Always
         name: oauth2-proxy
         ports:
