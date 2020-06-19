@@ -20,7 +20,7 @@ spec:
     spec:
       initContainers:
       - name: ara-migrations
-        image: quay.io/paulfantom/ankhmorpork:ara
+        image: quay.io/paulfantom/ara
         args: ['migrate']
         volumeMounts:
           - mountPath: /root/.ara/server

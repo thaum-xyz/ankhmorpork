@@ -17,7 +17,6 @@ nginx/nginx-prometheus-exporter
 allangood/holiday_exporter
 quay.io/superq/smokeping-prober-linux-arm64
 quay.io/prometheus/mysqld-exporter
-quay.io/paulfantom/ankhmorpork:ara
 EOM
 )
 
