@@ -1,5 +1,8 @@
 kind: pipeline
 name: validation
+trigger:
+  branch:
+    - master
 
 steps:
 - name: kubeval-apps
@@ -26,3 +29,4 @@ steps:
     - go get -u github.com/brancz/gojsontoyaml
     - go get -u github.com/estesp/manifest-tool
     - ./hack/checkimages.sh
+
