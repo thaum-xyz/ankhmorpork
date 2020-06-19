@@ -18,3 +18,11 @@ steps:
   commands:
   # - pluto detect-files --target-versions k8s=v1.18.0 -d base/ apps/
     - pluto detect-files --target-versions k8s=v1.18.0 -d apps/
+- name: images
+  image: golang:1.13
+  depends_on: [clone]
+  commands:
+    - apt update && apt install -y jq
+    - go get -u github.com/brancz/gojsontoyaml
+    - go get -u github.com/estesp/manifest-tool
+    - ./hack/checkimages.sh
