@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: unifi-poller
+    app.kubernetes.io/version: 2.0.1
     app.kubernetes.io/component: exporter
     app.kubernetes.io/managed-by: argocd
   name: unifi-poller
@@ -17,7 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: unifi-poller
-        app.kubernetes.io/version: 2.0.0
+        app.kubernetes.io/version: 2.0.1
         app.kubernetes.io/component: exporter
         app.kubernetes.io/managed-by: argocd
     spec:
@@ -39,7 +40,7 @@ spec:
           value: "https://192.168.2.7:8443"
         - name: UP_POLLING_MODE
           value: "prometheus"
-        image: golift/unifi-poller:2.0.0_linux_arm64
+        image: golift/unifi-poller:2.0.1
         imagePullPolicy: IfNotPresent
         name: unifi-poller
         ports:
@@ -55,5 +56,3 @@ spec:
           requests:
             memory: 15Mi
       restartPolicy: Always
-      nodeSelector:
-        kubernetes.io/arch: arm64
