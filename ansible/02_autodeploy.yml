@@ -49,7 +49,7 @@
         After=network-online.target
         [Service]
         Type=simple
-        Nice=-19
+        Nice=19
         User=pi
         Group=pi
         Environment=PATH=/usr/local/bin:/usr/bin:/bin
