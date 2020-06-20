@@ -3,30 +3,24 @@
 REPO_DIR=$(pwd)
 
 metrics() {
-	if [ "$UPDATE_STATE" -eq "0" ]; then
-		error=0
-		success=1
-	else
-		success=0
-		error=1
-	fi
+	code="$?"
 	end="$(date +%s)"
-        if [ -z "$PUSHGATEWAY_URL" ]; then
-                echo "INFO: PUSHGATEWAY_URL not defined, metrics won't be sent"
-        else
-                cat <<EOF | curl --data-binary @- "${PUSHGATEWAY_URL}/metrics/job/deploy/instance/$(hostname)"
-# HELP deployment_duration_seconds Time spent on deploying stack
-# TYPE deployment_duration_seconds gauge
-deployment_duration_seconds $((end - START))
-# HELP deployment_status_success Return 1 if deployment was successful
-# TYPE deployment_status_success gauge
-deployment_status_success $success
-# HELP deployment_status_failure Return 1 if deployment failed
-# TYPE deployment_status_failure gauge
-deployment_status_failure $success
+	if [ -z "$PUSHGATEWAY_URL" ]; then
+		echo "INFO: PUSHGATEWAY_URL not defined, metrics won't be sent"
+		exit $code
+	fi
+	cat <<EOF | curl --data-binary @- "${PUSHGATEWAY_URL}/metrics/job/deploy/instance/$(hostname)"
+# HELP deployment_start_last_timestamp_seconds Time whan deployment started
+# TYPE deployment_start_last_timestamp_seconds counter
+deployment_start_last_timestamp_seconds ${START}
+# HELP deployment_end_last_timestamp_seconds Time when deployment ended
+# TYPE deployment_end_last_timestamp_seconds counter
+deployment_end_last_timestamp_seconds ${end}
+# HELP deployment_exit_code Exit code returned by deployment script
+# TYPE deployment_exit_code
+deployment_exit_code $code
 EOF
-                echo "$(date +"%F %T") INFO: Statistics exported. All done."
-        fi
+	echo "INFO: Statistics exported. All done."
 }
 
 update_repo() {
@@ -67,8 +61,7 @@ update_hosts() {
 }
 
 START="$(date +%s)"
-echo "Start update at $(date)"
-UPDATE_STATE=1 # 0 - update done, 1 - update failed
+echo "INFO: Start update at $(date)"
 ARA_SERVER="$1"
 PUSHGATEWAY_URL="$2"
 
@@ -79,10 +72,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 REPO_DIR="$(pwd)"
 
 if update_repo; then
-	UPDATE_STATE=0
 	exit 0
 fi
 
 update_hosts
-
-UPDATE_STATE=0
