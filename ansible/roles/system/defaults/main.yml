@@ -5,3 +5,7 @@ system_healthcheck_url: ""
 system_mountpoints: []
 
 system_earlyoom_params: "-r 60"
+
+system_dns_primary: ""
+system_dns_secondary: ""
+system_dns_domain: ""

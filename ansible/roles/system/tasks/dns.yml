@@ -1,0 +1,31 @@
+---
+- name: Get services runnning on host
+  service_facts:
+
+- block:
+  - name: Configure static DNS [dhcpcd]
+    lineinfile:
+      path: /etc/dhcpcd.conf
+      regexp: '^static domain_name_servers='
+      line: "static domain_name_servers={{ system_dns_primary }} {{ system_dns_secondary }}"
+    notify: restart dhcpcd
+
+  - name: Configure DNS search domain [dhcpcd]
+    lineinfile:
+      path: /etc/dhcpcd.conf
+      regexp: '^static domain_search='
+      line: "static domain_search={{ system_dns_domain }}"
+    when: system_dns_domain | length > 0
+    notify: restart dhcpcd
+  when:
+    - ansible_facts.services['dhcpcd.service'] is defined
+    - ansible_facts.services['dhcpcd.service']['state'] == "running"
+
+- name: Configure static DNS [systemd-resolved]
+  template:
+    src: resolved.conf.j2
+    dest: /etc/systemd/resolved.conf
+  notify: restart systemd-resolved
+  when:
+    - ansible_facts.services['systemd-resolved.service'] is defined
+    - ansible_facts.services['systemd-resolved.service']['state'] == "running"

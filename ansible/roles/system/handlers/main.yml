@@ -4,3 +4,13 @@
     name: earlyoom
     state: restarted
     enabled: true
+
+- name: restart systemd-resolved
+  systemd:
+    name: systemd-resolved
+    state: restarted
+
+- name: restart dhcpcd
+  systemd:
+    name: dhcpcd
+    state: restarted

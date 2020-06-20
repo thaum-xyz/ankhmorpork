@@ -5,6 +5,10 @@ locales_present:
 unattended_automatic_reboot_time: "02:00"
 unattended_update_days: 1
 
+system_dns_primary: "192.168.2.1"
+system_dns_secondary: "1.1.1.1"
+system_dns_domain: "ankhmorpork.thaum.xyz"
+
 node_exporter_version: 1.0.0-rc.1
 node_exporter_enabled_collectors:
   - textfile:

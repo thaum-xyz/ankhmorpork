@@ -36,6 +36,9 @@
     - net.ipv6.conf.all.disable_ipv6
     - net.ipv6.conf.default.disable_ipv6
 
+- import_tasks: dns.yml
+  when: system_dns_primary | length > 0
+
 - import_tasks: earlyoom.yml
 
 - meta: flush_handlers
