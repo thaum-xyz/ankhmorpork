@@ -17,7 +17,7 @@ apt -y upgrade
 3. Install dependencies
 ```bash
 apt install -y git python3-jmespath python3-pip
-pip3 install ansible ara
+pip3 install ansible>=2.9.7 ara
 ```
 4. Clone this repository via HTTPS (not SSH!)
 ```bash
@@ -44,12 +44,12 @@ git config user.name "example"
 ssh-copy-id pi@<ip_of_host>
 # login to host
 sudo apt update && sudo apt -y upgrade
-sudo apt install -y git python3-jmespath python3-pip && sudo pip3 install ansible ara
+sudo apt install -y git python3-jmespath python3-pip && sudo pip3 install ansible>=2.9.7 ara
 git clone https://github.com/thaum-xyz/ankhmorpork.git config
 cd config
 git config credential.helper store && git pull
 git config user.email "example@example.org"
 git config user.name "example"
-sudo mkdir /var/log/deploy && sudo chown $(id -u):$(id -g) /var/log/deploy
+sudo mkdir /var/log/deploy && sudo chown pi:pi /var/log/deploy
 ./deploy.sh
 ```
