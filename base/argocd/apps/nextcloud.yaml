@@ -109,3 +109,21 @@ spec:
       prune: true
       selfHeal: false
 
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: exporter
+spec:
+  destination:
+    namespace: nextcloud
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/nextcloud/exporter
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: nextcloud
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true

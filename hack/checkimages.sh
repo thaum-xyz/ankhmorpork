@@ -13,6 +13,7 @@ haugene/transmission-openvpn
 mariadb
 oliver006/redis_exporter
 hipages/php-fpm_exporter
+xperimental/nextcloud-exporter
 nginx/nginx-prometheus-exporter
 allangood/holiday_exporter
 quay.io/superq/smokeping-prober-linux-arm64

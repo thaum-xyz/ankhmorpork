@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: exporter
+    app.kubernetes.io/part-of: nextcloud
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/version: 0.3.0
+  name: exporter
+  namespace: nextcloud
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: exporter
+      app.kubernetes.io/part-of: nextcloud
+      app.kubernetes.io/component: exporter
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: exporter
+        app.kubernetes.io/part-of: nextcloud
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/version: 0.3.0
+    spec:
+      containers:
+      - image: xperimental/nextcloud-exporter:v0.3.0
+        name: exporter
+        env:
+        - name: NEXTCLOUD_SERVER
+          value: "nginx.nextcloud.svc"
+        envFrom:
+          - secretRef:
+              name: exporter
+        ports:
+        - containerPort: 9205
+          name: metrics
+        resources:
+          requests:
+            memory: 30Mi
+      restartPolicy: Always
+      # FIXME: node selector can be dropped after fixing issues with DNS on NAS
+      nodeSelector:
+        node-role.kubernetes.io/storage: "true"
+        kubernetes.io/hostname: "nas"
+        kubernetes.io/arch: "amd64"
+      tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
