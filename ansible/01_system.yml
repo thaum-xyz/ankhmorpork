@@ -7,6 +7,11 @@
   - { role: jnv.unattended-upgrades, when: (ansible_os_family == "Debian") }
   - dev-sec.ssh-hardening
   - cloudalchemy.node-exporter
+
+- hosts: all
+  become: true
+  serial: 1
+  roles:
   - system
   tasks:
   - name: Reboot PC once a week
