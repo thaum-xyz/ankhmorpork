@@ -35,6 +35,18 @@ spec:
         operation:
           description: Operation contains requested operation parameters.
           properties:
+            info:
+              items:
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: string
+                required:
+                - name
+                - value
+                type: object
+              type: array
             initiatedBy:
               description: OperationInitiator holds information about the operation
                 initiator
@@ -74,6 +86,8 @@ spec:
                       kind:
                         type: string
                       name:
+                        type: string
+                      namespace:
                         type: string
                     required:
                     - kind
@@ -313,6 +327,10 @@ spec:
               description: Destination overrides the kubernetes server and namespace
                 defined in the environment ksonnet app.yaml
               properties:
+                name:
+                  description: Name of the destination cluster which can be used instead
+                    of server (url) field
+                  type: string
                 namespace:
                   description: Namespace overrides the environment namespace value
                     in the ksonnet app.yaml
@@ -623,13 +641,20 @@ spec:
                 description: RevisionHistory contains information relevant to an application
                   deployment
                 properties:
+                  deployStartedAt:
+                    description: DeployStartedAt holds the time the deployment started
+                    format: date-time
+                    type: string
                   deployedAt:
+                    description: DeployedAt holds the time the deployment completed
                     format: date-time
                     type: string
                   id:
+                    description: ID is an auto incrementing identifier of the RevisionHistory
                     format: int64
                     type: integer
                   revision:
+                    description: Revision holds the revision of the sync
                     type: string
                   source:
                     description: ApplicationSource contains information about github
@@ -847,6 +872,18 @@ spec:
                 operation:
                   description: Operation is the original requested operation
                   properties:
+                    info:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - name
+                        - value
+                        type: object
+                      type: array
                     initiatedBy:
                       description: OperationInitiator holds information about the
                         operation initiator
@@ -887,6 +924,8 @@ spec:
                               kind:
                                 type: string
                               name:
+                                type: string
+                              namespace:
                                 type: string
                             required:
                             - kind
@@ -1461,6 +1500,10 @@ spec:
                       description: ApplicationDestination contains deployment destination
                         information
                       properties:
+                        name:
+                          description: Name of the destination cluster which can be
+                            used instead of server (url) field
+                          type: string
                         namespace:
                           description: Namespace overrides the environment namespace
                             value in the ksonnet app.yaml
@@ -1756,6 +1799,10 @@ spec:
                 description: ApplicationDestination contains deployment destination
                   information
                 properties:
+                  name:
+                    description: Name of the destination cluster which can be used
+                      instead of server (url) field
+                    type: string
                   namespace:
                     description: Namespace overrides the environment namespace value
                       in the ksonnet app.yaml

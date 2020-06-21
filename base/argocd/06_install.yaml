@@ -465,8 +465,7 @@ spec:
         - "20"
         - --operation-processors
         - "10"
-        # image: phillebaba/argocd:v1.4.2
-        image: quay.io/paulfantom/argocd:d3ebf43b
+        image: quay.io/paulfantom/argocd:latest
         livenessProbe:
           httpGet:
             path: /healthz
@@ -530,8 +529,7 @@ spec:
         - -n
         - /usr/local/bin/argocd-util
         - /shared
-        image: quay.io/paulfantom/argocd:d3ebf43b
-        # image: phillebaba/argocd:v1.4.2
+        image: quay.io/paulfantom/argocd:latest
         name: copyutil
         volumeMounts:
         - mountPath: /shared
@@ -565,7 +563,7 @@ spec:
         - ""
         - --appendonly
         - "no"
-        image: redis:5.0.3
+        image: redis:5.0.8
         name: redis
         ports:
         - containerPort: 6379
@@ -598,8 +596,7 @@ spec:
         - argocd-repo-server
         - --redis
         - argocd-redis:6379
-        image: quay.io/paulfantom/argocd:d3ebf43b
-        # image: phillebaba/argocd:v1.4.2
+        image: quay.io/paulfantom/argocd:latest
         livenessProbe:
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -653,8 +650,7 @@ spec:
         - argocd-server
         - --staticassets
         - /shared/app
-        image: quay.io/paulfantom/argocd:d3ebf43b
-        # image: phillebaba/argocd:v1.4.2
+        image: quay.io/paulfantom/argocd:latest
         livenessProbe:
           httpGet:
             path: /healthz
