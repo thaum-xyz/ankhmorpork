@@ -29,4 +29,11 @@ steps:
     - go get -u github.com/brancz/gojsontoyaml
     - go get -u github.com/estesp/manifest-tool
     - ./hack/checkimages.sh
+- name: secrets
+  image: golang:1.13
+  depends_on: [clone]
+  commands:
+    - apt update && apt install -y jq
+    - go get -u github.com/brancz/gojsontoyaml
+    - ./hack/checksecrets.sh
 
