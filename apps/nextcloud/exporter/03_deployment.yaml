@@ -29,7 +29,7 @@ spec:
         name: exporter
         env:
         - name: NEXTCLOUD_SERVER
-          value: "nginx.nextcloud.svc"
+          value: "http://nginx.nextcloud.svc"
         envFrom:
           - secretRef:
               name: exporter
