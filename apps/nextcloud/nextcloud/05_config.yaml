@@ -40,10 +40,10 @@ metadata:
   labels:
     app.kubernetes.io/name: nextcloud
 data:
-  NEXTCLOUD_TRUSTED_DOMAINS: "cloud.krupa.net.pl"
+  NEXTCLOUD_TRUSTED_DOMAINS: "cloud.krupa.net.pl nginx.nextcloud.svc"
   NEXTCLOUD_TABLE_PREFIX: "oc_"
-  MYSQL_HOST: 'mysql.nextcloud.svc.cluster.local'
-  REDIS_HOST: 'redis.nextcloud.svc.cluster.local'
+  MYSQL_HOST: 'mysql.nextcloud.svc'
+  REDIS_HOST: 'redis.nextcloud.svc'
   REDIS_PORT: '6379'
   TRUSTED_PROXIES: "127.0.0.1 192.168.2.6"
   NC_mysql.utf8mb4: "true"

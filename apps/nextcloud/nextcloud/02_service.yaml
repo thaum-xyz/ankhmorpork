@@ -12,10 +12,6 @@ spec:
     port: 9000
     protocol: TCP
     targetPort: phpfpm
-  #- name: nextcloud-metrics
-  #  port: 9205
-  #  protocol: TCP
-  #  targetPort: nextcloud-metrics
   - name: phpfpm-metrics
     port: 9253
     protocol: TCP
