@@ -9,7 +9,7 @@ steps:
   image: garethr/kubeval
   depends_on: [clone]
   commands:
-    - kubeval --skip-kinds SealedSecret --strict -d apps/
+    - kubeval --skip-kinds SealedSecret,ConfigMapSecret --strict -d apps/
 - name: kubeval-base
   image: garethr/kubeval
   depends_on: [clone]
