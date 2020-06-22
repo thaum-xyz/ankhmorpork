@@ -33,10 +33,13 @@
         flat: true
       when: ansible_user == "root"
 
-    - name: Remove local provisioner manifests as those are managed externally
+    - name: Remove manifests managed externally
       file:
-        path: "/var/lib/rancher/k3s/server/manifests/local-storage.yaml"
+        path: "/var/lib/rancher/k3s/server/manifests/{{ item }}"
         state: "absent"
+      with_items:
+        - "local-storage.yaml"
+        - "coredns.yaml"
 
 - hosts: k3s-node
   become: true
