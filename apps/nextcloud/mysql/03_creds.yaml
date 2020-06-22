@@ -1,0 +1,15 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: mysql-creds
+  namespace: nextcloud
+spec:
+  encryptedData:
+    root_pass: AgCj8kCg+8Qsy/sXMG7QM9WjucQtPBgFQQj/q4qPcVK5WcGgBPpoVnuAME38aWIittYnxFc828c4Qrb+IMznnhjG5ntxTHc9tIrSoOYDwwsgeXVwEu+VyndkvSF3RxevNPXTp/e19tWkfQ3rp9oN0ufvZSYabADxKdhtEkTjgjxAAUJa8zO3rHehYU7aYlBjDMxHhEniu3ATwn6qjlzFp6LN9o/K8N2lXikoLGAz5Gaz28ovhY7fsYO/W5UxNS8weFflU1OMeKgOYpOJfJPLZ/Cuc+5fRtdXquXl2TVC4G2byTKb6yfMmry0ewJBMvBnB39JD4HVcL6g0PglyctWF7zS1zMgWSj4fRIlFwesL9BTJ1PSuqTnhofI1mhWBUgXYoNNHG2iRtcBKmPorkFR6l2cYHSqSS0KLw/vNv9zqz0+SQhAG1vf1IDwiXQdk8vl8XME6q8WJyDP6x86YKZBp5irHyEU2R01OCMVSCfn2w6cQgzYjJZy9FnBlNSrbDbQQI9gYpQoVR+40sqObMHhYDsrgtlmLzTt30eooH1eeATQm4D0z+q7ZSrt1ZLKCdqUDJ8YJQiSe197qb1dB/Ji4R0HJHgiSTXagt486YbLTUZycnocy6Ha6YC8Nn4RUXrz6Hyl2MpJMDjvaWH23+M+PckP3HDbl79YQfEUVBH3wOtbJYSt2yHWGspdJMThKcVjC+Bc2Wonx8HDUwjw1igVc+Pu/z5KgHrVbvTbRJNUJNs=
+  template:
+    metadata:
+      creationTimestamp: null
+      name: mysql-creds
+      namespace: nextcloud
+    type: Opaque

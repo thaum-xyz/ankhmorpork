@@ -1,0 +1,41 @@
+---
+apiVersion: secrets.mz.com/v1alpha1
+kind: ConfigMapSecret
+metadata:
+  name: mysql-init
+  namespace: nextcloud
+spec:
+  template:
+    metadata:
+      name: mysql-init
+      namespace: nextcloud
+    data:
+      exporter.sql: |
+        CREATE USER '$(MYSQL_EXPORTER_USER)'@'127.0.0.1' IDENTIFIED BY '$(MYSQL_EXPORTER_PASS)' WITH MAX_USER_CONNECTIONS 3;
+        GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO '$(MYSQL_EXPORTER_USER)'@'127.0.0.1';
+  vars:
+    - name: MYSQL_EXPORTER_USER
+      secretValue:
+        name: exporter-creds
+        key: exporter_user
+    - name: MYSQL_EXPORTER_PASS
+      secretValue:
+        name: exporter-creds
+        key: exporter_pass
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: exporter-creds
+  namespace: nextcloud
+spec:
+  encryptedData:
+    exporter_pass: AgCN/RJsbAgc9ayNiuvjfOjETvhifVV4N3ycX3hbousVBFoAcmadGXxaiq38+VawZlM2tOqutR3SKd3FW0/Q+a/VrZ9XOvWtmCcwmW/FCfSNoh3kp9zJSRBRFjjITxVEqTPaxpmOwWojA16OaM4q9MeO5nTHqEStX2eFW0LTX2d1LLK/EqgjlcI8Qaw8CofL0zT2lKqy2G3M1ZCGVis41JbpJns3PCI+AxaYB04Z7odqMOAVOYrdAlRCtYfCWdW7rpSjWhqkvRS5Xy/AAby0V+MpJ2r0gtZoYh7welQd9JrtAoaU2Pvdo9pMImyhvPcF7wi4ihJhMaRvZxI3O0h3wfrCMafafWvGLlAGPHEvacDm8wsJObXsus3P8rR/l9qmzX6xC7ujVoanVO9R4pmDYB+8pnLWDD30OCZUWFVixjimXCOnXpqn/eC0mIFbMAAirUByCl/TTBlJBKi5BSdLchGEHaMO1cFYzjm2frv7RAz56wA8ICs0MZ8lZ9pUNe5F8sI7s5qxGsiZK9k+w1mbVyVEq2sOlLGcHGoNZdRn8iay4AoRg2iOfBut/FXYlfGHehAXiQ07E3ohSMT7x/KAq/PPMjMzZHkAT56v8dXNTzQ2DmH+9fmB96wK6mzloO86qTW3FWrwopKQmd4MPeYUqhc+Zp+FYzfq4YD34hjzqwSOpFGFEaknigsrYFVoasJ8qRMEbmXI7vEgSfd979MMy7XWZgrfAa2OIACR7VRlkRM=
+    exporter_user: AgAoTo3Sz834TuP6VWFETsX19NDj8MY/48QSbPcpFc1C+afyQ5XCsKJ1Nxy0Zu1rZEuyC1w1tGbFXcMmRS2YqrunKgoOEeOnAK+FdqSibGZMDNNg/7PCFGy+xpcMBkGLCvJOYBmi8TiyYFq6QQsaq03az/lLzcP7XR7zxnRzq0Wf3oTO0lZOESM9mUED8WXlvlTBrcxG8txpjxx/GkusHuWOBj1hy0f7Z6iPWQjykr+TQ857HxF5XPuoi4D4jitRhnqnrEYJo1rgL24DqNi9Ew63ZKoKHyOVECcfmIRYciPdDU3g4w8IdYQp1Ekus8dOqvtITyag50CqblxiqMYOElE5jwRkbRtFNhgTsbSReHCtJxC9a7Q47u3hJVjx9r+ZUvBZznmuZydRjwXz1uH35jEKVpfmOjWIbkFun8GjYx5DuxkU1E98ReCD+RaIGmS26sBK2KevcaueIgkuJdzJwR8ou0Did1tQg+Y8eDi646DxMAJSFLH5/eo85AyuKNxxmB/qjbunA/Jd/d46YP6l70/RfCPOafHSKmxCSmm00bdLCLJ43XgLc64P7hlbPuRY6glJRHze+41rok9SKVoiX20M+tIPZ9FBVUBt3hx6T4g8Pr6JSyyfH/uT0rHBkAdA87I/L8sHQ/QE9uvbTK9Oh9hBAzZmzmKoskO7z4w+y4hLbO68HSeK9ULtgrvnPfC3KiI3xu0dSzLBgg==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: exporter-creds
+      namespace: nextcloud
+    type: Opaque
