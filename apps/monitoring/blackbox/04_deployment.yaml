@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/version: 0.16.0
     app.kubernetes.io/component: exporter
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: blackbox-exporter
