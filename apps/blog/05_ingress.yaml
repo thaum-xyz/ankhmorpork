@@ -2,6 +2,29 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
+  name: ghost-about
+  namespace: blog
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/permanent-redirect: https://alchemyof.it/about
+spec:
+  tls:
+  - hosts:
+    - blog.ankhmorpork.thaum.xyz
+    secretName: ghost-about-tls
+  # Those doesn't matter as this Ingress is doing a permanent redirect
+  rules:
+  - host: blog.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: ghost
+          servicePort: 2368
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
   name: ghost
   namespace: blog
   annotations:
@@ -11,10 +34,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - blog.ankhmorpork.thaum.xyz
+    - alchemyof.it
     secretName: ghost-tls
   rules:
-  - host: blog.ankhmorpork.thaum.xyz
+  - host: alchemyof.it
     http:
       paths:
       - backend:
