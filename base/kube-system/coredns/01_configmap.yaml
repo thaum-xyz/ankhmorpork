@@ -20,11 +20,10 @@ data:
           fallthrough
         }
         prometheus :9153
-        forward . 192.168.2.20 192.168.2.1
+        forward . /etc/resolv.conf
         cache 30
         loop
         reload
         loadbalance
-        log
     }
 
