@@ -8,7 +8,9 @@ data:
   Corefile: |
     .:53 {
         errors
-        health
+        health {
+          lameduck 5s
+        }
         ready
         kubernetes cluster.local in-addr.arpa ip6.arpa {
           pods insecure
@@ -26,4 +28,3 @@ data:
         reload
         loadbalance
     }
-
