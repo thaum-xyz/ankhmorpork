@@ -29,7 +29,7 @@ spec:
       - env:
         - name: ARA_ALLOWED_HOSTS
           value: "['192.168.2.25', 'ara.ankhmorpork.thaum.xyz', 'health.ara.local']"
-        image: quay.io/paulfantom/ankhmorpork:ara
+        image: quay.io/paulfantom/ara
         imagePullPolicy: Always
         name: ara
         ports:
