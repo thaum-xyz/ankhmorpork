@@ -5,6 +5,7 @@ set -euo pipefail
 CPU_ARCHS="amd64 arm64 arm"
 MULTI_ARCH_EXCLUDED=$( cat <<EOM
 quay.io/external_storage/nfs-client-provisioner-arm
+eu.gcr.io/k8s-artifacts-prod/descheduler/descheduler
 homeassistant/aarch64-homeassistant
 plexinc/pms-docker
 quay.io/paulfantom/plex_exporter
@@ -43,12 +44,8 @@ check_cross_compatibility() {
         done
         if [ "$err" -ne 0 ]; then
                 exit 129
-        else
-                echo "INFO: Image ${image} is compatible with specified CPU architectures"
         fi
 }
-
-
 
 # Go to top-level
 cd "$(git rev-parse --show-toplevel)"
