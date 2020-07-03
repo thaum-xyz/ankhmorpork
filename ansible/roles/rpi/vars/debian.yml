@@ -1,0 +1,4 @@
+---
+rpi_cmdline_file: "/boot/cmdline.txt"
+rpi_cmdline_last_regex: '^(.*rootwait)$'
+rpi_config_file: "/boot/config.txt"
