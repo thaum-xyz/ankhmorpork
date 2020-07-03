@@ -11,6 +11,9 @@ node05   ansible_user=ubuntu     ansible_host=192.168.2.16 network=fast
 node06   ansible_user=ubuntu     ansible_host=192.168.2.17 network=fast
 node07   ansible_user=pi         ansible_host=192.168.2.18
 
+[fan]
+node01
+
 [raspberry]
 master01
 node01
