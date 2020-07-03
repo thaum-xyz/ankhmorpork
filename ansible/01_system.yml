@@ -23,6 +23,7 @@
       hour: "3"
       minute: "43"
       job: reboot
+      state: "{{ reboot_enabled }}"
     when: reboot_enabled is defined
 
 - hosts: raspberry
