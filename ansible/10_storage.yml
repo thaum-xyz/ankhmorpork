@@ -10,25 +10,15 @@
         name:
           - moreutils
         state: installed
-    - name: Copy shell scripts # THIS SHOULD BE IN node-exporter ROLE!!!
+    - name: Copy smartmon textfile collector script
       copy:
-        src: "{{ item }}"
-        dest: "/usr/local/bin/{{ item | basename }}"
+        src: "scripts/smartmon.sh"
+        dest: "/usr/local/bin/smartmon.sh"
         mode: 0755
-      with_fileglob:
-        - "scripts/*.sh"
     - name: Set global cronjobs (/etc/crontab)
       cron:
         cron_file: "/etc/crontab"
         user: root
-        name: "{{ item.name }}"
-        minute: "{{ item.minute }}"
-        hour: "{{ item.hour | default(omit) }}"
-        job: "{{ item.job }}"
-      with_items:
-        - name: smartmon-metrics
-          minute: "*/10"
-          job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
-        - name: yum-metrics
-          minute: "13"
-          job: "/usr/local/bin/yum.sh | sponge /var/lib/node_exporter/yum.prom"
+        name: "smartmon-metrics"
+        minute: "*/10"
+        job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"

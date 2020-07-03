@@ -25,6 +25,24 @@
       job: reboot
       state: "{{ reboot_enabled }}"
     when: reboot_enabled is defined
+  - name: Install dependencies
+    package:
+      name: moreutils
+      state: installed
+  - set_fact:
+      pkg_mgr: "{{ 'yum' if ansible_pkg_mgr == 'dnf' else ansible_pkg_mgr }}"
+  - name: Copy package manager textfile collector script
+    copy:
+      src: "scripts/{{ pkg_mgr }}.sh"
+      dest: "/usr/local/bin/{{ pkg_mgr }}.sh"
+      mode: 0755
+  - name: Set cronjob for package manager (/etc/crontab)
+    cron:
+      cron_file: "/etc/crontab"
+      user: root
+      name: "{{ ansible_pkg_mgr }}-metrics"
+      minute: "13"
+      job: "/usr/local/bin/{{ pkg_mgr }}.sh | sponge /var/lib/node_exporter/{{ pkg_mgr }}.prom"
 
 - hosts: raspberry
   become: true
