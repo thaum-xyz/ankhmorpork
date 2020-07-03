@@ -7,7 +7,7 @@ k3s_extra_server_args: "--no-deploy servicelb --no-deploy traefik --node-taint n
 # k3s_extra_server_args: "--no-deploy servicelb --no-deploy traefik --no-deploy metrics-server"
 k3s_token: "{{ hostvars[groups['k3s-master'][0]]['token'] }}"
 
-# k3s_extra_agent_args: "--kubelet-arg system-reserved=cpu=100m,memory=200Mi --kubelet-arg kube-reserved=cpu=100m,memory=200Mi --node-label node.kubernetes.io/network-type={{ network }}"
-k3s_extra_agent_args: "--kubelet-arg system-reserved=cpu=100m,memory=200Mi --kubelet-arg kube-reserved=cpu=100m,memory=200Mi"
+k3s_extra_agent_args: "--kubelet-arg system-reserved=cpu=100m,memory=200Mi --kubelet-arg kube-reserved=cpu=100m,memory=200Mi --node-label node.kubernetes.io/network-type={{ network }}"
+# k3s_extra_agent_args: "--kubelet-arg system-reserved=cpu=100m,memory=200Mi --kubelet-arg kube-reserved=cpu=100m,memory=200Mi"
 
 system_earlyoom_params: "-r 60 -m 4"
