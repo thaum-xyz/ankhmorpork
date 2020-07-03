@@ -1,6 +1,5 @@
 ---
 - name: cloudalchemy.node-exporter
-- name: paulfantom.rpi_exporter
 - name: oefenweb.locales
   version: v1.0.37
 - name: jnv.unattended-upgrades
