@@ -6,6 +6,7 @@
     deploy_script: "{{ playbook_dir }}/../deploy.sh"
     ara_server: "http://192.168.2.25:8000"
     pgw_server: "http://192.168.2.21:9091"
+    enable_autodeploy: false
   handlers:
   - name: reload systemd
     systemd:
@@ -15,6 +16,7 @@
     with_items:
       - deploy.service
       - deploy.timer
+    when: enable_autodeploy
   tasks:
   - name: Create log directory
     file:
@@ -72,3 +74,13 @@
         WantedBy=timers.target
       dest: /etc/systemd/system/deploy.timer
     notify: reload systemd
+  - name: stop autodeploy
+    systemd:
+      name: "{{ item }}"
+      enabled: false
+      state: stopped
+      daemon_reload: true
+    with_items:
+      - deploy.service
+      - deploy.timer
+    when: not enable_autodeploy
