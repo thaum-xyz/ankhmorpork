@@ -53,7 +53,7 @@ cd "$(git rev-parse --show-toplevel)"
 IMAGES=""
 
 for file in $(find apps/ base/ -name *.yaml -exec grep "image" -l {} \;); do
-        new=$(gojsontoyaml -yamltojson < "$file" | jq -cr '..| .image? | select(type != "null")')
+        new=$(gojsontoyaml -yamltojson < "$file" | jq -cr '..| .image? | select(type == "string")')
         IMAGES="${new} ${IMAGES}"
 done
 
