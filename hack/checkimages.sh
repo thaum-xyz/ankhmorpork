@@ -65,6 +65,7 @@ for image in $(echo -e "${IMAGES}" | tr ' ' '\n' | sort -f | uniq); do
                 check_cross_compatibility "${image}" "${info}"
         ) &
         pids+=("$!")
+        sleep 1  # Add some delay to prevent DDoSing registry
 done
 
 EXIT_CODE=0
