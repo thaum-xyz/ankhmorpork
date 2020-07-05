@@ -1,0 +1,127 @@
+apiVersion: secrets.mz.com/v1alpha1
+kind: ConfigMapSecret
+metadata:
+  name: alertmanager-main
+  namespace: monitoring
+  labels:
+    app: alertmanager
+spec:
+  template:
+    metadata:
+      name: alertmanager-main
+      labels:
+        app: alertmanager
+    data:
+      alertmanager.yaml: |
+        global:
+          resolve_timeout: 5m
+          slack_api_url: $(SLACK_API_KEY)
+          opsgenie_api_url: 'https://api.eu.opsgenie.com'
+          opsgenie_api_key: $(OPSGENIE_API_KEY)
+        receivers:
+        - name: 'slack'
+          slack_configs:
+            - channel: '#alerts'
+              send_resolved: true
+              title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] Monitoring Event Notification'
+              text: >-
+                {{ range .Alerts }}
+                  *Alert (`{{ .Labels.severity }}`):* {{ .Annotations.summary }}
+                  *Description:* {{ .Annotations.description }}
+                  *Details:*
+                  {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+                  {{ end }}
+                {{ end }}
+        - name: 'opsgenie'
+          opsgenie_configs:
+            - message: "{{ .GroupLabels.alertname }}"
+              priority: >-
+                {{- if ne .CommonLabels.priority "" -}}
+                  {{- .CommonLabels.priority }}
+                {{- else -}}
+                  {{- if eq .CommonLabels.severity "critical" -}}
+                  P2
+                  {{- else -}}
+                  P4
+                  {{- end -}}
+                {{- end -}}
+              responders:
+              - name: 'Main'
+                type: team
+        - name: 'healthchecks.io'
+          webhook_configs:
+            - send_resolved: false
+              url: $(HEALTHCHECKS_URL)
+        route:
+          group_by: ['alertname', 'instance', 'job']
+          #group_by: ['instance', 'job']
+          group_wait: 30s
+          group_interval: 5m
+          repeat_interval: 12h
+          receiver: 'slack'
+          routes:
+            - match:
+                alertname: 'Watchdog'
+              receiver: 'healthchecks.io'
+              repeat_interval: 10m
+            - match:
+                severity: 'critical'
+              receiver: 'opsgenie'
+        inhibit_rules:
+          - source_match:
+              severity: "critical"
+            target_match_re:
+              severity: "warning|info"
+            equal: ['alertname', 'job']
+          - source_match:
+              severity: "warning"
+            target_match_re:
+              severity: "info"
+            equal: ['alertname', 'job']
+          - source_match:
+              alertname: 'ProbeFailed'
+            target_match:
+              alertname: 'StatusCode'
+            equal: ['job', 'instance']
+          - source_match:
+              alertname: 'NodeDown'
+            target_match:
+              alertname: 'TargetDown'
+            equal: ['job', 'instance']
+          - source_match:
+              alertname: 'FederatedPrometheusDown'
+              instance: 'lancre.thaum.xyz:443'
+            target_match_re:
+              alertname: "TargetDown"
+              instance: 'lancre.thaum.xyz:443|zmc.krupa.net.pl:443'
+  vars:
+    - name: OPSGENIE_API_KEY
+      secretValue:
+        name: alertmanager-keys
+        key: opsgenie_api_key
+    - name: SLACK_API_URL
+      secretValue:
+        name: alertmanager-keys
+        key: slack_api_key
+    - name: HEALTHCHECKS_URL
+      secretValue:
+        name: alertmanager-keys
+        key: healthchecks_url
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: alertmanager-keys
+  namespace: monitoring
+spec:
+  encryptedData:
+    healthchecks_url: AgCe2gkqzl4Isq2qSbuq27uxPBFXG+nON5i4sshRR2wHATs/MMRuZ6irCmsscfWmhhDvujo4+zj4AD7KkYTSvEU2WdVqCwmuVufMeqS10oBMNcUnnJHd8iCwhLqH7gzfBBQwXoJnwE83c+hUC1Z8CqgUW6dp2wmK0+p9bKgYRgCRjVgzTGQ4myRDSesNAWWyVgtYxHEfWzmprPjPmCDk/yRJ8Y5Hf8OZox7at24VCaSBFhFdLl336L9fDgK6XzSbgIs/db1f2Nl7aajr9JCskiq99vsoYZGe94DDGrSW6xaD0SFkn3Op6LE8DcIY3x216Pt15PV+sXHRobFU6hNk6X6HKTnVEv9DIKKrAtERoIHCig6vvtQJCOEBNAi6BXDfTzSmRZenWUKP8hVXs9RN0U8qUX/gFfpEQkz8IX5sKiW0fAQvrOBllLQkd/4cyroCBxLzfl60IlkBe8DqYd9FN9P4353BaSeQQ1ZMCqaefiBkIgb/yYx/mwgMo/pzZ2RHuGt9tMDAE2e+24ltZC1pexrYVua2ZxkDRor//UtLrUgOn+9d7YrtJ9z+v7epgYRzXA5allD76Q4oP9ABnVaDPMkFsEEpltqvxGJTIg5inFzgM+VX1SaycZlDbbcZ1tdKCkceSjwZ87g4STafUac0pKqHFaHhjvMKzM5bfu4/dmVaiZUoU+9bC5oF7h0VHnFLw2j1OZbDMTeMttwsyG6XeTf6bw4+KqomyQRD/+0SSfOSYc/ZkSFOLLRROa4LdoF4JLIIPblBRXMk4g==
+    opsgenie_api_key: AgCiXDWCtRMjwWLsiWhScolc7bZlfgbDG1m0QZEL0y31rN3x/KsZtbDFTXingwZb8Tm6GnGYFrL0dYp/7oEBJxAD247kkyGpTXjcJi0ZN01fq4n11jA/53Eu/CL6UnQcx9APg/XWcQmNhLaW4Rep/60LHGewazHWfuxuE4fMGPfd1039C1mltuuiB8H+N3l9blfkdf8M+9FFyv313NlNAyFL4qPDQwpuIRb916iqIVuls4LtsSzk8NPgkPmhN2l5o0ixE0wQ9pk4MW13jqXvWIYu5RQVxBTkas1Id1/kcM3GwC2AyZrODHsjiJ3cBB/d/WJ9sRh+oAQOeH+ZD/5KUz6oVo7hMgADDqYasqqGCgvH/aAcNSawg1pJYqwJmfs+z63FHK+e5J1H7LdfPwGTQdLzgpLewGcvgj+kVYdYvzwBnnB5PseI1yXXngxkthxqZA4JLe1S92D18p5WKrG/uIj9V5ic6+uzTTdqlAcMyYL+Zzj2m4smHSPYmpxZGNeWr7Fy7SS9F1Y9mrHbXKlu4H+7d4bt8AIJ6dCYS0BacbG1L9GFOPeBAP+qkVt+WodUchm/y2YecZOuiUQQLbB1GYy6dmnujZPW+KcU0oFB6v2eY46U8S/x8dLowgefJleU60flnFzfQVTV3x8g5HPCU5XnerG/vFaTBJXZWQQPrU/toU7cPN0dElSQH88c8hE06Fh9OozU9j16+AFiJ03X5+Wm5w8ypRVtKZewc9OTednNUTyORbM=
+    slack_api_key: AgAyvrlSI8AzMjujJwkk/A8K3zEjQLjf52xojNVAithPaemDXFdrOApktSIG2zBMKQ6/cvpnbNeMuWRZbhiaabe4Sr/CVqjF4P0MkHnaQjm05da66QJcQ/DM9O4Sg9MtCYMGH5Y9TeggN4xzacjlGp5ERF0uwZQIugQ/QcPQfUM1voQ4QOLiIgk5Xd4Jr5+FTzpuMHYr7In8b5p1VLWLRfRHLFigmVZuNv14Rv7M7DxC07VMEwREwx6oZaQphfMdzZ63AubWLJnbL8FOtlqeDNLTjcVwxFnFOd2o+24vitTrRzMbBrjp/+9HSvqg9PkATe01n1l3iJg70hltEQY6QknBudjp0+Gk5PH2oYOafmhUksVUljfXb+XQbXtAWqlZPJfl2XCNgXItJ5bTFiCy3ffnMoLYEP0uNYopifVfS/9Wu+MMaxIj62T5MNXhUyWURzeY1HYFH6G8Skt1o/LBgzIPe23zPH7Rt5Uv8S4rt0O9tB8Df8tDl4kcILH8EsE5V8whPm4Yj2ooJlsIXwsxIcYlbgDzMntyb2x8f5knW9EsL6zAcqd3nNcBly3rWEBMqqjz3wwRCMdFMeXMROTCdggRbyO9tMsDCvZg798WQ+rd9AHgJ0MIMv3Fmw8g3NWuWA3XwLDl/BvlVRDg7NPCEiX+dkxrchHDVMnfeqEqfiwbQXOQ45cs/NSF0ohDpM8sVLsDYJHKOgQa+AlpOQhZTQuRFdmmV8P61DZeSTgm1F+n/UldjWe1YjwIWle3aY0+8jG4AO3BAz4lp9UZ5NOIaL+OaO2q13HncZKLfWJe6g==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: alertmanager-keys
+      namespace: monitoring
+    type: Opaque
