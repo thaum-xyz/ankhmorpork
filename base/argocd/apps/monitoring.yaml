@@ -199,6 +199,8 @@ spec:
     path: apps/monitoring/prometheus-operator
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
+    directory:
+      recurse: true
   project: monitoring
   syncPolicy:
     automated:
