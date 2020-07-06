@@ -7,5 +7,5 @@
 - name: dev-sec.ssh-hardening
   version: 9.2.0
 - name: geerlingguy.nfs
-- name: bertvv.samba
-  version: v2.7.1
+#- name: bertvv.samba
+#  version: v2.7.1
