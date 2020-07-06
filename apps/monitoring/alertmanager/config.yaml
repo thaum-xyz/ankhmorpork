@@ -99,7 +99,7 @@ spec:
       secretValue:
         name: alertmanager-keys
         key: opsgenie_api_key
-    - name: SLACK_API_URL
+    - name: SLACK_API_KEY
       secretValue:
         name: alertmanager-keys
         key: slack_api_key
