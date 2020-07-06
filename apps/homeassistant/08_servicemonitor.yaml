@@ -1,0 +1,16 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: homeassistant
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  endpoints:
+  - interval: 90s
+    port: webui
+  jobLabel: app.kubernetes.io/name
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: homeassistant
