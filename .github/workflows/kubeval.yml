@@ -16,7 +16,7 @@ jobs:
         with:
           go-version: '^1.13.1'
       - run: go get -u github.com/instrumenta/kubeval
-      - run: kubeval --skip-kinds SealedSecret,ConfigMapSecret --strict -d apps/
+      - run: kubeval --skip-kinds SealedSecret,ConfigMapSecret,CustomResourceDefinition,ServiceMonitor,Prometheus,PrometheusRule,Alertmanager,APIService --strict -d apps/
   base:
     runs-on: ubuntu-latest
     steps:

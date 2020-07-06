@@ -53,7 +53,7 @@ cd "$(git rev-parse --show-toplevel)"
 IMAGES=""
 
 for file in $(find apps/ base/ -name *.yaml -exec grep "image" -l {} \;); do
-        new=$(gojsontoyaml -yamltojson < "$file" | jq -cr '..| .image? | select(type != "null")')
+        new=$(gojsontoyaml -yamltojson < "$file" | jq -cr '..| .image? | select(type == "string")')
         IMAGES="${new} ${IMAGES}"
 done
 
@@ -65,6 +65,7 @@ for image in $(echo -e "${IMAGES}" | tr ' ' '\n' | sort -f | uniq); do
                 check_cross_compatibility "${image}" "${info}"
         ) &
         pids+=("$!")
+        sleep 1  # Add some delay to prevent DDoSing registry
 done
 
 EXIT_CODE=0

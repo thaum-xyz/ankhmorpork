@@ -166,3 +166,83 @@ spec:
     automated:
       prune: false
       selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-adapter
+spec:
+  destination:
+    namespace: monitoring
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/monitoring/prometheus-adapter
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: monitoring
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-operator
+spec:
+  destination:
+    namespace: monitoring
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/monitoring/prometheus-operator
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  project: monitoring
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-k8s
+spec:
+  destination:
+    namespace: monitoring
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/monitoring/prometheus
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  project: monitoring
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alertmanager-main
+spec:
+  destination:
+    namespace: monitoring
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/monitoring/alertmanager
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: monitoring
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
