@@ -1,0 +1,19 @@
+#---
+#name: pluto
+#
+#on:
+#  push:
+#    branches: [master]
+#  pull_request:
+#    branches: [master]
+#
+#jobs:
+#  validate:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-go@v2
+#        with:
+#          go-version: '^1.13.1'
+#      - run: go get -u github.com/FairwindsOps/pluto
+#      - run: pluto detect-files --target-versions k8s=v1.18.0 -d apps/
