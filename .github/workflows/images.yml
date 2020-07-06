@@ -1,0 +1,21 @@
+---
+name: images
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.13.1'
+      - run: go get -u github.com/brancz/gojsontoyaml
+      - run: go get -u github.com/estesp/manifest-tool
+      - run: sudo apt update && sudo apt install -y jq
+      - run: ./hack/checkimages.sh
