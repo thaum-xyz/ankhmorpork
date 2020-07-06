@@ -5,6 +5,4 @@
 
 - import_playbook: 10_storage.yml
 
-- import_playbook: 20_fancontrol.yml
-
 - import_playbook: 70_k3s.yml

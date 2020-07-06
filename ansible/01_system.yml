@@ -49,3 +49,8 @@
   any_errors_fatal: true
   roles:
   - rpi
+
+- hosts: fancontroler
+  become: true
+  roles:
+  - fans
