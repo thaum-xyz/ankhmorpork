@@ -45,6 +45,9 @@ update_hosts() {
 		export ARA_API_CLIENT="http"
 		export ARA_API_SERVER="${ARA_SERVER}"
 		export ANSIBLE_CALLBACK_PLUGINS="$(python3 -m ara.setup.callback_plugins)"
+		export ANSIBLE_DISPLAY_OK_HOSTS=no
+		export ANSIBLE_DISPLAY_SKIPPED_HOSTS=no
+		echo "INFO: Connection to ARA extablished. Disabling showing unchanged and skipped tasks."
 	else
 		>&2 echo "WARN: Couldn't contact ARA server. Ansible run won't be recorded."
 	fi
