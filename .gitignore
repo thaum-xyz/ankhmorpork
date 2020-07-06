@@ -4,6 +4,8 @@ roles/*
 !roles/system
 !roles/rpi/*
 !roles/rpi
+!roles/fans/*
+!roles/fans
 *.retry
 .kube
 bin/
