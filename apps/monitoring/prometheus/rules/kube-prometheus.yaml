@@ -4,7 +4,7 @@ metadata:
   labels:
     prometheus: k8s
     role: alert-rules
-  name: kube-state-metrics-rules
+  name: kube-prometheus-rules
   namespace: monitoring
 spec:
   groups:
