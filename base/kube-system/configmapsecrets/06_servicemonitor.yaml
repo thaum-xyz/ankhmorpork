@@ -1,0 +1,13 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: configmapsecret-controller
+  namespace: kube-system
+spec:
+  endpoints:
+  - interval: 30s
+    port: http-metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: configmapsecret-controller
