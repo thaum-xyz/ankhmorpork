@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: credentials
+  namespace: homeassistant
+type: Opaque
+stringData:
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIwN2UxYzQ4NGQ0MDM0NTE3OGQ1MDZjOTcwZTEzMjg3OSIsImlhdCI6MTU5MTEwNzA3OSwiZXhwIjoxOTA2NDY3MDc5fQ.tJcCKoUbvl4Pd5xMGeCYByBZ9x_v6S88f9oaK9OXz_o

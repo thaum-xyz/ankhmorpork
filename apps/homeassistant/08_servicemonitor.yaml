@@ -2,15 +2,32 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  labels:
-    k8s-app: homeassistant
   name: homeassistant
   namespace: homeassistant
 spec:
   endpoints:
   - interval: 90s
     port: webui
-  jobLabel: app.kubernetes.io/name
+    path: /api/prometheus
+    bearerTokenSecret:
+      name: credentials
+      key: token
   selector:
     matchLabels:
       app.kubernetes.io/name: homeassistant
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: credentials
+  namespace: homeassistant
+spec:
+  encryptedData:
+    token: AgCSEYThPE4HXu9j1dA+9PJSIxFcnnYnHO5LTdHcHkxUhOzXQzYZZajQ3oQ+o5O5V21f5ofn5YKFps6XWFN65boRURtgHgRa+EXdj0o9oILXyLvvIBBgrBb1Io34pDuyil0/5YD8h69IAKnc8FiIrFRX8Uu+Fq+3VV1gfeFq3p0Xk0ECuU8DbP9TEivjOvJPqgcwG5IZ6pUw+ki0+rVOGqHXUaL6YiWKLY7G0ZkzUj0LnvcUjhiiMGo5y0TKBhbgmlsBpEaLwP7QLQwRNgCd13w4JFV/zkpPZpUXXvBns+tCbt8PNbLyVC4rximF/ieIogqH5Kstpkv8fVn13rLOWz33m/WBgpdEKx0T/6cvFv1Ho9ElME06kbnJm8sBUni/GalSbqQCZ4lVQvbgD87CSnzeBFhmvxXDJ6XLA7oo71SXjSELdExIfTPeiBk+sxtzHnGxbB04pAQTAq4MOkKdV2D0fGv+rewBeVMhvvKgC4HFdKF1SYVDPydc7m88YLjp8YSi2dkx3ds8eQTMZ04q2bZHbNAJhEOsmywaQkFsfqrGT/8VvXe57l0ufO+biCXKJ9zO1EcG8ykcjpZ08R7NbhN/HL5ODIGwjw3nqMRK7yHdrb3oLNJAq2sjuelLtS6kpQ6r25PCsI8WSKMGNkBBRLP9bNcN/zz77dqrmXR1c35Kl2W0A6b2tv5XGa3mhF2SC+TNXlXehC+c1pnIRTtBMp8Yl40nsnJQTxEQIDX3kLId/AC7fkIhdu+SDIlyQjjtoacBPwCrjLWR/DxuD703dHlpn8TIg6pTOFtGh8cZf3shcRrKJm+bg25ZdBYdW3LVSN2/Fz9klD28dQ4kMM1Pg6hSuUBMvZ8gxSPJ2B0+MJu+es2cePSeDSLzuKDbH5ZURtAueeW910r3wE++n47WftF3BO0FlqMaQNmp3EjnIRC4t5le0HCmiF0=
+  template:
+    metadata:
+      creationTimestamp: null
+      name: credentials
+      namespace: homeassistant
+    type: Opaque
