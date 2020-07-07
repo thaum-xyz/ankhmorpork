@@ -4,9 +4,8 @@ kind: Service
 metadata:
   name: metrics
   namespace: dns
-  annotations:
-    prometheus.io/port: "9153"
-    prometheus.io/scrape: "true"
+  labels:
+    app.kubernetes.io/name: coredns
 spec:
   selector:
     app.kubernetes.io/name: coredns
@@ -14,6 +13,7 @@ spec:
   - name: metrics
     port: 9153
     protocol: TCP
+    targetPort: metrics
 
 ---
 apiVersion: v1
@@ -45,8 +45,6 @@ metadata:
   annotations:
     metallb.universe.tf/address-pool: default
     metallb.universe.tf/allow-shared-ip: dns-svc
-    prometheus.io/port: "9153"
-    prometheus.io/scrape: "true"
   labels:
     app.kubernetes.io/name: coredns
   name: dns-udp
