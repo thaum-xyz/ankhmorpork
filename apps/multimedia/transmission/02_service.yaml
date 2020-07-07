@@ -29,9 +29,9 @@ metadata:
   name: transmission-metrics
   namespace: multimedia
 spec:
-  loadBalancerIP: None
   ports:
-  - port: 19091
+  - name: metrics
+    port: 19091
     protocol: TCP
     targetPort: metrics
   selector:

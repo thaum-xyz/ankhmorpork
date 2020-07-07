@@ -1,0 +1,13 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: transmission
+  namespace: multimedia
+spec:
+  endpoints:
+  - interval: 60s
+    port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: transmission
