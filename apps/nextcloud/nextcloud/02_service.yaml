@@ -4,6 +4,7 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/part-of: nextcloud
   name: phpfpm
   namespace: nextcloud
 spec:
@@ -18,3 +19,4 @@ spec:
     targetPort: phpfpm-metrics
   selector:
     app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/part-of: nextcloud
