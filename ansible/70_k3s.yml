@@ -39,7 +39,15 @@
         state: "absent"
       with_items:
         - "local-storage.yaml"
-        - "coredns.yaml"
+        # - "coredns.yaml"
+
+    - name: Import manifests bound to infrastructure
+      templates:
+        src: "{{ item | basename }}.j2"
+        dest: "/var/lib/rancher/k3s/server/manifests/{{ item | basename }}"
+      with_items:
+        - manifests/kubeControllerManagerPrometheusDiscoveryService.yaml
+        - manifests/kubeSchedulerPrometheusDiscoveryService.yaml
 
 - hosts: k3s-node
   become: true
