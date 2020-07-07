@@ -1,0 +1,13 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: holiday-exporter
+  namespace: monitoring
+spec:
+  endpoints:
+  - interval: 30s
+    port: http-holiday
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: holiday-exporter
