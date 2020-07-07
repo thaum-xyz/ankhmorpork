@@ -6,7 +6,7 @@ metadata:
   namespace: monitoring
   labels:
     app.kubernetes.io/name: blackbox-exporter
-    app.kubernetes.io/version: 0.16.0
+    app.kubernetes.io/version: 0.17.0
     app.kubernetes.io/component: exporter
 spec:
   replicas: 1
@@ -32,7 +32,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
       - name: blackbox-exporter
-        image: quay.io/prometheus/blackbox-exporter:v0.16.0
+        image: quay.io/prometheus/blackbox-exporter:v0.17.0
         imagePullPolicy: IfNotPresent
         args:
           - --config.file=/etc/blackbox_exporter/config.yml
