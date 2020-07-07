@@ -9,49 +9,10 @@ spec:
   - namespace: monitoring
     server: 'https://kubernetes.default.svc'
   sourceRepos:
-  - 'https://github.com/paulfantom/ankhmorpork.thaum.xyz.git'
   - 'https://github.com/thaum-xyz/ankhmorpork.git'
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: alertmanager
-spec:
-  destination:
-    namespace: monitoring
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: apps/monitoring/alertmanager
-    repoURL: 'https://github.com/paulfantom/ankhmorpork.thaum.xyz.git'
-    targetRevision: HEAD
-  project: monitoring
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: prometheus
-spec:
-  destination:
-    namespace: monitoring
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: apps/monitoring/prometheus
-    repoURL: 'https://github.com/paulfantom/ankhmorpork.thaum.xyz.git'
-    targetRevision: HEAD
-  project: monitoring
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
 
 ---
 apiVersion: argoproj.io/v1alpha1
