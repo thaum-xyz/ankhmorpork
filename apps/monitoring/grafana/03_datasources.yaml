@@ -13,4 +13,4 @@ data:
       access: proxy
       orgId: 1
       isDefault: true
-      url: http://prometheus.monitoring.svc:9090
+      url: http://prometheus-k8s.monitoring.svc:9090
