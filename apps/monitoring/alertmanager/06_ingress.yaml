@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: alertmanager
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.ankhmorpork.thaum.xyz/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri"
+spec:
+  tls:
+  - hosts:
+    - alertmanager.ankhmorpork.thaum.xyz
+    secretName: alertmanager-tls
+  rules:
+  - host: alertmanager.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: alertmanager-main
+          servicePort: 9093

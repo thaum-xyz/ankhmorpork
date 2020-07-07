@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.ankhmorpork.thaum.xyz/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri"
+spec:
+  tls:
+  - hosts:
+    - prometheus.ankhmorpork.thaum.xyz
+    secretName: prometheus-tls
+  rules:
+  - host: prometheus.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: prometheus-k8s
+          servicePort: 9090
