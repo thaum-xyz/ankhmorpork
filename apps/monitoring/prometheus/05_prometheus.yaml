@@ -50,3 +50,16 @@ spec:
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
   version: v2.19.2
+  storage:
+    volumeClaimTemplate:
+      metadata:
+        name: data
+        annotations:
+          volume.beta.kubernetes.io/storage-class: "nfs-client"
+      spec:
+        storageClassName: "nfs-client"
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 100Mi
