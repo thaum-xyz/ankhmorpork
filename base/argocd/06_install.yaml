@@ -486,7 +486,7 @@ spec:
           requests:
             memory: 510Mi
           limits:
-            memory: 700Mi
+            memory: 2000Mi
       serviceAccountName: argocd-application-controller
 ---
 apiVersion: apps/v1
