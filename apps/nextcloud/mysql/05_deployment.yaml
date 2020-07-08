@@ -72,7 +72,7 @@ spec:
           name: init
         resources:
           requests:
-            memory: 430Mi
+            memory: 450Mi
       - env:
         - name: USER
           valueFrom:
@@ -100,7 +100,7 @@ spec:
           name: metrics
         resources:
           requests:
-            memory: 10Mi
+            memory: 14Mi
           limits:
             memory: 20Mi
       restartPolicy: Always

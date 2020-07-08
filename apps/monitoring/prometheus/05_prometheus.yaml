@@ -36,7 +36,7 @@ spec:
   replicas: 1
   resources:
     requests:
-      memory: 400Mi
+      memory: 1400Mi
   ruleNamespaceSelector: {}
   ruleSelector:
     matchLabels:

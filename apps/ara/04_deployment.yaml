@@ -63,7 +63,7 @@ spec:
             name: database
         resources:
           requests:
-            memory: 55Mi
+            memory: 90Mi
       restartPolicy: Always
       volumes:
         - name: database

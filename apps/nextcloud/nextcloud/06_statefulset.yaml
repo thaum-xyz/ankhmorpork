@@ -73,7 +73,7 @@ spec:
           mountPath: /var/www/html/data
         resources:
           requests:
-            memory: 100Mi
+            memory: 350Mi
       - env:
         - name: PHP_FPM_SCRAPE_URI
           value: "tcp://127.0.0.1:9000/status"
@@ -85,7 +85,7 @@ spec:
           name: phpfpm-metrics
         resources:
           requests:
-            memory: 9Mi
+            memory: 13Mi
           limits:
             memory: 20Mi
       restartPolicy: Always

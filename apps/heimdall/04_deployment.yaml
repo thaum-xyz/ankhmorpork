@@ -47,7 +47,7 @@ spec:
             name: config
         resources:
           requests:
-            memory: 105M
+            memory: 135M
           limits:
             memory: 200M
       restartPolicy: Always

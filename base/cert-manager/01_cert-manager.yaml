@@ -7070,7 +7070,7 @@ spec:
                 fieldPath: metadata.namespace
           resources:
             requests:
-              memory: 25Mi
+              memory: 32Mi
 ---
 # Source: cert-manager/templates/webhook-deployment.yaml
 apiVersion: apps/v1

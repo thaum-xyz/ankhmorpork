@@ -62,7 +62,7 @@ spec:
           mountPath: /var/spool/cron/crontabs
         resources:
           requests:
-            memory: 270Mi
+            memory: 150Mi
       restartPolicy: Always
       volumes:
       - name: php-config

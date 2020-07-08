@@ -54,7 +54,7 @@ spec:
           name: metrics
         resources:
           requests:
-            memory: 8Mi
+            memory: 9Mi
           limits:
             memory: 20Mi
       restartPolicy: Always

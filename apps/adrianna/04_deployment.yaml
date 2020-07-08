@@ -44,7 +44,7 @@ spec:
             name: content
         resources:
           requests:
-            memory: 90M
+            memory: 120M
       volumes:
         - name: content
           persistentVolumeClaim:

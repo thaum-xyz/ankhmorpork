@@ -411,7 +411,7 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 90Mi
+              memory: 160Mi
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
       volumes:

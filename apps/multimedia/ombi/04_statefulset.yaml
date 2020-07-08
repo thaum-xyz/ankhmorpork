@@ -39,7 +39,7 @@ spec:
             name: config
         resources:
           requests:
-            memory: 130M
+            memory: 142M
       restartPolicy: Always
       tolerations:
       - key: "node-role.kubernetes.io/storage"

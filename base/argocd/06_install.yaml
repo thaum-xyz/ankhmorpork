@@ -569,7 +569,7 @@ spec:
         - containerPort: 6379
         resources:
           requests:
-            memory: 17Mi
+            memory: 30Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
