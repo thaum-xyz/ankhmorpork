@@ -51,7 +51,7 @@ spec:
         #     port: http-grafana
         resources:
           limits:
-            cpu: 200m
+            cpu: 400m
             memory: 200Mi
           requests:
             cpu: 100m
