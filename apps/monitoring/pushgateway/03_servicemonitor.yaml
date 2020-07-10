@@ -8,6 +8,7 @@ spec:
   endpoints:
   - interval: 30s
     port: http-push
+    honorLabels: true
   selector:
     matchLabels:
       app.kubernetes.io/name: pushgateway
