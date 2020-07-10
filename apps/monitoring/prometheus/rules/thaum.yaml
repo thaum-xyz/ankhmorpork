@@ -61,7 +61,7 @@ spec:
         annotations:
           description: "Backuping up {{ $labels.data }} on {{ $labels.instance }} didn't complete"
           summary: "Backup not created"
-      - alert: BackupMissing
+      - alert: BackupCompletion
         expr: |
           ((time() - (backup_success_timestamp_seconds > 0)) > backup_max_age_seconds)
           or
