@@ -25,4 +25,4 @@ jobs:
         with:
           go-version: '^1.13.1'
       - run: go get -u github.com/instrumenta/kubeval
-      - run: kubeval --skip-kinds SealedSecret,Application,CustomResourceDefinition,ClusterIssuer,AppProject --strict -d base/
+      - run: kubeval --skip-kinds SealedSecret,Application,CustomResourceDefinition,ClusterIssuer,AppProject,ServiceMonitor,PrometheusRule --strict -d base/
