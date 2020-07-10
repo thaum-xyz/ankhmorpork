@@ -11,13 +11,24 @@ spec:
     - name: custom node alert rules
       rules:
       - alert: PackagesAvailable
-        expr: 'sum(yum_upgrades_pending{instance="nas.ankhmorpork.thaum.xyz:9100"}) > 10'
+        expr: |
+          sum by (node) (yum_upgrades_pending) > 10
+          or
+          sum by (node) (apt_upgrades_pending) > 10
         for: 24h
         labels:
-          severity: warning
+          severity: info
         annotations:
-          summary: "System is ready for upgrade"
-          description: "More than 10 packages is available for upgrade. Maybe it is time to upgrade?"
+          message: "More than 10 packages are available for upgrade. Maybe it is time to upgrade?"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/PackagesAvailable.md"
+      - alert: RebootRequired
+        expr: "node_reboot_required > 0"
+        for: 1h
+        labels:
+          severity: info
+        annotations:
+          message: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/RebootRequired.md"
       - alert: RAIDCriticalFailure
         expr: 'node_md_disks_required - ignoring (state) (node_md_disks{state="active"}) != 0'
         for: 15m
@@ -27,6 +38,7 @@ spec:
         annotations:
           summary: "Degraded RAID array on {{ $labels.instance }}"
           description: "RAID array '{{ $labels.device }}' is in degraded state due to one or more disks failures. Number of spare drives is insufficient to fix issue automatically."
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/RAIDCriticalFailure.md"
       - alert: RAIDDiskFailure
         expr: 'node_md_disks{state="fail"} > 0'
         labels:
@@ -34,34 +46,26 @@ spec:
         annotations:
           summary: "Failed device in RAID array on {{ $labels.instance }}"
           description: "At least one device in RAID array on {{ $labels.instance }} failed. Array '{{ $labels.md_device }}' needs attention and possibly a disk swap"
-      - expr: abs(node_timex_offset_seconds)
-        record: instance:node_timex_offset:abs
-      - alert: RebootRequired
-        expr: "node_reboot_required > 0"
-        labels:
-          severity: info
-        annotations:
-          message: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/RebootRequired.md"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/RAIDDiskFailure.md"
       - alert: FilesystemReadOnly
         expr: |
           (node_filesystem_device_error{fstype!~"(tmpfs|proc|aufs|rpc_pipefs|nsfs|overlay|squashfs)"} != 0)
           and
           (node_filesystem_readonly{fstype!~"(tmpfs|proc|aufs|rpc_pipefs|nsfs|overlay|squashfs)"} != 0)
         labels:
-          severity: info
+          severity: info  # FIXME: promote to warning when expression is fixed
         annotations:
           message: "Filesystem went read-only due to device error"
-    - name: alert rules specific to thaum.xyz backups
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/FilesystemReadOnly.md"
+    - name: alert rules specific to thaum.xyz
       rules:
-      - alert: BackupNotCreated
+      - alert: BackupNotCreated  # TODO: Remove alert after upgrading infra in lancre
         expr: 'increase(backup_executions_total[48h]) < 1'
         for: 12h
         labels:
           severity: warning
         annotations:
-          description: "Backuping up {{ $labels.data }} on {{ $labels.instance }} didn't complete"
-          summary: "Backup not created"
+          message: "Backuping up {{ $labels.data }} on {{ $labels.instance }} didn't complete"
       - alert: BackupCompletion
         expr: |
           ((time() - (backup_success_timestamp_seconds > 0)) > backup_max_age_seconds)
@@ -72,13 +76,12 @@ spec:
           severity: warning
         annotations:
           message: "Missing backup of {{ $labels.data }} on {{ $labels.tier }}"
-    - name: alert rules specific to thaum.xyz environments
-      rules:
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/BackupCompletion.md"
       - alert: FederatedPrometheusDown
         expr: 'up{job="lancre"} == 0'
         for: 10m
         labels:
           severity: warning
         annotations:
-          description: "Remote Prometheus server {{ $labels.instance }} has been down for more than 5 minutes."
-          summary: "Federated Prometheus down on {{ $labels.instance }}"
+          message: "Remote Prometheus server {{ $labels.instance }} has been down for more than 10 minutes."
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/FederatedPrometheusDown.md"

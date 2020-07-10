@@ -8,4 +8,4 @@
 4. ssh into node and run `reboot`
 5. wait for node to come up
 6. Make node schedulable `kubectl uncordon NODE_NAME`
-7. remove silence from alertmanager
+7. (optional) remove silence from alertmanager.
