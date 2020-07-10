@@ -42,6 +42,7 @@ spec:
           severity: info
         annotations:
           message: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
+          runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/RebootRequired.md"
       - alert: FilesystemReadOnly
         expr: |
           (node_filesystem_device_error{fstype!~"(tmpfs|proc|aufs|rpc_pipefs|nsfs|overlay|squashfs)"} != 0)
