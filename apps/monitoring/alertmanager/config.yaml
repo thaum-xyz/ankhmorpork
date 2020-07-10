@@ -28,7 +28,7 @@ spec:
               [{{ .Status | toUpper -}}
                 {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{- end -}}
               ] {{ if ne .Status "firing" -}}
-                :lgtm:
+                :heavy_check_mark:
                 {{- else if eq .CommonLabels.severity "critical" -}}
                 :fire:
                 {{- else if eq .CommonLabels.severity "warning" -}}
@@ -39,27 +39,21 @@ spec:
                 :question:
               {{- end -}}
               {{ .CommonLabels.alertname }}
-            color: |
-              {{ if eq .Status "firing" -}}
-                {{ if eq .CommonLabels.severity "warning" -}}
-                    warning
-                {{- else if eq .CommonLabels.severity "critical" -}}
-                    danger
-                {{- else -}}
-                    #439FE0
-                {{- end -}}
-              {{ else -}}
-              good
-              {{- end }}
             text: |
               {{ range .Alerts }}
                 {{- if .Annotations.message }}
-                  {{ .Annotations.message -}}
-                {{- end -}}
+                  {{ .Annotations.message }}
+                {{- end }}
                 {{- if .Annotations.description }}
-                  {{ .Annotations.description -}}
-                {{- end -}}
-              {{ end }}
+                  {{ .Annotations.description }}
+                {{- end }}
+              {{- end }}
+            short_fields: true
+            fields:
+            - title: Severity
+              value: '{{ .CommonLabels.severity }}'
+            - title: Job
+              value: '{{ .GroupLabels.job }}'
             actions:
             - type: button
               text: 'Runbook :green_book:'
@@ -115,6 +109,7 @@ spec:
             - match:
                 severity: 'critical'
               receiver: 'opsgenie'
+              continue: true
         inhibit_rules:
           - source_match:
               severity: "critical"
