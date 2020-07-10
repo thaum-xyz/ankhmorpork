@@ -20,6 +20,7 @@ spec:
           - monitoring
           topologyKey: kubernetes.io/hostname
         weight: 100
+  externalUrl: https://alertmanager.ankhmorpork.thaum.xyz
   image: quay.io/prometheus/alertmanager:v0.21.0
   nodeSelector:
     kubernetes.io/os: linux
