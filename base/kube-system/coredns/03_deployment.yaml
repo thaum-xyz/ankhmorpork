@@ -21,6 +21,16 @@ spec:
       labels:
         k8s-app: kube-dns
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: k8s-app
+                operator: In
+                values:
+                - kube-dns
+            topologyKey: "kubernetes.io/hostname"
       serviceAccountName: coredns
       tolerations:
         - key: "CriticalAddonsOnly"
