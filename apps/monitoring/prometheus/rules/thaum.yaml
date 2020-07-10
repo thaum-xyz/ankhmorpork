@@ -62,11 +62,15 @@ spec:
           description: "Backuping up {{ $labels.data }} on {{ $labels.instance }} didn't complete"
           summary: "Backup not created"
       - alert: BackupMissing
-        expr: 'time() - backup_end_last_timestamp > 8 * 24 * 60 * 60'
+        expr: |
+          ((time() - (backup_success_timestamp_seconds > 0)) > backup_max_age_seconds)
+          or
+          (time() - backup_start_timestamp_seconds > backup_max_age_seconds and backup_success_timestamp_seconds == 0)
+        for: 1m
         labels:
           severity: warning
         annotations:
-          message: "Missing backup of {{ $labels.data }} on {{ $labels.instance }} in {{ $labels.namespace }} for over 8 days"
+          message: "Missing backup of {{ $labels.data }} on {{ $labels.tier }}"
     - name: alert rules specific to thaum.xyz environments
       rules:
       - alert: FederatedPrometheusDown
