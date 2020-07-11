@@ -337,8 +337,10 @@ spec:
       serviceAccountName: speaker
       terminationGracePeriodSeconds: 2
       tolerations:
-      - operator: Exists
-        effect: NoSchedule
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
 ---
 apiVersion: apps/v1
 kind: Deployment
