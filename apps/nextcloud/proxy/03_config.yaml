@@ -52,7 +52,7 @@ data:
         }
         
         upstream php-handler {
-            server phpfpm.nextcloud.svc.cluster.local:9000;
+            server phpfpm.nextcloud.svc:9000;
         }
         
         server {
