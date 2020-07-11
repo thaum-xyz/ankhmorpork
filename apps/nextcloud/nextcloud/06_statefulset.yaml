@@ -49,6 +49,7 @@ spec:
         - configMapRef:
             name: nextcloud-envs
         image: nextcloud:19.0.0-fpm
+        imagePullPolicy: Always
         name: nextcloud
         ports:
         - containerPort: 9000
