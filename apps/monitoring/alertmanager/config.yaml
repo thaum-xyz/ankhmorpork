@@ -39,7 +39,7 @@ spec:
                 :question:
               {{- end -}}
               {{ .CommonLabels.alertname }}
-            text: |
+            text: >-
               {{ range .Alerts }}
                 {{- if .Annotations.message }}
                   {{ .Annotations.message }}
@@ -66,14 +66,14 @@ spec:
               url: '{{ (index .Alerts 0).Annotations.dashboard }}'
             - type: button
               text: 'Silence :no_bell:'
-              url: |
+              url: >-
                 {{ .ExternalURL }}/#/silences/new?filter=%7B
                 {{- range .CommonLabels.SortedPairs -}}
-                  {{- if ne .Name "alertname" -}}
-                      {{- .Name }}%3D"{{- .Value -}}"%2C%20
-                  {{- end -}}
+                    {{- if ne .Name "alertname" -}}
+                        {{- .Name }}%3D%22{{- reReplaceAll " +" "%20" .Value -}}%22%2C%20
+                    {{- end -}}
                 {{- end -}}
-                alertname%3D"{{ .CommonLabels.alertname }}"%7D
+                alertname%3D%22{{ reReplaceAll " +" "%20" .CommonLabels.alertname }}%22%7D
         - name: 'opsgenie'
           opsgenie_configs:
             - message: "{{ .GroupLabels.alertname }}"
@@ -137,6 +137,15 @@ spec:
             target_match_re:
               alertname: "TargetDown"
               instance: 'lancre.thaum.xyz:443|zmc.krupa.net.pl:443'
+          - source_match:
+              alertname: 'KubeNodeUnreachable'
+            target_match_re:
+              alertname: "TargetDown"
+              job: "kubelet|node-exporter"
+          - source_match:
+              alertname: 'KubeNodeUnreachable'
+            target_match:
+              alertname: "KubeNodeNotReady"
   vars:
     - name: OPSGENIE_API_KEY
       secretValue:
