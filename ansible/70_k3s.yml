@@ -18,20 +18,19 @@
   roles:
     - k3s-master
   tasks:
-    - name: Create .kube directory on deployer host
-      file:
-        path: "/root/.kube"
-        state: directory
-      delegate_to: localhost
-      run_once: true
-      when: ansible_user == "root"
-
     - name: Get kube config to deployer host
       fetch:
-        src: "/home/pi/.kube/config"
-        dest: "/root/.kube/config"
+        src: "/etc/rancher/k3s/k3s.yaml"
+        dest: "{{ playbook_dir }}/kubeconfig"
         flat: true
-      when: ansible_user == "root"
+
+    - name: Replace localhost with master IP
+      become: false
+      replace:
+        path: "{{ playbook_dir }}/kubeconfig"
+        regexp: "127.0.0.1"
+        replace: "{{ k3s_master_ip }}"
+      delegate_to: localhost
 
     - name: Remove manifests managed externally
       file:
@@ -39,15 +38,13 @@
         state: "absent"
       with_items:
         - "local-storage.yaml"
-        # - "coredns.yaml"
+        - "coredns.yaml"
 
     - name: Import manifests bound to infrastructure
-      templates:
-        src: "{{ item | basename }}.j2"
+      template:
+        src: "{{ item }}"
         dest: "/var/lib/rancher/k3s/server/manifests/{{ item | basename }}"
-      with_items:
-        - manifests/kubeControllerManagerPrometheusDiscoveryService.yaml
-        - manifests/kubeSchedulerPrometheusDiscoveryService.yaml
+      with_fileglob: "manifests/*.yaml"
 
 - hosts: k3s-node
   become: true
@@ -55,17 +52,29 @@
   roles:
     - k3s-node
   pre_tasks:
-  - name: Install packages needed for PV providers
-    package:
-      name: "{{ item }}"
-      state: present
-    with_items:
-      - "{{ 'nfs-common' if (ansible_os_family | lower == 'debian') else 'nfs-utils' }}"
-  - name: Check if systemd-resolvd is used
-    stat:
-      path: /run/systemd/resolve/resolv.conf
-    register: resolv
-  - name: Use resolv.conf provided by systemd-resolved
-    set_fact:
-      k3s_extra_agent_args: "{{ k3s_extra_agent_args }} --resolv-conf /run/systemd/resolve/resolv.conf"
-    when: resolv.stat.exists
+    - name: Install packages needed by PV providers
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "{{ 'nfs-common' if (ansible_os_family | lower == 'debian') else 'nfs-utils' }}"
+    - name: Add node labels
+      set_fact:
+        k3s_extra_agent_args: "{{ k3s_extra_agent_args }} --node-label {{ node_labels | join(' --node-label ') }}"
+      when:
+        - node_labels is defined
+        - node_labels != ""
+    - name: Add node taints
+      set_fact:
+        k3s_extra_agent_args: "{{ k3s_extra_agent_args }} --node-taint {{ node_taints | join(' --node-taint ') }}"
+      when:
+        - node_taints is defined
+        - node_taints != ""
+    - name: Check if systemd-resolvd is used
+      stat:
+        path: /run/systemd/resolve/resolv.conf
+      register: resolv
+    - name: Use resolv.conf provided by systemd-resolved
+      set_fact:
+        k3s_extra_agent_args: "{{ k3s_extra_agent_args }} --resolv-conf /run/systemd/resolve/resolv.conf"
+      when: resolv.stat.exists

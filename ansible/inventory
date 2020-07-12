@@ -1,35 +1,31 @@
 # By default hosts are labeled with `network=slow` label
 # Hosts with label `network=fast` are used for metallb loadbalancer
 
-nas      ansible_user=paulfantom ansible_host=192.168.2.3  network=fast
-master01 ansible_user=pi         ansible_host=192.168.2.11 ansible_connection=local
-node01   ansible_user=ubuntu     ansible_host=192.168.2.12 network=fast
-node02   ansible_user=paulfantom ansible_host=192.168.2.13
-node03   ansible_user=ubuntu     ansible_host=192.168.2.14 network=fast
-node04   ansible_user=ubuntu     ansible_host=192.168.2.15
-#node05   ansible_user=ubuntu     ansible_host=192.168.2.16 network=fast
-node06   ansible_user=ubuntu     ansible_host=192.168.2.17 network=fast
-node07   ansible_user=ubuntu     ansible_host=192.168.2.18
+storage01 ansible_user=paulfantom ansible_host=192.168.2.3  network=fast
+master01  ansible_user=ubuntu     ansible_host=192.168.2.11
+node01    ansible_user=ubuntu     ansible_host=192.168.2.12
+node02    ansible_user=ubuntu     ansible_host=192.168.2.13 network=fast
+node03    ansible_user=ubuntu     ansible_host=192.168.2.14 network=fast
+node04    ansible_user=ubuntu     ansible_host=192.168.2.15
+node05    ansible_user=ubuntu     ansible_host=192.168.2.16 network=fast
+node06    ansible_user=ubuntu     ansible_host=192.168.2.17
 
 [fancontroler]
-node01
+node02
 
 [raspberry]
 master01
-node01
-node0[3:4]
-node0[6:7]
+node0[2:6]
 
 [storage]
-nas
+storage01
 
 [k3s-master]
 master01
 
 [k3s-node]
-nas
-node0[1:4]
-node0[6:7]
+storage01
+node0[1:6]
 
 [k3s:children]
 k3s-master

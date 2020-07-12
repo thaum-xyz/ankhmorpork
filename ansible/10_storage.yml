@@ -7,9 +7,8 @@
   tasks:
     - name: Install dependencies
       package:
-        name:
-          - moreutils
-        state: installed
+        name: moreutils
+        state: present
     - name: Copy smartmon textfile collector script
       copy:
         src: "scripts/smartmon.sh"

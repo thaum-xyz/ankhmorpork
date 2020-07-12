@@ -5,7 +5,6 @@ locales_present:
 unattended_automatic_reboot_time: "02:00"
 unattended_update_days: 1
 
-node_exporter_version: 1.0.0-rc.1
 node_exporter_enabled_collectors:
   - textfile:
       directory: "/var/lib/node_exporter"

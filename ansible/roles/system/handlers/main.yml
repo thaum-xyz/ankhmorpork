@@ -14,3 +14,11 @@
   systemd:
     name: dhcpcd
     state: restarted
+
+- name: enable mountpoints
+  systemd:
+    name: "{{ item.mountpoint[1:] | replace('/','-') }}.mount"
+    state: started
+    enabled: true
+    daemon_reload: true
+  with_items: "{{ system_mountpoints }}"

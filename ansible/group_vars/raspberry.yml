@@ -1,4 +1,4 @@
 ---
-reboot_enabled: false
-
 rpi_bt: true
+rpi_swap_size: 0
+

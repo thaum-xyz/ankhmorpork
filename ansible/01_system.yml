@@ -14,17 +14,6 @@
   roles:
   - system
   tasks:
-  - name: Reboot PC once a week
-    cron:
-      cron_file: /etc/crontab
-      name: reboot
-      user: root
-      day: "4"
-      hour: "3"
-      minute: "43"
-      job: reboot
-      state: "{{ 'present' if reboot_enabled else 'absent' }}"
-    when: reboot_enabled is defined
   - name: Install dependencies
     package:
       name: moreutils
@@ -43,6 +32,12 @@
       name: "{{ ansible_pkg_mgr }}-metrics"
       minute: "13"
       job: "/usr/local/bin/{{ pkg_mgr }}.sh | sponge /var/lib/node_exporter/{{ pkg_mgr }}.prom"
+  - name: Ensure snapd is removed
+    apt:
+      name: snapd
+      state: absent
+      purge: true
+    when: ansible_os_family == "Debian"
 
 - hosts: raspberry
   become: true

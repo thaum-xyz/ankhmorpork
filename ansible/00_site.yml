@@ -1,8 +1,6 @@
 ---
 - import_playbook: 01_system.yml
 
-- import_playbook: 02_autodeploy.yml
-
 - import_playbook: 10_storage.yml
 
 - import_playbook: 70_k3s.yml

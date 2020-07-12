@@ -28,16 +28,14 @@
 
 - name: disable IPv6
   sysctl:
-    sysctl_file: "/etc/sysctl.d/ipv6.conf"
+    sysctl_file: "/etc/sysctl.d/01-ipv6.conf"
     name: "{{ item }}"
     value: '1'
     sysctl_set: true
   with_items:
     - net.ipv6.conf.all.disable_ipv6
     - net.ipv6.conf.default.disable_ipv6
-
-- import_tasks: dns.yml
-  when: system_dns_primary | length > 0
+    - net.ipv6.conf.eth0.disable_ipv6
 
 - import_tasks: earlyoom.yml
 
