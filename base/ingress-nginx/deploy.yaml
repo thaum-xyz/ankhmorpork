@@ -419,12 +419,13 @@ spec:
           secret:
             secretName: ingress-nginx-admission
       nodeSelector:
-        kubernetes.io/hostname: "nas"
+        network.infra/fast: "true"
       tolerations:
-      - key: "node-role.kubernetes.io/storage"
+      - key: "storage.infra"
         operator: "Equal"
         value: "true"
         effect: "NoSchedule"
+
 ---
 # Source: ingress-nginx/templates/admission-webhooks/validating-webhook.yaml
 apiVersion: admissionregistration.k8s.io/v1beta1
