@@ -75,6 +75,8 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: appdata
+        - mountPath: /backup
+          name: backup
         - mountPath: /data/movies
           name: movies
         - mountPath: /data/tv
@@ -124,6 +126,16 @@ spec:
       storageClassName: "local-path"
       accessModes:
         - ReadWriteOnce
+      resources:
+        requests:
+          storage: 30Gi
+  - metadata:
+      name: backup
+      namespace: multimedia
+    spec:
+      storageClassName: "nfs-client"
+      accessModes:
+        - ReadWriteMany
       resources:
         requests:
           storage: 30Gi
