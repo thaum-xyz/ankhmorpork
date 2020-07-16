@@ -6,9 +6,11 @@ metadata:
   namespace: dns
   labels:
     app.kubernetes.io/name: coredns
+    app.kubernetes.io/component: adblocker
 spec:
   selector:
     app.kubernetes.io/name: coredns
+    app.kubernetes.io/component: adblocker
   ports:
   - name: metrics
     port: 9153
@@ -24,6 +26,7 @@ metadata:
     metallb.universe.tf/allow-shared-ip: dns-svc
   labels:
     app.kubernetes.io/name: coredns
+    app.kubernetes.io/component: adblocker
   name: dns-tcp
   namespace: dns
 spec:
@@ -32,12 +35,12 @@ spec:
   loadBalancerIP: 192.168.2.20
   selector:
     app.kubernetes.io/name: coredns
+    app.kubernetes.io/component: adblocker
   ports:
   - name: dns
     port: 53
     protocol: TCP
     targetPort: dns
-  sessionAffinity: None
 ---
 apiVersion: v1
 kind: Service
@@ -47,6 +50,7 @@ metadata:
     metallb.universe.tf/allow-shared-ip: dns-svc
   labels:
     app.kubernetes.io/name: coredns
+    app.kubernetes.io/component: adblocker
   name: dns-udp
   namespace: dns
 spec:
@@ -55,6 +59,7 @@ spec:
   loadBalancerIP: 192.168.2.20
   selector:
     app.kubernetes.io/name: coredns
+    app.kubernetes.io/component: adblocker
   ports:
   - name: dns-udp
     port: 53
