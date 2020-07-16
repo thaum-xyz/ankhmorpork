@@ -11,16 +11,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - twoflower.ankhmorpork.thaum.xyz
     - weirdo.blog
     secretName: ghost-tls
   rules:
-  - host: twoflower.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          serviceName: ghost
-          servicePort: 2368
   - host: weirdo.blog
     http:
       paths:
