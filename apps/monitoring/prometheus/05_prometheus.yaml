@@ -58,9 +58,9 @@ spec:
         annotations:
           volume.beta.kubernetes.io/storage-class: "nfs-client"
       spec:
-        storageClassName: "nfs-client"
+        storageClassName: "nfs-client"  # note: NFS is not supported and can lead to data loss!
         accessModes:
           - ReadWriteMany
         resources:
           requests:
-            storage: 100Mi
+            storage: 1Gi

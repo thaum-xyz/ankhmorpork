@@ -20,7 +20,7 @@ spec:
           severity: info
         annotations:
           message: "More than 10 packages are available for upgrade. Maybe it is time to upgrade?"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/PackagesAvailable.md"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/PackagesAvailable.md"
       - alert: RebootRequired
         expr: "node_reboot_required > 0"
         for: 1h
@@ -28,7 +28,7 @@ spec:
           severity: info
         annotations:
           message: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/RebootRequired.md"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RebootRequired.md"
       - alert: RAIDCriticalFailure
         expr: 'node_md_disks_required - ignoring (state) (node_md_disks{state="active"}) != 0'
         for: 15m
@@ -38,7 +38,7 @@ spec:
         annotations:
           summary: "Degraded RAID array on {{ $labels.instance }}"
           description: "RAID array '{{ $labels.device }}' is in degraded state due to one or more disks failures. Number of spare drives is insufficient to fix issue automatically."
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/RAIDCriticalFailure.md"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDCriticalFailure.md"
       - alert: RAIDDiskFailure
         expr: 'node_md_disks{state="fail"} > 0'
         labels:
@@ -46,7 +46,7 @@ spec:
         annotations:
           summary: "Failed device in RAID array on {{ $labels.instance }}"
           description: "At least one device in RAID array on {{ $labels.instance }} failed. Array '{{ $labels.md_device }}' needs attention and possibly a disk swap"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/RAIDDiskFailure.md"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDDiskFailure.md"
       - alert: FilesystemReadOnly
         expr: |
           (node_filesystem_device_error{fstype!~"(tmpfs|proc|aufs|rpc_pipefs|nsfs|overlay|squashfs)"} != 0)
@@ -56,7 +56,7 @@ spec:
           severity: info  # FIXME: promote to warning when expression is fixed
         annotations:
           message: "Filesystem went read-only due to device error"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/FilesystemReadOnly.md"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/FilesystemReadOnly.md"
     - name: alert rules specific to thaum.xyz
       rules:
       - alert: BackupNotCreated  # TODO: Remove alert after upgrading infra in lancre
@@ -76,7 +76,7 @@ spec:
           severity: warning
         annotations:
           message: "Missing backup of {{ $labels.data }} on {{ $labels.tier }}"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/BackupCompletion.md"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/BackupCompletion.md"
       - alert: FederatedPrometheusDown
         expr: 'up{job="lancre"} == 0'
         for: 10m
@@ -84,4 +84,4 @@ spec:
           severity: warning
         annotations:
           message: "Remote Prometheus server {{ $labels.instance }} has been down for more than 10 minutes."
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/runbooks/FederatedPrometheusDown.md"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/FederatedPrometheusDown.md"

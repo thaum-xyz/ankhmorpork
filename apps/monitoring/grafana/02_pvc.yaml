@@ -7,7 +7,6 @@ metadata:
   annotations:
     volume.beta.kubernetes.io/storage-class: "nfs-client"
 spec:
-  volumeName: pvc-268ae051-7081-4d91-a2eb-8a0b4f3153c5
   accessModes:
     - ReadWriteMany
   resources:
