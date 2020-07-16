@@ -59,10 +59,17 @@ spec:
           type: ""
         name: localtime
       nodeSelector:
-        node-role.kubernetes.io/storage: "true"
-        kubernetes.io/hostname: "nas"
+        storage.infra/raid: "true"
       tolerations:
       - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      - key: "tier/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      - key: "storage.infra"
         operator: "Equal"
         value: "true"
         effect: "NoSchedule"

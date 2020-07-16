@@ -41,11 +41,7 @@ spec:
           requests:
             memory: 142M
       restartPolicy: Always
-      tolerations:
-      - key: "node-role.kubernetes.io/storage"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+      # tolerations: # TODO: figure out where to place it
   volumeClaimTemplates:
   - metadata:
       name: config
