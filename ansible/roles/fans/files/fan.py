@@ -65,7 +65,7 @@ while True:
 
     # This should be handled by getting metrics from prometheus and using highest one
     # add 12 more degrees (value based on historical trends)
-    tempC += 12
+    #tempC += 12
 
     # Tweak here minimal dc (PWM Duty Cycle), temp threshold and ratio
     dc = MIN_DUTY + max(0, int((tempC - 38) * ratio))

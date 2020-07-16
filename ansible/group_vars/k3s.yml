@@ -1,9 +1,9 @@
 ---
 k3s_version: v1.18.4+k3s1
 k3s_master_ip: "{{ hostvars[groups['k3s-master'][0]]['ansible_default_ipv4']['address'] }}"
-k3s_extra_server_args: "--disable coredns --disable servicelb --disable traefik --node-taint node-role.kubernetes.io/master=true:NoSchedule "
+k3s_extra_server_args: "--disable coredns --disable servicelb --disable traefik --disable-cloud-controller --node-taint node-role.kubernetes.io/master=true:NoSchedule "
 k3s_token: "{{ hostvars[groups['k3s-master'][0]]['token'] }}"
 
-k3s_extra_agent_args: "--kubelet-arg system-reserved=cpu=100m,memory=200Mi --kubelet-arg kube-reserved=cpu=100m,memory=200Mi --node-label tier/network={{ network | default('slow') }}"
+k3s_extra_agent_args: "--kubelet-arg system-reserved=cpu=100m,memory=200Mi --kubelet-arg kube-reserved=cpu=100m,memory=200Mi --node-label network.infra/{{ network | default('slow') }}=true"
 
 system_earlyoom_params: "-r 60 -m 4"

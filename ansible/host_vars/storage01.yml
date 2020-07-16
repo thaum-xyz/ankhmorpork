@@ -1,13 +1,11 @@
 ---
-# k3s_extra_agent_args: "--node-label node-role.kubernetes.io/storage=true --node-taint node-role.kubernetes.io/storage=true:NoSchedule"
 node_labels:
-  - "storage.tier/local=true"
-  - "storage.tier/raid=true"
-  - "storage.tier/fast=true"
-  - "network.tier/fast=true"
+  - "storage.infra/local=true"
+  - "storage.infra/raid=true"
+  - "storage.infra/fast=true"
+  - "network.infra/fast=true"
 node_taints:
-  - "tier/storage=true:NoSchedule"
-  - "node-role.kubernetes.io/storage=true:NoSchedule"
+  - "storage.infra=true:NoSchedule"
 
 samba_domain_master: true
 samba_local_master: true

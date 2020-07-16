@@ -5,17 +5,17 @@ storage01 ansible_user=paulfantom ansible_host=192.168.2.3  network=fast
 master01  ansible_user=ubuntu     ansible_host=192.168.2.11
 node01    ansible_user=ubuntu     ansible_host=192.168.2.12
 node02    ansible_user=ubuntu     ansible_host=192.168.2.13 network=fast
-node03    ansible_user=ubuntu     ansible_host=192.168.2.14 network=fast
+node03    ansible_user=ubuntu     ansible_host=192.168.2.14
 node04    ansible_user=ubuntu     ansible_host=192.168.2.15
 node05    ansible_user=ubuntu     ansible_host=192.168.2.16 network=fast
-node06    ansible_user=ubuntu     ansible_host=192.168.2.17
+#node06    ansible_user=ubuntu     ansible_host=192.168.2.17
 
 [fancontroler]
-node02
+master01
 
 [raspberry]
 master01
-node0[2:6]
+node0[2:5]
 
 [storage]
 storage01
@@ -25,7 +25,7 @@ master01
 
 [k3s-node]
 storage01
-node0[1:6]
+node0[1:5]
 
 [k3s:children]
 k3s-master

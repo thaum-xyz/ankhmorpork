@@ -32,19 +32,11 @@
         replace: "{{ k3s_master_ip }}"
       delegate_to: localhost
 
-    - name: Remove manifests managed externally
-      file:
-        path: "/var/lib/rancher/k3s/server/manifests/{{ item }}"
-        state: "absent"
-      with_items:
-        - "local-storage.yaml"
-        - "coredns.yaml"
-
     - name: Import manifests bound to infrastructure
       template:
         src: "{{ item }}"
         dest: "/var/lib/rancher/k3s/server/manifests/{{ item | basename }}"
-      with_fileglob: "manifests/*.yaml"
+      with_fileglob: "templates/manifests/*.yaml"
 
 - hosts: k3s-node
   become: true
