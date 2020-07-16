@@ -20,7 +20,9 @@ spec:
               - name: DATA_DIRECTORY
                 value: "/backup"
               - name: NAMESPACE
-                value: "nextcloud"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
               - name: INSTANCE
                 value: "files"
               - name: PUSHGATEWAY_URL
@@ -38,7 +40,9 @@ spec:
               - name: DATA_DIRECTORY
                 value: "/backup"
               - name: NAMESPACE
-                value: "nextcloud"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
               - name: INSTANCE
                 value: "web"
               - name: PUSHGATEWAY_URL
@@ -65,7 +69,9 @@ spec:
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
               - name: NAMESPACE
-                value: "nextcloud"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
               - name: INSTANCE
                 value: "db"
               - name: MYSQL_USER
@@ -101,10 +107,18 @@ spec:
                 claimName: nextcloud-theme
           restartPolicy: OnFailure
           nodeSelector:
-            node-role.kubernetes.io/storage: "true"
-            kubernetes.io/hostname: "nas"
+            kubernetes.io/hostname: "storage01"
+            storage.infra/raid: "true"
           tolerations:
           - key: "node-role.kubernetes.io/storage"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+          - key: "tier/storage"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+          - key: "storage.infra"
             operator: "Equal"
             value: "true"
             effect: "NoSchedule"
