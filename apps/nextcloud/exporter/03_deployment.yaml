@@ -42,11 +42,18 @@ spec:
       restartPolicy: Always
       # FIXME: node selector can be dropped after fixing issues with DNS on NAS
       nodeSelector:
-        node-role.kubernetes.io/storage: "true"
-        kubernetes.io/hostname: "nas"
+        kubernetes.io/hostname: "storage01"
         kubernetes.io/arch: "amd64"
       tolerations:
       - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      - key: "tier/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      - key: "storage.infra"
         operator: "Equal"
         value: "true"
         effect: "NoSchedule"

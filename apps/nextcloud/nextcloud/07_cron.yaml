@@ -87,10 +87,10 @@ spec:
         persistentVolumeClaim:
           claimName: nextcloud-config
       nodeSelector:
-        node-role.kubernetes.io/storage: "true"
-        kubernetes.io/hostname: "nas"
+        kubernetes.io/hostname: "storage01"
+        storage.infra/raid: "true"
       tolerations:
-      - key: "node-role.kubernetes.io/storage"
+      - key: "storage.infra"
         operator: "Equal"
         value: "true"
         effect: "NoSchedule"

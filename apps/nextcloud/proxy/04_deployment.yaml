@@ -71,12 +71,8 @@ spec:
       - name: apps
         persistentVolumeClaim:
           claimName: nextcloud-apps
-      # FIXME: node selector can be dropped after fixing issues with DNS on NAS
-      nodeSelector:
-        node-role.kubernetes.io/storage: "true"
-        kubernetes.io/hostname: "nas"
       tolerations:
-      - key: "node-role.kubernetes.io/storage"
+      - key: "storage.infra"
         operator: "Equal"
         value: "true"
         effect: "NoSchedule"
