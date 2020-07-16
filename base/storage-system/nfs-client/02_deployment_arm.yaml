@@ -28,7 +28,7 @@ spec:
               value: /srv/kubernetes/nfs
           name: nfs-client-provisioner
           # image: quay.io/external_storage/nfs-client-provisioner-arm:latest
-          image: quay.io/external_storage/nfs-client-provisioner-arm:v3.1.0-k8s1.11
+          image: quay.io/paulfantom/nfs-client-provisioner:v3.1.0-arm64
           volumeMounts:
             - mountPath: /persistentvolumes
               name: nfs-client-root
@@ -41,7 +41,7 @@ spec:
             server: 192.168.2.3
             path: /srv/kubernetes/nfs
       nodeSelector:
-        kubernetes.io/arch: arm
+        kubernetes.io/arch: arm64
       tolerations:
       - key: "node-role.kubernetes.io/master"
         operator: "Equal"
