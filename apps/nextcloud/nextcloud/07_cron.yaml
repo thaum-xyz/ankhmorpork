@@ -3,18 +3,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/name: cron
+    app.kubernetes.io/part-of: nextcloud
   name: cron
   namespace: nextcloud
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: nextcloud
+      app.kubernetes.io/name: cron
+      app.kubernetes.io/part-of: nextcloud
   replicas: 1
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: nextcloud
+        app.kubernetes.io/name: cron
+        app.kubernetes.io/part-of: nextcloud
     spec:
       containers:
       - env:
@@ -31,12 +34,12 @@ spec:
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: credentials
+              name: mysql-creds
               key: mysql_user
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: credentials
+              name: mysql-creds
               key: mysql_pass
         envFrom:
         - configMapRef:

@@ -6,13 +6,12 @@ metadata:
   namespace: nextcloud
 spec:
   encryptedData:
-    pzptg.conf: AgCwWtcfjVUHGy8Owvaopv49UYjban8srFHdFvm6ci9/UQazSKmZsuY68+H47/fj7GNNSpZICQe3DYbdsfhjFKZfOd6D75DuanvSN99DdoRjdPH9FcqxnesLmhNlFOB+rQxx9qb85UCUXXYknrIKcApYgfApBeBfY8BMHCNUoKpSZr9KmUvwfwenjVGfIfEiWFBb/5IViwNxpWaWYmsjxZdLgu9eRduwOuW85qcUSvVTsTk9mA9IN5xS3t8VuGUDXUCiHlz5S8EJaDQRkmbT3rUUdtGFJ0qZp1v5cvuYMLn4sDjLzoCWO4PsjOdS1gYMQlx1zM0TBcjsCwcJdFfdBdoGBepDyy+ivqDlrLtxXl+zR2uuzEnBwikwk8ML0LUvAtuoe68CObKD63e0gthTlItNH2RjcJgk1NrXsfqBqzf2TD0Z3Y4DrF3a89twX5Sz7x7jEYtOZyQ9xUDpiWcm1E0/zINO4419VS8bQLH9pilOZ+SKzXtPuDts6Urt+vujH58Oaxbqy9pS93geAn7z3AeS+/3SMvGbvxsCRS1/tJrCP89fkalLYAb2M55ozYDDOsJcoDEdHrpo+f+455KjKCBkI/zeJvzb9DYOMCjd9QLPXV/iyvziLgkGvvPDQHD8H9577nSGS9njpDiW1FbnI47GMXhhTEImKg1/KkuhznRofccsJnX+MOAXmtTe8pqQ6jYAZs9quvvPtD1O0q+uXaWFMoQYJpvdmg4EO7Gk+m4Vn2GhhvMhjnQovMGYBurELnNvASl2mJVx6wnsQMkDgMFp0H1mTjp4Qb89ixERM9Nlk9lLaRjyNCD6k3OfQ2hUdbujMZ4OWbqd3HcOeMxFshs7OyLMMa1o4I0=
+    pzptg.conf: AgAm/c00PKvWJjmULKhJTo9H/tZYA3iyn8T4NU93spOpm4FVp21Ba/ZtX6sqtVT1plhOF/vensgi/Z1h4fld8l37nwXeyXFQdBlNV2hVm95EbN6cmI88gNhh+ruTIKzLeRN2E6yYvbkDAY4u3hfhmy8tARSFQUi1ct9AILBqEvY4UKgxDR3eB2yiE88MUyhTm+5Ldn4VusQ7cQ4KNh/kMSZ6WnislK+7YGlxd8/jmM1bPvllUUdXSUw38vQcd+1LSh2zhpGmBNg3T8PWL3pRjzx1HR4CTI6DuE+qroPkZNcf3JDq+D9sfhY1yn0R1+nuEQKnFxQJC/L035/q0XINObfiv5xksReEbZFt+EdPx/Gxln+cgpnXaN0uy115Iy8C+d6uTNtDuJejyIIzM1GtRgE9SGebts4OiOnDOpCeMFPhFFfBpsB48bJGa/mFodTXotWMiirtJMIdvq+L3PrvrdH+KmdvnB1+1IYvGxsIB4wI2C9Qp/sGjH/7sBdK4Jkeayo8SoQ4Y4lEBvRQBA6ZwW6rNSTX/beAexCqFOWEy4Ued8jm3dfBruHwlAkWhVY5BmjEtWAEGKViYR7l27KWsTJiSt7KptuQCjP8dzEudhlWwbdGiNdZc9/XXxJH/Y32UCESbZQnEiy3EK6Ckxk9RAqsayDtz2283sE9q5rGreRzzEUqA8GX/cBXTbAOkUowgrkohuz0upJFcdZM9dp46oHoYDPsbjQIcrm8kn/BDiMkYV0yv+9DlZmoEMA7tNqzzYwrAN6dCZ/l3eFWIRtuCEA=
   template:
     metadata:
+      annotations:
+        sealedsecrets.bitnami.com/managed: "true"
       creationTimestamp: null
-      labels:
-        app.kubernetes.io/component: proxy
-        app.kubernetes.io/name: nginx
-        app.kubernetes.io/part-of: nextcloud
       name: nginx-locations
       namespace: nextcloud
+    type: Opaque

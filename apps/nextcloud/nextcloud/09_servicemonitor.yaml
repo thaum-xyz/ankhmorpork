@@ -10,5 +10,5 @@ spec:
     port: phpfpm-metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: nextcloud
+      app.kubernetes.io/name: phpfpm
       app.kubernetes.io/part-of: nextcloud
