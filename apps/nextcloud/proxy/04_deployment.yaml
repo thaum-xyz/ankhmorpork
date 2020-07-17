@@ -83,8 +83,8 @@ spec:
           claimName: nextcloud-apps
       #nodeSelector: 
       #  kubernetes.io/arch: "amd64"
-      tolerations:
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+      #tolerations:
+      #- key: "storage.infra"
+      #  operator: "Equal"
+      #  value: "true"
+      #  effect: "NoSchedule"
