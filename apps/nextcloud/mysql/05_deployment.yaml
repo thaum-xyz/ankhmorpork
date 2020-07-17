@@ -37,13 +37,13 @@ spec:
           valueFrom:
             secretKeyRef:
               key: mysql_pass
-              name: credentials
+              name: mysql-creds
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
               key: mysql_user
-              name: credentials
-        image: mariadb:latest
+              name: mysql-creds
+        image: mariadb:10.4.12
         imagePullPolicy: IfNotPresent
         name: mysql
         args:
@@ -78,12 +78,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: exporter_user
-              name: exporter-creds
+              name: mysql-creds
         - name: PASS
           valueFrom:
             secretKeyRef:
               key: exporter_pass
-              name: exporter-creds
+              name: mysql-creds
         - name: DATA_SOURCE_NAME
           value: "$(USER):$(PASS)@(127.0.0.1:3306)/"
         image: quay.io/prometheus/mysqld-exporter:latest
