@@ -8,13 +8,14 @@ metadata:
   name: argocd-cm
   namespace: argocd
 data:
-  repositories: |
-    - passwordSecret:
-        key: password
-        name: repo-ankhmorpork.thaum.xyz
-      type: git
-      url: https://github.com/paulfantom/ankhmorpork.thaum.xyz.git
-      usernameSecret:
-        key: username
-        name: repo-ankhmorpork.thaum.xyz
+  repositories: ""
+#  repositories: |
+#    - passwordSecret:
+#        key: password
+#        name: repo-ankhmorpork.thaum.xyz
+#      type: git
+#      url: https://github.com/paulfantom/ankhmorpork.thaum.xyz.git
+#      usernameSecret:
+#        key: username
+#        name: repo-ankhmorpork.thaum.xyz
 
