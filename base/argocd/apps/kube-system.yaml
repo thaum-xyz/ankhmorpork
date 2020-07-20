@@ -14,43 +14,24 @@ spec:
   - group: '*'
     kind: '*'
 
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: local-path-provisioner
-spec:
-  destination:
-    namespace: kube-system
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: base/kube-system/local-path-provisioner
-    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
-    targetRevision: HEAD
-  project: kube-system
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: true
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: kube-dns
-spec:
-  destination:
-    namespace: kube-system
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: base/kube-system/coredns
-    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
-    targetRevision: HEAD
-  project: kube-system
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: local-path-provisioner
+# spec:
+#   destination:
+#     namespace: kube-system
+#     server: 'https://kubernetes.default.svc'
+#   source:
+#     path: base/kube-system/local-path-provisioner
+#     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+#     targetRevision: HEAD
+#   project: kube-system
+#   syncPolicy:
+#     automated:
+#       prune: false
+#       selfHeal: true
 
 ---
 apiVersion: argoproj.io/v1alpha1
