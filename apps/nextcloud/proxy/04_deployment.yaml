@@ -55,18 +55,19 @@ spec:
           requests:
             memory: 16Mi
       #- image: nginx/nginx-prometheus-exporter:0.8.0
-      #  name: nginx-exporter
-      #  args:
-      #  - "-nginx.scrape-uri"
-      #  - "http://127.0.0.1:8080/stub_status"
-      #  ports:
-      #  - containerPort: 9113
-      #    name: metrics
-      #  resources:
-      #    requests:
-      #      memory: 9Mi
-      #    limits:
-      #      memory: 20Mi
+      - image: quay.io/paulfantom/nginx-exporter:latest
+        name: nginx-exporter
+        args:
+        - "-nginx.scrape-uri"
+        - "http://127.0.0.1:8080/stub_status"
+        ports:
+        - containerPort: 9113
+          name: metrics
+        resources:
+          requests:
+            memory: 9Mi
+          limits:
+            memory: 20Mi
       restartPolicy: Always
       volumes:
       - name: config
