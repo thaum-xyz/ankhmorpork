@@ -27,7 +27,7 @@ data:
         192.168.2.30 auth.ankhmorpork.thaum.xyz
         192.168.2.7  unifi.ankhmorpork.thaum.xyz
         192.168.2.10 spy.ankhmorpork.thaum.xyz
-        192.168.2.20 pihole.ankhmorpork.thaum.xyz
+        192.168.2.11 k8sapi.ankhmorpork.thaum.xyz
         192.168.2.3  storage01
         192.168.2.3  storage01.ankhmorpork.thaum.xyz
         192.168.2.11 master01.ankhmorpork.thaum.xyz
