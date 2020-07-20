@@ -15,7 +15,7 @@ data:
             "paths":["/var/lib/rancher/k3s/storage"]
           },
           {
-            "node":"nas",
+            "node":"storage01",
             "paths":["/var/lib/rancher/k3s/storage"]
           }
         ]
