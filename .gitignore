@@ -8,6 +8,7 @@ roles/*
 !roles/fans
 *.retry
 ansible/kubeconfig
+master.key
 .kube
 bin/
 templates/
