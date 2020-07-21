@@ -3,7 +3,6 @@ locales_present:
   - en_US.UTF-8
   - en_GB.UTF-8
 unattended_automatic_reboot_time: "02:00"
-unattended_update_days: 1
 
 node_exporter_enabled_collectors:
   - textfile:
@@ -12,7 +11,7 @@ node_exporter_enabled_collectors:
       ignored-fs-types: "^(sys|proc|auto|overlay)fs$"
       ignored-mount-points: "^/(sys|proc|dev)($|/)"
   - diskstats:
-      ignored-devices: '^(ram|loop|fd|(h|v|xv)d[a-z]|dm-)\d+$'
+      ignored-devices: '^(ram|loop|fd|(h|v|xv)d[a-z]|dm-)\\\d+$'
   - netdev:
       device-blacklist: "^(veth.*|br.*)$"
   - systemd
