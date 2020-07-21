@@ -77,12 +77,12 @@ spec:
               - name: MYSQL_USER
                 valueFrom:
                   secretKeyRef:
-                    name: credentials
+                    name: mysql-creds
                     key: mysql_user
               - name: MYSQL_PASSWORD
                 valueFrom:
                   secretKeyRef:
-                    name: credentials
+                    name: mysql-creds
                     key: mysql_pass
             envFrom:
               - configMapRef:
