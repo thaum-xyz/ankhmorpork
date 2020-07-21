@@ -16,9 +16,10 @@ spec:
     spec:
       containers:
         - name: controller
-          image: mzinc/configmapsecret-controller:v0.3.0
+          image: quay.io/paulfantom/configmapsecrets-controller:latest
+          imagePullPolicy: IfNotPresent
           command:
-            - /configmapsecret-controller
+            - /usr/bin/controller
             - --health-addr=:9090
             - --metrics-addr=:9091
             - --enable-leader-election
