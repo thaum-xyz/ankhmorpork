@@ -2,9 +2,12 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
+  labels:
+    k8s-app: coredns
   name: coredns
   namespace: dns
 spec:
+  jobLabel: coredns
   endpoints:
   - interval: 30s
     port: metrics
