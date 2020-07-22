@@ -1,0 +1,54 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: ansible
+spec:
+  description: Ansible management
+  destinations:
+  - namespace: ansible
+    server: 'https://kubernetes.default.svc'
+  sourceRepos:
+  - 'https://github.com/thaum-xyz/ankhmorpork.git'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ankhmorpork-deployment
+spec:
+  destination:
+    namespace: ansible
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/ansible/ankhmorpork
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: ansible
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ara
+spec:
+  destination:
+    namespace: ansible
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/ansible/ara
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: ansible
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+

@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: ara
   name: ara
-  namespace: ara
+  namespace: ansible
 spec:
   replicas: 1
   selector:
