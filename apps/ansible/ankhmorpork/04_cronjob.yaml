@@ -28,9 +28,11 @@ spec:
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
               - name: ARA_SERVER
-                value: "http://ara.ara.svc:8000"
+                value: "http://ara.ansible.svc:8000"
               - name: PLAYBOOK_NAME 
                 value: "00_site.yml"
+              - name: REPO_URL
+                value: "https://github.com/thaum-xyz/ankhmorpork.git"
             volumeMounts:
               - name: repository
                 mountPath: /ansible
