@@ -29,7 +29,7 @@ spec:
       namespace: monitoring
       port: web
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
-  image: quay.io/prometheus/prometheus:v2.20.0-rc.1
+  image: quay.io/prometheus/prometheus:v2.20.0
   nodeSelector:
     kubernetes.io/os: linux
   podMonitorNamespaceSelector: {}
@@ -50,7 +50,7 @@ spec:
   serviceAccountName: prometheus-k8s
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
-  version: v2.20.0-rc.1
+  version: v2.20.0
   storage:
     volumeClaimTemplate:
       metadata:
