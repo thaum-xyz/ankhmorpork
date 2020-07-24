@@ -28,7 +28,7 @@ spec:
       containers:
       - env:
         - name: ARA_ALLOWED_HOSTS
-          value: "['192.168.2.25', 'ara.ankhmorpork.thaum.xyz', 'health.ara.local']"
+          value: "['192.168.2.25', 'ara.ankhmorpork.thaum.xyz', 'health.ara.local', 'ara.ansible.svc', 'ara.ansible.svc.cluster.local']"
         image: quay.io/paulfantom/ara
         imagePullPolicy: Always
         name: ara
