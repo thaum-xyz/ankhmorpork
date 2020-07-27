@@ -10,13 +10,6 @@ spec:
   groups:
   - name: general.rules
     rules:
-    - alert: TargetsDown
-      annotations:
-        message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.'
-      expr: 100 * (count(up{job!="windows"} == 0) BY (job, namespace, service) / count(up{job!="windows"}) BY (job, namespace, service)) > 10
-      for: 10m
-      labels:
-        severity: warning
     - alert: Watchdog
       annotations:
         message: |
@@ -28,3 +21,43 @@ spec:
       expr: vector(1)
       labels:
         severity: none
+    - alert: TargetsDown
+      annotations:
+        message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.'
+      expr: 100 * (count(up{job!="windows"} == 0) BY (job, namespace, service) / count(up{job!="windows"}) BY (job, namespace, service)) > 10
+      for: 10m
+      labels:
+        severity: warning
+    - alert: JobNotCompleted
+      expr: |
+        ((time() - (job_success_timestamp_seconds > 0)) > job_max_age_seconds)
+        or
+        (time() - jon_start_timestamp_seconds > job_max_age_seconds and job_success_timestamp_seconds == 0)
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        message: "Cron job {{ $labels.job }} has not started/completed in {{ $value | humanizeDuration }}"
+        runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/JobCompletion.md"
+  - name: custom node alert rules
+    rules:
+    - alert: PackagesAvailable
+      expr: |
+        sum by (node) (yum_upgrades_pending) > 10
+        or
+        sum by (node) (apt_upgrades_pending) > 10
+      for: 24h
+      labels:
+        severity: info
+      annotations:
+        message: "More than 10 packages are available for upgrade. Maybe it is time to upgrade?"
+        runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/PackagesAvailable.md"
+    - alert: RebootRequired
+      expr: "node_reboot_required > 0"
+      for: 1h
+      labels:
+        severity: info
+      annotations:
+        message: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
+        runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RebootRequired.md"
+

@@ -8,55 +8,6 @@ metadata:
   namespace: monitoring
 spec:
   groups:
-    - name: custom node alert rules
-      rules:
-      - alert: PackagesAvailable
-        expr: |
-          sum by (node) (yum_upgrades_pending) > 10
-          or
-          sum by (node) (apt_upgrades_pending) > 10
-        for: 24h
-        labels:
-          severity: info
-        annotations:
-          message: "More than 10 packages are available for upgrade. Maybe it is time to upgrade?"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/PackagesAvailable.md"
-      - alert: RebootRequired
-        expr: "node_reboot_required > 0"
-        for: 1h
-        labels:
-          severity: info
-        annotations:
-          message: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RebootRequired.md"
-      - alert: RAIDCriticalFailure
-        expr: 'node_md_disks_required - ignoring (state) (node_md_disks{state="active"}) != 0'
-        for: 15m
-        labels:
-          severity: critical
-          priority: P1
-        annotations:
-          summary: "Degraded RAID array on {{ $labels.instance }}"
-          description: "RAID array '{{ $labels.device }}' is in degraded state due to one or more disks failures. Number of spare drives is insufficient to fix issue automatically."
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDCriticalFailure.md"
-      - alert: RAIDDiskFailure
-        expr: 'node_md_disks{state="fail"} > 0'
-        labels:
-          severity: warning
-        annotations:
-          summary: "Failed device in RAID array on {{ $labels.instance }}"
-          description: "At least one device in RAID array on {{ $labels.instance }} failed. Array '{{ $labels.md_device }}' needs attention and possibly a disk swap"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDDiskFailure.md"
-      - alert: FilesystemReadOnly
-        expr: |
-          (node_filesystem_device_error{fstype!~"(tmpfs|proc|aufs|rpc_pipefs|nsfs|overlay|squashfs)"} != 0)
-          and
-          (node_filesystem_readonly{fstype!~"(tmpfs|proc|aufs|rpc_pipefs|nsfs|overlay|squashfs)"} != 0)
-        labels:
-          severity: info  # FIXME: promote to warning when expression is fixed
-        annotations:
-          message: "Filesystem went read-only due to device error"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/FilesystemReadOnly.md"
     - name: alert rules specific to thaum.xyz
       rules:
       - alert: BackupNotCreated  # TODO: Remove alert after upgrading infra in lancre
@@ -66,20 +17,9 @@ spec:
           severity: warning
         annotations:
           message: "Backuping up {{ $labels.data }} on {{ $labels.instance }} didn't complete"
-      - alert: JobNotCompleted
-        expr: |
-          ((time() - (job_success_timestamp_seconds > 0)) > job_max_age_seconds)
-          or
-          (time() - jon_start_timestamp_seconds > job_max_age_seconds and job_success_timestamp_seconds == 0)
-        for: 1m
-        labels:
-          severity: warning
-        annotations:
-          message: "Cron job {{ $labels.job }} has not started/completed in {{ $value | humanizeDuration }}"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/JobCompletion.md"
       - alert: FederatedPrometheusDown
         expr: 'up{job="lancre"} == 0'
-        for: 10m
+        for: 20m
         labels:
           severity: warning
         annotations:
