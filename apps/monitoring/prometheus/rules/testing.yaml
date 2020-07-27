@@ -29,13 +29,3 @@ spec:
           summary: "Failed device in RAID array on {{ $labels.instance }}"
           description: "At least one device in RAID array on {{ $labels.instance }} failed. Array '{{ $labels.md_device }}' needs attention and possibly a disk swap"
           runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDDiskFailure.md"
-      - alert: FilesystemReadOnly
-        expr: |
-          (node_filesystem_device_error{fstype!~"(tmpfs|proc|aufs|rpc_pipefs|nsfs|overlay|squashfs)"} != 0)
-          and
-          (node_filesystem_readonly{fstype!~"(tmpfs|proc|aufs|rpc_pipefs|nsfs|overlay|squashfs)"} != 0)
-        labels:
-          severity: info  # FIXME: promote to warning when expression is fixed
-        annotations:
-          message: "Filesystem went read-only due to device error"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/FilesystemReadOnly.md"
