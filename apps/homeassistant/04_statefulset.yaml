@@ -5,7 +5,7 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: homeassistant
-    app.kubernetes.io/version: 0.112.2
+    app.kubernetes.io/version: 0.113.1
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: argocd
   name: homeassistant
@@ -20,14 +20,14 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: homeassistant
-        app.kubernetes.io/version: 0.112.2
+        app.kubernetes.io/version: 0.113.1
         app.kubernetes.io/component: server
         app.kubernetes.io/managed-by: argocd
     spec:
       containers:
       #- image: homeassistant/raspberrypi3-64-homeassistant
       #- image: homeassistant/odroid-c2-homeassistant:0.109.4
-      - image: homeassistant/aarch64-homeassistant:0.112.2
+      - image: homeassistant/aarch64-homeassistant:0.113.1
         name: homeassistant
         ports:
         - name: webui
