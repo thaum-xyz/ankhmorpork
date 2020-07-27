@@ -33,6 +33,8 @@ spec:
                 value: "00_site.yml"
               - name: REPO_URL
                 value: "https://github.com/thaum-xyz/ankhmorpork.git"
+              - name: MAX_AGE
+                value: 1600
             volumeMounts:
               - name: repository
                 mountPath: /ansible
