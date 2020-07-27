@@ -66,17 +66,17 @@ spec:
           severity: warning
         annotations:
           message: "Backuping up {{ $labels.data }} on {{ $labels.instance }} didn't complete"
-      - alert: BackupCompletion
+      - alert: JobNotCompleted
         expr: |
-          ((time() - (backup_success_timestamp_seconds > 0)) > backup_max_age_seconds)
+          ((time() - (job_success_timestamp_seconds > 0)) > job_max_age_seconds)
           or
-          (time() - backup_start_timestamp_seconds > backup_max_age_seconds and backup_success_timestamp_seconds == 0)
+          (time() - jon_start_timestamp_seconds > job_max_age_seconds and job_success_timestamp_seconds == 0)
         for: 1m
         labels:
           severity: warning
         annotations:
-          message: "Missing backup of {{ $labels.data }} on {{ $labels.tier }}"
-          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/BackupCompletion.md"
+          message: "Cron job {{ $labels.job }} has not started/completed in {{ $value | humanizeDuration }}"
+          runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/JobCompletion.md"
       - alert: FederatedPrometheusDown
         expr: 'up{job="lancre"} == 0'
         for: 10m

@@ -8,7 +8,7 @@ metadata:
   namespace: monitoring
 spec:
   groups:
-    - name: gitops alert rules
+    - name: gitops alert rules # Remove all after lancre infra upgrade
       rules:
       - alert: FailedDeploy
         expr: '(increase(deployment_total{status="error"}[20m]) > 0) AND on (instance) (deployment_total{status="success"} == 0)'
