@@ -35,7 +35,7 @@ spec:
           runbook: "Check SD card for FS corruption. Possibly reflash OS to new card."
       - alert: TouchscreenNotAvailable
         expr: |
-          devices_input_touchscreen_up == 0
+          devices_input_touchscreen_up == 0 or absent(devices_input_touchscreen_up)
         for: 10m
         labels:
           severity: warning
@@ -44,7 +44,7 @@ spec:
           runbook: "Powercycle device {{ $labels.instance }}"
       - alert: TouchscreenNotAvailable
         expr: |
-          devices_input_touchscreen_up == 0
+          devices_input_touchscreen_up == 0 or absent(devices_input_touchscreen_up)
         for: 1h
         labels:
           severity: critical
