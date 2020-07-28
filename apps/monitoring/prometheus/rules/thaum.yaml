@@ -36,7 +36,7 @@ spec:
       - alert: TouchscreenNotAvailable
         expr: |
           devices_input_touchscreen_up == 0
-        for: 20m
+        for: 10m
         labels:
           severity: warning
         annotations:
