@@ -33,3 +33,21 @@ spec:
         annotations:
           message: "Filesystem went read-only possibly due to device error."
           runbook: "Check SD card for FS corruption. Possibly reflash OS to new card."
+      - alert: TouchscreenNotAvailable
+        expr: |
+          devices_input_touchscreen_up == 0
+        for: 20m
+        labels:
+          severity: warning
+        annotations:
+          message: "Touchscreen not available"
+          runbook: "Powercycle device {{ $labels.instance }}"
+      - alert: TouchscreenNotAvailable
+        expr: |
+          devices_input_touchscreen_up == 0
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          message: "Touchscreen not available and automatic remediation failed to restore it"
+          runbook: "Powercycle device {{ $labels.instance }}"
