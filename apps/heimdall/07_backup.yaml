@@ -3,6 +3,8 @@ kind: CronJob
 metadata:
   name: backup
   namespace: heimdall
+  labels:
+    app.kubernetes.io/name: backup
 spec:
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 3

@@ -29,7 +29,7 @@ spec:
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
               - name: MAX_AGE
-                value: "220"
+                value: "691200"
             envFrom:
               - secretRef:
                   name: restic-repository

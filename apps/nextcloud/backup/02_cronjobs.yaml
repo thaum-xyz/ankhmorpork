@@ -28,7 +28,7 @@ spec:
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
               - name: MAX_AGE
-                value: "6000"
+                value: "86400"
             envFrom:
               - secretRef:
                   name: restic-repository-files
@@ -50,7 +50,7 @@ spec:
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
               - name: MAX_AGE
-                value: "600"
+                value: "86400"
             envFrom:
               - secretRef:
                   name: restic-repository-web
@@ -89,7 +89,7 @@ spec:
                     name: mysql-creds
                     key: mysql_pass
               - name: MAX_AGE
-                value: "500"
+                value: "86400"
             envFrom:
               - configMapRef:
                   name: nextcloud-envs
