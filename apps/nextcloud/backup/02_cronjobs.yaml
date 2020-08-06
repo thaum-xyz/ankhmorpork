@@ -4,7 +4,7 @@ metadata:
   name: backup
   namespace: nextcloud
 spec:
-  successfulJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 3
   concurrencyPolicy: Forbid
   schedule: "43 2 * * *"  # At 02:43
