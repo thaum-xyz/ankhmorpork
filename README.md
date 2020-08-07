@@ -1,23 +1,37 @@
-# Ankhmorpork management and deployment system
+# Ankhmorpork
 
-## Installation
+## What is it?
 
-### Step-by-step instructions
+This is a part of [@paulfantom](https://github.com/paulfantom) personal homelab. It is on purpose made public to be used as:
+- a configuration example
+- a proof that cluster configuration can live in the open and be secure
 
-1. Flash SD card with ubuntu 20.04 arm64
-2. Configure ssh key-based login (first password is `raspberry`)
-```bash
-ssh-copy-id pi@<ip_of_host>
-```
-3. Install dependencies
-```bash
-apt install -y git python3-jmespath python3-pip
-pip3 install ansible>=2.9.7
-```
-4. Clone this repository
-```bash
-git clone https://github.com/thaum-xyz/ankhmorpork.git config
-```
-5. Go into `ansible/` subdirectory in repository directory
-6. Run `ansible-playbook 00_site.yml`
+## How dos it work?
 
+Configuration is divided into three directories and is managed in two ways - either by ansible or by argoCD.
+
+#### Ansible
+
+Ansible is used to manage services which were easier to operate out of kubernetes cluster or putting them into a cluster
+would cause a circular dependency issue. Most of ansible code is related to hardening base operating system, setting up
+storage and bootstraping a k3s cluster.
+
+#### Base
+
+Directory contains all base application of k3s cluster. Initial bootstrap should be done manually with kubectl and after
+that updates are performed by argoCD.
+
+Additionally it is a place where argoCD apps and projects are stored.
+
+#### Apps
+
+Every other service that is installed into a cluster goes into `apps/` directory which should be governed by argoCD after
+creating a proper `Application` and `Project` CRs.
+
+## Security
+
+If you find any security issue please ping me using one of following contact mediums:
+- twitter DM (@paulfantom)
+- kubernetes slack (@paulfantom)
+- freenode IRC (@paulfantom)
+- email (paulfantom+security@gmail.com)
