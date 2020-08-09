@@ -12,7 +12,8 @@ spec:
     rules:
     - alert: Watchdog
       annotations:
-        message: |
+        summary: "Alerting pipeline test alert"
+        description: |
           This is an alert meant to ensure that the entire alerting pipeline is functional.
           This alert is always firing, therefore it should always be firing in Alertmanager
           and always fire against a receiver. There are integrations with various notification
@@ -23,7 +24,8 @@ spec:
         severity: none
     - alert: TargetsDown
       annotations:
-        message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.'
+        summary: "Prometheus targets went down"
+        desctiption: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.'
       expr: 100 * (count(up{job!="windows"} == 0) BY (job, namespace, service) / count(up{job!="windows"}) BY (job, namespace, service)) > 10
       for: 10m
       labels:
@@ -37,8 +39,9 @@ spec:
       labels:
         severity: warning
       annotations:
-        message: "Cron job {{ $labels.job }} has not started/completed in {{ $value | humanizeDuration }}"
-        runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/JobCompletion.md"
+        summary: "Cron job did not complete"
+        desctiption: "Cron job {{ $labels.job }} has not started/completed in {{ $value | humanizeDuration }}"
+        runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/JobCompletion.md"
   - name: custom node alert rules
     rules:
     - alert: PackagesAvailable
@@ -50,14 +53,16 @@ spec:
       labels:
         severity: info
       annotations:
-        message: "More than 10 packages are available for upgrade. Maybe it is time to upgrade?"
-        runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/PackagesAvailable.md"
+        summary: "Packages are available for upgrade"
+        desctiption: "{{ $value }} packages are available for upgrade. Maybe it is time to upgrade?"
+        runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/PackagesAvailable.md"
     - alert: RebootRequired
       expr: "node_reboot_required > 0"
       for: 1h
       labels:
         severity: info
       annotations:
-        message: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
-        runbook: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RebootRequired.md"
+        summary: "Reboot is required to finish package upgrade"
+        desctiption: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
+        runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RebootRequired.md"
 

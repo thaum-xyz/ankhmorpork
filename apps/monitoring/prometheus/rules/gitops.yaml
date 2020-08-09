@@ -16,13 +16,13 @@ spec:
         labels:
           severity: warning
         annotations:
-          description: "Deployment reconcilitaion failed on {{ $labels.instance }} "
           summary: "Deployment failed"
+          description: "Deployment reconcilitaion failed on {{ $labels.instance }} "
       - alert: DeploymentHalted
         expr: 'sum(increase(deployment_total[30m])) by (instance) < 1'
         for: 1h
         labels:
           severity: warning
         annotations:
-          description: "Deployment reconcilitaion is stopped on {{ $labels.instance }} "
           summary: "Deployment halted"
+          description: "Deployment reconcilitaion is stopped on {{ $labels.instance }} "
