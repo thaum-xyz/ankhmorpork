@@ -38,9 +38,7 @@ spec:
                   fieldRef:
                     fieldPath: metadata.namespace
               - name: INSTANCE
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.name
+                value: autobackup
               - name: DATA_DIRECTORY
                 value: "/backup"
               - name: PUSHGATEWAY_URL

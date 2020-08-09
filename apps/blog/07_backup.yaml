@@ -23,9 +23,7 @@ spec:
                   fieldRef:
                     fieldPath: metadata.namespace
               - name: INSTANCE
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.name
+                value: blog
               - name: PUSHGATEWAY_URL
                 value: "http://push.monitoring.svc:9091"
               - name: MAX_AGE
