@@ -4,13 +4,12 @@ metadata:
   name: backup
   namespace: nextcloud
 spec:
-  successfulJobsHistoryLimit: 0
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 3
   concurrencyPolicy: Forbid
   schedule: "43 2 * * *"  # At 02:43
   jobTemplate:
     spec:
-      backoffLimit: 3
       template:
         spec:
           containers:
@@ -116,14 +115,6 @@ spec:
             kubernetes.io/hostname: "storage01"
             storage.infra/raid: "true"
           tolerations:
-          - key: "node-role.kubernetes.io/storage"
-            operator: "Equal"
-            value: "true"
-            effect: "NoSchedule"
-          - key: "tier/storage"
-            operator: "Equal"
-            value: "true"
-            effect: "NoSchedule"
           - key: "storage.infra"
             operator: "Equal"
             value: "true"
