@@ -207,3 +207,24 @@ spec:
     automated:
       prune: false
       selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-events-exporter
+spec:
+  destination:
+    namespace: monitoring
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/monitoring/kube-events-exporter
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+

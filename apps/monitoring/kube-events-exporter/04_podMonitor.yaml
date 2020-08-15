@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-events-exporter
+    app.kubernetes.io/version: 0.1.0
+  name: kube-events-exporter
+  namespace: monitoring
+spec:
+  podMetricsEndpoints:
+  - port: event
+  - port: exporter
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: kube-events-exporter

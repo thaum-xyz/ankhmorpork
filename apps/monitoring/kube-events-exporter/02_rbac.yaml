@@ -1,0 +1,45 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-events-exporter
+    app.kubernetes.io/version: 0.1.0
+  name: kube-events-exporter
+  namespace: monitoring
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kube-events-exporter
+subjects:
+- kind: ServiceAccount
+  name: kube-events-exporter
+  namespace: monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-events-exporter
+    app.kubernetes.io/version: 0.1.0
+  name: kube-events-exporter
+  namespace: monitoring
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - list
+  - watch
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-events-exporter
+    app.kubernetes.io/version: 0.1.0
+  name: kube-events-exporter
+  namespace: monitoring
