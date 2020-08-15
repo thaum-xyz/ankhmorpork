@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: backup
+  name: backup-files
   namespace: nextcloud
 spec:
   successfulJobsHistoryLimit: 1
@@ -35,6 +35,35 @@ spec:
               - name: data
                 mountPath: /backup
                 readOnly: true
+          volumes:
+            - name: data
+              hostPath:
+                path: /srv/nextcloud/data
+          restartPolicy: OnFailure
+          nodeSelector:
+            kubernetes.io/hostname: "storage01"
+            storage.infra/raid: "true"
+          tolerations:
+          - key: "storage.infra"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup-web
+  namespace: nextcloud
+spec:
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  schedule: "43 2 * * *"  # At 02:43
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
           - name: web
             image: quay.io/paulfantom/restic-mysql
             env:
@@ -66,6 +95,44 @@ spec:
               - name: theme
                 mountPath: /backup/themes/mytheme
                 readOnly: true
+          volumes:
+            - name: web
+              persistentVolumeClaim:
+                claimName: nextcloud-files
+            - name: apps
+              persistentVolumeClaim:
+                claimName: nextcloud-apps
+            - name: config
+              persistentVolumeClaim:
+                claimName: nextcloud-config
+            - name: theme
+              persistentVolumeClaim:
+                claimName: nextcloud-theme
+          restartPolicy: OnFailure
+          nodeSelector:
+            kubernetes.io/hostname: "storage01"
+            storage.infra/raid: "true"
+          tolerations:
+          - key: "storage.infra"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup-db
+  namespace: nextcloud
+spec:
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  schedule: "43 2 * * *"  # At 02:43
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
           - name: db
             image: quay.io/paulfantom/restic-mysql
             env:
@@ -94,22 +161,6 @@ spec:
                   name: nextcloud-envs
               - secretRef:
                   name: restic-repository-db
-          volumes:
-            - name: data
-              hostPath:
-                path: /srv/nextcloud/data
-            - name: web
-              persistentVolumeClaim:
-                claimName: nextcloud-files
-            - name: apps
-              persistentVolumeClaim:
-                claimName: nextcloud-apps
-            - name: config
-              persistentVolumeClaim:
-                claimName: nextcloud-config
-            - name: theme
-              persistentVolumeClaim:
-                claimName: nextcloud-theme
           restartPolicy: OnFailure
           nodeSelector:
             kubernetes.io/hostname: "storage01"

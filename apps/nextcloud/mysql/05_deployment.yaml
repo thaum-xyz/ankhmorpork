@@ -48,6 +48,7 @@ spec:
         name: mysql
         args:
         - '--transaction-isolation=READ-COMMITTED'
+        - '--max-allowed-packet=33554432'
         ports:
         - containerPort: 3306
           name: mysql
