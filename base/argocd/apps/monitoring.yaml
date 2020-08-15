@@ -186,8 +186,8 @@ spec:
   project: monitoring
   syncPolicy:
     automated:
-      prune: false
-      selfHeal: false
+      prune: true
+      selfHeal: true
 
 ---
 apiVersion: argoproj.io/v1alpha1
