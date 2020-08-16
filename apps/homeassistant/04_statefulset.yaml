@@ -2,7 +2,6 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  creationTimestamp: null
   labels:
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/version: 0.113.1
