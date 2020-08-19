@@ -15,7 +15,8 @@ spec:
           - targets:
             - 'dibbler.ankhmorpork.thaum.xyz:9182'
         - job_name: lancre
-          scrape_interval: 15s
+          scrape_interval: 30s
+          scrape_timeout: 30s
           scheme: 'https'
           honor_labels: true
           metrics_path: '/federate'
