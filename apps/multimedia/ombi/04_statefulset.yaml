@@ -23,7 +23,7 @@ spec:
         - name: TZ
           value: "Europe/Berlin"
         name: ombi
-        image: linuxserver/ombi:3.0.5202-ls66
+        image: linuxserver/ombi:v3.0.5202-ls66
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 3579
