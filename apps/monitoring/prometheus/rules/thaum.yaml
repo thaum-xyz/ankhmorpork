@@ -45,3 +45,12 @@ spec:
         annotations:
           summary: "Touchscreen not available and automatic remediation failed to restore it"
           description: "Powercycle device {{ $labels.instance }}"
+      - alert: TemperaturesNotAvailable
+        expr: |
+          absent(evok_temperature_celsius)
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Cannot obtain temperature data"
+          description: "Temperature data is gone. Immediatelly switch off all relays and check OW bus."
