@@ -8,7 +8,7 @@ metadata:
   name: oauth2-proxy
   namespace: auth
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: oauth2-proxy
@@ -33,22 +33,9 @@ spec:
         - --pass-basic-auth=false
         #- --reverse-proxy=true
         - --http-address=0.0.0.0:4180
-        env:
-        - name: OAUTH2_PROXY_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
+        envFrom:
+          - secretRef:
               name: oauth-creds
-              key: client_id
-        - name: OAUTH2_PROXY_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: oauth-creds
-              key: client_secret
-        - name: OAUTH2_PROXY_COOKIE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: oauth-creds
-              key: client_cookie
         image: quay.io/paulfantom/oauth2-proxy:ebdc93c2  # v6.1.1
         name: oauth2-proxy
         ports:
