@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/version: 6.1.1
   name: oauth2-proxy
   namespace: auth
 spec:
@@ -11,10 +12,12 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: oauth2-proxy
+      app.kubernetes.io/version: 6.1.1
   template:
     metadata:
       labels:
         app.kubernetes.io/name: oauth2-proxy
+        app.kubernetes.io/version: 6.1.1
     spec:
       containers:
       - args:
@@ -46,8 +49,7 @@ spec:
             secretKeyRef:
               name: oauth-creds
               key: client_cookie
-        image: quay.io/paulfantom/oauth2-proxy
-        imagePullPolicy: Always
+        image: quay.io/paulfantom/oauth2-proxy:ebdc93c2  # v6.1.1
         name: oauth2-proxy
         ports:
         - containerPort: 4180
