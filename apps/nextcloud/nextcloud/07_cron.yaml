@@ -44,7 +44,7 @@ spec:
         envFrom:
         - configMapRef:
             name: nextcloud-envs
-        image: nextcloud:19.0.1-fpm
+        image: nextcloud:19.0.2-fpm
         name: cron
         command:
         - /cron.sh
