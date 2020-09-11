@@ -97,6 +97,6 @@ data:
       }
       reload
       loadbalance
-      # log
+      log
       errors
     }
