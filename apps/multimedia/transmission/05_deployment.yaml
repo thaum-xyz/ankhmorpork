@@ -14,7 +14,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: transmission
-      app.kubernetes.io/version: 2.13
   template:
     metadata:
       labels:

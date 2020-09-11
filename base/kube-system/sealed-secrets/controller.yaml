@@ -21,7 +21,6 @@ spec:
       app.kubernetes.io/managed-by: jsonnet
       app.kubernetes.io/name: kubeseal
       app.kubernetes.io/part-of: kubeseal
-      app.kubernetes.io/version: v0.12.5
       name: sealed-secrets-controller
   strategy:
     rollingUpdate:
