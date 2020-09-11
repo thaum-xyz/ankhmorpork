@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-controller
   name: sealed-secrets-controller
   namespace: kube-system
@@ -21,7 +21,7 @@ spec:
       app.kubernetes.io/managed-by: jsonnet
       app.kubernetes.io/name: kubeseal
       app.kubernetes.io/part-of: kubeseal
-      app.kubernetes.io/version: v0.12.1
+      app.kubernetes.io/version: v0.12.5
       name: sealed-secrets-controller
   strategy:
     rollingUpdate:
@@ -35,7 +35,7 @@ spec:
         app.kubernetes.io/managed-by: jsonnet
         app.kubernetes.io/name: kubeseal
         app.kubernetes.io/part-of: kubeseal
-        app.kubernetes.io/version: v0.12.1
+        app.kubernetes.io/version: v0.12.5
         name: sealed-secrets-controller
     spec:
       containers:
@@ -43,7 +43,7 @@ spec:
         command:
         - controller
         env: []
-        image: quay.io/bitnami/sealed-secrets-controller:v0.12.1
+        image: quay.io/bitnami/sealed-secrets-controller:v0.12.5
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -89,7 +89,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-service-proxier
   name: sealed-secrets-service-proxier
   namespace: kube-system
@@ -110,7 +110,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-controller
   name: sealed-secrets-controller
   namespace: kube-system
@@ -131,7 +131,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-controller
   name: sealed-secrets-controller
 roleRef:
@@ -151,7 +151,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: secrets-unsealer
   name: secrets-unsealer
 rules:
@@ -194,7 +194,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-controller
   name: sealed-secrets-controller
   namespace: kube-system
@@ -223,7 +223,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-controller
   name: sealed-secrets-controller
   namespace: kube-system
@@ -235,7 +235,7 @@ spec:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-controller
   type: ClusterIP
 ---
@@ -247,7 +247,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-service-proxier
   name: sealed-secrets-service-proxier
   namespace: kube-system
@@ -271,7 +271,7 @@ metadata:
     app.kubernetes.io/managed-by: jsonnet
     app.kubernetes.io/name: kubeseal
     app.kubernetes.io/part-of: kubeseal
-    app.kubernetes.io/version: v0.12.1
+    app.kubernetes.io/version: v0.12.5
     name: sealed-secrets-key-admin
   name: sealed-secrets-key-admin
   namespace: kube-system
