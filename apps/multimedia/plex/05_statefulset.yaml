@@ -4,6 +4,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: plex
+    app.kubernetes.io/version: 1.20.1
   name: plex
   namespace: multimedia
 spec:
@@ -12,11 +13,13 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: plex
+      app.kubernetes.io/version: 1.20.1
   serviceName: plex
   template:
     metadata:
       labels:
         app.kubernetes.io/name: plex
+        app.kubernetes.io/version: 1.20.1
     spec:
       hostname: nas
       containers:
@@ -55,7 +58,7 @@ spec:
             secretKeyRef:
               key: claim
               name: plex-creds
-        image: plexinc/pms-docker:latest
+        image: plexinc/pms-docker:1.20.1.3252-a78fef9a9
         name: plex
         ports:
         - containerPort: 32400

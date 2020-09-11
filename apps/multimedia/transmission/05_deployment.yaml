@@ -6,7 +6,7 @@ metadata:
   namespace: multimedia
   labels:
     app.kubernetes.io/name: transmission
-    # app.kubernetes.io/version:
+    app.kubernetes.io/version: 2.13
 spec:
   replicas: 1
   strategy:
@@ -14,10 +14,12 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: transmission
+      app.kubernetes.io/version: 2.13
   template:
     metadata:
       labels:
         app.kubernetes.io/name: transmission
+        app.kubernetes.io/version: 2.13
     spec:
       containers:
       - env:
@@ -36,8 +38,8 @@ spec:
       - envFrom:
         - configMapRef:
             name: transmission-config
-            optional: false
-        image: haugene/transmission-openvpn:latest-alpine
+            optional: false 
+        image: haugene/transmission-openvpn:2.13-alpine
         name: transmission
         ports:
         - containerPort: 9091
