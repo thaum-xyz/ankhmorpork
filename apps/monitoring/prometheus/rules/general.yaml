@@ -25,7 +25,7 @@ spec:
     - alert: TargetsDown
       annotations:
         summary: "Prometheus targets went down"
-        desctiption: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.'
+        description: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.'
       expr: 100 * (count(up{job!="windows"} == 0) BY (job, namespace, service) / count(up{job!="windows"}) BY (job, namespace, service)) > 10
       for: 10m
       labels:
@@ -40,7 +40,7 @@ spec:
         severity: warning
       annotations:
         summary: "Cron job did not complete"
-        desctiption: "Cron job {{ $labels.job }} has not started/completed in {{ $value | humanizeDuration }}"
+        description: "Cron job {{ $labels.job }} has not started/completed in {{ $value | humanizeDuration }}"
         runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/JobCompletion.md"
   - name: custom node alert rules
     rules:
@@ -54,7 +54,7 @@ spec:
         severity: info
       annotations:
         summary: "Packages are available for upgrade"
-        desctiption: "{{ $value }} packages are available for upgrade. Maybe it is time to upgrade?"
+        description: "{{ $value }} packages are available for upgrade. Maybe it is time to upgrade?"
         runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/PackagesAvailable.md"
     - alert: RebootRequired
       expr: "node_reboot_required > 0"
@@ -63,6 +63,6 @@ spec:
         severity: info
       annotations:
         summary: "Reboot is required to finish package upgrade"
-        desctiption: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
+        description: "Instance '{{ $labels.instance }}' was upgraded and now requires a reboot."
         runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RebootRequired.md"
 

@@ -17,7 +17,7 @@ spec:
           severity: warning
         annotations:
           summary: "Federated prometheus is down"
-          desctiption: "Remote Prometheus server {{ $labels.instance }} has been down for more than 10 minutes."
+          description: "Remote Prometheus server {{ $labels.instance }} has been down for more than 10 minutes."
           runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/FederatedPrometheusDown.md"
       - alert: FilesystemReadOnly
         expr: |
