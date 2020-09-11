@@ -21,3 +21,11 @@
         name: "smartmon-metrics"
         minute: "*/10"
         job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
+
+- hosts: all
+  become: true
+  tasks:
+  - name: Install nfs mount client software
+    apt:
+      name: nfs-client
+      state: present
