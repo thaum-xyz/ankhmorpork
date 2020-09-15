@@ -24,10 +24,9 @@ spec:
       - args:
         - --kubelet-service=kube-system/kubelet
         - --logtostderr=true
-        - --config-reloader-image=jimmidyson/configmap-reload:v0.4.0
-        - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.42.0
+        - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:single-reloader
         - --log-level=debug
-        image: quay.io/prometheus-operator/prometheus-operator:v0.42.0
+        image: quay.io/prometheus-operator/prometheus-operator:single-reloader
         name: prometheus-operator
         ports:
         - containerPort: 8080
