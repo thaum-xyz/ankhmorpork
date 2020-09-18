@@ -49,7 +49,7 @@ spec:
         sum by (node) (yum_upgrades_pending) > 10
         or
         sum by (node) (apt_upgrades_pending) > 10
-      for: 24h
+      for: 48h
       labels:
         severity: info
       annotations:
@@ -58,7 +58,7 @@ spec:
         runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/PackagesAvailable.md"
     - alert: RebootRequired
       expr: "node_reboot_required > 0"
-      for: 1h
+      for: 4h
       labels:
         severity: info
       annotations:
