@@ -20,11 +20,12 @@ spec:
       containers:
       - args:
         - --host=127.0.0.1
-        - --port=8081
+        - --port=8080
         - --telemetry-host=127.0.0.1
-        - --telemetry-port=8082
+        - --telemetry-port=8081
         # Version v2.0.0-alpha refers to commit 30976a7 built with mechanisms from PR1190
-        image: quay.io/paulfantom/kube-state-metrics:v2.0.0-alpha
+        # image: quay.io/paulfantom/kube-state-metrics:v2.0.0-alpha
+        image: k8s.gcr.io/kube-state-metrics/kube-state-metrics-arm64:2.0.0-alpha
         name: kube-state-metrics
         securityContext:
           runAsUser: 65534
@@ -35,8 +36,8 @@ spec:
         - --logtostderr
         - --secure-listen-address=:8443
         - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
-        - --upstream=http://127.0.0.1:8081/
-        image: quay.io/brancz/kube-rbac-proxy:v0.6.0
+        - --upstream=http://127.0.0.1:8080/
+        image: quay.io/brancz/kube-rbac-proxy:v0.7.0
         name: kube-rbac-proxy-main
         ports:
         - containerPort: 8443
@@ -50,8 +51,8 @@ spec:
         - --logtostderr
         - --secure-listen-address=:9443
         - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
-        - --upstream=http://127.0.0.1:8082/
-        image: quay.io/brancz/kube-rbac-proxy:v0.6.0
+        - --upstream=http://127.0.0.1:8081/
+        image: quay.io/brancz/kube-rbac-proxy:v0.7.0
         name: kube-rbac-proxy-self
         ports:
         - containerPort: 9443
@@ -63,4 +64,5 @@ spec:
             memory: 9Mi
       nodeSelector:
         kubernetes.io/os: linux
+        kubernetes.io/arch: arm64
       serviceAccountName: kube-state-metrics
