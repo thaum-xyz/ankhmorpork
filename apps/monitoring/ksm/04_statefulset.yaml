@@ -8,6 +8,7 @@ metadata:
   namespace: monitoring
 spec:
   replicas: 2
+  serviceName: kube-state-metrics
   selector:
     matchLabels:
       app.kubernetes.io/name: kube-state-metrics
