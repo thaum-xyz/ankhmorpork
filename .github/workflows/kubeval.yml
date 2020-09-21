@@ -14,15 +14,15 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
-          go-version: '^1.13.1'
+          go-version: '1.15'
       - run: go get -u github.com/instrumenta/kubeval
-      - run: kubeval --skip-kinds SealedSecret,ConfigMapSecret,CustomResourceDefinition,ServiceMonitor,PodMonitor,Prometheus,PrometheusRule,Alertmanager,APIService --strict -d apps/
+      - run: kubeval --skip-kinds SealedSecret,ConfigMapSecret,CustomResourceDefinition,ServiceMonitor,PodMonitor,Probe,Prometheus,PrometheusRule,Alertmanager,APIService --strict --force-color -d apps/
   base:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
-          go-version: '^1.13.1'
+          go-version: '1.15'
       - run: go get -u github.com/instrumenta/kubeval
-      - run: kubeval --skip-kinds SealedSecret,Application,CustomResourceDefinition,ClusterIssuer,AppProject,ServiceMonitor,PodMonitor,PrometheusRule --strict -d base/
+      - run: kubeval --skip-kinds SealedSecret,Application,CustomResourceDefinition,ClusterIssuer,AppProject,ServiceMonitor,PodMonitor,PrometheusRule --strict --force-color -d base/
