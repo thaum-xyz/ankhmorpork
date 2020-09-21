@@ -20,6 +20,7 @@ nginx/nginx-prometheus-exporter
 allangood/holiday_exporter
 quay.io/superq/smokeping-prober-linux-arm64
 quay.io/prometheus/mysqld-exporter
+k8s.gcr.io/kube-state-metrics/kube-state-metrics-arm64
 EOM
 )
 
