@@ -10,6 +10,9 @@ spec:
   - name: web
     port: 9090
     targetPort: web
+  - name: reloader
+    port: 8080
+    targetPort: 8080
   selector:
     app: prometheus
     prometheus: k8s
