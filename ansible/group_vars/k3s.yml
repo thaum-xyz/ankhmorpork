@@ -1,5 +1,5 @@
 ---
-k3s_version: v1.19.1-rc1+k3s1
+k3s_version: v1.19.2+k3s1
 k3s_master_ip: "{{ hostvars[groups['k3s-master'][0]]['ansible_default_ipv4']['address'] }}"
 k3s_extra_server_args: "--disable servicelb --disable traefik --disable-cloud-controller --node-taint node-role.kubernetes.io/master=true:NoSchedule --kube-controller-manager-arg address={{ k3s_master_ip }} --kube-scheduler-arg address={{ k3s_master_ip }}"
 k3s_token: "{{ hostvars[groups['k3s-master'][0]]['token'] }}"
