@@ -5,7 +5,7 @@ metadata:
     prometheus: k8s
     role: alert-rules
   name: cert-manager-rules
-  namespace: monitoring
+  namespace: cert-manager
 spec:
   groups:
   - name: cert-manager
