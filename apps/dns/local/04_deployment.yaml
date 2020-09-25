@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: coredns
     app.kubernetes.io/component: adblocker
-    app.kubernetes.io/version: 0.2.2
+    app.kubernetes.io/version: 0.2.4
 spec:
   strategy:
     type: RollingUpdate
@@ -18,13 +18,12 @@ spec:
     matchLabels:
       app.kubernetes.io/name: coredns
       app.kubernetes.io/component: adblocker
-      app.kubernetes.io/version: 0.2.2
   template:
     metadata:
       labels:
         app.kubernetes.io/name: coredns
         app.kubernetes.io/component: adblocker
-        app.kubernetes.io/version: 0.2.2
+        app.kubernetes.io/version: 0.2.4
     spec:
       serviceAccountName: coredns
       affinity:
@@ -40,7 +39,7 @@ spec:
                topologyKey: kubernetes.io/hostname
       containers:
       - name: coredns
-        image: quay.io/paulfantom/coredns-ads:ebdc93c2
+        image: quay.io/paulfantom/coredns-ads:9d08bf49
         # image: coredns/coredns
         resources:
           limits:
