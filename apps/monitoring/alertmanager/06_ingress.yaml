@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: alertmanager
@@ -18,6 +18,10 @@ spec:
   - host: alertmanager.ankhmorpork.thaum.xyz
     http:
       paths:
-      - backend:
-          serviceName: alertmanager-main
-          servicePort: 9093
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: alertmanager-main
+            port:
+              name: web

@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: prometheus
@@ -18,6 +18,10 @@ spec:
   - host: prometheus.ankhmorpork.thaum.xyz
     http:
       paths:
-      - backend:
-          serviceName: prometheus-k8s
-          servicePort: 9090
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-k8s
+            port:
+              name: web

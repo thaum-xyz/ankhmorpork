@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ara
@@ -18,6 +18,10 @@ spec:
   - host: ara.ankhmorpork.thaum.xyz
     http:
       paths:
-      - backend:
-          serviceName: ara
-          servicePort: 8000
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ara
+            port:
+              name: http-ara
