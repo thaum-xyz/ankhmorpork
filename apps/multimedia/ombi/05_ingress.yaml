@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ombi
@@ -16,6 +16,10 @@ spec:
   - host: ombi.ankhmorpork.thaum.xyz
     http:
       paths:
-      - backend:
-          serviceName: ombi
-          servicePort: 3579
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+           name: ombi
+           port: 
+             name: http-ombi

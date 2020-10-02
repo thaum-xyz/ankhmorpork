@@ -1,5 +1,5 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: argocd-server-ingress
@@ -15,15 +15,18 @@ metadata:
     #
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
-  rules:
-  - host: argocd.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          serviceName: argocd-server
-          servicePort: https
-        path: /
   tls:
   - hosts:
     - argocd.ankhmorpork.thaum.xyz
     secretName: argocd-secret # do not change, this is provided by Argo CD
+  rules:
+  - host: argocd.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: https

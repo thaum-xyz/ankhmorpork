@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress
@@ -16,7 +16,10 @@ spec:
   - host: auth.ankhmorpork.thaum.xyz
     http:
       paths:
-      - backend:
-          serviceName: oauth2-proxy
-          servicePort: 4180
-        #path: /oauth2
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: oauth2-proxy
+            port:
+              name: proxy

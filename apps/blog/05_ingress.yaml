@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ghost-about
@@ -18,11 +18,15 @@ spec:
   - host: blog.ankhmorpork.thaum.xyz
     http:
       paths:
-      - backend:
-          serviceName: ghost
-          servicePort: 2368
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ghost
+            port:
+              name: http
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ghost
@@ -40,6 +44,10 @@ spec:
   - host: alchemyof.it
     http:
       paths:
-      - backend:
-          serviceName: ghost
-          servicePort: 2368
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ghost
+            port:
+              name: http

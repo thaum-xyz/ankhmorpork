@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: homeassistant
@@ -18,6 +18,10 @@ spec:
   - host: home.ankhmorpork.thaum.xyz
     http:
       paths:
-      - backend:
-          serviceName: webui
-          servicePort: 8123
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: webui
+            port:
+              name: webui
