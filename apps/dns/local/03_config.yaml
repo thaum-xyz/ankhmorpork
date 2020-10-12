@@ -39,56 +39,8 @@ data:
         fallthrough
       }
       ads {
-        blacklist https://gist.githubusercontent.com/paulfantom/03f6367728381a7ccf53fc7612b1575d/raw/adblocklist
-        blacklist https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-        blacklist https://mirror1.malwaredomains.com/files/justdomains
-        blacklist http://sysctl.org/cameleon/hosts
-        blacklist https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
-        blacklist https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/easylist_host.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/easy_privacy_host.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/hostfile.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/Ad_filter_list_by_Disconnect.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/kad_host.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/adguard_mobile_host.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/ads-and-tracking.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/adservers.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/gambling-hosts.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/youtubehosts.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/adguard_host.txt
-        blacklist https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-pihole-filters/adguard_crypto_host.txt
-        blacklist https://reddestdream.github.io/Projects/MinimalHosts/etc/MinimalHostsBlocker/minimalhosts
-        blacklist https://raw.githubusercontent.com/StevenBlack/hosts/master/data/KADhosts/hosts
-        blacklist https://raw.githubusercontent.com/StevenBlack/hosts/master/data/add.Spam/hosts
-        blacklist https://v.firebog.net/hosts/static/w3kbl.txt
-        blacklist https://adaway.org/hosts.txt
-        blacklist https://v.firebog.net/hosts/AdguardDNS.txt
-        blacklist https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt
-        blacklist https://v.firebog.net/hosts/Easylist.txt
-        blacklist https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts;showintro=0
-        blacklist https://raw.githubusercontent.com/StevenBlack/hosts/master/data/UncheckyAds/hosts
-        blacklist https://www.squidblacklist.org/downloads/dg-ads.acl
-        blacklist https://v.firebog.net/hosts/Easyprivacy.txt
-        blacklist https://v.firebog.net/hosts/Prigent-Ads.txt
-        blacklist https://gitlab.com/quidsup/notrack-blocklists/raw/master/notrack-blocklist.txt
-        blacklist https://raw.githubusercontent.com/StevenBlack/hosts/master/data/add.2o7Net/hosts
-        blacklist https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
-        blacklist https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
-        blacklist https://mirror.cedia.org.ec/malwaredomains/immortal_domains.txt
-        blacklist https://www.malwaredomainlist.com/hostslist/hosts.txt
-        blacklist https://bitbucket.org/ethanr/dns-blacklists/raw/8575c9f96e5b4a1308f2f12394abd86d0927a4a0/bad_lists/Mandiant_APT1_Report_Appendix_D.txt
-        blacklist https://v.firebog.net/hosts/Prigent-Malware.txt
-        blacklist https://v.firebog.net/hosts/Prigent-Phishing.txt
-        blacklist https://phishing.army/download/phishing_army_blocklist_extended.txt
-        blacklist https://gitlab.com/quidsup/notrack-blocklists/raw/master/notrack-malware.txt
-        blacklist https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt
-        blacklist https://ransomwaretracker.abuse.ch/downloads/CW_C2_DOMBL.txt
-        blacklist https://ransomwaretracker.abuse.ch/downloads/LY_C2_DOMBL.txt
-        blacklist https://ransomwaretracker.abuse.ch/downloads/TC_C2_DOMBL.txt
-        blacklist https://ransomwaretracker.abuse.ch/downloads/TL_C2_DOMBL.txt
-        blacklist https://raw.githubusercontent.com/StevenBlack/hosts/master/data/add.Risk/hosts
-        blacklist https://www.squidblacklist.org/downloads/dg-malicious.acl
-        blacklist https://zerodot1.gitlab.io/CoinBlockerLists/hosts
+        default-lists
+        log
       }
       cache
       forward . tls://1.1.1.1 tls://1.0.0.1 {
