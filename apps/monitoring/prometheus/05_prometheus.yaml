@@ -29,12 +29,13 @@ spec:
       namespace: monitoring
       port: web
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
-  image: quay.io/prometheus/prometheus:v2.21.0-rc.1
+  image: quay.io/prometheus/prometheus:v2.22.0-rc.0
   nodeSelector:
     kubernetes.io/os: linux
   podMonitorNamespaceSelector: {}
   podMonitorSelector: {}
   replicas: 1
+  retention: 7d
   resources:
     requests:
       memory: 1400Mi
@@ -62,4 +63,4 @@ spec:
           - ReadWriteMany
         resources:
           requests:
-            storage: 1Gi
+            storage: 50Gi
