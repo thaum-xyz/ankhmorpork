@@ -42,12 +42,6 @@ spec:
         resources:
           requests:
             memory: 22Mi
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8081
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
       - args:
         - --logtostderr
         - --secure-listen-address=:8443
