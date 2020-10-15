@@ -14,8 +14,7 @@ spec:
         expr: 'absent(up{namespace="ingress-nginx"}) == 1'
         for: 15m
         labels:
-          severity: critical
-          priority: P1
+          severity: warning
         annotations:
           description: Nginx Ingress has disappeared from Prometheus target discovery.
           summary: Target disappeared from Prometheus target discovery.
