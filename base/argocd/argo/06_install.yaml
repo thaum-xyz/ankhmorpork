@@ -454,7 +454,7 @@ metadata:
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.7
+    app.kubernetes.io/version: 1.8.0-alpha
   name: argocd-application-controller
   namespace: argocd
 spec:
@@ -467,7 +467,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: argocd-application-controller
-        app.kubernetes.io/version: 1.7.7
+        app.kubernetes.io/version: 1.8.0-alpha
     spec:
       containers:
       - command:
@@ -476,7 +476,7 @@ spec:
         - "10"
         - --operation-processors
         - "5"
-        image: quay.io/paulfantom/argocd:42818c42  # v1.7.7
+        image: quay.io/paulfantom/argocd:1bed5a14  # v1.8.0-alpha
         livenessProbe:
           httpGet:
             path: /healthz
@@ -507,7 +507,7 @@ metadata:
     app.kubernetes.io/component: dex-server
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.7
+    app.kubernetes.io/version: 1.8.0-alpha
   name: argocd-dex-server
   namespace: argocd
 spec:
@@ -518,7 +518,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: argocd-dex-server
-        app.kubernetes.io/version: 1.7.7
+        app.kubernetes.io/version: 1.8.0-alpha
     spec:
       containers:
       - command:
@@ -542,7 +542,7 @@ spec:
         - -n
         - /usr/local/bin/argocd-util
         - /shared
-        image: quay.io/paulfantom/argocd:42818c42  # v1.7.7
+        image: quay.io/paulfantom/argocd:1bed5a14  # v1.8.0-alpha
         name: copyutil
         volumeMounts:
         - mountPath: /shared
@@ -559,7 +559,7 @@ metadata:
     app.kubernetes.io/component: redis
     app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.7
+    app.kubernetes.io/version: 1.8.0-alpha
   name: argocd-redis
   namespace: argocd
 spec:
@@ -570,7 +570,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: argocd-redis
-        app.kubernetes.io/version: 1.7.7
+        app.kubernetes.io/version: 1.8.0-alpha
     spec:
       containers:
       - args:
@@ -598,7 +598,7 @@ metadata:
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.7
+    app.kubernetes.io/version: 1.8.0-alpha
   name: argocd-repo-server
   namespace: argocd
 spec:
@@ -617,7 +617,7 @@ spec:
         - argocd-repo-server
         - --redis
         - argocd-redis:6379
-        image: quay.io/paulfantom/argocd:42818c42  # v1.7.7
+        image: quay.io/paulfantom/argocd:1bed5a14  # v1.8.0-alpha
         livenessProbe:
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -664,7 +664,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.7
+    app.kubernetes.io/version: 1.8.0-alpha
   name: argocd-server
   namespace: argocd
 spec:
@@ -675,14 +675,14 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: argocd-server
-        app.kubernetes.io/version: 1.7.7
+        app.kubernetes.io/version: 1.8.0-alpha
     spec:
       containers:
       - command:
         - argocd-server
         - --staticassets
         - /shared/app
-        image: quay.io/paulfantom/argocd:42818c42  # v1.7.7
+        image: quay.io/paulfantom/argocd:1bed5a14  # v1.8.0-alpha
         livenessProbe:
           httpGet:
             path: /healthz
