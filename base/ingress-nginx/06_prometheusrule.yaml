@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: nginx-ingress
+  namespace: ingress-nginx
+spec:
+  groups:
+  - name: nginx-ingress
+    rules:
+      - alert: NginxIngressDown
+        expr: 'absent(up{namespace="ingress-nginx"}) == 1'
+        for: 15m
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          description: Nginx Ingress has disappeared from Prometheus target discovery.
+          summary: Target disappeared from Prometheus target discovery.
