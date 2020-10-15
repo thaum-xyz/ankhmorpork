@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: prometheus-operator
-    app.kubernetes.io/version: v0.42.1
+    app.kubernetes.io/version: v0.42.1-master
   name: prometheus-operator
   namespace: monitoring
 spec:
@@ -18,16 +18,16 @@ spec:
       labels:
         app.kubernetes.io/component: controller
         app.kubernetes.io/name: prometheus-operator
-        app.kubernetes.io/version: v0.42.1
+        app.kubernetes.io/version: v0.42.1-master
     spec:
       containers:
       - args:
         - --kubelet-service=kube-system/kubelet
         - --logtostderr=true
-        - --prometheus-config-reloader=quay.io/paulfantom/prometheus-config-reloader:single-reloader-eb6c074
+        - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:master
         - --config-reloader-cpu=150m
         - --log-level=debug
-        image: quay.io/paulfantom/prometheus-operator:single-reloader-eb6c074
+        image: quay.io/prometheus-operator/prometheus-operator:master
         name: prometheus-operator
         ports:
         - containerPort: 8080
@@ -46,7 +46,7 @@ spec:
         - --secure-listen-address=:8443
         - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
         - --upstream=http://127.0.0.1:8080/
-        image: quay.io/brancz/kube-rbac-proxy:v0.6.0
+        image: quay.io/brancz/kube-rbac-proxy:v0.7.0
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443
