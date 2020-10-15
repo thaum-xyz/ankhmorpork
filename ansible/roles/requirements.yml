@@ -5,7 +5,6 @@
 - name: jnv.unattended-upgrades
   version: v1.7.1
 - name: dev-sec.ssh-hardening
-  version: 9.2.0
 - name: geerlingguy.nfs
 - name: paulfantom.raspberry
 #- name: bertvv.samba
