@@ -396,6 +396,9 @@ spec:
             - name: webhook
               containerPort: 8443
               protocol: TCP
+            - name: metrics
+              containerPort: 10254
+              protocol: TCP
           volumeMounts:
             - name: webhook-cert
               mountPath: /usr/local/certificates/
