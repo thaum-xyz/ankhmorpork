@@ -3,7 +3,7 @@
 
 storage01 ansible_user=paulfantom ansible_host=192.168.2.3  network=fast
 master01  ansible_user=ubuntu     ansible_host=192.168.2.11
-node01    ansible_user=ubuntu     ansible_host=192.168.2.12
+#node01    ansible_user=ubuntu     ansible_host=192.168.2.12
 node02    ansible_user=ubuntu     ansible_host=192.168.2.13 network=fast
 #node03    ansible_user=ubuntu     ansible_host=192.168.2.14
 node04    ansible_user=ubuntu     ansible_host=192.168.2.15
@@ -26,7 +26,7 @@ master01
 
 [k3s-node]
 storage01
-node0[1:2]
+node02
 node0[4:5]
 
 [k3s:children]

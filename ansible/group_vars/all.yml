@@ -14,7 +14,6 @@ node_exporter_enabled_collectors:
       ignored-devices: '^(ram|loop|fd|(h|v|xv)d[a-z]|dm-)\\\d+$'
   - netdev:
       device-blacklist: "^(veth.*|br.*)$"
-  - systemd
 node_exporter_disabled_collectors:
   - logind
   - ntp
