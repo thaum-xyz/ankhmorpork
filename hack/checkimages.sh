@@ -24,6 +24,10 @@ k8s.gcr.io/kube-state-metrics/kube-state-metrics-arm64
 EOM
 )
 
+FAIL="[ \e[1m\e[31mFAIL\e[0m ]"
+SKIP="[ \e[1m\e[33mSKIP\e[0m ]"
+OK="[  \e[1m\e[32mOK\e[0m  ]"
+
 check_cross_compatibility() {
         local image="${1}"
         local manifest="${2}"
@@ -32,7 +36,7 @@ check_cross_compatibility() {
 
         for exclude in ${MULTI_ARCH_EXCLUDED}; do
                 if [[ "${image}" =~ ${exclude} ]]; then
-                        echo "WARN: Skipping validating cross-arch compatibility for ${image}"
+                        echo -e "$SKIP Validating cross-arch compatibility for \e[1m${image}\e[0m"
                         return
                 fi
         done
@@ -40,7 +44,7 @@ check_cross_compatibility() {
         arch_list="$(echo "${manifest}" | jq -cr '..| .architecture?, .Architecture? | select(type != "null") | select(. != "" )'  | sort | uniq)"
         for arch in ${CPU_ARCHS}; do
                 if ! grep -q "${arch}$" <<< "$arch_list"; then
-                        echo "ERR : Image ${image} does not support ${arch} !"
+                        echo -e "$FAIL Image \e[1m${image}\e[0m does not support ${arch} !"
                         err=1
                 fi
         done
@@ -62,9 +66,20 @@ done
 pids=()
 for image in $(echo -e "${IMAGES}" | tr ' ' '\n' | sort -f | uniq); do
         (
-                echo "INFO: Inspecting ${image} ..."
                 info=$(manifest-tool inspect --raw "${image}")
-                check_cross_compatibility "${image}" "${info}"
+                count=0
+                until check_cross_compatibility "${image}" "${info}"; do
+                	sleep 15
+                	count=$((count++))
+                	if [ $count -gt 10 ]; then
+                		break
+                	fi
+                done
+                if [ $count -gt 10 ]; then
+                	echo -e "$FAIL Image \e[1m${image}\e[0m is not compatible with system architecture"
+                else
+                	echo -e "$OK Image \e[1m${image}\e[0m is compatible"
+                fi
         ) &
         pids+=("$!")
         sleep 1  # Add some delay to prevent DDoSing registry
