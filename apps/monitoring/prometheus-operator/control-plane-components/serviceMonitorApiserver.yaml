@@ -59,12 +59,13 @@ spec:
       sourceLabels:
       - __name__
       - le
+    - targetLabel: job
+      replacement: "kube-apiserver"
     port: https
     scheme: https
     tlsConfig:
       caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
       serverName: kubernetes
-  jobLabel: k8s-app
   namespaceSelector:
     matchNames:
     - default
