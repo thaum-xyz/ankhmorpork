@@ -30,8 +30,8 @@ spec:
   project: ansible
   syncPolicy:
     automated:
-      prune: false
-      selfHeal: false
+      prune: true
+      selfHeal: true
 
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -49,6 +49,6 @@ spec:
   project: ansible
   syncPolicy:
     automated:
-      prune: false
+      prune: true
       selfHeal: true
 
