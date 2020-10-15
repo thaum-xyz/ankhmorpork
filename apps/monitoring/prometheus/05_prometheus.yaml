@@ -34,16 +34,15 @@ spec:
     kubernetes.io/os: linux
   podMonitorNamespaceSelector: {}
   podMonitorSelector: {}
+  probeNamespaceSelector: {}
+  probeSelector: {}
   replicas: 1
   retention: 7d
   resources:
     requests:
       memory: 1400Mi
   ruleNamespaceSelector: {}
-  ruleSelector:
-    matchLabels:
-      prometheus: k8s
-      role: alert-rules
+  ruleSelector: {}
   securityContext:
     fsGroup: 2000
     runAsNonRoot: true

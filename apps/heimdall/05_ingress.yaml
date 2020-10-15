@@ -4,6 +4,8 @@ kind: Ingress
 metadata:
   name: ingress
   namespace: heimdall
+  labels:
+    probe: enabled
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"

@@ -1,0 +1,37 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: prometheus-demo
+  namespace: monitoring
+spec:
+  prober:
+    url: prober.monitoring.svc:9115
+  module: http_2xx
+  targets:
+    staticConfig:
+      static:
+        - 'https://demo.do.prometheus.io'
+        - 'https://prometheus.demo.do.prometheus.io/-/healthy'
+        - 'https://alertmanager.demo.do.prometheus.io/-/healthy'
+        - 'https://node.demo.do.prometheus.io'
+        - 'https://grafana.demo.do.prometheus.io/api/health'
+      labels:
+        environment: prometheus.io
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: ankhmorpork
+  namespace: monitoring
+spec:
+  prober:
+    url: prober.monitoring.svc:9115
+  module: http_2xx
+  targets:
+    ingress:
+      selector:
+        matchLabels:
+          probe: enabled
+      namespaceSelector:
+        any: true
