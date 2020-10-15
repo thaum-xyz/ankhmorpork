@@ -272,6 +272,15 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
+    app.kubernetes.io/name: argocd-gpg-keys-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-gpg-keys-cm
+  namespace: argocd
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
     app.kubernetes.io/name: argocd-rbac-cm
     app.kubernetes.io/part-of: argocd
   name: argocd-rbac-cm
@@ -445,7 +454,7 @@ metadata:
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.6
+    app.kubernetes.io/version: 1.7.7
   name: argocd-application-controller
   namespace: argocd
 spec:
@@ -458,7 +467,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: argocd-application-controller
-        app.kubernetes.io/version: 1.7.6
+        app.kubernetes.io/version: 1.7.7
     spec:
       containers:
       - command:
@@ -467,7 +476,7 @@ spec:
         - "10"
         - --operation-processors
         - "5"
-        image: quay.io/paulfantom/argocd:42818c42  # v1.7.6
+        image: quay.io/paulfantom/argocd:42818c42  # v1.7.7
         livenessProbe:
           httpGet:
             path: /healthz
@@ -498,7 +507,7 @@ metadata:
     app.kubernetes.io/component: dex-server
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.6
+    app.kubernetes.io/version: 1.7.7
   name: argocd-dex-server
   namespace: argocd
 spec:
@@ -509,7 +518,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: argocd-dex-server
-        app.kubernetes.io/version: 1.7.6
+        app.kubernetes.io/version: 1.7.7
     spec:
       containers:
       - command:
@@ -533,7 +542,7 @@ spec:
         - -n
         - /usr/local/bin/argocd-util
         - /shared
-        image: quay.io/paulfantom/argocd:42818c42  # v1.7.6
+        image: quay.io/paulfantom/argocd:42818c42  # v1.7.7
         name: copyutil
         volumeMounts:
         - mountPath: /shared
@@ -550,7 +559,7 @@ metadata:
     app.kubernetes.io/component: redis
     app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.6
+    app.kubernetes.io/version: 1.7.7
   name: argocd-redis
   namespace: argocd
 spec:
@@ -561,7 +570,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: argocd-redis
-        app.kubernetes.io/version: 1.7.6
+        app.kubernetes.io/version: 1.7.7
     spec:
       containers:
       - args:
@@ -576,6 +585,11 @@ spec:
         resources:
           requests:
             memory: 30Mi
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -584,7 +598,7 @@ metadata:
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.6
+    app.kubernetes.io/version: 1.7.7
   name: argocd-repo-server
   namespace: argocd
 spec:
@@ -603,7 +617,7 @@ spec:
         - argocd-repo-server
         - --redis
         - argocd-redis:6379
-        image: quay.io/paulfantom/argocd:42818c42  # v1.7.6
+        image: quay.io/paulfantom/argocd:42818c42  # v1.7.7
         livenessProbe:
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -623,6 +637,10 @@ spec:
           name: ssh-known-hosts
         - mountPath: /app/config/tls
           name: tls-certs
+        - mountPath: /app/config/gpg/source
+          name: gpg-keys
+        - mountPath: /app/config/gpg/keys
+          name: gpg-keyring
         resources:
           requests:
             memory: 45Mi
@@ -633,6 +651,11 @@ spec:
       - configMap:
           name: argocd-tls-certs-cm
         name: tls-certs
+      - configMap:
+          name: argocd-gpg-keys-cm
+        name: gpg-keys
+      - emptyDir: {}
+        name: gpg-keyring
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -641,7 +664,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: 1.7.6
+    app.kubernetes.io/version: 1.7.7
   name: argocd-server
   namespace: argocd
 spec:
@@ -652,14 +675,14 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: argocd-server
-        app.kubernetes.io/version: 1.7.6
+        app.kubernetes.io/version: 1.7.7
     spec:
       containers:
       - command:
         - argocd-server
         - --staticassets
         - /shared/app
-        image: quay.io/paulfantom/argocd:42818c42  # v1.7.6
+        image: quay.io/paulfantom/argocd:42818c42  # v1.7.7
         livenessProbe:
           httpGet:
             path: /healthz
