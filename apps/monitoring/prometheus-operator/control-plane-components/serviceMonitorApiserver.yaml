@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    k8s-app: kube-apiserver
+    k8s-app: apiserver
   name: kube-apiserver
   namespace: monitoring
 spec:
@@ -59,13 +59,12 @@ spec:
       sourceLabels:
       - __name__
       - le
-    - targetLabel: job
-      replacement: "kube-apiserver"
     port: https
     scheme: https
     tlsConfig:
       caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
       serverName: kubernetes
+  jobLabel: component
   namespaceSelector:
     matchNames:
     - default
