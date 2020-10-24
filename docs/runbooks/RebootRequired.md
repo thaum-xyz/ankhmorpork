@@ -10,7 +10,3 @@
 6. Make node schedulable `kubectl uncordon NODE_NAME`
 7. (optional) remove silence from alertmanager.
 
-## Side notes
-
-Rebooting `node01` requires shutdown of `node04` and power cycling PoE for `node04`. This is due to reboot issues
-on Odroid C2 board.
