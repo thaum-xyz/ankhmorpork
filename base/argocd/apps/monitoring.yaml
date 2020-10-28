@@ -37,13 +37,13 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: blackbox
+  name: prober
 spec:
   destination:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/blackbox
+    path: apps/monitoring/prober
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
