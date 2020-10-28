@@ -36,7 +36,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         # image: k8s.gcr.io/kube-state-metrics/kube-state-metrics-arm64:2.0.0-alpha.2
-        image: gcr.io/k8s-staging-kube-state-metrics/kube-state-metrics-arm64:v2.0.0-alpha.2
+        image: gcr.io/k8s-staging-kube-state-metrics/kube-state-metrics:v2.0.0-alpha.2
         name: kube-state-metrics
         securityContext:
           runAsUser: 65534
@@ -75,5 +75,5 @@ spec:
             memory: 9Mi
       nodeSelector:
         kubernetes.io/os: linux
-        kubernetes.io/arch: arm64
+        # kubernetes.io/arch: arm64
       serviceAccountName: kube-state-metrics
