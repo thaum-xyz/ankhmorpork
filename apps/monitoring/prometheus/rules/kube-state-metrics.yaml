@@ -21,7 +21,7 @@ spec:
         > 0.01
       for: 15m
       labels:
-        severity: critical
+        severity: warning
     - alert: KubeStateMetricsWatchErrors
       annotations:
         message: kube-state-metrics is experiencing errors at an elevated rate in watch operations. This is likely causing it to not be able to expose metrics about Kubernetes objects correctly or at all.
@@ -33,4 +33,4 @@ spec:
         > 0.01
       for: 15m
       labels:
-        severity: critical
+        severity: warning
