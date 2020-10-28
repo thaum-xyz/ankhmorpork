@@ -150,11 +150,11 @@ spec:
         summary: Filesystem is predicted to run out of inodes within the next 4 hours.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} / node_filesystem_files{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} * 100 < 20
+          node_filesystem_files_free{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"} / node_filesystem_files{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"} * 100 < 20
         and
-          predict_linear(node_filesystem_files_free{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"}[6h], 4*60*60) < 0
+          predict_linear(node_filesystem_files_free{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"}[6h], 4*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} == 0
+          node_filesystem_readonly{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"} == 0
         )
       for: 1h
       labels:
@@ -166,9 +166,9 @@ spec:
         summary: Filesystem has less than 5% inodes left.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} / node_filesystem_files{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} * 100 < 5
+          node_filesystem_files_free{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"} / node_filesystem_files{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"} * 100 < 5
         and
-          node_filesystem_readonly{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} == 0
+          node_filesystem_readonly{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"} == 0
         )
       for: 1h
       labels:
@@ -180,9 +180,9 @@ spec:
         summary: Filesystem has less than 3% inodes left.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} / node_filesystem_files{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} * 100 < 3
+          node_filesystem_files_free{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"} / node_filesystem_files{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} * 100 < 3
         and
-          node_filesystem_readonly{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+""overlay|nsfs"} == 0
+          node_filesystem_readonly{job="node-exporter",fstype!~"overlay|nsfs",device="nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+|overlay|nsfs"} == 0
         )
       for: 1h
       labels:
