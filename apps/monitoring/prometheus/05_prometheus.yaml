@@ -29,7 +29,7 @@ spec:
       namespace: monitoring
       port: web
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
-  image: quay.io/prometheus/prometheus:v2.22.0-rc.0
+  image: quay.io/prometheus/prometheus:v2.22.0
   nodeSelector:
     kubernetes.io/os: linux
   podMonitorNamespaceSelector: {}
