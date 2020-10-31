@@ -27,7 +27,7 @@ spec:
                 value: "http://push.monitoring.svc:9091"
               - name: ARA_SERVER
                 value: "http://ara.ansible.svc:8000"
-              - name: PLAYBOOK_NAME 
+              - name: PLAYBOOK_NAME
                 value: "00_site.yml"
               - name: REPO_URL
                 value: "https://github.com/thaum-xyz/ankhmorpork.git"
