@@ -7,12 +7,34 @@ metadata:
   labels:
     app.kubernetes.io/name: pushgateway
     app.kubernetes.io/component: exporter
-  name: push
+  name: push-old
   namespace: monitoring
 spec:
   externalTrafficPolicy: Cluster
   type: LoadBalancer
   loadBalancerIP: 192.168.2.21
+  ports:
+  - name: http-push
+    port: 9091
+    protocol: TCP
+    targetPort: http-push
+  selector:
+    app.kubernetes.io/name: pushgateway
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+  labels:
+    app.kubernetes.io/name: pushgateway
+    app.kubernetes.io/component: exporter
+  name: push
+  namespace: monitoring
+spec:
+  externalTrafficPolicy: Cluster
+  type: LoadBalancer
+  loadBalancerIP: 192.168.2.97
   ports:
   - name: http-push
     port: 9091

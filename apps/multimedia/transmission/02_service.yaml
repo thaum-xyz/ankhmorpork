@@ -11,6 +11,28 @@ metadata:
   namespace: multimedia
 spec:
   externalTrafficPolicy: Cluster
+  loadBalancerIP: 192.168.2.98
+  ports:
+  - port: 9091
+    protocol: TCP
+    targetPort: http-api
+  selector:
+    app.kubernetes.io/name: transmission
+  sessionAffinity: None
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+    metallb.universe.tf/allow-shared-ip: multimedia-svc
+  labels:
+    app.kubernetes.io/name: transmission
+  name: transmission-ui-old
+  namespace: multimedia
+spec:
+  externalTrafficPolicy: Cluster
   loadBalancerIP: 192.168.2.24
   ports:
   - port: 9091
