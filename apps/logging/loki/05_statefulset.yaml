@@ -1,0 +1,75 @@
+---
+# Source: loki/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: loki
+  namespace: logging
+  labels:
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: 2.0.0
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: loki
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: loki
+      app.kubernetes.io/component: server
+  serviceName: loki-headless
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: loki
+        app.kubernetes.io/component: server
+      annotations:
+        checksum/config: c4e05fe3283000f3d6122f139ec08460832e12feefdbe6746e19bca1f61387bb
+    spec:
+      serviceAccountName: loki
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: loki
+          image: "grafana/loki:2.0.0"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-config.file=/etc/loki/loki.yaml"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/loki
+            - name: storage
+              mountPath: "/data"
+              subPath: 
+          ports:
+            - name: http-metrics
+              containerPort: 3100
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 45
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 45
+          resources: {}
+          securityContext:
+            readOnlyRootFilesystem: true
+          env:
+      nodeSelector: {}
+      tolerations: []
+      terminationGracePeriodSeconds: 4800
+      volumes:
+        - name: config
+          secret:
+            secretName: loki
+        - name: storage
+          emptyDir: {}

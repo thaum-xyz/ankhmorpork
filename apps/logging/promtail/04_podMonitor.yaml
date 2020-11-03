@@ -1,0 +1,16 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: log-collector
+    app.kubernetes.io/name: promtail
+  name: promtail
+  namespace: logging
+spec:
+  podMetricsEndpoints:
+  - port: http-metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: log-collector
+      app.kubernetes.io/name: promtail

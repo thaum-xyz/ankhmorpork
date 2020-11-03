@@ -1,0 +1,122 @@
+---
+# Source: promtail/templates/podsecuritypolicy.yaml
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: promtail
+  labels:
+    app.kubernetes.io/name: promtail
+    app.kubernetes.io/version: 2.0.0
+    app.kubernetes.io/part-of: loki
+    app.kubernetes.io/component: log-collector
+spec:
+  allowPrivilegeEscalation: false
+  fsGroup:
+    rule: RunAsAny
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  privileged: false
+  readOnlyRootFilesystem: true
+  requiredDropCapabilities:
+  - ALL
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - secret
+  - configMap
+  - hostPath
+  - projected
+  - downwardAPI
+  - emptyDir
+---
+# Source: promtail/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: promtail
+    app.kubernetes.io/version: 2.0.0
+    app.kubernetes.io/part-of: loki
+    app.kubernetes.io/component: log-collector
+  name: promtail
+  namespace: logging
+---
+# Source: promtail/templates/clusterrole.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  labels:
+    app.kubernetes.io/name: promtail
+    app.kubernetes.io/version: 2.0.0
+    app.kubernetes.io/component: log-collector
+    app.kubernetes.io/part-of: loki
+  name: promtail-clusterrole
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "watch", "list"]
+---
+# Source: promtail/templates/clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: promtail-clusterrolebinding
+  labels:
+    app.kubernetes.io/name: promtail
+    app.kubernetes.io/version: 2.0.0
+    app.kubernetes.io/component: log-collector
+    app.kubernetes.io/part-of: loki
+subjects:
+  - kind: ServiceAccount
+    name: promtail
+    namespace: logging
+roleRef:
+  kind: ClusterRole
+  name: promtail-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: promtail/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: promtail
+  namespace: logging
+  labels:
+    app.kubernetes.io/name: promtail
+    app.kubernetes.io/version: 2.0.0
+    app.kubernetes.io/part-of: loki
+    app.kubernetes.io/component: log-collector
+rules:
+- apiGroups:      ['extensions']
+  resources:      ['podsecuritypolicies']
+  verbs:          ['use']
+  resourceNames:  [promtail]
+---
+# Source: promtail/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: promtail
+  namespace: logging
+  labels:
+    app.kubernetes.io/name: promtail
+    app.kubernetes.io/version: 2.0.0
+    app.kubernetes.io/part-of: loki
+    app.kubernetes.io/component: log-collector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: promtail
+subjects:
+- kind: ServiceAccount
+  name: promtail
