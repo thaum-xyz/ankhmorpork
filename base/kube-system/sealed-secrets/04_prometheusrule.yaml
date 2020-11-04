@@ -16,4 +16,4 @@ spec:
           severity: 'warning'
         annotations:
           summary: "Sealed Secrets controller experiences high rate of unsealing errors"
-          description: 'High rate of errors unsealing Sealed Secrets on {{ $instance }} due to {{ $reason }} issues'
+          description: 'High rate of errors unsealing Sealed Secrets on {{ $labels.instance }} due to {{ $labels.reason }} issues'
