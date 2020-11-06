@@ -40,17 +40,17 @@ system_mountpoints:
 
   - description: torrent hot cache mount
     before: k3s-node.service
-    device: "/dev/vg_fast/torrents"
+    device: "/dev/ubuntu-vg/torrents"
     mountpoint: "/srv/torrents"
     type: "xfs"
   - description: kubernetes NFS storage
     before: nfs-server.service k3s-node.service
-    device: "/dev/vg_fast/kube_nfs"
+    device: "/dev/ubuntu-vg/kube_nfs"
     mountpoint: "/srv/kubernetes/nfs"
     type: "ext4"
   - description: kubernetes local storage
     before: k3s-node.service
-    device: "/dev/vg_fast/kube_local"
+    device: "/dev/ubuntu-vg/kube_local"
     mountpoint: "/var/lib/rancher/k3s/storage"
     type: "ext4"
 
