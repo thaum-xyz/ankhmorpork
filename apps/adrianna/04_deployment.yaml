@@ -5,7 +5,7 @@ metadata:
   name: ghost
   labels:
     app.kubernetes.io/name: ghost
-    app.kubernetes.io/version: 3.32.2
+    app.kubernetes.io/version: 3.37.1
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: argocd
   namespace: adrianna
@@ -20,13 +20,13 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: ghost
-        app.kubernetes.io/version: 3.32.2
+        app.kubernetes.io/version: 3.37.1
         app.kubernetes.io/component: server
         app.kubernetes.io/managed-by: argocd
     spec:
       containers:
       - name: ghost
-        image: ghost:3.32.2
+        image: ghost:3.37.1
         ports:
           - name: http
             containerPort: 2368
