@@ -1,50 +1,50 @@
----
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: deploy
-  namespace: ansible
-spec:
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 3
-  concurrencyPolicy: Forbid
-  schedule: "6 1 * * *"  # At 01:06 everyday
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: ansible
-            image: quay.io/paulfantom/ansible-deploy
-            env:
-              - name: NAMESPACE
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.namespace
-              - name: INSTANCE
-                value: "ankhmopork"
-              - name: PUSHGATEWAY_URL
-                value: "http://push.monitoring.svc:9091"
-              - name: ARA_SERVER
-                value: "http://ara.ansible.svc:8000"
-              - name: PLAYBOOK_NAME
-                value: "00_site.yml"
-              - name: REPO_URL
-                value: "https://github.com/thaum-xyz/ankhmorpork.git"
-              - name: MAX_AGE
-                value: "691200"
-            volumeMounts:
-              - name: repository
-                mountPath: /ansible
-              - name: ssh
-                mountPath: /root/.ssh
-                readOnly: true
-          volumes:
-            - name: repository
-              persistentVolumeClaim:
-                claimName: repository
-            - name: ssh
-              secret:
-                secretName: sshprivkey
-                defaultMode: 0400
-          restartPolicy: OnFailure
+#---
+#apiVersion: batch/v1beta1
+#kind: CronJob
+#metadata:
+#  name: deploy
+#  namespace: ansible
+#spec:
+#  successfulJobsHistoryLimit: 1
+#  failedJobsHistoryLimit: 3
+#  concurrencyPolicy: Forbid
+#  schedule: "6 1 * * *"  # At 01:06 everyday
+#  jobTemplate:
+#    spec:
+#      template:
+#        spec:
+#          containers:
+#          - name: ansible
+#            image: quay.io/paulfantom/ansible-deploy
+#            env:
+#              - name: NAMESPACE
+#                valueFrom:
+#                  fieldRef:
+#                    fieldPath: metadata.namespace
+#              - name: INSTANCE
+#                value: "ankhmopork"
+#              - name: PUSHGATEWAY_URL
+#                value: "http://push.monitoring.svc:9091"
+#              - name: ARA_SERVER
+#                value: "http://ara.ansible.svc:8000"
+#              - name: PLAYBOOK_NAME
+#                value: "00_site.yml"
+#              - name: REPO_URL
+#                value: "https://github.com/thaum-xyz/ankhmorpork.git"
+#              - name: MAX_AGE
+#                value: "691200"
+#            volumeMounts:
+#              - name: repository
+#                mountPath: /ansible
+#              - name: ssh
+#                mountPath: /root/.ssh
+#                readOnly: true
+#          volumes:
+#            - name: repository
+#              persistentVolumeClaim:
+#                claimName: repository
+#            - name: ssh
+#              secret:
+#                secretName: sshprivkey
+#                defaultMode: 0400
+#          restartPolicy: OnFailure
