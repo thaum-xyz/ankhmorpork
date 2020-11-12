@@ -22,6 +22,21 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
+  name: ingresses
+  namespace: monitoring
+spec:
+  prober:
+    url: prober.monitoring.svc:9115
+  module: http_2xx
+  targets:
+    ingress:
+      selector: {}
+      namespaceSelector:
+        any: true
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
   name: ankhmorpork
   namespace: monitoring
 spec:
