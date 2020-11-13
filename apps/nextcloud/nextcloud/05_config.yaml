@@ -62,6 +62,6 @@ metadata:
     app.kubernetes.io/name: nextcloud
 data:
   www-data: |
-    */5 * * * * php -f /var/www/html/cron.php
-    30  2 * * * php -f /var/www/html/occ preview:pre-generate
+    */5  * * * * php -f /var/www/html/cron.php
+    30 */2 * * * php -f /var/www/html/occ preview:pre-generate
 
