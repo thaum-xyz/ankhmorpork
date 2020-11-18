@@ -39,6 +39,8 @@ data:
         fallthrough
       }
       ads {
+        permit cdnpark.com
+        permit googleadservices.com
         default-lists
         log
       }
