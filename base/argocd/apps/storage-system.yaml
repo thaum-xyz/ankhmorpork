@@ -34,3 +34,22 @@ spec:
       prune: false
       selfHeal: false
 
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-nfs
+spec:
+  destination:
+    namespace: storage-system
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: base/storage-system/external-nfs
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: storage-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
