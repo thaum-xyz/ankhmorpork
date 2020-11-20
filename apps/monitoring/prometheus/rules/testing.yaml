@@ -29,3 +29,13 @@ spec:
           summary: "Failed device in RAID array on {{ $labels.instance }}"
           description: "At least one device in RAID array on {{ $labels.instance }} failed. Array '{{ $labels.md_device }}' needs attention and possibly a disk swap"
           runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDDiskFailure.md"
+      - alert: CPUStealTimeHigh
+        expr: |
+          sum by (instance) (rate(node_cpu_seconds_total{mode="steal"}[3m])) / count by (instance) (node_cpu_seconds_total{mode="steal"}) > 0.000001
+        for: 20m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU Steal Time"
+          description: "CPU Steal Time is very high on {{ $labels.instance }} hypervisor. This can lead to VM being stalled."
+          runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/CPUStealTimeHigh.md"
