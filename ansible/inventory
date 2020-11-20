@@ -1,31 +1,35 @@
 # By default hosts are labeled with `network=slow` label
 # Hosts with label `network=fast` are used for metallb loadbalancer
 
-storage01 ansible_user=paulfantom ansible_host=192.168.2.3  network=fast
+storage01 ansible_user=ubuntu     ansible_host=192.168.2.3  network=fast
 master01  ansible_user=ubuntu     ansible_host=192.168.2.11
-#node01    ansible_user=ubuntu     ansible_host=192.168.2.12
-#node02    ansible_user=ubuntu     ansible_host=192.168.2.13 network=fast
+#node01    ansible_user=ubuntu     ansible_host=192.168.2.12 network=fast
+node02    ansible_user=ubuntu     ansible_host=192.168.2.13
 node03    ansible_user=ubuntu     ansible_host=192.168.2.14
-node04    ansible_user=ubuntu     ansible_host=192.168.2.15
+node04    ansible_user=ubuntu     ansible_host=192.168.2.15 network=fast
 node05    ansible_user=ubuntu     ansible_host=192.168.2.16 network=fast
-#node06    ansible_user=ubuntu     ansible_host=192.168.2.17
+# node06    ansible_user=ubuntu     ansible_host=192.168.2.17
+hyper01   ansible_user=root       ansible_host=192.168.2.40
 
 [fancontroler]
 master01
 
 [raspberry]
 master01
-node0[3:5]
+node0[2:5]
 
 [storage]
 storage01
+
+[proxmox]
+hyper01
 
 [k3s-master]
 master01
 
 [k3s-node]
 storage01
-node0[3:5]
+node0[2:5]
 
 [k3s:children]
 k3s-master
