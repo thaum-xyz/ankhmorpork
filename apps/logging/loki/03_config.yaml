@@ -10,5 +10,47 @@ metadata:
     app.kubernetes.io/version: 2.0.0
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: loki
-data:
-  loki.yaml: YXV0aF9lbmFibGVkOiBmYWxzZQpjaHVua19zdG9yZV9jb25maWc6CiAgbWF4X2xvb2tfYmFja19wZXJpb2Q6IDBzCmNvbXBhY3RvcjoKICBzaGFyZWRfc3RvcmU6IGZpbGVzeXN0ZW0KICB3b3JraW5nX2RpcmVjdG9yeTogL2RhdGEvbG9raS9ib2x0ZGItc2hpcHBlci1jb21wYWN0b3IKaW5nZXN0ZXI6CiAgY2h1bmtfYmxvY2tfc2l6ZTogMjYyMTQ0CiAgY2h1bmtfaWRsZV9wZXJpb2Q6IDNtCiAgY2h1bmtfcmV0YWluX3BlcmlvZDogMW0KICBsaWZlY3ljbGVyOgogICAgcmluZzoKICAgICAga3ZzdG9yZToKICAgICAgICBzdG9yZTogaW5tZW1vcnkKICAgICAgcmVwbGljYXRpb25fZmFjdG9yOiAxCiAgbWF4X3RyYW5zZmVyX3JldHJpZXM6IDAKbGltaXRzX2NvbmZpZzoKICBlbmZvcmNlX21ldHJpY19uYW1lOiBmYWxzZQogIHJlamVjdF9vbGRfc2FtcGxlczogdHJ1ZQogIHJlamVjdF9vbGRfc2FtcGxlc19tYXhfYWdlOiAxNjhoCnNjaGVtYV9jb25maWc6CiAgY29uZmlnczoKICAtIGZyb206ICIyMDIwLTEwLTI0IgogICAgaW5kZXg6CiAgICAgIHBlcmlvZDogMjRoCiAgICAgIHByZWZpeDogaW5kZXhfCiAgICBvYmplY3Rfc3RvcmU6IGZpbGVzeXN0ZW0KICAgIHNjaGVtYTogdjExCiAgICBzdG9yZTogYm9sdGRiLXNoaXBwZXIKc2VydmVyOgogIGh0dHBfbGlzdGVuX3BvcnQ6IDMxMDAKc3RvcmFnZV9jb25maWc6CiAgYm9sdGRiX3NoaXBwZXI6CiAgICBhY3RpdmVfaW5kZXhfZGlyZWN0b3J5OiAvZGF0YS9sb2tpL2JvbHRkYi1zaGlwcGVyLWFjdGl2ZQogICAgY2FjaGVfbG9jYXRpb246IC9kYXRhL2xva2kvYm9sdGRiLXNoaXBwZXItY2FjaGUKICAgIGNhY2hlX3R0bDogMjRoCiAgICBzaGFyZWRfc3RvcmU6IGZpbGVzeXN0ZW0KICBmaWxlc3lzdGVtOgogICAgZGlyZWN0b3J5OiAvZGF0YS9sb2tpL2NodW5rcwp0YWJsZV9tYW5hZ2VyOgogIHJldGVudGlvbl9kZWxldGVzX2VuYWJsZWQ6IGZhbHNlCiAgcmV0ZW50aW9uX3BlcmlvZDogMHM=
+stringData:
+  loki.yaml: |
+    auth_enabled: false
+    chunk_store_config:
+      max_look_back_period: 0s
+    compactor:
+      shared_store: filesystem
+      working_directory: /data/loki/boltdb-shipper-compactor
+    ingester:
+      chunk_block_size: 262144
+      chunk_idle_period: 3m
+      chunk_retain_period: 1m
+      lifecycler:
+        ring:
+          kvstore:
+            store: inmemory
+          replication_factor: 1
+      max_transfer_retries: 0
+    limits_config:
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
+    schema_config:
+      configs:
+      - from: "2020-10-24"
+        index:
+          period: 24h
+          prefix: index_
+        object_store: filesystem
+        schema: v11
+        store: boltdb-shipper
+    server:
+      http_listen_port: 3100
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /data/loki/boltdb-shipper-active
+        cache_location: /data/loki/boltdb-shipper-cache
+        cache_ttl: 24h
+        shared_store: filesystem
+      filesystem:
+        directory: /data/loki/chunks
+    table_manager:
+      retention_deletes_enabled: false
+      retention_period: 0s
