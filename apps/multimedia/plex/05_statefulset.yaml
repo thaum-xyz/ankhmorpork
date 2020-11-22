@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: plex
-    app.kubernetes.io/version: 1.20.1
+    app.kubernetes.io/version: 1.20.4
   name: plex
   namespace: multimedia
 spec:
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: plex
-        app.kubernetes.io/version: 1.20.1
+        app.kubernetes.io/version: 1.20.4
     spec:
       hostname: nas
       containers:
@@ -76,9 +76,9 @@ spec:
           timeoutSeconds: 10
         volumeMounts:
         - mountPath: /config
-          name: appdata
+          name: plexdata
         - mountPath: /backup
-          name: backup
+          name: backups
         - mountPath: /data/movies
           name: movies
         - mountPath: /data/tv
@@ -105,8 +105,10 @@ spec:
           type: ""
         name: localtime
       nodeSelector:
-        kubernetes.io/hostname: "storage01"
-        storage.infra/raid: "true"
+        kubernetes.io/arch: "amd64"
+        # kubernetes.io/hostname: "node01"
+        # storage.infra/replicated: "true"
+        gpu.infra/intel: "true"
       tolerations:
       - key: "node-role.kubernetes.io/storage"
         operator: "Equal"
@@ -122,20 +124,22 @@ spec:
         effect: "NoSchedule"
   volumeClaimTemplates:
   - metadata:
-      name: appdata
+      name: plexdata
       namespace: multimedia
     spec:
-      storageClassName: "local-path"
+      # TODO: Maybe put this in "replicated/drbd" storage?
+      storageClassName: "external-nfs"
       accessModes:
-        - ReadWriteOnce
+        - ReadWriteMany
       resources:
         requests:
           storage: 30Gi
   - metadata:
-      name: backup
+      name: backups
       namespace: multimedia
     spec:
-      storageClassName: "nfs-client"
+      # TODO: Maybe put this in "replicated/drbd" storage?
+      storageClassName: "external-nfs"
       accessModes:
         - ReadWriteMany
       resources:
