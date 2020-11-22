@@ -1,2 +1,3 @@
 ---
 ssh_permit_root_login: 'yes'
+system_update_etc_hosts: false

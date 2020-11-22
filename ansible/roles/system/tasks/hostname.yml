@@ -16,3 +16,4 @@
     line: "127.0.0.1{{'\t'}}localhost {{ system_hostname }}"
     backup: true
     state: present
+  when: system_update_etc_hosts
