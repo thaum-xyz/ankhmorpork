@@ -5,7 +5,7 @@ metadata:
   name: external-nfs-provisioner
   labels:
     app.kubernetes.io/name: external-nfs-provisioner
-    app.kubernetes.io/version: 2.3.0
+    app.kubernetes.io/version: 3.1.0
   namespace: storage-system
 spec:
   replicas: 1
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: external-nfs-provisioner
-        app.kubernetes.io/version: 2.3.0
+        app.kubernetes.io/version: 3.1.0
     spec:
       containers:
         - env:
@@ -27,9 +27,9 @@ spec:
             - name: NFS_SERVER
               value: 192.168.2.40
             - name: NFS_PATH
-              value: /srv/storage/k8s
+              value: /srv/storage/kubernetes/externalnfs
           name: external-nfs-provisioner
-          image: quay.io/kubernetes_incubator/nfs-provisioner:v2.3.0
+          image: quay.io/external_storage/nfs-client-provisioner:v3.1.0-k8s1.11
           volumeMounts:
             - mountPath: /persistentvolumes
               name: external-nfs-root
@@ -40,7 +40,7 @@ spec:
         - name: external-nfs-root
           nfs:
             server: 192.168.2.40
-            path: /srv/storage/k8s
+            path: /srv/storage/kubernetes/externalnfs
       nodeSelector:
         kubernetes.io/arch: amd64
       tolerations:
