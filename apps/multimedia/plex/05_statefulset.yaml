@@ -89,6 +89,8 @@ spec:
         resources:
           requests:
             memory: 2000Mi
+          limits:
+            gpu.intel.com/i915: 1
       restartPolicy: Always
       volumes:
       - name: movies
