@@ -31,7 +31,7 @@ spec:
           runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDDiskFailure.md"
       - alert: CPUStealTimeHigh
         expr: |
-          sum by (instance) (rate(node_cpu_seconds_total{mode="steal"}[3m])) / count by (instance) (node_cpu_seconds_total{mode="steal"}) > 0.000001
+          sum by (instance) (rate(node_cpu_seconds_total{mode="steal"}[3m])) / count by (instance) (node_cpu_seconds_total{mode="steal"}) > 0.1
         for: 20m
         labels:
           severity: warning
