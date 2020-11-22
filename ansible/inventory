@@ -22,6 +22,10 @@ node0[2:5]
 [storage]
 storage01
 
+[drbd]
+node01
+hyper01
+
 [proxmox]
 hyper01
 
@@ -30,7 +34,7 @@ master01
 
 [k3s-node]
 storage01
-node0[2:5]
+node0[1:5]
 
 [k3s:children]
 k3s-master

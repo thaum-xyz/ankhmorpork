@@ -26,38 +26,38 @@ node_taints:
 #    browseable: true
 #    writable: false
 
-system_mountpoints:
-  - description: main streaming storage data
-    before: k3s-node.service
-    device: "192.168.2.40:/mnt/old/netflix"
-    mountpoint: "/srv/netflix"
-    type: "nfs"
-    options: "_netdev,defaults"
-  - description: main cloud service data
-    before: k3s-node.service
-    device: "192.168.2.40:/mnt/old/nextcloud"
-    mountpoint: "/srv/nextcloud"
-    type: "nfs"
-    options: "_netdev,defaults"
-
-  - description: torrent hot cache mount
-    before: k3s-node.service
-    device: "/dev/disk/by-uuid/7158b9d4-7462-431c-9884-e637d5304bd3"
-    mountpoint: "/srv/torrents"
-    type: "ext4"
-  - description: kubernetes NFS storage
-    before: nfs-server.service k3s-node.service
-    device: "192.168.2.40:/mnt/old/kube_nfs"
-    mountpoint: "/srv/kubernetes/nfs"
-    type: "nfs"
-    options: "_netdev,defaults"
-  - description: kubernetes local storage
-    before: k3s-node.service
-    device: "192.168.2.40:/mnt/old/kube_local"
-    mountpoint: "/var/lib/rancher/k3s/storage"
-    type: "nfs"
-    options: "_netdev,defaults"
-
-nfs_exports:
-  - "/mnt/sbc/vetinari 192.168.2.0/24(rw,sync,no_subtree_check,no_root_squash)"
-  - "/srv/kubernetes/nfs *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure,fsid=1)"
+#system_mountpoints:
+#  - description: main streaming storage data
+#    before: k3s-node.service
+#    device: "192.168.2.40:/mnt/old/netflix"
+#    mountpoint: "/srv/netflix"
+#    type: "nfs"
+#    options: "_netdev,defaults"
+#  - description: main cloud service data
+#    before: k3s-node.service
+#    device: "192.168.2.40:/mnt/old/nextcloud"
+#    mountpoint: "/srv/nextcloud"
+#    type: "nfs"
+#    options: "_netdev,defaults"
+#
+#  - description: torrent hot cache mount
+#    before: k3s-node.service
+#    device: "/dev/disk/by-uuid/7158b9d4-7462-431c-9884-e637d5304bd3"
+#    mountpoint: "/srv/torrents"
+#    type: "ext4"
+#  - description: kubernetes NFS storage
+#    before: nfs-server.service k3s-node.service
+#    device: "192.168.2.40:/mnt/old/kube_nfs"
+#    mountpoint: "/srv/kubernetes/nfs"
+#    type: "nfs"
+#    options: "_netdev,defaults"
+#  - description: kubernetes local storage
+#    before: k3s-node.service
+#    device: "192.168.2.40:/mnt/old/kube_local"
+#    mountpoint: "/var/lib/rancher/k3s/storage"
+#    type: "nfs"
+#    options: "_netdev,defaults"
+#
+#nfs_exports:
+#  - "/mnt/sbc/vetinari 192.168.2.0/24(rw,sync,no_subtree_check,no_root_squash)"
+#  - "/srv/kubernetes/nfs *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure,fsid=1)"

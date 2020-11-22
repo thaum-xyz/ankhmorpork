@@ -1,0 +1,22 @@
+---
+nfs_srv_addr: "192.168.40.2"
+
+node_labels:
+  - "storage.infra/local=true"
+  - "network.infra/fast=true"
+  - "gpu.infra/intel=true"
+
+system_mountpoints:
+  - description: main streaming storage data
+    before: k3s-node.service
+    device: "{{ nfs_srv_addr }}:/mnt/old/netflix"
+    mountpoint: "/srv/netflix"
+    type: "nfs"
+    options: "_netdev,defaults"
+  - description: main cloud service data
+    before: k3s-node.service
+    device: "{{ nfs_srv_addr }}:/mnt/old/nextcloud"
+    mountpoint: "/srv/nextcloud"
+    type: "nfs"
+    options: "_netdev,defaults"
+
