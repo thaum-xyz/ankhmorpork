@@ -38,6 +38,11 @@
       state: absent
       purge: true
     when: ansible_os_family == "Debian"
+  - name: Install ubuntu addons when necessary
+    package:
+      name: ubuntu-restricted-addons
+      state: present
+    when: '"GenuineIntel" in ansible_processor'
 
 - hosts: raspberry
   become: true
