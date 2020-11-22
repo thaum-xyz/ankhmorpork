@@ -29,3 +29,21 @@
     apt:
       name: nfs-client
       state: present
+  - block:
+    - name: Install dependencies
+      package:
+        name: moreutils
+        state: present
+    - name: Copy smartmon textfile collector script
+      copy:
+        src: "scripts/smartmon.sh"
+        dest: "/usr/local/bin/smartmon.sh"
+        mode: 0755
+    - name: Set global cronjobs (/etc/crontab)
+      cron:
+        cron_file: "/etc/crontab"
+        user: root
+        name: "smartmon-metrics"
+        minute: "*/10"
+        job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
+    when: enable_smartmon is defined

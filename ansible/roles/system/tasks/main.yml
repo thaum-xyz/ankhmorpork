@@ -13,7 +13,7 @@
 
 - import_tasks: hostname.yml
 
-- import_tasks: storage.yml
+# - import_tasks: storage.yml
 
 - name: add packages
   package:
