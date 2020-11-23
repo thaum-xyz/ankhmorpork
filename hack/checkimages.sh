@@ -5,7 +5,7 @@ set -euo pipefail
 CPU_ARCHS="amd64 arm64 arm"
 MULTI_ARCH_EXCLUDED=$( cat <<EOM
 quay.io/external_storage/nfs-client-provisioner-arm
-quay.io/kubernetes_incubator/nfs-provisioner
+quay.io/external_storage/nfs-client-provisioner
 quay.io/paulfantom/nfs-client-provisioner
 eu.gcr.io/k8s-artifacts-prod/descheduler/descheduler
 homeassistant/aarch64-homeassistant
@@ -21,6 +21,7 @@ nginx/nginx-prometheus-exporter
 allangood/holiday_exporter
 quay.io/superq/smokeping-prober-linux-arm64
 quay.io/prometheus/mysqld-exporter
+intel/intel-gpu-plugin
 EOM
 )
 
