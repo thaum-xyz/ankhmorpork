@@ -8,7 +8,7 @@ node_exporter_enabled_collectors:
   - textfile:
       directory: "/var/lib/node_exporter"
   - filesystem:
-      ignored-fs-types: "^(sys|proc|auto|overlay)fs$"
+      ignored-fs-types: "^(ns|sys|proc|auto|overlay)fs|overlay$"
       ignored-mount-points: "^/(sys|proc|dev)($|/)"
   - diskstats:
       ignored-devices: '^(ram|loop|fd|(h|v|xv)d[a-z]|dm-)\\\d+$'
