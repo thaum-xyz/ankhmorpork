@@ -46,9 +46,9 @@ spec:
     rules:
     - alert: PackagesAvailable
       expr: |
-        sum by (node) (yum_upgrades_pending) > 10
+        sum by (node,instance) (yum_upgrades_pending) > 30
         or
-        sum by (node) (apt_upgrades_pending) > 10
+        sum by (node,instance) (apt_upgrades_pending) > 30
       for: 48h
       labels:
         severity: info
