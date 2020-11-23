@@ -49,8 +49,3 @@ spec:
           name: config
       nodeSelector:
         kubernetes.io/arch: amd64
-      tolerations:
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
