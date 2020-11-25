@@ -3,6 +3,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: unifi
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
 spec:
   destination:
     namespace: unifi

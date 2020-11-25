@@ -20,6 +20,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: nfs-client
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
 spec:
   destination:
     namespace: storage-system
@@ -39,6 +41,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: external-nfs
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
 spec:
   destination:
     namespace: storage-system

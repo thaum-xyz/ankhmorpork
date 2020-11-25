@@ -2,57 +2,56 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: ansible
+  name: networking
 spec:
-  description: Ansible management
+  description: Networking
   destinations:
-  - namespace: ansible
+  - namespace: metallb-system
+    server: 'https://kubernetes.default.svc'
+  - namespace: ingress-nginx
     server: 'https://kubernetes.default.svc'
   sourceRepos:
   - 'https://github.com/thaum-xyz/ankhmorpork.git'
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ankhmorpork-deployment
+  name: metallb-system
   annotations:
     argocd.argoproj.io/manifest-generate-paths: .
 spec:
   destination:
-    namespace: ansible
+    namespace: metallb-system
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/ansible/ankhmorpork
+    path: base/metallb-system
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
-  project: ansible
+  project: networking
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
-
+      prune: false
+      selfHeal: false
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ara
+  name: ingress-nginx
   annotations:
     argocd.argoproj.io/manifest-generate-paths: .
 spec:
   destination:
-    namespace: ansible
+    namespace: ingress-nginx
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/ansible/ara
+    path: base/ingress-nginx
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
-  project: ansible
+  project: networking
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
-
+      prune: false
+      selfHeal: false
