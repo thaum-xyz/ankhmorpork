@@ -40,9 +40,7 @@ spec:
           requests:
             memory: 30Mi
       restartPolicy: Always
-      # FIXME: node selector can be dropped after fixing issues with DNS on NAS
       nodeSelector:
-        kubernetes.io/hostname: "storage01"
         kubernetes.io/arch: "amd64"
       tolerations:
       - key: "storage.infra"
