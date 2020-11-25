@@ -26,6 +26,7 @@ spec:
         - --telemetry-port=8081
         - --pod=$(POD_NAME)
         - --pod-namespace=$(POD_NAMESPACE)
+        - '--labels-metric-allow-list=nodes=["kubernetes.io/arch","gpu.infra/intel","network.infra/fast"]'
         env:
         - name: POD_NAME
           valueFrom:
