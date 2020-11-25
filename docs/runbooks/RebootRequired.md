@@ -1,6 +1,21 @@
 # Reboot Required
 
-## Resolution
+## Meaning
+
+Node is expressing a need to be rebooted. Usually this is shown because of an unattended upgrade which included new
+kernel version.
+
+## Impact
+
+Running with older kernel.
+
+## Diagnosis
+
+Log into a machine and check if latest kernel is used.
+
+## Mitigation
+
+Reboot the machine by following those steps:
 
 1. Drain node with `kubectl drain node NODE_NAME`
 2. Ensure all pods are moved with `kubectl describe node NODE_NAME`
