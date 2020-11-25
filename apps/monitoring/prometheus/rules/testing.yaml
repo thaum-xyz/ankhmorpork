@@ -1,3 +1,4 @@
+---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -11,24 +12,6 @@ spec:
   # Rules which are tested and should be promoted upstream when ready
   - name: testing.rules
     rules:
-      - alert: RAIDCriticalFailure  # https://github.com/prometheus/node_exporter/pull/1801
-        expr: 'node_md_disks_required - ignoring (state) (node_md_disks{state="active"}) < 0'
-        for: 15m
-        labels:
-          severity: critical
-          priority: P1
-        annotations:
-          summary: "Degraded RAID array on {{ $labels.instance }}"
-          description: "RAID array '{{ $labels.device }}' is in degraded state due to one or more disks failures. Number of spare drives is insufficient to fix issue automatically."
-          runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDCriticalFailure.md"
-      - alert: RAIDDiskFailure  # https://github.com/prometheus/node_exporter/pull/1801
-        expr: 'node_md_disks{state="fail"} > 0'
-        labels:
-          severity: warning
-        annotations:
-          summary: "Failed device in RAID array on {{ $labels.instance }}"
-          description: "At least one device in RAID array on {{ $labels.instance }} failed. Array '{{ $labels.md_device }}' needs attention and possibly a disk swap"
-          runbook_url: "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RAIDDiskFailure.md"
       - alert: CPUStealTimeHigh
         expr: |
           sum by (instance) (rate(node_cpu_seconds_total{mode="steal"}[3m])) / count by (instance) (node_cpu_seconds_total{mode="steal"}) > 0.1
