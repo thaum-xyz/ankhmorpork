@@ -113,8 +113,8 @@ spec:
         secret:
           secretName: mysql-init
       nodeSelector:
-        kubernetes.io/hostname: "storage01"
-        storage.infra/raid: "true"
+        kubernetes.io/hostname: "node01"  # TODO: fix this
+        # storage.infra/raid: "true"
       tolerations:
       - key: "storage.infra"
         operator: "Equal"
