@@ -5,7 +5,7 @@ metadata:
   name: ghost
   namespace: blog
   annotations:
-    volume.beta.kubernetes.io/storage-class: "nfs-client"
+    volume.beta.kubernetes.io/storage-class: "external-nfs"
 spec:
   accessModes:
     - ReadWriteMany
