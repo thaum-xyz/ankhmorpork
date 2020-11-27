@@ -98,5 +98,4 @@ spec:
         kubernetes.io/arch: "amd64"
         # kubernetes.io/hostname: "node01"
         # storage.infra/replicated: "true"
-        gpu.infra/intel: "true"  # TODO: remove after storage is figured out
       tolerations: []
