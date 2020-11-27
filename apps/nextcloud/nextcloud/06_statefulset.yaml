@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: phpfpm
-    app.kubernetes.io/version: 19.0.2
+    app.kubernetes.io/version: 19.0.5
     app.kubernetes.io/part-of: nextcloud
     app.kubernetes.io/component: server
   name: nextcloud
@@ -20,7 +20,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: phpfpm
-        app.kubernetes.io/version: 19.0.2
+        app.kubernetes.io/version: 19.0.5
         app.kubernetes.io/part-of: nextcloud
         app.kubernetes.io/component: server
     spec:
@@ -49,7 +49,7 @@ spec:
         envFrom:
         - configMapRef:
             name: nextcloud-envs
-        image: nextcloud:19.0.2-fpm
+        image: nextcloud:19.0.5-fpm
         # imagePullPolicy: Always
         name: nextcloud
         ports:
@@ -99,8 +99,8 @@ spec:
         configMap:
           name: php-config
       - name: data
-        hostPath:
-          path: /srv/nextcloud/data
+        persistentVolumeClaim:
+          claimName: nextcloud-data
       - name: web
         persistentVolumeClaim:
           claimName: nextcloud-files
@@ -114,10 +114,5 @@ spec:
         persistentVolumeClaim:
           claimName: nextcloud-config
       nodeSelector:
-        kubernetes.io/hostname: "storage01"
-        storage.infra/raid: "true"
-      tolerations:
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+        kubernetes.io/arch: "amd64"
+

@@ -37,17 +37,11 @@ spec:
                 readOnly: true
           volumes:
             - name: data
-              hostPath:
-                path: /srv/nextcloud/data
+              persistentVolumeClaim:
+                claimName: nextcloud-data
           restartPolicy: OnFailure
           nodeSelector:
-            kubernetes.io/hostname: "storage01"
-            storage.infra/raid: "true"
-          tolerations:
-          - key: "storage.infra"
-            operator: "Equal"
-            value: "true"
-            effect: "NoSchedule"
+            kubernetes.io/arch: "amd64"
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
@@ -110,13 +104,7 @@ spec:
                 claimName: nextcloud-theme
           restartPolicy: OnFailure
           nodeSelector:
-            kubernetes.io/hostname: "storage01"
-            storage.infra/raid: "true"
-          tolerations:
-          - key: "storage.infra"
-            operator: "Equal"
-            value: "true"
-            effect: "NoSchedule"
+            kubernetes.io/arch: "amd64"
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
@@ -163,10 +151,4 @@ spec:
                   name: restic-repository-db
           restartPolicy: OnFailure
           nodeSelector:
-            kubernetes.io/hostname: "storage01"
-            storage.infra/raid: "true"
-          tolerations:
-          - key: "storage.infra"
-            operator: "Equal"
-            value: "true"
-            effect: "NoSchedule"
+            kubernetes.io/arch: "amd64"
