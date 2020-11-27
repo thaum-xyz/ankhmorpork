@@ -49,11 +49,11 @@ spec:
       restartPolicy: Always
       volumes:
       - name: data
-        hostPath:
-          path: /srv/netflix/movies
+        persistentVolumeClaim:
+          claimName: movies
       - name: downloads
-        hostPath:
-          path: /srv/torrents/completed
+        persistentVolumeClaim:
+          claimName: torrents
       - hostPath:
           path: /etc/localtime
           type: ""

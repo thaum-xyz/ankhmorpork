@@ -81,11 +81,11 @@ spec:
         secret:
           secretName: transmission-vpn-creds
       - name: incomplete
-        hostPath:
-          path: /srv/torrents/incomplete
+        persistentVolumeClaim:
+          claimName: torrents-incomplete
       - name: completed
-        hostPath:
-          path: /srv/torrents/completed
+        persistentVolumeClaim:
+          claimName: torrents
       - hostPath:
           path: /dev/net/tun
           type: ""
