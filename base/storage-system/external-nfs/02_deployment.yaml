@@ -27,7 +27,7 @@ spec:
             - name: NFS_SERVER
               value: 192.168.2.40
             - name: NFS_PATH
-              value: /srv/storage/kubernetes/externalnfs
+              value: /srv/storage/kubernetes
           name: external-nfs-provisioner
           image: quay.io/external_storage/nfs-client-provisioner:v3.1.0-k8s1.11
           volumeMounts:
@@ -40,7 +40,7 @@ spec:
         - name: external-nfs-root
           nfs:
             server: 192.168.2.40
-            path: /srv/storage/kubernetes/externalnfs
+            path: /srv/storage/kubernetes
       nodeSelector:
         kubernetes.io/arch: amd64
       tolerations:
