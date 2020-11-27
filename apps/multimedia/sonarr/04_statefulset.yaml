@@ -23,6 +23,8 @@ spec:
           value: "1000"
         - name: PGID
           value: "1000"
+        - name: TZ
+          value: "Europe/Berlin"
         name: sonarr
         image: linuxserver/sonarr
         ports:
@@ -36,9 +38,6 @@ spec:
         volumeMounts:
           - mountPath: /config
             name: config
-          - mountPath: /etc/localtime
-            name: localtime
-            readOnly: true
           - mountPath: /tv
             name: data
           - mountPath: /data/completed
@@ -54,10 +53,6 @@ spec:
       - name: downloads
         persistentVolumeClaim:
           claimName: torrents
-      - hostPath:
-          path: /etc/localtime
-          type: ""
-        name: localtime
       nodeSelector:
         kubernetes.io/arch: "amd64"
         # kubernetes.io/hostname: "node01"

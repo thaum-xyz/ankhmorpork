@@ -34,7 +34,10 @@ spec:
             memory: 11Mi
           limits:
             memory: 20Mi
-      - envFrom:
+      - env:
+        - name: TZ
+          value: "Europe/Berlin"
+        envFrom:
         - configMapRef:
             name: transmission-config
             optional: false 
@@ -61,9 +64,6 @@ spec:
             name: completed
           - mountPath: /dev/net/tun
             name: tunnel
-          - mountPath: /etc/localtime
-            name: localtime
-            readOnly: true
           - mountPath: /config/openvpn-credentials.txt
             name: vpncreds
             subPath: openvpn-credentials.txt
@@ -80,7 +80,7 @@ spec:
       - name: vpncreds
         secret:
           secretName: transmission-vpn-creds
-      - name: incomplete
+      - name: incomplete  # TODO: Does it make sense to move it to emptyDir ?
         persistentVolumeClaim:
           claimName: torrents-incomplete
       - name: completed
@@ -90,10 +90,6 @@ spec:
           path: /dev/net/tun
           type: ""
         name: tunnel
-      - hostPath:
-          path: /etc/localtime
-          type: ""
-        name: localtime
       nodeSelector:
         kubernetes.io/arch: "amd64"
         # kubernetes.io/hostname: "node01"
