@@ -83,9 +83,9 @@ spec:
           name: movies
         - mountPath: /data/tv
           name: tv
-        - mountPath: /data/mymultimedia
-          name: mymultimedia
-          readOnly: true
+        #- mountPath: /data/mymultimedia
+        #  name: mymultimedia
+        #  readOnly: true
         resources:
           requests:
             memory: 2000Mi
@@ -94,14 +94,14 @@ spec:
       restartPolicy: Always
       volumes:
       - name: movies
-        hostPath:
-          path: /srv/netflix/movies
+        persistentVolumeClaim:
+          claimName: movies
       - name: tv
-        hostPath:
-          path: /srv/netflix/tv
-      - name: mymultimedia
-        hostPath:
-          path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
+        persistentVolumeClaim:
+          claimName: tv
+      #- name: mymultimedia
+      #  hostPath:
+      #    path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
       - hostPath:
           path: /etc/localtime
           type: ""
@@ -111,25 +111,13 @@ spec:
         # kubernetes.io/hostname: "node01"
         # storage.infra/replicated: "true"
         gpu.infra/intel: "true"
-      tolerations:
-      - key: "node-role.kubernetes.io/storage"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
-      - key: "tier/storage"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+      tolerations: []
   volumeClaimTemplates:
   - metadata:
       name: plexdata
       namespace: multimedia
     spec:
-      # TODO: Maybe put this in "replicated/drbd" storage?
+      # TODO: Maybe put this in "replicated" storage?
       storageClassName: "external-nfs"
       accessModes:
         - ReadWriteMany
@@ -140,7 +128,7 @@ spec:
       name: backups
       namespace: multimedia
     spec:
-      # TODO: Maybe put this in "replicated/drbd" storage?
+      # TODO: Maybe put this in "replicated" storage?
       storageClassName: "external-nfs"
       accessModes:
         - ReadWriteMany
