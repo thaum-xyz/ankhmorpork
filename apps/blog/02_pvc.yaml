@@ -7,6 +7,7 @@ metadata:
   annotations:
     volume.beta.kubernetes.io/storage-class: "external-nfs"
 spec:
+  storageClassName: "external-nfs"
   accessModes:
     - ReadWriteMany
   resources:

@@ -58,9 +58,9 @@ spec:
       metadata:
         name: data
         annotations:
-          volume.beta.kubernetes.io/storage-class: "nfs-client"
+          volume.beta.kubernetes.io/storage-class: "external-nfs"
       spec:
-        storageClassName: "nfs-client"  # note: NFS is not supported and can lead to data loss!
+        storageClassName: "external-nfs"  # note: NFS is not supported and can lead to data loss! This needs to be moved to other storage type
         accessModes:
           - ReadWriteMany
         resources:

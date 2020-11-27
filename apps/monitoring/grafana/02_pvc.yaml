@@ -5,8 +5,9 @@ metadata:
   name: grafana-data
   namespace: monitoring
   annotations:
-    volume.beta.kubernetes.io/storage-class: "nfs-client"
+    volume.beta.kubernetes.io/storage-class: "external-nfs"
 spec:
+  storageClassName: external-nfs
   accessModes:
     - ReadWriteMany
   resources:
