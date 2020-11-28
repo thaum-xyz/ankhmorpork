@@ -14,28 +14,6 @@ spec:
   - group: '*'
     kind: '*'
 
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: nfs-client
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: .
-spec:
-  destination:
-    namespace: storage-system
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: base/storage-system/nfs-client
-    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
-    targetRevision: HEAD
-  project: storage-system
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
