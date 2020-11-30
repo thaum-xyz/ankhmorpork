@@ -15,6 +15,11 @@ spec:
       - {key: plan.upgrade.cattle.io/k3s, operator: NotIn, values: ["disabled", "false"]}
       - {key: kubernetes.io/hostname, operator: Exists}
       - {key: node-role.kubernetes.io/master, operator: In, values: ["true"]}
+  tolerations:
+    - key: node-role.kubernetes.io/master
+      operator: Equal
+      value: "true"
+
   serviceAccountName: system-upgrade
   cordon: true
 #  drain:
