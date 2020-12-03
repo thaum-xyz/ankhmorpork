@@ -14,12 +14,19 @@ spec:
           static_configs:
           - targets:
             - 'dibbler.ankhmorpork.thaum.xyz:9182'
-        - job_name: external-nodes
+        - job_name: nodes-exporter
           static_configs:
           - targets:
             - '192.168.2.40:9100'
             labels:
               node: "hyper01"
+        - job_name: systemd
+          static_configs:
+          - targets:
+            - '192.168.2.40:9558'
+            labels:
+              node: "hyper01"
+
         # https://github.com/prometheus-pve/prometheus-pve-exporter
         #- job_name: 'pve'
         #  static_configs:
