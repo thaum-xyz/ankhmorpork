@@ -76,7 +76,7 @@ spec:
           timeoutSeconds: 10
         volumeMounts:
         - mountPath: /config
-          name: plexdata
+          name: plexlib
         - mountPath: /backup
           name: backups
         - mountPath: /data/movies
@@ -109,18 +109,16 @@ spec:
       nodeSelector:
         kubernetes.io/arch: "amd64"
         # kubernetes.io/hostname: "node01"
-        # storage.infra/replicated: "true"
         gpu.infra/intel: "true"
       tolerations: []
   volumeClaimTemplates:
   - metadata:
-      name: plexdata
+      name: plexlib
       namespace: multimedia
     spec:
-      # TODO: Maybe put this in "replicated" storage?
-      storageClassName: "external-nfs"
+      storageClassName: "local-path"
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
       resources:
         requests:
           storage: 30Gi
@@ -128,7 +126,6 @@ spec:
       name: backups
       namespace: multimedia
     spec:
-      # TODO: Maybe put this in "replicated" storage?
       storageClassName: "external-nfs"
       accessModes:
         - ReadWriteMany
