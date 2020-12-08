@@ -80,10 +80,11 @@ spec:
       - name: vpncreds
         secret:
           secretName: transmission-vpn-creds
+      # TODO: Consider mounting both volumes as emptyDir. This should speed up data copy
       - name: incomplete  # TODO: Does it make sense to move it to emptyDir ?
         persistentVolumeClaim:
           claimName: torrents-incomplete
-      - name: completed
+      - name: completed  # Maybe emptyDir? Files shouldn't live here for long.
         persistentVolumeClaim:
           claimName: torrents
       - hostPath:

@@ -14,10 +14,10 @@ spec:
   storageClassName: manual
   # mountOptions:
   #   - hard
-  #   - nfsvers=4.1
+  #   - nfsvers=4.2
   nfs:
     path: /srv/storage/kubernetes/vod/movies
-    server: 192.168.2.40
+    server: 192.168.2.40  # TODO: Consider using direct link bonded interfaces
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -34,10 +34,10 @@ spec:
   storageClassName: manual
   # mountOptions:
   #   - hard
-  #   - nfsvers=4.1
+  #   - nfsvers=4.2
   nfs:
     path: /srv/storage/kubernetes/vod/tv
-    server: 192.168.2.40
+    server: 192.168.2.40  # TODO: Consider using direct link bonded interfaces
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
