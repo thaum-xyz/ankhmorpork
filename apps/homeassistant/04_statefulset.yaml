@@ -49,9 +49,9 @@ spec:
         # Enable for Z-wave support
         # securityContext:
         #   privileged: true
-        securityContext:
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
+        #securityContext:
+        #  readOnlyRootFilesystem: true
+        #  runAsNonRoot: true
         volumeMounts:
         - name: config
           mountPath: /config
