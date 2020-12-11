@@ -50,7 +50,8 @@ spec:
         # securityContext:
         #   privileged: true
         securityContext:
-          privileged: true
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
         volumeMounts:
         - name: config
           mountPath: /config

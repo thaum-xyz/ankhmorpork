@@ -19,7 +19,7 @@ jobs:
           | awk '{print "https://github.com/stackrox/kube-linter/releases/download/" substr($2, 2, length($2)-3) "/kube-linter-linux.tar.gz"}')
           curl -s -L -o kube-linter-linux.tar.gz $LOCATION
           tar -xf kube-linter-linux.tar.gz -C "${GITHUB_WORKSPACE}/"
-      - run: ./kube-linter lint apps/
+      - run: ./kube-linter lint --config .kubelinter.yaml apps/
   base:
     runs-on: ubuntu-latest
     steps:
@@ -31,4 +31,4 @@ jobs:
           | awk '{print "https://github.com/stackrox/kube-linter/releases/download/" substr($2, 2, length($2)-3) "/kube-linter-linux.tar.gz"}')
           curl -s -L -o kube-linter-linux.tar.gz $LOCATION
           tar -xf kube-linter-linux.tar.gz -C "${GITHUB_WORKSPACE}/"
-      - run: ./kube-linter lint base/
+      - run: ./kube-linter lint --config .kubelinter.yaml base/
