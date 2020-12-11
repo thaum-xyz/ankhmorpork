@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: phpfpm
-    app.kubernetes.io/version: 19.0.5
+    app.kubernetes.io/version: 20.0.3
     app.kubernetes.io/part-of: nextcloud
     app.kubernetes.io/component: server
   name: nextcloud
@@ -20,7 +20,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: phpfpm
-        app.kubernetes.io/version: 19.0.5
+        app.kubernetes.io/version: 20.0.3
         app.kubernetes.io/part-of: nextcloud
         app.kubernetes.io/component: server
     spec:
@@ -49,7 +49,7 @@ spec:
         envFrom:
         - configMapRef:
             name: nextcloud-envs
-        image: nextcloud:19.0.5-fpm
+        image: nextcloud:20.0.3-fpm
         # imagePullPolicy: Always
         name: nextcloud
         ports:

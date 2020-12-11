@@ -16,7 +16,7 @@ jobs:
         with:
           go-version: '1.15'
       - run: go get -u github.com/instrumenta/kubeval
-      - run: kubeval --skip-kinds SealedSecret,ConfigMapSecret,CustomResourceDefinition,ServiceMonitor,PodMonitor,Probe,Prometheus,PrometheusRule,Alertmanager,APIService,Ingress --strict --force-color -d apps/
+      - run: kubeval --skip-kinds Plan,SealedSecret,ConfigMapSecret,CustomResourceDefinition,ServiceMonitor,PodMonitor,Probe,Prometheus,PrometheusRule,Alertmanager,APIService,Ingress --strict --force-color -d apps/
   base:
     runs-on: ubuntu-latest
     steps:
@@ -25,4 +25,4 @@ jobs:
         with:
           go-version: '1.15'
       - run: go get -u github.com/instrumenta/kubeval
-      - run: kubeval --skip-kinds SealedSecret,Application,CustomResourceDefinition,ClusterIssuer,AppProject,ServiceMonitor,PodMonitor,PrometheusRule,Ingress --strict --force-color -d base/
+      - run: kubeval --skip-kinds Plan,SealedSecret,Application,CustomResourceDefinition,ClusterIssuer,AppProject,ServiceMonitor,PodMonitor,PrometheusRule,Ingress --strict --force-color -d base/

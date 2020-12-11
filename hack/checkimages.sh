@@ -22,6 +22,7 @@ allangood/holiday_exporter
 quay.io/superq/smokeping-prober-linux-arm64
 quay.io/prometheus/mysqld-exporter
 intel/intel-gpu-plugin
+rancher/k3s-upgrade
 EOM
 )
 
@@ -67,7 +68,12 @@ done
 pids=()
 for image in $(echo -e "${IMAGES}" | tr ' ' '\n' | sort -f | uniq); do
         (
-                info=$(manifest-tool inspect --raw "${image}")
+        	# Loop handles 429 Too Many Requests response
+                info="429"
+                while [[ "$info" =~ 429 ]]; do
+	                info=$(manifest-tool inspect --raw "${image}")
+	                sleep "$(( RANDOM % 60 ))"
+	        done
                 count=0
                 until check_cross_compatibility "${image}" "${info}"; do
                 	sleep 15
