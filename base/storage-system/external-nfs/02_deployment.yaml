@@ -33,7 +33,6 @@ spec:
           volumeMounts:
             - mountPath: /persistentvolumes
               name: external-nfs-root
-      serviceAccount: external-nfs-provisioner
       serviceAccountName: external-nfs-provisioner
       priorityClassName: system-cluster-critical
       volumes:

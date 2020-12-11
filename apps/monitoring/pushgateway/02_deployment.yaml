@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pushgateway
+  namespace: monitoring
   labels:
     app.kubernetes.io/name: pushgateway
     app.kubernetes.io/version: 1.2.0
@@ -16,6 +17,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: pushgateway
+        app.kubernetes.io/component: exporter
     spec:
       containers:
       - name: pushgateway
