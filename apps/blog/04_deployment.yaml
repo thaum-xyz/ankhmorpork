@@ -45,9 +45,9 @@ spec:
         resources:
           requests:
             memory: 120M
-        securityContext:
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
+        #securityContext:
+        #  readOnlyRootFilesystem: true
+        #  runAsNonRoot: true
       volumes:
         - name: content
           persistentVolumeClaim:
