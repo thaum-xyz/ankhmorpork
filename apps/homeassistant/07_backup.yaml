@@ -31,9 +31,9 @@ spec:
             envFrom:
               - secretRef:
                   name: restic-repository
-            securityContext:
-              readOnlyRootFilesystem: true
-              runAsNonRoot: true
+            #securityContext:
+            #  readOnlyRootFilesystem: true
+            #  runAsNonRoot: true
             volumeMounts:
               - name: content
                 mountPath: /backup
