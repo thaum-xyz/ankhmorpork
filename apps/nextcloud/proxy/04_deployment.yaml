@@ -9,7 +9,7 @@ metadata:
   name: nginx
   namespace: nextcloud
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: nginx
@@ -83,8 +83,8 @@ spec:
       - name: apps
         persistentVolumeClaim:
           claimName: nextcloud-apps
-      nodeSelector: 
-        kubernetes.io/arch: "amd64"
+      #nodeSelector:
+      #  kubernetes.io/arch: "amd64"
       #  kubernetes.io/hostname: "storage01"
       #  storage.infra/raid: "true"
       tolerations: []
