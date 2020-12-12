@@ -6,7 +6,7 @@ metadata:
   namespace: multimedia
   labels:
     app.kubernetes.io/name: transmission
-    app.kubernetes.io/version: "2.13"
+    app.kubernetes.io/version: "3.3"
 spec:
   replicas: 1
   strategy:
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: transmission
-        app.kubernetes.io/version: "2.13"
+        app.kubernetes.io/version: "3.3"
     spec:
       containers:
       - env:
@@ -40,8 +40,8 @@ spec:
         envFrom:
         - configMapRef:
             name: transmission-config
-            optional: false 
-        image: haugene/transmission-openvpn:2.13-alpine
+            optional: false
+        image: haugene/transmission-openvpn:3.3
         name: transmission
         ports:
         - containerPort: 9091
@@ -58,9 +58,11 @@ spec:
             add:
             - NET_ADMIN
         volumeMounts:
-          - mountPath: /data/incomplete
+          - mountPath: /data
+            name: data
+          - mountPath: /download/incomplete
             name: incomplete
-          - mountPath: /data/completed
+          - mountPath: /download/completed
             name: completed
           - mountPath: /dev/net/tun
             name: tunnel
@@ -80,11 +82,13 @@ spec:
       - name: vpncreds
         secret:
           secretName: transmission-vpn-creds
-      # TODO: Consider mounting both volumes as emptyDir. This should speed up data copy
-      - name: incomplete  # TODO: Does it make sense to move it to emptyDir ?
+      - name: data  # Allows resuming downloads after pod deletion
+        persistentVolumeClaim:
+          claimName: transmission-data
+      - name: incomplete
         persistentVolumeClaim:
           claimName: torrents-incomplete
-      - name: completed  # Maybe emptyDir? Files shouldn't live here for long.
+      - name: completed
         persistentVolumeClaim:
           claimName: torrents
       - hostPath:

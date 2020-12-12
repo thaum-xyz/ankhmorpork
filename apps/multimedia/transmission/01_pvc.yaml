@@ -41,3 +41,16 @@ spec:
   resources:
     requests:
       storage: "70Gi"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: "multimedia"
+  name: "transmission-data"
+spec:
+  storageClassName: "external-nfs"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "1Gi"
