@@ -26,7 +26,8 @@ spec:
         - name: TZ
           value: "Europe/Berlin"
         name: sonarr
-        image: linuxserver/sonarr
+        image: linuxserver/sonarr:preview
+        imagePullPolicy: Always
         ports:
           - containerPort: 8989
             name: http-sonarr
