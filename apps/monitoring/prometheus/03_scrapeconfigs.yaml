@@ -10,11 +10,11 @@ spec:
       name: scrapeconfigs
     data:
       additional.yaml: |
-        - job_name: windows
-          static_configs:
-          - targets:
-            - 'dibbler.ankhmorpork.thaum.xyz:9182'
-        - job_name: nodes-exporter
+        #- job_name: windows
+        #  static_configs:
+        #  - targets:
+        #    - 'dibbler.ankhmorpork.thaum.xyz:9182'
+        - job_name: node-exporter
           static_configs:
           - targets:
             - '192.168.2.40:9100'
