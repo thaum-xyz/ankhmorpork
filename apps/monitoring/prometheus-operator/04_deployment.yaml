@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: prometheus-operator
-    app.kubernetes.io/version: v0.42.1-master
+    app.kubernetes.io/version: 0.44.1
   name: prometheus-operator
   namespace: monitoring
 spec:
@@ -18,7 +18,7 @@ spec:
       labels:
         app.kubernetes.io/component: controller
         app.kubernetes.io/name: prometheus-operator
-        app.kubernetes.io/version: v0.42.1-master
+        app.kubernetes.io/version: 0.44.1
     spec:
       containers:
       - args:
@@ -27,7 +27,7 @@ spec:
         - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:master
         - --config-reloader-cpu=150m
         - --log-level=debug
-        image: quay.io/prometheus-operator/prometheus-operator:master
+        image: quay.io/prometheus-operator/prometheus-operator:v0.44.1
         name: prometheus-operator
         ports:
         - containerPort: 8080
