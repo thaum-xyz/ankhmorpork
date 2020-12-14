@@ -39,6 +39,9 @@ spec:
   podMonitorSelector: {}
   probeNamespaceSelector: {}
   probeSelector: {}
+  podMetadata:
+    labels:
+      app.kubernetes.io/name: "prometheus"
   replicas: 1
   retention: 7d
   resources:
