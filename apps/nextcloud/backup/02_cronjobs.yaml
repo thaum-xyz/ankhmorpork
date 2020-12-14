@@ -39,7 +39,7 @@ spec:
             - name: data
               persistentVolumeClaim:
                 claimName: nextcloud-data
-          restartPolicy: OnFailure
+          restartPolicy: Never
           nodeSelector:
             kubernetes.io/arch: "amd64"
 ---
@@ -102,7 +102,7 @@ spec:
             - name: theme
               persistentVolumeClaim:
                 claimName: nextcloud-theme
-          restartPolicy: OnFailure
+          restartPolicy: Never
           nodeSelector:
             kubernetes.io/arch: "amd64"
 ---
@@ -149,6 +149,6 @@ spec:
                   name: nextcloud-envs
               - secretRef:
                   name: restic-repository-db
-          restartPolicy: OnFailure
+          restartPolicy: Never
           nodeSelector:
             kubernetes.io/arch: "amd64"

@@ -39,4 +39,4 @@ spec:
             - name: content
               persistentVolumeClaim:
                 claimName: ghost
-          restartPolicy: OnFailure
+          restartPolicy: Never
