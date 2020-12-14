@@ -24,7 +24,7 @@ spec:
       - args:
         - --kubelet-service=kube-system/kubelet
         - --logtostderr=true
-        - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:master
+        - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.44.1
         - --config-reloader-cpu=150m
         - --log-level=debug
         image: quay.io/prometheus-operator/prometheus-operator:v0.44.1
