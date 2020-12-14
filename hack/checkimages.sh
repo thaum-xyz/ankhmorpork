@@ -40,7 +40,7 @@ check_cross_compatibility() {
 	for exclude in ${MULTI_ARCH_EXCLUDED}; do
 		if [[ "${image}" =~ ${exclude} ]]; then
 			echo -e "$SKIP Validating cross-arch compatibility for \e[1m${image}\e[0m"
-			return
+			exit 0
 		fi
 	done
 
@@ -76,19 +76,11 @@ for image in $(echo -e "${IMAGES}" | tr ' ' '\n' | sort -f | uniq); do
 			exit 0
 		fi
 
-		count=0
-		until check_cross_compatibility "${image}" "${info}"; do
-			sleep 15
-			count=$((count++))
-			if [ $count -gt 10 ]; then
-				break
-			fi
-		done
-		if [ $count -gt 10 ]; then
+		if ! check_cross_compatibility "${image}" "${info}"; then
 			echo -e "$FAIL Image \e[1m${image}\e[0m is not compatible with system architecture"
-		else
-			echo -e "$OK Image \e[1m${image}\e[0m is compatible"
+			exit 1
 		fi
+		echo -e "$OK Image \e[1m${image}\e[0m is compatible"
 	) &
 	pids+=("$!")
 	sleep "$((RANDOM % 10))" # Add some delay to prevent DDoSing registry
