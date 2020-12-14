@@ -24,7 +24,7 @@ spec:
         - name: TZ
           value: "Europe/Berlin"
         name: heimdall
-        image: linuxserver/heimdall:2.2.2-ls82
+        image: linuxserver/heimdall:version-2.2.2
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80
