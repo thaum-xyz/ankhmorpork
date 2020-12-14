@@ -23,7 +23,6 @@ spec:
       containers:
       - args:
         - --kubelet-service=kube-system/kubelet
-        - --logtostderr=true
         - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.44.1
         - --config-reloader-cpu=150m
         - --log-level=debug
