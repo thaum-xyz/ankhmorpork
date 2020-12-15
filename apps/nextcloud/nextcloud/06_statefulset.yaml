@@ -49,6 +49,8 @@ spec:
         envFrom:
         - configMapRef:
             name: nextcloud-envs
+        - secretRef:
+            name: redis-password
         image: nextcloud:20.0.3-fpm
         # imagePullPolicy: Always
         name: nextcloud

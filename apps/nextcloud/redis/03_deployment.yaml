@@ -23,7 +23,13 @@ spec:
         app.kubernetes.io/component: database
     spec:
       containers:
-      - image: redis:alpine
+      - args:
+        - "--requirepass"
+        - "$(REDIS_HOST_PASSWORD)"
+        envFrom:
+        - secretRef:
+            name: redis-password
+        image: redis:alpine
         imagePullPolicy: Always
         name: redis
         ports:
@@ -52,8 +58,4 @@ spec:
       restartPolicy: Always
       nodeSelector:
         kubernetes.io/arch: "amd64"
-      tolerations:
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+      tolerations: []
