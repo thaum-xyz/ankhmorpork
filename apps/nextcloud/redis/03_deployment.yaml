@@ -38,9 +38,14 @@ spec:
         resources:
           requests:
             memory: 5Mi
-      - env:
-        - name: REDIS_ADDR
-          value: "127.0.0.1"
+      - args:
+        - "--redis.password"
+        - "$(REDIS_HOST_PASSWORD)"
+        - "--redis.addr"
+        - "127.0.0.1"
+        envFrom:
+        - secretRef:
+            name: redis-password
         image: oliver006/redis_exporter
         name: redis-exporter
         ports:
