@@ -1,26 +1,9 @@
 ---
-- hosts: storage
-  become: true
-  roles:
-  # - bertvv.samba
-  - geerlingguy.nfs
-  tasks:
-    - name: Install dependencies
-      package:
-        name: moreutils
-        state: present
-    - name: Copy smartmon textfile collector script
-      copy:
-        src: "scripts/smartmon.sh"
-        dest: "/usr/local/bin/smartmon.sh"
-        mode: 0755
-    - name: Set global cronjobs (/etc/crontab)
-      cron:
-        cron_file: "/etc/crontab"
-        user: root
-        name: "smartmon-metrics"
-        minute: "*/10"
-        job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
+#- hosts: storage
+#  become: true
+#  roles:
+#  # - bertvv.samba
+#  - geerlingguy.nfs
 
 - hosts: all
   become: true
@@ -34,9 +17,9 @@
       package:
         name: moreutils
         state: present
-    - name: Copy smartmon textfile collector script
-      copy:
-        src: "scripts/smartmon.sh"
+    - name: Download smartmon textfile collector script
+      get_url:
+        url: "https://github.com/prometheus-community/node-exporter-textfile-collector-scripts/blob/master/smartmon.sh"
         dest: "/usr/local/bin/smartmon.sh"
         mode: 0755
     - name: Set global cronjobs (/etc/crontab)

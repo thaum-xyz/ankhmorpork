@@ -2,7 +2,7 @@
 locales_present:
   - en_US.UTF-8
   - en_GB.UTF-8
-unattended_automatic_reboot_time: "02:00"
+unattended_automatic_reboot: false
 
 node_exporter_enabled_collectors:
   - textfile:

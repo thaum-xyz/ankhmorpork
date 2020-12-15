@@ -3,7 +3,6 @@
 
 # Assign enable_smartmon=true label to enable SMART monitoring of disks
 
-storage01 ansible_user=ubuntu ansible_host=192.168.2.3  network=fast
 master01  ansible_user=ubuntu ansible_host=192.168.2.11
 node01    ansible_user=ubuntu ansible_host=192.168.2.41 network=fast enable_smartmon=true
 node02    ansible_user=ubuntu ansible_host=192.168.2.13
@@ -20,10 +19,6 @@ master01
 node0[2:5]
 
 [storage]
-storage01
-
-[drbd]
-node01
 hyper01
 
 [proxmox]
@@ -33,7 +28,6 @@ hyper01
 master01
 
 [k3s-node]
-storage01
 node0[1:5]
 
 [k3s:children]

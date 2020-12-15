@@ -14,7 +14,10 @@ FAN_FREQ   = 100   # Shall be 25kHz. See README.md
 
 INTERVAL = 1
 MIN_DUTY = 22  # Shouldn't be less than 20
-MAX_TEMP = 75
+MAX_DUTY = 50  # Shouldn't be less than MIN_DUTY
+MAX_TEMP = 79
+
+TEMP_OFFSET = -6
 
 TEMP_SOURCE = '/sys/class/thermal/thermal_zone0/temp'
 METRICS_FILE = "/var/lib/node_exporter/fans.prom"
@@ -25,6 +28,7 @@ def signal_handler(sig, frame):
     fan.ChangeDutyCycle(100)  # Fan at full speed on exit
     GPIO.cleanup()
     sys.exit(0)
+
 
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
@@ -64,12 +68,11 @@ while True:
     tempC = temp/1000.0
 
     # This should be handled by getting metrics from prometheus and using highest one
-    # add 12 more degrees (value based on historical trends)
-    #tempC += 12
+    tempC = tempC + TEMP_OFFSET
 
     # Tweak here minimal dc (PWM Duty Cycle), temp threshold and ratio
     dc = MIN_DUTY + max(0, int((tempC - 38) * ratio))
-    dc = min(dc, 100)
+    dc = min(dc, MAX_DUTY)
     fan.ChangeDutyCycle(dc)
 
     rpm = pulses * 60 / (FAN_PULSES * INTERVAL)

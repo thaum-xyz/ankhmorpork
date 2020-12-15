@@ -5,7 +5,7 @@
 - name: jnv.unattended-upgrades
   version: v1.7.1
 - name: dev-sec.ssh-hardening
-- name: geerlingguy.nfs
+#- name: geerlingguy.nfs # conflicts with current ZFS setup
 - name: paulfantom.raspberry
 #- name: bertvv.samba
 #  version: v2.7.1
