@@ -21,19 +21,19 @@ spec:
         app.kubernetes.io/version: "3.3"
     spec:
       containers:
-      - env:
-        - name: TRANSMISSION_ADDR
-          value: "http://127.0.0.1:9091"
-        image: metalmatze/transmission-exporter
-        name: metrics-exporter
-        ports:
-        - containerPort: 19091
-          name: metrics
-        resources:
-          requests:
-            memory: 11Mi
-          limits:
-            memory: 20Mi
+      #- env:
+      #  - name: TRANSMISSION_ADDR
+      #    value: "http://127.0.0.1:9091"
+      #  image: metalmatze/transmission-exporter
+      #  name: metrics-exporter
+      #  ports:
+      #  - containerPort: 19091
+      #    name: metrics
+      #  resources:
+      #    requests:
+      #      memory: 11Mi
+      #    limits:
+      #      memory: 20Mi
       - env:
         - name: TZ
           value: "Europe/Berlin"
