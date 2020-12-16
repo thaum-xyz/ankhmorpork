@@ -64,8 +64,8 @@ spec:
             name: incomplete
           - mountPath: /download/completed
             name: completed
-          - mountPath: /dev/net/tun
-            name: tunnel
+          #- mountPath: /dev/net/tun
+          #  name: tunnel
           - mountPath: /config/openvpn-credentials.txt
             name: vpncreds
             subPath: openvpn-credentials.txt
@@ -91,10 +91,10 @@ spec:
       - name: completed
         persistentVolumeClaim:
           claimName: torrents
-      - hostPath:
-          path: /dev/net/tun
-          type: ""
-        name: tunnel
+      #- hostPath:
+      #    path: /dev/net/tun
+      #    type: ""
+      #  name: tunnel
       nodeSelector:
         kubernetes.io/arch: "amd64"
         # kubernetes.io/hostname: "node01"
