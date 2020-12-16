@@ -6,7 +6,7 @@ metadata:
   namespace: multimedia
   labels:
     app.kubernetes.io/name: transmission
-    app.kubernetes.io/version: "3.3"
+    app.kubernetes.io/version: "3.4"
 spec:
   replicas: 1
   strategy:
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: transmission
-        app.kubernetes.io/version: "3.3"
+        app.kubernetes.io/version: "3.4"
     spec:
       containers:
       - env:
@@ -34,14 +34,11 @@ spec:
             memory: 11Mi
           limits:
             memory: 20Mi
-      - env:
-        - name: TZ
-          value: "Europe/Berlin"
-        envFrom:
+      - envFrom:
         - configMapRef:
             name: transmission-config
             optional: false
-        image: haugene/transmission-openvpn:3.3
+        image: haugene/transmission-openvpn:3.4
         name: transmission
         ports:
         - containerPort: 9091
@@ -64,8 +61,6 @@ spec:
             name: incomplete
           - mountPath: /download/completed
             name: completed
-          #- mountPath: /dev/net/tun
-          #  name: tunnel
           - mountPath: /config/openvpn-credentials.txt
             name: vpncreds
             subPath: openvpn-credentials.txt
@@ -91,12 +86,6 @@ spec:
       - name: completed
         persistentVolumeClaim:
           claimName: torrents
-      #- hostPath:
-      #    path: /dev/net/tun
-      #    type: ""
-      #  name: tunnel
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        # kubernetes.io/hostname: "node01"
-        # storage.infra/replicated: "true"
       tolerations: []
