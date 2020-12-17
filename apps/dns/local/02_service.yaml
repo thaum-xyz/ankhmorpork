@@ -36,10 +36,10 @@ spec:
     app.kubernetes.io/name: coredns
     app.kubernetes.io/component: adblocker
   ports:
-  - name: dns
+  - name: dns-tcp
     port: 53
     protocol: TCP
-    targetPort: dns
+    targetPort: dns-tcp
 ---
 apiVersion: v1
 kind: Service
