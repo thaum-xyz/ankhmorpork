@@ -40,6 +40,7 @@ spec:
       containers:
       - name: coredns
         image: quay.io/paulfantom/coredns-ads:0.2.5
+        imagePullPolicy: Always
         # image: coredns/coredns
         resources:
           limits:
