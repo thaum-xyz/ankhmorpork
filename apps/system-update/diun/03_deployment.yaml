@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diun
+  namespace: system-update
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: diun
+  template:
+    metadata:
+      labels:
+        app: diun
+      annotations:
+        diun.enable: "true"
+        diun.watch_repo: "true"
+    spec:
+      serviceAccountName: diun
+      containers:
+        - name: diun
+          image: crazymax/diun:latest
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: "Europe/Berlin"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: LOG_JSON
+              value: "false"
+            - name: DIUN_WATCH_WORKERS
+              value: "20"
+            - name: DIUN_WATCH_SCHEDULE
+              value: "0 */6 * * *"
+            - name: DIUN_PROVIDERS_KUBERNETES
+              value: "true"
+            - name: DIUN_PROVIDERS_KUBERNETES_WATCHBYDEFAULT
+              value: "true"
+            - name: DIUN_NOTIF_SCRIPT_CMD
+              value: "/notifiers/github-issue.sh"
+            # Those are necessary for script notifications
+            - name: REPO_SLUG
+              value: "thaum-xyz/ankhmorpork"
+            - name: GITHUB_TOKEN
+              value: ""
+          volumeMounts:
+            - mountPath: "/data"
+              name: "data"
+            - name: notifiers
+              mountPath: /notifiers/github-issue.sh
+              subPath: github-issue.sh
+      restartPolicy: Always
+      volumes:
+        - name: notifiers
+          configMap:
+            name: notifiers
+            defaultMode: 0777
+        - name: "data"
+          emptyDir: {}

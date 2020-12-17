@@ -1,0 +1,56 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: system-update
+spec:
+  description: Storage Providers
+  destinations:
+  - namespace: system-update
+    server: 'https://kubernetes.default.svc'
+  sourceRepos:
+  - 'https://github.com/thaum-xyz/ankhmorpork.git'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: diun
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
+spec:
+  destination:
+    namespace: system-update
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/system-update/diun
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: system-update
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kured
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
+spec:
+  destination:
+    namespace: system-update
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/system-update/kured
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: system-update
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
