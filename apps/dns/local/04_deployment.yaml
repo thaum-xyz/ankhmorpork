@@ -40,8 +40,7 @@ spec:
       containers:
       - name: coredns
         image: quay.io/paulfantom/coredns-ads:0.2.5
-        imagePullPolicy: Always
-        # image: coredns/coredns
+        imagePullPolicy: Always  # Remove this when on 0.2.6
         resources:
           limits:
             memory: 170Mi
