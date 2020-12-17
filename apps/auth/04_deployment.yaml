@@ -47,7 +47,7 @@ spec:
         envFrom:
           - secretRef:
               name: oauth-creds
-        image: quay.io/paulfantom/oauth2-proxy:ebdc93c2  # v6.1.1
+        image: quay.io/paulfantom/oauth2-proxy:6.1.1
         name: oauth2-proxy
         ports:
         - containerPort: 4180

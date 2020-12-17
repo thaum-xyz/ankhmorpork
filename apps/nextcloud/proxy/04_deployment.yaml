@@ -55,8 +55,7 @@ spec:
         resources:
           requests:
             memory: 16Mi
-      #- image: nginx/nginx-prometheus-exporter:0.8.0
-      - image: quay.io/paulfantom/nginx-exporter:latest
+      - image: quay.io/paulfantom/nginx-exporter:0.8.0
         name: nginx-exporter
         args:
         - "-nginx.scrape-uri"
