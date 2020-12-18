@@ -4,7 +4,6 @@ nfs_srv_addr: "192.168.40.2"
 node_labels:
   - "storage.infra/local=true"
   - "storage.infra/replicated=true"
-  - "network.infra/type=fast"
   - "gpu.infra/intel=true"
 
 system_mountpoints:

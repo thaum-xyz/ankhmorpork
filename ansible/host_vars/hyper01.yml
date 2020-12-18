@@ -12,7 +12,6 @@ node_labels:
   - "storage.infra/local=true"
   - "storage.infra/replicated=true"
   - "storage.infra/capacious=true"
-  - "network.infra/type=fast"
   - "gpu.infra/nvidia=true"
 
 system_mountpoints:
