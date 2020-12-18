@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-path-provisioner
+  namespace: storage-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: local-path-provisioner
+  template:
+    metadata:
+      labels:
+        app: local-path-provisioner
+    spec:
+      priorityClassName: "system-node-critical"
+      serviceAccountName: local-path-provisioner-service-account
+      tolerations:
+          - key: "CriticalAddonsOnly"
+            operator: "Exists"
+          - key: "node-role.kubernetes.io/control-plane"
+            operator: "Exists"
+            effect: "NoSchedule"
+          - key: "node-role.kubernetes.io/master"
+            operator: "Exists"
+            effect: "NoSchedule"
+      containers:
+      - name: local-path-provisioner
+        image: rancher/local-path-provisioner:v0.0.14
+        imagePullPolicy: IfNotPresent
+        command:
+        - local-path-provisioner
+        - start
+        - --config
+        - /etc/config/config.json
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config/
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: HELPER_IMAGE
+          value: rancher/library-busybox:1.31.1
+      volumes:
+        - name: config-volume
+          configMap:
+            name: local-path-config
