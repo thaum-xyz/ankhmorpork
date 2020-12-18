@@ -41,7 +41,7 @@ spec:
         #- --labels-metric-allow-list=nodes=["kubernetes.io/arch","gpu.infra/intel","network.infra/fast"]
         #- --labels-metric-allow-list="nodes=["kubernetes.io/arch","gpu.infra/intel","network.infra/fast"]"
         #- --labels-metric-allow-list="nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/fast]"
-        - --labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/fast]
+        - --labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]
         env:
         - name: POD_NAME
           valueFrom:

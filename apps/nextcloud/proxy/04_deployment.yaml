@@ -82,8 +82,6 @@ spec:
       - name: apps
         persistentVolumeClaim:
           claimName: nextcloud-apps
-      #nodeSelector:
-      #  kubernetes.io/arch: "amd64"
-      #  kubernetes.io/hostname: "storage01"
-      #  storage.infra/raid: "true"
+      nodeSelector:
+        network.infra/type: "fast"
       tolerations: []

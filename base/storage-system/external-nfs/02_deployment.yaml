@@ -42,8 +42,9 @@ spec:
             path: /srv/storage/kubernetes
       nodeSelector:
         kubernetes.io/arch: amd64
+        storage.infra/capacious: "true"
       tolerations:
-      - key: "storage.infra"
+      - key: "node.infra/hypervisor"
         operator: "Equal"
         value: "true"
         effect: "NoSchedule"

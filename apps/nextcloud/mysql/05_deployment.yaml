@@ -115,8 +115,4 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: "node01"  # TODO: fix this
         # storage.infra/raid: "true"
-      tolerations:
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+      tolerations: []
