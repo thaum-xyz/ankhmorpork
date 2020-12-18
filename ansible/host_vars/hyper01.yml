@@ -14,3 +14,10 @@ node_labels:
   - "storage.infra/capacious=true"
   - "network.infra/type=fast"
   - "gpu.infra/nvidia=true"
+
+system_mountpoints:
+  - description: k3s local storage
+    before: k3s-node.service
+    device: "/dev/disk/by-uuid/ca95c8d2-2603-4ef6-ac3e-ccf7a9d904cc"
+    mountpoint: "/var/lib/longhorn"
+    type: "ext4"
