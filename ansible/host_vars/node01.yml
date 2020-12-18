@@ -12,3 +12,8 @@ system_mountpoints:
     device: "/dev/ubuntu-vg/k3s-storage"
     mountpoint: "/var/lib/rancher/k3s/storage"
     type: "ext4"
+  - description: k3s longhorn storage
+    before: k3s-node.service
+    device: "/dev/ubuntu-vg/longhorn"
+    mountpoint: "/var/lib/longhorn"
+    type: "ext4"
