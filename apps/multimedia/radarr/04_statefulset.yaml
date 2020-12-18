@@ -40,7 +40,7 @@ spec:
             name: config
           - mountPath: /movies
             name: data
-          - mountPath: /data/completed
+          - mountPath: /download/completed
             name: downloads
         resources:
           requests:

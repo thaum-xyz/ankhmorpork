@@ -41,7 +41,7 @@ spec:
             name: config
           - mountPath: /tv
             name: data
-          - mountPath: /data/completed
+          - mountPath: /download/completed
             name: downloads
         resources:
           requests:
