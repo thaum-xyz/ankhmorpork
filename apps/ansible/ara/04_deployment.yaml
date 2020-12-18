@@ -7,7 +7,7 @@ metadata:
   name: ara
   namespace: ansible
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: ara
