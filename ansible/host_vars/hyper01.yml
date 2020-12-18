@@ -2,3 +2,15 @@
 nfs_exports:
   - "/mnt 192.168.2.40(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
   - "/srv/storage/kubernetes *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
+
+# 8GB is dedicated to ZFS storage
+kubelet_system_resources: "cpu=2000m,memory=8Gi"
+node_taints:
+  - "node.infra/hypervisor=true:NoSchedule"
+
+node_labels:
+  - "storage.infra/local=true"
+  - "storage.infra/replicated=true"
+  - "storage.infra/capacious=true"
+  - "network.infra/type=fast"
+  - "gpu.infra/nvidia=true"
