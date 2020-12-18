@@ -266,6 +266,8 @@ metadata:
   labels:
     app: metallb
     component: speaker
+  annotations:
+    ignore-check.kube-linter.io/drop-net-raw-capability: "metallb needs raw network capability to work"
   name: speaker
   namespace: metallb-system
 spec:
