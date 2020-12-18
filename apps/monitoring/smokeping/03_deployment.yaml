@@ -62,8 +62,3 @@ spec:
       restartPolicy: Always
       nodeSelector:
         kubernetes.io/arch: arm64
-      tolerations:
-      - key: "node-role.kubernetes.io/master"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"

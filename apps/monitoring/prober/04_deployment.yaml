@@ -62,8 +62,3 @@ spec:
             defaultMode: 420
             name: prober-config
           name: config
-      tolerations:
-      - key: "node-role.kubernetes.io/master"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"

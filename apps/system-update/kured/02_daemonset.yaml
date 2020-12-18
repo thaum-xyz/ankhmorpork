@@ -26,6 +26,8 @@ spec:
       tolerations:
         - key: node-role.kubernetes.io/master
           operator: Exists
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
       nodeSelector:
         kubernetes.io/arch: "arm64"  # TODO(paulfantom): allow amd64 reboots after nextcloud db migration
       hostPID: true # Facilitate entering the host mount namespace via init
