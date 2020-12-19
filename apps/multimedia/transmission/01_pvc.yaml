@@ -48,9 +48,9 @@ metadata:
   namespace: "multimedia"
   name: "transmission-data"
 spec:
-  storageClassName: "external-nfs"
+  storageClassName: "longhorn"
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: "1Gi"
+      storage: "50Mi"
