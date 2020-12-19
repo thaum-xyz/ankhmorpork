@@ -50,9 +50,9 @@ spec:
   ruleNamespaceSelector: {}
   ruleSelector: {}
   securityContext:
-    fsGroup: 65534
+    fsGroup: 2000
     runAsNonRoot: true
-    runAsUser: 65534
+    runAsUser: 1000
   serviceAccountName: prometheus-k8s
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
