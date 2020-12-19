@@ -2,11 +2,11 @@
 
 Ankhmorpork storage is represented by 3 Kubernetes Storage Classes each with different properties. Such division allows to cover all possible usecases for volume-based storage. Table below presents Storage Classes properties in clear way.
 
-Type       | Fast     | Capacious | Resilient
------------|----------|-----------|----------
-local-path | YES      | possible  |
-NFS        |          |   YES     |
-Longhorn   | possible |           |  YES
+Class      | High Performance | Capacity  | Resiliency
+-----------|------------------|-----------|-----------
+local-path | YES              | possible  |
+NFS        |                  |   YES     |
+Longhorn   | possible         |           |  YES
 
 _Note: Ankhmorpork environment currently doesn't host any object storage._
 
@@ -41,6 +41,8 @@ _Note: Long term network disruption causes Volume disconnection._
 - two ways of mounting volume depending on `accessMode`
   - RWX type is using NFS as mount mechanism
   - RWO type mounts PVs from `/dev/longhorn` and those devices are created by CSI plugin when PV is created.
+- snapshotting is supported from web UI
+- volumes can be automatically backed up to NFS device
 
 ## Hardware considerations
 

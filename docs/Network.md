@@ -1,26 +1,20 @@
 # Network IP range assignment
 
+_Note: This is under constant development_
+
 Base network in /24 subnet
 
 ### .0 - .10
 
 RESTRICTED for network equipment
 
-### .11 - .19
+### .11 - .29
 
 k8s nodes
 
-### .20 - .29
-
-k8s cluster old loadbalancer pool. Will be added to k8s nodes pool.
-
-### .30 - .38
+### .30 - .39
 
 FREE
-
-### .39
-
-iSCSI virtual IP
 
 ### .40 - .49
 
