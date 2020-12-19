@@ -2,56 +2,45 @@
 
 set -euo pipefail
 
-CPU_ARCHS="amd64 arm64 arm"
+CPU_ARCHS="amd64 arm64"
 MULTI_ARCH_EXCLUDED=$(
 	cat <<EOM
-quay.io/external_storage/nfs-client-provisioner-arm
 quay.io/external_storage/nfs-client-provisioner
-quay.io/paulfantom/nfs-client-provisioner
 eu.gcr.io/k8s-artifacts-prod/descheduler/descheduler
 homeassistant/aarch64-homeassistant
 plexinc/pms-docker
 quay.io/paulfantom/plex_exporter
 metalmatze/transmission-exporter
-haugene/transmission-openvpn
 mariadb
 oliver006/redis_exporter
 hipages/php-fpm_exporter
 xperimental/nextcloud-exporter
-nginx/nginx-prometheus-exporter
 allangood/holiday_exporter
 quay.io/superq/smokeping-prober-linux-arm64
 quay.io/prometheus/mysqld-exporter
 intel/intel-gpu-plugin
-rancher/k3s-upgrade
 EOM
 )
 
 FAIL="[ \e[1m\e[31mFAIL\e[0m ]"
 SKIP="[ \e[1m\e[33mSKIP\e[0m ]"
 OK="[  \e[1m\e[32mOK\e[0m  ]"
+INFO="[ \e[1m\e[34mSKIP\e[0m ]"
 
 check_cross_compatibility() {
 	local image="${1}"
 	local manifest="${2}"
-	local err=0
 	local arch_list
-
-	for exclude in ${MULTI_ARCH_EXCLUDED}; do
-		if [[ "${image}" =~ ${exclude} ]]; then
-			echo -e "$SKIP Validating cross-arch compatibility for \e[1m${image}\e[0m"
-			exit 0
-		fi
-	done
+	local arch_fail=""
 
 	arch_list="$(echo "${manifest}" | jq -cr '..| .architecture?, .Architecture? | select(type != "null") | select(. != "" )' | sort | uniq)"
 	for arch in ${CPU_ARCHS}; do
 		if ! grep -q "${arch}$" <<<"$arch_list"; then
-			echo -e "$FAIL Image \e[1m${image}\e[0m does not support ${arch} !"
-			err=1
+			arch_fail="${arch_fail} ${arch}"
 		fi
 	done
-	if [ "$err" -ne 0 ]; then
+	if [ "$arch_fail" != "" ]; then
+		echo -e "$FAIL Image \e[1m${image}\e[0m does not support following architectures: ${arch_fail}!"
 		exit 129
 	fi
 }
@@ -59,31 +48,46 @@ check_cross_compatibility() {
 # Go to top-level
 cd "$(git rev-parse --show-toplevel)"
 
-IMAGES=""
-
+# Find all images used in environment
+DETECTED_IMAGES=""
 for file in $(find apps/ base/ -name *.yaml -exec grep "image" -l {} \;); do
 	new=$(gojsontoyaml -yamltojson <"$file" | jq -cr '..| .image? | select(type == "string")')
-	IMAGES="${new} ${IMAGES}"
+	DETECTED_IMAGES="${new} ${DETECTED_IMAGES}"
 done
 
+# Check if exclusion list is up to date
+for image in ${MULTI_ARCH_EXCLUDED}; do
+	grep "${image}" -q -R apps/ base/ || echo -e "$INFO Excluded image \e[1m${image}\e[0m no longer used"
+done
+
+# Remove duplicates, sanitize, and check if image shoud be skipped
+IMAGES=""
+for image in $(echo -e "${DETECTED_IMAGES}" | tr ' ' '\n' | sort -f | uniq | grep -v '^$'); do
+	# remove version
+	prefix=$(echo "$image" | tr ':' '\n' | head -n1)
+	if [[ ${MULTI_ARCH_EXCLUDED} =~ "${prefix}" ]]; then
+		echo -e "$SKIP Validating cross-arch compatibility for \e[1m${image}\e[0m"
+	else
+		IMAGES="${IMAGES} ${image}"
+	fi
+done
+
+# In parallel check image manifests
 pids=()
-for image in $(echo -e "${IMAGES}" | tr ' ' '\n' | sort -f | uniq); do
+for image in ${IMAGES}; do
 	(
-		info=$(manifest-tool inspect --raw "${image}" 2>&1)
+		sleep "$((RANDOM % 10))" # Add some delay to prevent DDoSing registry
+		info=$(manifest-tool inspect --raw "${image}" 2>&1 || :)
 		# Handles 429 Too Many Requests response
-		if [[ "$info" =~ "429 Too Many Requests" ]]; then
-			echo -e "$SKIP Too many retries when trying to validate cross-arch compatibility for \e[1m${image}\e[0m - $info"
+		if [[ "$info" =~ "You have reached your pull rate limit" ]]; then
+			echo -e "$SKIP Too many retries when trying to validate cross-arch compatibility for \e[1m${image}\e[0m"
 			exit 0
 		fi
 
-		if ! check_cross_compatibility "${image}" "${info}"; then
-			echo -e "$FAIL Image \e[1m${image}\e[0m is not compatible with system architecture"
-			exit 1
-		fi
+		check_cross_compatibility "${image}" "${info}" || exit 1
 		echo -e "$OK Image \e[1m${image}\e[0m is compatible"
 	) &
 	pids+=("$!")
-	sleep "$((RANDOM % 10))" # Add some delay to prevent DDoSing registry
 done
 
 EXIT_CODE=0
