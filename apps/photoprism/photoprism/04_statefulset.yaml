@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: photoprism
+  namespace: photoprism
+spec:
+  selector:
+    matchLabels:
+      app: photoprism
+  serviceName: photoprism
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: photoprism
+    spec:
+      containers:
+      - name: photoprism
+        image: photoprism/photoprism:20201219
+        env:
+        # Explanation of some vars: https://dl.photoprism.org/docker/docker-compose.yml
+        - name: PHOTOPRISM_DEBUG
+          value: "true"
+        - name: PHOTOPRISM_READONLY
+          value: "true"
+        - name: PHOTOPRISM_DISABLE_WEBDAV
+          value: "true"
+        #- name: PHOTOPRISM_CACHE_PATH
+        #  value: /assets/cache
+        #- name: PHOTOPRISM_IMPORT_PATH
+        #  value: /assets/photos/import
+        #- name: PHOTOPRISM_EXPORT_PATH
+        #  value: /assets/photos/export
+        #- name: PHOTOPRISM_ORIGINALS_PATH
+        #  vale: /photoprism/originals
+        - name: PHOTOPRISM_DATABASE_DRIVER
+          value: sqlite  # mysql
+        - name: PHOTOPRISM_HTTP_HOST
+          value: 0.0.0.0
+        - name: PHOTOPRISM_HTTP_PORT
+          value: "2342"
+        # Load database DSN & admin password from secret
+        envFrom:
+        - secretRef:
+            name: photoprism-secrets
+            optional: false
+        ports:
+        - containerPort: 2342
+          name: http
+        volumeMounts:
+        - mountPath: /photoprism/originals
+          name: originals
+        #- mountPath: /asssets/cache
+        #  name: photoprism
+        #  subPath: cache
+        readinessProbe:
+          httpGet:
+            path: /api/v1/status
+            port: http
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      volumes:
+      - name: originals
+        nfs:
+          path: /srv/storage/kubernetes/nextcloud/data/__groupfolders/1
+          readOnly: true
+          server: 192.168.2.40

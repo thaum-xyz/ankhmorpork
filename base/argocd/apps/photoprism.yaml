@@ -1,0 +1,57 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: photoprism
+spec:
+  description: PhotoPrism
+  destinations:
+  - namespace: photoprism
+    server: 'https://kubernetes.default.svc'
+  sourceRepos:
+  - 'https://github.com/thaum-xyz/ankhmorpork.git'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mysql
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
+spec:
+  destination:
+    namespace: photoprism
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/photoprism/mysql
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: photoprism
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: photoprism
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
+spec:
+  destination:
+    namespace: photoprism
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/photoprism/photoprism
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: photoprism
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
