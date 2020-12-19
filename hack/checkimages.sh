@@ -83,6 +83,10 @@ for image in ${IMAGES}; do
 			echo -e "$SKIP Too many retries when trying to validate cross-arch compatibility for \e[1m${image}\e[0m"
 			exit 0
 		fi
+		if echo "${info}" | grep -q 'level=fatal'; then
+			echo -e "$FAIL Encountered fatal problems with \e[1m${image}\e[0m: ${info/*msg=/}"
+			exit 1
+		fi
 
 		check_cross_compatibility "${image}" "${info}" || exit 1
 		echo -e "$OK Image \e[1m${image}\e[0m is compatible"
@@ -95,7 +99,7 @@ for job in "${pids[@]}"; do
 	CODE=0
 	wait ${job} || CODE=$?
 	if [[ "${CODE}" != "0" ]]; then
-		echo "At least one image is not compatible with specified CPU architectures"
+		echo -e "$FAIL Detected problems with at least one image"
 		EXIT_CODE=$CODE
 	fi
 done
