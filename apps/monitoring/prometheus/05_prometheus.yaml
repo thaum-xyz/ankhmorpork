@@ -49,10 +49,10 @@ spec:
       memory: 1400Mi
   ruleNamespaceSelector: {}
   ruleSelector: {}
-  securityContext:
-    fsGroup: 2000
-    runAsNonRoot: true
-    runAsUser: 1000
+  # securityContext:
+  #   fsGroup: 2000
+  #   runAsNonRoot: true
+  #   runAsUser: 1000
   serviceAccountName: prometheus-k8s
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
