@@ -79,7 +79,7 @@ for image in ${IMAGES}; do
 		sleep "$((RANDOM % 10))" # Add some delay to prevent DDoSing registry
 		info=$(manifest-tool inspect --raw "${image}" 2>&1 || :)
 		# Handles 429 Too Many Requests response
-		if [[ "$info" =~ "You have reached your pull rate limit" ]] -o [[ "$info" =~ "429 Too Many Requests" ]]; then
+		if [[ "$info" =~ "You have reached your pull rate limit" ]] || [[ "$info" =~ "429 Too Many Requests" ]]; then
 			echo -e "$SKIP Too many retries when trying to validate cross-arch compatibility for \e[1m${image}\e[0m"
 			exit 0
 		fi
