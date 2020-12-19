@@ -4,6 +4,8 @@ kind: DaemonSet
 metadata:
   labels:
     app: longhorn-manager
+  annotations:
+    ignore-check.kube-linter.io/privileged-container: "needed for the container to work"
   name: longhorn-manager
   namespace: storage-system
 spec:
