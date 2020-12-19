@@ -67,7 +67,7 @@ spec:
       spec:
         storageClassName: "longhorn"
         accessModes:
-          - ReadWriteOnce
+          - ReadWriteOnce  # Note: Do not use RWX as longhorn will mount volume via NFS
         resources:
           requests:
             storage: 40Gi
