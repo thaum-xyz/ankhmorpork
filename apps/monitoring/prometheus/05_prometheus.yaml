@@ -49,11 +49,12 @@ spec:
       memory: 1400Mi
   ruleNamespaceSelector: {}
   ruleSelector: {}
-  # Longhorn doesn't like this :(
+  # TODO: Figure out why longhorn doesn't like those and why PV needs manual chmod.
   # securityContext:
   #   fsGroup: 2000
   #   runAsNonRoot: true
   #   runAsUser: 1000
+  #   RunAsGroup: 2000
   serviceAccountName: prometheus-k8s
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
