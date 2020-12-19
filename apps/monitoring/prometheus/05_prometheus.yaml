@@ -61,11 +61,11 @@ spec:
       metadata:
         name: data
         annotations:
-          volume.beta.kubernetes.io/storage-class: "external-nfs"
+          volume.beta.kubernetes.io/storage-class: "longhorn"
       spec:
-        storageClassName: "external-nfs"  # note: NFS is not supported and can lead to data loss! This needs to be moved to other storage type
+        storageClassName: "longhorn"
         accessModes:
           - ReadWriteMany
         resources:
           requests:
-            storage: 50Gi
+            storage: 40Gi
