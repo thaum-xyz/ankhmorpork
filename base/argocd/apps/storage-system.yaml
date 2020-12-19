@@ -34,4 +34,24 @@ spec:
     automated:
       prune: true
       selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
+spec:
+  destination:
+    namespace: storage-system
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: base/storage-system/longhorn
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: storage-system
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
 
