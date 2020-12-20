@@ -34,7 +34,6 @@ spec:
         - 'https://weirdo.blog/ghost'
         - 'https://alchemyof.it/ghost'
         - 'https://zmc.krupa.net.pl'
-        - 'https://lancre.thaum.xyz'
       labels:
         environment: thaum
 ---
