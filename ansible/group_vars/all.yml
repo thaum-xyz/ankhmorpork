@@ -21,6 +21,4 @@ node_exporter_disabled_collectors:
 
 systemd_exporter_enable_ip_accounting: true
 systemd_exporter_enable_restart_count: true
-systemd_exporter_unit_blacklist:
-  - '.*.mount'
-  - 'user-runtime-dir@0.service'
+systemd_exporter_unit_blacklist: '.*.mount|user-runtime-dir@0.service'
