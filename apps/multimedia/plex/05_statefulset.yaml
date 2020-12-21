@@ -52,6 +52,8 @@ spec:
           value: "1000"
         - name: ALLOWED_NETWORKS
           value: "192.168.2.0/24,10.42.0.0/16"
+        - name: ADVERTISE_IP  # Tied to LB Service IP
+          value: "http://192.168.2.98:32400/"
         - name: PLEX_CLAIM
           valueFrom:
             secretKeyRef:
@@ -102,13 +104,8 @@ spec:
       #- name: mymultimedia
       #  hostPath:
       #    path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
-      - hostPath:
-          path: /etc/localtime
-          type: ""
-        name: localtime
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        # kubernetes.io/hostname: "node01"
         gpu.infra/intel: "true"
       tolerations: []
   volumeClaimTemplates:
