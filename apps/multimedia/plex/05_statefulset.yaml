@@ -79,6 +79,8 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: plexlib
+        - mountPath: /transcode
+          name: transcode
         - mountPath: /backup
           name: backups
         - mountPath: /data/movies
@@ -119,6 +121,16 @@ spec:
       resources:
         requests:
           storage: 30Gi
+  - metadata:
+      name: transcode
+      namespace: multimedia
+    spec:
+      storageClassName: "local-path"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
   - metadata:
       name: backups
       namespace: multimedia
