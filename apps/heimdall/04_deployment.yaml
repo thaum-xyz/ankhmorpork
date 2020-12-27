@@ -24,7 +24,7 @@ spec:
         - name: TZ
           value: "Europe/Berlin"
         name: heimdall
-        image: linuxserver/heimdall:version-2.2.2
+        image: ghcr.io/linuxserver/heimdall:version-2.2.2
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 80
@@ -47,7 +47,8 @@ spec:
             name: config
         resources:
           requests:
-            memory: 135M
+            cpu: 30m
+            memory: 100Mi
           limits:
             memory: 200M
       restartPolicy: Always

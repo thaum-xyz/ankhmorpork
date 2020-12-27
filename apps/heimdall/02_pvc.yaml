@@ -5,11 +5,11 @@ metadata:
   name: heimdall-config
   namespace: heimdall
   annotations:
-    volume.beta.kubernetes.io/storage-class: "external-nfs"
+    volume.beta.kubernetes.io/storage-class: "longhorn"
 spec:
-  storageClassName: "external-nfs"
+  storageClassName: "longhorn"
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 100Mi
+      storage: 60Mi
