@@ -106,6 +106,8 @@ spec:
       #- name: mymultimedia
       #  hostPath:
       #    path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
+      - name: transcode
+        emptyDir: {}
       nodeSelector:
         kubernetes.io/arch: "amd64"
         gpu.infra/intel: "true"
@@ -122,17 +124,7 @@ spec:
         requests:
           storage: 30Gi
   - metadata:
-      name: transcode
-      namespace: multimedia
-    spec:
-      storageClassName: "local-path"
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 10Gi
-  - metadata:
-      name: backups
+      name: backups  # TODO: consider moving to emptyDir and backing up to B2
       namespace: multimedia
     spec:
       storageClassName: "external-nfs"
