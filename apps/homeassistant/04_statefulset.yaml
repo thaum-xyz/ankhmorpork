@@ -59,6 +59,8 @@ spec:
           requests:
             cpu: 200m
             memory: 800Mi
+          limits:
+            memory: 1600Mi
       hostNetwork: true
       volumes:
         - name: config
