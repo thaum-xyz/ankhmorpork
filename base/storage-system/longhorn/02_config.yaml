@@ -58,7 +58,7 @@ data:
       staleReplicaTimeout: "2880"
       fromBackup: ""
     #  diskSelector: "ssd,fast"
-    #  nodeSelector: "storage,fast"
+    #  nodeSelector: "storage,fast"  # Those are tags set in longhorn UI
     #  recurringJobs: '[{"name":"snap", "task":"snapshot", "cron":"*/1 * * * *", "retain":1},
     #                   {"name":"backup", "task":"backup", "cron":"*/2 * * * *", "retain":1,
     #                    "labels": {"interval":"2m"}}]'
