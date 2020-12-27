@@ -35,6 +35,7 @@ spec:
   image: quay.io/prometheus/prometheus:v2.23.0
   nodeSelector:
     kubernetes.io/os: linux
+    storage.infra/replicated: "true"
   podMonitorNamespaceSelector: {}
   podMonitorSelector: {}
   probeNamespaceSelector: {}
