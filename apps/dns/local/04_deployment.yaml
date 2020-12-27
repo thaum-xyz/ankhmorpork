@@ -45,8 +45,8 @@ spec:
           limits:
             memory: 170Mi
           requests:
-            cpu: 100m
-            memory: 70Mi
+            cpu: 15m
+            memory: 30Mi
         args: [ "-conf", "/etc/coredns/Corefile" ]
         volumeMounts:
         - name: config-volume

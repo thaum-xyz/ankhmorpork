@@ -47,7 +47,8 @@ spec:
   retention: 7d
   resources:
     requests:
-      memory: 1400Mi
+      cpu: 140m
+      memory: 1900Mi
   ruleNamespaceSelector: {}
   ruleSelector: {}
   # TODO: Figure out why longhorn doesn't like those and why PV needs manual chmod.

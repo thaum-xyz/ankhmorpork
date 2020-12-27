@@ -54,7 +54,8 @@ spec:
           readOnly: true
         resources:
           requests:
-            memory: 16Mi
+            cpu: 5m
+            memory: 25Mi
       - image: quay.io/paulfantom/nginx-exporter:0.8.0
         name: nginx-exporter
         args:
@@ -65,7 +66,8 @@ spec:
           name: metrics
         resources:
           requests:
-            memory: 9Mi
+            cpu: 1m
+            memory: 11Mi
           limits:
             memory: 20Mi
       restartPolicy: Always

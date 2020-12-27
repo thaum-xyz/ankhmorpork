@@ -57,7 +57,8 @@ spec:
           mountPath: /config
         resources:
           requests:
-            memory: 800M
+            cpu: 200m
+            memory: 800Mi
       hostNetwork: true
       volumes:
         - name: config
@@ -65,4 +66,3 @@ spec:
             claimName: homeassistant-config
       nodeSelector:
         kubernetes.io/arch: arm64
-        # kubernetes.io/hostname: node02

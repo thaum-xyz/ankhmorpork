@@ -27,7 +27,7 @@ spec:
   replicas: 3
   resources:
     requests:
-      memory: 40Mi
+      memory: 30Mi
   securityContext:
     fsGroup: 2000
     runAsNonRoot: true

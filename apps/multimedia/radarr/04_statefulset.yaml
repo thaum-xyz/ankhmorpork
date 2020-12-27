@@ -44,7 +44,7 @@ spec:
             name: downloads
         resources:
           requests:
-            cpu: 15m
+            cpu: 20m
             memory: 635Mi
       restartPolicy: Always
       volumes:

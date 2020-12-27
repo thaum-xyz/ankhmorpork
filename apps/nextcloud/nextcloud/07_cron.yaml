@@ -67,7 +67,8 @@ spec:
           mountPath: /var/spool/cron/crontabs
         resources:
           requests:
-            memory: 150Mi
+            cpu: 150m
+            memory: 50Mi
       restartPolicy: Always
       nodeSelector:
         kubernetes.io/arch: amd64  # TODO: consider removing

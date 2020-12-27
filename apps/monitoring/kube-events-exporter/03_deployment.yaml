@@ -28,6 +28,10 @@ spec:
           name: event
         - containerPort: 8081
           name: exporter
+        resources:
+          requests:
+            cpu: 2m
+            memory: 16Mi
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534

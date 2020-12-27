@@ -55,7 +55,8 @@ spec:
             add: ['NET_RAW']
         resources:
           requests:
-            memory: 20Mi
+            cpu: 21m
+            memory: 16Mi
       restartPolicy: Always
       volumes:
         - configMap:
