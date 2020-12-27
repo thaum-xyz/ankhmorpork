@@ -39,7 +39,8 @@ spec:
             name: config
         resources:
           requests:
-            memory: 142M
+            cpu: 200m
+            memory: 200Mi
       restartPolicy: Always
   volumeClaimTemplates:
   - metadata:

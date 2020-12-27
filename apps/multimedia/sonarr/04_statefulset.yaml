@@ -26,7 +26,7 @@ spec:
         - name: TZ
           value: "Europe/Berlin"
         name: sonarr
-        image: linuxserver/sonarr:preview
+        image: ghcr.io/linuxserver/sonarr:preview
         imagePullPolicy: Always
         ports:
           - containerPort: 8989
@@ -45,7 +45,8 @@ spec:
             name: downloads
         resources:
           requests:
-            memory: 280Mi
+            cpu: 15m
+            memory: 320Mi
       restartPolicy: Always
       volumes:
       - name: data
@@ -56,19 +57,17 @@ spec:
           claimName: torrents
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        # kubernetes.io/hostname: "node01"
-        # storage.infra/replicated: "true"
       tolerations: []
   volumeClaimTemplates:
   - metadata:
       name: config
       namespace: multimedia
       annotations:
-        volume.beta.kubernetes.io/storage-class: "external-nfs"
+        volume.beta.kubernetes.io/storage-class: "longhorn"
     spec:
-      storageClassName: "external-nfs"
+      storageClassName: "longhorn"
       accessModes:
         - ReadWriteMany
       resources:
         requests:
-          storage: 100Mi
+          storage: 600Mi
