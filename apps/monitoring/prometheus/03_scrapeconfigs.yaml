@@ -13,7 +13,9 @@ spec:
         - job_name: windows
           static_configs:
           - targets:
-            - 'DESKTOP-ODOR2KB:9182'
+            - '192.168.2.50:9182'
+            labels:
+              node: 'DESKTOP-ODOR2KB'
 
         # https://github.com/prometheus-pve/prometheus-pve-exporter
         #- job_name: 'pve'

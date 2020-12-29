@@ -20,7 +20,14 @@ FREE
 
 Hypervisors and x86 nodes
 
-### .50 - .79
+### .50 - .54
+
+Static IP allocation in DHCP. MAC addr following pattern: DE:AD:BE:EF:00:xy, ex.
+MAC DE:AD:BE:EF:00:50 gets IP ending with .50
+MAC DE:AD:BE:EF:00:51 gets IP ending with .51
+and so on
+
+### .55 - .79
 
 FREE
 
