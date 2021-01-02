@@ -26,7 +26,8 @@ spec:
         - name: TZ
           value: "Europe/Berlin"
         name: radarr
-        image: ghcr.io/linuxserver/radarr
+        image: ghcr.io/linuxserver/radarr:develop
+        imagePullPolicy: Always
         ports:
           - containerPort: 7878
             name: http-radarr
