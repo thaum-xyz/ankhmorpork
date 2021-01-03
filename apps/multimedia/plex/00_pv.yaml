@@ -17,7 +17,7 @@ spec:
   #   - nfsvers=4.2
   nfs:
     path: /srv/storage/kubernetes/vod/movies
-    server: 192.168.2.40  # TODO: Consider using direct link bonded interfaces
+    server: 192.168.40.2  # direct link bonded interface
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -37,7 +37,7 @@ spec:
   #   - nfsvers=4.2
   nfs:
     path: /srv/storage/kubernetes/vod/tv
-    server: 192.168.2.40  # TODO: Consider using direct link bonded interfaces
+    server: 192.168.40.2  # direct link bonded interface
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -51,6 +51,7 @@ spec:
   resources:
     requests:
       storage: 4000Gi
+  volumeName: movies
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -64,4 +65,4 @@ spec:
   resources:
     requests:
       storage: 4000Gi
-
+  volumeName: tv
