@@ -3,13 +3,14 @@ nfs_exports:
   - "/mnt 192.168.2.40(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
   - "/srv/storage/kubernetes *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
 
-# 8GB is dedicated to ZFS storage
-kubelet_system_resources: "cpu=2000m,memory=8Gi"
+# 8GB and 2 cores are dedicated to ZFS storage
+# 40GB and 8 cores are dedicated to VMs
+kubelet_system_resources: "cpu=10000m,memory=48Gi"  # This leaves 2 cores and ~14G
 node_taints:
   - "node.infra/hypervisor=true:NoSchedule"
 
 node_labels:
-  - "storage.infra/local=true"
+  - "storage.infra/direct=true"
   - "storage.infra/replicated=true"
   - "storage.infra/capacious=true"
   - "gpu.infra/nvidia=true"
