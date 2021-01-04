@@ -83,8 +83,8 @@ spec:
         configMap:
           name: longhorn-default-setting
       serviceAccountName: longhorn-service-account
-      #nodeSelector:  # longhorn needs to know about all nodes
-      #  storage.infra/replicated: "true"
+      nodeSelector:
+        storage.infra/replicated: "true"
   updateStrategy:
     rollingUpdate:
       maxUnavailable: "100%"
