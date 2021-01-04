@@ -42,7 +42,7 @@ spec:
       annotations:
         description: The used storage of node {{$labels.node}} is at {{$value}}% capacity for
           more than 5 minutes.
-        summary:  The used storage of node is over 70% of the capacity.
+        summary: The used storage of node is over 70% of the capacity.
       expr: (longhorn_node_storage_usage_bytes / longhorn_node_storage_capacity_bytes) * 100 > 70
       for: 5m
       labels:
@@ -51,7 +51,7 @@ spec:
       annotations:
         description: The used storage of disk {{$labels.disk}} on node {{$labels.node}} is at {{$value}}% capacity for
           more than 5 minutes.
-        summary:  The used storage of disk is over 70% of the capacity.
+        summary: The used storage of disk is over 70% of the capacity.
       expr: (longhorn_disk_usage_bytes / longhorn_disk_capacity_bytes) * 100 > 70
       for: 5m
       labels:
@@ -64,21 +64,3 @@ spec:
       for: 5m
       labels:
         severity: critical
-    - alert: LonghornIntanceManagerCPUUsageWarning
-      annotations:
-        description: Longhorn instance manager {{$labels.instance_manager}} on {{$labels.node}} has CPU Usage / CPU request is {{$value}}% for
-          more than 5 minutes.
-        summary: Longhorn instance manager {{$labels.instance_manager}} on {{$labels.node}} has CPU Usage / CPU request is over 300%.
-      expr: (longhorn_instance_manager_cpu_usage_millicpu/longhorn_instance_manager_cpu_requests_millicpu) * 100 > 300
-      for: 5m
-      labels:
-        severity: warning
-    - alert: LonghornNodeCPUUsageWarning
-      annotations:
-        description: Longhorn node {{$labels.node}} has CPU Usage / CPU capacity is {{$value}}% for
-          more than 5 minutes.
-        summary: Longhorn node {{$labels.node}} experiences high CPU pressure for more than 5m.
-      expr: (longhorn_node_cpu_usage_millicpu / longhorn_node_cpu_capacity_millicpu) * 100 > 90
-      for: 5m
-      labels:
-        severity: warning
