@@ -28,6 +28,8 @@ spec:
                 value: "http://push.monitoring.svc:9091"
               - name: MAX_AGE
                 value: "86400"
+              - name: TIMEOUT
+                value: "8h"
             envFrom:
               - secretRef:
                   name: restic-repository-files
