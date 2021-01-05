@@ -12,8 +12,8 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: homer
-  strategy:
-    type: Recreate
+  # strategy:
+  #   type: Recreate
   template:
     metadata:
       labels:
