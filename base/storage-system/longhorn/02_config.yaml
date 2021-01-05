@@ -7,7 +7,7 @@ metadata:
 data:
   default-setting.yaml: |-
     # Settings explained in https://longhorn.io/docs/1.1.0/references/settings/#general
-    # backup-target:
+    backup-target: nfs://192.168.2.40:/srv/storage/backup
     # backup-target-credential-secret:
     # allow-recurring-job-while-volume-detached:
     # create-default-disk-labeled-nodes:
@@ -25,7 +25,7 @@ data:
     priority-class: high-priority
     # auto-salvage:
     # auto-delete-pod-when-volume-detached-unexpectedly:
-    disable-scheduling-on-cordoned-node: true
+    disable-scheduling-on-cordoned-node: false
     # replica-zone-soft-anti-affinity:
     # volume-attachment-recovery-policy:
     # node-down-pod-deletion-policy:
