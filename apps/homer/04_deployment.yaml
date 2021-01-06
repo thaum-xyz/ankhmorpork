@@ -6,22 +6,21 @@ metadata:
   namespace: homer
   labels:
     app.kubernetes.io/name: homer
-    # app.kubernetes.io/version:
+    app.kubernetes.io/version: 20.12.19
 spec:
   # replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: homer
-  # strategy:
-  #   type: Recreate
   template:
     metadata:
       labels:
         app.kubernetes.io/name: homer
+        app.kubernetes.io/version: 20.12.19
     spec:
       containers:
       - name: homer
-        image: b4bz/homer
+        image: b4bz/homer:20.12.19
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080
@@ -45,10 +44,11 @@ spec:
             subPath: config.yml
         resources:
           requests:
-            cpu: 30m
-            memory: 100Mi
+            cpu: 1m
+            memory: 2Mi
           limits:
-            memory: 200M
+            cpu: 10m
+            memory: 10Mi
       restartPolicy: Always
       volumes:
       - name: config
