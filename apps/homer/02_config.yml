@@ -141,3 +141,6 @@ data:
             logo: "https://avatars3.githubusercontent.com/u/51335366?s=200&v=4"
             <<: *Local
             url: "http://192.168.2.97/#/dashboard"
+          - name: ArgoCD
+            logo: "https://argoproj.github.io/argo-cd/assets/logo.png"
+            url: "https://argocd.ankhmorpork.thaum.xyz"
