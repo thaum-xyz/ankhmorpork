@@ -29,7 +29,7 @@ metadata:
   name: dns-tcp
   namespace: dns
 spec:
-  externalTrafficPolicy: Cluster
+  # externalTrafficPolicy: Cluster
   type: LoadBalancer
   loadBalancerIP: 192.168.2.99
   selector:
@@ -53,7 +53,7 @@ metadata:
   name: dns-udp
   namespace: dns
 spec:
-  externalTrafficPolicy: Cluster
+  # externalTrafficPolicy: Cluster
   type: LoadBalancer
   loadBalancerIP: 192.168.2.99
   selector:

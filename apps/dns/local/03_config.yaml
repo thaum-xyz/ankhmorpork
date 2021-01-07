@@ -33,7 +33,7 @@ data:
         192.168.2.14 node03.ankhmorpork.thaum.xyz
         192.168.2.15 node04.ankhmorpork.thaum.xyz
         192.168.2.16 node05.ankhmorpork.thaum.xyz
-        192.168.2.17 node06.ankhmorpork.thaum.xyz
+        192.168.2.42 node06.ankhmorpork.thaum.xyz
         192.168.2.40 hyper01.ankhmorpork.thaum.xyz
         fallthrough
       }
@@ -43,13 +43,19 @@ data:
         default-lists
         log
       }
-      cache
+      cache {
+        success 51200 21600
+        prefetch 1000
+      }
       forward . tls://1.1.1.1 tls://1.0.0.1 {
         tls_servername cloudflare-dns.com
         health_check 5s
       }
+      local
       reload
       loadbalance
-      log
+      log {combined} {
+        class denial error
+      }
       errors
     }
