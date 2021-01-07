@@ -51,7 +51,7 @@ data:
         tls_servername cloudflare-dns.com
         health_check 5s
       }
-      local
+      # local
       reload
       loadbalance
       log {combined} {
