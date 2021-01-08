@@ -1,5 +1,5 @@
 local homer = import './homer.libsonnet';
-local configData = importstr './config.yaml';
+local configData = importstr './config.yml';
 
 local config = {
   version: '20.12.19',
