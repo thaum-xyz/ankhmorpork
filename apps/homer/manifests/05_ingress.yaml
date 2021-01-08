@@ -1,27 +1,30 @@
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
-  namespace: homer
-  labels:
-    probe: enabled
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homer
+    app.kubernetes.io/part-of: homer
+    app.kubernetes.io/version: 20.12.19
+    probe: enabled
+  name: homer
+  namespace: homer
 spec:
-  tls:
-  - hosts:
-    - ankhmorpork.thaum.xyz
-    secretName: homer-tls
   rules:
   - host: ankhmorpork.thaum.xyz
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
+      - backend:
           service:
             name: homer
             port:
-              name: http-homer
+              name: http
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - ankhmorpork.thaum.xyz
+    secretName: homer-tls

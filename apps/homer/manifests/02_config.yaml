@@ -1,19 +1,13 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config
-  namespace: homer
 data:
   config.yml: |
     title: "Ankhmorpork portal"
     subtitle: "thaum"
     logo: "logo.png"
     # icon: "fas fa-skull-crossbones" # Optional icon
-    
+
     header: true
     footer: false
-    
+
     # Optional theme customization
     theme: default
     colors:
@@ -41,7 +35,7 @@ data:
         text-subtitle: "#f5f5f5"
         card-shadow: rgba(0, 0, 0, 0.4)
         link-hover: "#ffdd57"
-    
+
     # Optional message
     #message:
     #  #url: https://b4bz.io
@@ -49,7 +43,7 @@ data:
     #  title: "Demo !"
     #  icon: "fa fa-grin"
     #  content: "This is a dummy homepage demo. <br /> Find more information on <a href='https://github.com/bastienwirtz/homer'>github.com/bastienwirtz/homer</a>"
-    
+
     # Optional navbar
     # links: [] # Allows for navbar (dark mode, layout, and search) without any links
     links:
@@ -59,12 +53,12 @@ data:
       - name: "Passwords"
         icon: "fa fa-key"
         url: "https://vault.bitwarden.com/"
-    
+
     tags:
       Local: &Local
         - tag: local
           tagstyle: "is-danger"
-    
+
     # Services
     # First level array represent a group.
     # Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
@@ -84,7 +78,7 @@ data:
             subtitle: "Home automation system"
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png"
             url: "https://home.ankhmorpork.thaum.xyz/"
-    
+
       - name: "Multimedia"
         icon: "fa fa-tv"
         items:
@@ -116,7 +110,7 @@ data:
           #  logo: ""
           #  subtitle: "Photo management"
           #  url: "http://192.168.2.96"
-    
+
       - name: "Administration"
         icon: "fa fa-user-shield"
         items:
@@ -144,3 +138,11 @@ data:
           - name: ArgoCD
             logo: "https://argoproj.github.io/argo-cd/assets/logo.png"
             url: "https://argocd.ankhmorpork.thaum.xyz"
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homer
+    app.kubernetes.io/part-of: homer
+    app.kubernetes.io/version: 20.12.19
+  name: homer-config
+  namespace: homer
