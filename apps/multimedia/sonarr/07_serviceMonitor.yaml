@@ -3,15 +3,17 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: sonarr-exporter
-  namespace: monitoring
+  namespace: multimedia
   labels:
-    app.kubernetes.io/name: sonarr-exporter
-    app.kubernetes.io/instance: sonarr-exporter
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/instance: exportarr
+    app.kubernetes.io/component: exporter
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: sonarr-exporter
-      app.kubernetes.io/instance: sonarr-exporter
+      app.kubernetes.io/name: sonarr
+      app.kubernetes.io/instance: exportarr
+      app.kubernetes.io/component: exporter
   endpoints:
   - port: sonarr-metrics
     interval: 4m

@@ -5,21 +5,24 @@ metadata:
   name: sonarr-exporter
   namespace: multimedia
   labels:
-    app.kubernetes.io/name: sonarr-exporter
-    app.kubernetes.io/instance: sonarr-exporter
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/instance: exportarr
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 0.3.4
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: sonarr-exporter
-      app.kubernetes.io/instance: sonarr-exporter
+      app.kubernetes.io/name: sonarr
+      app.kubernetes.io/instance: exportarr
+      app.kubernetes.io/component: exporter
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: sonarr-exporter
-        app.kubernetes.io/instance: sonarr-exporter
+        app.kubernetes.io/name: sonarr
+        app.kubernetes.io/instance: exportarr
+        app.kubernetes.io/component: exporter
         app.kubernetes.io/version: 0.3.4
     spec:
       containers:
@@ -31,7 +34,7 @@ spec:
           value: "http://sonarr.multimedia.svc:8989"
         envFrom:
         - secretRef:
-            name: sonarr-exporter
+            name: sonarr-apikey
         ports:
         - name: sonarr-metrics
           containerPort: 9708
