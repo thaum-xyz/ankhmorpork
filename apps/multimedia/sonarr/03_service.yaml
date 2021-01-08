@@ -20,3 +20,20 @@ spec:
     app.kubernetes.io/name: sonarr
   sessionAffinity: None
   type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr-exporter
+  namespace: multimedia
+  labels:
+    app.kubernetes.io/name: sonarr-exporter
+    app.kubernetes.io/instance: sonarr-exporter
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: sonarr-exporter
+    app.kubernetes.io/instance: sonarr-exporter
+  ports:
+  - name: sonarr-metrics
+    port: 9708

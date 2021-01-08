@@ -20,3 +20,20 @@ spec:
     app.kubernetes.io/name: radarr
   sessionAffinity: None
   type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: radarr-exporter
+  namespace: multimedia
+  labels:
+    app.kubernetes.io/name: radarr-exporter
+    app.kubernetes.io/instance: radarr-exporter
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: radarr-exporter
+    app.kubernetes.io/instance: radarr-exporter
+  ports:
+  - name: radarr-metrics
+    port: 9708

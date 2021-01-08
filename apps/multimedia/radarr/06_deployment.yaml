@@ -1,0 +1,56 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: radarr-exporter
+  namespace: multimedia
+  labels:
+    app.kubernetes.io/name: radarr-exporter
+    app.kubernetes.io/instance: radarr-exporter
+    app.kubernetes.io/version: 0.3.4
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: radarr-exporter
+      app.kubernetes.io/instance: radarr-exporter
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: radarr-exporter
+        app.kubernetes.io/instance: radarr-exporter
+        app.kubernetes.io/version: 0.3.4
+    spec:
+      containers:
+      - name: radarr-exporter
+        image: onedr0p/exportarr:v0.3.4
+        args: ["radarr"]
+        env:
+        - name: URL
+          value: "http://radarr.multimedia.svc:7878"
+        envFrom:
+        - secretRef:
+            name: radarr-exporter
+        ports:
+        - name: radarr-metrics
+          containerPort: 9708
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: radarr-metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: radarr-metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
