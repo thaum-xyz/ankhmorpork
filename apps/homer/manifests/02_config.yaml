@@ -1,3 +1,4 @@
+apiVersion: v1
 data:
   config.yml: |
     title: "Ankhmorpork portal"
@@ -138,6 +139,7 @@ data:
           - name: ArgoCD
             logo: "https://argoproj.github.io/argo-cd/assets/logo.png"
             url: "https://argocd.ankhmorpork.thaum.xyz"
+kind: ConfigMap
 metadata:
   labels:
     app.kubernetes.io/component: server
