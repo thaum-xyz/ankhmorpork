@@ -1,0 +1,138 @@
+title: "Ankhmorpork portal"
+subtitle: "thaum"
+logo: "logo.png"
+# icon: "fas fa-skull-crossbones" # Optional icon
+
+header: true
+footer: false
+
+# Optional theme customization
+theme: default
+colors:
+  light:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#f5f5f5"
+    card-background: "#ffffff"
+    text: "#363636"
+    text-header: "#ffffff"
+    text-title: "#303030"
+    text-subtitle: "#424242"
+    card-shadow: rgba(0, 0, 0, 0.1)
+    link-hover: "#363636"
+  dark:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#131313"
+    card-background: "#2b2b2b"
+    text: "#eaeaea"
+    text-header: "#ffffff"
+    text-title: "#fafafa"
+    text-subtitle: "#f5f5f5"
+    card-shadow: rgba(0, 0, 0, 0.4)
+    link-hover: "#ffdd57"
+
+# Optional message
+#message:
+#  #url: https://b4bz.io
+#  style: "is-dark" # See https://bulma.io/documentation/components/message/#colors for styling options.
+#  title: "Demo !"
+#  icon: "fa fa-grin"
+#  content: "This is a dummy homepage demo. <br /> Find more information on <a href='https://github.com/bastienwirtz/homer'>github.com/bastienwirtz/homer</a>"
+
+# Optional navbar
+# links: [] # Allows for navbar (dark mode, layout, and search) without any links
+links:
+  - name: "Status Page"
+    icon: "fa fa-question"
+    url: "https://thaum.statuspage.io/"
+  - name: "Passwords"
+    icon: "fa fa-key"
+    url: "https://vault.bitwarden.com/"
+
+tags:
+  Local: &Local
+    - tag: local
+      tagstyle: "is-danger"
+
+# Services
+# First level array represent a group.
+# Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
+services:
+  - name: "Home Cloud"
+    icon: "fa fa-cloud"
+    items:
+      - name: Nextcloud
+        subtitle: "Everything and more"
+        logo: "https://avatars0.githubusercontent.com/u/19211038?s=200&v=4"
+        url: "https://cloud.krupa.net.pl"
+      - name: "Cookbook"
+        subtitle: "Our recipes"
+        logo: "https://github.com/nextcloud/cookbook/raw/master/img/favicon.png"
+        url: "https://cloud.krupa.net.pl/apps/cookbook/"
+      - name: "HomeAssistant"
+        subtitle: "Home automation system"
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png"
+        url: "https://home.ankhmorpork.thaum.xyz/"
+
+  - name: "Multimedia"
+    icon: "fa fa-tv"
+    items:
+      - name: "Plex"
+        subtitle: "Video on demand"
+        logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
+        <<: *Local
+        url: "http://192.168.2.98:32400/web/index.html#"
+      - name: "Ombi"
+        subtitle: "Media requests"
+        logo: "http://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/ombi.png"
+        url: "https://ombi.ankhmorpork.thaum.xyz/"
+      - name: "Radarr"
+        subtitle: "Movie collection manager"
+        logo: "https://avatars1.githubusercontent.com/u/25025331?s=200&v=4"
+        <<: *Local
+        url: "http://192.168.2.95:7878/"
+      - name: "Sonarr"
+        subtitle: "TV series collection manager"
+        logo: "https://avatars3.githubusercontent.com/u/1082903?s=200&v=4"
+        <<: *Local
+        url: "http://192.168.2.95:8989/"
+      - name: "Transmission"
+        subtitle: "downloader"
+        logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
+        <<: *Local
+        url: "http://192.168.2.95:9001/"
+      #- name: Photoprism
+      #  logo: ""
+      #  subtitle: "Photo management"
+      #  url: "http://192.168.2.96"
+
+  - name: "Administration"
+    icon: "fa fa-user-shield"
+    items:
+      - name: Grafana
+        logo: "https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg"
+        url: "https://grafana.ankhmorpork.thaum.xyz/"
+      - name: Alertmanager
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/200px-Prometheus_software_logo.svg.png"
+        url: "https://alertmanager.ankhmorpork.thaum.xyz/"
+      - name: Prometheus
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/200px-Prometheus_software_logo.svg.png"
+        url: "https://prometheus.ankhmorpork.thaum.xyz/"
+      - name: Proxmox
+        logo: "https://www.proxmox.com/images/proxmox/Proxmox_symbol_standard_hex.png"
+        <<: *Local
+        url: "https://192.168.2.40:8006/"
+      - name: Unifi
+        logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
+        <<: *Local
+        url: "https://192.168.2.7:8443/"
+      - name: Longhorn
+        logo: "https://avatars3.githubusercontent.com/u/51335366?s=200&v=4"
+        <<: *Local
+        url: "http://192.168.2.97/#/dashboard"
+      - name: ArgoCD
+        logo: "https://argoproj.github.io/argo-cd/assets/logo.png"
+        url: "https://argocd.ankhmorpork.thaum.xyz"
