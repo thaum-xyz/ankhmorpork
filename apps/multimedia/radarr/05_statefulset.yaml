@@ -45,7 +45,7 @@ spec:
             name: downloads
         resources:
           requests:
-            cpu: 20m
+            cpu: 40m
             memory: 635Mi
       - env:
         - name: URL
