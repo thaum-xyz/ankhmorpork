@@ -4,10 +4,6 @@ metadata:
   creationTimestamp: null
   name: sonarr-apikey
   namespace: multimedia
-  labels:
-    app.kubernetes.io/name: exportarr
-    app.kubernetes.io/instance: sonarr
-    app.kubernetes.io/component: exporter
 spec:
   encryptedData:
     APIKEY: AgCbT1jEup+SNJVKszQ/qBZXY9Ur0qcs6ZF/B9OU0t+nxDQFLvHXWDetIAkDVF1FFHK/g6duBzbYt0+YRJ/zGu7uJAqHMLHvKhDPn79TKaZ1LYFdPLcaUaQQXKV2tvZWESlVn3TRUm0/haRqiNs2MdrDlLOzn8WVCK2eGQaGmtpcj1IWaRZExffMtFEyb4xmPr8OI3WcuzlDqWfs3VEOQvFQizgs6ggdEckT+J8mBdWYLPqBRHAdp6VLIXgVuesuvbV1z5hN3/Uv4V4ASJT2DetbNitciBMbSLY4bY16/9AaunDFUqHJw1Dheu+rjwbF47ii2RUkPackTc4yPxbFQVCzEUwhLNgqGwb5n1mg2C7aHE74JTK44abwwXFzm2CG8rR0OxJhGfdVwUzIhDmNFqZOYiwefUhwF8YL4a14YKjnrsltzd0lw2i6Kx0m5OQSqVBbolCWUqIdlTFN/dG8UCCyleD/aF1pXfCQKPjQUOFcAxe3N5WxdRrvj+al64EIYvtq1jI37hXR5Pd8n7AfQXNbrhviKPASSWcV/u0GtfWvw5JlQcmRGzbu0oVlWyw59E96Kw8VCI62yn8siLkd91wNDcOuq6KodL8eZa2jDIW47n9HnX8Iig2Dxy2qUwrVAUAMKNrqg6K/h3YgTqYpr5KKsE60GaAEy0c4gaHTKT14CqyRbWSrME+TPzNVF8aQPtoMxNt9+w2JJNAbAXTo5lPDO0oYcOGjOJf7W5q8H6YCYw==
@@ -15,10 +11,6 @@ spec:
     metadata:
       annotations:
         sealedsecrets.bitnami.com/managed: "true"
-      labels:
-        app.kubernetes.io/name: exportarr
-        app.kubernetes.io/instance: sonarr
-        app.kubernetes.io/component: exporter
       creationTimestamp: null
       name: sonarr-apikey
       namespace: multimedia

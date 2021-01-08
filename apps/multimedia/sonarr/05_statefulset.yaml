@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: radarr
+  name: sonarr
   namespace: multimedia
   labels:
-    app.kubernetes.io/name: radarr
+    app.kubernetes.io/name: sonarr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: radarr
-  serviceName: radarr
+      app.kubernetes.io/name: sonarr
+  serviceName: sonarr
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: radarr
+        app.kubernetes.io/name: sonarr
     spec:
       containers:
       - env:
@@ -25,39 +25,68 @@ spec:
           value: "1000"
         - name: TZ
           value: "Europe/Berlin"
-        name: radarr
-        image: ghcr.io/linuxserver/radarr:develop
+        name: sonarr
+        image: ghcr.io/linuxserver/sonarr:preview
         imagePullPolicy: Always
         ports:
-          - containerPort: 7878
-            name: http-radarr
+          - containerPort: 8989
+            name: http-sonarr
         readinessProbe:
           tcpSocket:
-            port: http-radarr
+            port: http-sonarr
           failureThreshold: 5
           timeoutSeconds: 10
         volumeMounts:
           - mountPath: /config
             name: config
-          - mountPath: /movies
+          - mountPath: /tv
             name: data
           - mountPath: /download/completed
             name: downloads
         resources:
           requests:
             cpu: 20m
-            memory: 635Mi
+            memory: 320Mi
+      - env:
+        - name: URL
+          value: "http://127.0.0.1:8989"
+        #- name: LOG_LEVEL
+        #  value: "DEBUG"
+        - name: PORT
+          value: "9707"
+        envFrom:
+        - secretRef:
+            name: sonarr-apikey
+        name: exportarr
+        image: onedr0p/exportarr:v0.3.4
+        args: ["sonarr"]
+        ports:
+        - name: metrics
+          containerPort: 9707
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 11Mi
+          limits:
+            cpu: 20m
+            memory: 100Mi
       restartPolicy: Always
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: movies
+          claimName: tv
       - name: downloads
         persistentVolumeClaim:
           claimName: torrents
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        storage.infra/direct: "true"  # use direct network link for movies volume
+        storage.infra/direct: "true"  # use direct network link for tv volume
       tolerations: []
   volumeClaimTemplates:
   - metadata:
@@ -71,4 +100,4 @@ spec:
         - ReadWriteMany
       resources:
         requests:
-          storage: 800Mi
+          storage: 600Mi
