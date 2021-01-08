@@ -27,14 +27,14 @@ metadata:
   name: sonarr-exporter
   namespace: multimedia
   labels:
-    app.kubernetes.io/name: sonarr
-    app.kubernetes.io/instance: exportarr
+    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/instance: sonarr
     app.kubernetes.io/component: exporter
 spec:
   clusterIP: None
   selector:
-    app.kubernetes.io/name: sonarr
-    app.kubernetes.io/instance: exportarr
+    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/instance: sonarr
     app.kubernetes.io/component: exporter
   ports:
   - name: sonarr-metrics

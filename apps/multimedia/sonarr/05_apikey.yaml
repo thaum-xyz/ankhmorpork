@@ -5,8 +5,8 @@ metadata:
   name: sonarr-apikey
   namespace: multimedia
   labels:
-    app.kubernetes.io/name: sonarr
-    app.kubernetes.io/instance: exportarr
+    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/instance: sonarr
     app.kubernetes.io/component: exporter
 spec:
   encryptedData:
@@ -16,8 +16,8 @@ spec:
       annotations:
         sealedsecrets.bitnami.com/managed: "true"
       labels:
-        app.kubernetes.io/name: sonarr
-        app.kubernetes.io/instance: exportarr
+        app.kubernetes.io/name: exportarr
+        app.kubernetes.io/instance: sonarr
         app.kubernetes.io/component: exporter
       creationTimestamp: null
       name: sonarr-apikey

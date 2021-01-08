@@ -5,8 +5,8 @@ metadata:
   name: sonarr-exporter
   namespace: multimedia
   labels:
-    app.kubernetes.io/name: sonarr
-    app.kubernetes.io/instance: exportarr
+    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/instance: sonarr
     app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 0.3.4
 spec:
@@ -14,14 +14,14 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: sonarr
-      app.kubernetes.io/instance: exportarr
+      app.kubernetes.io/name: exportarr
+      app.kubernetes.io/instance: sonarr
       app.kubernetes.io/component: exporter
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: sonarr
-        app.kubernetes.io/instance: exportarr
+        app.kubernetes.io/name: exportarr
+        app.kubernetes.io/instance: sonarr
         app.kubernetes.io/component: exporter
         app.kubernetes.io/version: 0.3.4
     spec:
