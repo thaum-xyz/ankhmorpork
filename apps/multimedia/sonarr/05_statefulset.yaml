@@ -74,7 +74,7 @@ spec:
             cpu: 1m
             memory: 11Mi
           limits:
-            cpu: 20m
+            cpu: 50m
             memory: 100Mi
       restartPolicy: Always
       volumes:
