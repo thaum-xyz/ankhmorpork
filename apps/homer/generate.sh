@@ -2,9 +2,8 @@
 
 set -euo pipefail
 
-rm -rf manifests
-mkdir manifests
-jsonnet -m manifests -S jsonnet/main.jsonnet
+rm -rf manifests || :
+jsonnet -c -m manifests -S jsonnet/main.jsonnet
 
 # Next step is just an eye-candy and only beautifies yaml files
 cd manifests
