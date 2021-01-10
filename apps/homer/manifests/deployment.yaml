@@ -48,7 +48,7 @@ spec:
             memory: 10Mi
           requests:
             cpu: 1m
-            memory: 2Mi
+            memory: 5Mi
         volumeMounts:
         - mountPath: /www/assets/config.yml
           name: config

@@ -5,7 +5,7 @@ local defaults = {
   version: error 'must provide version',
   image: error 'must provide image',
   resources: {
-    requests: { cpu: '1m', memory: '2Mi' },
+    requests: { cpu: '1m', memory: '5Mi' },
     limits: { cpu: '10m', memory: '10Mi' },
   },
   commonLabels:: {
