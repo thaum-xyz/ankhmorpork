@@ -41,5 +41,5 @@ spec:
           volumes:
             - name: content
               persistentVolumeClaim:
-                claimName: homeassistant-config
+                claimName: config
           restartPolicy: Never
