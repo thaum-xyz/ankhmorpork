@@ -1,0 +1,16 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: restic-robot
+  namespace: blog
+  labels:
+    app.kubernetes.io/name: restic-robot
+    app.kubernetes.io/component: backup
+spec:
+  podMetricsEndpoints:
+  - port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: restic-robot
+      app.kubernetes.io/component: backup
