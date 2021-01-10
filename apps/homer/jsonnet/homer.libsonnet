@@ -24,24 +24,6 @@ local defaults = {
   configData: error 'must provide configData',
 };
 
-local podantiaffinity(value) = {
-  podAntiAffinity: {
-    preferredDuringSchedulingIgnoredDuringExecution: [{
-      weight: 100,
-      podAffinityTerm: {
-        labelSelector: {
-          matchExpressions: [{
-            key: 'app.kubernetes.io/name',
-            operator: 'In',
-            values: [value],
-          }],
-        },
-        topologyKey: 'kubernetes.io/hostname',
-      },
-    }],
-  },
-};
-
 function(params) {
   local h = self,
   config:: defaults + params,
@@ -120,7 +102,7 @@ function(params) {
       template: {
         metadata: { labels: h.config.commonLabels },
         spec: {
-          affinity: podantiaffinity(h.config.name),
+          affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity(h.config.name),
           containers: [c],
           restartPolicy: 'Always',
           serviceAccountName: h.serviceAccount.metadata.name,
