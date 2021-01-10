@@ -10,7 +10,7 @@ spec:
     namespace: auth
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/auth
+    path: apps/auth/manifests
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: default
