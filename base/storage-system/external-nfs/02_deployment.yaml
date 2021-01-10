@@ -40,9 +40,10 @@ spec:
           nfs:
             server: 192.168.2.40
             path: /srv/storage/kubernetes
-      nodeSelector:
-        kubernetes.io/arch: amd64
-        storage.infra/capacious: "true"
+      nodeName: hyper01  # This is a NFS share server
+      # nodeSelector:
+      #   kubernetes.io/arch: amd64
+      #   storage.infra/capacious: "true"
       tolerations:
       - key: "node.infra/hypervisor"
         operator: "Equal"
