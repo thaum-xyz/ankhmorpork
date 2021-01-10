@@ -1,5 +1,3 @@
-local antiaffinity = import '../../../lib/podantiaffinity.libsonnet';
-
 local defaults = {
   local defaults = self,
   name: 'oauth2-proxy',
@@ -103,7 +101,7 @@ function(params) {
       template: {
         metadata: { labels: o.config.commonLabels },
         spec: {
-          affinity: antiaffinity.podantiaffinity(o.config.name),
+          affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity(o.config.name),
           containers: [c],
           restartPolicy: 'Always',
           serviceAccountName: o.serviceAccount.metadata.name,
