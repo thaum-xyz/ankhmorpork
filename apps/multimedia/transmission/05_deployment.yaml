@@ -66,7 +66,8 @@ spec:
             subPath: openvpn-credentials.txt
         resources:
           requests:
-            memory: 35Mi
+            cpu: 200m
+            memory: 500Mi
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
