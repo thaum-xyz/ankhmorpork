@@ -24,7 +24,8 @@ spec:
       - env:
         - name: TRANSMISSION_ADDR
           value: "http://127.0.0.1:9091"
-        image: metalmatze/transmission-exporter
+        image: metalmatze/transmission-exporter:master
+        imagePullPolicy: Always
         name: exporter
         ports:
         - containerPort: 19091
@@ -71,8 +72,8 @@ spec:
             subPath: openvpn-credentials.txt
         resources:
           requests:
-            cpu: 30m
-            memory: 300Mi
+            cpu: 200m
+            memory: 500Mi
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
