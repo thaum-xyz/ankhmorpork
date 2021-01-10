@@ -284,7 +284,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
-  loadBalancerIP: 192.168.2.30
+  loadBalancerIP: 192.168.2.91
   ports:
     - name: http
       port: 80
@@ -414,12 +414,8 @@ spec:
           secret:
             secretName: ingress-nginx-admission
       nodeSelector:
-        network.infra/fast: "true"
-      tolerations:
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+        network.infra/type: "fast"
+      tolerations: []
 ---
 # Source: ingress-nginx/templates/admission-webhooks/validating-webhook.yaml
 # before changing this value, check the required kubernetes version

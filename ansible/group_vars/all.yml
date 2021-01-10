@@ -14,6 +14,11 @@ node_exporter_enabled_collectors:
       ignored-devices: '^(ram|loop|fd|(h|v|xv)d[a-z]|dm-)\\\d+$'
   - netdev:
       device-blacklist: "^(veth.*|br.*)$"
+  - mountstats
 node_exporter_disabled_collectors:
   - logind
   - ntp
+
+systemd_exporter_enable_ip_accounting: true
+systemd_exporter_enable_restart_count: true
+systemd_exporter_unit_blacklist: '.*.mount|user-runtime-dir@0.service'

@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: coredns
     app.kubernetes.io/component: adblocker
-    app.kubernetes.io/version: 0.2.4
+    app.kubernetes.io/version: 0.2.5
 spec:
   strategy:
     type: RollingUpdate
@@ -23,7 +23,7 @@ spec:
       labels:
         app.kubernetes.io/name: coredns
         app.kubernetes.io/component: adblocker
-        app.kubernetes.io/version: 0.2.4
+        app.kubernetes.io/version: 0.2.5
     spec:
       serviceAccountName: coredns
       affinity:
@@ -39,14 +39,14 @@ spec:
                topologyKey: kubernetes.io/hostname
       containers:
       - name: coredns
-        image: quay.io/paulfantom/coredns-ads:9d08bf49
-        # image: coredns/coredns
+        image: quay.io/paulfantom/coredns-ads:0.2.5
+        imagePullPolicy: Always  # Remove this when on 0.2.6
         resources:
           limits:
             memory: 170Mi
           requests:
-            cpu: 100m
-            memory: 70Mi
+            cpu: 10m
+            memory: 30Mi
         args: [ "-conf", "/etc/coredns/Corefile" ]
         volumeMounts:
         - name: config-volume

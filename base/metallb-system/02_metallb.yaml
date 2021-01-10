@@ -266,6 +266,8 @@ metadata:
   labels:
     app: metallb
     component: speaker
+  annotations:
+    ignore-check.kube-linter.io/drop-net-raw-capability: "metallb needs raw network capability to work"
   name: speaker
   namespace: metallb-system
 spec:
@@ -329,14 +331,10 @@ spec:
           readOnlyRootFilesystem: true
       hostNetwork: true
       nodeSelector:
-        network.infra/fast: "true"
+        network.infra/type: "fast"
       serviceAccountName: speaker
       terminationGracePeriodSeconds: 2
-      tolerations:
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+      tolerations: []
 ---
 apiVersion: apps/v1
 kind: Deployment

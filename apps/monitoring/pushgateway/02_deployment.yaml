@@ -25,3 +25,7 @@ spec:
         ports:
         - name: http-push
           containerPort: 9091
+        resources:
+          requests:
+            cpu: 10m
+            memory: 12Mi

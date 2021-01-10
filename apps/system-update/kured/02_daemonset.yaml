@@ -2,8 +2,8 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: kured            # Must match `--ds-name`
-  namespace: kube-system # Must match `--ds-namespace`
+  name: kured              # Must match `--ds-name`
+  namespace: system-update # Must match `--ds-namespace`
   labels:
     app.kubernetes.io/name: kured
     app.kubernetes.io/version: 1.5.1
@@ -26,13 +26,15 @@ spec:
       tolerations:
         - key: node-role.kubernetes.io/master
           operator: Exists
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
       nodeSelector:
         kubernetes.io/arch: "arm64"  # TODO(paulfantom): allow amd64 reboots after nextcloud db migration
       hostPID: true # Facilitate entering the host mount namespace via init
       restartPolicy: Always
       containers:
         - name: kured
-          image: quay.io/paulfantom/kured:51d766ef
+          image: quay.io/paulfantom/kured:1.5.1
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true # Give permission to nsenter /proc/1/ns/mnt
@@ -53,7 +55,7 @@ spec:
 #            - --blocking-pod-selector=name=temperamental
 #            - --blocking-pod-selector=...
 #            - --ds-name=kured
-#            - --ds-namespace=kube-system
+            - --ds-namespace=system-update
 #            - --end-time=23:59:59
 #            - --lock-annotation=weave.works/kured-node-lock
             - --period=2m

@@ -1,36 +1,53 @@
 # Storage
 
-Note: everything here is in progress and can change
+Ankhmorpork storage is represented by 3 Kubernetes Storage Classes each with different properties. Such division allows to cover all possible usecases for volume-based storage. Table below presents Storage Classes properties in clear way.
 
-## Available Storage Types
+Class      | High Performance | Capacity  | Resiliency
+-----------|------------------|-----------|-----------
+local-path | YES              | possible  |
+NFS        |                  |   YES     |
+Longhorn   | possible         |           |  YES
 
-### Capacity (NFS external)
+_Note: Ankhmorpork environment currently doesn't host any object storage._
 
-TODO: Consider switching this to ZFS pool with SSD as cache
+## Available Storage Classes
 
-RAID5 storage based on HDDs. Internally it is bound to LVM volume called "k8s-nfs-capacity" in "storage" VG.
-This is an NFS store with  in /srv/storage/kubernetes/capacity
-To allow disk spindown and lower power consumption, this class should be used only for applications
-with infrequent disk IO.
+### local-path
 
-### Replicated (DRBD + iSCSI)
+- volume provisioning is realized by [local-path-provisioner](https://github.com/rancher/local-path-provisioner).
+- essentially a `hostPath` mount for volumes
+- performance is as good as underlying hardware storage
+- on node all volumes are stored in `/var/lib/rancher/k3s/storage`.
+- can be mounted in RWX and RWO modes
 
-Essentially RAID1 over lan. Physical disks are located on node01 any hyper01. Replication is happening over dedicated
-network (with dedicated HW) on 192.168.40.0/24 subnet. iSCSI is available for all k8s nodes.
-
-TODO: More details
-
-### High-Speed-NFS
-
-Special type available only on node01 and hyper01. This is invisible to k8s and accessible only via `hostPath`. On lower
-level those are NFS volumes attached over dedicated network (same one as in #Replicated storage type). 
-
-## K8S storage classes
+_Note: Volumes are not retained!_
 
 ### external-nfs
 
-Tied to #Capacity storage type
+- volume provisioning is realized by [external-nfs-provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)
+- mounted nfs volume from `hyper01` node
+- data is not stored on nodes running workload
+- underlying storage system is based on ZFS RAIDZ1 pool with 4 HDDs (no SLOG, no L2ARC, dedicated 8GB RAM max)
+- data on `hyper01` host is stored in `datastore/nfsshare` zfs pool mounted at `/srv/storage/kubernetes`
+- can be mounted in RWX and RWO modes
 
-### iscsi (TODO)
+_Note: Long term network disruption causes Volume disconnection._
 
-Tied to #Replicated storage type
+### longhorn
+
+- volume provisioning is realized by [longhorn](https://longhorn.io/)
+- data is stored on dedicated nodes with replication factor of at least 2
+- on dedicated nodes data is stored in `/var/lib/longhorn`
+- two ways of mounting volume depending on `accessMode`
+  - RWX type is using NFS as mount mechanism
+  - RWO type mounts PVs from `/dev/longhorn` and those devices are created by CSI plugin when PV is created.
+- snapshotting is supported from web UI
+- volumes can be automatically backed up to NFS device
+
+## Hardware considerations
+
+All amd64 nodes are equipped with SATA SSD or NVMe drives used for system partition and possibly for storing data.
+
+All arm64 nodes are equipped with SD cards (class A1 or higher) but they do not have any dedicated storage devices.
+
+`hyper01` is a special host with HDD drives for high capacity.

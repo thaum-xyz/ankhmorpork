@@ -37,6 +37,7 @@ spec:
           name: redis
         resources:
           requests:
+            cpu: 3m
             memory: 5Mi
       - args:
         - "--redis.password"
@@ -53,6 +54,7 @@ spec:
           name: metrics
         resources:
           requests:
+            cpu: 1m
             memory: 13Mi
           limits:
             memory: 20Mi

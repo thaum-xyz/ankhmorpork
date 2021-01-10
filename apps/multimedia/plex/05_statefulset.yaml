@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: plex
-    app.kubernetes.io/version: 1.21.0
+    app.kubernetes.io/version: 1.21.1
   name: plex
   namespace: multimedia
 spec:
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: plex
-        app.kubernetes.io/version: 1.21.0
+        app.kubernetes.io/version: 1.21.1
     spec:
       hostname: nas
       containers:
@@ -29,7 +29,7 @@ spec:
               key: token
               name: plex-creds
         name: plex-metrics
-        image: quay.io/paulfantom/plex_exporter
+        image: quay.io/paulfantom/plex_exporter:0.2.2
         imagePullPolicy: IfNotPresent
         args:
         - "--token=$(TOKEN)"
@@ -52,12 +52,14 @@ spec:
           value: "1000"
         - name: ALLOWED_NETWORKS
           value: "192.168.2.0/24,10.42.0.0/16"
+        - name: ADVERTISE_IP  # Tied to LB Service IP
+          value: "http://192.168.2.98:32400/"
         - name: PLEX_CLAIM
           valueFrom:
             secretKeyRef:
               key: claim
               name: plex-creds
-        image: plexinc/pms-docker:1.21.0.3711-b509cc236
+        image: plexinc/pms-docker:1.21.1.3830-6c22540d5
         name: plex
         ports:
         - containerPort: 32400
@@ -77,6 +79,8 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: plexlib
+        - mountPath: /transcode
+          name: transcode
         - mountPath: /backup
           name: backups
         - mountPath: /data/movies
@@ -88,7 +92,8 @@ spec:
         #  readOnly: true
         resources:
           requests:
-            memory: 2000Mi
+            memory: 2500Mi
+            cpu: 2
           limits:
             gpu.intel.com/i915: 1
       restartPolicy: Always
@@ -102,13 +107,10 @@ spec:
       #- name: mymultimedia
       #  hostPath:
       #    path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
-      - hostPath:
-          path: /etc/localtime
-          type: ""
-        name: localtime
+      - name: transcode
+        emptyDir: {}
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        # kubernetes.io/hostname: "node01"
         gpu.infra/intel: "true"
       tolerations: []
   volumeClaimTemplates:
@@ -123,7 +125,7 @@ spec:
         requests:
           storage: 30Gi
   - metadata:
-      name: backups
+      name: backups  # TODO: consider moving to emptyDir and backing up to B2
       namespace: multimedia
     spec:
       storageClassName: "external-nfs"

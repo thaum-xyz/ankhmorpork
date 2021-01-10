@@ -35,6 +35,7 @@ spec:
   image: quay.io/prometheus/prometheus:v2.23.0
   nodeSelector:
     kubernetes.io/os: linux
+    storage.infra/replicated: "true"
   podMonitorNamespaceSelector: {}
   podMonitorSelector: {}
   probeNamespaceSelector: {}
@@ -46,13 +47,16 @@ spec:
   retention: 7d
   resources:
     requests:
-      memory: 1400Mi
+      cpu: 140m
+      memory: 1900Mi
   ruleNamespaceSelector: {}
   ruleSelector: {}
-  securityContext:
-    fsGroup: 2000
-    runAsNonRoot: true
-    runAsUser: 1000
+  # TODO: Figure out why longhorn doesn't like those and why PV needs manual chmod.
+  # securityContext:
+  #   fsGroup: 2000
+  #   runAsNonRoot: true
+  #   runAsUser: 1000
+  #   RunAsGroup: 2000
   serviceAccountName: prometheus-k8s
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
@@ -61,11 +65,11 @@ spec:
       metadata:
         name: data
         annotations:
-          volume.beta.kubernetes.io/storage-class: "external-nfs"
+          volume.beta.kubernetes.io/storage-class: "longhorn"
       spec:
-        storageClassName: "external-nfs"  # note: NFS is not supported and can lead to data loss! This needs to be moved to other storage type
+        storageClassName: "longhorn"
         accessModes:
-          - ReadWriteMany
+          - ReadWriteOnce  # Note: Do not use RWX as longhorn will mount volume via NFS
         resources:
           requests:
-            storage: 50Gi
+            storage: 80Gi

@@ -4,8 +4,6 @@ kind: Ingress
 metadata:
   name: ghost-about
   namespace: blog
-  labels:
-    probe: enabled
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -33,6 +31,8 @@ kind: Ingress
 metadata:
   name: ghost
   namespace: blog
+  labels:
+    probe: enabled
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"

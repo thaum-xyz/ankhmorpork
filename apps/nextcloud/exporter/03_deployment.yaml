@@ -38,7 +38,8 @@ spec:
           name: metrics
         resources:
           requests:
-            memory: 30Mi
+            cpu: 1m
+            memory: 13Mi
       restartPolicy: Always
       nodeSelector:
         kubernetes.io/arch: "amd64"

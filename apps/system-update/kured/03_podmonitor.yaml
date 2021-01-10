@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kured
   name: kured
-  namespace: kube-system
+  namespace: system-update
 spec:
   podMetricsEndpoints:
     - port: metrics

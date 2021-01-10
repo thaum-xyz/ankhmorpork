@@ -3,7 +3,7 @@ nfs_srv_addr: "192.168.40.2"
 
 node_labels:
   - "storage.infra/local=true"
-  - "network.infra/fast=true"
+  - "storage.infra/replicated=true"
   - "gpu.infra/intel=true"
 
 system_mountpoints:
@@ -11,4 +11,9 @@ system_mountpoints:
     before: k3s-node.service
     device: "/dev/ubuntu-vg/k3s-storage"
     mountpoint: "/var/lib/rancher/k3s/storage"
+    type: "ext4"
+  - description: k3s longhorn storage
+    before: k3s-node.service
+    device: "/dev/ubuntu-vg/longhorn"
+    mountpoint: "/var/lib/longhorn"
     type: "ext4"

@@ -10,22 +10,12 @@ spec:
       name: scrapeconfigs
     data:
       additional.yaml: |
-        #- job_name: windows
-        #  static_configs:
-        #  - targets:
-        #    - 'dibbler.ankhmorpork.thaum.xyz:9182'
-        - job_name: node-exporter
+        - job_name: windows
           static_configs:
           - targets:
-            - '192.168.2.40:9100'
+            - '192.168.2.50:9182'
             labels:
-              node: "hyper01"
-        - job_name: systemd
-          static_configs:
-          - targets:
-            - '192.168.2.40:9558'
-            labels:
-              node: "hyper01"
+              node: 'DESKTOP-ODOR2KB'
 
         # https://github.com/prometheus-pve/prometheus-pve-exporter
         #- job_name: 'pve'

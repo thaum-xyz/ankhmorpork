@@ -54,5 +54,8 @@ spec:
           timeoutSeconds: 10
         resources:
           requests:
-            memory: 15Mi
+            cpu: 5m
+            memory: 20Mi
+          limits:
+            memory: 100Mi
       restartPolicy: Always

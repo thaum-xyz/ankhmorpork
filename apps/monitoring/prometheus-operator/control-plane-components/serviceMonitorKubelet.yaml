@@ -97,6 +97,23 @@ spec:
     - action: replace
       replacement: node-exporter
       targetLabel: job
+  - interval: 30s
+    port: https-metrics
+    relabelings:
+    - action: replace
+      regex: (.+)(?::\d+)
+      replacement: $1:9558
+      sourceLabels:
+      - __address__
+      targetLabel: __address__
+    - action: replace
+      replacement: systemd-exporter
+      sourceLabels:
+      - endpoint
+      targetLabel: endpoint
+    - action: replace
+      replacement: systemd-exporter
+      targetLabel: job
   - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
     honorLabels: true
     interval: 30s

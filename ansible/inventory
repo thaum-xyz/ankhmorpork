@@ -9,7 +9,7 @@ node02    ansible_user=ubuntu ansible_host=192.168.2.13
 node03    ansible_user=ubuntu ansible_host=192.168.2.14
 node04    ansible_user=ubuntu ansible_host=192.168.2.15 network=fast
 node05    ansible_user=ubuntu ansible_host=192.168.2.16 network=fast
-hyper01   ansible_user=root   ansible_host=192.168.2.40 enable_smartmon=true
+hyper01   ansible_user=root   ansible_host=192.168.2.40 network=fast enable_smartmon=true
 
 [fancontroler]
 master01
@@ -29,6 +29,7 @@ master01
 
 [k3s-node]
 node0[1:5]
+hyper01
 
 [k3s:children]
 k3s-master

@@ -26,7 +26,8 @@ spec:
         - name: TZ
           value: "Europe/Berlin"
         name: radarr
-        image: linuxserver/radarr
+        image: ghcr.io/linuxserver/radarr:develop
+        imagePullPolicy: Always
         ports:
           - containerPort: 7878
             name: http-radarr
@@ -40,11 +41,39 @@ spec:
             name: config
           - mountPath: /movies
             name: data
-          - mountPath: /data/completed
+          - mountPath: /download/completed
             name: downloads
         resources:
           requests:
-            memory: 400Mi
+            cpu: 40m
+            memory: 635Mi
+      - env:
+        - name: URL
+          value: "http://127.0.0.1:7878"
+        - name: PORT
+          value: "9707"
+        envFrom:
+        - secretRef:
+            name: radarr-apikey
+        name: exportarr
+        image: onedr0p/exportarr:v0.3.4
+        args: ["radarr"]
+        ports:
+        - name: metrics
+          containerPort: 9707
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 11Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
       restartPolicy: Always
       volumes:
       - name: data
@@ -55,19 +84,18 @@ spec:
           claimName: torrents
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        # kubernetes.io/hostname: "node01"
-        # storage.infra/replicated: "true"
+        storage.infra/direct: "true"  # use direct network link for movies volume
       tolerations: []
   volumeClaimTemplates:
   - metadata:
       name: config
       namespace: multimedia
       annotations:
-        volume.beta.kubernetes.io/storage-class: "external-nfs"
+        volume.beta.kubernetes.io/storage-class: "longhorn"
     spec:
-      storageClassName: "external-nfs"
+      storageClassName: "longhorn"
       accessModes:
         - ReadWriteMany
       resources:
         requests:
-          storage: 100Mi
+          storage: 1201Mi

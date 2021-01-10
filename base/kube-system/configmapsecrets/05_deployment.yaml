@@ -5,6 +5,7 @@ metadata:
   namespace: kube-system
   labels:
     app.kubernetes.io/name: configmapsecret-controller
+    app.kubernetes.io/version: 0.4.0
 spec:
   selector:
     matchLabels:
@@ -13,10 +14,11 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: configmapsecret-controller
+        app.kubernetes.io/version: 0.4.0
     spec:
       containers:
         - name: controller
-          image: quay.io/paulfantom/configmapsecrets-controller:latest
+          image: quay.io/paulfantom/configmapsecrets-controller:0.4.0
           imagePullPolicy: IfNotPresent
           command:
             - /usr/bin/controller

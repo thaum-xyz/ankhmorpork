@@ -68,10 +68,9 @@ spec:
         - effect: NoSchedule
           key: node-role.kubernetes.io/master
           operator: Exists
-        - key: "storage.infra"
-          operator: "Equal"
-          value: "true"
-          effect: "NoSchedule"
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
       volumes:
         - name: config
           configMap:

@@ -56,14 +56,10 @@ spec:
             add: ["NET_RAW"]
         resources:
           requests:
-            memory: 25Mi
+            cpu: 40m
+            memory: 30Mi
           limits:
             memory: 70Mi
       restartPolicy: Always
       nodeSelector:
         kubernetes.io/arch: arm64
-      tolerations:
-      - key: "node-role.kubernetes.io/master"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"

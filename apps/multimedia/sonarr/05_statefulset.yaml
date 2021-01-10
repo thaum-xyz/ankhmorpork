@@ -26,7 +26,7 @@ spec:
         - name: TZ
           value: "Europe/Berlin"
         name: sonarr
-        image: linuxserver/sonarr:preview
+        image: ghcr.io/linuxserver/sonarr:preview
         imagePullPolicy: Always
         ports:
           - containerPort: 8989
@@ -41,11 +41,41 @@ spec:
             name: config
           - mountPath: /tv
             name: data
-          - mountPath: /data/completed
+          - mountPath: /download/completed
             name: downloads
         resources:
           requests:
-            memory: 280Mi
+            cpu: 20m
+            memory: 320Mi
+      - env:
+        - name: URL
+          value: "http://127.0.0.1:8989"
+        #- name: LOG_LEVEL
+        #  value: "DEBUG"
+        - name: PORT
+          value: "9707"
+        envFrom:
+        - secretRef:
+            name: sonarr-apikey
+        name: exportarr
+        image: onedr0p/exportarr:v0.3.4
+        args: ["sonarr"]
+        ports:
+        - name: metrics
+          containerPort: 9707
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 1m
+            memory: 11Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
       restartPolicy: Always
       volumes:
       - name: data
@@ -56,19 +86,18 @@ spec:
           claimName: torrents
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        # kubernetes.io/hostname: "node01"
-        # storage.infra/replicated: "true"
+        storage.infra/direct: "true"  # use direct network link for tv volume
       tolerations: []
   volumeClaimTemplates:
   - metadata:
       name: config
       namespace: multimedia
       annotations:
-        volume.beta.kubernetes.io/storage-class: "external-nfs"
+        volume.beta.kubernetes.io/storage-class: "longhorn"
     spec:
-      storageClassName: "external-nfs"
+      storageClassName: "longhorn"
       accessModes:
         - ReadWriteMany
       resources:
         requests:
-          storage: 100Mi
+          storage: 600Mi

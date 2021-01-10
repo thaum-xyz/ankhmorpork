@@ -2,8 +2,8 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: heimdall-config
-  namespace: heimdall
+  name: ara-database
+  namespace: ansible
   annotations:
     volume.beta.kubernetes.io/storage-class: "external-nfs"
 spec:

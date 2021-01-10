@@ -13,29 +13,28 @@ data:
       ready
       prometheus :9153
       hosts {
-        192.168.2.30 weirdo.blog
-        192.168.2.30 alchemyof.it
-        192.168.2.30 cloud.krupa.net.pl
-        192.168.2.30 ankhmorpork.thaum.xyz
-        192.168.2.30 home.ankhmorpork.thaum.xyz
-        192.168.2.30 ombi.ankhmorpork.thaum.xyz
-        192.168.2.30 prometheus.ankhmorpork.thaum.xyz
-        192.168.2.30 alertmanager.ankhmorpork.thaum.xyz
-        192.168.2.30 grafana.ankhmorpork.thaum.xyz
-        192.168.2.30 twoflower.ankhmorpork.thaum.xyz
-        192.168.2.30 auth.ankhmorpork.thaum.xyz
+        192.168.2.91 weirdo.blog
+        192.168.2.91 alchemyof.it
+        192.168.2.91 cloud.krupa.net.pl
+        192.168.2.91 ankhmorpork.thaum.xyz
+        192.168.2.91 home.ankhmorpork.thaum.xyz
+        192.168.2.91 ombi.ankhmorpork.thaum.xyz
+        192.168.2.91 prometheus.ankhmorpork.thaum.xyz
+        192.168.2.91 alertmanager.ankhmorpork.thaum.xyz
+        192.168.2.91 grafana.ankhmorpork.thaum.xyz
+        192.168.2.91 twoflower.ankhmorpork.thaum.xyz
+        192.168.2.91 auth.ankhmorpork.thaum.xyz
         192.168.2.7  unifi.ankhmorpork.thaum.xyz
         192.168.2.10 spy.ankhmorpork.thaum.xyz
         192.168.2.11 k8sapi.ankhmorpork.thaum.xyz
-        192.168.2.3  storage01
-        192.168.2.3  storage01.ankhmorpork.thaum.xyz
         192.168.2.11 master01.ankhmorpork.thaum.xyz
-        192.168.2.12 node01.ankhmorpork.thaum.xyz
+        192.168.2.41 node01.ankhmorpork.thaum.xyz
         192.168.2.13 node02.ankhmorpork.thaum.xyz
         192.168.2.14 node03.ankhmorpork.thaum.xyz
         192.168.2.15 node04.ankhmorpork.thaum.xyz
         192.168.2.16 node05.ankhmorpork.thaum.xyz
-        192.168.2.17 node06.ankhmorpork.thaum.xyz
+        192.168.2.42 node06.ankhmorpork.thaum.xyz
+        192.168.2.40 hyper01.ankhmorpork.thaum.xyz
         fallthrough
       }
       ads {
@@ -44,13 +43,19 @@ data:
         default-lists
         log
       }
-      cache
+      cache {
+        success 51200 21600
+        prefetch 1000
+      }
       forward . tls://1.1.1.1 tls://1.0.0.1 {
         tls_servername cloudflare-dns.com
         health_check 5s
       }
+      # local
       reload
       loadbalance
-      log
+      log {combined} {
+        class denial error
+      }
       errors
     }

@@ -73,7 +73,8 @@ spec:
           name: init
         resources:
           requests:
-            memory: 450Mi
+            cpu: 45m
+            memory: 410Mi
       - env:
         - name: USER
           valueFrom:
@@ -101,7 +102,8 @@ spec:
           name: metrics
         resources:
           requests:
-            memory: 14Mi
+            cpu: 2m
+            memory: 12Mi
           limits:
             memory: 20Mi
       restartPolicy: Always
@@ -115,8 +117,4 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: "node01"  # TODO: fix this
         # storage.infra/raid: "true"
-      tolerations:
-      - key: "storage.infra"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+      tolerations: []

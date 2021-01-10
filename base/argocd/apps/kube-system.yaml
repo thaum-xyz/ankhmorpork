@@ -116,22 +116,3 @@ spec:
     automated:
       prune: false
       selfHeal: true
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: kured
-spec:
-  destination:
-    namespace: kube-system
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: base/kube-system/kured
-    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
-    targetRevision: HEAD
-  project: kube-system
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: true

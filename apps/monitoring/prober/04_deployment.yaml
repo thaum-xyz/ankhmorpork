@@ -55,15 +55,11 @@ spec:
             add: ['NET_RAW']
         resources:
           requests:
-            memory: 20Mi
+            cpu: 21m
+            memory: 16Mi
       restartPolicy: Always
       volumes:
         - configMap:
             defaultMode: 420
             name: prober-config
           name: config
-      tolerations:
-      - key: "node-role.kubernetes.io/master"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"

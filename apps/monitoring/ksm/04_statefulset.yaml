@@ -41,7 +41,7 @@ spec:
         #- --labels-metric-allow-list=nodes=["kubernetes.io/arch","gpu.infra/intel","network.infra/fast"]
         #- --labels-metric-allow-list="nodes=["kubernetes.io/arch","gpu.infra/intel","network.infra/fast"]"
         #- --labels-metric-allow-list="nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/fast]"
-        - --labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/fast]
+        - --labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]
         env:
         - name: POD_NAME
           valueFrom:
@@ -58,7 +58,8 @@ spec:
           runAsUser: 65534
         resources:
           requests:
-            memory: 22Mi
+            cpu: 10m
+            memory: 26Mi
       - args:
         - --logtostderr
         - --secure-listen-address=:8443
@@ -73,6 +74,7 @@ spec:
           runAsUser: 65532
         resources:
           requests:
+            cpu: 2m
             memory: 12Mi
       - args:
         - --logtostderr
@@ -88,6 +90,7 @@ spec:
           runAsUser: 65532
         resources:
           requests:
+            cpu: 2m
             memory: 9Mi
       nodeSelector:
         kubernetes.io/os: linux
