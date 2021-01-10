@@ -10,11 +10,9 @@ spec:
     namespace: homer
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/homer/jsonnet
+    path: apps/homer/manifests
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
-  directory:
-    jsonnet: {}
   project: default
   syncPolicy:
     automated:
