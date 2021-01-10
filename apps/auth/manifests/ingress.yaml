@@ -1,25 +1,29 @@
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
-  namespace: auth
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/part-of: auth
+    app.kubernetes.io/version: 6.1.1
+  name: oauth2-proxy
+  namespace: auth
 spec:
-  tls:
-  - hosts:
-    - auth.ankhmorpork.thaum.xyz
-    secretName: auth-tls
   rules:
   - host: auth.ankhmorpork.thaum.xyz
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
+      - backend:
           service:
             name: oauth2-proxy
             port:
-              name: proxy
+              name: http
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - auth.ankhmorpork.thaum.xyz
+    secretName: oauth2-proxy-tls

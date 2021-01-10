@@ -1,9 +1,10 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app.kubernetes.io/component: proxy
     app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/part-of: auth
     app.kubernetes.io/version: 6.1.1
   name: oauth2-proxy
   namespace: auth
@@ -11,25 +12,29 @@ spec:
   replicas: 2
   selector:
     matchLabels:
+      app.kubernetes.io/component: proxy
       app.kubernetes.io/name: oauth2-proxy
-      app.kubernetes.io/version: 6.1.1
+      app.kubernetes.io/part-of: auth
   template:
     metadata:
       labels:
+        app.kubernetes.io/component: proxy
         app.kubernetes.io/name: oauth2-proxy
+        app.kubernetes.io/part-of: auth
         app.kubernetes.io/version: 6.1.1
     spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
+          - podAffinityTerm:
               labelSelector:
                 matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values: ["oauth2-proxy"]
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - oauth2-proxy
               topologyKey: kubernetes.io/hostname
+            weight: 100
       containers:
       - args:
         - --provider=google
@@ -37,21 +42,24 @@ spec:
         - --cookie-domain=.ankhmorpork.thaum.xyz
         - --whitelist-domain=.ankhmorpork.thaum.xyz
         - --pass-host-header=true
-        #- --set-authorization-header=true
-        # - --pass-authorization-header=true
         - --set-xauthrequest=true
-        #- --pass-user-headers=true
         - --pass-basic-auth=false
-        #- --reverse-proxy=true
         - --http-address=0.0.0.0:4180
         envFrom:
-          - secretRef:
-              name: oauth-creds
+        - secretRef:
+            name: oauth-creds
         image: quay.io/paulfantom/oauth2-proxy:6.1.1
+        imagePullPolicy: IfNotPresent
         name: oauth2-proxy
         ports:
         - containerPort: 4180
-          name: proxy
+          name: http
         resources:
+          limits:
+            cpu: 15m
+            memory: 30Mi
           requests:
-            memory: 15Mi
+            cpu: 5m
+            memory: 13Mi
+      restartPolicy: Always
+      serviceAccountName: oauth2-proxy
