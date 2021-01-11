@@ -34,7 +34,7 @@ spec:
       expr: |
         ((time() - (job_success_timestamp_seconds > 0)) > job_max_age_seconds)
         or
-        (time() - jon_start_timestamp_seconds > job_max_age_seconds and job_success_timestamp_seconds == 0)
+        (time() - job_start_timestamp_seconds > job_max_age_seconds and job_success_timestamp_seconds == 0)
       for: 1m
       labels:
         severity: warning
