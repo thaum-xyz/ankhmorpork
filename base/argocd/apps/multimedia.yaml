@@ -21,7 +21,7 @@ spec:
     namespace: multimedia
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/multimedia/ombi
+    path: apps/multimedia/manifests/ombi
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: multimedia
@@ -40,7 +40,7 @@ spec:
     namespace: multimedia
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/multimedia/plex
+    path: apps/multimedia/manifests/plex
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: multimedia
@@ -59,7 +59,7 @@ spec:
     namespace: multimedia
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/multimedia/radarr
+    path: apps/multimedia/manifests/radarr
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: multimedia
@@ -78,7 +78,7 @@ spec:
     namespace: multimedia
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/multimedia/sonarr
+    path: apps/multimedia/manifests/sonarr
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: multimedia
@@ -97,7 +97,7 @@ spec:
     namespace: multimedia
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/multimedia/transmission
+    path: apps/multimedia/manifests/transmission
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: multimedia
