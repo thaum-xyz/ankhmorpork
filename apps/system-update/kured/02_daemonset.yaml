@@ -6,7 +6,7 @@ metadata:
   namespace: system-update # Must match `--ds-namespace`
   labels:
     app.kubernetes.io/name: kured
-    app.kubernetes.io/version: 1.5.1
+    app.kubernetes.io/version: 1.6.1
   annotations:
     ignore-check.kube-linter.io/privileged-container: "kured needs priv container to work"
 spec:
@@ -20,7 +20,7 @@ spec:
       labels:
         name: kured
         app.kubernetes.io/name: kured
-        app.kubernetes.io/version: 1.5.1
+        app.kubernetes.io/version: 1.6.1
     spec:
       serviceAccountName: kured
       tolerations:
@@ -34,7 +34,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: kured
-          image: quay.io/paulfantom/kured:1.5.1
+          image: quay.io/paulfantom/kured:1.6.1
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true # Give permission to nsenter /proc/1/ns/mnt
