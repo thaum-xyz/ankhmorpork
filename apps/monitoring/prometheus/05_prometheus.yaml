@@ -35,6 +35,7 @@ spec:
   image: quay.io/prometheus/prometheus:v2.24.0
   nodeSelector:
     kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
     storage.infra/replicated: "true"
   podMonitorNamespaceSelector: {}
   podMonitorSelector: {}
@@ -43,7 +44,7 @@ spec:
   podMetadata:
     labels:
       app.kubernetes.io/name: "prometheus"
-  replicas: 1
+  replicas: 2
   retention: 7d
   resources:
     requests:
@@ -63,13 +64,11 @@ spec:
   storage:
     volumeClaimTemplate:
       metadata:
-        name: data
-        annotations:
-          volume.beta.kubernetes.io/storage-class: "longhorn"
+        name: promdata
       spec:
-        storageClassName: "longhorn"
+        storageClassName: "local-path"  # For performance reasons use local disk
         accessModes:
-          - ReadWriteOnce  # Note: Do not use RWX as longhorn will mount volume via NFS
+          - ReadWriteOnce
         resources:
           requests:
-            storage: 80Gi
+            storage: 40Gi
