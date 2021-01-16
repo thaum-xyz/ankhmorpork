@@ -42,10 +42,14 @@ spec:
         volumeMounts:
           - mountPath: /var/lib/ghost/content
             name: content
+          - mountPath: /var/lib/ghost/content/logs
+            name: logs
         resources:
           requests:
             memory: 120M
       volumes:
         - name: content
           persistentVolumeClaim:
-            claimName: ghost
+            claimName: data
+        - name: logs
+          emptyDir: {}

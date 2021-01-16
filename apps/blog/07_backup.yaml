@@ -46,4 +46,4 @@ spec:
       volumes:
         - name: content
           persistentVolumeClaim:
-            claimName: ghost
+            claimName: data
