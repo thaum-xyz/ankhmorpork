@@ -50,6 +50,8 @@ spec:
     requests:
       cpu: 140m
       memory: 1900Mi
+    limits:
+      cpu: 1
   ruleNamespaceSelector: {}
   ruleSelector: {}
   # TODO: Figure out why longhorn doesn't like those and why PV needs manual chmod.
