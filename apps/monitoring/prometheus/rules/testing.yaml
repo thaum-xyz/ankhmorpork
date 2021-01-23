@@ -11,7 +11,6 @@ spec:
   groups:
   # Rules which are tested and should be promoted upstream when ready
   - name: testing.rules
-    partial_response_strategy: 'warn'
     rules:
       - alert: CPUStealTimeHigh
         expr: |
