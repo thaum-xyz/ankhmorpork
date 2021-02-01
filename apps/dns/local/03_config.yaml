@@ -40,6 +40,8 @@ data:
       ads {
         permit cdnpark.com
         permit googleadservices.com
+        permit backblazeb2.com
+        permit app.adjust.com
         default-lists
         log
       }
