@@ -12,3 +12,4 @@ master.key
 .kube
 bin/
 templates/
+vendor/

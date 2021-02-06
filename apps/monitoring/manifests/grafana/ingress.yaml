@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Email
+    nginx.ingress.kubernetes.io/auth-signin: https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
+  name: grafana
+  namespace: monitoring
+spec:
+  rules:
+  - host: grafana.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          service:
+            name: grafana
+            port:
+              name: http
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - grafana.ankhmorpork.thaum.xyz
+    secretName: grafana-tls

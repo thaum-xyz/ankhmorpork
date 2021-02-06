@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: blackbox-exporter
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 0.18.0
+  name: ankhmorpork
+  namespace: monitoring
+spec:
+  module: http_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc:19115
+  targets:
+    ingress:
+      namespaceSelector:
+        any: true
+      selector:
+        matchLabels:
+          probe: enabled

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    volume.beta.kubernetes.io/storage-class: longhorn
+  name: grafana-data
+  namespace: monitoring
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 60Mi
+  storageClassName: longhorn
