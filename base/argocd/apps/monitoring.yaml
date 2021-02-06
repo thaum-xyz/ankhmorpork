@@ -24,7 +24,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/grafana
+    path: apps/monitoring/manifests/grafana
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
@@ -43,7 +43,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/prober
+    path: apps/monitoring/manifests/prober
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
@@ -62,7 +62,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/pushgateway
+    path: apps/monitoring/manifests/pushgateway
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
@@ -81,7 +81,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/holiday
+    path: apps/monitoring/manifests/holiday
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
@@ -100,7 +100,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/ksm
+    path: apps/monitoring/manifests/ksm
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
@@ -119,7 +119,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/smokeping
+    path: apps/monitoring/manifests/smokeping
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
@@ -138,7 +138,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/prometheus-operator
+    path: apps/monitoring/manifests/prometheus-operator
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
     directory:
@@ -159,7 +159,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/prometheus
+    path: apps/monitoring/manifests/prometheus
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
     directory:
@@ -180,7 +180,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/alertmanager
+    path: apps/monitoring/manifests/alertmanager
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
@@ -199,7 +199,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/kube-events-exporter
+    path: apps/monitoring/manifests/kube-events-exporter
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
