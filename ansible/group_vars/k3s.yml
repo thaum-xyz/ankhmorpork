@@ -1,6 +1,6 @@
 ---
-k3s_version: v1.19.4+k3s1
-# k3s_version: v1.20.0-rc5+k3s1
+k3s_version: v1.19.7+k3s1
+# k3s_version: v1.20.2+k3s1
 k3s_master_ip: "{{ hostvars[groups['k3s-master'][0]]['ansible_default_ipv4']['address'] }}"
 k3s_extra_server_args: >-
   --disable servicelb
