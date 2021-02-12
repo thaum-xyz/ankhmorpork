@@ -108,7 +108,7 @@
       name: 'grafana-data',
       namespace: 'monitoring',
       annotations: {
-        'volume.beta.kubernetes.io/storage-class': 'longhorn'
+        'volume.beta.kubernetes.io/storage-class': 'longhorn',
       },
     },
     spec: {

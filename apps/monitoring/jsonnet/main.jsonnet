@@ -235,11 +235,11 @@ local kp =
     },
 
     local ingressAnnotations = {
-            'kubernetes.io/ingress.class': 'nginx',
-            'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-            'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
-            'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
-          },
+      'kubernetes.io/ingress.class': 'nginx',
+      'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+      'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
+      'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
+    },
     alertmanager+: {
       // alertmanager secret is stored as ConfigMapSecret in plain yaml file
       secret:: null,
@@ -492,7 +492,7 @@ local kp =
 //
 // Manifestation
 //
-{ ['namespace.yaml']: std.manifestYamlDoc(kp.kubePrometheus.namespace) } +
+{ 'namespace.yaml': std.manifestYamlDoc(kp.kubePrometheus.namespace) } +
 { ['prometheus-operator/' + name + '.yaml']: std.manifestYamlDoc(kp.prometheusOperator[name]) for name in std.objectFields(kp.prometheusOperator) } +
 { ['kube-state-metrics/' + name + '.yaml']: std.manifestYamlDoc(kp.kubeStateMetrics[name]) for name in std.objectFields(kp.kubeStateMetrics) } +
 { ['alertmanager/' + name + '.yaml']: std.manifestYamlDoc(kp.alertmanager[name]) for name in std.objectFields(kp.alertmanager) } +
@@ -509,7 +509,7 @@ local kp =
 // { ['holiday/' + name + '.yaml']: std.manifestYamlDoc(kp.blackboxExporter[name]) for name in std.objectFields(kp.blackboxExporter) } +
 { ['kube-events-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.kubeEventsExporter[name]) for name in std.objectFields(kp.kubeEventsExporter) } +
 { ['other/' + name + '.yaml']: std.manifestYamlDoc(kp.other[name]) for name in std.objectFields(kp.other) } +
-{ ['other/kubePrometheusRule.yaml']: std.manifestYamlDoc(kp.kubePrometheus.prometheusRule) } +
-{ ['other/kubernetesPrometheusRule.yaml']: std.manifestYamlDoc(kp.kubernetesMixin.prometheusRule) } +
+{ 'other/kubePrometheusRule.yaml': std.manifestYamlDoc(kp.kubePrometheus.prometheusRule) } +
+{ 'other/kubernetesPrometheusRule.yaml': std.manifestYamlDoc(kp.kubernetesMixin.prometheusRule) } +
 // { ['other/etcdPrometheusRule.yaml']: std.manifestYamlDoc(kp.other.etcdPrometheusRule) } +
 {}

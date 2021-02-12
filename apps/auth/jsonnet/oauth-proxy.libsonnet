@@ -60,21 +60,21 @@ function(params) {
       clusterIP: 'None',
     },
   },
-  
+
   deployment: {
     local c = {
       name: o.config.name,
       image: o.config.image,
       imagePullPolicy: 'IfNotPresent',
-      args: [ // TODO: costomize
-        "--provider=google",
-        "--email-domain=krupa.net.pl",
-        "--cookie-domain=.ankhmorpork.thaum.xyz",
-        "--whitelist-domain=.ankhmorpork.thaum.xyz",
-        "--pass-host-header=true",
-        "--set-xauthrequest=true",
-        "--pass-basic-auth=false",
-        "--http-address=0.0.0.0:4180",
+      args: [  // TODO: costomize
+        '--provider=google',
+        '--email-domain=krupa.net.pl',
+        '--cookie-domain=.ankhmorpork.thaum.xyz',
+        '--whitelist-domain=.ankhmorpork.thaum.xyz',
+        '--pass-host-header=true',
+        '--set-xauthrequest=true',
+        '--pass-basic-auth=false',
+        '--http-address=0.0.0.0:4180',
       ],
       envFrom: [{
         secretRef: {
