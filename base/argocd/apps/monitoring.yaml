@@ -71,24 +71,24 @@ spec:
       prune: false
       selfHeal: false
 
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: holiday
-spec:
-  destination:
-    namespace: monitoring
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: apps/monitoring/manifests/holiday
-    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
-    targetRevision: HEAD
-  project: monitoring
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
+#---
+#apiVersion: argoproj.io/v1alpha1
+#kind: Application
+#metadata:
+#  name: holiday
+#spec:
+#  destination:
+#    namespace: monitoring
+#    server: 'https://kubernetes.default.svc'
+#  source:
+#    path: apps/monitoring/manifests/holiday
+#    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+#    targetRevision: HEAD
+#  project: monitoring
+#  syncPolicy:
+#    automated:
+#      prune: false
+#      selfHeal: false
 
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -100,7 +100,7 @@ spec:
     namespace: monitoring
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/monitoring/manifests/ksm
+    path: apps/monitoring/manifests/kube-state-metrics
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: monitoring
@@ -207,5 +207,24 @@ spec:
     automated:
       prune: true
       selfHeal: true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: other-prometheus-rules
+spec:
+  destination:
+    namespace: monitoring
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/monitoring/manifests/other
+    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
+    targetRevision: HEAD
+  project: monitoring
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
 
 

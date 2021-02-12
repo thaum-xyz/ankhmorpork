@@ -1,0 +1,75 @@
+---
+apiVersion: secrets.mz.com/v1alpha1
+kind: ConfigMapSecret
+metadata:
+  name: scrapeconfigs
+  namespace: monitoring
+spec:
+  template:
+    metadata:
+      name: scrapeconfigs
+    data:
+      additional.yaml: |
+        - job_name: windows
+          static_configs:
+          - targets:
+            - '192.168.2.50:9182'
+            labels:
+              node: 'DESKTOP-ODOR2KB'
+
+        - job_name: lancre
+          scrape_interval: 30s
+          scrape_timeout: 30s
+          scheme: 'https'
+          honor_labels: true
+          metrics_path: '/federate'
+          basic_auth:
+            username: $(USERNAME)
+            password: $(PASSWORD)
+          params:
+            'match[]':
+              - '{job=~".+"}'
+          static_configs:
+            - targets: ['lancre.thaum.xyz']
+          metric_relabel_configs:
+            - source_labels: [__name__]
+              regex: "prometheus_notifications_alertmanagers_discovered"
+              action: drop
+            - source_labels: ['instance', 'environment']
+              regex: "(.*):(.*);(.*)"
+              replacement: '$1.$3:$2'
+              target_label: 'instance'
+            - source_labels: [state]
+              regex: '(activating|deactivating)'
+              action: drop
+            - source_labels: [type]
+              regex: '(oneshot|dbus|idle|notify)'
+              action: drop
+  vars:
+    - name: USERNAME
+      secretValue:
+        name: federation-creds
+        key: lancre_username
+    - name: PASSWORD
+      secretValue:
+        name: federation-creds
+        key: lancre_password
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: federation-creds
+  namespace: monitoring
+spec:
+  encryptedData:
+    lancre_password: AgDE3yAeoD/hj3t0sn8yhYYCK6Ca4xLH9O9S5s7zKP0vyCaP2BbvAbl9HYuYeXBZWNtHgPu8F0V9QNeDK04KRB1GJH600Ut0ZaYJXY0LjJCKC9wv4ax61UCOTGXj1MIEVtwckcV/1ob9wAQTgAMTTbcO8bKE5qhsNzV8R5H/A6YNEezo66PG1oM4RrF0H+GALX0ZOVXczS4uGBWHZNsqtRZD2PojeRZ/Yr3wunfVjfBNsBrK1y8qRSQsYUXDSw0lV+D8fwo25NAQ2nf+fHDFG04fdLr0gyGeIqczrakHcD8UECZzy3beX/dNUJLF7Xkepd/3hhAmcMcfcCJ8OpW56SX0wVoyAHuW9yFrqRpSiX3QHg9fJZws2jhqSZ1GoWu84h3+DX9f+G065fHqGV09m63ldE+OJREtsiapbZh3AhGtHbDUR5YJ7wFosLjpaSdiKZL+DxifOolv9gxP4uRtjQYsiV4C4onnwy9toZl+KC3wkLS+B8cXLzPeIYLQEMpCTUHpMr8iEDxJyWikyidQ3vlQybt47dsv9liQGYSh7NtB8SDuxWMSvgZRNEJaXBMVzYcncRcNkiqrC0kLE6cy3x9HbolzDYb+Iq8uKweFQ1ViSXvgHze2k0ZUgRQe8GD9Dw/IghHEEA+EBOh1/InotRjQ8lbVa8VdIv0GrERBOwJn/1cUlPcev6sg6S+AsghVkvjmqlU4ZscWoRJ3xTIkRZwIW7fjNLvUvQ5pSVuLQ2g=
+    lancre_username: AgB1Hr/k+79xhoZlsJ+YxKn2KGsbcB/lG5LW7OopcL/msF+dRy9Pb/kwoyPQEX8G60eLe3TEsWDV14MQTHJjl8QkT5FDrBTaRVaD9ysEojSq6f6G7LV/hoccDHVaC13bKcH8QthYkcpuM4pj1eje5B7aphO/2rSkx+fW3YjC3YP4JNFb0ay+O6RWd9RGo64hqlLG9TQcBgydzfjgTDYbQJExtTAYuh7FBbfJqnHbK2KGI19hGPFGNgybF5UN8lfw5YmPpxq9Essf1Zht3vhxh2bg8s9KZHtEPOh1GRhbtvdaEzviS44bbc5SepFs5XDOH3styBb3Z2nIcYVkJQoV8GnXKp9uaeRocleP13pxK5Atg6XwEVt0H85TtuLRLrroDKxaUqEPtnfksW/7dwZqdSQ7Ehfy1UeIvqMMDi9pYzcr6RpUeLcdLH+kErqEJMqz4lFGT+GSrcKPga0KbwLTJ/jpmTFVZ8POb2eMx1eNDcKlZuPXVihE41+bH6tYTb5XuWbGoExSlgL8opppxJ6JEo0/V8llFZ82v1H+R9J6spmlRXdD+bScob70EtC8wHpVkaAyqmtJmQD7h3IZj/70GUGbAcFErYR3+jVXufZskBCF4ex7A+GaaYzNmXpKkdQgum8p0wB1nCaz5EKHFmLa7PCTQp0Nqm4Fl0mSZ7LOnxN9SzqE/t5nbQCa4DLCyV6B1aTCwCFr3CANkyFi
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/managed: "true"
+      creationTimestamp: null
+      name: federation-creds
+      namespace: monitoring
+    type: Opaque

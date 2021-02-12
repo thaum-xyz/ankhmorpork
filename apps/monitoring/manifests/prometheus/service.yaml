@@ -5,22 +5,22 @@ metadata:
     ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator
       CRDs
   labels:
-    alertmanager: main
-    app.kubernetes.io/component: alert-router
-    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.21.0
-  name: alertmanager-main
+    app.kubernetes.io/version: 2.24.0
+    prometheus: k8s
+  name: prometheus-k8s
   namespace: monitoring
 spec:
   ports:
   - name: web
-    port: 9093
+    port: 9090
     targetPort: web
   selector:
-    alertmanager: main
-    app: alertmanager
-    app.kubernetes.io/component: alert-router
-    app.kubernetes.io/name: alertmanager
+    app: prometheus
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
+    prometheus: k8s
   sessionAffinity: ClientIP

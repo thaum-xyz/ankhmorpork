@@ -2,11 +2,11 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app.kubernetes.io/component: alert-router
-    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.21.0
-  name: alertmanager
+    app.kubernetes.io/version: 2.24.0
+  name: prometheus
   namespace: monitoring
 spec:
   endpoints:
@@ -14,7 +14,7 @@ spec:
     port: web
   selector:
     matchLabels:
-      alertmanager: main
-      app.kubernetes.io/component: alert-router
-      app.kubernetes.io/name: alertmanager
+      app.kubernetes.io/component: prometheus
+      app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: kube-prometheus
+      prometheus: k8s
