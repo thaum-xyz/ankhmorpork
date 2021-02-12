@@ -454,7 +454,7 @@ local kp =
           groups: std.map(function(ruleGroup) ruleGroup {
             rules: std.map(
               function(rule) if 'alert' in rule && rule.alert == 'TargetDown' then
-                rule { expr: '100 * (count(up{job!="windows"}, == 0) BY (job, namespace, service) / count(up{job!="windows"}) BY (job, namespace, service)) > 10' }
+                rule { expr: '100 * (count(up{job!="windows"} == 0) BY (job, namespace, service) / count(up{job!="windows"}) BY (job, namespace, service)) > 10' }
               else rule,
               ruleGroup.rules,
             ),
