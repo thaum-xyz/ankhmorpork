@@ -1,5 +1,5 @@
-local oauth = import './oauth-proxy.libsonnet';
 local encryptedSecretsData = import './creds.json';
+local oauth = import './oauth-proxy.libsonnet';
 
 local config = {
   version: '6.1.1',
@@ -10,14 +10,15 @@ local config = {
   encryptedSecretsData: encryptedSecretsData,
 };
 
-local all = oauth(config);/* + {
-  ingress+: {
-    metadata+: {
-      labels+: {
-        probe: 'enabled',
-      },
-    },
-  },
+local all = oauth(config);
+/* + {
+ingress+: {
+metadata+: {
+labels+: {
+probe: 'enabled',
+},
+},
+},
 };
 */
 
