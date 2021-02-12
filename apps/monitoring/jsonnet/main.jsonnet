@@ -418,7 +418,24 @@ local kp =
         spec+: {
           template+: {
             spec+: {
-              containers: addArgs(['--labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers),
+              containers: 
+                // addArgs(['--labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers) + 
+                // TODO: consider moving this into kube-prometheus
+                std.map(
+                  function(c) if c.name == 'kube-rbac-proxy-main' then
+                    c {
+                      resources+: {
+                        requests+: {cpu: "20m"},
+                        limits+: {cpu: '40m'},
+                      },
+                    }
+                  else if c.name == 'kube-state-metrics' then
+                    c {
+                      args+: ['--labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'],
+                    }
+                  else c,
+                  super.containers,
+                ),
             },
           },
         },
