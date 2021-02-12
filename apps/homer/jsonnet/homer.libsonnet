@@ -60,15 +60,15 @@ function(params) {
   },
 
   configmap: {
-    apiVersion: "v1",
-    kind: "ConfigMap",
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
     metadata: {
       name: h.config.name + '-config',
       namespace: h.config.namespace,
       labels: h.config.commonLabels,
     },
     data: {
-      "config.yml": h.config.configData,
+      'config.yml': h.config.configData,
     },
   },
 
