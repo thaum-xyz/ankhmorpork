@@ -13,3 +13,4 @@ master.key
 bin/
 templates/
 vendor/
+crdschemas/
