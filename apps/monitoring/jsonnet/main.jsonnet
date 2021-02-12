@@ -212,6 +212,7 @@ local kp =
             kubeSchedulerSelector: 'job="kubelet"',
             kubeControllerManagerSelector: 'job="kubelet"',
             kubeApiserverSelector: 'job="kubelet"',
+            cpuThrottlingPercent: 70,
           },
         },
       },
@@ -444,46 +445,22 @@ local kp =
         name: 'testing-rules',
         groups: (import 'ext/rules/testing.json').groups,
       }),
-      // TODO: move to k3s addon (probably not needed since k3s exposes everything on one endpoint)
-      /*kubeSchedulerPrometheusDiscovery: {
-        apiVersion: 'v1',
-        kind: 'Service',
-        metadata: {
-          labels: {
-            'k8s-app': 'kube-scheduler',
-            'app.kubernetes.io/name': 'kube-scheduler',
-            'app.kubernetes.io/part-of': 'kube-prometheus',
-          },
-          name: 'kube-scheduler-prometheus-discovery',
-          namespace: 'kube-system',
-        },
-        spec: {
-          ports: [{
-            name: 'http-metrics',
-            port: 10251,
-          }],
+    },
+
+    kubePrometheus+: {
+      // Exclude job="windows" from TargetDown alert
+      prometheusRule+: {
+        spec+: {
+          groups: std.map(function(ruleGroup) ruleGroup {
+            rules: std.map(
+              function(rule) if 'alert' in rule && rule.alert == 'TargetDown' then
+                rule { expr: '100 * (count(up{job!="windows}, == 0) BY (job, namespace, service) / count(up{job!="windows}) BY (job, namespace, service)) > 10' }
+              else rule,
+              ruleGroup.rules,
+            ),
+          }, super.groups),
         },
       },
-      // TODO: move to k3s addon
-      kubeControllerManagerPrometheusDiscovery: {
-        apiVersion: 'v1',
-        kind: 'Service',
-        metadata: {
-          labels: {
-            'k8s-app': 'kube-controller-manager',
-            'app.kubernetes.io/name': 'kube-controller-manager',
-            'app.kubernetes.io/part-of': 'kube-prometheus',
-          },
-          name: 'kube-controller-manager-prometheus-discovery',
-          namespace: 'kube-system',
-        },
-        spec: {
-          ports: [{
-            name: 'http-metrics',
-            port: 10252,
-          }],
-        },
-      },*/
     },
   } +
   // kube-linter annotations need to be added after all objects are created
