@@ -3,13 +3,13 @@
 
 # Assign enable_smartmon=true label to enable SMART monitoring of disks
 
-master01  ansible_user=ubuntu ansible_host=192.168.2.11
-node01    ansible_user=ubuntu ansible_host=192.168.2.41 network=fast enable_smartmon=true
-node02    ansible_user=ubuntu ansible_host=192.168.2.13
-node03    ansible_user=ubuntu ansible_host=192.168.2.14
-node04    ansible_user=ubuntu ansible_host=192.168.2.15 network=fast
-node05    ansible_user=ubuntu ansible_host=192.168.2.16 network=fast
-hyper01   ansible_user=root   ansible_host=192.168.2.40 network=fast enable_smartmon=true
+master01 ansible_user=ubuntu ansible_host=192.168.2.11
+node01   ansible_user=ubuntu ansible_host=192.168.2.41 network=fast enable_smartmon=true
+node02   ansible_user=ubuntu ansible_host=192.168.2.13
+node03   ansible_user=ubuntu ansible_host=192.168.2.14
+node04   ansible_user=ubuntu ansible_host=192.168.2.15 network=fast
+node05   ansible_user=ubuntu ansible_host=192.168.2.16 network=fast
+metal01  ansible_user=ubuntu ansible_host=192.168.2.40 network=fast enable_smartmon=true
 
 [fancontroler]
 master01
@@ -19,17 +19,14 @@ master01
 node0[2:5]
 
 [storage]
-hyper01
-
-[proxmox]
-hyper01
+metal01
 
 [k3s-master]
 master01
 
 [k3s-node]
 node0[1:5]
-hyper01
+metal01
 
 [k3s:children]
 k3s-master

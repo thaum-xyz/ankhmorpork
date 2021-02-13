@@ -2,12 +2,13 @@
 nfs_exports:
   - "/mnt 192.168.2.40(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
   - "/srv/storage/kubernetes *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
+  - "/srv/storage/backup *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
 
 # 8GB and 2 cores are dedicated to ZFS storage
 # 40GB and 8 cores are dedicated to VMs
-kubelet_system_resources: "cpu=10000m,memory=48Gi"  # This leaves 2 cores and ~14G
-node_taints:
-  - "node.infra/hypervisor=true:NoSchedule"
+# kubelet_system_resources: "cpu=10000m,memory=48Gi"  # This leaves 2 cores and ~14G
+# node_taints:
+#   - "node.infra/hypervisor=true:NoSchedule"
 
 node_labels:
   - "storage.infra/direct=true"
@@ -20,4 +21,14 @@ system_mountpoints:
     before: k3s-node.service
     device: "/dev/disk/by-uuid/ca95c8d2-2603-4ef6-ac3e-ccf7a9d904cc"
     mountpoint: "/var/lib/longhorn"
+    type: "ext4"
+  - description: k3s longhorn backups
+    before: k3s-node.service
+    device: "/dev/ubuntu-vg/longhorn-backups"
+    mountpoint: "/srv/storage/backup"
+    type: "ext4"
+  - description: k3s local storage
+    before: k3s-node.service
+    device: "/dev/ubuntu-vg/k3s-local-storage"
+    mountpoint: "/var/lib/rancher/k3s/storage"
     type: "ext4"
