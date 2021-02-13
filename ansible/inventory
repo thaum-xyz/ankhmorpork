@@ -21,6 +21,9 @@ node0[2:5]
 [storage]
 metal01
 
+[nvidia]
+metal01
+
 [k3s-master]
 master01
 

@@ -26,7 +26,21 @@ Note: without this step GPU won't get assigned
         resources:
           limits:
             gpu.intel.com/i915: 1
-            # nvidia.com/gpu: 1
 ```
 
-## Nvidia (TODO)
+## Nvidia
+
+1. Execute `ansible/20_nvidia.yml` playbook to install drivers and configure containerd
+2. Restart k3s node daemon with `systemctl restart k3s-node`
+3. Add nvidia driver plugin DaemonSet from `base/kube-system/device-plugins/nvidia-gpu-plugin.yaml`
+4. Add resource request to a container.
+
+Note: without this step GPU won't get assigned
+
+```
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+```
+
+Ansible playbook is based on https://github.com/NVIDIA/k8s-device-plugin and https://dev.to/mweibel/add-nvidia-gpu-support-to-k3s-with-containerd-4j17

@@ -1,0 +1,60 @@
+---
+- name: Enable nvidia GPU
+  hosts: nvidia
+  become: true
+  tasks:
+  - name: Add nvidia PPA
+    apt_repository:
+      repo: ppa:graphics-drivers
+
+  - name: Add gpg keys for nvidia container runtime
+    apt_key:
+      url: "https://nvidia.github.io/nvidia-container-runtime/gpgkey"
+
+  - name: Add nvidia container runtime repos
+    apt_repository:
+      repo: "{{ item }}"
+      state: present
+      filename: nvidia
+    with_items:
+      - "deb https://nvidia.github.io/libnvidia-container/stable/ubuntu18.04/$(ARCH) /"
+      - "deb https://nvidia.github.io/nvidia-container-runtime/stable/ubuntu18.04/$(ARCH) /"
+
+  - name: Install drivers
+    apt:
+      name:
+      - nvidia-driver-440
+      - nvidia-container-runtime
+      - nvidia-modprobe
+      state: present
+      update_cache: true
+
+  - name: Disable nouveau driver on boot
+    copy:
+      content: |
+        blacklist nouveau
+        options nouveau modeset=0
+      dest: "/etc/modprobe.d/blacklist-nvidia-nouveau.conf"
+
+  - name: Unload nouveau kernel module
+    modprobe:
+      name: "nouveau"
+      state: absent
+
+  - name: Enable required kernel modules
+    modprobe:
+      name: "{{ item }}"
+    with_items:
+    - ipmi_devintf
+    - nvidia
+    - nvidia-uvm
+
+  - name: Create directory for containerd
+    file:
+      path: "/var/lib/rancher/k3s/agent/etc/containerd/"
+      state: directory
+
+  - name: Configure containerd
+    copy:
+      dest: "/var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl"
+      src: "nvidia-containerd-config.toml"
