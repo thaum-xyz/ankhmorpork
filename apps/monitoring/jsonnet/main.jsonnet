@@ -349,6 +349,60 @@ local kp =
         },
       },
 
+      serviceMonitorKubelet+: {
+        spec+: {
+          endpoints+: [
+            // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
+            {
+              bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+              honorLabels: true,
+              interval: '30s',
+              metricRelabelings: [{
+                action: 'drop',
+                regex: 'container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)',
+                sourceLabels: ['__name__'],
+              }],
+              path: '/metrics/resource',
+              port: 'https-metrics',
+              relabelings: [{
+                sourceLabels: ['__metrics_path__'],
+                targetLabel: 'metrics_path',
+              }],
+              scheme: 'https',
+              tlsConfig: {
+                insecureSkipVerify: true,
+              },
+            },
+            // This allows scraping external node-exporter endpoints
+            {
+              interval: '30s',
+              port: 'https-metrics',
+              relabelings: [
+                {
+                  action: 'replace',
+                  regex: '(.+)(?::\\d+)',
+                  replacement: '$1:9100',
+                  sourceLabels: ['__address__'],
+                  targetLabel: '__address__',
+                },
+                {
+                  action: 'replace',
+                  replacement: 'node-exporter',
+                  sourceLabels: ['endpoint'],
+                  targetLabel: 'endpoint',
+                },
+                {
+                  action: 'replace',
+                  replacement: 'node-exporter',
+                  targetLabel: 'job',
+                },
+              ],
+            },
+          ],
+        },
+      },
+
+
       // k3s exposes all this data under single endpoint and those can be obtained via "kubelet" Service
       serviceMonitorApiserver:: null,
       serviceMonitorKubeControllerManager:: null,
@@ -418,15 +472,15 @@ local kp =
         spec+: {
           template+: {
             spec+: {
-              containers: 
-                // addArgs(['--labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers) + 
+              containers:
+                // addArgs(['--labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers) +
                 // TODO: consider moving this into kube-prometheus
                 std.map(
                   function(c) if c.name == 'kube-rbac-proxy-main' then
                     c {
                       resources+: {
-                        requests+: {cpu: "20m"},
-                        limits+: {cpu: '40m'},
+                        requests+: { cpu: '20m' },
+                        limits+: { cpu: '40m' },
                       },
                     }
                   else if c.name == 'kube-state-metrics' then
