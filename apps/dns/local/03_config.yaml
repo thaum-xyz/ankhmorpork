@@ -28,13 +28,12 @@ data:
         192.168.2.10 spy.ankhmorpork.thaum.xyz
         192.168.2.11 k8sapi.ankhmorpork.thaum.xyz
         192.168.2.11 master01.ankhmorpork.thaum.xyz
-        192.168.2.41 node01.ankhmorpork.thaum.xyz
         192.168.2.13 node02.ankhmorpork.thaum.xyz
         192.168.2.14 node03.ankhmorpork.thaum.xyz
         192.168.2.15 node04.ankhmorpork.thaum.xyz
         192.168.2.16 node05.ankhmorpork.thaum.xyz
         192.168.2.42 node06.ankhmorpork.thaum.xyz
-        192.168.2.40 hyper01.ankhmorpork.thaum.xyz
+        192.168.2.40 metal01.ankhmorpork.thaum.xyz
         fallthrough
       }
       ads {

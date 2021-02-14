@@ -4,7 +4,7 @@
 # Assign enable_smartmon=true label to enable SMART monitoring of disks
 
 master01 ansible_user=ubuntu ansible_host=192.168.2.11
-node01   ansible_user=ubuntu ansible_host=192.168.2.41 network=fast enable_smartmon=true
+# node01   ansible_user=ubuntu ansible_host=192.168.2.41 network=fast enable_smartmon=true
 node02   ansible_user=ubuntu ansible_host=192.168.2.13
 node03   ansible_user=ubuntu ansible_host=192.168.2.14
 node04   ansible_user=ubuntu ansible_host=192.168.2.15 network=fast
@@ -28,7 +28,7 @@ metal01
 master01
 
 [k3s-node]
-node0[1:5]
+node0[2:5]
 metal01
 
 [k3s:children]
