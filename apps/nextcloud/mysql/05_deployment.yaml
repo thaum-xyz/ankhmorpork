@@ -115,6 +115,6 @@ spec:
         secret:
           secretName: mysql-init
       nodeSelector:
-        kubernetes.io/hostname: "node01"  # TODO: fix this
+        kubernetes.io/hostname: "metal01"  # TODO: migrate to galera or distributed postgres
         # storage.infra/raid: "true"
       tolerations: []
