@@ -95,7 +95,8 @@ spec:
             memory: 2500Mi
             cpu: 2
           limits:
-            gpu.intel.com/i915: 1
+            # gpu.intel.com/i915: 1
+            nvidia.com/gpu: 1
       restartPolicy: Always
       volumes:
       - name: movies
@@ -111,7 +112,7 @@ spec:
         emptyDir: {}
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        gpu.infra/intel: "true"
+        kubernetes.io/hostname: "metal01"  # TODO: remove this after tests
       tolerations: []
   volumeClaimTemplates:
   - metadata:
@@ -125,7 +126,7 @@ spec:
         requests:
           storage: 30Gi
   - metadata:
-      name: backups  # TODO: consider moving to emptyDir and backing up to B2
+      name: backups  # TODO: consider moving to emptyDir and backing up to B2/minio
       namespace: multimedia
     spec:
       storageClassName: "external-nfs"

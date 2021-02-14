@@ -1,0 +1,14 @@
+# This PVC cannot be a part of STS as it needs to be created before STS
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-library
+  namespace: multimedia
+spec:
+  storageClassName: "local-path"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
