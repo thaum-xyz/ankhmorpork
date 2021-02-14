@@ -316,7 +316,7 @@ local kp =
           externalUrl: 'https://prometheus.' + $.values.common.baseDomain,
           retention: '7d',
           nodeSelector+: {
-            'kubernetes.io/arch': 'amd64',
+            'storage.infra/local': 'true',
           },
           // FIXME: reenable
           securityContext:: null,
