@@ -59,7 +59,9 @@ spec:
             secretKeyRef:
               key: claim
               name: plex-creds
-        image: plexinc/pms-docker:1.21.1.3830-6c22540d5
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: "all"
+        image: plexinc/pms-docker:1.21.3.4021-5a0a3e4b2
         name: plex
         ports:
         - containerPort: 32400

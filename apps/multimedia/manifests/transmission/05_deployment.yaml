@@ -99,6 +99,5 @@ spec:
       #  name: tunnel
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        # kubernetes.io/hostname: "node01"
         # storage.infra/replicated: "true"
       tolerations: []
