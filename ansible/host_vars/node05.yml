@@ -5,12 +5,12 @@ node_labels:
   - "storage.infra/local=true"
   - "storage.infra/replicated=true"
 
-#system_mountpoints:
-#  - description: k3s local storage
-#    before: k3s-node.service
-#    device: "/dev/ubuntu-vg/k3s-storage"
-#    mountpoint: "/var/lib/rancher/k3s/storage"
-#    type: "ext4"
+system_mountpoints:
+  - description: k3s local storage
+    before: k3s-node.service
+    device: "/dev/disk/by-uuid/e13f201c-6898-4f5f-85f5-8494189f50a1"
+    mountpoint: "/var/lib/rancher/k3s/storage"
+    type: "ext4"
 #  - description: k3s longhorn storage
 #    before: k3s-node.service
 #    device: "/dev/ubuntu-vg/longhorn"

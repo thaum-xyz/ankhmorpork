@@ -11,6 +11,7 @@ nfs_exports:
 #   - "node.infra/hypervisor=true:NoSchedule"
 
 node_labels:
+  - "storage.infra/local=true"
   - "storage.infra/direct=true"
   - "storage.infra/replicated=true"
   - "storage.infra/capacious=true"

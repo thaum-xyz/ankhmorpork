@@ -2,7 +2,7 @@
 nfs_srv_addr: "192.168.40.2"
 
 node_labels:
-  - "storage.infra/local=true"
+  - "storage.infra/local=false"
   - "storage.infra/replicated=true"
 
 #system_mountpoints:
