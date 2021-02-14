@@ -106,7 +106,7 @@ data:
             subtitle: "downloader"
             logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
             <<: *Local
-            url: "http://192.168.2.95:9001/transmission/web/"
+            url: "http://192.168.2.95:9091/transmission/web/"
           #- name: Photoprism
           #  logo: ""
           #  subtitle: "Photo management"
@@ -124,10 +124,6 @@ data:
           - name: Prometheus
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/200px-Prometheus_software_logo.svg.png"
             url: "https://prometheus.ankhmorpork.thaum.xyz/"
-          - name: Proxmox
-            logo: "https://www.proxmox.com/images/proxmox/Proxmox_symbol_standard_hex.png"
-            <<: *Local
-            url: "https://192.168.2.40:8006/"
           - name: Unifi
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             <<: *Local
