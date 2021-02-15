@@ -19,6 +19,7 @@ allangood/holiday_exporter
 quay.io/superq/smokeping-prober-linux-arm64
 quay.io/prometheus/mysqld-exporter
 intel/intel-gpu-plugin
+nvidia/k8s-device-plugin
 EOM
 )
 
