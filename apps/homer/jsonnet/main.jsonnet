@@ -1,12 +1,7 @@
 local homer = import './homer.libsonnet';
-local configData = importstr './config.yml';
+local configData = importstr './homer-configuration.yml';
 
-local config = {
-  version: '20.12.19',
-  image: 'b4bz/homer:' + self.version,
-  namespace: 'homer',
-  replicas: 2,
-  domain: 'ankhmorpork.thaum.xyz',
+local config = (import './deployment-config.json') + {
   configData: configData,
 };
 

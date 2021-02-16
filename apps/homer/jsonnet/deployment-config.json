@@ -1,0 +1,7 @@
+{
+  "version": "20.12.19",
+  "image": "b4bz/homer:20.12.19",
+  "namespace": "homer",
+  "replicas": 2,
+  "domain": "ankhmorpork.thaum.xyz"
+}
