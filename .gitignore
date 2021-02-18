@@ -13,5 +13,5 @@ master.key
 bin/
 templates/
 vendor/
-crdschemas/
+.crdschemas/
 tmp/

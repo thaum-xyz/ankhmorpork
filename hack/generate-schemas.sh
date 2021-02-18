@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR="crdschemas"
+DIR=".crdschemas"
 
 # Go to git repository root
 cd ./$(git rev-parse --show-cdup)
