@@ -479,8 +479,8 @@ local kp =
                   function(c) if c.name == 'kube-rbac-proxy-main' then
                     c {
                       resources+: {
-                        requests+: { cpu: '20m' },
-                        limits+: { cpu: '40m' },
+                        requests+: { cpu: '10m' },
+                        limits+: { cpu: '20m' },
                       },
                     }
                   else if c.name == 'kube-state-metrics' then
