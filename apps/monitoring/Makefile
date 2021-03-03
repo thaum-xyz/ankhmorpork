@@ -19,6 +19,7 @@ generate: $(MANIFESTS_DIR) $(JSONNET_VENDOR)
 	$(MAKE) configmapsecrets
 
 $(MANIFESTS_DIR):
+	rm -rf $(MANIFESTS_DIR)
 	mkdir -p $(MANIFESTS_DIR)
 
 $(JSONNET_VENDOR):
