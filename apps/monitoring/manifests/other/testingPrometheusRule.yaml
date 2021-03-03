@@ -21,3 +21,5 @@ spec:
       for: 20m
       labels:
         severity: warning
+    - expr: time() - kube_namespace_created
+      record: :kube_namespace_created

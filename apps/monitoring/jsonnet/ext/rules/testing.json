@@ -15,6 +15,10 @@
           "labels": {
             "severity": "warning"
           }
+        },
+        {
+          "record": ":kube_namespace_created",
+          "expr": "time() - kube_namespace_created"
         }
       ]
     }
