@@ -548,6 +548,7 @@ local kp =
 { ['prober/' + name + '.yaml']: std.manifestYamlDoc(kp.blackboxExporter[name]) for name in std.objectFields(kp.blackboxExporter) } +
 // node_exporter is deployed separately via Ansible
 // { ['node-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.nodeExporter[name]) for name in std.objectFields(kp.nodeExporter) } +
+{ 'node-exporter/prometheus-rule.yaml': std.manifestYamlDoc(kp.nodeExporter.prometheusRule) } +
 // using metrics-server instead of prometheus-adater
 // { ['prometheus-adapter-' + name + '.yaml']: std.manifestYamlDoc(kp.prometheusAdapter[name]) for name in std.objectFields(kp.prometheusAdapter) } +
 // TBD
