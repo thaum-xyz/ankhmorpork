@@ -205,7 +205,7 @@ local kp =
           url: 'http://prometheus-k8s.monitoring.svc:9090',
         }],
       },
-      kubernetesMixin+: {
+      kubernetesControlPlane+: {
         mixin+: {
           _config+: {
             // k3s exposes all this data under single endpoint and those can be obtained via "kubelet" Service
@@ -349,64 +349,6 @@ local kp =
         },
       },
 
-      serviceMonitorKubelet+: {
-        spec+: {
-          endpoints+: [
-            // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
-            {
-              bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
-              honorLabels: true,
-              interval: '30s',
-              metricRelabelings: [{
-                action: 'drop',
-                regex: 'container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)',
-                sourceLabels: ['__name__'],
-              }],
-              path: '/metrics/resource',
-              port: 'https-metrics',
-              relabelings: [{
-                sourceLabels: ['__metrics_path__'],
-                targetLabel: 'metrics_path',
-              }],
-              scheme: 'https',
-              tlsConfig: {
-                insecureSkipVerify: true,
-              },
-            },
-            // This allows scraping external node-exporter endpoints
-            {
-              interval: '30s',
-              port: 'https-metrics',
-              relabelings: [
-                {
-                  action: 'replace',
-                  regex: '(.+)(?::\\d+)',
-                  replacement: '$1:9100',
-                  sourceLabels: ['__address__'],
-                  targetLabel: '__address__',
-                },
-                {
-                  action: 'replace',
-                  replacement: 'node-exporter',
-                  sourceLabels: ['endpoint'],
-                  targetLabel: 'endpoint',
-                },
-                {
-                  action: 'replace',
-                  replacement: 'node-exporter',
-                  targetLabel: 'job',
-                },
-              ],
-            },
-          ],
-        },
-      },
-
-
-      // k3s exposes all this data under single endpoint and those can be obtained via "kubelet" Service
-      serviceMonitorApiserver:: null,
-      serviceMonitorKubeControllerManager:: null,
-      serviceMonitorKubeScheduler:: null,
       ingress: {
         apiVersion: 'networking.k8s.io/v1',
         kind: 'Ingress',
@@ -450,22 +392,6 @@ local kp =
       // TODO: those should be a part of kube-prometheus/addons/all-namespaces.libsonnet
       roleBindingSpecificNamespaces:: null,
       roleSpecificNamespaces:: null,
-      // TODO: fix in kube-prometheus
-      serviceMonitorCoreDNS+: {
-        metadata+: {
-          labels+: {
-            'k8s-app': 'kube-dns',
-          },
-        },
-        spec+: {
-          jobLabel: 'k8s-app',
-          selector: {
-            matchLabels: {
-              'k8s-app': 'kube-dns',
-            },
-          },
-        },
-      },
     },
     kubeStateMetrics+: {
       deployment+: {
@@ -518,6 +444,81 @@ local kp =
       }),
     },
 
+    kubernetesControlPlane+: {
+      // k3s exposes all this data under single endpoint and those can be obtained via "kubelet" Service
+      serviceMonitorApiserver:: null,
+      serviceMonitorKubeControllerManager:: null,
+      serviceMonitorKubeScheduler:: null,
+      // TODO: fix in kube-prometheus
+      serviceMonitorCoreDNS+: {
+        metadata+: {
+          labels+: {
+            'k8s-app': 'kube-dns',
+          },
+        },
+        spec+: {
+          jobLabel: 'k8s-app',
+          selector: {
+            matchLabels: {
+              'k8s-app': 'kube-dns',
+            },
+          },
+        },
+      },
+      serviceMonitorKubelet+: {
+        spec+: {
+          endpoints+: [
+            // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
+            {
+              bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+              honorLabels: true,
+              interval: '30s',
+              metricRelabelings: [{
+                action: 'drop',
+                regex: 'container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)',
+                sourceLabels: ['__name__'],
+              }],
+              path: '/metrics/resource',
+              port: 'https-metrics',
+              relabelings: [{
+                sourceLabels: ['__metrics_path__'],
+                targetLabel: 'metrics_path',
+              }],
+              scheme: 'https',
+              tlsConfig: {
+                insecureSkipVerify: true,
+              },
+            },
+            // This allows scraping external node-exporter endpoints
+            {
+              interval: '30s',
+              port: 'https-metrics',
+              relabelings: [
+                {
+                  action: 'replace',
+                  regex: '(.+)(?::\\d+)',
+                  replacement: '$1:9100',
+                  sourceLabels: ['__address__'],
+                  targetLabel: '__address__',
+                },
+                {
+                  action: 'replace',
+                  replacement: 'node-exporter',
+                  sourceLabels: ['endpoint'],
+                  targetLabel: 'endpoint',
+                },
+                {
+                  action: 'replace',
+                  replacement: 'node-exporter',
+                  targetLabel: 'job',
+                },
+              ],
+            },
+          ],
+        },
+      },
+    },
+
     kubePrometheus+: {
       // Exclude job="windows" from TargetDown alert
       prometheusRule+: {
@@ -546,9 +547,10 @@ local kp =
 { ['alertmanager/' + name + '.yaml']: std.manifestYamlDoc(kp.alertmanager[name]) for name in std.objectFields(kp.alertmanager) } +
 { ['prometheus/' + name + '.yaml']: std.manifestYamlDoc(kp.prometheus[name]) for name in std.objectFields(kp.prometheus) } +
 { ['prober/' + name + '.yaml']: std.manifestYamlDoc(kp.blackboxExporter[name]) for name in std.objectFields(kp.blackboxExporter) } +
+{ ['kubernetesControlPlane/' + name + '.yaml']: std.manifestYamlDoc(kp.kubernetesControlPlane[name]) for name in std.objectFields(kp.kubernetesControlPlane) } +
 // node_exporter is deployed separately via Ansible
 // { ['node-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.nodeExporter[name]) for name in std.objectFields(kp.nodeExporter) } +
-{ 'other/node-exporter-prometheus-rule.yaml': std.manifestYamlDoc(kp.nodeExporter.prometheusRule) } +
+{ 'other/nodeExporterPrometheusRule.yaml': std.manifestYamlDoc(kp.nodeExporter.prometheusRule) } +
 // using metrics-server instead of prometheus-adater
 // { ['prometheus-adapter-' + name + '.yaml']: std.manifestYamlDoc(kp.prometheusAdapter[name]) for name in std.objectFields(kp.prometheusAdapter) } +
 // TBD
@@ -559,6 +561,4 @@ local kp =
 { ['kube-events-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.kubeEventsExporter[name]) for name in std.objectFields(kp.kubeEventsExporter) } +
 { ['other/' + name + '.yaml']: std.manifestYamlDoc(kp.other[name]) for name in std.objectFields(kp.other) } +
 { 'other/kubePrometheusRule.yaml': std.manifestYamlDoc(kp.kubePrometheus.prometheusRule) } +
-{ 'other/kubernetesPrometheusRule.yaml': std.manifestYamlDoc(kp.kubernetesMixin.prometheusRule) } +
-// { ['other/etcdPrometheusRule.yaml']: std.manifestYamlDoc(kp.other.etcdPrometheusRule) } +
 {}

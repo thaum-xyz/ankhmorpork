@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 0.21.0
     role: alert-rules
-  name: main-rules
+  name: alertmanager-main-rules
   namespace: monitoring
 spec:
   groups:
@@ -17,6 +17,7 @@ spec:
       annotations:
         description: Configuration has failed to load for {{ $labels.namespace }}/{{
           $labels.pod}}.
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/alertmanagerfailedreload
         summary: Reloading an Alertmanager configuration has failed.
       expr: |
         # Without max_over_time, failed scrapes could create false negatives, see
@@ -29,6 +30,7 @@ spec:
       annotations:
         description: Alertmanager {{ $labels.namespace }}/{{ $labels.pod}} has only
           found {{ $value }} members of the {{$labels.job}} cluster.
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/alertmanagermembersinconsistent
         summary: A member of an Alertmanager cluster has not found all other cluster
           members.
       expr: |
@@ -45,6 +47,7 @@ spec:
         description: Alertmanager {{ $labels.namespace }}/{{ $labels.pod}} failed
           to send {{ $value | humanizePercentage }} of notifications to {{ $labels.integration
           }}.
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/alertmanagerfailedtosendalerts
         summary: An Alertmanager instance failed to send notifications.
       expr: |
         (
@@ -61,6 +64,7 @@ spec:
         description: The minimum notification failure rate to {{ $labels.integration
           }} sent from any instance in the {{$labels.job}} cluster is {{ $value |
           humanizePercentage }}.
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/alertmanagerclusterfailedtosendalerts
         summary: All Alertmanager instances in a cluster failed to send notifications
           to a critical integration.
       expr: |
@@ -78,6 +82,7 @@ spec:
         description: The minimum notification failure rate to {{ $labels.integration
           }} sent from any instance in the {{$labels.job}} cluster is {{ $value |
           humanizePercentage }}.
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/alertmanagerclusterfailedtosendalerts
         summary: All Alertmanager instances in a cluster failed to send notifications
           to a non-critical integration.
       expr: |
@@ -94,6 +99,7 @@ spec:
       annotations:
         description: Alertmanager instances within the {{$labels.job}} cluster have
           different configurations.
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/alertmanagerconfiginconsistent
         summary: Alertmanager instances within the same cluster have different configurations.
       expr: |
         count by (namespace,service) (
@@ -108,6 +114,7 @@ spec:
         description: '{{ $value | humanizePercentage }} of Alertmanager instances
           within the {{$labels.job}} cluster have been up for less than half of the
           last 5m.'
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/alertmanagerclusterdown
         summary: Half or more of the Alertmanager instances within the same cluster
           are down.
       expr: |
@@ -129,6 +136,7 @@ spec:
         description: '{{ $value | humanizePercentage }} of Alertmanager instances
           within the {{$labels.job}} cluster have restarted at least 5 times in the
           last 10m.'
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/alertmanagerclustercrashlooping
         summary: Half or more of the Alertmanager instances within the same cluster
           are crashlooping.
       expr: |

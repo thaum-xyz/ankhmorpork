@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 2.24.0
+    app.kubernetes.io/version: 2.25.0
     prometheus: k8s
   name: k8s
   namespace: monitoring
@@ -34,7 +34,7 @@ spec:
       namespace: monitoring
       port: web
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
-  image: quay.io/prometheus/prometheus:v2.24.0
+  image: quay.io/prometheus/prometheus:v2.25.0
   nodeSelector:
     kubernetes.io/os: linux
     storage.infra/local: "true"
@@ -43,7 +43,7 @@ spec:
       app.kubernetes.io/component: prometheus
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: kube-prometheus
-      app.kubernetes.io/version: 2.24.0
+      app.kubernetes.io/version: 2.25.0
   podMonitorNamespaceSelector: {}
   podMonitorSelector: {}
   probeNamespaceSelector: {}
@@ -72,4 +72,4 @@ spec:
           requests:
             storage: 40Gi
         storageClassName: local-path
-  version: 2.24.0
+  version: 2.25.0
