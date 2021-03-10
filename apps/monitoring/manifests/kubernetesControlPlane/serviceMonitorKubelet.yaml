@@ -115,10 +115,10 @@ spec:
     - action: replace
       replacement: node-exporter
       targetLabel: job
-  jobLabel: k8s-app
+  jobLabel: app.kubernetes.io/name
   namespaceSelector:
     matchNames:
     - kube-system
   selector:
     matchLabels:
-      k8s-app: kubelet
+      app.kubernetes.io/name: kubelet
