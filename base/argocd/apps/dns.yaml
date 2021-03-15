@@ -23,7 +23,7 @@ spec:
     namespace: dns
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/dns/external
+    path: apps/dns/manifests/external
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: dns
@@ -43,7 +43,7 @@ spec:
     namespace: dns
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/dns/local
+    path: apps/dns/manifests/local
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: dns
