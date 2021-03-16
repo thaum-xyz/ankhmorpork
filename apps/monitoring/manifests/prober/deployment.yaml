@@ -46,10 +46,10 @@ spec:
           name: http
         resources:
           limits:
-            cpu: 42m
+            cpu: 64m
             memory: 42Mi
           requests:
-            cpu: 21m
+            cpu: 30m
             memory: 16Mi
         securityContext:
           runAsNonRoot: true
@@ -65,10 +65,10 @@ spec:
         name: module-configmap-reloader
         resources:
           limits:
-            cpu: 42m
+            cpu: 64m
             memory: 42Mi
           requests:
-            cpu: 21m
+            cpu: 30m
             memory: 16Mi
         securityContext:
           runAsNonRoot: true

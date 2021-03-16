@@ -150,8 +150,8 @@ local kp =
       blackboxExporter+: {
         modules: blackboxExporterModules,
         resources: {
-          requests: { cpu: '21m', memory: '16Mi' },
-          limits: { cpu: '42m', memory: '42Mi' },
+          requests: { cpu: '30m', memory: '16Mi' },
+          limits: { cpu: '64m', memory: '42Mi' },
         },
         replicas: 2,
         probes: {
