@@ -190,8 +190,8 @@ local kp =
         },
       },
       kubeStateMetrics+: {
-        version: 'v2.0.0-beta',
-        image: 'k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0-beta',
+        version: 'v2.0.0-rc.0',
+        image: 'k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0-rc.0',
       },
       grafana+: {
         version: '7.3.7',
@@ -557,7 +557,7 @@ local kp =
 { ['grafana/' + name + '.yaml']: std.manifestYamlDoc(kp.grafana[name]) for name in std.objectFields(kp.grafana) } +
 { ['pushgateway/' + name + '.yaml']: std.manifestYamlDoc(kp.pushgateway[name]) for name in std.objectFields(kp.pushgateway) } +
 { ['smokeping/' + name + '.yaml']: std.manifestYamlDoc(kp.smokeping[name]) for name in std.objectFields(kp.smokeping) } +
-// { ['holiday/' + name + '.yaml']: std.manifestYamlDoc(kp.blackboxExporter[name]) for name in std.objectFields(kp.blackboxExporter) } +
+// { ['holiday/' + name + '.yaml']: std.manifestYamlDoc(kp.holidayExporter[name]) for name in std.objectFields(kp.holidayExporter) } +
 { ['kube-events-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.kubeEventsExporter[name]) for name in std.objectFields(kp.kubeEventsExporter) } +
 { ['other/' + name + '.yaml']: std.manifestYamlDoc(kp.other[name]) for name in std.objectFields(kp.other) } +
 { 'other/kubePrometheusRule.yaml': std.manifestYamlDoc(kp.kubePrometheus.prometheusRule) } +

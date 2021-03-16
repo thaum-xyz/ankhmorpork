@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: v2.0.0-beta
+    app.kubernetes.io/version: v2.0.0-rc.0
     role: alert-rules
   name: kube-state-metrics-rules
   namespace: monitoring
