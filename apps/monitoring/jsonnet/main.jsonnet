@@ -547,7 +547,6 @@ local kp =
 { ['alertmanager/' + name + '.yaml']: std.manifestYamlDoc(kp.alertmanager[name]) for name in std.objectFields(kp.alertmanager) } +
 { ['prometheus/' + name + '.yaml']: std.manifestYamlDoc(kp.prometheus[name]) for name in std.objectFields(kp.prometheus) } +
 { ['prober/' + name + '.yaml']: std.manifestYamlDoc(kp.blackboxExporter[name]) for name in std.objectFields(kp.blackboxExporter) } +
-{ ['kubernetesControlPlane/' + name + '.yaml']: std.manifestYamlDoc(kp.kubernetesControlPlane[name]) for name in std.objectFields(kp.kubernetesControlPlane) } +
 // node_exporter is deployed separately via Ansible
 // { ['node-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.nodeExporter[name]) for name in std.objectFields(kp.nodeExporter) } +
 { 'other/nodeExporterPrometheusRule.yaml': std.manifestYamlDoc(kp.nodeExporter.prometheusRule) } +
@@ -559,6 +558,7 @@ local kp =
 { ['smokeping/' + name + '.yaml']: std.manifestYamlDoc(kp.smokeping[name]) for name in std.objectFields(kp.smokeping) } +
 // { ['holiday/' + name + '.yaml']: std.manifestYamlDoc(kp.holidayExporter[name]) for name in std.objectFields(kp.holidayExporter) } +
 { ['kube-events-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.kubeEventsExporter[name]) for name in std.objectFields(kp.kubeEventsExporter) } +
+{ ['other/k8sControlPlane-' + name + '.yaml']: std.manifestYamlDoc(kp.kubernetesControlPlane[name]) for name in std.objectFields(kp.kubernetesControlPlane) } +
 { ['other/' + name + '.yaml']: std.manifestYamlDoc(kp.other[name]) for name in std.objectFields(kp.other) } +
 { 'other/kubePrometheusRule.yaml': std.manifestYamlDoc(kp.kubePrometheus.prometheusRule) } +
 {}
