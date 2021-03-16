@@ -212,7 +212,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: other-prometheus-rules
+  name: other-monitoring-components
 spec:
   destination:
     namespace: monitoring
