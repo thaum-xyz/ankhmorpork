@@ -1,19 +1,17 @@
----
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   labels:
+    app.kubernetes.io/component: adblocker
     app.kubernetes.io/name: coredns
+    app.kubernetes.io/version: 0.2.5
   name: coredns
   namespace: dns
 spec:
-  jobLabel: app.kubernetes.io/name
-  endpoints:
+  podMetricsEndpoints:
   - interval: 30s
     port: metrics
-  namespaceSelector:
-    matchNames:
-    - dns
   selector:
     matchLabels:
+      app.kubernetes.io/component: adblocker
       app.kubernetes.io/name: coredns

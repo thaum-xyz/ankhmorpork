@@ -1,0 +1,23 @@
+{
+    "version": 1,
+    "dependencies": [
+      {
+        "source": {
+          "git": {
+            "remote": "https://github.com/kubernetes-monitoring/kubernetes-mixin"
+          }
+        },
+        "version": "master"
+      },
+      {
+        "source": {
+          "git": {
+            "remote": "https://github.com/povilasv/coredns-mixin"
+          }
+        },
+        "version": "master"
+      }
+    ],
+    "legacyImports": false
+  }
+  
