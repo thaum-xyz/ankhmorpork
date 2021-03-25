@@ -28,14 +28,14 @@
     192.168.2.40 metal01.ankhmorpork.thaum.xyz
     fallthrough
   }
-  ads {
-    permit cdnpark.com
-    permit googleadservices.com
-    permit backblazeb2.com
-    permit app.adjust.com
-    default-lists
-    log
-  }
+  # ads {
+  #   permit cdnpark.com
+  #   permit googleadservices.com
+  #   permit backblazeb2.com
+  #   permit app.adjust.com
+  #   default-lists
+  #   log
+  # }
   cache {
     success 51200 21600
     prefetch 1000
