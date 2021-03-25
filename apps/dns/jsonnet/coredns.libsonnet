@@ -10,8 +10,8 @@ local defaults = {
   replicas: 2,
 
   resources: {
-    limits: { cpu: '100m', memory: '170Mi' },
-    requests: { cpu: '10m', memory: '30Mi' },
+    limits: { cpu: '200m', memory: '170Mi' },
+    requests: { cpu: '100m', memory: '30Mi' },
   },
   commonLabels:: {
     'app.kubernetes.io/name': 'coredns',

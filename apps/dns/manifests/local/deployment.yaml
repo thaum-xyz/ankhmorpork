@@ -69,10 +69,10 @@ spec:
             scheme: HTTP
         resources:
           limits:
-            cpu: 100m
+            cpu: 200m
             memory: 170Mi
           requests:
-            cpu: 10m
+            cpu: 100m
             memory: 30Mi
         securityContext:
           allowPrivilegeEscalation: false
