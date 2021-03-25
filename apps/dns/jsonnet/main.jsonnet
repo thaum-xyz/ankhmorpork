@@ -38,7 +38,28 @@ local all = {
       credentialsSecretName: externaDNSCreds.metadata.name,
     },
   },
-  adblocker: coredns($.config.adblocker),
+  adblocker: coredns($.config.adblocker) + {
+    local metallbMetadata = {
+      metadata+: {
+        annotations+: {
+          'metallb.universe.tf/address-pool': 'default',
+          'metallb.universe.tf/allow-shared-ip': 'dns-svc',
+        },
+      },
+    },
+    serviceTCP+: metallbMetadata,
+    serviceUDP+: metallbMetadata,
+    deployment+: {
+      spec+: {
+        dnsConfig+: {
+          nameservers: [
+            '192.168.2.1',
+            '1.0.0.1',
+          ],
+        },
+      },
+    },
+  },
   external: external($.config.updater) + {
     credentials: externaDNSCreds,
   },

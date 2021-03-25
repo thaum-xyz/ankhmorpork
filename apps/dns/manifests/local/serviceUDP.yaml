@@ -1,6 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+    metallb.universe.tf/allow-shared-ip: dns-svc
   labels:
     app.kubernetes.io/component: adblocker
     app.kubernetes.io/name: coredns
