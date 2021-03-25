@@ -135,6 +135,8 @@ local kp =
         },
       },
       prometheus+: {
+        version: '2.26.0',
+        image: 'quay.io/prometheus/prometheus:v2.26.0-rc.0',
         resources: {
           requests: { cpu: '140m', memory: '1900Mi' },
           limits: { cpu: '1' },
