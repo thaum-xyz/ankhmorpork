@@ -171,7 +171,6 @@ function(params) {
         add: ['NET_BIND_SERVICE'],
         drop: ['all'],
       },
-      readOnlyRootFilesystem: true,
     },
     livenessProbe: {
       httpGet: {

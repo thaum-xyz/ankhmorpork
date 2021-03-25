@@ -81,7 +81,6 @@ spec:
             - NET_BIND_SERVICE
             drop:
             - all
-          readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /etc/coredns
           name: corefile
