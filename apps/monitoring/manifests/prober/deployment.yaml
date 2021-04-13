@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    kubectl.kubernetes.io/default-container: blackbox-exporter
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: blackbox-exporter
