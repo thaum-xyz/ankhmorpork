@@ -288,6 +288,11 @@ local kp =
     // TODO: Should service expose 2 ports???
     blackboxExporter+: {
       deployment+: {
+        metadata+: {
+          annotations+: {
+            "kubectl.kubernetes.io/default-container": "blackbox-exporter",
+          }
+        },
         spec+: {
           template+: {
             spec+: {
@@ -302,6 +307,11 @@ local kp =
     },
     prometheusOperator+: {
       deployment+: {
+        metadata+: {
+          annotations+: {
+            "kubectl.kubernetes.io/default-container": "prometheus-operator",
+          }
+        },
         spec+: {
           template+: {
             spec+: {
@@ -397,11 +407,16 @@ local kp =
     },
     kubeStateMetrics+: {
       deployment+: {
+        metadata+: {
+          annotations+: {
+            "kubectl.kubernetes.io/default-container": "kube-state-metrics",
+          }
+        },
         spec+: {
           template+: {
             spec+: {
               containers:
-                // addArgs(['--labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers) +
+                // addArgs(['--labels-metric-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers) +
                 // TODO: consider moving this into kube-prometheus
                 std.map(
                   function(c) if c.name == 'kube-rbac-proxy-main' then
