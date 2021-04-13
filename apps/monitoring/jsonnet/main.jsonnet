@@ -413,7 +413,7 @@ local kp =
                     }
                   else if c.name == 'kube-state-metrics' then
                     c {
-                      args+: ['--labels-metric-allow-list=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'],
+                      args+: ['--labels-metric-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'],
                     }
                   else c,
                   super.containers,
