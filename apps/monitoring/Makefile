@@ -23,8 +23,7 @@ $(MANIFESTS_DIR):
 	mkdir -p $(MANIFESTS_DIR)
 
 $(JSONNET_VENDOR):
-	cd jsonnet
-	jb install
+	cd jsonnet && jb install
 
 .PHONY: beautify
 beautify:
@@ -33,3 +32,9 @@ beautify:
 .PHONY: configmapsecrets
 configmapsecrets:
 	./configmapsecrets/populate.sh
+
+.PHONY: update
+update:
+	cd jsonnet && jb update
+	rm -rf $(JSONNET_VENDOR)
+	$(MAKE) generate
