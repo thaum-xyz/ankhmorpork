@@ -136,7 +136,7 @@ local kp =
       },
       prometheus+: {
         version: '2.26.0',
-        image: 'quay.io/prometheus/prometheus:v2.26.0-rc.0',
+        image: 'quay.io/prometheus/prometheus:v2.26.0',
         resources: {
           requests: { cpu: '140m', memory: '1900Mi' },
           limits: { cpu: '1' },
@@ -192,12 +192,12 @@ local kp =
         },
       },
       kubeStateMetrics+: {
-        version: 'v2.0.0-rc.0',
-        image: 'k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0-rc.0',
+        version: 'v2.0.0',
+        image: 'k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0',
       },
       grafana+: {
-        version: '7.3.7',
-        //image: 'grafana/grafana:7.3.7', // This is overridden in grafana-overrides.libsonnet
+        version: '7.5.3',
+        //image: 'grafana/grafana:7.5.3', // This is overridden in grafana-overrides.libsonnet
         datasources: [{
           name: 'Prometheus',
           type: 'prometheus',

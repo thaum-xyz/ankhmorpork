@@ -51,7 +51,7 @@
                 { name: 'GF_AUTH_PROXY_HEADERS', value: 'Email:X-Auth-Request-Email' },
                 { name: 'GF_SNAPSHOTS_EXTERNAL_ENABLED', value: 'false' },
               ],
-              image: 'grafana/grafana:7.3.7',
+              image: 'grafana/grafana:7.5.3',
               //image: $.values.grafana.image,
               name: 'grafana',
               ports: [{
