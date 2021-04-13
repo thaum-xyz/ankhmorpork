@@ -288,13 +288,13 @@ local kp =
     // TODO: Should service expose 2 ports???
     blackboxExporter+: {
       deployment+: {
-        metadata+: {
-          annotations+: {
-            "kubectl.kubernetes.io/default-container": "blackbox-exporter",
-          }
-        },
         spec+: {
           template+: {
+            metadata+: {
+              annotations+: {
+                "kubectl.kubernetes.io/default-container": "blackbox-exporter",
+              }
+            },
             spec+: {
               affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity('blackbox-exporter'),
             },
@@ -307,13 +307,13 @@ local kp =
     },
     prometheusOperator+: {
       deployment+: {
-        metadata+: {
-          annotations+: {
-            "kubectl.kubernetes.io/default-container": "prometheus-operator",
-          }
-        },
         spec+: {
           template+: {
+            metadata+: {
+              annotations+: {
+                "kubectl.kubernetes.io/default-container": "prometheus-operator",
+              }
+            },
             spec+: {
               containers: addArgs(['--config-reloader-cpu=150m', '--log-level=debug'], 'prometheus-operator', super.containers),
             },
@@ -407,13 +407,13 @@ local kp =
     },
     kubeStateMetrics+: {
       deployment+: {
-        metadata+: {
-          annotations+: {
-            "kubectl.kubernetes.io/default-container": "kube-state-metrics",
-          }
-        },
         spec+: {
           template+: {
+            metadata+: {
+              annotations+: {
+                "kubectl.kubernetes.io/default-container": "kube-state-metrics",
+              }
+            },
             spec+: {
               containers:
                 // addArgs(['--metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers) +
