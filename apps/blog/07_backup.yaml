@@ -31,7 +31,7 @@ spec:
             value: "/backup"
           - name: SCHEDULE
             value: "13 1 * * *"  # At 01:13
-          - name: RUN_ON_BOOT
+          - name: PRE_COMMAND
             value: "restic unlock"
           - name: POST_COMMAND
             value: "restic forget --keep-last 14 --keep-daily 7 --keep-monthly 6 --keep-yearly 2"
