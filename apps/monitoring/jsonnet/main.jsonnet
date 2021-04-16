@@ -301,9 +301,9 @@ local kp =
           },
         },
       },
-      promDemoProbe: probe('prometheus-demo', $.values.common.namespace, $.blackboxExporter.config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.promDemo),
-      thaumProbe: probe('thaum-sites', $.values.common.namespace, $.blackboxExporter.config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.thaumSites),
-      ingressProbe: probe('ankhmorpork', $.values.common.namespace, $.blackboxExporter.config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
+      promDemoProbe: probe('prometheus-demo', $.values.common.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.promDemo),
+      thaumProbe: probe('thaum-sites', $.values.common.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.thaumSites),
+      ingressProbe: probe('ankhmorpork', $.values.common.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
     },
     prometheusOperator+: {
       deployment+: {
