@@ -26,17 +26,17 @@ local defaults = {
 
 function(params) {
   local h = self,
-  config:: defaults + params,
+  _config:: defaults + params,
   // Safety check
-  assert std.isObject(h.config.resources),
+  assert std.isObject(h._config.resources),
 
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
     metadata: {
-      name: h.config.name,
-      namespace: h.config.namespace,
-      labels: h.config.commonLabels,
+      name: h._config.name,
+      namespace: h._config.namespace,
+      labels: h._config.commonLabels,
     },
   },
 
@@ -44,9 +44,9 @@ function(params) {
     apiVersion: 'v1',
     kind: 'Service',
     metadata: {
-      name: h.config.name,
-      namespace: h.config.namespace,
-      labels: h.config.commonLabels,
+      name: h._config.name,
+      namespace: h._config.namespace,
+      labels: h._config.commonLabels,
     },
     spec: {
       ports: [{
@@ -54,7 +54,7 @@ function(params) {
         targetPort: h.deployment.spec.template.spec.containers[0].ports[0].name,
         port: 8080,
       }],
-      selector: h.config.selectorLabels,
+      selector: h._config.selectorLabels,
       clusterIP: 'None',
     },
   },
@@ -63,19 +63,19 @@ function(params) {
     apiVersion: 'v1',
     kind: 'ConfigMap',
     metadata: {
-      name: h.config.name + '-config',
-      namespace: h.config.namespace,
-      labels: h.config.commonLabels,
+      name: h._config.name + '-config',
+      namespace: h._config.namespace,
+      labels: h._config.commonLabels,
     },
     data: {
-      'config.yml': h.config.configData,
+      'config.yml': h._config.configData,
     },
   },
 
   deployment: {
     local c = {
-      name: h.config.name,
-      image: h.config.image,
+      name: h._config.name,
+      image: h._config.image,
       imagePullPolicy: 'IfNotPresent',
       ports: [{
         containerPort: 8080,
@@ -86,23 +86,26 @@ function(params) {
         name: 'config',
         subPath: 'config.yml',
       }],
-      resources: h.config.resources,
+      resources: h._config.resources,
     },
 
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: h.config.name,
-      namespace: h.config.namespace,
-      labels: h.config.commonLabels,
+      name: h._config.name,
+      namespace: h._config.namespace,
+      labels: h._config.commonLabels,
+      annotations: {
+        'checksum.config/md5': std.md5(h._config.configData),
+      },
     },
     spec: {
-      replicas: h.config.replicas,
-      selector: { matchLabels: h.config.selectorLabels },
+      replicas: h._config.replicas,
+      selector: { matchLabels: h._config.selectorLabels },
       template: {
-        metadata: { labels: h.config.commonLabels },
+        metadata: { labels: h._config.commonLabels },
         spec: {
-          affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity(h.config.name),
+          affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity(h._config.name),
           containers: [c],
           restartPolicy: 'Always',
           serviceAccountName: h.serviceAccount.metadata.name,
@@ -119,15 +122,15 @@ function(params) {
 
 
   /*
-    if h.config.domain != '' then
+    if h._config.domain != '' then
   */
   ingress: {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
-      name: h.config.name,
-      namespace: h.config.namespace,
-      labels: h.config.commonLabels,  // + { probe: "enabled" }
+      name: h._config.name,
+      namespace: h._config.namespace,
+      labels: h._config.commonLabels,  // + { probe: "enabled" }
       annotations: {
         'kubernetes.io/ingress.class': 'nginx',
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
@@ -135,18 +138,18 @@ function(params) {
     },
     spec: {
       tls: [{
-        secretName: h.config.name + '-tls',
-        hosts: [h.config.domain],
+        secretName: h._config.name + '-tls',
+        hosts: [h._config.domain],
       }],
       rules: [{
-        host: h.config.domain,
+        host: h._config.domain,
         http: {
           paths: [{
             path: '/',
             pathType: 'Prefix',
             backend: {
               service: {
-                name: h.config.name,
+                name: h._config.name,
                 port: {
                   name: h.service.spec.ports[0].name,
                 },

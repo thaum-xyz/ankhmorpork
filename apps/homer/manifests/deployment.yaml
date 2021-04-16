@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    checksum.config/md5: 17981ba0deb3a34d2e3e3915470242f4
   labels:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homer
