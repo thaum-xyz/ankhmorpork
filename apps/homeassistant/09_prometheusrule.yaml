@@ -17,5 +17,5 @@ spec:
           severity: critical
           priority: P1
         annotations:
-          summary: "Home Assistant instance {{ $labels.instance }} is down"
-          description: "Home Assistant is down"
+          description: "Home Assistant instance {{ $labels.instance }} is down"
+          summary: "Home Assistant is down"
