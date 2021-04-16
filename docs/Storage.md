@@ -1,5 +1,7 @@
 # Storage
 
+_Note: Document is outdated and needs an update._
+
 Ankhmorpork storage is represented by 3 Kubernetes Storage Classes each with different properties. Such division allows to cover all possible usecases for volume-based storage. Table below presents Storage Classes properties in clear way.
 
 Class      | High Performance | Capacity  | Resiliency

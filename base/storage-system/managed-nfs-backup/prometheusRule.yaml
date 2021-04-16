@@ -10,20 +10,20 @@ spec:
   groups:
   - name: restic-backup.rules
     rules:
-    - alert: BackupNotCreatedWarning
+    - alert: BackupsNotCreated
       annotations:
         description: '{{ printf "%.4g" $value }}% of the {{ $labels.namespace }}/{{ $labels.job }} backup jobs succeeded.'
         summary: Less than 90% of backup jobs succeeded.
-        # runbook_url: https://github.com
+        runbook_url: https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/BackupsNotCreated.md
       expr: |
         sum without (pod,instance) (backup_backups_successful_total) / sum without (pod,instance) (backup_backups_all_total) * 100 < 90
       labels:
         severity: warning
-    - alert: BackupNotCreatedCritical
+    - alert: BackupsNotCreated
       annotations:
         description: '{{ printf "%.4g" $value }}% of the {{ $labels.namespace }}/{{ $labels.job }} backup jobs succeeded.'
         summary: Less than 50% of backup jobs succeeded.
-        # runbook_url: https://github.com
+        runbook_url: https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/BackupsNotCreated.md
       expr: |
         sum without (pod,instance) (backup_backups_successful_total) / sum without (pod,instance) (backup_backups_all_total) * 100 < 50
       labels:
