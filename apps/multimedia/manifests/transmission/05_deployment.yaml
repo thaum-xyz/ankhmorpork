@@ -16,6 +16,8 @@ spec:
       app.kubernetes.io/name: transmission
   template:
     metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: transmission
       labels:
         app.kubernetes.io/name: transmission
         app.kubernetes.io/version: "3.4"

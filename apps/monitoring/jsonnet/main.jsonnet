@@ -292,8 +292,8 @@ local kp =
           template+: {
             metadata+: {
               annotations+: {
-                "kubectl.kubernetes.io/default-container": "blackbox-exporter",
-              }
+                'kubectl.kubernetes.io/default-container': 'blackbox-exporter',
+              },
             },
             spec+: {
               affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity('blackbox-exporter'),
@@ -311,8 +311,8 @@ local kp =
           template+: {
             metadata+: {
               annotations+: {
-                "kubectl.kubernetes.io/default-container": "prometheus-operator",
-              }
+                'kubectl.kubernetes.io/default-container': 'prometheus-operator',
+              },
             },
             spec+: {
               containers: addArgs(['--config-reloader-cpu=150m', '--log-level=debug'], 'prometheus-operator', super.containers),
@@ -411,8 +411,8 @@ local kp =
           template+: {
             metadata+: {
               annotations+: {
-                "kubectl.kubernetes.io/default-container": "kube-state-metrics",
-              }
+                'kubectl.kubernetes.io/default-container': 'kube-state-metrics',
+              },
             },
             spec+: {
               containers:

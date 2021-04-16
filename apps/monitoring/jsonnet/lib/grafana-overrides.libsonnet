@@ -107,12 +107,9 @@
     metadata: {
       name: 'grafana-data',
       namespace: 'monitoring',
-      annotations: {
-        'volume.beta.kubernetes.io/storage-class': 'longhorn',
-      },
     },
     spec: {
-      storageClassName: 'longhorn',
+      storageClassName: 'managed-nfs-storage',
       accessModes: ['ReadWriteMany'],
       resources: {
         requests: {

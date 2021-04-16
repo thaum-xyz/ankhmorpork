@@ -5,7 +5,7 @@ metadata:
   name: data
   namespace: blog
 spec:
-  storageClassName: "longhorn"
+  storageClassName: "managed-nfs-storage"
   accessModes:
     - ReadWriteMany
   resources:

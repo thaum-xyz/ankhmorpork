@@ -48,7 +48,7 @@ metadata:
   namespace: "multimedia"
   name: "transmission-data"
 spec:
-  storageClassName: "longhorn"
+  storageClassName: "managed-nfs-storage"
   accessModes:
     - ReadWriteOnce
   resources:

@@ -46,12 +46,10 @@ spec:
   - metadata:
       name: config
       namespace: multimedia
-      annotations:
-        volume.beta.kubernetes.io/storage-class: "longhorn"
     spec:
-      storageClassName: "longhorn"
+      storageClassName: "managed-nfs-storage"
       accessModes:
-        - ReadWriteMany  # NFS
+        - ReadWriteMany
       resources:
         requests:
-          storage: 100Mi
+          storage: 200Mi

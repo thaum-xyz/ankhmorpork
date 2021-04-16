@@ -5,7 +5,7 @@ metadata:
   name: data
   namespace: adrianna
 spec:
-  storageClassName: "longhorn"
+  storageClassName: "managed-nfs-storage"
   accessModes:
     - ReadWriteMany
   resources:
