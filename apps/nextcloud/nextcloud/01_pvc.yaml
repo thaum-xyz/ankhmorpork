@@ -4,10 +4,8 @@ apiVersion: v1
 metadata:
   name: nextcloud-files
   namespace: nextcloud
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "external-nfs"
 spec:
-  storageClassName: "external-nfs"
+  storageClassName: "managed-nfs-storage"
   accessModes:
     - ReadWriteMany
   resources:
@@ -19,10 +17,8 @@ apiVersion: v1
 metadata:
   name: nextcloud-apps
   namespace: nextcloud
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "external-nfs"
 spec:
-  storageClassName: "external-nfs"
+  storageClassName: "managed-nfs-storage"
   accessModes:
     - ReadWriteMany
   resources:
@@ -34,10 +30,8 @@ apiVersion: v1
 metadata:
   name: nextcloud-config
   namespace: nextcloud
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "external-nfs"
 spec:
-  storageClassName: "external-nfs"
+  storageClassName: "managed-nfs-storage"
   accessModes:
     - ReadWriteMany
   resources:
@@ -49,10 +43,8 @@ apiVersion: v1
 metadata:
   name: nextcloud-theme
   namespace: nextcloud
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "external-nfs"
 spec:
-  storageClassName: "external-nfs"
+  storageClassName: "managed-nfs-storage"
   accessModes:
     - ReadWriteMany
   resources:

@@ -131,7 +131,7 @@ spec:
       name: backups  # TODO: consider moving to emptyDir and backing up to B2/minio
       namespace: multimedia
     spec:
-      storageClassName: "external-nfs"
+      storageClassName: "managed-nfs-storage"
       accessModes:
         - ReadWriteMany
       resources:
