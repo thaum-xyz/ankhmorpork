@@ -18,7 +18,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: external-nfs
+  name: managed-nfs-storage
   annotations:
     argocd.argoproj.io/manifest-generate-paths: .
 spec:
@@ -26,7 +26,7 @@ spec:
     namespace: storage-system
     server: 'https://kubernetes.default.svc'
   source:
-    path: base/storage-system/external-nfs
+    path: base/storage-system/managed-nfs-storage
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: storage-system
