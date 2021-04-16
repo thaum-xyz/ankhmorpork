@@ -125,10 +125,6 @@ services:
         logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
         <<: *Local
         url: "https://192.168.2.7:8443/"
-      - name: Longhorn
-        logo: "https://avatars3.githubusercontent.com/u/51335366?s=200&v=4"
-        <<: *Local
-        url: "http://192.168.2.97/#/dashboard"
       - name: ArgoCD
         logo: "https://argoproj.github.io/argo-cd/assets/logo.png"
         url: "https://argocd.ankhmorpork.thaum.xyz"
