@@ -27,3 +27,9 @@ $(JSONNET_VENDOR):
 .PHONY: beautify
 beautify:
 	for i in $(shell find manifests/ -name *.yaml); do mv "$$i" "$$i.bak"; yamlfmt < "$$i.bak" > "$$i"; rm "$$i.bak"; done
+
+.PHONY: update
+update:
+	cd jsonnet && jb update
+	rm -rf $(JSONNET_VENDOR)
+	$(MAKE) generate
