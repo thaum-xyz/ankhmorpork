@@ -95,15 +95,17 @@ function(params) {
       name: h._config.name,
       namespace: h._config.namespace,
       labels: h._config.commonLabels,
-      annotations: {
-        'checksum.config/md5': std.md5(h._config.configData),
-      },
     },
     spec: {
       replicas: h._config.replicas,
       selector: { matchLabels: h._config.selectorLabels },
       template: {
-        metadata: { labels: h._config.commonLabels },
+        metadata: {
+          annotations: {
+            'checksum.config/md5': std.md5(h._config.configData),
+          },
+          labels: h._config.commonLabels,
+        },
         spec: {
           affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity(h._config.name),
           containers: [c],
