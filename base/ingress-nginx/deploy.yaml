@@ -36,6 +36,8 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 data:
+# TODO: THIS IS CUSTOM!!!
+  use-gzip: "true"
 ---
 # Source: ingress-nginx/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
