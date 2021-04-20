@@ -3,7 +3,7 @@ local oauth = import './oauth-proxy.libsonnet';
 
 local config = {
   version: '7.1.2',
-  image: 'quay.io/paulfantom/oauth2-proxy:v' + self.version,
+  image: 'quay.io/paulfantom/oauth2-proxy:' + self.version,
   namespace: 'auth',
   replicas: 2,
   ingressDomain: 'auth.ankhmorpork.thaum.xyz',
