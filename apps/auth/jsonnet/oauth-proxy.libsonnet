@@ -48,11 +48,18 @@ function(params) {
     kind: 'Service',
     metadata: $.metadata,
     spec: {
-      ports: [{
-        name: 'http',
-        targetPort: $.deployment.spec.template.spec.containers[0].ports[0].name,
-        port: 4180,
-      }],
+      ports: [
+        {
+          name: 'http',
+          targetPort: $.deployment.spec.template.spec.containers[0].ports[0].name,
+          port: 4180,
+        },
+        {
+          name: 'metrics',
+          targetPort: $.deployment.spec.template.spec.containers[0].ports[1].name,
+          port: 8080,
+        },
+      ],
       selector: $.config.selectorLabels,
       clusterIP: 'None',
     },
