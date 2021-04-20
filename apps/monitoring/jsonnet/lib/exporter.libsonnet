@@ -31,15 +31,16 @@ local defaults = {
 
 function(params) {
   config:: defaults + params,
+  metadata:: {
+    labels: $.config.commonLabels,
+    name: $.config.name,
+    namespace: $.config.namespace,
+  },
 
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: $.config.name,
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
   },
 
   local exporter = {
@@ -65,11 +66,7 @@ function(params) {
   deployment: {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: $.config.name,
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
     spec: {
       replicas: $.config.replicas,
       selector: {
@@ -90,11 +87,7 @@ function(params) {
   podMonitor: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PodMonitor',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: $.config.name,
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
     spec: {
       podMetricsEndpoints: [
         { port: 'http', interval: '30s' },

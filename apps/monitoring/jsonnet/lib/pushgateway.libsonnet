@@ -24,25 +24,22 @@ local defaults = {
 
 function(params) {
   config:: defaults + params,
+  metadata:: {
+    labels: $.config.commonLabels,
+    name: $.config.name,
+    namespace: $.config.namespace,
+  },
 
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: $.config.name,
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
   },
 
   service: {
     apiVersion: 'v1',
     kind: 'Service',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: $.config.name,
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
     spec: {
       ports: [{
         name: 'http-push',
@@ -67,11 +64,7 @@ function(params) {
   deployment: {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: $.config.name,
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
     spec: {
       replicas: 1,
       selector: {
@@ -96,11 +89,7 @@ function(params) {
   serviceMonitor: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'ServiceMonitor',
-    metadata: {
-      name: $.config.name,
-      namespace: $.config.namespace,
-      labels: $.config.commonLabels,
-    },
+    metadata: $.metadata,
     spec: {
       selector: {
         matchLabels: $.config.selectorLabels,

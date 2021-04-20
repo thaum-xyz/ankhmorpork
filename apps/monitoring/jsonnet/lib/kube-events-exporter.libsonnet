@@ -7,6 +7,7 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  name: 'kube-events-exporter',
 
   eventTypes: [],
   involvedObjectAPIGroups: [],
@@ -14,9 +15,9 @@ local defaults = {
   reportingControllers: [],
 
   commonLabels: {
-    'app.kubernetes.io/name': 'kube-events-exporter',
+    'app.kubernetes.io/name': defaults.name,
     'app.kubernetes.io/version': defaults.version,
-    'app.kubernetes.io/component': 'events-exporter',
+    'app.kubernetes.io/component': 'exporter',
   },
 
   selectorLabels: {
@@ -30,25 +31,22 @@ local defaults = {
 
 function(params) {
   config:: defaults + params,
+  metadata:: {
+    labels: $.config.commonLabels,
+    name: $.config.name,
+    namespace: $.config.namespace,
+  },
 
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: 'kube-events-exporter',
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
   },
 
   clusterRole: {
     apiVersion: 'rbac.authorization.k8s.io/v1',
     kind: 'ClusterRole',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: 'kube-events-exporter',
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
     rules: [{
       apiGroups: [''],
       resources: ['events'],
@@ -59,11 +57,7 @@ function(params) {
   clusterRoleBinding: {
     apiVersion: 'rbac.authorization.k8s.io/v1',
     kind: 'ClusterRoleBinding',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: 'kube-events-exporter',
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
     roleRef: {
       apiGroup: 'rbac.authorization.k8s.io',
       kind: 'ClusterRole',
@@ -82,7 +76,7 @@ function(params) {
           ['--involved-object-api-groups=' + apiGroup for apiGroup in $.config.involvedObjectAPIGroups] +
           ['--involved-object-namespaces=' + ns for ns in $.config.involvedObjectNamespaces] +
           ['--reporting-controllers=' + controller for controller in $.config.reportingControllers],
-    name: 'kube-events-exporter',
+    name: $.config.name,
     image: $.config.image,
     ports: [
       { containerPort: 8080, name: 'event' },
@@ -94,11 +88,7 @@ function(params) {
   deployment: {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: 'kube-events-exporter',
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
     spec: {
       replicas: 1,
       selector: {
@@ -123,11 +113,7 @@ function(params) {
   podMonitor: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PodMonitor',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: 'kube-events-exporter',
-      namespace: $.config.namespace,
-    },
+    metadata: $.metadata,
     spec: {
       podMetricsEndpoints: [
         { port: 'event' },
