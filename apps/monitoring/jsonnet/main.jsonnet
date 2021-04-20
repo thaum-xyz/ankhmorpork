@@ -114,7 +114,7 @@ local kp =
       smokeping: {
         name: 'smokeping',
         namespace: $.values.common.namespace,
-        version: '1.2.0',
+        version: '0.4.1',
         image: 'quay.io/superq/smokeping-prober:v0.4.1',
         port: 9374,
         resources: {
@@ -268,10 +268,6 @@ local kp =
               containers: std.map(function(c) c {
                 securityContext: { capabilities: { add: ['NET_RAW'] } },
               }, super.containers),
-              securityContext: {
-                runAsNonRoot: true,
-                runAsUser: 65534,
-              },
             },
           },
         },

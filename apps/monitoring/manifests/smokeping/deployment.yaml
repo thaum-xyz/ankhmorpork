@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: smokeping
-    app.kubernetes.io/version: 1.2.0
+    app.kubernetes.io/version: 0.4.1
   name: smokeping
   namespace: monitoring
 spec:
@@ -18,7 +18,7 @@ spec:
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: smokeping
-        app.kubernetes.io/version: 1.2.0
+        app.kubernetes.io/version: 0.4.1
     spec:
       affinity:
         podAntiAffinity:
@@ -61,7 +61,4 @@ spec:
           capabilities:
             add:
             - NET_RAW
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
       serviceAccountName: smokeping
