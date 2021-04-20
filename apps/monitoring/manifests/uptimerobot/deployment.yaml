@@ -31,10 +31,10 @@ spec:
           name: http
         resources:
           limits:
-            memory: 70Mi
-          requests:
-            cpu: 40m
             memory: 30Mi
+          requests:
+            cpu: 10m
+            memory: 13Mi
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux

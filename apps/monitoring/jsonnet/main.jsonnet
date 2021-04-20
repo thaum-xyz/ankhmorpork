@@ -134,12 +134,10 @@ local kp =
       uptimerobot: {
         namespace: $.values.common.namespace,
         version: 'latest',
-        // TODO: consider rewriting/updating this exporter
         image: 'drubin/uptimerobot-prometheus-exporter',
-        // TODO: adjust resource requirements
         resources: {
-          requests: { cpu: '40m', memory: '30Mi' },
-          limits: { memory: '70Mi' },
+          requests: { cpu: '10m', memory: '13Mi' },
+          limits: { memory: '30Mi' },
         },
         port: 9429,
         secretRefName: 'uptimerobot-api-key',
