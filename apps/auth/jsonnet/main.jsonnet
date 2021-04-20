@@ -8,6 +8,10 @@ local config = {
   replicas: 2,
   ingressDomain: 'auth.ankhmorpork.thaum.xyz',
   encryptedSecretsData: encryptedSecretsData,
+  resources: {
+    requests: { cpu: '10m', memory: '13Mi' },
+    limits: { cpu: '30m', memory: '30Mi' },
+  },
 };
 
 local all = oauth(config);

@@ -56,10 +56,10 @@ spec:
           name: http
         resources:
           limits:
-            cpu: 15m
+            cpu: 30m
             memory: 30Mi
           requests:
-            cpu: 5m
+            cpu: 10m
             memory: 13Mi
       restartPolicy: Always
       serviceAccountName: oauth2-proxy
