@@ -49,7 +49,7 @@ spec:
         envFrom:
         - secretRef:
             name: oauth-creds
-        image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.2
+        image: quay.io/paulfantom/oauth2-proxy:v7.1.2
         imagePullPolicy: IfNotPresent
         name: oauth2-proxy
         ports:
