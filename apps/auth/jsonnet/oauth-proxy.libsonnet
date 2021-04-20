@@ -95,6 +95,7 @@ function(params) {
         '--pass-basic-auth=false',
         '--http-address=0.0.0.0:4180',
         '--metrics-address=0.0.0.0:8080',
+        '--skip-auth-route="/-/healthy,/api/health"',
       ],
       envFrom: [{
         secretRef: {
