@@ -15,9 +15,12 @@ spec:
       app.kubernetes.io/name: phpfpm
       app.kubernetes.io/part-of: nextcloud
   replicas: 1
+  revisionHistoryLimit: 3
   serviceName: nextcloud
   template:
     metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: nextcloud
       labels:
         app.kubernetes.io/name: phpfpm
         app.kubernetes.io/version: 21.0.1
