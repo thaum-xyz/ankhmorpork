@@ -24,10 +24,10 @@ spec:
       - envFrom:
         - secretRef:
             name: uptimerobot-api-key
-        image: lekpamartin/uptimerobot_exporter
+        image: drubin/uptimerobot-prometheus-exporter
         name: uptimerobot-exporter
         ports:
-        - containerPort: 9705
+        - containerPort: 9429
           name: http
         resources:
           limits:

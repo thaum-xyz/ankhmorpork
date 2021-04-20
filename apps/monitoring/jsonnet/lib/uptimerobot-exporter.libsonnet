@@ -20,7 +20,7 @@ local defaults = {
   },
 
   resources: {},
-  port: 9705,
+  port: error 'must provide port',
   secretRefName: null,
 };
 

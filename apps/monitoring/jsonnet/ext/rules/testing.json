@@ -19,6 +19,18 @@
         {
           "record": ":kube_namespace_created",
           "expr": "time() - kube_namespace_created"
+        },
+        {
+          "alert": "SiteNotUP",
+          "annotations": {
+            "description": "UptimeRobot reports site {{ $labels.url }} not to be up for 15m. Site is either paused or down.",
+            "summary": "UptimeRobot reports site to be up."
+          },
+          "expr": "uptimerobot_monitor_status != 2",
+          "for": "15m",
+          "labels": {
+            "severity": "critical"
+          }
         }
       ]
     }
