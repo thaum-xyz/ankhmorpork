@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cron
     app.kubernetes.io/part-of: nextcloud
-    app.kubernetes.io/version: 20.0.5
+    app.kubernetes.io/version: 21.0.1
   name: cron
   namespace: nextcloud
 spec:
@@ -19,7 +19,7 @@ spec:
       labels:
         app.kubernetes.io/name: cron
         app.kubernetes.io/part-of: nextcloud
-        app.kubernetes.io/version: 20.0.5
+        app.kubernetes.io/version: 21.0.1
     spec:
       containers:
       - env:
@@ -46,7 +46,7 @@ spec:
         envFrom:
         - configMapRef:
             name: nextcloud-envs
-        image: nextcloud:20.0.5-fpm
+        image: nextcloud:21.0.1-fpm
         name: cron
         command:
         - /cron.sh
