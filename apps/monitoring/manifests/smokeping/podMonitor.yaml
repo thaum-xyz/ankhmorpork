@@ -1,5 +1,5 @@
-apiVersion: v1
-kind: Service
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
 metadata:
   labels:
     app.kubernetes.io/component: exporter
@@ -8,11 +8,9 @@ metadata:
   name: smokeping
   namespace: monitoring
 spec:
-  ports:
-  - name: http
-    port: 9374
-    protocol: TCP
-    targetPort: http
+  podMetricsEndpoints:
+  - port: http
   selector:
-    app.kubernetes.io/component: exporter
-    app.kubernetes.io/name: smokeping
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: smokeping

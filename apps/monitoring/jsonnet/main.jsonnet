@@ -69,9 +69,7 @@ local kubeEventsExporter = (import 'lib/kube-events-exporter.libsonnet');
 // TODO: add to kube-prometheus, more info in libsonnet file
 local pushgateway = (import 'lib/pushgateway.libsonnet');
 // TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
-local smokeping = (import 'lib/smokeping.libsonnet');
-// TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
-local uptimerobot = (import 'lib/uptimerobot-exporter.libsonnet');
+local exporter = (import 'lib/exporter.libsonnet');
 
 local kp =
   (import 'kube-prometheus/main.libsonnet') +
@@ -114,15 +112,17 @@ local kp =
         },
       },
       smokeping: {
+        name: 'smokeping',
         namespace: $.values.common.namespace,
         version: '1.2.0',
         image: 'quay.io/superq/smokeping-prober:v0.4.1',
+        port: 9374,
         resources: {
           requests: { cpu: '40m', memory: '30Mi' },
           limits: { memory: '70Mi' },
         },
         replicas: 2,
-        hosts: [
+        args: [
           '8.8.8.8',
           '1.1.1.1',
           'lancre.thaum.xyz',
@@ -132,6 +132,7 @@ local kp =
         ],
       },
       uptimerobot: {
+        name: 'uptimerobot-exporter',
         namespace: $.values.common.namespace,
         version: 'latest',
         image: 'drubin/uptimerobot-prometheus-exporter',
@@ -239,7 +240,7 @@ local kp =
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
     // TODO: rebuild exporter to be arm64 compliant
-    uptimerobot: uptimerobot($.values.uptimerobot) + {
+    uptimerobot: exporter($.values.uptimerobot) + {
       deployment+: {
         spec+: {
           template+: {
@@ -252,13 +253,25 @@ local kp =
           },
         },
       },
+      podMonitor+: {
+        spec+: {
+          podMetricsEndpoints: [{ port: 'http', interval: '5m' }],
+        },
+      },
     },
-    smokeping: smokeping($.values.smokeping) + {
+    smokeping: exporter($.values.smokeping) + {
       deployment+: {
         spec+: {
           template+: {
             spec+: {
               affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity('smokeping'),
+              containers: std.map(function(c) c {
+                securityContext: { capabilities: { add: ['NET_RAW'] } },
+              }, super.containers),
+              securityContext: {
+                runAsNonRoot: true,
+                runAsUser: 65534,
+              },
             },
           },
         },

@@ -21,7 +21,8 @@ local defaults = {
 
   replicas: 1,
   resources: {},
-  hosts: [],
+  port: 9374,
+  args: [],
 };
 
 function(params) {
@@ -37,31 +38,12 @@ function(params) {
     },
   },
 
-  service: {
-    apiVersion: 'v1',
-    kind: 'Service',
-    metadata: {
-      labels: $.config.commonLabels,
-      name: $.config.name,
-      namespace: $.config.namespace,
-    },
-    spec: {
-      ports: [{
-        name: 'http',
-        port: 9374,
-        protocol: 'TCP',
-        targetPort: 'http',
-      }],
-      selector: $.config.selectorLabels,
-    },
-  },
-
   local smoke = {
     name: $.config.name,
     image: $.config.image,
-    args: $.config.hosts,
+    args: $.config.args,
     ports: [{
-      containerPort: 9374,
+      containerPort: $.config.port,
       name: 'http',
     }],
     readinessProbe: {
@@ -109,21 +91,21 @@ function(params) {
     },
   },
 
-  serviceMonitor: {
+  podMonitor: {
     apiVersion: 'monitoring.coreos.com/v1',
-    kind: 'ServiceMonitor',
+    kind: 'PodMonitor',
     metadata: {
       name: $.config.name,
       namespace: $.config.namespace,
       labels: $.config.commonLabels,
     },
     spec: {
+      podMetricsEndpoints: [
+        { port: 'http' },
+      ],
       selector: {
         matchLabels: $.config.selectorLabels,
       },
-      endpoints: [
-        { port: 'http', interval: '30s' },
-      ],
     },
   },
 }

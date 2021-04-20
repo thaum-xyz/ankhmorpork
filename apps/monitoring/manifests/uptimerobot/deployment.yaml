@@ -21,7 +21,8 @@ spec:
         app.kubernetes.io/version: latest
     spec:
       containers:
-      - envFrom:
+      - args: []
+        envFrom:
         - secretRef:
             name: uptimerobot-api-key
         image: drubin/uptimerobot-prometheus-exporter
@@ -29,6 +30,12 @@ spec:
         ports:
         - containerPort: 9429
           name: http
+        readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 1
+          tcpSocket:
+            port: http
+          timeoutSeconds: 10
         resources:
           limits:
             memory: 30Mi

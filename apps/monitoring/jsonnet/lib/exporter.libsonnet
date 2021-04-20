@@ -2,10 +2,11 @@
 
 local defaults = {
   local defaults = self,
-  name: 'uptimerobot-exporter',
+  name: error 'must provide name',
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  port: error 'must provide port',
 
   commonLabels: {
     'app.kubernetes.io/name': defaults.name,
@@ -20,8 +21,9 @@ local defaults = {
   },
 
   resources: {},
-  port: error 'must provide port',
+  replicas: 1,
   secretRefName: null,
+  args: [],
 };
 
 function(params) {
@@ -38,13 +40,22 @@ function(params) {
   },
 
   local exporter = {
-    envFrom: [{ secretRef: { name: $.config.secretRefName } }],
+    args: $.config.args,
+    [if $.config.secretRefName != null then 'envFrom']: [{ secretRef: { name: $.config.secretRefName } }],
     name: $.config.name,
     image: $.config.image,
     ports: [{
       containerPort: $.config.port,
       name: 'http',
     }],
+    readinessProbe: {
+      tcpSocket: {
+        port: 'http',
+      },
+      initialDelaySeconds: 1,
+      failureThreshold: 5,
+      timeoutSeconds: 10,
+    },
     resources: $.config.resources,
   },
 
@@ -57,7 +68,7 @@ function(params) {
       namespace: $.config.namespace,
     },
     spec: {
-      replicas: 1,
+      replicas: $.config.replicas,
       selector: {
         matchLabels: $.config.selectorLabels,
       },
@@ -83,13 +94,12 @@ function(params) {
     },
     spec: {
       podMetricsEndpoints: [
-        { port: 'http', interval: '5m' },
+        { port: 'http' },
       ],
       selector: {
         matchLabels: $.config.selectorLabels,
       },
     },
   },
-
 
 }
