@@ -25,46 +25,58 @@ local defaults = {
 };
 
 function(params) {
-  local o = self,
   config:: defaults + params,
   // Safety check
-  assert std.isObject(o.config.resources),
+  assert std.isObject($.config.resources),
+
+  metadata:: {
+    name: $.config.name,
+    namespace: $.config.namespace,
+    labels: $.config.commonLabels,
+  },
 
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
-    metadata: {
-      name: o.config.name,
-      namespace: o.config.namespace,
-      labels: o.config.commonLabels,
-    },
+    metadata: $.metadata,
   },
 
-  creds: o.config.encryptedSecretsData,
+  creds: $.config.encryptedSecretsData,
 
   service: {
     apiVersion: 'v1',
     kind: 'Service',
-    metadata: {
-      name: o.config.name,
-      namespace: o.config.namespace,
-      labels: o.config.commonLabels,
-    },
+    metadata: $.metadata,
     spec: {
       ports: [{
         name: 'http',
-        targetPort: o.deployment.spec.template.spec.containers[0].ports[0].name,
+        targetPort: $.deployment.spec.template.spec.containers[0].ports[0].name,
         port: 4180,
       }],
-      selector: o.config.selectorLabels,
+      selector: $.config.selectorLabels,
       clusterIP: 'None',
     },
   },
 
+  serviceMonitor: {
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'ServiceMonitor',
+    metadata: $.metadata,
+    spec: {
+      selector: {
+        matchLabels: $.config.selectorLabels,
+      },
+      endpoints: [
+        { port: 'metrics', interval: '30s' },
+      ],
+    },
+  },
+
+
   deployment: {
     local c = {
-      name: o.config.name,
-      image: o.config.image,
+      name: $.config.name,
+      image: $.config.image,
       imagePullPolicy: 'IfNotPresent',
       args: [  // TODO: costomize
         '--provider=google',
@@ -75,48 +87,48 @@ function(params) {
         '--set-xauthrequest=true',
         '--pass-basic-auth=false',
         '--http-address=0.0.0.0:4180',
+        '--metrics-address=0.0.0.0:8080',
       ],
       envFrom: [{
         secretRef: {
-          name: o.creds.metadata.name,
+          name: $.creds.metadata.name,
         },
       }],
-      ports: [{
-        containerPort: 4180,
-        name: 'http',
-      }],
-      resources: o.config.resources,
+      ports: [
+        {
+          containerPort: 4180,
+          name: 'http',
+        },
+        {
+          containerPort: 8080,
+          name: 'metrics',
+        },
+      ],
+      resources: $.config.resources,
     },
 
     apiVersion: 'apps/v1',
     kind: 'Deployment',
-    metadata: {
-      name: o.config.name,
-      namespace: o.config.namespace,
-      labels: o.config.commonLabels,
-    },
+    metadata: $.metadata,
     spec: {
-      replicas: o.config.replicas,
-      selector: { matchLabels: o.config.selectorLabels },
+      replicas: $.config.replicas,
+      selector: { matchLabels: $.config.selectorLabels },
       template: {
-        metadata: { labels: o.config.commonLabels },
+        metadata: { labels: $.config.commonLabels },
         spec: {
-          affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity(o.config.name),
+          affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity($.config.name),
           containers: [c],
           restartPolicy: 'Always',
-          serviceAccountName: o.serviceAccount.metadata.name,
+          serviceAccountName: $.serviceAccount.metadata.name,
         },
       },
     },
   },
 
-  ingress: if o.config.ingressDomain != '' then {
+  ingress: if $.config.ingressDomain != '' then {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
-    metadata: {
-      name: o.config.name,
-      namespace: o.config.namespace,
-      labels: o.config.commonLabels,
+    metadata: $.metadata {
       annotations: {
         'kubernetes.io/ingress.class': 'nginx',
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
@@ -124,20 +136,20 @@ function(params) {
     },
     spec: {
       tls: [{
-        secretName: o.config.name + '-tls',
-        hosts: [o.config.ingressDomain],
+        secretName: $.config.name + '-tls',
+        hosts: [$.config.ingressDomain],
       }],
       rules: [{
-        host: o.config.ingressDomain,
+        host: $.config.ingressDomain,
         http: {
           paths: [{
             path: '/',
             pathType: 'Prefix',
             backend: {
               service: {
-                name: o.config.name,
+                name: $.config.name,
                 port: {
-                  name: o.service.spec.ports[0].name,
+                  name: $.service.spec.ports[0].name,
                 },
               },
             },

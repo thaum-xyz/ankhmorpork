@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/part-of: auth
+    app.kubernetes.io/version: 7.1.2
+  name: oauth2-proxy
+  namespace: auth
+spec:
+  endpoints:
+  - interval: 30s
+    port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: proxy
+      app.kubernetes.io/name: oauth2-proxy
+      app.kubernetes.io/part-of: auth

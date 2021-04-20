@@ -2,8 +2,8 @@ local encryptedSecretsData = import './creds.json';
 local oauth = import './oauth-proxy.libsonnet';
 
 local config = {
-  version: '6.1.1',
-  image: 'quay.io/paulfantom/oauth2-proxy:' + self.version,
+  version: '7.1.2',
+  image: 'quay.io/oauth2-proxy/oauth2-proxy:v' + self.version,
   namespace: 'auth',
   replicas: 2,
   ingressDomain: 'auth.ankhmorpork.thaum.xyz',
