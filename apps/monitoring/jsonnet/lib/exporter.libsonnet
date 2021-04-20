@@ -1,4 +1,7 @@
-// TODO(paulfantom): COnvert this into a generic exporter library
+// Generic exporter library
+// Application CLI arguments are passed via `args` option
+// Environment variables are passed from k8s Secret if `secretRefName` is specified. Secret needs to be creted by user.
+// Monitoring is enabled via PodMonitor
 
 local defaults = {
   local defaults = self,
@@ -94,7 +97,7 @@ function(params) {
     },
     spec: {
       podMetricsEndpoints: [
-        { port: 'http' },
+        { port: 'http', interval: '30s' },
       ],
       selector: {
         matchLabels: $.config.selectorLabels,

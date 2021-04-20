@@ -9,7 +9,8 @@ metadata:
   namespace: monitoring
 spec:
   podMetricsEndpoints:
-  - port: http
+  - interval: 30s
+    port: http
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter
