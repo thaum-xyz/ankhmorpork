@@ -1,7 +1,7 @@
 SHELL=/bin/bash -o pipefail
 
 MANIFESTS_DIR=manifests
-VENDOR_DIR=jsonnet/vendor
+JSONNET_VENDOR=jsonnet/vendor
 JSONNETFMT_ARGS=-n 2 --max-blank-lines 2 --string-style s --comment-style s
 
 .PHONY: all
