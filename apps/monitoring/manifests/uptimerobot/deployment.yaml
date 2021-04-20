@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: uptimerobot-exporter
+    app.kubernetes.io/version: latest
+  name: uptimerobot-exporter
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: uptimerobot-exporter
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: uptimerobot-exporter
+        app.kubernetes.io/version: latest
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: uptimerobot-api-key
+        image: lekpamartin/uptimerobot_exporter
+        name: uptimerobot-exporter
+        ports:
+        - containerPort: 9705
+          name: http
+        resources:
+          limits:
+            memory: 70Mi
+          requests:
+            cpu: 40m
+            memory: 30Mi
+      serviceAccountName: uptimerobot-exporter

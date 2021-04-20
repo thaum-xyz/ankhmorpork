@@ -70,6 +70,8 @@ local kubeEventsExporter = (import 'lib/kube-events-exporter.libsonnet');
 local pushgateway = (import 'lib/pushgateway.libsonnet');
 // TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
 local smokeping = (import 'lib/smokeping.libsonnet');
+// TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
+local uptimerobot = (import 'lib/uptimerobot-exporter.libsonnet');
 
 local kp =
   (import 'kube-prometheus/main.libsonnet') +
@@ -128,6 +130,17 @@ local kp =
           'cloud.krupa.net.pl',
           'pawel.krupa.net.pl',
         ],
+      },
+      uptimerobot: {
+        namespace: $.values.common.namespace,
+        version: 'latest',
+        image: 'lekpamartin/uptimerobot_exporter',
+        // TODO: adjust resource requirements
+        resources: {
+          requests: { cpu: '40m', memory: '30Mi' },
+          limits: { memory: '70Mi' },
+        },
+        secretRefName: 'uptimerobot-api-key',
       },
       alertmanager+: {
         resources: {
@@ -225,6 +238,7 @@ local kp =
     //
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
+    uptimerobot: uptimerobot($.values.uptimerobot),
     smokeping: smokeping($.values.smokeping) + {
       deployment+: {
         spec+: {
@@ -573,6 +587,7 @@ local kp =
 { ['grafana/' + name + '.yaml']: std.manifestYamlDoc(kp.grafana[name]) for name in std.objectFields(kp.grafana) } +
 { ['pushgateway/' + name + '.yaml']: std.manifestYamlDoc(kp.pushgateway[name]) for name in std.objectFields(kp.pushgateway) } +
 { ['smokeping/' + name + '.yaml']: std.manifestYamlDoc(kp.smokeping[name]) for name in std.objectFields(kp.smokeping) } +
+{ ['uptimerobot/' + name + '.yaml']: std.manifestYamlDoc(kp.uptimerobot[name]) for name in std.objectFields(kp.uptimerobot) } +
 // { ['holiday/' + name + '.yaml']: std.manifestYamlDoc(kp.holidayExporter[name]) for name in std.objectFields(kp.holidayExporter) } +
 { ['kube-events-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.kubeEventsExporter[name]) for name in std.objectFields(kp.kubeEventsExporter) } +
 { ['other/k8sControlPlane-' + name + '.yaml']: std.manifestYamlDoc(kp.kubernetesControlPlane[name]) for name in std.objectFields(kp.kubernetesControlPlane) } +

@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-# Copy ConfigMapSecrets
-for i in configmapsecrets/*.yaml; do
+# Copy raw manifests
+for i in raw/*.yaml; do
   f="$(basename "$i" | sed 's/-/\//')"
   cp "$i" "manifests/$f"
 done

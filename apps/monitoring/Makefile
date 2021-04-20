@@ -16,7 +16,7 @@ fmt:
 generate: $(MANIFESTS_DIR) $(JSONNET_VENDOR)
 	jsonnet -J jsonnet/vendor -c -m $(MANIFESTS_DIR) -S jsonnet/main.jsonnet
 	$(MAKE) beautify
-	$(MAKE) configmapsecrets
+	$(MAKE) raw
 
 $(MANIFESTS_DIR):
 	rm -rf $(MANIFESTS_DIR)
@@ -29,9 +29,9 @@ $(JSONNET_VENDOR):
 beautify:
 	for i in $(shell find manifests/ -name *.yaml); do mv "$$i" "$$i.bak"; yamlfmt < "$$i.bak" > "$$i"; rm "$$i.bak"; done
 
-.PHONY: configmapsecrets
-configmapsecrets:
-	./configmapsecrets/populate.sh
+.PHONY: raw
+raw:
+	./raw/populate.sh
 
 .PHONY: update
 update:
