@@ -29,14 +29,6 @@ local all = {
         },
       },
     },
-    updater: {
-      name: 'updater',
-      namespace: 'dns',
-      schedule: '*/15 * * * *',
-      domain: 'ankhmorpork.thaum.xyz',
-      image: 'curlimages/curl:7.70.0',
-      credentialsSecretName: externaDNSCreds.metadata.name,
-    },
   },
   adblocker: coredns($.config.adblocker) + {
     local metallbMetadata = {
@@ -64,11 +56,6 @@ local all = {
       },
     },
   },
-  external: external($.config.updater) + {
-    credentials: externaDNSCreds,
-  },
-
 };
 
-{ ['local/' + name + '.yaml']: std.manifestYamlDoc(all.adblocker[name]) for name in std.objectFields(all.adblocker) } +
-{ ['external/' + name + '.yaml']: std.manifestYamlDoc(all.external[name]) for name in std.objectFields(all.external) }
+{ [name + '.yaml']: std.manifestYamlDoc(all.adblocker[name]) for name in std.objectFields(all.adblocker) }
