@@ -35,19 +35,6 @@
       "name": "alert rules specific to thaum.xyz",
       "rules": [
         {
-          "alert": "FederatedPrometheusDown",
-          "annotations": {
-            "description": "Remote Prometheus server {{ $labels.instance }} has been down for more than 10 minutes.",
-            "runbook_url": "https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/FederatedPrometheusDown.md",
-            "summary": "Federated prometheus is down"
-          },
-          "expr": "up{job=\"lancre\"} == 0",
-          "for": "20m",
-          "labels": {
-            "severity": "warning"
-          }
-        },
-        {
           "alert": "FilesystemReadOnly",
           "annotations": {
             "description": "Filesystem went read-only on {{ $labels.instance }}. Check FS for possible corruption.",
@@ -61,23 +48,11 @@
         {
           "alert": "TouchscreenNotAvailable",
           "annotations": {
-            "description": "Powercycle device {{ $labels.instance }} to bring touchscreen up",
-            "summary": "Touchscreen not available"
-          },
-          "expr": "devices_input_touchscreen_up == 0 or absent(devices_input_touchscreen_up)\n",
-          "for": "10m",
-          "labels": {
-            "severity": "warning"
-          }
-        },
-        {
-          "alert": "TouchscreenNotAvailable",
-          "annotations": {
             "description": "Powercycle device {{ $labels.instance }}",
             "summary": "Touchscreen not available and automatic remediation failed to restore it"
           },
-          "expr": "devices_input_touchscreen_up == 0 or absent(devices_input_touchscreen_up)\n",
-          "for": "1h",
+          "expr": "devices_input_touchscreen_up{environment=\"lancre.thaum.xyz\"} == 0 or absent(devices_input_touchscreen_up{environment=\"lancre.thaum.xyz\"})\n",
+          "for": "30m",
           "labels": {
             "severity": "critical"
           }
@@ -88,10 +63,11 @@
             "description": "Temperature data is gone. Immediatelly switch off all relays and check OW bus.",
             "summary": "Cannot obtain temperature data"
           },
-          "expr": "absent(evok_temperature_celsius)\n",
+          "expr": "absent(evok_temperature_celsius{environment=\"lancre.thaum.xyz\"})\n",
           "for": "15m",
           "labels": {
-            "severity": "critical"
+            "severity": "critical",
+            "env": "lancre"
           }
         }
       ]
