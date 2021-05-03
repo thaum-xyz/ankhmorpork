@@ -114,8 +114,8 @@ local kp =
       smokeping: {
         name: 'smokeping',
         namespace: $.values.common.namespace,
-        version: '0.4.1',
-        image: 'quay.io/superq/smokeping-prober:v0.4.1',
+        version: '0.4.2',
+        image: 'quay.io/superq/smokeping-prober:v0.4.2',
         port: 9374,
         resources: {
           requests: { cpu: '40m', memory: '30Mi' },

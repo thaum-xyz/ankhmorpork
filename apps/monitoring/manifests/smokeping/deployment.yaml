@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: smokeping
-    app.kubernetes.io/version: 0.4.1
+    app.kubernetes.io/version: 0.4.2
   name: smokeping
   namespace: monitoring
 spec:
@@ -18,7 +18,7 @@ spec:
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: smokeping
-        app.kubernetes.io/version: 0.4.1
+        app.kubernetes.io/version: 0.4.2
     spec:
       affinity:
         podAntiAffinity:
@@ -40,7 +40,7 @@ spec:
         - krupa.net.pl
         - cloud.krupa.net.pl
         - pawel.krupa.net.pl
-        image: quay.io/superq/smokeping-prober:v0.4.1
+        image: quay.io/superq/smokeping-prober:v0.4.2
         name: smokeping
         ports:
         - containerPort: 9374
