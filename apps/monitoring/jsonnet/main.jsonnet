@@ -1,17 +1,14 @@
 // TODO list:
-// - compare and test
 
 // k3s additions:
 // - kube-controller-manager-prometheus-discovery service
 // - kube-scheduler-prometheus-discovery
 
 // Things to fix in kube-prometheus
-// - better examples for adding custom alerts/rules
 // - addon/example for additionalScrapeConfigs?
 // - prometheus-pvc should be an addon
 // - better `examples/` directory schema
 // - addon to add 'runbook_url' annotation to every alert
-// - non-prometheus ServiceMonitors shouldn't be in prometheus object
 // - fix SM label selector for coreDNS in kube-prometheus
 // - ...
 
@@ -73,7 +70,8 @@ local exporter = (import 'lib/exporter.libsonnet');
 
 local kp =
   (import 'kube-prometheus/main.libsonnet') +
-  (import 'kube-prometheus/addons/anti-affinity.libsonnet') +
+  (import 'lib/antiaffinitytest.libsonnet') +
+  //(import 'kube-prometheus/addons/anti-affinity.libsonnet') +
   (import 'kube-prometheus/addons/all-namespaces.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
   // TODO: Can be enabled after dealing with lancre ENV
@@ -295,7 +293,7 @@ local kp =
         kind: 'Ingress',
         metadata: {
           name: 'alertmanager',
-          namespace: $.values.common.namespace,
+          namespace: $.alertmanager.alertmanager.metadata.namespace,
           annotations: ingressAnnotations,
         },
         spec: {
@@ -339,25 +337,9 @@ local kp =
           },
         },
       },
-      promDemoProbe: probe('prometheus-demo', $.values.common.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.promDemo),
-      thaumProbe: probe('thaum-sites', $.values.common.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.thaumSites),
-      ingressProbe: probe('ankhmorpork', $.values.common.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
-    },
-    prometheusOperator+: {
-      deployment+: {
-        spec+: {
-          template+: {
-            metadata+: {
-              annotations+: {
-                'kubectl.kubernetes.io/default-container': 'prometheus-operator',
-              },
-            },
-            spec+: {
-              containers: addArgs(['--config-reloader-cpu=150m', '--log-level=debug'], 'prometheus-operator', super.containers),
-            },
-          },
-        },
-      },
+      promDemoProbe: probe('prometheus-demo', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.promDemo),
+      thaumProbe: probe('thaum-sites', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.thaumSites),
+      ingressProbe: probe('ankhmorpork', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
     },
     nodeExporter+: {
       // node_exporter is deployed separately via Ansible
@@ -416,7 +398,7 @@ local kp =
         kind: 'Ingress',
         metadata: {
           name: 'prometheus',
-          namespace: $.values.common.namespace,
+          namespace: $.prometheus.prometheus.metadata.namespace,
           annotations: ingressAnnotations,
         },
         spec: {

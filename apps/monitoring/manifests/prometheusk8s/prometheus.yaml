@@ -18,11 +18,11 @@ spec:
       preferredDuringSchedulingIgnoredDuringExecution:
       - podAffinityTerm:
           labelSelector:
-            matchExpressions:
-            - key: prometheus
-              operator: In
-              values:
-              - k8s
+            matchLabels:
+              app.kubernetes.io/component: prometheus
+              app.kubernetes.io/name: prometheus
+              app.kubernetes.io/part-of: kube-prometheus
+              prometheus: k8s
           namespaces:
           - monitoring
           topologyKey: kubernetes.io/hostname
