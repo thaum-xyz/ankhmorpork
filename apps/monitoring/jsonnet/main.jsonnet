@@ -237,6 +237,7 @@ local kp =
     //
     // Objects customization
     //
+
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
     // TODO: rebuild exporter to be arm64 compliant
@@ -358,7 +359,19 @@ local kp =
         },
       },
     },
-    prometheus+: {
+    nodeExporter+: {
+      // node_exporter is deployed separately via Ansible
+      clusterRole:: null,
+      clusterRoleBinding:: null,
+      daemonset:: null,
+      service:: null,
+      serviceAccount:: null,
+      serviceMonitor:: null,
+    },
+    // Using metrics-server instead of prometheus-adapter
+    prometheusAdapter:: null,
+    // FIXME(paulfantom): Figure out what is hiding `prometheus` top-level object so remapping won't be necessary
+    prometheusk8s: $.prometheus {
       prometheus+: {
         spec+: {
           // TODO: move ingress and externalURL to an addon
@@ -571,7 +584,7 @@ local kp =
           ],
         },
       },
-    },
+    },'
 
     kubePrometheus+: {
       // Exclude job="windows" from TargetDown alert
@@ -595,25 +608,9 @@ local kp =
 //
 // Manifestation
 //
-{ 'namespace.yaml': std.manifestYamlDoc(kp.kubePrometheus.namespace) } +
-{ ['prometheus-operator/' + name + '.yaml']: std.manifestYamlDoc(kp.prometheusOperator[name]) for name in std.objectFields(kp.prometheusOperator) } +
-{ ['kube-state-metrics/' + name + '.yaml']: std.manifestYamlDoc(kp.kubeStateMetrics[name]) for name in std.objectFields(kp.kubeStateMetrics) } +
-{ ['alertmanager/' + name + '.yaml']: std.manifestYamlDoc(kp.alertmanager[name]) for name in std.objectFields(kp.alertmanager) } +
-{ ['prometheus/' + name + '.yaml']: std.manifestYamlDoc(kp.prometheus[name]) for name in std.objectFields(kp.prometheus) } +
-{ ['prober/' + name + '.yaml']: std.manifestYamlDoc(kp.blackboxExporter[name]) for name in std.objectFields(kp.blackboxExporter) } +
-// node_exporter is deployed separately via Ansible
-// { ['node-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.nodeExporter[name]) for name in std.objectFields(kp.nodeExporter) } +
-{ 'other/nodeExporterPrometheusRule.yaml': std.manifestYamlDoc(kp.nodeExporter.prometheusRule) } +
-// using metrics-server instead of prometheus-adater
-// { ['prometheus-adapter-' + name + '.yaml']: std.manifestYamlDoc(kp.prometheusAdapter[name]) for name in std.objectFields(kp.prometheusAdapter) } +
-// TBD
-{ ['grafana/' + name + '.yaml']: std.manifestYamlDoc(kp.grafana[name]) for name in std.objectFields(kp.grafana) } +
-{ ['pushgateway/' + name + '.yaml']: std.manifestYamlDoc(kp.pushgateway[name]) for name in std.objectFields(kp.pushgateway) } +
-{ ['smokeping/' + name + '.yaml']: std.manifestYamlDoc(kp.smokeping[name]) for name in std.objectFields(kp.smokeping) } +
-{ ['uptimerobot/' + name + '.yaml']: std.manifestYamlDoc(kp.uptimerobot[name]) for name in std.objectFields(kp.uptimerobot) } +
-// { ['holiday/' + name + '.yaml']: std.manifestYamlDoc(kp.holidayExporter[name]) for name in std.objectFields(kp.holidayExporter) } +
-{ ['kube-events-exporter/' + name + '.yaml']: std.manifestYamlDoc(kp.kubeEventsExporter[name]) for name in std.objectFields(kp.kubeEventsExporter) } +
-{ ['other/k8sControlPlane-' + name + '.yaml']: std.manifestYamlDoc(kp.kubernetesControlPlane[name]) for name in std.objectFields(kp.kubernetesControlPlane) } +
-{ ['other/' + name + '.yaml']: std.manifestYamlDoc(kp.other[name]) for name in std.objectFields(kp.other) } +
-{ 'other/kubePrometheusRule.yaml': std.manifestYamlDoc(kp.kubePrometheus.prometheusRule) } +
-{}
+
+{
+  [component + '/' + resource + '.yaml']: std.manifestYamlDoc(kp[component][resource])
+  for component in std.objectFields(kp)
+  for resource in std.objectFields(kp[component])
+}
