@@ -584,7 +584,7 @@ local kp =
           ],
         },
       },
-    },'
+    },
 
     kubePrometheus+: {
       // Exclude job="windows" from TargetDown alert
