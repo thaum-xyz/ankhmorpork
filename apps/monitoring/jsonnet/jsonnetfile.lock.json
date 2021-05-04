@@ -109,18 +109,8 @@
           "subdir": "jsonnet/kube-prometheus"
         }
       },
-      "version": "e2f1581c37b6147b2aff50a0bed928b35a1a2e97",
-      "sum": "2FerOwV4gxklZajOk+CEXgH6TW3JKLFTNxQ6cbs+htc="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/prometheus-operator/prometheus-operator.git",
-          "subdir": ""
-        }
-      },
-      "version": "3d7e074097abed637c0a8531e285b518da48e7df",
-      "sum": "SpN7duG0V/85q7nRgVSghG6wUUbNvD88vkEICxL+RZk="
+      "version": "e0fb2b782167218747d37c73e68daec763d065a4",
+      "sum": "DC+XlhbPPiKM7DWY2r0gtkXC0a1ZhEp56duIKbHz7vk="
     },
     {
       "source": {
@@ -129,7 +119,7 @@
           "subdir": "jsonnet/mixin"
         }
       },
-      "version": "3d7e074097abed637c0a8531e285b518da48e7df",
+      "version": "b7ca32169844f0b5143f3e5e318fc05fa025df18",
       "sum": "6reUygVmQrLEWQzTKcH8ceDbvM+2ztK3z2VBR2K2l+U=",
       "name": "prometheus-operator-mixin"
     },

@@ -68,10 +68,17 @@ local pushgateway = (import 'lib/pushgateway.libsonnet');
 // TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
 local exporter = (import 'lib/exporter.libsonnet');
 
+
+local ingressAnnotations = {
+  'kubernetes.io/ingress.class': 'nginx',
+  'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+  'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
+  'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
+};
+
 local kp =
   (import 'kube-prometheus/main.libsonnet') +
-  (import 'lib/antiaffinitytest.libsonnet') +
-  //(import 'kube-prometheus/addons/anti-affinity.libsonnet') +
+  (import 'kube-prometheus/addons/anti-affinity.libsonnet') +
   (import 'kube-prometheus/addons/all-namespaces.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
   // TODO: Can be enabled after dealing with lancre ENV
@@ -149,6 +156,7 @@ local kp =
       prometheus+: {
         version: '2.26.0',
         image: 'quay.io/prometheus/prometheus:v2.26.0',
+        ruleSelector: {},
         resources: {
           requests: { cpu: '140m', memory: '1900Mi' },
           limits: { cpu: '1' },
@@ -203,10 +211,6 @@ local kp =
           },
         },
       },
-      kubeStateMetrics+: {
-        version: 'v2.0.0',
-        image: 'k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0',
-      },
       grafana+: {
         version: '7.5.3',
         //image: 'grafana/grafana:7.5.3', // This is overridden in grafana-overrides.libsonnet
@@ -234,51 +238,9 @@ local kp =
 
     //
     // Objects customization
+    // kube-prometheus objects first
     //
 
-    kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
-    pushgateway: pushgateway($.values.pushgateway),
-    // TODO: rebuild exporter to be arm64 compliant
-    uptimerobot: exporter($.values.uptimerobot) + {
-      deployment+: {
-        spec+: {
-          template+: {
-            spec+: {
-              nodeSelector+: {
-                'kubernetes.io/os': 'linux',
-                'kubernetes.io/arch': 'amd64',
-              },
-            },
-          },
-        },
-      },
-      podMonitor+: {
-        spec+: {
-          podMetricsEndpoints: [{ port: 'http', interval: '5m' }],
-        },
-      },
-    },
-    smokeping: exporter($.values.smokeping) + {
-      deployment+: {
-        spec+: {
-          template+: {
-            spec+: {
-              affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity('smokeping'),
-              containers: std.map(function(c) c {
-                securityContext: { capabilities: { add: ['NET_RAW'] } },
-              }, super.containers),
-            },
-          },
-        },
-      },
-    },
-
-    local ingressAnnotations = {
-      'kubernetes.io/ingress.class': 'nginx',
-      'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-      'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
-      'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
-    },
     alertmanager+: {
       // alertmanager secret is stored as ConfigMapSecret in plain yaml file
       secret:: null,
@@ -321,6 +283,7 @@ local kp =
         },
       },
     },
+
     // TODO: Should service expose 2 ports???
     blackboxExporter+: {
       deployment+: {
@@ -341,6 +304,7 @@ local kp =
       thaumProbe: probe('thaum-sites', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.thaumSites),
       ingressProbe: probe('ankhmorpork', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
     },
+
     nodeExporter+: {
       // node_exporter is deployed separately via Ansible
       clusterRole:: null,
@@ -350,8 +314,10 @@ local kp =
       serviceAccount:: null,
       serviceMonitor:: null,
     },
+
     // Using metrics-server instead of prometheus-adapter
     prometheusAdapter:: null,
+
     // FIXME(paulfantom): Figure out what is hiding `prometheus` top-level object so remapping won't be necessary
     prometheusk8s: $.prometheus {
       prometheus+: {
@@ -370,9 +336,8 @@ local kp =
             name: 'scrapeconfigs',
             key: 'additional.yaml',
           },
-          // TODO: figure out why this is not added by default
+          // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/1132 is merged
           ruleNamespaceSelector: {},
-          ruleSelector: {},
 
           // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/929 is merged
           thanos:: null,
@@ -425,7 +390,7 @@ local kp =
           }],
         },
       },
-      // TODO: check if this addition is necessary
+      // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/1131 is merged
       clusterRole+: {
         rules+: [{
           apiGroups: ['networking.k8s.io'],
@@ -434,31 +399,21 @@ local kp =
         }],
       },
       // TODO: those should be a part of kube-prometheus/addons/all-namespaces.libsonnet
+      // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/1131 is merged
       roleBindingSpecificNamespaces:: null,
       roleSpecificNamespaces:: null,
     },
+
     kubeStateMetrics+: {
       deployment+: {
         spec+: {
           template+: {
-            metadata+: {
-              annotations+: {
-                'kubectl.kubernetes.io/default-container': 'kube-state-metrics',
-              },
-            },
             spec+: {
               containers:
                 // addArgs(['--metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers) +
                 // TODO: consider moving this into kube-prometheus
                 std.map(
-                  function(c) if c.name == 'kube-rbac-proxy-main' then
-                    c {
-                      resources+: {
-                        requests+: { cpu: '40m' },
-                        limits+: { cpu: '60m' },
-                      },
-                    }
-                  else if c.name == 'kube-state-metrics' then
+                  function(c) if c.name == 'kube-state-metrics' then
                     c {
                       args+: ['--metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'],
                     }
@@ -470,35 +425,13 @@ local kp =
         },
       },
     },
-    grafana+: (import 'lib/grafana-overrides.libsonnet'),
-    other: {
-      local externalRules = import 'lib/externalRules.libsonnet',
-      coreDNSMixin:: (import 'github.com/povilasv/coredns-mixin/mixin.libsonnet') + {
-        _config+:: {
-          corednsSelector: 'job=~"kube-dns|coredns"',
-          corednsRunbookURLPattern: 'https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/%s',
-        },
-      },
-      coreDNSPrometheusRule: externalRules({
-        name: 'coredns',
-        groups: $.other.coreDNSMixin.prometheusAlerts.groups,
-      }),
-      thaumPrometheusRule: externalRules({
-        name: 'thaum-rules',
-        groups: (import 'ext/rules/thaum.json').groups,
-      }),
-      testingPrometheusRule: externalRules({
-        name: 'testing-rules',
-        groups: (import 'ext/rules/testing.json').groups,
-      }),
-    },
 
     kubernetesControlPlane+: {
       // k3s exposes all this data under single endpoint and those can be obtained via "kubelet" Service
       serviceMonitorApiserver:: null,
       serviceMonitorKubeControllerManager:: null,
       serviceMonitorKubeScheduler:: null,
-      // TODO: fix in kube-prometheus
+      // TODO: check and fix in kube-prometheus
       serviceMonitorCoreDNS+: {
         metadata+: {
           labels+: {
@@ -522,11 +455,6 @@ local kp =
               bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
               honorLabels: true,
               interval: '30s',
-              metricRelabelings: [{
-                action: 'drop',
-                regex: 'container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)',
-                sourceLabels: ['__name__'],
-              }],
               path: '/metrics/resource',
               port: 'https-metrics',
               relabelings: [{
@@ -583,6 +511,72 @@ local kp =
         },
       },
     },
+
+    grafana+: (import 'lib/grafana-overrides.libsonnet'),
+
+    //
+    // Custom components
+    //
+
+    kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
+    pushgateway: pushgateway($.values.pushgateway),
+    // TODO: rebuild exporter to be arm64 compliant
+    uptimerobot: exporter($.values.uptimerobot) + {
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              nodeSelector+: {
+                'kubernetes.io/os': 'linux',
+                'kubernetes.io/arch': 'amd64',
+              },
+            },
+          },
+        },
+      },
+      podMonitor+: {
+        spec+: {
+          podMetricsEndpoints: [{ port: 'http', interval: '5m' }],
+        },
+      },
+    },
+    smokeping: exporter($.values.smokeping) + {
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity('smokeping'),
+              containers: std.map(function(c) c {
+                securityContext: { capabilities: { add: ['NET_RAW'] } },
+              }, super.containers),
+            },
+          },
+        },
+      },
+    },
+
+    other: {
+      local externalRules = import 'lib/externalRules.libsonnet',
+      coreDNSMixin:: (import 'github.com/povilasv/coredns-mixin/mixin.libsonnet') + {
+        _config+:: {
+          corednsSelector: 'job=~"kube-dns|coredns"',
+          corednsRunbookURLPattern: 'https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/%s',
+        },
+      },
+      coreDNSPrometheusRule: externalRules({
+        name: 'coredns',
+        groups: $.other.coreDNSMixin.prometheusAlerts.groups,
+      }),
+      thaumPrometheusRule: externalRules({
+        name: 'thaum-rules',
+        groups: (import 'ext/rules/thaum.json').groups,
+      }),
+      testingPrometheusRule: externalRules({
+        name: 'testing-rules',
+        groups: (import 'ext/rules/testing.json').groups,
+      }),
+    },
+
   } +
   // kube-linter annotations need to be added after all objects are created
   (import 'lib/kube-linter.libsonnet');
