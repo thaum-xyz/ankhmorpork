@@ -10,7 +10,7 @@ local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modul
     baseDomain: 'ankhmorpork.thaum.xyz',
   },
   kubeEventsExporter: {
-    namespace: $.common.namespace,
+    namespace: 'monitoring',
     version: '0.1.0',
     image: 'quay.io/dgrisonnet/kube-events-exporter:v0.1.0',
     resources: {
@@ -21,7 +21,7 @@ local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modul
     },
   },
   pushgateway: {
-    namespace: $.common.namespace,
+    namespace: 'monitoring',
     version: '1.2.0',
     image: 'quay.io/prometheus/pushgateway:v1.2.0',
     resources: {
@@ -30,7 +30,7 @@ local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modul
   },
   smokeping: {
     name: 'smokeping',
-    namespace: $.common.namespace,
+    namespace: 'monitoring',
     version: '0.4.2',
     image: 'quay.io/superq/smokeping-prober:v0.4.2',
     port: 9374,
@@ -50,7 +50,7 @@ local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modul
   },
   uptimerobot: {
     name: 'uptimerobot-exporter',
-    namespace: $.common.namespace,
+    namespace: 'monitoring',
     version: 'latest',
     image: 'drubin/uptimerobot-prometheus-exporter',
     resources: {
