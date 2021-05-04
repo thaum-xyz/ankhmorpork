@@ -1,5 +1,5 @@
 // convert file to yaml when jsonnet supports yaml imports (https://github.com/google/jsonnet/pull/888)
-local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modules;
+//local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modules;
 
 {
   common+: {
@@ -31,7 +31,16 @@ local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modul
     },
   },
   blackboxExporter+: {
-    modules: blackboxExporterModules,
+    // modules: blackboxExporterModules,
+    // Using only HTTP module
+    modules: {
+      http_2xx: {
+        http: {
+          preferred_ip_protocol: 'ip4',
+        },
+        prober: 'http',
+      },
+    },
     resources: {
       requests: { cpu: '30m', memory: '16Mi' },
       limits: { cpu: '64m', memory: '42Mi' },
