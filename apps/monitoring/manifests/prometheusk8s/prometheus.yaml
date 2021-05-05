@@ -49,6 +49,7 @@ spec:
   podMonitorSelector: {}
   probeNamespaceSelector: {}
   probeSelector: {}
+  queryLogFile: /prometheus/query.log
   replicas: 2
   resources:
     limits:

@@ -190,6 +190,7 @@ local kp =
             name: 'scrapeconfigs',
             key: 'additional.yaml',
           },
+          queryLogFile: '/prometheus/query.log',
           // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/1132 is merged
           ruleNamespaceSelector: {},
 
