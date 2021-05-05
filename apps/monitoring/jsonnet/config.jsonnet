@@ -1,5 +1,7 @@
 // convert file to yaml when jsonnet supports yaml imports (https://github.com/google/jsonnet/pull/888)
 // Figure out how to merge configuration as `std.mergePatch` may not be enough
+//local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modules;
+
 {
   common+: {
     namespace: 'monitoring',
