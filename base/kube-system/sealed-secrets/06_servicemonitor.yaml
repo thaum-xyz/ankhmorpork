@@ -2,12 +2,12 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: kubeseal
+  name: sealed-secrets
   namespace: kube-system
 spec:
   endpoints:
   - interval: 30s
-    port: http
+    targetPort: 8080
   selector:
     matchLabels:
-      app.kubernetes.io/name: kubeseal
+      name: sealed-secrets-controller
