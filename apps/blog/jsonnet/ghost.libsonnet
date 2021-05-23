@@ -142,6 +142,7 @@ function(params) {
       annotations: {
         'kubernetes.io/ingress.class': 'nginx',
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
+        'nginx.ingress.kubernetes.io/proxy-body-size': '600K',
       },
     },
     spec: {

@@ -19,9 +19,6 @@ local all = mealie(config) + {
       labels+: {
         probe: 'enabled',
       },
-      annotations+: {
-        'nginx.ingress.kubernetes.io/proxy-body-size': '50M',
-      },
     },
   },
   // TODO: remove this
