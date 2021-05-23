@@ -20,5 +20,5 @@ jobs:
       with:
         token: ${{ secrets.PAT_SECRET }}
         update-command: "'./hack/version-update.sh'"
-        on-changes-command: "'cd apps/homer && make'"
+        on-changes-command: "'cd apps/homer && make generate'"
 
