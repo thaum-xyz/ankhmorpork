@@ -1,0 +1,22 @@
+name: Get latest versions
+
+on:
+  schedule:
+    - cron: '15 * * * *'
+  push:
+    branch: main
+jobs:
+  versions:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+    - name: Get jsonnet
+      # Some commits after introducing std.parseYaml. Around 2021-05-23
+      run: go get github.com/google/go-jsonnet/cmd/jsonnet@7373f5b6067899549aa7524ca2bba0dff22fe494
+    - uses: romoh/dependencies-autoupdate@v1.1
+      with:
+        token: ${{ secrets.PAT_SECRET }}
+        update-command: "'./hack/version-update.sh'"
+        on-changes-command: "'cd apps/homer && make'"
+
