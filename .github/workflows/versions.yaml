@@ -18,12 +18,11 @@ jobs:
       run: go get github.com/google/go-jsonnet/cmd/jsonnet@7373f5b6067899549aa7524ca2bba0dff22fe494
     - name: Generate versions
       run: |
+        export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
         ./hack/version-update.sh
         if [[ -z $(git status -s) ]]; then
           cd apps/homer && make generate
         fi
-      with:
-        GITHUB_TOKEN: ${{ secrets.PAT_SECRET }}
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
