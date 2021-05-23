@@ -16,6 +16,8 @@ jobs:
     - name: Get jsonnet
       # Some commits after introducing std.parseYaml. Around 2021-05-23
       run: go get github.com/google/go-jsonnet/cmd/jsonnet@7373f5b6067899549aa7524ca2bba0dff22fe494
+    - name: Get yamlfmt
+      run: go get github.com/devopyio/yamlfmt
     - name: Generate versions
       run: |
         export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
