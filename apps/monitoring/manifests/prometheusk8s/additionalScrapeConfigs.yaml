@@ -56,6 +56,9 @@ spec:
             - source_labels: [__name__]
               regex: "prometheus_notifications_alertmanagers_discovered"
               action: drop
+            - source_labels: [__name__]
+              target_label: namespace
+              replacement: "lancre"
             - source_labels: ['instance', 'environment']
               regex: "(.*):(.*);(.*)"
               replacement: '$1.$3:$2'
@@ -66,6 +69,4 @@ spec:
             - source_labels: [type]
               regex: '(oneshot|dbus|idle|notify)'
               action: drop
-            - source_labels: [__name__]
-              target_label: namespace
-              replacement: "lancre"
+
