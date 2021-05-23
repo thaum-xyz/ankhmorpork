@@ -87,8 +87,10 @@ local kp =
     // Configuration
     //
 
-    // TODO: figure out how to make this a JSON/YAML file!
-    values+:: (import './config.jsonnet'),
+    // This needs jsonnet from at least e6a958171333f34458c6d77c5d22aa69787df057 commit (done around 20.05.2021)
+    local config = std.parseYaml(importstr './config.yaml'),
+    values:: std.mergePatch((import 'kube-prometheus/main.libsonnet').values, config),
+    //values+:: std.parseYaml(config),
 
     //
     // Objects customization
