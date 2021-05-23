@@ -3,8 +3,8 @@ name: Get latest versions
 on:
   schedule:
     - cron: '15 * * * *'
-  push:
-    branch: main
+  #push:
+  #  branch: main
 jobs:
   versions:
     runs-on: ubuntu-latest
@@ -29,11 +29,11 @@ jobs:
       uses: peter-evans/create-pull-request@v3
       with:
         commit-message: "[bot] Automated version update"
-        title: "Automated version update"
+        title: "[bot] Automated version update"
         body: |
-          Automated version update performed from CI.
+          This is an automated version update performed from CI on behalf of @paulfantom.
 
-          ping @paulfantom for review
+          Configuration of the workflow is located in `.github/workflows/versions.yaml`
         assignees: paulfantom
         labels: enhancement
         branch: automated-updates
