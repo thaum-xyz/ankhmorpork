@@ -10,7 +10,7 @@ spec:
     namespace: blog
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/blog
+    path: apps/blog/manifests
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: default
