@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Test only for homer for now
 FILE=apps/homer/jsonnet/settings.yaml
 
