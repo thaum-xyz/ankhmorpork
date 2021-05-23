@@ -1,5 +1,5 @@
 ---
-version: "20.12.19"
+version: "20.12.19"  # version-updater-repo: bastienwirtz/homer
 image: "b4bz/homer:20.12.19"
 namespace: "homer"
 replicas: 2
