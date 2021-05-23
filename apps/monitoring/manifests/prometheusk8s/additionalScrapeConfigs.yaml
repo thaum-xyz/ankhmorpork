@@ -66,3 +66,6 @@ spec:
             - source_labels: [type]
               regex: '(oneshot|dbus|idle|notify)'
               action: drop
+            - source_labels: [__name__]
+              target_label: namespace
+              replacement: "lancre"
