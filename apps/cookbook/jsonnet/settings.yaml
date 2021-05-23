@@ -1,8 +1,9 @@
 ---
-image: hkotel/mealie:v0.4.3
-version: 0.4.3
+image: hkotel/mealie:v0.4.3  # github-repository: hay-kot/mealie
+version: 0.4.3  # github-repository: hay-kot/mealie
 namespace: cookbook
 domain: cookbook.ankhmorpork.thaum.xyz
 resources:
   requests:
     memory: '150Mi'
+
