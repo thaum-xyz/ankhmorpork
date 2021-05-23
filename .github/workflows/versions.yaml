@@ -20,7 +20,7 @@ jobs:
       run: |
         export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
         ./hack/version-update.sh
-        if [[ -z $(git status -s) ]]; then
+        if [[ -n $(git status -s) ]]; then
           cd apps/homer && make generate
         fi
     - name: Create Pull Request
