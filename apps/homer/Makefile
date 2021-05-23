@@ -1,7 +1,7 @@
 SHELL=/bin/bash -o pipefail
 
 MANIFESTS_DIR=manifests
-VENDOR_DIR=jsonnet/vendor
+JSONNET_VENDOR=jsonnet/vendor
 JSONNETFMT_ARGS=-n 2 --max-blank-lines 2 --string-style s --comment-style s
 
 .PHONY: all
@@ -18,12 +18,19 @@ generate: $(MANIFESTS_DIR) $(JSONNET_VENDOR)
 	$(MAKE) beautify
 
 $(MANIFESTS_DIR):
+	rm -rf $(MANIFESTS_DIR)
 	mkdir -p $(MANIFESTS_DIR)
 
 $(JSONNET_VENDOR):
 	cd jsonnet
-	jb install
+	-jb install
 
 .PHONY: beautify
 beautify:
 	for i in $(shell find manifests/ -name *.yaml); do mv "$$i" "$$i.bak"; yamlfmt < "$$i.bak" > "$$i"; rm "$$i.bak"; done
+
+.PHONY: update
+update:
+	cd jsonnet && jb update
+	rm -rf $(JSONNET_VENDOR)
+	$(MAKE) generate

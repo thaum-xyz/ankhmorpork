@@ -1,8 +1,11 @@
 local homer = import './homer.libsonnet';
-local configData = importstr './homer-configuration.yml';
+local siteConfig = importstr './homer-configuration.yml';
 
-local config = (import './deployment-config.json') + {
-  configData: configData,
+local configYAML = (importstr './settings.yaml');
+
+// Join multiple configuration sources
+local config = std.parseYaml(configYAML)[0] {
+  configData: siteConfig,
 };
 
 local all = homer(config) + {

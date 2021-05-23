@@ -64,7 +64,7 @@ data:
     # First level array represent a group.
     # Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
     services:
-      - name: "Home Cloud"
+      - name: "Ankh Cloud"
         icon: "fa fa-cloud"
         items:
           - name: Nextcloud
@@ -74,11 +74,15 @@ data:
           - name: "Cookbook"
             subtitle: "Our recipes"
             logo: "https://github.com/nextcloud/cookbook/raw/master/img/favicon.png"
-            url: "https://cloud.krupa.net.pl/apps/cookbook/"
+            url: "https://cookbook.ankhmorpork.thaum.xyz"
           - name: "HomeAssistant"
             subtitle: "Home automation system"
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png"
             url: "https://home.ankhmorpork.thaum.xyz/"
+          - name: "Image Compressor"
+            subtitle: "Compress images online"
+            logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
+            url: "https://compressor.io/"
 
       - name: "Multimedia"
         icon: "fa fa-tv"
