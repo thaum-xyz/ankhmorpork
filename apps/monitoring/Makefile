@@ -38,3 +38,8 @@ update:
 	cd jsonnet && jb update
 	rm -rf $(JSONNET_VENDOR)
 	$(MAKE) generate
+
+.PHONY: version-update
+version-update:
+	./../../hack/version-update.sh .
+	if ! git diff-index --quiet HEAD .; then $(MAKE) generate; fi

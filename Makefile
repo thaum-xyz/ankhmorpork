@@ -13,6 +13,5 @@ generate:
 
 .PHONY: upgrade
 upgrade:
-	for d in $(DIRS); do ./hack/version-update.sh $$d; done
-	if ! git diff-index --quiet HEAD apps base; then $(MAKE) generate; fi
+	for d in $(DIRS); do $(MAKE) -C $$d version-update; done
 
