@@ -161,6 +161,7 @@ local kp =
 
     nodeExporter+: {
       // node_exporter is deployed separately via Ansible
+      // TODO: Move node_exporter into k3s installation
       clusterRole:: null,
       clusterRoleBinding:: null,
       daemonset:: null,
@@ -412,12 +413,8 @@ local kp =
 
     other: {
       local externalRules = import 'lib/externalRules.libsonnet',
-      coreDNSMixin:: (import 'github.com/povilasv/coredns-mixin/mixin.libsonnet') + {
-        _config+:: {
-          corednsSelector: 'job=~"kube-dns|coredns"',
-          corednsRunbookURLPattern: 'https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/%s',
-        },
-      },
+      // TODO(paulfantom): convert this to use new kube-prometheus addon to add mixins
+      coreDNSMixin:: (import 'github.com/povilasv/coredns-mixin/mixin.libsonnet') + $.values.other.coreDNSmixin,
       coreDNSPrometheusRule: externalRules({
         name: 'coredns',
         groups: $.other.coreDNSMixin.prometheusAlerts.groups,
