@@ -123,10 +123,7 @@ function(params) {
   },
 
 
-  /*
-    if h._config.domain != '' then
-  */
-  ingress: {
+  [if std.objectHas(params, 'domain') && std.length(params.domain) > 0 then 'ingress']: {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
