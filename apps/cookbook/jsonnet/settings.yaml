@@ -1,0 +1,5 @@
+---
+image: hkotel/mealie:v0.4.3
+version: 0.4.3
+namespace: cookbook
+domain: cookbook.ankhmorpork.thaum.xyz
