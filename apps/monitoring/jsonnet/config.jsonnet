@@ -1,6 +1,5 @@
 // convert file to yaml when jsonnet supports yaml imports (https://github.com/google/jsonnet/pull/888)
 // Figure out how to merge configuration as `std.mergePatch` may not be enough
-//local blackboxExporterModules = (import 'ext/blackboxExporterConfig.json').modules;
 
 {
   common+: {
@@ -16,8 +15,8 @@
     },
   },
   prometheus+: {
-    version: '2.26.0',
-    image: 'quay.io/prometheus/prometheus:v2.26.0',
+    version: '2.26.0',  # github-repository: prometheus/prometheus
+    image: 'quay.io/prometheus/prometheus:v2.26.0',  # github-repository: prometheus/prometheus
     ruleSelector: {},
     resources: {
       requests: { cpu: '140m', memory: '1900Mi' },
@@ -32,7 +31,6 @@
     },
   },
   blackboxExporter+: {
-    // modules: blackboxExporterModules,
     // Using only HTTP module
     modules: {
       http_2xx: {
@@ -94,7 +92,7 @@
     },
   },
   grafana+: {
-    version: '7.5.3',
+    version: '7.5.3',  # github-repository: grafana/grafana
     //image: 'grafana/grafana:7.5.3', // This is overridden in grafana-overrides.libsonnet
     datasources: [{
       name: 'Prometheus',
@@ -119,8 +117,8 @@
   },
   pushgateway: {
     namespace: 'monitoring',
-    version: '1.2.0',
-    image: 'quay.io/prometheus/pushgateway:v1.2.0',
+    version: '1.2.0',  # github-repository: prometheus/pushgateway
+    image: 'quay.io/prometheus/pushgateway:v1.2.0',  # github-repository: prometheus/pushgateway
     resources: {
       requests: { cpu: '10m', memory: '12Mi' },
     },
@@ -128,8 +126,8 @@
   smokeping: {
     name: 'smokeping',
     namespace: 'monitoring',
-    version: '0.4.2',
-    image: 'quay.io/superq/smokeping-prober:v0.4.2',
+    version: '0.4.2',  # github-repository: SuperQ/smokeping_prober
+    image: 'quay.io/superq/smokeping-prober:v0.4.2',  # github-repository: SuperQ/smokeping_prober
     port: 9374,
     resources: {
       requests: { cpu: '40m', memory: '30Mi' },
