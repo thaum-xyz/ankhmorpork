@@ -1,11 +1,11 @@
-local mealie = import './ghost.libsonnet';
+local ghost = import './ghost.libsonnet';
 
 local configYAML = (importstr './settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];
 
-local all = mealie(config) + {
+local all = ghost(config) + {
   pvc+: {
     metadata: {
       name: 'data',
