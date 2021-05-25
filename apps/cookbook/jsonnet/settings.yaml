@@ -1,6 +1,6 @@
 ---
-image: hkotel/mealie:v0.4.3  # github-repository: hay-kot/mealie
-version: 0.4.3  # github-repository: hay-kot/mealie
+image: hkotel/mealie:v0.4.3  # application-image-from-github: hay-kot/mealie
+version: 0.4.3  # application-version-from-github: hay-kot/mealie
 namespace: cookbook
 domain: cookbook.ankhmorpork.thaum.xyz
 resources:

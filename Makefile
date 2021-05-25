@@ -3,7 +3,8 @@ SHELL:=/bin/bash
 DIRS=\
 	apps/auth \
 	apps/cookbook \
-	apps/homer
+	apps/homer \
+	apps/monitoring
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 

@@ -9,30 +9,32 @@ get_latest_version() {
 
 DIRECTORY="${1}"
 
-# Scan for files with `version-updater-repo` comment
-FILES=$(grep --exclude=*./vendor/ -rl "$DIRECTORY" -e "github-repository:")
+# Scan for files with `application-version-from-github:` comment
+FILES=$(grep --exclude=*./vendor/ -rl "$DIRECTORY" -e "application-version-from-github:")
 
 # Iterate over each file searching for mark
 for f in $FILES; do
-    REPOS=$(grep github-repository "$f" | rev | cut -d: -f1 | xargs | rev)
-    # Deduplicate
-    REPOS=$(echo "${REPOS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')
+    
+    REPOS=$(grep application-version-from-github: "$f" | rev | cut -d: -f1 | xargs | rev)
 
     for r in $REPOS; do
         LATEST="$(get_latest_version "$r")"
-        CURRENT=$(grep 'version:' "$f" | cut -d: -f2 | cut -d# -f1 | xargs)
+        CURRENT=$(grep "application-version-from-github:.*${r}" "$f" | cut -d: -f2 | cut -d# -f1 | sed -e 's/[^0-9.]//g')
 
         if [ "$LATEST" == "" ]; then
             echo "Latest version detection failed"
             exit 1
         fi
 
-        echo >&2 "Current: $CURRENT, Latest: $LATEST"
+        echo >&2 "Current: '$CURRENT', Latest: '$LATEST'"
         if [ "$CURRENT" == "$LATEST" ]; then
             echo >&2 "Nothing to do for $r"
             continue
         fi
-        sed -i "s/$CURRENT/$LATEST/g" "$f"
+
+        # Change only lines with correct metadata
+        sed -Ei "s|^(.*)${CURRENT}(.*application-version-from-github:.*${r}.*)$|\1${LATEST}\2|g" "$f"
+        sed -Ei "s|^(.*)${CURRENT}(.*application-image-from-github:.*${r}.*)$|\1${LATEST}\2|g" "$f" || echo "No image update for $r due to incorrect or lack of metadata"
     done
 done
 

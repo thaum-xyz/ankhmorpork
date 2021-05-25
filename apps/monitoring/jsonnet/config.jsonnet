@@ -15,8 +15,8 @@
     },
   },
   prometheus+: {
-    version: '2.26.0',  # github-repository: prometheus/prometheus
-    image: 'quay.io/prometheus/prometheus:v2.26.0',  # github-repository: prometheus/prometheus
+    version: '2.26.0',  # application-version-from-github: prometheus/prometheus
+    image: 'quay.io/prometheus/prometheus:v2.26.0',  # application-image-from-github: prometheus/prometheus
     ruleSelector: {},
     resources: {
       requests: { cpu: '140m', memory: '1900Mi' },
@@ -92,7 +92,7 @@
     },
   },
   grafana+: {
-    version: '7.5.3',  # github-repository: grafana/grafana
+    version: '7.5.3',
     //image: 'grafana/grafana:7.5.3', // This is overridden in grafana-overrides.libsonnet
     datasources: [{
       name: 'Prometheus',
@@ -106,8 +106,8 @@
   // Following are not in kube-prometheus
   kubeEventsExporter: {
     namespace: 'monitoring',
-    version: '0.1.0',
-    image: 'quay.io/dgrisonnet/kube-events-exporter:v0.1.0',
+    version: '0.1.0',  # application-version-from-github: rhobs/kube-events-exporter
+    image: 'quay.io/dgrisonnet/kube-events-exporter:v0.1.0',  # application-image-from-github: rhobs/kube-events-exporter
     resources: {
       requests: { cpu: '2m', memory: '16Mi' },
     },
@@ -117,8 +117,8 @@
   },
   pushgateway: {
     namespace: 'monitoring',
-    version: '1.2.0',  # github-repository: prometheus/pushgateway
-    image: 'quay.io/prometheus/pushgateway:v1.2.0',  # github-repository: prometheus/pushgateway
+    version: '1.2.0',  # application-version-from-github: prometheus/pushgateway
+    image: 'quay.io/prometheus/pushgateway:v1.2.0',  # application-image-from-github: prometheus/pushgateway
     resources: {
       requests: { cpu: '10m', memory: '12Mi' },
     },
@@ -126,8 +126,8 @@
   smokeping: {
     name: 'smokeping',
     namespace: 'monitoring',
-    version: '0.4.2',  # github-repository: SuperQ/smokeping_prober
-    image: 'quay.io/superq/smokeping-prober:v0.4.2',  # github-repository: SuperQ/smokeping_prober
+    version: '0.4.2',  # application-version-from-github: SuperQ/smokeping_prober
+    image: 'quay.io/superq/smokeping-prober:v0.4.2',  # application-image-from-github: SuperQ/smokeping_prober
     port: 9374,
     resources: {
       requests: { cpu: '40m', memory: '30Mi' },
