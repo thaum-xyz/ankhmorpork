@@ -16,6 +16,8 @@ jobs:
     - name: Get jsonnet
       # Some commits after introducing std.parseYaml. Around 2021-05-23
       run: go get github.com/google/go-jsonnet/cmd/jsonnet@7373f5b6067899549aa7524ca2bba0dff22fe494
+    - name: Get jsonnet-bundler
+      run: go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@dafc283219baad354ecec101ec33070049e3a7b4
     - name: Get yamlfmt
       run: go get github.com/devopyio/yamlfmt
     - name: Upgrade
