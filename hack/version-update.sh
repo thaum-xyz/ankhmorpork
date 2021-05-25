@@ -4,7 +4,7 @@ set -eo pipefail
 
 get_latest_version() {
     echo >&2 "Checking release version for ${1}"
-    curl --retry 5 --silent --fail -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${1}/releases/latest" | jq '.tag_name' | tr -d '"v'
+    curl --retry 5 --silent --fail -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${1}/releases/latest" 2>/dev/null | jq '.tag_name' | tr -d '"v'
 }
 
 DIRECTORY="${1}"

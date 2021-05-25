@@ -36,7 +36,7 @@ update:
 	$(MAKE) generate
 
 .PHONY: version-update
-LATEST=$(shell curl https://raw.githubusercontent.com/paulfantom/dockerfiles/master/oauth2-proxy/VERSION)
+LATEST=$(shell curl https://raw.githubusercontent.com/paulfantom/dockerfiles/master/oauth2-proxy/VERSION 2>/dev/null)
 CURRENT=$(shell grep version jsonnet/settings.yaml | cut -d':' -f2 | xargs)
 version-update:
 	sed -i "s/$(CURRENT)/$(LATEST)/g" jsonnet/settings.yaml
