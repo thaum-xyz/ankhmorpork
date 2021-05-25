@@ -2,7 +2,7 @@ name: Upgrade to latest versions
 
 on:
   schedule:
-    - cron: '15 * * * *'
+    - cron: '15 */6 * * *'
   #push:
   #  branch: main
 jobs:
