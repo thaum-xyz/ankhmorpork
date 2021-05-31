@@ -14,7 +14,6 @@ spec:
       app.kubernetes.io/name: mysql
       app.kubernetes.io/part-of: nextcloud
       app.kubernetes.io/component: database
-  replicas: 1
   revisionHistoryLimit: 3
   strategy:
     type: Recreate
