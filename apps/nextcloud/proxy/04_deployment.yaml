@@ -9,7 +9,6 @@ metadata:
   name: nginx
   namespace: nextcloud
 spec:
-  replicas: 2
   revisionHistoryLimit: 3
   selector:
     matchLabels:
