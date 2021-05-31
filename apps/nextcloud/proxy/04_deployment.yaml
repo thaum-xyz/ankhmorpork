@@ -36,7 +36,7 @@ spec:
                      values: ["nginx"]
                topologyKey: kubernetes.io/hostname
       containers:
-      - image: nginx:1.16
+      - image: nginx:1.19
         name: nginx
         imagePullPolicy: Always
         ports:
