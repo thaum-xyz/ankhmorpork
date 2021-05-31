@@ -32,11 +32,11 @@ data:
   memory-limit.ini: |
     memory_limit=1024M
     max_file_uploads=500
-  #redis-session.ini: |
-  #  session.save_handler = redis
-  #  session.save_path = tcp://redis.nextcloud.svc:6379
-  #  redis.session.locking_enabled = 1
-  #  redis.session.lock_retries = 4000
+#  redis-session.ini: |
+#    session.save_handler = redis
+#    session.save_path = tcp://redis.nextcloud.svc:6379
+#    redis.session.locking_enabled = 1
+#    redis.session.lock_retries = 4000
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -48,16 +48,18 @@ metadata:
 data:
   NEXTCLOUD_TRUSTED_DOMAINS: "cloud.krupa.net.pl nginx.nextcloud.svc nginx.nextcloud.svc.cluster.local"
   NEXTCLOUD_TABLE_PREFIX: "oc_"
+  MYSQL_DATABASE: "cloud"
   MYSQL_HOST: 'mysql.nextcloud.svc'
   REDIS_HOST: 'redis.nextcloud.svc'
   REDIS_PORT: '6379'
-  TRUSTED_PROXIES: "127.0.0.1 10.42.0.0/16"
-  NC_mysql.utf8mb4: "true"
-  NC_enable_avatars: "false"
   SMTP_SECURE: "tls"
   SMTP_PORT: "587"
   SMTP_AUTHTYPE: "PLAIN"
-  MYSQL_DATABASE: "cloud"
+  TRUSTED_PROXIES: "127.0.0.1 10.42.0.0/16"
+  OVERWRITEHOST: "cloud.krupa.net.pl"
+  OVERWRITEPROTOCOL: "https"
+  NC_mysql.utf8mb4: "true"
+  NC_enable_avatars: "false"
 ---
 apiVersion: v1
 kind: ConfigMap
