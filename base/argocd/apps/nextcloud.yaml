@@ -102,27 +102,6 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: backup
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: .
-spec:
-  destination:
-    namespace: nextcloud
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: apps/nextcloud/backup
-    repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
-    targetRevision: HEAD
-  project: nextcloud
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: false
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: exporter
   annotations:
     argocd.argoproj.io/manifest-generate-paths: .
