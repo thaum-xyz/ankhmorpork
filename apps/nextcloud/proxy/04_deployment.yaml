@@ -51,9 +51,9 @@ spec:
         - name: web
           mountPath: /var/www/html
           readOnly: true
-        - name: apps
-          mountPath: /var/www/html/custom_apps
-          readOnly: true
+        #- name: apps
+        #  mountPath: /var/www/html/custom_apps
+        #  readOnly: true
         resources:
           requests:
             cpu: 5m
