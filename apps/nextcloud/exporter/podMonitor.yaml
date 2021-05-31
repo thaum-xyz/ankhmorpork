@@ -1,11 +1,10 @@
----
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   name: nextcloud-exporter
   namespace: nextcloud
 spec:
-  endpoints:
+  podMetricsEndpoints:
   - interval: 30s
     port: metrics
   selector:
