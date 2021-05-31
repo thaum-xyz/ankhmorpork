@@ -15,8 +15,8 @@
     },
   },
   prometheus+: {
-    version: '2.26.0',  # application-version-from-github: prometheus/prometheus
-    image: 'quay.io/prometheus/prometheus:v2.26.0',  # application-image-from-github: prometheus/prometheus
+    version: '2.27.1',  # application-version-from-github: prometheus/prometheus
+    image: 'quay.io/prometheus/prometheus:v2.27.1',  # application-image-from-github: prometheus/prometheus
     ruleSelector: {},
     resources: {
       requests: { cpu: '140m', memory: '1900Mi' },
@@ -117,8 +117,8 @@
   },
   pushgateway: {
     namespace: 'monitoring',
-    version: '1.2.0',  # application-version-from-github: prometheus/pushgateway
-    image: 'quay.io/prometheus/pushgateway:v1.2.0',  # application-image-from-github: prometheus/pushgateway
+    version: '1.4.1',  # application-version-from-github: prometheus/pushgateway
+    image: 'quay.io/prometheus/pushgateway:v1.4.1',  # application-image-from-github: prometheus/pushgateway
     resources: {
       requests: { cpu: '10m', memory: '12Mi' },
     },
