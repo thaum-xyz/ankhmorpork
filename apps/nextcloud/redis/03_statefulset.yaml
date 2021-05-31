@@ -1,6 +1,6 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: redis
@@ -9,13 +9,13 @@ metadata:
   name: redis
   namespace: nextcloud
 spec:
+  serviceName: redis
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app.kubernetes.io/name: redis
       app.kubernetes.io/part-of: nextcloud
       app.kubernetes.io/component: database
-  replicas: 1
-  revisionHistoryLimit: 3
   template:
     metadata:
       annotations:
