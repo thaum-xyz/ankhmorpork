@@ -79,6 +79,23 @@ spec:
             cpu: 45m
             memory: 410Mi
       - env:
+        - name: CRON_SCHEDULE
+          value: "5 3 * * *"
+        - name: MYSQL_HOST
+          value: "localhost"
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: root_pass
+              name: mysql-creds
+        image: woolfg/mysql-backup-sidecar:v0.3.4-mariadb-10.4
+        name: backup
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: data
+        - mountPath: /backup
+          name: backup
+      - env:
         - name: USER
           valueFrom:
             secretKeyRef:
@@ -93,7 +110,7 @@ spec:
           value: "$(USER):$(PASS)@(127.0.0.1:3306)/"
         image: quay.io/prometheus/mysqld-exporter:latest
         imagePullPolicy: IfNotPresent
-        name: mysql-exporter
+        name: exporter
         args:
         - "--collect.info_schema.innodb_metrics"
         - "--collect.info_schema.userstats"
@@ -114,6 +131,9 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: mysql-data
+      - name: backup
+        persistentVolumeClaim:
+          claimName: mysql-backup
       - name: init
         secret:
           secretName: mysql-init

@@ -15,3 +15,20 @@ spec:
   resources:
     requests:
       storage: "7Gi"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: "nextcloud"
+  name: "mysql-backup"
+  labels:
+    app.kubernetes.io/name: mysql
+    app.kubernetes.io/part-of: nextcloud
+    app.kubernetes.io/component: database
+spec:
+  storageClassName: "managed-nfs-storage"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: "7Gi"
