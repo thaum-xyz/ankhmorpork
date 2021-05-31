@@ -32,7 +32,7 @@ spec:
         envFrom:
         - secretRef:
             name: redis-password
-        image: redis:alpine
+        image: redis:5-alpine
         imagePullPolicy: Always
         name: redis
         ports:
