@@ -100,12 +100,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: exporter_user
-              name: mysql-creds
+              name: mysql-init
         - name: PASS
           valueFrom:
             secretKeyRef:
               key: exporter_pass
-              name: mysql-creds
+              name: mysql-init
         - name: DATA_SOURCE_NAME
           value: "$(USER):$(PASS)@(127.0.0.1:3306)/"
         image: quay.io/prometheus/mysqld-exporter:latest
