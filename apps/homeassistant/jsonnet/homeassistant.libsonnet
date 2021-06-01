@@ -134,7 +134,9 @@ function(params) {
         path: '/api/prometheus',
         bearerTokenSecret: h._config.apiTokenSecretKeySelector,
       }],
-      selector: h._config.selectorLabels,
+      selector: {
+        matchLabels: h._config.selectorLabels,
+      },
     },
   },
 

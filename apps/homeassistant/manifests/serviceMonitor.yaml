@@ -17,6 +17,7 @@ spec:
     path: /api/prometheus
     port: http
   selector:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/name: homeassistant
-    app.kubernetes.io/part-of: homeassistant
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: homeassistant
+      app.kubernetes.io/part-of: homeassistant
