@@ -4,14 +4,12 @@ local external = import './externalDNS.libsonnet';
 local externaDNSCreds = import '../external-dns-creds.json';
 local corefile = importstr '../Corefile';
 
+local configYAML = (importstr './settings.yaml');
+
+// TODO: figure out how to clean this mess
 local all = {
   config:: {
-    adblocker: {
-      name: 'coredns',
-      namespace: 'dns',
-      version: '0.2.5',
-      image: 'quay.io/paulfantom/coredns-ads:' + self.version,
-      loadBalancerIP: '192.168.2.99',
+    adblocker: std.parseYaml(configYAML)[0] {
       corefile: corefile,
       commonLabels:: {
         'app.kubernetes.io/name': 'coredns',

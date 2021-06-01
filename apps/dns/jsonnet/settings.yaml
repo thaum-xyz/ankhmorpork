@@ -1,0 +1,6 @@
+---
+name: 'coredns'
+namespace: 'dns'
+version: '0.2.5'
+image: 'quay.io/paulfantom/coredns-ads:0.2.5'
+loadBalancerIP: '192.168.2.99'
