@@ -1,13 +1,17 @@
----
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homeassistant
+    app.kubernetes.io/part-of: homeassistant
+    app.kubernetes.io/version: 2021.4.4
   name: config
   namespace: homeassistant
 spec:
-  storageClassName: "managed-nfs-storage"
   accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
+  storageClassName: managed-nfs-storage

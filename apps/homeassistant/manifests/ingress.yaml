@@ -1,29 +1,32 @@
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homeassistant
+    app.kubernetes.io/part-of: homeassistant
+    app.kubernetes.io/version: 2021.4.4
+    probe: enabled
   name: homeassistant
   namespace: homeassistant
-  labels:
-    probe: enabled
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
 spec:
-  tls:
-  - hosts:
-    - home.ankhmorpork.thaum.xyz
-    secretName: homeassistant-tls
   rules:
   - host: home.ankhmorpork.thaum.xyz
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
+      - backend:
           service:
-            name: webui
+            name: homeassistant
             port:
-              name: webui
+              name: http
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - home.ankhmorpork.thaum.xyz
+    secretName: homeassistant-tls
