@@ -42,6 +42,7 @@ local all = homeassistant(config) + {
       },
     },
   },
+  sealedSecret: apitoken,
 };
 
 { [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }
