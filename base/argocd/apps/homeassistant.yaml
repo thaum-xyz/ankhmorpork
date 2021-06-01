@@ -10,7 +10,7 @@ spec:
     namespace: homeassistant
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/homeassistant
+    path: apps/homeassistant/manifests
     repoURL: 'https://github.com/thaum-xyz/ankhmorpork.git'
     targetRevision: HEAD
   project: default
