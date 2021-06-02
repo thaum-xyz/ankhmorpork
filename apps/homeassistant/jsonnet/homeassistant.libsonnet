@@ -21,6 +21,7 @@ local defaults = {
   },
   domain: '',
   zwaveSupport: false,
+  hostNetwork: false,
   pvcSpec: '',
   // TODO: Consider creting an operator just to handle this part
   apiTokenSecretKeySelector: {},
@@ -102,6 +103,7 @@ function(params) {
           containers: [c],
           restartPolicy: 'Always',
           serviceAccountName: h.serviceAccount.metadata.name,
+          hostNetwork: h._config.hostNetwork,
           volumes: [{
             name: 'config',
             // Add conditional based on pvcSpec

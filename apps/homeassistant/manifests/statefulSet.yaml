@@ -51,6 +51,7 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: config
+      hostNetwork: true
       nodeSelector:
         kubernetes.io/arch: arm64
       restartPolicy: Always
