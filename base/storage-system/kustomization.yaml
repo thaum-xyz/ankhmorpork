@@ -5,9 +5,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ./managed-nfs-backup/credentials.yaml
-- ./managed-nfs-backup deployment.yaml
-- ./managed-nfs-backup podMonitor.yaml
-- ./managed-nfs-backup prometheusRule.yaml
+- ./managed-nfs-backup/deployment.yaml
+- ./managed-nfs-backup/podMonitor.yaml
+- ./managed-nfs-backup/prometheusRule.yaml
 - ./managed-nfs-storage/class.yaml
 - ./managed-nfs-storage/deployment.yaml
 - ./managed-nfs-storage/rbac.yaml
