@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: flux
+  name: blog
   namespace: flux-system
 spec:
-  interval: 2m0s
-  path: ./base/flux-system
+  interval: 5m0s
+  path: ./apps/blog/manifests
   prune: true
   sourceRef:
     kind: GitRepository
