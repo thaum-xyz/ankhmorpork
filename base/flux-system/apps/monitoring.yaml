@@ -1,0 +1,13 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: monitoring
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  path: ./apps/monitoring/manifests
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork
+  validation: client
