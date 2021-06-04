@@ -1,0 +1,13 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: storage-system
+  namespace: flux-system
+spec:
+  interval: 15m0s
+  path: ./base/storage-system
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork
+  validation: client

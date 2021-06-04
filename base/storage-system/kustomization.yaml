@@ -1,0 +1,13 @@
+---
+# This file is needed to tell flux where are particular resources to apply
+# TODO: Consider getting rid of this this file by changing directory structure (move to jsonnet?)
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ./managed-nfs-backup/credentials.yaml
+- ./managed-nfs-backup deployment.yaml
+- ./managed-nfs-backup podMonitor.yaml
+- ./managed-nfs-backup prometheusRule.yaml
+- ./managed-nfs-storage/class.yaml
+- ./managed-nfs-storage/deployment.yaml
+- ./managed-nfs-storage/rbac.yaml
