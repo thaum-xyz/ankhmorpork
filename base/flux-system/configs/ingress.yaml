@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+  name: flux
+  namespace: flux-system
+spec:
+  rules:
+  - host: flux.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          service:
+            name: notification-controller
+            port:
+              name: http
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - flux.ankhmorpork.thaum.xyz
+    secretName: flux-tls

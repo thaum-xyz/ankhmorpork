@@ -1,0 +1,15 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: github-webhook-token
+  namespace: flux-system
+spec:
+  encryptedData:
+    token: AgBItxVsdI1pfFc9fu13ARAnY9f4/Y94+bXReaatoO6YVRJQoEjQOY67pg5Cs20IdahwFlhMI73DZIhLWCWdM3RFsD042NXTZrBVS8TV94gBcuJOqxO44+rtv9c41XIUQV8fOduX6Nd319OERaLVWh56J4ZUwRRJuyeYswt57dSIWtWPtym6ZGN/XYltqDQ/gNKfBHz4GqU/6Oi0ZVDMhaRSgbC8RaEmHiMKR/Jm1eXfMSr7BSpqapOZtA3hcJT845WIoDJ4qbgm6g5nfNNrDYCqPl+cS5XRV4X7EoKEb1CiXLngoqaS1YbbJqNTmGkffJpomDaJe9nIeTlmHZaSUGhlFDnFABWdHJADwpVPv1HC5Co6U8olRGomEz+utpWWzGlUWNFAtLcCSE0uZ5CY6m+GqgxEHKxwQjrDnDYIBSrXF2jDGaDoQqJaR/P3n/hO4fdurBEZ3ee6SyfBqFbeIGB7QqKuawuAZ4s5JzKixPIKMzR3nfQKqEkPvGHFmnu48Y42CkIvhq4+axoEITlTJJpZeBFjQWUBavNnbkESowSVHwoWGOMMYQoD8BukVQtjKmGuRupg3sLDz7r8XaSdO9/EPxK+jvSdpg4cRdW+naJX8rorDyGZa/+6esYv2FzJXovYbV4WPFaG8xW7rT+5zSsuEihWm81BjlsgBhxgE3fOJc/dczk03yDmiqdocd65vGD22/STX5tqGOyZpJIw2qpIVpFZHt38+Q4/kMQJLFR4IG25FK8An1wB
+  template:
+    data: null
+    metadata:
+      creationTimestamp: null
+      name: github-webhook-token
+      namespace: flux-system
