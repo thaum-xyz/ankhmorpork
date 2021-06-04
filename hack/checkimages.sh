@@ -12,6 +12,7 @@ plexinc/pms-docker
 quay.io/paulfantom/plex_exporter
 metalmatze/transmission-exporter
 mariadb
+woolfg/mysql-backup-sidecar
 oliver006/redis_exporter
 hipages/php-fpm_exporter
 xperimental/nextcloud-exporter
