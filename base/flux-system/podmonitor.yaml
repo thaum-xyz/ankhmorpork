@@ -22,3 +22,9 @@ spec:
           - image-reflector-controller
   podMetricsEndpoints:
     - targetPort: http-prom
+      # Custom
+      metricRelabelings:
+      - action: drop
+        regex: "rest_client_request_latency_seconds.*"
+        sourceLabels:
+        - __name__
