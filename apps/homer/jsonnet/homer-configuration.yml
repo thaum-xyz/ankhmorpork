@@ -129,6 +129,3 @@ services:
         logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
         <<: *Local
         url: "https://192.168.2.7:8443/"
-      - name: ArgoCD
-        logo: "https://argoproj.github.io/argo-cd/assets/logo.png"
-        url: "https://argocd.ankhmorpork.thaum.xyz"
