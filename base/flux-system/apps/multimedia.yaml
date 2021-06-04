@@ -1,0 +1,13 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: multimedia
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./apps/multimedia
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork
+  validation: client
