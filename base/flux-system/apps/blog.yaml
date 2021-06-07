@@ -4,7 +4,7 @@ metadata:
   name: blog
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 15m0s
   path: ./apps/blog/manifests
   prune: true
   sourceRef:

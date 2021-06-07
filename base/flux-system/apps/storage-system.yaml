@@ -4,7 +4,7 @@ metadata:
   name: storage-system
   namespace: flux-system
 spec:
-  interval: 15m0s
+  interval: 120m0s
   path: ./base/storage-system
   prune: true
   sourceRef:

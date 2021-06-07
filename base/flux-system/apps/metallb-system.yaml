@@ -4,7 +4,7 @@ metadata:
   name: metallb-system
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 60m0s
   path: ./base/metallb-system
   prune: true
   sourceRef:

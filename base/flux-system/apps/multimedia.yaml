@@ -4,7 +4,7 @@ metadata:
   name: multimedia
   namespace: flux-system
 spec:
-  interval: 10m0s
+  interval: 60m0s
   path: ./apps/multimedia
   prune: true
   sourceRef:

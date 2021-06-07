@@ -4,7 +4,7 @@ metadata:
   name: unifi
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 120m0s
   path: ./apps/unifi
   prune: true
   sourceRef:

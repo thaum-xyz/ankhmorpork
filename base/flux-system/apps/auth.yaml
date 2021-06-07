@@ -4,7 +4,7 @@ metadata:
   name: auth
   namespace: flux-system
 spec:
-  interval: 2m0s
+  interval: 15m0s
   path: ./apps/auth/manifests
   prune: true
   sourceRef:

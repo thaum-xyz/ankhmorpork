@@ -4,7 +4,7 @@ metadata:
   name: homeassistant
   namespace: flux-system
 spec:
-  interval: 2m0s
+  interval: 60m0s
   path: ./apps/homeassistant/manifests
   prune: true
   sourceRef:

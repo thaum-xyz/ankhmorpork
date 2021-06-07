@@ -4,7 +4,7 @@ metadata:
   name: adrianna
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 15m0s
   path: ./apps/adrianna
   prune: true
   sourceRef:

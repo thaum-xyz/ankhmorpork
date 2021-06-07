@@ -4,7 +4,7 @@ metadata:
   name: dns
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 15m0s
   path: ./apps/dns/manifests
   prune: true
   sourceRef:

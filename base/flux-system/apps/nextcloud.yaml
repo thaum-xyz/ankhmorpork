@@ -4,7 +4,7 @@ metadata:
   name: nextcloud
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 10m0s
   path: ./apps/nextcloud
   prune: true
   sourceRef:
