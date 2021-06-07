@@ -9,7 +9,7 @@ metadata:
   namespace: monitoring
 spec:
   prober:
-    url: pagespeed.monitoring:9271
+    url: pagespeed.monitoring.svc:9271
   targets:
     staticConfig:
       static:

@@ -92,7 +92,7 @@ function(params) {
     metadata: $.metadata,
     spec: {
       prober: {
-        url: $.service.metadata.name + '.' + $.config.namespace + ':9271',
+        url: $.service.metadata.name + '.' + $.config.namespace + '.svc:9271',
       },
       targets: {
         staticConfig: {
