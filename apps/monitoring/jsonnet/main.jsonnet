@@ -378,7 +378,7 @@ local kp =
 
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
-    // TODO: uncomment when
+    // TODO: uncomment when https://github.com/prometheus-operator/prometheus-operator/pull/4074 is done and released
     //pagespeed: pagespeed($.values.pagespeed) + {
     //  deployment+: {
     //    spec+: {
