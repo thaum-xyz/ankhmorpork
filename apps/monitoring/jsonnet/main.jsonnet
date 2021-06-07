@@ -378,7 +378,20 @@ local kp =
 
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
-    pagespeed: pagespeed($.values.pagespeed),
+    pagespeed: pagespeed($.values.pagespeed) + {
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              nodeSelector+: {
+                'kubernetes.io/os': 'linux',
+                'kubernetes.io/arch': 'amd64',
+              },
+            },
+          },
+        },
+      },
+    },
     // TODO: rebuild exporter to be arm64 compliant
     uptimerobot: exporter($.values.uptimerobot) + {
       deployment+: {

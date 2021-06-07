@@ -22,6 +22,7 @@ quay.io/prometheus/mysqld-exporter
 intel/intel-gpu-plugin
 nvidia/k8s-device-plugin
 drubin/uptimerobot-prometheus-exporter
+foomo/pagespeed_exporter
 EOM
 )
 
