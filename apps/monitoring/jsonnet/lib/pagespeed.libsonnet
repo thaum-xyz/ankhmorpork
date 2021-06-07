@@ -91,6 +91,8 @@ function(params) {
     kind: 'Probe',
     metadata: $.metadata,
     spec: {
+      interval: '5m',
+      scrapeTimeout: '3m',
       prober: {
         url: $.service.metadata.name + '.' + $.config.namespace + '.svc:9271',
       },
@@ -101,5 +103,4 @@ function(params) {
       },
     },
   },
-
 }
