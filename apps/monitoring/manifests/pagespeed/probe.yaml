@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: pagespeed
+    app.kubernetes.io/version: latest
+  name: pagespeed
+  namespace: monitoring
+spec:
+  prober:
+    url: pagespeed.monitoring:9271
+  targets:
+    staticConfig:
+      static:
+      - prometheus.io

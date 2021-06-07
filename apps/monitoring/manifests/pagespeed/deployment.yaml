@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: pagespeed
+    app.kubernetes.io/version: latest
+  name: pagespeed
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: pagespeed
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: pagespeed
+        app.kubernetes.io/version: latest
+    spec:
+      containers:
+      - args: []
+        image: foomo/pagespeed_exporter
+        name: pagespeed
+        ports:
+        - containerPort: 9271
+          name: http
+        resources:
+          limits:
+            memory: 30Mi
+          requests:
+            cpu: 10m
+            memory: 13Mi
+      serviceAccountName: pagespeed

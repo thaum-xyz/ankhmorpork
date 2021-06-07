@@ -64,6 +64,8 @@ local kubeEventsExporter = (import 'lib/kube-events-exporter.libsonnet');
 local pushgateway = (import 'lib/pushgateway.libsonnet');
 // TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
 local exporter = (import 'lib/exporter.libsonnet');
+// TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
+local pagespeed = (import 'lib/lighthouse.libsonnet');
 
 
 local ingressAnnotations = {
@@ -376,6 +378,7 @@ local kp =
 
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
+    pagespeed: pagespeed($.values.pagespeed),
     // TODO: rebuild exporter to be arm64 compliant
     uptimerobot: exporter($.values.uptimerobot) + {
       deployment+: {
