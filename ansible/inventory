@@ -4,11 +4,10 @@
 # Assign enable_smartmon=true label to enable SMART monitoring of disks
 
 master01 ansible_user=ubuntu ansible_host=192.168.2.30
-# node01   ansible_user=ubuntu ansible_host=192.168.2.41 network=fast enable_smartmon=true
-node02   ansible_user=ubuntu ansible_host=192.168.2.36
-node03   ansible_user=ubuntu ansible_host=192.168.2.37
-node04   ansible_user=ubuntu ansible_host=192.168.2.38 network=fast
-node05   ansible_user=ubuntu ansible_host=192.168.2.39 network=fast
+node01   ansible_user=ubuntu ansible_host=192.168.2.31 network=fast
+node02   ansible_user=ubuntu ansible_host=192.168.2.32 network=fast
+node03   ansible_user=ubuntu ansible_host=192.168.2.33
+node04   ansible_user=ubuntu ansible_host=192.168.2.34
 metal01  ansible_user=ubuntu ansible_host=192.168.2.40 network=fast enable_smartmon=true
 
 [fancontroler]
@@ -16,7 +15,7 @@ master01
 
 [raspberry]
 master01
-node0[2:5]
+node0[1:4]
 
 [nvidia]
 metal01
@@ -25,7 +24,7 @@ metal01
 master01
 
 [k3s-node]
-node0[2:5]
+node0[1:4]
 metal01
 
 [k3s:children]
