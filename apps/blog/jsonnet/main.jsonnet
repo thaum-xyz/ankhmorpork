@@ -7,7 +7,7 @@ local config = std.parseYaml(configYAML)[0];
 
 local all = ghost(config) + {
   pvc+: {
-    metadata: {
+    metadata+: {
       name: 'data',
     },
     spec+: {
