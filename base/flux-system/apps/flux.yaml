@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 2m0s
   path: ./base/flux-system
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
