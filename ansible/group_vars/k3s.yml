@@ -4,9 +4,10 @@ k3s_master_ip: "{{ hostvars[groups['k3s-master'][0]]['ansible_default_ipv4']['ad
 k3s_extra_server_args: >-
   --disable servicelb
   --disable traefik
+  --disable local-storage
   --disable-cloud-controller
   --node-taint node-role.kubernetes.io/control-plane=true:NoSchedule
-  --kubelet-arg system-reserved=cpu=50m,memory=100Mi
+  --kubelet-arg system-reserved=cpu=100m,memory=200Mi
   --kubelet-arg kube-reserved=cpu=100m,memory=300Mi
   --kube-controller-manager-arg address={{ k3s_master_ip }}
   --kube-scheduler-arg address={{ k3s_master_ip }}
