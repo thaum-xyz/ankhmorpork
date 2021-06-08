@@ -3,4 +3,6 @@
 
 - import_playbook: 10_storage.yml
 
+- import_playbook: 20_nvidia.yml
+
 - import_playbook: 70_k3s.yml

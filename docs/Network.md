@@ -10,11 +10,11 @@ RESTRICTED for network equipment
 
 ### .11 - .29
 
-k8s nodes
+FREE
 
 ### .30 - .39
 
-FREE
+k3s
 
 ### .40 - .49
 

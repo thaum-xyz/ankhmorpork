@@ -1,10 +1,4 @@
 ---
-#- hosts: storage
-#  become: true
-#  roles:
-#  # - bertvv.samba
-#  - geerlingguy.nfs
-
 - hosts: all
   become: true
   tasks:
