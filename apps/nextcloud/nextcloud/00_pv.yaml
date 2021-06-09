@@ -17,7 +17,7 @@ spec:
   #   - hard
   #   - nfsvers=4.1
   nfs:
-    path: /srv/storage/kubernetes/nextcloud/data
+    path: /srv/storage/kubernetes/nextcloud
     server: 192.168.2.40
 ---
 apiVersion: v1

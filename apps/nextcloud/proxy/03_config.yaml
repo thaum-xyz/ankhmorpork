@@ -83,7 +83,7 @@ data:
                 access_log off;
             }
 
-            include locations/pzptg.conf;
+            #include locations/pzptg.conf;
        
             # The following 2 rules are only needed for the user_webfinger app.
             # Uncomment it if you're planning to use this app.

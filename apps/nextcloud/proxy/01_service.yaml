@@ -14,22 +14,6 @@ spec:
     port: 80
     protocol: TCP
     targetPort: http
-  selector:
-    app.kubernetes.io/name: nginx
-    app.kubernetes.io/part-of: nextcloud
-    app.kubernetes.io/component: proxy
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/name: nginx
-    app.kubernetes.io/part-of: nextcloud
-    app.kubernetes.io/component: proxy
-  name: nginx-metrics
-  namespace: nextcloud
-spec:
-  ports:
   - name: metrics
     port: 9113
     protocol: TCP

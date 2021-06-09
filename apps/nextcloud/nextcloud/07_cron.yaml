@@ -23,30 +23,11 @@ spec:
         app.kubernetes.io/version: 21.0.1
     spec:
       containers:
-      - env:
-        - name: NEXTCLOUD_ADMIN_USER
-          valueFrom:
-            secretKeyRef:
-              name: credentials
-              key: admin_user
-        - name: NEXTCLOUD_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: credentials
-              key: admin_pass
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql-creds
-              key: mysql_user
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-creds
-              key: mysql_pass
-        envFrom:
+      - envFrom:
         - configMapRef:
             name: nextcloud-envs
+        - secretRef:
+            name: mysql-creds
         image: nextcloud:21.0.1-fpm
         name: cron
         command:
