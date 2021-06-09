@@ -16,11 +16,12 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: controller
   name: ingress-nginx
   namespace: ingress-nginx
+automountServiceAccountToken: true
 ---
 # Source: ingress-nginx/templates/controller-configmap.yaml
 apiVersion: v1
@@ -30,7 +31,7 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller
@@ -45,7 +46,7 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
   name: ingress-nginx
 rules:
@@ -73,7 +74,6 @@ rules:
     verbs:
       - get
       - list
-      - update
       - watch
   - apiGroups:
       - extensions
@@ -115,7 +115,7 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
   name: ingress-nginx
 roleRef:
@@ -135,7 +135,7 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: controller
   name: ingress-nginx
@@ -165,7 +165,6 @@ rules:
     verbs:
       - get
       - list
-      - update
       - watch
   - apiGroups:
       - extensions
@@ -209,14 +208,6 @@ rules:
   - apiGroups:
       - ''
     resources:
-      - endpoints
-    verbs:
-      - create
-      - get
-      - update
-  - apiGroups:
-      - ''
-    resources:
       - events
     verbs:
       - create
@@ -230,7 +221,7 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: controller
   name: ingress-nginx
@@ -252,7 +243,7 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller-admission
@@ -272,11 +263,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
   labels:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller
@@ -284,7 +276,6 @@ metadata:
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
-  loadBalancerIP: 192.168.2.91
   ports:
     - name: http
       port: 80
@@ -307,7 +298,7 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller
@@ -330,9 +321,8 @@ spec:
       dnsPolicy: ClusterFirst
       containers:
         - name: controller
-          # image: k8s.gcr.io/ingress-nginx/controller:v0.40.2@sha256:46ba23c3fbaafd9e5bd01ea85b2f921d9f2217be082580edc22e6c704a83f02f
-          image: k8s.gcr.io/ingress-nginx/controller:v0.40.2
-          imagePullPolicy: Always
+          image: k8s.gcr.io/ingress-nginx/controller:v0.47.0@sha256:a1e4efc107be0bb78f32eaec37bef17d7a0c81bec8066cdf2572508d21351d0b
+          imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
               exec:
@@ -367,25 +357,25 @@ spec:
             - name: LD_PRELOAD
               value: /usr/local/lib/libmimalloc.so
           livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 10254
-              scheme: HTTP
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 1
-            successThreshold: 1
             failureThreshold: 5
-          readinessProbe:
             httpGet:
               path: /healthz
               port: 10254
               scheme: HTTP
             initialDelaySeconds: 10
             periodSeconds: 10
-            timeoutSeconds: 1
             successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
             failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 10254
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           ports:
             - name: http
               containerPort: 80
@@ -407,15 +397,15 @@ spec:
             requests:
               cpu: 100m
               memory: 90Mi
+      nodeSelector:
+        kubernetes.io/os: linux
+        network.infra/type: "fast"
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
       volumes:
         - name: webhook-cert
           secret:
             secretName: ingress-nginx-admission
-      nodeSelector:
-        network.infra/type: "fast"
-      tolerations: []
 ---
 # Source: ingress-nginx/templates/admission-webhooks/validating-webhook.yaml
 # before changing this value, check the required kubernetes version
@@ -427,18 +417,18 @@ metadata:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: admission-webhook
   name: ingress-nginx-admission
 webhooks:
   - name: validate.nginx.ingress.kubernetes.io
+    matchPolicy: Equivalent
     rules:
       - apiGroups:
           - networking.k8s.io
         apiVersions:
           - v1beta1
-          - v1
         operations:
           - CREATE
           - UPDATE
@@ -447,6 +437,7 @@ webhooks:
     failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
+      - v1
       - v1beta1
     clientConfig:
       service:
@@ -459,11 +450,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: ingress-nginx-admission
+  annotations:
+    
+    
   labels:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: admission-webhook
   namespace: ingress-nginx
@@ -473,11 +467,14 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: ingress-nginx-admission
+  annotations:
+    
+    
   labels:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: admission-webhook
 rules:
@@ -494,11 +491,14 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: ingress-nginx-admission
+  annotations:
+    
+    
   labels:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: admission-webhook
 roleRef:
@@ -515,11 +515,14 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: ingress-nginx-admission
+  annotations:
+    
+    
   labels:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: admission-webhook
   namespace: ingress-nginx
@@ -537,11 +540,14 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: ingress-nginx-admission
+  annotations:
+    
+    
   labels:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: admission-webhook
   namespace: ingress-nginx
@@ -559,11 +565,14 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: ingress-nginx-admission-create
+  annotations:
+    
+    
   labels:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: admission-webhook
   namespace: ingress-nginx
@@ -572,16 +581,16 @@ spec:
     metadata:
       name: ingress-nginx-admission-create
       labels:
-       
+        
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/instance: ingress-nginx
-        app.kubernetes.io/version: 0.40.0
+        app.kubernetes.io/version: 0.47.0
         
         app.kubernetes.io/component: admission-webhook
     spec:
       containers:
         - name: create
-          image: docker.io/jettech/kube-webhook-certgen:v1.3.0
+          image: docker.io/jettech/kube-webhook-certgen:v1.5.1
           imagePullPolicy: IfNotPresent
           args:
             - create
@@ -604,11 +613,14 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: ingress-nginx-admission-patch
+  annotations:
+    
+    
   labels:
     
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.40.0
+    app.kubernetes.io/version: 0.47.0
     
     app.kubernetes.io/component: admission-webhook
   namespace: ingress-nginx
@@ -620,13 +632,13 @@ spec:
         
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/instance: ingress-nginx
-        app.kubernetes.io/version: 0.40.0
+        app.kubernetes.io/version: 0.47.0
         
         app.kubernetes.io/component: admission-webhook
     spec:
       containers:
         - name: patch
-          image: docker.io/jettech/kube-webhook-certgen:v1.3.0
+          image: docker.io/jettech/kube-webhook-certgen:v1.5.1
           imagePullPolicy: IfNotPresent
           args:
             - patch
