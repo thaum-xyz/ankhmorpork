@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: multimedia
-  namespace: flux-system
+  name: dns
+  namespace: flux-apps
 spec:
-  interval: 60m0s
-  path: ./apps/multimedia
+  interval: 15m0s
+  path: ./apps/dns/manifests
   prune: false
   sourceRef:
     kind: GitRepository

@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: kube-system
-  namespace: flux-system
+  name: multimedia
+  namespace: flux-apps
 spec:
-  interval: 15m0s
-  path: ./base/kube-system
+  interval: 60m0s
+  path: ./apps/multimedia
   prune: false
   sourceRef:
     kind: GitRepository

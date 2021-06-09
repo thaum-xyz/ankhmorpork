@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: nextcloud
-  namespace: flux-system
+  name: auth
+  namespace: flux-apps
 spec:
-  interval: 10m0s
-  path: ./apps/nextcloud
+  interval: 15m0s
+  path: ./apps/auth/manifests
   prune: false
   sourceRef:
     kind: GitRepository

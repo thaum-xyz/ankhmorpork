@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: homer
-  namespace: flux-system
+  name: cert-manager
+  namespace: flux-apps
 spec:
-  interval: 15m0s
-  path: ./apps/homer/manifests
+  interval: 30m0s
+  path: ./base/cert-manager
   prune: false
   sourceRef:
     kind: GitRepository

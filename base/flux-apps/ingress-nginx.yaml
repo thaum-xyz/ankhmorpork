@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: metallb-system
-  namespace: flux-system
+  name: ingress-nginx
+  namespace: flux-apps
 spec:
-  interval: 60m0s
-  path: ./base/metallb-system
+  interval: 30m0s
+  path: ./base/ingress-nginx
   prune: false
   sourceRef:
     kind: GitRepository

@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
   name: ankhmorpork
-  namespace: flux-system
+  namespace: flux-apps
 spec:
   interval: 60s
   ref:

@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: adrianna
-  namespace: flux-system
+  name: homer
+  namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./apps/adrianna
+  path: ./apps/homer/manifests
   prune: false
   sourceRef:
     kind: GitRepository

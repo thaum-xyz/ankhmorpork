@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: monitoring
-  namespace: flux-system
+  name: metallb-system
+  namespace: flux-apps
 spec:
-  interval: 5m0s
-  path: ./apps/monitoring/manifests
+  interval: 60m0s
+  path: ./base/metallb-system
   prune: false
   sourceRef:
     kind: GitRepository
