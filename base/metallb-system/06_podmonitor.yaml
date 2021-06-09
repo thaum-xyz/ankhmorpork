@@ -1,16 +1,15 @@
 ---
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   labels:
     k8s-app: controller
   name: metallb
   namespace: metallb-system
 spec:
-  endpoints:
+  podMetricsEndpoints:
   - interval: 30s
     port: monitoring
   selector:
     matchLabels:
       app: metallb
-      component: controller
