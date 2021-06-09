@@ -8,7 +8,7 @@ This is a part of [@paulfantom](https://github.com/paulfantom) personal homelab.
 
 ## How dos it work?
 
-Configuration is divided into three directories and is managed in two ways - either by ansible or by argoCD.
+Configuration is divided into three directories and is managed in two ways - either by ansible or by flux.
 
 #### Ansible
 
@@ -19,14 +19,13 @@ storage and bootstraping a k3s cluster.
 #### Base
 
 Directory contains all base application of k3s cluster. Initial bootstrap should be done manually with kubectl and after
-that updates are performed by argoCD.
+that updates are performed by flux.
 
-Additionally it is a place where argoCD apps and projects are stored.
+Additionally it is a place where flux apps and projects are stored.
 
 #### Apps
 
-Every other service that is installed into a cluster goes into `apps/` directory which should be governed by argoCD after
-creating a proper `Application` and `Project` CRs.
+Every other service that is installed into a cluster goes into `apps/` directory which should be governed by flux.
 
 ## Security
 
