@@ -5,7 +5,8 @@ metadata:
   name: radarr
   namespace: multimedia
   labels:
-    app.kubernetes.io/name: radarr
+    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/part-of: radarr
 spec:
   podMetricsEndpoints:
   - port: metrics
@@ -14,4 +15,5 @@ spec:
     path: /metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: radarr
+      app.kubernetes.io/name: exportarr
+      app.kubernetes.io/part-of: radarr

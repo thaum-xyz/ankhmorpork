@@ -20,19 +20,3 @@ spec:
     app.kubernetes.io/name: transmission
   sessionAffinity: None
   type: LoadBalancer
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/name: transmission
-  name: transmission-metrics
-  namespace: multimedia
-spec:
-  ports:
-  - name: metrics
-    port: 19091
-    protocol: TCP
-    targetPort: metrics
-  selector:
-    app.kubernetes.io/name: transmission

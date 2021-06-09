@@ -1,0 +1,17 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: sonarr-apikey
+  namespace: multimedia
+spec:
+  encryptedData:
+    APIKEY: AgCK8R8KqOjmltbqu7V9fsB1Mcr4Yhyo+paaBYzmUrXVG28X7O4XsQyKWIP0KYVX7iYPOJjT6KmvhfLK7jAbRmlwDmbDetG7VJY8bEl5gTOeJDpwj3RXc2u/Qu4HMlif9R7HHiaUPfk9Zs3Dui4kxdlFaIgfzz/hdLnOB0qiTwZ4XuDIKzXKkZd6TpnaoijWiSx0HnFnBMlsCBvKdmwb/hZB1/+9RM7YP9NeOI7q+ZdLbA2AUK3zTlOO6BdnVLHueezjj6rd/NfzQKiiUbKAStJYVc/i7HZe4PFFVjR4f4GLItNtOpjE+n3lnjLVE/MkhEhZDINBdgu5R07AZuq5LgTDdYoB9p4T82uiwNzj59lS4N/PGarFPQT2wOZKW5SClX7FfWi8N2kST/s7UuDJ8Gs5QOtINd0zDgMUyOwpejfuxWRw2qmGzcY3UCaoFkdVareltdi6BK26QV0Wj5vv2K3tmQjo/qFee8gxhXjBgFYGe6+/yC/6GhrM4HdxTRNgB8A4MBmfm3zGOs1EUrdpp78jdoyywQtHXkliIGP38TYpzEBWf92wFlMwus5AsRC+zHStsesReT6CKTSrwqJ+4UXDwmNkxKhbTDI1waLhxAaLklfrEAc22lEZClTSLymWelUyeiD3M5c3cNMPbxUSMskyPxU1k/dhEJNrpxanH/HTpcdWGjBXpkQ8d6vrgT61rEQMYSZmQW85FrqmqU9pEVm0m3ULfWqrpaWb0f+dNodASQ==
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/managed: "true"
+      creationTimestamp: null
+      name: sonarr-apikey
+      namespace: multimedia
+    type: Opaque

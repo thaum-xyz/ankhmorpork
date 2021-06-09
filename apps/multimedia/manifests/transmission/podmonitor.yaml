@@ -1,11 +1,11 @@
 ---
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   name: transmission
   namespace: multimedia
 spec:
-  endpoints:
+  podMetricsEndpoints:
   - interval: 60s
     port: metrics
   selector:

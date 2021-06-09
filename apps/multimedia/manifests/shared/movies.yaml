@@ -20,26 +20,6 @@ spec:
     server: 192.168.40.2  # direct link bonded interface
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: tv
-  namespace: multimedia
-spec:
-  capacity:
-    storage: 4000Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
-  # mountOptions:
-  #   - hard
-  #   - nfsvers=4.2
-  nfs:
-    path: /srv/storage/kubernetes/vod/tv
-    server: 192.168.40.2  # direct link bonded interface
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: movies
@@ -52,17 +32,3 @@ spec:
     requests:
       storage: 4000Gi
   volumeName: movies
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: tv
-  namespace: multimedia
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 4000Gi
-  volumeName: tv

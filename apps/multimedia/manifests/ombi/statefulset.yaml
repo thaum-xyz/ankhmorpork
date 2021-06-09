@@ -37,19 +37,16 @@ spec:
         volumeMounts:
           - mountPath: /config
             name: config
+          - mountPath: /config/Logs
+            name: logs
         resources:
           requests:
             cpu: 200m
             memory: 200Mi
       restartPolicy: Always
-  volumeClaimTemplates:
-  - metadata:
-      name: config
-      namespace: multimedia
-    spec:
-      storageClassName: "managed-nfs-storage"
-      accessModes:
-        - ReadWriteMany
-      resources:
-        requests:
-          storage: 200Mi
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: ombi-config
+      - name: logs
+        emptyDir: {}

@@ -22,20 +22,3 @@ spec:
     app.kubernetes.io/name: plex
   sessionAffinity: None
   type: LoadBalancer
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/name: plex
-  name: plex-metrics
-  namespace: multimedia
-spec:
-  loadBalancerIP: None
-  ports:
-  - name: metrics
-    port: 9594
-    protocol: TCP
-    targetPort: metrics
-  selector:
-    app.kubernetes.io/name: plex

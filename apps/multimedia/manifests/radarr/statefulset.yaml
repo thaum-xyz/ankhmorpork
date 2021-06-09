@@ -14,8 +14,6 @@ spec:
   serviceName: radarr
   template:
     metadata:
-      annotations:
-        kubectl.kubernetes.io/default-container: radarr
       labels:
         app.kubernetes.io/name: radarr
     spec:
@@ -41,6 +39,8 @@ spec:
         volumeMounts:
           - mountPath: /config
             name: config
+          - mountPath: /config/logs
+            name: logs
           - mountPath: /movies
             name: data
           - mountPath: /download/completed
@@ -49,53 +49,20 @@ spec:
           requests:
             cpu: 40m
             memory: 635Mi
-      - env:
-        - name: URL
-          value: "http://127.0.0.1:7878"
-        - name: PORT
-          value: "9707"
-        envFrom:
-        - secretRef:
-            name: radarr-apikey
-        name: exportarr
-        image: onedr0p/exportarr:v0.3.4
-        args: ["radarr"]
-        ports:
-        - name: metrics
-          containerPort: 9707
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: metrics
-          failureThreshold: 5
-          periodSeconds: 10
-        resources:
-          requests:
-            cpu: 1m
-            memory: 11Mi
-          limits:
-            cpu: 50m
-            memory: 100Mi
       restartPolicy: Always
       volumes:
+      - name: logs
+        emptyDir: {}
       - name: data
         persistentVolumeClaim:
           claimName: movies
       - name: downloads
         persistentVolumeClaim:
           claimName: torrents
+      - name: config
+        persistentVolumeClaim:
+          claimName: radarr-config
       nodeSelector:
         kubernetes.io/arch: "amd64"
         storage.infra/direct: "true"  # use direct network link for movies volume
       tolerations: []
-  volumeClaimTemplates:
-  - metadata:
-      name: config
-      namespace: multimedia
-    spec:
-      storageClassName: "managed-nfs-storage"
-      accessModes:
-        - ReadWriteMany
-      resources:
-        requests:
-          storage: 1201Mi

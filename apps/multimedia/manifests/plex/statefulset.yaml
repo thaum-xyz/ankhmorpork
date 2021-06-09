@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: plex
-    app.kubernetes.io/version: 1.21.1
+    app.kubernetes.io/version: 1.23.2
   name: plex
   namespace: multimedia
 spec:
@@ -18,31 +18,10 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: plex
-        app.kubernetes.io/version: 1.21.1
+        app.kubernetes.io/version: 1.23.2
     spec:
       hostname: nas
       containers:
-      - env:
-        - name: TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: token
-              name: plex-creds
-        name: plex-metrics
-        image: quay.io/paulfantom/plex_exporter:0.2.2
-        imagePullPolicy: IfNotPresent
-        args:
-        - "--token=$(TOKEN)"
-        - "--plex-server=http://127.0.0.1:32400"
-        #- "--auto-discover"
-        ports:
-        - containerPort: 9594
-          name: metrics
-        resources:
-          requests:
-            memory: 11Mi
-          limits:
-            memory: 20Mi
       - env:
         - name: TZ
           value: "Europe/Berlin"
@@ -54,14 +33,12 @@ spec:
           value: "192.168.2.0/24,10.42.0.0/16"
         - name: ADVERTISE_IP  # Tied to LB Service IP
           value: "http://192.168.2.98:32400/"
-        - name: PLEX_CLAIM
-          valueFrom:
-            secretKeyRef:
-              key: claim
-              name: plex-creds
         - name: NVIDIA_DRIVER_CAPABILITIES
           value: "all"
-        image: plexinc/pms-docker:1.21.4.4079-1b7748a7b
+        envFrom:
+        - secretRef:
+            name: plex-claim
+        image: plexinc/pms-docker:1.23.2.4656-85f0adf5b
         name: plex
         ports:
         - containerPort: 32400
@@ -107,6 +84,12 @@ spec:
       - name: tv
         persistentVolumeClaim:
           claimName: tv
+      - name: plexlib
+        persistentVolumeClaim:
+          claimName: plex-library
+      - name: backups
+        persistentVolumeClaim:
+          claimName: plex-backups
       #- name: mymultimedia
       #  hostPath:
       #    path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
@@ -116,24 +99,3 @@ spec:
         kubernetes.io/arch: "amd64"
         kubernetes.io/hostname: "metal01"  # TODO: remove this after tests
       tolerations: []
-  volumeClaimTemplates:
-  - metadata:
-      name: plexlib
-      namespace: multimedia
-    spec:
-      storageClassName: "local-path"
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 30Gi
-  - metadata:
-      name: backups  # TODO: consider moving to emptyDir and backing up to B2/minio
-      namespace: multimedia
-    spec:
-      storageClassName: "managed-nfs-storage"
-      accessModes:
-        - ReadWriteMany
-      resources:
-        requests:
-          storage: 30Gi

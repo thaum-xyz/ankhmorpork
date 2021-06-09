@@ -28,29 +28,3 @@ spec:
   resources:
     requests:
       storage: 100Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: "multimedia"
-  name: "torrents-incomplete"
-spec:
-  storageClassName: "local-path"
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: "70Gi"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: "multimedia"
-  name: "transmission-data"
-spec:
-  storageClassName: "managed-nfs-storage"
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: "50Mi"
