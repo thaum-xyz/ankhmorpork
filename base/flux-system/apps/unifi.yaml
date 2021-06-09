@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 120m0s
   path: ./apps/unifi
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

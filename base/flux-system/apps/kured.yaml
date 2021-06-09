@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 60m0s
   path: ./apps/system-update/kured
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

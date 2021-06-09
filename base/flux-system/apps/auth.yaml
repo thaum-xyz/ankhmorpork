@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 15m0s
   path: ./apps/auth/manifests
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 30m0s
   path: ./base/cert-manager
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
