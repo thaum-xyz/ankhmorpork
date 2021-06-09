@@ -70,6 +70,8 @@ spec:
           value: "5 3 * * *"
         - name: MYSQL_HOST
           value: "localhost"
+        - name: MYSQL_USER
+          value: "root"
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
