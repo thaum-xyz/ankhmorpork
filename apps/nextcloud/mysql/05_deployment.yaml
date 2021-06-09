@@ -28,23 +28,11 @@ spec:
     spec:
       containers:
       - env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: root_pass
-              name: mysql-creds
         - name: MYSQL_DATABASE
           value: "cloud"
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: mysql_pass
-              name: mysql-creds
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              key: mysql_user
-              name: mysql-creds
+        envFrom:
+        - secretRef:
+            name: mysql-creds
         image: mariadb:10.4.12
         imagePullPolicy: IfNotPresent
         name: mysql
@@ -85,7 +73,7 @@ spec:
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              key: root_pass
+              key: MYSQL_ROOT_PASSWORD
               name: mysql-creds
         image: woolfg/mysql-backup-sidecar:v0.3.4-mariadb-10.4
         name: backup
@@ -95,18 +83,11 @@ spec:
         - mountPath: /backup
           name: backup
       - env:
-        - name: USER
-          valueFrom:
-            secretKeyRef:
-              key: exporter_user
-              name: mysql-init
-        - name: PASS
-          valueFrom:
-            secretKeyRef:
-              key: exporter_pass
-              name: mysql-init
         - name: DATA_SOURCE_NAME
-          value: "$(USER):$(PASS)@(127.0.0.1:3306)/"
+          value: "$(EXPORTER_USER):$(EXPORTER_PASS)@(127.0.0.1:3306)/"
+        envFrom:
+        - secretRef:
+            name: mysql-init
         image: quay.io/prometheus/mysqld-exporter:latest
         imagePullPolicy: IfNotPresent
         name: exporter
