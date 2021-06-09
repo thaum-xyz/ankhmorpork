@@ -1,0 +1,14 @@
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backups
+  namespace: unifi
+spec:
+  storageClassName: "managed-nfs-storage"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "100Mi"

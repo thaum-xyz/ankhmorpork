@@ -13,7 +13,7 @@ spec:
     spec:
       template:
         spec:
-          initContainers:
+          containers:
           - name: copier
             image: quay.io/paulfantom/rsync
             command:
@@ -29,30 +29,10 @@ spec:
                 mountPath: /backup
               - name: ssh
                 mountPath: /root/.ssh
-          containers:
-          - name: restic
-            image: quay.io/paulfantom/restic-mysql
-            env:
-              - name: NAMESPACE
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.namespace
-              - name: INSTANCE
-                value: autobackup
-              - name: DATA_DIRECTORY
-                value: "/backup"
-              - name: PUSHGATEWAY_URL
-                value: "http://push.monitoring.svc:9091"
-            envFrom:
-              - secretRef:
-                  name: restic-repository
-            volumeMounts:
-              - name: backups
-                mountPath: /backup
-                readOnly: true
           volumes:
             - name: backups
-              emptyDir: {}
+              persistentVolumeClaim:
+                claimName: backups
             - name: ssh
               secret:
                 secretName: sshprivkey
