@@ -1,17 +1,18 @@
 local homeassistant = import './homeassistant.libsonnet';
+local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
 
-local apitoken = import './apitoken.json';
 local configYAML = (importstr './settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0] {
   apiTokenSecretKeySelector: {
-    name: apitoken.spec.template.metadata.name,
+    name: 'credentials',
     key: 'token',
   },
 };
 
 local all = homeassistant(config) + {
+  credentials: sealedsecret(config.apiTokenSecretKeySelector.name, config.namespace, { [config.apiTokenSecretKeySelector.key]: config.encryptedAPIToken }),
   ingress+: {
     metadata+: {
       labels+: {
@@ -42,7 +43,6 @@ local all = homeassistant(config) + {
       },
     },
   },
-  sealedSecret: apitoken,
 };
 
 { [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }
