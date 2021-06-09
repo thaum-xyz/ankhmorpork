@@ -30,6 +30,8 @@ spec:
         env:
         - name: NEXTCLOUD_SERVER
           value: "http://nginx.nextcloud.svc"
+        - name: NEXTCLOUD_TIMEOUT
+          value: 15s
         envFrom:
           - secretRef:
               name: exporter
