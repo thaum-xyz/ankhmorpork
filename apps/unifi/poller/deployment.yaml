@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: unifi-poller
+    app.kubernetes.io/version: 2.1.3
+    app.kubernetes.io/component: exporter
+  name: unifi-poller
+  namespace: unifi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: unifi-poller
+      app.kubernetes.io/component: exporter
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: unifi-poller
+        app.kubernetes.io/version: 2.1.3
+        app.kubernetes.io/component: exporter
+      annotations:
+        checksum: "TBD."
+    spec:
+      containers:
+      - name: unifi-poller
+        image: golift/unifi-poller:2.1.3
+        ports:
+        - containerPort: 9130
+          name: metrics
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /config/unifi-poller.conf
+          subPath: unifi-poller.conf
+        #livenessProbe:
+        #  httpGet:
+        #    path: /health
+        #    port: 9130
+        #  initialDelaySeconds: 10
+        #  timeoutSeconds: 10
+        resources:
+          requests:
+            cpu: 5m
+            memory: 20Mi
+          limits:
+            memory: 100Mi
+      volumes:
+      - name: config
+        secret:
+          secretName: unifi-poller
+      restartPolicy: Always

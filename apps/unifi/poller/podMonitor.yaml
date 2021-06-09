@@ -1,13 +1,17 @@
 ---
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   name: poller
   namespace: unifi
+  labels:
+    app.kubernetes.io/name: unifi-poller
+    app.kubernetes.io/component: exporter
 spec:
-  endpoints:
+  podMetricsEndpoints:
   - interval: 30s
     port: metrics
   selector:
     matchLabels:
       app.kubernetes.io/name: unifi-poller
+      app.kubernetes.io/component: exporter

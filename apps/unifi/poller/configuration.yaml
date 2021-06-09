@@ -1,0 +1,48 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: unifi-poller
+  namespace: unifi
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: unifi-poller
+    app.kubernetes.io/component: exporter
+spec:
+  encryptedData:
+    user: "AgA7O41h2+ry/ltIQ1p3sfaGz8yAZQpxVyCYaNRvFrrprpzafKfGSifPmBcdeNlFSXLs6FyJmaM5OoFa7BZ63Tyvrgxw3pDZmizp76VPjCTHu/rx5dhgXEJdTd17m0mHI8wix3jrqmlsjUbMcNQiZucO9RhnUsrf/wx6YUxLxEaoow0UjXJTDw+agZasMfAqmLQeRccHzdm2LtJOesT1/4XxhWpbNITefSjB+HZueiM3JToetTk32xLvAp7ZyshKaQywjaDjP0UN+Kq5qkTahJtiY2N6DiCA434VLEnl8uR1LAIFfHkHDxJZ/kCXhEbvi/rhBBXrOwDVbr7x6FxOK2pCwBu4pYrYZay+AdZBZnUb7vYEpn58jsqx5Yps4wiWUDPGWLUEpfUzi4WVGdypwAWIMp1D76vQh2UCLTDAhbQ5yvAhK1q0960IhR6N41vEa6b3wPwKcYJXacC/uKmyJlXD1PBKXctoYYUw6vOPIpJFUh0wNPT2AK21NKqSS4Dkq52o3tOr9wiTL4WPfxIHJZtpBMg3gml2loHH4P5htofRPvgTplhPmcrWp9Ti0MASg6VPfdNCVT30CZkNmHPdcpM+WxcgHgFtNXp42FskV0iVijpW6OUe+1KLHjP8So6fH9eC4PWD2nzouZQ7OJrCiUBvDMn8p0SOjq+xZmDF+++tsAno4h+5fUUg/Tfdkquw6nsROqIzNnUK7w==" 
+    pass: "AgB4vMPFTVV4tESyAsfO0NnM6UCyYZst9jkCV0hER20NyeBJeCD5vyPlm5B+CAECKQ22GWv9a06JEeaDfMh1HP7STKvBA2XcMYu/WCMyO+fhJHzuqSkMLEKl7YvShNkRDU8Eq5zi95HOE7nFcCEvEyt18oEQIoFIu4Gfz7y+X8kYn28XxE0AcvaTeioCArZm9gA832i96nUElk1zLNYFvk/nGZoZANd1tO5vCF7sJM0Sb3zAn3PnJd3lCWyi6U7Q+uuM0cDCU+d/eQQjID61wUGN2u7wsL3JhhP7Lwv9jkA7XUJ8NDZ/9VVN493PJbMMSOimvtINAi3jXseuO3dAIhQoU7MLkXfS+OVZ7u5mNqnDdoI6EH5h/wPNhLJrKAgik14ijskFPs2qSkx5oAWcagV4Y6PaDpvT+XrTi2JubusTWASpgPLDAAxPic8q6sp75Ua7D5WdvtRaBP+2NB0fPJKzMkMTJjymTyzAy04C0UedeWevFl1ZQhWwB2iRK5sMiKbjrQHyeeLGrKB2Q9sCdWDsc9H+zewzSlucn674OlwPp4SGmMnhOHKwgQ0bTCPTxcidQHpl5Ahi6xlxFUMSQuylMMa6iVPCQzQfQ/W3Z/cyJ0BQ/P8Pa+Vi/cVA9yMrGqltSRidz6pqqvPpGO7bepN0y9S3y1+21p7GEdXjJflIge47UkGv7dna24GrNS0jvbR8o/0ZLUT+WVaYhYII/hAUaeg9bg=="
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/managed: "true"
+      creationTimestamp: null
+      name: scrapeconfigs
+      namespace: monitoring
+    type: Opaque
+    data:
+      unifi-poller.conf: |
+          [poller]
+            debug = false
+            quiet = false
+            plugins = []
+          [prometheus]
+            disable = false
+            http_listen = "0.0.0.0:9130"
+            report_errors = false
+          [influxdb]
+            disable = true
+          [webserver]
+            enable = false
+          [unifi]
+            dynamic = true
+          [unifi.defaults]
+              url = "https://192.168.2.7:8443"
+              user = "{{ index . "user" }}"
+              pass = "{{ index . "pass" }}"
+              sites = ["all"]
+              save_ids = false
+              save_dpi = false
+              save_sites = true
+              hash_pii = false
+              verify_ssl = false
