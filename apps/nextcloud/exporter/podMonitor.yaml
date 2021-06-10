@@ -5,7 +5,7 @@ metadata:
   namespace: nextcloud
 spec:
   podMetricsEndpoints:
-  - interval: 30s
+  - interval: 2m
     port: metrics
   selector:
     matchLabels:
