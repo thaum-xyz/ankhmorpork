@@ -23,6 +23,8 @@ spec:
         app.kubernetes.io/part-of: nextcloud
         app.kubernetes.io/component: exporter
         app.kubernetes.io/version: 0.3.0
+      annotations:
+        checksum: "TBD"
     spec:
       containers:
       - image: xperimental/nextcloud-exporter:v0.3.0
