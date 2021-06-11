@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 120m0s
-  path: ./apps/unifi
+  path: ./apps/unifi/manifests
   prune: false
   sourceRef:
     kind: GitRepository
