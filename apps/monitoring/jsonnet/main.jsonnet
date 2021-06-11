@@ -199,8 +199,6 @@ local kp =
           // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/1132 is merged
           ruleNamespaceSelector: {},
 
-          // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/929 is merged
-          thanos:: null,
           storage: {
             volumeClaimTemplate: {
               metadata: {
@@ -270,16 +268,7 @@ local kp =
           template+: {
             spec+: {
               containers:
-                // addArgs(['--metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers) +
-                // TODO: consider moving this into kube-prometheus
-                std.map(
-                  function(c) if c.name == 'kube-state-metrics' then
-                    c {
-                      args+: ['--metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'],
-                    }
-                  else c,
-                  super.containers,
-                ),
+                addArgs(['--metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers),
             },
           },
         },
@@ -292,6 +281,7 @@ local kp =
       serviceMonitorKubeControllerManager:: null,
       serviceMonitorKubeScheduler:: null,
       // TODO: check and fix in kube-prometheus
+      // Remove after https://github.com/prometheus-operator/kube-prometheus/pull/1200 is merged
       serviceMonitorCoreDNS+: {
         metadata+: {
           labels+: {
