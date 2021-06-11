@@ -1,40 +1,39 @@
----
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: backup
   namespace: unifi
 spec:
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 3
   concurrencyPolicy: Forbid
-  schedule: "6 6 * * sun"  # At 06:06 on Sunday
+  failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: copier
+          - command:
+            - rsync
+            - -av
+            - --delete
+            - -e
+            - ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+            - root@192.168.2.7:/data/autobackup/
+            - /backup/
             image: quay.io/paulfantom/rsync
-            command:
-              - rsync
-              - -av
-              - --delete
-              - -e
-              - 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-              - "root@192.168.2.7:/data/autobackup/"
-              - "/backup/"
+            name: copier
             volumeMounts:
-              - name: backups
-                mountPath: /backup
-              - name: ssh
-                mountPath: /root/.ssh
-          volumes:
-            - name: backups
-              persistentVolumeClaim:
-                claimName: backups
-            - name: ssh
-              secret:
-                secretName: sshprivkey
-                defaultMode: 0400
+            - mountPath: /backups
+              name: backups
+            - mountPath: /root/.ssh
+              name: ssh
+              readOnly: true
           restartPolicy: OnFailure
+          volumes:
+          - name: backups
+            persistentVolumeClaim:
+              claimName: backup
+          - name: ssh
+            secret:
+              secretName: sshprivkey
+  schedule: 6 6 * * sun
+  successfulJobsHistoryLimit: 1
