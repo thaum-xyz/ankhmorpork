@@ -196,8 +196,6 @@ local kp =
             key: 'additional.yaml',
           },
           queryLogFile: '/prometheus/query.log',
-          // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/1132 is merged
-          ruleNamespaceSelector: {},
 
           storage: {
             volumeClaimTemplate: {
@@ -248,18 +246,6 @@ local kp =
           }],
         },
       },
-      // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/1131 is merged
-      clusterRole+: {
-        rules+: [{
-          apiGroups: ['networking.k8s.io'],
-          resources: ['ingresses'],
-          verbs: ['get', 'list', 'watch'],
-        }],
-      },
-      // TODO: those should be a part of kube-prometheus/addons/all-namespaces.libsonnet
-      // TODO: remove after https://github.com/prometheus-operator/kube-prometheus/pull/1131 is merged
-      roleBindingSpecificNamespaces:: null,
-      roleSpecificNamespaces:: null,
     },
 
     kubeStateMetrics+: {
@@ -280,23 +266,6 @@ local kp =
       serviceMonitorApiserver:: null,
       serviceMonitorKubeControllerManager:: null,
       serviceMonitorKubeScheduler:: null,
-      // TODO: check and fix in kube-prometheus
-      // Remove after https://github.com/prometheus-operator/kube-prometheus/pull/1200 is merged
-      serviceMonitorCoreDNS+: {
-        metadata+: {
-          labels+: {
-            'app.kubernetes.io/name': 'coredns',
-          },
-        },
-        spec+: {
-          jobLabel: 'app.kubernetes.io/name',
-          selector: {
-            matchLabels: {
-              'k8s-app': 'kube-dns',
-            },
-          },
-        },
-      },
       serviceMonitorKubelet+: {
         spec+: {
           endpoints+: [
