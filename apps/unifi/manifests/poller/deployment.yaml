@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 110d78835a670a4de10d3fbf7593d654
+        checksum.config/md5: d3c60b57c413107cc7a142621f65399a
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: unifi-poller

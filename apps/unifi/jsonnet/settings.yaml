@@ -16,6 +16,7 @@ poller:
   credentials:
     user: AgCqNc+gOKXak6UiPxI35tdKzVtvuQBs9kmAU4YLpaR8+MT9Y1UVQuYxai51Cll+RcMzvSaY0UuB80htIClQBV/LtSoAdYX6CxeXNW+bs5LLT40OY9DmViOfPbhEW2b3n1BvRzlTBbaMvnXo9Qn1PHMLfpKrnyG02xc/CYCiihbcru8eqSVJkDkEIj+dnmsUKXfjZ9hb8xlcYbQn3qBpRBLPadmhAWFbnVGHVKIkIcVLjnkek+dkv78Mb6LYOtQx8p0jGBazDL1ijUxw1YVyY5LjspPJRhWo8Y4Xs/jmira/GEt0uTyq7cy5VJwZI+IVfuaantL1cX/HTiXES6nylyfPV2UrHyncp+rc1gr73TvbgSniX+8GIVnTvEmVh5PxylBLMnIoNSTe+kYjOj1uqBD/ezlfP4F9cSIH3lkreBtgTJbRghujsM42ltR55YqSt6lRYFo77+W3VDCfZ0CmxS+TxrIPxo4S+Twt/MAay3EGNUuMB6zd/SNjNdg9sHd506JZ02blvlVyhj3X0Mw6TEodYf9ReFYF+E43jEcLqFHRB82JkiL/8a7WrAfKkswaZDicQEKO6iXdNZXdQM7CZTSAzeBDL0j9ImfGI0HcG3/N5/n0QBVnfur53BZn4ZEoKitiwuhdS0D6tpNLmCJofzL2kNmqM3jAKUFYZiKwQoRbUVkZ7LcYbwa36uP1X/4LhZoRl5Ltw1Vlpw==
     pass: AgBeP6IZ1MPnUQng7JFmi8nDPNhkj6Qwl2yoOZLR+895MOk81aUKEkCJAvbdbLsYVprjBE1M4RuZIGIekD7wlb399Pir61jhUDqxmvPsnb6hE9EqQmbq+fgS6ZvCSoLYU7Jkpy3uJ+uoh7UoRAwb9rdIGqjvtJIsrEoqQIaahcPWaU9z9haYJcOdaGgi3yRLX5BFlR2hx8K8ci7Y9g/SwItwqOz9+dOalAdoqvEpqe5wP6c79w1HMrKLxmUdGLWbQYPn2HmpCEBMYwu5zgPBT5E1QtxTTR8aKn6RhhYn5Lpa4kq2266j9FwvIViGQJ09B3xNt9VTirQNKENuoy8dehWNQiiDOU6+ipOqm4dAvXXxm0MFyTA6GAYRXlPd2nMp1fiEDW/HXY+bPsBRmqnrtJThdTVAaOT3QdbHpWk7nZbsW5taDSZSavYhqrdmTT6M692GVaUmhjBNFIq42/VftmZwEDtcxNvk6mAFkqxc47up6RPcUVg+dc6sr5+Y9o2YKk7dKee6C6blaZix0nZnbFYQ2v5bZ0jxxDbeQRk1+zyiGRWRwu0ojppjo0CMvakwJTQASaK5wkU/dzB9B0YNWbUvFbN4uSL4hwbxVwCWcyzjq3ZPjCIqBjdONouBUxgU3z1Q2lOUVsm0v33VTWrfubm8e3XguHIaO5C9KGHZ2tSrfJHoEBxkBiak9569eOrVGk+EdqqDOCRD8z4/jFuyASbLOVjQXilx8VLUddPYd3MmsyPrLOkbKVG+
+    address: AgBShhxGug06bqEdPOlWatn7Bs7/gtznNrZmqIe+2FXYu6fMPuJDMhYqjHOSjXMFc0HivjzYTC0rX2KFTQTT20EoSPrKqcbxReVynBGkwM5suX/3AJWHRVFuzfLAuPUBgyJ18QjMK7gQ/ZoGm/hZFzRG/mm7X8O9HkscmUUH30jAQCHQT0Sr+lBVegoJ6Is0A09v/ZcHGIvaK0i9HvdRVH7LgrYgTboQkT927rJZRWnsfkYgWEEKvOWpnLum+6VUw4PsF7epRU+QQIgvqQBKdpv68scQ5+r8yhPOP/cbunJb+srQlZjACLGH2BvVbu6TzvUV1MicxEGDoneNDO7yI5H3evGSzzgO15oogHC6c1vZleQfvuQcPQRgMPmdKqMRQ8vdCtFoCDxAh0XkaLAmBc5eS6PKkyw4Ap4sS2jDCnIs52W475/KoCzsv8O29XVSlk0iweUjdzxPWAP9cFddT5UGPfD8XwmnuwmvUEzuyF0wN92s4rov2YCQSo0iKkD/Kx6gxehkerKrGVa1xSMdYaG4lNzWAmWx9N2LTIhR6JraxaTHvNKJ0M3ZhDHGhPuciuruvkcSB8K6HqaCc8w2Zp4ezYh38bSdoTGJ6OvsvX1n81ktSHBYljdNKUVOnBGwEIN/zbe1e5RH/WUWC5MU65mVw4HNEEgrVxFiW6Jc0UiZ+s9SAoM9eOT+2MnFP4QJYueag/DXWTb6D/XX5aDDgynPqJqDa63OYYg=
   config: |
         [poller]
             debug = false
@@ -32,7 +33,7 @@ poller:
         [unifi]
             dynamic = true
         [unifi.defaults]
-            url = "https://192.168.2.7:8443"
+            url = "{{ index . "address" }}"
             user = "{{ index . "user" }}"
             pass = "{{ index . "pass" }}"
             sites = ["all"]
