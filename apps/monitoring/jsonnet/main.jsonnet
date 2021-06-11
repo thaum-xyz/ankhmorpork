@@ -114,7 +114,12 @@ local kp =
         metadata: {
           name: 'alertmanager',
           namespace: $.alertmanager.alertmanager.metadata.namespace,
-          annotations: ingressAnnotations,
+          annotations: ingressAnnotations {
+            'nginx.ingress.kubernetes.io/affinity': 'cookie',
+            'nginx.ingress.kubernetes.io/affinity-mode': 'persistent',
+            'nginx.ingress.kubernetes.io/session-cookie-hash': 'sha1',
+            'nginx.ingress.kubernetes.io/session-cookie-name': 'routing-cookie',
+          },
         },
         spec: {
           tls: [{
