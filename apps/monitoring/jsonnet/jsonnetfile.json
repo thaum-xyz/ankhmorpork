@@ -11,24 +11,6 @@
       "version": "main"
     },
     {
-      "source": {
-        "git": {
-          "remote": "https://github.com/kubernetes/kube-state-metrics",
-          "subdir": "jsonnet/kube-state-metrics"
-        }
-      },
-      "version": "release-2.0"
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/kubernetes/kube-state-metrics",
-          "subdir": "jsonnet/kube-state-metrics-mixin"
-        }
-      },
-      "version": "release-2.0"
-    },
-    {
 
       "source": {
         "git": {

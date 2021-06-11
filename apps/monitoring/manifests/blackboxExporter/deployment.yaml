@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: blackbox-exporter
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.18.0
+    app.kubernetes.io/version: 0.19.0
   name: blackbox-exporter
   namespace: monitoring
 spec:
@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: blackbox-exporter
         app.kubernetes.io/part-of: kube-prometheus
-        app.kubernetes.io/version: 0.18.0
+        app.kubernetes.io/version: 0.19.0
     spec:
       affinity:
         podAntiAffinity:
@@ -41,7 +41,7 @@ spec:
       - args:
         - --config.file=/etc/blackbox_exporter/config.yml
         - --web.listen-address=:19115
-        image: quay.io/prometheus/blackbox-exporter:v0.18.0
+        image: quay.io/prometheus/blackbox-exporter:v0.19.0
         name: blackbox-exporter
         ports:
         - containerPort: 19115
@@ -86,18 +86,18 @@ spec:
         - --secure-listen-address=:9115
         - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
         - --upstream=http://127.0.0.1:19115/
-        image: quay.io/brancz/kube-rbac-proxy:v0.8.0
+        image: quay.io/brancz/kube-rbac-proxy:v0.10.0
         name: kube-rbac-proxy
         ports:
         - containerPort: 9115
           name: https
         resources:
           limits:
-            cpu: 20m
-            memory: 40Mi
+            cpu: 64m
+            memory: 42Mi
           requests:
-            cpu: 10m
-            memory: 20Mi
+            cpu: 30m
+            memory: 16Mi
         securityContext:
           runAsGroup: 65532
           runAsNonRoot: true

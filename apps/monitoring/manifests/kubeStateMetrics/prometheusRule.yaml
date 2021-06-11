@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 2.0.0
+    app.kubernetes.io/version: 2.1.0
     role: alert-rules
   name: kube-state-metrics-rules
   namespace: monitoring
@@ -40,6 +40,32 @@ spec:
           /
         sum(rate(kube_state_metrics_watch_total{job="kube-state-metrics"}[5m])))
         > 0.01
+      for: 15m
+      labels:
+        severity: critical
+    - alert: KubeStateMetricsShardingMismatch
+      annotations:
+        description: kube-state-metrics pods are running with different --total-shards
+          configuration, some Kubernetes objects may be exposed multiple times or
+          not exposed at all.
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/kubestatemetricsshardingmismatch
+        summary: kube-state-metrics sharding is misconfigured.
+      expr: |
+        stdvar (kube_state_metrics_total_shards{job="kube-state-metrics"}) != 0
+      for: 15m
+      labels:
+        severity: critical
+    - alert: KubeStateMetricsShardsMissing
+      annotations:
+        description: kube-state-metrics shards are missing, some Kubernetes objects
+          are not being exposed.
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/kubestatemetricsshardsmissing
+        summary: kube-state-metrics shards are missing.
+      expr: |
+        2^max(kube_state_metrics_total_shards{job="kube-state-metrics"}) - 1
+          -
+        sum( 2 ^ max by (shard_ordinal) (kube_state_metrics_shard_ordinal{job="kube-state-metrics"}) )
+        != 0
       for: 15m
       labels:
         severity: critical

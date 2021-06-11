@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/component: alert-router
     app.kubernetes.io/name: alertmanager
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.21.0
+    app.kubernetes.io/version: 0.22.2
   name: main
   namespace: monitoring
 spec:
@@ -24,7 +24,7 @@ spec:
           topologyKey: kubernetes.io/hostname
         weight: 100
   externalUrl: https://alertmanager.ankhmorpork.thaum.xyz
-  image: quay.io/prometheus/alertmanager:v0.21.0
+  image: quay.io/prometheus/alertmanager:v0.22.2
   nodeSelector:
     kubernetes.io/os: linux
   podMetadata:
@@ -32,7 +32,7 @@ spec:
       app.kubernetes.io/component: alert-router
       app.kubernetes.io/name: alertmanager
       app.kubernetes.io/part-of: kube-prometheus
-      app.kubernetes.io/version: 0.21.0
+      app.kubernetes.io/version: 0.22.2
   replicas: 3
   resources:
     requests:
@@ -42,4 +42,4 @@ spec:
     runAsNonRoot: true
     runAsUser: 1000
   serviceAccountName: alertmanager-main
-  version: 0.21.0
+  version: 0.22.2
