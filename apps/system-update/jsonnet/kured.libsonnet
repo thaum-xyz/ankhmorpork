@@ -11,7 +11,6 @@ local defaults = {
   commonLabels:: {
     'app.kubernetes.io/name': 'kured',
     'app.kubernetes.io/version': defaults.version,
-    'app.kubernetes.io/component': 'server',
     'app.kubernetes.io/part-of': 'kured',
   },
   selectorLabels:: {
