@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kured
     app.kubernetes.io/part-of: kured
-    app.kubernetes.io/version: 1.6.1
+    app.kubernetes.io/version: 1.7.0
   name: kured
   namespace: system-update
 spec:
