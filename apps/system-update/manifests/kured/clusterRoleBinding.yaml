@@ -1,0 +1,18 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: kured
+    app.kubernetes.io/part-of: kured
+    app.kubernetes.io/version: 1.6.1
+  name: kured
+  namespace: system-update
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kured
+subjects:
+- kind: ServiceAccount
+  name: kured
+  namespace: system-update
