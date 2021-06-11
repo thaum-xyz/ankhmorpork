@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 60m0s
-  path: ./apps/system-update/kured
+  path: ./apps/system-update/manifests
   prune: false
   sourceRef:
     kind: GitRepository
