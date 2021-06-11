@@ -108,6 +108,31 @@ local all = {
       },
       { id_rsa: config.backup.encryptedSSHKey }
     ),
+
+    local c = {
+      name: 'copier',
+      image: config.backup.image,
+      command: [
+        'rsync',
+        '-av',
+        '--delete',
+        '-e',
+        'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null',
+        'root@' + config.backup.host + ':/data/autobackup/',
+        '/backup/',
+      ],
+      volumeMounts: [
+        {
+          name: 'backups',
+          mountPath: '/backups',
+        },
+        {
+          name: 'ssh',
+          mountPath: '/root/.ssh',
+          readOnly: true,
+        },
+      ],
+    },
     cronjob: {
       apiVersion: 'batch/v1beta1',
       kind: 'CronJob',
@@ -121,30 +146,7 @@ local all = {
           spec: {
             template: {
               spec: {
-                containers: [{
-                  name: 'copier',
-                  image: 'quay.io/paulfantom/rsync',
-                  command: [
-                    'rsync',
-                    '-av',
-                    '--delete',
-                    '-e',
-                    'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null',
-                    'root@' + config.backup.host + ':/data/autobackup/',
-                    '/backup/',
-                  ],
-                  volumeMounts: [
-                    {
-                      name: 'backups',
-                      mountPath: '/backups',
-                    },
-                    {
-                      name: 'ssh',
-                      mountPath: '/root/.ssh',
-                      readOnly: true,
-                    },
-                  ],
-                }],
+                containers: [c],
                 volumes: [
                   {
                     name: 'backups',
