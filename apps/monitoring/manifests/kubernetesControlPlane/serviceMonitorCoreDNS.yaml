@@ -3,7 +3,6 @@ kind: ServiceMonitor
 metadata:
   labels:
     app.kubernetes.io/name: coredns
-    k8s-app: kube-dns
   name: coredns
   namespace: monitoring
 spec:
@@ -11,7 +10,7 @@ spec:
   - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
     interval: 15s
     port: metrics
-  jobLabel: k8s-app
+  jobLabel: app.kubernetes.io/name
   namespaceSelector:
     matchNames:
     - kube-system

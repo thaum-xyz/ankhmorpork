@@ -295,11 +295,11 @@ local kp =
       serviceMonitorCoreDNS+: {
         metadata+: {
           labels+: {
-            'k8s-app': 'kube-dns',
+            'app.kubernetes.io/name': 'coredns',
           },
         },
         spec+: {
-          jobLabel: 'k8s-app',
+          jobLabel: 'app.kubernetes.io/name',
           selector: {
             matchLabels: {
               'k8s-app': 'kube-dns',
