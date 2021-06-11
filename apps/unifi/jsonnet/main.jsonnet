@@ -100,12 +100,12 @@ local all = {
     _metadata:: {
       name: 'backup',
       namespace: config.namespace,
+      labels: {
+        'app.kubernetes.io/name': 'backup',
+      },
     },
     sshprivkey: sealedsecret(
-      {
-        name: 'sshprivkey',
-        namespace: config.namespace,
-      },
+      $.backup._metadata { name: 'sshprivkey' },
       { id_rsa: config.backup.encryptedSSHKey }
     ),
 

@@ -1,6 +1,8 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
+  labels:
+    app.kubernetes.io/name: backup
   name: backup
   namespace: unifi
 spec:

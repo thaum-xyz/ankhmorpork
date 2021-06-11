@@ -2,6 +2,8 @@ apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
   creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: backup
   name: sshprivkey
   namespace: unifi
 spec:
@@ -12,5 +14,7 @@ spec:
       annotations:
         sealedsecrets.bitnami.com/managed: "true"
       creationTimestamp: null
+      labels:
+        app.kubernetes.io/name: backup
       name: sshprivkey
       namespace: unifi
