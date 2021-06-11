@@ -31,6 +31,8 @@
 //       - redis
 //       - home dashboard
 
+local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
+
 local addArgs(args, name, containers) = std.map(
   function(c) if c.name == name then
     c {
@@ -395,6 +397,11 @@ local kp =
     //},
     // TODO: rebuild exporter to be arm64 compliant
     uptimerobot: exporter($.values.uptimerobot) + {
+      secret: sealedsecret(
+        $.values.uptimerobot.secretRefName,
+        $.values.common.namespace,
+        { UPTIMEROBOT_API_KEY: $.values.uptimerobot.encryptedApiKey }
+      ),
       deployment+: {
         spec+: {
           template+: {
