@@ -47,6 +47,8 @@ spec:
         securityContext:
           privileged: true
       hostPID: true
+      nodeSelector:
+        kubernetes.io/arch: arm64
       restartPolicy: Always
       serviceAccountName: kured
       tolerations:
