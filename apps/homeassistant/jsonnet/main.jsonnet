@@ -12,7 +12,13 @@ local config = std.parseYaml(configYAML)[0] {
 };
 
 local all = homeassistant(config) + {
-  credentials: sealedsecret(config.apiTokenSecretKeySelector.name, config.namespace, { [config.apiTokenSecretKeySelector.key]: config.encryptedAPIToken }),
+  credentials: sealedsecret(
+    {
+      name: config.apiTokenSecretKeySelector.name,
+      namespace: config.namespace,
+    },
+    { [config.apiTokenSecretKeySelector.key]: config.encryptedAPIToken }
+  ),
   ingress+: {
     metadata+: {
       labels+: {

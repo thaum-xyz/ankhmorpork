@@ -1,22 +1,18 @@
 {
-  sealedsecret(name, namespace, encryptedData): {
+  sealedsecret(metadata, encryptedData): {
     apiVersion: "bitnami.com/v1alpha1",
     kind: "SealedSecret",
-    metadata: {
+    metadata: metadata {
       creationTimestamp: null,
-      name: name,
-      namespace: namespace,
     },
     spec: {
       encryptedData: encryptedData,
       template: {
-        metadata: {
+        metadata: metadata {
           annotations: {
             "sealedsecrets.bitnami.com/managed": "true"
           },
           creationTimestamp: null,
-          name: name,
-          namespace: namespace,
         }
       }
     }
