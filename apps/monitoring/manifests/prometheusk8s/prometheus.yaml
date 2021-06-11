@@ -33,7 +33,8 @@ spec:
       name: alertmanager-main
       namespace: monitoring
       port: web
-  enableFeatures: []
+  enableFeatures:
+  - remote-write-receiver
   externalLabels: {}
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
   image: quay.io/prometheus/prometheus:v2.27.1
