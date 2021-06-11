@@ -5,6 +5,7 @@ DIRS=\
 	apps/cookbook \
 	apps/homer \
 	apps/monitoring \
+	apps/unifi \
 	apps/system-update
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
