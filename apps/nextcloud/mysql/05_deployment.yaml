@@ -72,6 +72,10 @@ spec:
           value: "localhost"
         - name: MYSQL_USER
           value: "root"
+        - name: MYSQL_HOST
+          value: "127.0.0.1"
+        - name: MYSQL_PORT
+          value: "3306"
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
