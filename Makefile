@@ -5,6 +5,7 @@ DIRS=\
 	apps/cookbook \
 	apps/homer \
 	apps/monitoring \
+	apps/news \
 	apps/unifi \
 	apps/system-update
 

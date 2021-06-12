@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: database
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/part-of: postgres
+    app.kubernetes.io/version: "13.3"
+  name: postgres
+  namespace: news
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: database
+      app.kubernetes.io/name: postgres
+      app.kubernetes.io/part-of: postgres
+  serviceName: postgres
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: database
+        app.kubernetes.io/name: postgres
+        app.kubernetes.io/part-of: postgres
+        app.kubernetes.io/version: "13.3"
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: postgres
+        image: postgres:13.3
+        imagePullPolicy: IfNotPresent
+        name: postgres
+        ports:
+        - containerPort: 5432
+          name: tcp
+        readinessProbe:
+          exec:
+            command:
+            - bash
+            - -c
+            - pg_isready -U $POSTGRES_USER
+          initialDelaySeconds: 15
+          timeoutSeconds: 2
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: data
+      restartPolicy: Always
+      serviceAccountName: postgres
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: postgres
