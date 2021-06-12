@@ -90,6 +90,4 @@ spec:
       - name: completed
         persistentVolumeClaim:
           claimName: torrents
-      nodeSelector:
-        kubernetes.io/arch: "amd64"  # TODO: images are now multi-arch, consider removing this selector
       tolerations: []

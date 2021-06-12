@@ -50,6 +50,12 @@
         state: present
       with_items:
         - "{{ 'nfs-common' if (ansible_os_family | lower == 'debian') else 'nfs-utils' }}"
+    - name: Add node local storage labels
+      set_fact:
+        k3s_extra_agent_args: "{{ k3s_extra_agent_args }} --node-label storage.infra/local=true"
+      when:
+        - local_storage_device is defined
+        - local_storage_device != ""
     - name: Add node labels
       set_fact:
         k3s_extra_agent_args: "{{ k3s_extra_agent_args }} --node-label {{ node_labels | join(' --node-label ') }}"

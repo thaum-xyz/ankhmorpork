@@ -29,7 +29,7 @@ spec:
       containers:
       - envFrom:
         - secretRef:
-            name: plex-token  # TODO: consider moving this to a separate secret
+            name: plex-token
         name: plex-metrics
         image: quay.io/paulfantom/plex_exporter:0.2.2
         imagePullPolicy: IfNotPresent

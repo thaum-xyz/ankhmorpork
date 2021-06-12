@@ -66,4 +66,5 @@ spec:
           claimName: sonarr-config
       nodeSelector:
         kubernetes.io/arch: "amd64"
+        storage.infra/main: "true"
       tolerations: []

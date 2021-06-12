@@ -1,0 +1,6 @@
+system_mountpoints:
+  - description: k3s local storage
+    before: k3s-node.service
+    device: "{{ local_storage_device }}"
+    mountpoint: "/var/lib/rancher/k3s/storage"
+    type: "ext4"

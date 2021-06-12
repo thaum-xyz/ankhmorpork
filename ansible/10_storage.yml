@@ -24,3 +24,4 @@
         minute: "*/10"
         job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
     when: enable_smartmon is defined
+

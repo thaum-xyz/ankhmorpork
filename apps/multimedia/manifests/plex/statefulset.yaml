@@ -97,5 +97,5 @@ spec:
         emptyDir: {}
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        kubernetes.io/hostname: "metal01"  # TODO: remove this after tests
+        storage.infra/main: "true"
       tolerations: []
