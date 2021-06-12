@@ -66,5 +66,4 @@ spec:
           claimName: sonarr-config
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        storage.infra/direct: "true"  # use direct network link for tv volume
       tolerations: []

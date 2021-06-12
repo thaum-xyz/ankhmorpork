@@ -64,5 +64,4 @@ spec:
           claimName: radarr-config
       nodeSelector:
         kubernetes.io/arch: "amd64"
-        storage.infra/direct: "true"  # use direct network link for movies volume
       tolerations: []
