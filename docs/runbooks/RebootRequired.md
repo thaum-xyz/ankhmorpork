@@ -2,8 +2,7 @@
 
 ## Meaning
 
-Node is expressing a need to be rebooted. Usually this is shown because of an unattended upgrade which included new
-kernel version.
+Node is expressing a need to be rebooted. Usually this is shown because of an unattended upgrade which included a new kernel version.
 
 ## Impact
 

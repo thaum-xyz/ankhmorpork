@@ -3,19 +3,42 @@
 
 ## Cluster bootstrap
 
-1. Startup vanilla cluster without ANYTHING from `base/` or `apps/` directories
-2. Get SealedSecrets master key from bitwarden and apply it to cluster as described
-[here](https://github.com/bitnami-labs/sealed-secrets#how-can-i-do-a-backup-of-my-sealedsecrets) with:
-```
-$ kubectl apply -f master.key
-$ kubectl delete pod -n kube-system -l name=sealed-secrets-controller
-```
+1. Configure nodes and start a cluster using ansible playbooks from `ansible/` directory
 
-## Data Recovery
+2. Recover SealedSecret master key following [SealedSecrets SOP](https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/SealedSecrets.md)
 
-Currently backup recovery is a manual process for each PV. All backups are stored in B2 with keys in bitwarden.
+3. Start kubernetes infrastructure using manifests from `base/` subdirectories
 
-TODO: Describe procedure
+   _Note_: some custom resources may not be applied at this stage. Try applying the same configs second time to ensure necessary CR objects are applied
+
+   ```bash
+   cd base
+   k apply -Rf kube-system/
+   for i in $(ls); do kubectl create namespace $i && kubectl apply -Rf $i; done
+   sleep 30s
+   for i in $(ls); do kubectl create namespace $i && kubectl apply -Rf $i; done
+   ```
+
+4. Previous point should start `flux` which should also start managing a cluster and start all applications from `apps/` .
+
+5. Start [recovering PVs](##PersistentVolume Data Recovery)
+
+
+## PersistentVolume Data Recovery
+
+### managed-nfs-storage StorageClass
+
+Store for managed-nfs-storage is periodically backed up as a whole to a backblaze B2 bucket b2:ankhmorpork-thaum-xyz:/nfs-managed with encryption handled by restic.
+The process of mapping restored PVCs to old PV names is not automated and needs to be performed manually by one of two methods:
+
+1. Creating PVs manually and changing `claimRef` to match restored PVCs.
+2. Stopping application using PV and moving data from old directories to new ones.
+
+### local-path StorageClass
+
+There is no global method for backing up this storage type. Each application deployment uses its own method of backing up data.
+
+Recommended way is to periodically backup data to a PV in `managed-nfs-storage` and use it as a backup proxy.
 
 ## MySQL root password recovery
 
