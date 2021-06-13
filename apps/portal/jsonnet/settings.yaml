@@ -1,0 +1,6 @@
+---
+version: "21.03.2"  # application-version-from-github: bastienwirtz/homer
+image: "b4bz/homer:21.03.2"  # application-image-from-github: bastienwirtz/homer
+namespace: "portal"
+replicas: 1
+domain: "portal.krupa.net.pl"

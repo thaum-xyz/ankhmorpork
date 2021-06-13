@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homer
+    app.kubernetes.io/part-of: homer
+    app.kubernetes.io/version: 21.03.2
+  name: homer
+  namespace: portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: homer
+      app.kubernetes.io/part-of: homer
+  template:
+    metadata:
+      annotations:
+        checksum.config/md5: 1dfc1b4051622046d3af3a1b80cdbd02
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: homer
+        app.kubernetes.io/part-of: homer
+        app.kubernetes.io/version: 21.03.2
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - homer
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - image: b4bz/homer:21.03.2
+        imagePullPolicy: IfNotPresent
+        name: homer
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 10m
+            memory: 10Mi
+          requests:
+            cpu: 1m
+            memory: 5Mi
+        volumeMounts:
+        - mountPath: /www/assets/config.yml
+          name: config
+          subPath: config.yml
+      restartPolicy: Always
+      serviceAccountName: homer
+      volumes:
+      - configMap:
+          name: homer-config
+        name: config
