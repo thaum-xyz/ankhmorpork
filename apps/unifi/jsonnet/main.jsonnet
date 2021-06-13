@@ -156,6 +156,7 @@ local all = {
                     name: 'ssh',
                     secret: {
                       secretName: $.backup.sshprivkey.metadata.name,
+                      defaultMode: 384,  // Same as 0600
                     },
                   },
                 ],

@@ -36,6 +36,7 @@ spec:
               claimName: backup
           - name: ssh
             secret:
+              defaultMode: 384
               secretName: sshprivkey
   schedule: 6 6 * * sun
   successfulJobsHistoryLimit: 1
