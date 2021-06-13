@@ -36,8 +36,8 @@ data:
         success 51200 21600
         prefetch 1000
       }
-      forward . tls://1.1.1.1 tls://1.0.0.1 {
-        tls_servername cloudflare-dns.com
+      forward . tls://45.90.28.182 tls://45.90.30.182 {
+        tls_servername dns.nextdns.io
         health_check 5s
       }
       # local
