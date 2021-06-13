@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
-    app.kubernetes.io/component: adblocker
+    app.kubernetes.io/component: dnsforwarder
     app.kubernetes.io/name: coredns
     app.kubernetes.io/version: 1.8.4
     prometheus: k8s

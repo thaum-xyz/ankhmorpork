@@ -33,10 +33,7 @@
     success 51200 21600
     prefetch 1000
   }
-  forward . tls://45.90.28.182 tls://45.90.30.182 {
-    tls_servername dns.nextdns.io
-    health_check 5s
-  }
+  forward . 127.0.0.1:5301 127.0.0.1:5302
   # local
   reload
   loadbalance
@@ -44,4 +41,14 @@
     class denial error
   }
   errors
+}
+
+forward . tls://45.90.28.182 {
+  tls_servername {$NEXTDNS_ID}.dns1.nextdns.io
+  health_check 5s
+}
+
+forward . tls://45.90.30.182 {
+  tls_servername {$NEXTDNS_ID}.dns2.nextdns.io
+  health_check 5s
 }

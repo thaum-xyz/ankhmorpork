@@ -9,12 +9,12 @@ local configYAML = (importstr './settings.yaml');
 // TODO: figure out how to clean this mess
 local all = {
   config:: {
-    adblocker: std.parseYaml(configYAML)[0] {
+    dnsforwarder: std.parseYaml(configYAML)[0] {
       corefile: corefile,
       commonLabels:: {
         'app.kubernetes.io/name': 'coredns',
-        'app.kubernetes.io/version': $.config.adblocker.version,
-        'app.kubernetes.io/component': 'adblocker',
+        'app.kubernetes.io/version': $.config.dnsforwarder.version,
+        'app.kubernetes.io/component': 'dnsforwarder',
       },
       mixin: {
         _config: {
@@ -28,7 +28,7 @@ local all = {
       },
     },
   },
-  adblocker: coredns($.config.adblocker) + {
+  dnsforwarder: coredns($.config.dnsforwarder) + {
     local metallbMetadata = {
       metadata+: {
         annotations+: {
@@ -45,8 +45,9 @@ local all = {
           spec+: {
             dnsConfig+: {
               nameservers: [
+                '45.90.28.182',
+                '45.90.30.182',
                 '192.168.2.1',
-                '1.0.0.1',
               ],
             },
           },
@@ -56,4 +57,4 @@ local all = {
   },
 };
 
-{ [name + '.yaml']: std.manifestYamlDoc(all.adblocker[name]) for name in std.objectFields(all.adblocker) }
+{ [name + '.yaml']: std.manifestYamlDoc(all.dnsforwarder[name]) for name in std.objectFields(all.dnsforwarder) }
