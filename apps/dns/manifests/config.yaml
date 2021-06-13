@@ -32,14 +32,6 @@ data:
         192.168.2.40 metal01.ankhmorpork.thaum.xyz
         fallthrough
       }
-      ads {
-        permit cdnpark.com
-        permit googleadservices.com
-        permit backblazeb2.com
-        permit app.adjust.com
-        default-lists
-        log
-      }
       cache {
         success 51200 21600
         prefetch 1000
@@ -61,6 +53,6 @@ metadata:
   labels:
     app.kubernetes.io/component: adblocker
     app.kubernetes.io/name: coredns
-    app.kubernetes.io/version: 0.2.5
+    app.kubernetes.io/version: 1.8.4
   name: coredns-corefile
   namespace: dns

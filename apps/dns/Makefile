@@ -1,7 +1,7 @@
 SHELL=/bin/bash -o pipefail
 
 MANIFESTS_DIR=manifests
-VENDOR_DIR=jsonnet/vendor
+JSONNET_VENDOR=jsonnet/vendor
 JSONNETFMT_ARGS=-n 2 --max-blank-lines 2 --string-style s --comment-style s
 
 .PHONY: all
@@ -18,11 +18,12 @@ generate: $(MANIFESTS_DIR) $(JSONNET_VENDOR)
 	$(MAKE) beautify
 
 $(MANIFESTS_DIR):
+	rm -rf $(MANIFESTS_DIR)
 	mkdir -p $(MANIFESTS_DIR)
 
 $(JSONNET_VENDOR):
 	cd jsonnet
-	jb install
+	-jb install
 
 .PHONY: beautify
 beautify:
@@ -30,13 +31,11 @@ beautify:
 
 .PHONY: update
 update:
-	cd jsonnet && jb update
+	-cd jsonnet && jb update
 	rm -rf $(JSONNET_VENDOR)
 	$(MAKE) generate
 
 .PHONY: version-update
-LATEST=$(shell curl https://raw.githubusercontent.com/paulfantom/dockerfiles/master/coredns-ads/VERSION 2>/dev/null)
-CURRENT=$(shell grep version jsonnet/settings.yaml | cut -d':' -f2 | xargs)
 version-update:
-	sed -i "s/$(CURRENT)/$(LATEST)/g" jsonnet/settings.yaml
+	./../../hack/version-update.sh .
 	if ! git diff-index --quiet HEAD .; then $(MAKE) generate; fi

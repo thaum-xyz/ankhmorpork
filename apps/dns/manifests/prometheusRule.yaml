@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: adblocker
     app.kubernetes.io/name: coredns
-    app.kubernetes.io/version: 0.2.5
+    app.kubernetes.io/version: 1.8.4
     prometheus: k8s
     role: alert-rules
   name: coredns

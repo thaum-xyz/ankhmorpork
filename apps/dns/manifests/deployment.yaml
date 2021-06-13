@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: adblocker
     app.kubernetes.io/name: coredns
-    app.kubernetes.io/version: 0.2.5
+    app.kubernetes.io/version: 1.8.4
   name: coredns
   namespace: dns
 spec:
@@ -22,7 +22,7 @@ spec:
       labels:
         app.kubernetes.io/component: adblocker
         app.kubernetes.io/name: coredns
-        app.kubernetes.io/version: 0.2.5
+        app.kubernetes.io/version: 1.8.4
     spec:
       affinity:
         podAntiAffinity:
@@ -40,7 +40,7 @@ spec:
       - args:
         - -conf
         - /etc/coredns/Corefile
-        image: quay.io/paulfantom/coredns-ads:0.2.5
+        image: coredns:1.8.4
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 5
