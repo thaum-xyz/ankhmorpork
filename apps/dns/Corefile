@@ -5,19 +5,6 @@
   ready
   prometheus :9153
   hosts {
-    192.168.2.91 weirdo.blog
-    192.168.2.91 alchemyof.it
-    192.168.2.91 cloud.krupa.net.pl
-    192.168.2.91 ankhmorpork.thaum.xyz
-    192.168.2.91 cookbook.ankhmorpork.thaum.xyz
-    192.168.2.91 flux.ankhmorpork.thaum.xyz
-    192.168.2.91 home.ankhmorpork.thaum.xyz
-    192.168.2.91 ombi.ankhmorpork.thaum.xyz
-    192.168.2.91 prometheus.ankhmorpork.thaum.xyz
-    192.168.2.91 alertmanager.ankhmorpork.thaum.xyz
-    192.168.2.91 grafana.ankhmorpork.thaum.xyz
-    192.168.2.91 twoflower.ankhmorpork.thaum.xyz
-    192.168.2.91 auth.ankhmorpork.thaum.xyz
     192.168.2.7  unifi.ankhmorpork.thaum.xyz
     192.168.2.10 spy.ankhmorpork.thaum.xyz
     192.168.2.30 k8sapi.ankhmorpork.thaum.xyz
@@ -27,6 +14,23 @@
     192.168.2.33 node03.ankhmorpork.thaum.xyz
     192.168.2.34 node04.ankhmorpork.thaum.xyz
     192.168.2.40 metal01.ankhmorpork.thaum.xyz
+    ### local ingress START ###
+    192.168.2.91 cookbook.ankhmorpork.thaum.xyz
+    192.168.2.91 alchemyof.it
+    192.168.2.91 auth.ankhmorpork.thaum.xyz
+    192.168.2.91 weirdo.blog
+    192.168.2.91 blog.ankhmorpork.thaum.xyz
+    192.168.2.91 ankhmorpork.thaum.xyz
+    192.168.2.91 ombi.ankhmorpork.thaum.xyz
+    192.168.2.91 cloud.krupa.net.pl
+    192.168.2.91 grafana.ankhmorpork.thaum.xyz
+    192.168.2.91 prometheus.ankhmorpork.thaum.xyz
+    192.168.2.91 flux.ankhmorpork.thaum.xyz
+    192.168.2.91 home.ankhmorpork.thaum.xyz
+    192.168.2.91 alertmanager.ankhmorpork.thaum.xyz
+    192.168.2.91 push.ankhmopork.thaum.xyz
+    192.168.2.91 rss.ankhmorpork.thaum.xyz
+    ### local ingress END ###
     fallthrough
   }
   cache {
@@ -43,12 +47,16 @@
   errors
 }
 
-forward . tls://45.90.28.182 {
-  tls_servername {$NEXTDNS_ID}.dns1.nextdns.io
-  health_check 5s
+.:5301 {
+  forward . tls://45.90.28.182 {
+    tls_servername {$NEXTDNS_ID}.dns1.nextdns.io
+    health_check 5s
+  }
 }
 
-forward . tls://45.90.30.182 {
-  tls_servername {$NEXTDNS_ID}.dns2.nextdns.io
-  health_check 5s
+.:5302 {
+  forward . tls://45.90.30.182 {
+    tls_servername {$NEXTDNS_ID}.dns2.nextdns.io
+    health_check 5s
+  }
 }

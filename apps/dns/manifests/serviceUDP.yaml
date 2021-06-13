@@ -5,7 +5,7 @@ metadata:
     metallb.universe.tf/address-pool: default
     metallb.universe.tf/allow-shared-ip: dns-svc
   labels:
-    app.kubernetes.io/component: dnsforwarder
+    app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns
     app.kubernetes.io/version: 1.8.4
   name: coredns-udp
@@ -18,6 +18,6 @@ spec:
     protocol: UDP
     targetPort: dns-udp
   selector:
-    app.kubernetes.io/component: dnsforwarder
+    app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns
   type: LoadBalancer

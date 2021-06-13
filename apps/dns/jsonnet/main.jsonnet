@@ -1,3 +1,4 @@
+local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
 local coredns = import './coredns.libsonnet';
 local external = import './externalDNS.libsonnet';
 
@@ -9,13 +10,9 @@ local configYAML = (importstr './settings.yaml');
 // TODO: figure out how to clean this mess
 local all = {
   config:: {
-    dnsforwarder: std.parseYaml(configYAML)[0] {
+    coredns: std.parseYaml(configYAML)[0] {
       corefile: corefile,
-      commonLabels:: {
-        'app.kubernetes.io/name': 'coredns',
-        'app.kubernetes.io/version': $.config.dnsforwarder.version,
-        'app.kubernetes.io/component': 'dnsforwarder',
-      },
+      secretName: 'coredns-envs',
       mixin: {
         _config: {
           // TODO: Figure out how to auto-configure this in coredns.libsonnet
@@ -28,7 +25,13 @@ local all = {
       },
     },
   },
-  dnsforwarder: coredns($.config.dnsforwarder) + {
+  coredns: coredns($.config.coredns) + {
+    envs: sealedsecret(
+      $.coredns.serviceAccount.metadata { name: $.config.coredns.secretName },
+      {
+        NEXTDNS_ID: $.config.coredns.nextDNSID,
+      }
+    ),
     local metallbMetadata = {
       metadata+: {
         annotations+: {
@@ -57,4 +60,4 @@ local all = {
   },
 };
 
-{ [name + '.yaml']: std.manifestYamlDoc(all.dnsforwarder[name]) for name in std.objectFields(all.dnsforwarder) }
+{ [name + '.yaml']: std.manifestYamlDoc(all.coredns[name]) for name in std.objectFields(all.coredns) }

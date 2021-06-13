@@ -23,6 +23,8 @@ local defaults = {
     for labelName in std.objectFields(defaults.commonLabels)
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
+  // Secret can be used to store env variables for coredns
+  secretName: '',
   mixin: {
     ruleLabels: {},
     _config: {},
@@ -31,23 +33,23 @@ local defaults = {
 
 function(params) {
   local dns = self,
-  cfg:: defaults + params,
+  _config:: defaults + params,
   metadata:: {
-    name: dns.cfg.name,
-    namespace: dns.cfg.namespace,
-    labels: dns.cfg.commonLabels,
+    name: dns._config.name,
+    namespace: dns._config.namespace,
+    labels: dns._config.commonLabels,
   },
 
   mixin:: (import 'github.com/povilasv/coredns-mixin/mixin.libsonnet') +
           (import 'github.com/kubernetes-monitoring/kubernetes-mixin/alerts/add-runbook-links.libsonnet') {
-            _config+:: dns.cfg.mixin._config,
+            _config+:: dns._config.mixin._config,
           },
 
   prometheusRule: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PrometheusRule',
     metadata: dns.metadata {
-      labels: dns.cfg.mixin.ruleLabels + dns.metadata.labels,
+      labels: dns._config.mixin.ruleLabels + dns.metadata.labels,
     },
     spec: {
       local r = if std.objectHasAll(dns.mixin, 'prometheusRules') then dns.mixin.prometheusRules.groups else [],
@@ -66,34 +68,34 @@ function(params) {
   serviceTCP: {
     apiVersion: 'v1',
     kind: 'Service',
-    metadata: dns.metadata { name: dns.cfg.name + '-tcp' },
+    metadata: dns.metadata { name: dns._config.name + '-tcp' },
     spec: {
       type: 'LoadBalancer',
-      loadBalancerIP: dns.cfg.loadBalancerIP,
+      loadBalancerIP: dns._config.loadBalancerIP,
       ports: [{
         name: 'dns-tcp',
         targetPort: 'dns-tcp',
         port: 53,
         protocol: 'TCP',
       }],
-      selector: dns.cfg.selectorLabels,
+      selector: dns._config.selectorLabels,
     },
   },
 
   serviceUDP: {
     apiVersion: 'v1',
     kind: 'Service',
-    metadata: dns.metadata { name: dns.cfg.name + '-udp' },
+    metadata: dns.metadata { name: dns._config.name + '-udp' },
     spec: {
       type: 'LoadBalancer',
-      loadBalancerIP: dns.cfg.loadBalancerIP,
+      loadBalancerIP: dns._config.loadBalancerIP,
       ports: [{
         name: 'dns-udp',
         targetPort: 'dns-udp',
         port: 53,
         protocol: 'UDP',
       }],
-      selector: dns.cfg.selectorLabels,
+      selector: dns._config.selectorLabels,
     },
   },
 
@@ -108,7 +110,7 @@ function(params) {
         interval: '30s',
       }],
       selector: {
-        matchLabels: dns.cfg.selectorLabels,
+        matchLabels: dns._config.selectorLabels,
       },
     },
   },
@@ -120,7 +122,7 @@ function(params) {
     spec: {
       minAvailable: 1,
       selector: {
-        matchLabels: dns.cfg.selectorLabels,
+        matchLabels: dns._config.selectorLabels,
       },
     },
   },
@@ -129,20 +131,27 @@ function(params) {
     apiVersion: 'v1',
     kind: 'ConfigMap',
     metadata: dns.metadata {
-      name: dns.cfg.name + '-corefile',
+      name: dns._config.name + '-corefile',
     },
     data: {
-      Corefile: dns.cfg.corefile,
+      Corefile: dns._config.corefile,
       //Corefile: 'ok',
     },
   },
 
   local c = {
-    name: dns.cfg.name,
-    image: dns.cfg.image,
+    name: dns._config.name,
+    image: dns._config.image,
     imagePullPolicy: 'Always',
-    resources: dns.cfg.resources,
+    resources: dns._config.resources,
     args: ['-conf', '/etc/coredns/Corefile'],
+    [if dns._config.secretName != '' then 'envFrom']: [
+      {
+        secretRef: {
+          name: dns._config.secretName,
+        },
+      },
+    ],
     volumeMounts: [{
       name: 'corefile',
       mountPath: '/etc/coredns',
@@ -203,13 +212,13 @@ function(params) {
           maxUnavailable: 1,
         },
       },
-      replicas: dns.cfg.replicas,
-      selector: { matchLabels: dns.cfg.selectorLabels },
+      replicas: dns._config.replicas,
+      selector: { matchLabels: dns._config.selectorLabels },
       template: {
-        metadata: { labels: dns.cfg.commonLabels },
+        metadata: { labels: dns._config.commonLabels },
         spec: {
           serviceAccountName: dns.serviceAccount.metadata.name,
-          affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity(dns.cfg.name),
+          affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity(dns._config.name),
           containers: [c],
           dnsPolicy: 'Default',
           volumes: [{

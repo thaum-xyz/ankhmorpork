@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: dnsforwarder
+    app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns
     app.kubernetes.io/version: 1.8.4
   name: coredns
@@ -11,7 +11,7 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app.kubernetes.io/component: dnsforwarder
+      app.kubernetes.io/component: dns-server
       app.kubernetes.io/name: coredns
   strategy:
     rollingUpdate:
@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: dnsforwarder
+        app.kubernetes.io/component: dns-server
         app.kubernetes.io/name: coredns
         app.kubernetes.io/version: 1.8.4
     spec:
@@ -40,6 +40,9 @@ spec:
       - args:
         - -conf
         - /etc/coredns/Corefile
+        envFrom:
+        - secretRef:
+            name: coredns-envs
         image: coredns/coredns:1.8.4
         imagePullPolicy: Always
         livenessProbe:
@@ -87,9 +90,9 @@ spec:
           readOnly: true
       dnsConfig:
         nameservers:
-        - 192.168.2.1
         - 45.90.28.182
         - 45.90.30.182
+        - 192.168.2.1
       dnsPolicy: Default
       serviceAccountName: coredns
       volumes:

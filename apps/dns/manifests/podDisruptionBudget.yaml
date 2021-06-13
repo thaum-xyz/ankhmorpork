@@ -2,7 +2,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   labels:
-    app.kubernetes.io/component: dnsforwarder
+    app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns
     app.kubernetes.io/version: 1.8.4
   name: coredns
@@ -11,5 +11,5 @@ spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app.kubernetes.io/component: dnsforwarder
+      app.kubernetes.io/component: dns-server
       app.kubernetes.io/name: coredns
