@@ -258,6 +258,46 @@ local kp =
     },
 
     kubeStateMetrics+: {
+      service:: {},
+      serviceMonitor:: {},
+      // Test moving KSM to pod monitor
+      podMonitor: {
+        apiVersion: 'monitoring.coreos.com/v1',
+        kind: 'ServiceMonitor',
+        metadata: $.kubeStateMetrics.deployment.metadata,  // Internally metadata is identical
+        spec: {
+          jobLabel: 'app.kubernetes.io/name',
+          selector: {
+            matchLabels: $.kubeStateMetrics.podLabels,
+          },
+        },
+        endpoints: [
+          {
+            bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+            honorLabels: true,
+            interval: '30s',
+            port: 'https-main',
+            relabelings: [{
+              action: 'labeldrop',
+              regex: '(pod|service|endpoint|namespace)',
+            }],
+            scheme: 'https',
+            scrapeTimeout: '30s',
+            tlsConfig: {
+              insecureSkipVerify: true,
+            },
+          },
+          {
+            bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+            interval: '30s',
+            port: 'https-self',
+            scheme: 'https',
+            tlsConfig: {
+              insecureSkipVerify: true,
+            },
+          },
+        ],
+      },
       deployment+: {
         spec+: {
           template+: {
