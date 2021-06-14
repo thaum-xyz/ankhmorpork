@@ -30,6 +30,6 @@ spec:
           name: metrics
         resources: {}
       nodeSelector:
-        kubernetes.io/arch: arm64
+        kubernetes.io/arch: amd64
         kubernetes.io/os: linux
       serviceAccountName: sloth

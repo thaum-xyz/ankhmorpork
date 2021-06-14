@@ -412,7 +412,7 @@ local kp =
             spec+: {
               nodeSelector: {
                 'kubernetes.io/os': 'linux',  // TODO: investigate and move to sloth.libsonnet
-                'kubernetes.io/arch': 'arm64',  // TODO: remove nodeSelector after tests.
+                'kubernetes.io/arch': 'amd64',  // TODO: remove nodeSelector after tests.
               },
             },
           },
