@@ -405,7 +405,20 @@ local kp =
       },
     },
 
-    sloth: sloth($.values.sloth),
+    sloth: sloth($.values.sloth) {
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              nodeSelector: {
+                'kubernetes.io/os': 'linux',  // TODO: investigate and move to sloth.libsonnet
+                'kubernetes.io/arch': 'arm64',  // TODO: remove nodeSelector after tests.
+              },
+            },
+          },
+        },
+      },
+    },
 
     other: {
       local externalRules = import 'lib/externalRules.libsonnet',
