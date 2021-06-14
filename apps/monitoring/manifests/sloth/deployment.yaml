@@ -19,8 +19,6 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: sloth
         app.kubernetes.io/version: 0.3.1
-    nodeSelector:
-      kubernetes.io/os: linux
     spec:
       containers:
       - args:
@@ -31,4 +29,6 @@ spec:
         - containerPort: 8081
           name: metrics
         resources: {}
+      nodeSelector:
+        kubernetes.io/os: linux
       serviceAccountName: sloth

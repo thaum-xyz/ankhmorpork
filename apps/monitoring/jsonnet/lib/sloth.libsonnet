@@ -96,9 +96,9 @@ function(params) {
         spec: {
           containers: [container],
           serviceAccountName: $.serviceAccount.metadata.name,
-        },
-        nodeSelector: {
-          'kubernetes.io/os': 'linux',
+          nodeSelector: {
+            'kubernetes.io/os': 'linux',
+          },
         },
       },
     },
