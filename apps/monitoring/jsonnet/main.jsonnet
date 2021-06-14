@@ -68,7 +68,9 @@ local pushgateway = (import 'lib/pushgateway.libsonnet');
 local exporter = (import 'lib/exporter.libsonnet');
 // TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
 local pagespeed = (import 'lib/pagespeed.libsonnet');
-
+// TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
+// TODO: propose to https://github.com/slok/sloth
+local sloth = (import 'lib/sloth.libsonnet');
 
 local ingressAnnotations = {
   'kubernetes.io/ingress.class': 'nginx',
@@ -397,6 +399,21 @@ local kp =
               containers: std.map(function(c) c {
                 securityContext: { capabilities: { add: ['NET_RAW'] } },
               }, super.containers),
+            },
+          },
+        },
+      },
+    },
+
+    sloth: sloth($.values.sloth) {
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              nodeSelector: {
+                'kubernetes.io/os': 'linux',  // TODO: investigate and move to sloth.libsonnet
+                'kubernetes.io/arch': 'arm64',  // TODO: remove nodeSelector after tests.
+              },
             },
           },
         },
