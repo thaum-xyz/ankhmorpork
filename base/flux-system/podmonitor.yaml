@@ -23,6 +23,7 @@ spec:
   podMetricsEndpoints:
     - targetPort: http-prom
       # Custom
+      honorLabels: true  # Allow overriding `namespace` label
       metricRelabelings:
       - action: drop
         regex: "rest_client_request_latency_seconds.*"
