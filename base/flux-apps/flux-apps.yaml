@@ -5,8 +5,10 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 2m0s
-  path: ./base/flux-system
-  prune: false  # TODO: check if this can be set to 'true' without compromising the cluster
+  path: ./base/flux-apps
+  # WARNING: DO NOT SET THIS TO TRUE
+  # For "why?" go to https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/post-mortems/2021-06-08-flux.md
+  prune: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

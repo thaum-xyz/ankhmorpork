@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 30m0s
   path: ./base/ingress-nginx
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
