@@ -68,7 +68,9 @@ local pushgateway = (import 'lib/pushgateway.libsonnet');
 local exporter = (import 'lib/exporter.libsonnet');
 // TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
 local pagespeed = (import 'lib/pagespeed.libsonnet');
-
+// TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
+// TODO: propose to https://github.com/slok/sloth
+local sloth = (import 'lib/sloth.libsonnet');
 
 local ingressAnnotations = {
   'kubernetes.io/ingress.class': 'nginx',
@@ -402,6 +404,8 @@ local kp =
         },
       },
     },
+
+    sloth: sloth($.values.sloth),
 
     other: {
       local externalRules = import 'lib/externalRules.libsonnet',
