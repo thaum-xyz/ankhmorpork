@@ -364,32 +364,32 @@ local kp =
     //  },
     //},
     // TODO: rebuild exporter to be arm64 compliant
-    uptimerobot: exporter($.values.uptimerobot) + {
-      secret: sealedsecret(
-        {
-          name: $.values.uptimerobot.secretRefName,
-          namespace: $.values.common.namespace,
-        },
-        { UPTIMEROBOT_API_KEY: $.values.uptimerobot.encryptedApiKey }
-      ),
-      deployment+: {
-        spec+: {
-          template+: {
-            spec+: {
-              nodeSelector+: {
-                'kubernetes.io/os': 'linux',
-                'kubernetes.io/arch': 'amd64',
-              },
-            },
-          },
-        },
-      },
-      podMonitor+: {
-        spec+: {
-          podMetricsEndpoints: [{ port: 'http', interval: '5m' }],
-        },
-      },
-    },
+    //uptimerobot: exporter($.values.uptimerobot) + {
+    //  secret: sealedsecret(
+    //    {
+    //      name: $.values.uptimerobot.secretRefName,
+    //      namespace: $.values.common.namespace,
+    //    },
+    //    { UPTIMEROBOT_API_KEY: $.values.uptimerobot.encryptedApiKey }
+    //  ),
+    //  deployment+: {
+    //    spec+: {
+    //      template+: {
+    //        spec+: {
+    //          nodeSelector+: {
+    //            'kubernetes.io/os': 'linux',
+    //            'kubernetes.io/arch': 'amd64',
+    //          },
+    //        },
+    //      },
+    //    },
+    //  },
+    //  podMonitor+: {
+    //    spec+: {
+    //      podMetricsEndpoints: [{ port: 'http', interval: '5m' }],
+    //    },
+    //  },
+    //},
     smokeping: exporter($.values.smokeping) + {
       deployment+: {
         spec+: {
