@@ -28,7 +28,7 @@ spec:
       containers:
       - env:
         - name: url
-          value: https://blog.ankhmorpork.thaum.xyz
+          value: https://pawel.krupa.net.pl
         image: ghost:4.7.0
         imagePullPolicy: IfNotPresent
         livenessProbe:

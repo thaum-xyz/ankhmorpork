@@ -15,7 +15,7 @@ metadata:
   namespace: blog
 spec:
   rules:
-  - host: blog.ankhmorpork.thaum.xyz
+  - host: pawel.krupa.net.pl
     http:
       paths:
       - backend:
@@ -27,5 +27,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - blog.ankhmorpork.thaum.xyz
+    - pawel.krupa.net.pl
     secretName: ghost-tls
