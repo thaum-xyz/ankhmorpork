@@ -1,5 +1,5 @@
 ---
 namespace: blog
-version: 3.32.2  # github-repo: TryGhost/Ghost  # TODO: fix metadata for version updater after migrating to ghost 4
-image: ghost:3.32.2  # github-repo: TryGhost/Ghost
-domain: alchemyof.it
+version: 4.7.0  # github-repo: TryGhost/Ghost  # TODO: fix metadata for version updater after migrating to ghost 4
+image: ghost:4.7.0  # github-repo: TryGhost/Ghost
+domain: blog.ankhmorpork.thaum.xyz

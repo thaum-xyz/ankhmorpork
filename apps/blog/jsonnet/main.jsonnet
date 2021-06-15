@@ -21,25 +21,6 @@ local all = ghost(config) + {
       },
     },
   },
-  // TODO: remove this
-  ingressAbout: $.ingress {
-    metadata+: {
-      name: 'ghost-about',
-      annotations+: {
-        'nginx.ingress.kubernetes.io/permanent-redirect': 'https://alchemyof.it/about',
-      },
-    },
-    spec+: {
-      tls: [{
-        hosts: ['blog.ankhmorpork.thaum.xyz'],
-        secretName: 'ghost-about-tls',
-      }],
-      rules: [{
-        host: 'blog.ankhmorpork.thaum.xyz',
-        http: $.ingress.spec.rules[0].http,
-      }],
-    },
-  },
 };
 
 { [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }

@@ -9,13 +9,13 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: ghost
     app.kubernetes.io/part-of: ghost
-    app.kubernetes.io/version: 3.32.2
+    app.kubernetes.io/version: 4.7.0
     probe: enabled
   name: ghost
   namespace: blog
 spec:
   rules:
-  - host: alchemyof.it
+  - host: blog.ankhmorpork.thaum.xyz
     http:
       paths:
       - backend:
@@ -27,5 +27,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - alchemyof.it
+    - blog.ankhmorpork.thaum.xyz
     secretName: ghost-tls

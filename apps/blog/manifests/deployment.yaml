@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: ghost
     app.kubernetes.io/part-of: ghost
-    app.kubernetes.io/version: 3.32.2
+    app.kubernetes.io/version: 4.7.0
   name: ghost
   namespace: blog
 spec:
@@ -23,13 +23,13 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: ghost
         app.kubernetes.io/part-of: ghost
-        app.kubernetes.io/version: 3.32.2
+        app.kubernetes.io/version: 4.7.0
     spec:
       containers:
       - env:
         - name: url
-          value: https://alchemyof.it
-        image: ghost:3.32.2
+          value: https://blog.ankhmorpork.thaum.xyz
+        image: ghost:4.7.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           initialDelaySeconds: 30
