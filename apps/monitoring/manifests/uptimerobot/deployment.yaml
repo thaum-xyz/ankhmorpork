@@ -25,10 +25,10 @@ spec:
         envFrom:
         - secretRef:
             name: uptimerobot-api-key
-        image: drubin/uptimerobot-prometheus-exporter
+        image: quay.io/paulfantom/uptimerobot:latest
         name: uptimerobot-exporter
         ports:
-        - containerPort: 9429
+        - containerPort: 9705
           name: http
         readinessProbe:
           failureThreshold: 5

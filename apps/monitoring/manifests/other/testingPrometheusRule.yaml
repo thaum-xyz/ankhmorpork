@@ -32,6 +32,14 @@ spec:
       for: 15m
       labels:
         severity: critical
+    - alert: UptimeRobotExporterDown
+      annotations:
+        description: UptimeRobot exporter doesn't report any metrics for monitors.
+        summary: 'No metrics from UptimeRobot exporter '
+      expr: absent(uptimerobot_monitor_status)
+      for: 15m
+      labels:
+        severity: warning
     - alert: KubePodOOMKilled
       annotations:
         description: Pod {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container
