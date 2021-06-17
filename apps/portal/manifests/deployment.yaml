@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 1dfc1b4051622046d3af3a1b80cdbd02
+        checksum.config/md5: f27c89437d1df2c58372f451061e2682
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homer
