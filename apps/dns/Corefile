@@ -16,10 +16,8 @@
     192.168.2.40 metal01.ankhmorpork.thaum.xyz
     ### local ingress START ###
     192.168.2.91 cookbook.ankhmorpork.thaum.xyz
-    192.168.2.91 alchemyof.it
     192.168.2.91 auth.ankhmorpork.thaum.xyz
     192.168.2.91 weirdo.blog
-    192.168.2.91 blog.ankhmorpork.thaum.xyz
     192.168.2.91 ankhmorpork.thaum.xyz
     192.168.2.91 ombi.ankhmorpork.thaum.xyz
     192.168.2.91 cloud.krupa.net.pl
@@ -30,6 +28,9 @@
     192.168.2.91 alertmanager.ankhmorpork.thaum.xyz
     192.168.2.91 push.ankhmopork.thaum.xyz
     192.168.2.91 rss.ankhmorpork.thaum.xyz
+    192.168.2.91 portal.krupa.net.pl
+    192.168.2.91 pawel.krupa.net.pl
+    192.168.2.91 recipe.krupa.net.pl
     ### local ingress END ###
     fallthrough
   }
