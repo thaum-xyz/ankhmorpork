@@ -11,6 +11,15 @@
       "version": "main"
     },
     {
+      "source": {
+        "git": {
+          "remote": "https://github.com/kubernetes-monitoring/kubernetes-mixin",
+          "subdir": ""
+        }
+      },
+      "version": "master"
+    },
+    {
 
       "source": {
         "git": {

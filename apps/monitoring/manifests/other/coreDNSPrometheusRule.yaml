@@ -35,9 +35,9 @@ spec:
           }} of requests.
         runbook_url: https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/corednserrorshigh
       expr: |
-        sum(rate(coredns_dns_response_rcode_count_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
+        sum(rate(coredns_dns_responses_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
           /
-        sum(rate(coredns_dns_response_rcode_count_total{job=~"kube-dns|coredns"}[5m])) > 0.03
+        sum(rate(coredns_dns_responses_total{job=~"kube-dns|coredns"}[5m])) > 0.03
       for: 10m
       labels:
         severity: critical
@@ -47,9 +47,9 @@ spec:
           }} of requests.
         runbook_url: https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/corednserrorshigh
       expr: |
-        sum(rate(coredns_dns_response_rcode_count_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
+        sum(rate(coredns_dns_responses_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
           /
-        sum(rate(coredns_dns_response_rcode_count_total{job=~"kube-dns|coredns"}[5m])) > 0.01
+        sum(rate(coredns_dns_responses_total{job=~"kube-dns|coredns"}[5m])) > 0.01
       for: 10m
       labels:
         severity: warning
@@ -71,9 +71,9 @@ spec:
           }} of forward requests to {{ $labels.to }}.
         runbook_url: https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/corednsforwarderrorshigh
       expr: |
-        sum(rate(coredns_forward_response_rcode_count_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
+        sum(rate(coredns_forward_responses_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
           /
-        sum(rate(coredns_forward_response_rcode_count_total{job=~"kube-dns|coredns"}[5m])) > 0.03
+        sum(rate(coredns_forward_responses_total{job=~"kube-dns|coredns"}[5m])) > 0.03
       for: 10m
       labels:
         severity: critical
@@ -83,9 +83,28 @@ spec:
           }} of forward requests to {{ $labels.to }}.
         runbook_url: https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/corednsforwarderrorshigh
       expr: |
-        sum(rate(coredns_dns_response_rcode_count_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
+        sum(rate(coredns_forward_responses_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
           /
-        sum(rate(coredns_dns_response_rcode_count_total{job=~"kube-dns|coredns"}[5m])) > 0.01
+        sum(rate(coredns_forward_responses_total{job=~"kube-dns|coredns"}[5m])) > 0.01
+      for: 10m
+      labels:
+        severity: warning
+    - alert: CoreDNSForwardHealthcheckFailureCount
+      annotations:
+        message: CoreDNS health checks have failed to upstream server {{ $labels.to
+          }}.
+        runbook_url: https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/corednsforwardhealthcheckfailurecount
+      expr: |
+        sum(rate(coredns_forward_healthcheck_failures_total{job=~"kube-dns|coredns"}[5m])) by (to) > 0
+      for: 10m
+      labels:
+        severity: warning
+    - alert: CoreDNSForwardHealthcheckBrokenCount
+      annotations:
+        message: CoreDNS health checks have failed for all upstream servers.
+        runbook_url: https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/corednsforwardhealthcheckbrokencount
+      expr: |
+        sum(rate(coredns_forward_healthcheck_broken_total{job=~"kube-dns|coredns"}[5m])) > 0
       for: 10m
       labels:
         severity: warning
