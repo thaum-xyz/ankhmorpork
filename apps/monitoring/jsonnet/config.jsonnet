@@ -176,12 +176,5 @@
     image: 'slok/sloth:v0.3.1',
   },
 
-  other: {
-    coreDNSmixin: {
-      _config+:: {
-        corednsSelector: 'job=~"kube-dns|coredns"',
-        corednsRunbookURLPattern: 'https://github.com/thaum-xyz/ankhmorpork/tree/master/docs/runbooks/%s',
-      },
-    },
-  },
+  other: {},
 }
