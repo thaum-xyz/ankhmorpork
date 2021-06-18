@@ -1,6 +1,6 @@
-local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
+local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 
-local mealie = import './mealie.libsonnet';
+local mealie = import 'github.com/thaum-xyz/jsonnet-libs/apps/mealie/mealie.libsonnet';
 
 local configYAML = (importstr './settings.yaml');
 

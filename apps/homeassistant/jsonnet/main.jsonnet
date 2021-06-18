@@ -1,5 +1,5 @@
-local homeassistant = import './homeassistant.libsonnet';
-local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
+local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassistant/homeassistant.libsonnet';
+local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 
 local configYAML = (importstr './settings.yaml');
 

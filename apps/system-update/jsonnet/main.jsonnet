@@ -1,4 +1,4 @@
-local kured = import './kured.libsonnet';
+local kured = import 'github.com/thaum-xyz/jsonnet-libs/apps/kured/kured.libsonnet';
 
 local configYAML = (importstr './settings.yaml');
 

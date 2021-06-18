@@ -1,4 +1,4 @@
-local mealie = import './mealie.libsonnet';
+local mealie = import 'github.com/thaum-xyz/jsonnet-libs/apps/mealie/mealie.libsonnet';
 
 local credentials = import './credentials.json';
 local configYAML = (importstr './settings.yaml');

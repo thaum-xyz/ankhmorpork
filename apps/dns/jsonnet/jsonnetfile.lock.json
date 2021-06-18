@@ -40,6 +40,26 @@
       },
       "version": "dfba2975946008f4b1e51fd5e554607331118fd0",
       "sum": "2VXzu8ERsmBJRXatQ0vH13Ik0pr7682iairpv3l7tzA="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/coredns"
+        }
+      },
+      "version": "d07a829724ccc732bb15f8e2559bda95c800cca5",
+      "sum": "nYp3K0QxpwYqzSiofEzcMxySYBzBNmMVi+tEaZE60T8="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "utils"
+        }
+      },
+      "version": "d07a829724ccc732bb15f8e2559bda95c800cca5",
+      "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
     }
   ],
   "legacyImports": false

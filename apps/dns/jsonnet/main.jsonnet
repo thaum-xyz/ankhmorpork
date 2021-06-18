@@ -1,5 +1,5 @@
-local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
-local coredns = import './coredns.libsonnet';
+local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local coredns = import 'github.com/thaum-xyz/jsonnet-libs/apps/coredns/coredns.libsonnet';
 local external = import './externalDNS.libsonnet';
 
 local externaDNSCreds = import '../external-dns-creds.json';

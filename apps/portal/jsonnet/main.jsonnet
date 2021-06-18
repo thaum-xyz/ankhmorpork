@@ -1,4 +1,4 @@
-local homer = import '../../homer/jsonnet/homer.libsonnet';
+local homer = import 'github.com/thaum-xyz/jsonnet-libs/apps/homer/homer.libsonnet';
 local siteConfig = importstr './homer-configuration.yml';
 
 local configYAML = (importstr './settings.yaml');

@@ -1,4 +1,4 @@
-local ghost = import './ghost.libsonnet';
+local ghost = import 'github.com/thaum-xyz/jsonnet-libs/apps/ghost/ghost.libsonnet';
 
 local configYAML = (importstr './settings.yaml');
 

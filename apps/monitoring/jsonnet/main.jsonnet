@@ -60,17 +60,13 @@ local probe(name, namespace, labels, module, targets) = {
   },
 };
 
-// TODO: add to kube-prometheus, more info in libsonnet file
-local kubeEventsExporter = (import 'lib/kube-events-exporter.libsonnet');
-// TODO: add to kube-prometheus, more info in libsonnet file
-local pushgateway = (import 'lib/pushgateway.libsonnet');
+// TODO: propose to https://github.com/slok/sloth
+local sloth = (import 'github.com/thaum-xyz/jsonnet-libs/apps/sloth/sloth.libsonnet');
 // TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
 local exporter = (import 'lib/exporter.libsonnet');
-// TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
-local pagespeed = (import 'lib/pagespeed.libsonnet');
-// TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
-// TODO: propose to https://github.com/slok/sloth
-local sloth = (import 'lib/sloth.libsonnet');
+local pagespeed = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pagespeed/pagespeed.libsonnet');
+local kubeEventsExporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/kube-events-exporter/kube-events-exporter.libsonnet');
+local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
 local ingressAnnotations = {
   'kubernetes.io/ingress.class': 'nginx',

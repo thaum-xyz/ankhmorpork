@@ -22,8 +22,7 @@ $(MANIFESTS_DIR):
 	mkdir -p $(MANIFESTS_DIR)
 
 $(JSONNET_VENDOR):
-	cd jsonnet
-	-jb install
+	cd jsonnet && jb install
 
 .PHONY: beautify
 beautify:
