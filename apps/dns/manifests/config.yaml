@@ -52,6 +52,7 @@ data:
     }
 
     .:5301 {
+      prometheus :9153
       forward . tls://45.90.28.182 {
         tls_servername {$NEXTDNS_ID}.dns1.nextdns.io
         health_check 5s
@@ -59,6 +60,7 @@ data:
     }
 
     .:5302 {
+      prometheus :9153
       forward . tls://45.90.30.182 {
         tls_servername {$NEXTDNS_ID}.dns2.nextdns.io
         health_check 5s
