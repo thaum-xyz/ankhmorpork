@@ -28,6 +28,10 @@ $(JSONNET_VENDOR):
 beautify:
 	for i in $(shell find $(MANIFESTS_DIR)/ -name '*.yaml'); do mv "$$i" "$$i.bak"; yamlfmt < "$$i.bak" > "$$i"; rm "$$i.bak"; done
 
+.PHONY: clean
+clean:
+	rm -rf jsonnet/vendor
+
 .PHONY: update
 update:
 	cd jsonnet && jb update
