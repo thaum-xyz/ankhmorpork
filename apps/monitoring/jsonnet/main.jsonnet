@@ -22,7 +22,6 @@
 //       - sealed-secrets
 //       - go runtime metrics (https://github.com/grafana/jsonnet-libs/tree/master/go-runtime-mixin)
 //     from json:
-//       - argocd
 //       - blackbox-exporter
 //       - smokeping
 //       - unifi
@@ -60,8 +59,7 @@ local probe(name, namespace, labels, module, targets) = {
 
 // TODO: propose to https://github.com/slok/sloth
 local sloth = (import 'github.com/thaum-xyz/jsonnet-libs/apps/sloth/sloth.libsonnet');
-// TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
-local exporter = (import 'lib/exporter.libsonnet');
+local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
 local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
 local pagespeed = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pagespeed/pagespeed.libsonnet');
@@ -90,7 +88,7 @@ local kp =
     //
 
     // TODO: figure out how to make this a JSON/YAML file!
-    values+:: (import './config.jsonnet'),
+    values+:: (import '../config.jsonnet'),
 
     //
     // Objects customization
@@ -291,6 +289,7 @@ local kp =
               },
             },
             // This allows scraping external node-exporter endpoints
+            // TODO: Remove after moving node-exporter into a cluster
             {
               interval: '30s',
               port: 'https-metrics',

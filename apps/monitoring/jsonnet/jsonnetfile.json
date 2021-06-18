@@ -49,6 +49,15 @@
       "source": {
         "git": {
           "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "subdir": "apps/prometheus-exporter"
+        }
+      },
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
           "subdir": "apps/pushgateway"
         }
       },
