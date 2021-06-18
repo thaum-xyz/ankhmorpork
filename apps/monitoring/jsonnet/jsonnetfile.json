@@ -20,13 +20,48 @@
       "version": "master"
     },
     {
-
       "source": {
         "git": {
           "remote": "https://github.com/povilasv/coredns-mixin"
         }
       },
       "version": "master"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "subdir": "apps/kube-events-exporter"
+        }
+      },
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "subdir": "apps/pagespeed"
+        }
+      },
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "subdir": "apps/pushgateway"
+        }
+      },
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "subdir": "apps/sloth"
+        }
+      },
+      "version": "main"
     }
   ],
   "legacyImports": true

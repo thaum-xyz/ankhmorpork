@@ -1,8 +1,8 @@
-local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
+local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 
-local mealie = import './mealie.libsonnet';
+local mealie = import 'github.com/thaum-xyz/jsonnet-libs/apps/mealie/mealie.libsonnet';
 
-local configYAML = (importstr './settings.yaml');
+local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0] { credentialsSecretRef: 'envs' };

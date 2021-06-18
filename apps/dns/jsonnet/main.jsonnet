@@ -1,11 +1,11 @@
-local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
-local coredns = import './coredns.libsonnet';
+local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local coredns = import 'github.com/thaum-xyz/jsonnet-libs/apps/coredns/coredns.libsonnet';
 local external = import './externalDNS.libsonnet';
 
 local externaDNSCreds = import '../external-dns-creds.json';
 local corefile = importstr '../Corefile';
 
-local configYAML = (importstr './settings.yaml');
+local configYAML = (importstr '../settings.yaml');
 
 // TODO: figure out how to clean this mess
 local all = {

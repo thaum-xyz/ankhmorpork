@@ -164,6 +164,46 @@
       "version": "e3b0baf7de9dde1887253b1bb19d78ae71a01bf8",
       "sum": "IS62r3fSx0evbBhH0QqKUW+4TAMOHpzbsW+v9nw/SNM=",
       "name": "thanos-mixin"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/kube-events-exporter"
+        }
+      },
+      "version": "2c5eb3d2d0c1f67b740149ab170be93a77c32ecd",
+      "sum": "w/+FA9/N5Tn25zUtE88EZz2VlohnTih2AtGWl3N5sac="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/pagespeed"
+        }
+      },
+      "version": "2c5eb3d2d0c1f67b740149ab170be93a77c32ecd",
+      "sum": "CfyYEnaJZ8eCvK25TJiFpuT6KD4Py6tl2Xh8MREgRUY="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/pushgateway"
+        }
+      },
+      "version": "2c5eb3d2d0c1f67b740149ab170be93a77c32ecd",
+      "sum": "0CQNTwXh/zpUaOobOtpL1bhdy08ss+hP9df+IpORvf4="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/sloth"
+        }
+      },
+      "version": "2c5eb3d2d0c1f67b740149ab170be93a77c32ecd",
+      "sum": "bqT4fHGj2jdSE8O3DiS9u5JxO0Ssx1ANVikuJ4RN8PY="
     }
   ],
   "legacyImports": false

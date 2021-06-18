@@ -4,24 +4,8 @@
       {
         "source": {
           "git": {
-            "remote": "https://github.com/kubernetes-monitoring/kubernetes-mixin"
-          }
-        },
-        "version": "master"
-      },
-      {
-        "source": {
-          "git": {
-            "remote": "https://github.com/povilasv/coredns-mixin"
-          }
-        },
-        "version": "master"
-      },
-      {
-        "source": {
-          "git": {
             "remote": "https://github.com/thaum-xyz/jsonnet-libs",
-            "subdir": "apps/coredns"
+            "subdir": "apps/mealie"
           }
         },
         "version": "main"
