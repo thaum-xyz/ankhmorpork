@@ -22,12 +22,11 @@ $(MANIFESTS_DIR):
 	mkdir -p $(MANIFESTS_DIR)
 
 $(JSONNET_VENDOR):
-	cd jsonnet
-	-jb install
+	cd jsonnet && jb install
 
 .PHONY: beautify
 beautify:
-	for i in $(shell find manifests/ -name '*.yaml'); do mv "$$i" "$$i.bak"; yamlfmt < "$$i.bak" > "$$i"; rm "$$i.bak"; done
+	for i in $(shell find $(MANIFESTS_DIR)/ -name '*.yaml'); do mv "$$i" "$$i.bak"; yamlfmt < "$$i.bak" > "$$i"; rm "$$i.bak"; done
 
 .PHONY: update
 update:
