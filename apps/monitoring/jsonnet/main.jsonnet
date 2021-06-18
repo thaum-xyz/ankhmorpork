@@ -409,12 +409,6 @@ local kp =
 
     other: {
       local externalRules = import 'lib/externalRules.libsonnet',
-      // TODO(paulfantom): convert this to use new kube-prometheus addon to add mixins
-      coreDNSMixin:: (import 'github.com/povilasv/coredns-mixin/mixin.libsonnet') + $.values.other.coreDNSmixin,
-      coreDNSPrometheusRule: externalRules({
-        name: 'coredns',
-        groups: $.other.coreDNSMixin.prometheusAlerts.groups,
-      }),
       thaumPrometheusRule: externalRules({
         name: 'thaum-rules',
         groups: (import 'ext/rules/thaum.json').groups,
