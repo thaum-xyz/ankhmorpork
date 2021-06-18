@@ -2,10 +2,10 @@ SHELL:=/bin/bash
 
 DIRS=\
 	apps/auth \
-	apps/cookbook \
 	apps/homer \
 	apps/monitoring \
 	apps/news \
+	apps/recipe \
 	apps/unifi \
 	apps/system-update
 
