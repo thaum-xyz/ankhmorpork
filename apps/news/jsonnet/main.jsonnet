@@ -1,6 +1,6 @@
 local miniflux = import './miniflux.libsonnet';
 local postgres = import './postgres.libsonnet';
-local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
+local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 
 local configYAML = (importstr '../settings.yaml');
 

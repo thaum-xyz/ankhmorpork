@@ -31,8 +31,6 @@
 //       - redis
 //       - home dashboard
 
-local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
-
 local addArgs(args, name, containers) = std.map(
   function(c) if c.name == name then
     c {
@@ -64,6 +62,8 @@ local probe(name, namespace, labels, module, targets) = {
 local sloth = (import 'github.com/thaum-xyz/jsonnet-libs/apps/sloth/sloth.libsonnet');
 // TODO: consider moving this to some other place (maybe jsonnet-libs repo?)
 local exporter = (import 'lib/exporter.libsonnet');
+local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
 local pagespeed = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pagespeed/pagespeed.libsonnet');
 local kubeEventsExporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/kube-events-exporter/kube-events-exporter.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
@@ -156,7 +156,7 @@ local kp =
               },
             },
             spec+: {
-              affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity('blackbox-exporter'),
+              affinity: antiaffinity.podantiaffinity('blackbox-exporter'),
             },
           },
         },
@@ -391,7 +391,7 @@ local kp =
         spec+: {
           template+: {
             spec+: {
-              affinity: (import '../../../lib/podantiaffinity.libsonnet').podantiaffinity('smokeping'),
+              affinity: antiaffinity.podantiaffinity('smokeping'),
               containers: std.map(function(c) c {
                 securityContext: { capabilities: { add: ['NET_RAW'] } },
               }, super.containers),
