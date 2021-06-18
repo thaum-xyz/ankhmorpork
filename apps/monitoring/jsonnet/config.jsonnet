@@ -15,8 +15,8 @@
     },
   },
   prometheus+: {
-    version: '2.27.1',  // application-version-from-github: prometheus/prometheus
-    image: 'quay.io/prometheus/prometheus:v2.27.1',  // application-image-from-github: prometheus/prometheus
+    version: '2.28.0-rc.0',  // application-version-from-github: prometheus/prometheus
+    image: 'quay.io/prometheus/prometheus:v2.28.0-rc.0',  // application-image-from-github: prometheus/prometheus
     ruleSelector: {},
     resources: {
       requests: { cpu: '140m', memory: '1900Mi' },
