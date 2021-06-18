@@ -1,4 +1,4 @@
-include ../Makefile.common
+include ../../Makefile.common
 
 .PHONY: version-update
 LATEST=$(shell curl https://raw.githubusercontent.com/paulfantom/dockerfiles/master/oauth2-proxy/VERSION 2>/dev/null)

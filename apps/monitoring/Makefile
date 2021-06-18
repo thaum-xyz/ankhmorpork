@@ -1,4 +1,4 @@
-include ../Makefile.common
+include ../../Makefile.common
 
 .PHONY: generate
 generate: $(MANIFESTS_DIR) $(JSONNET_VENDOR)
@@ -9,5 +9,4 @@ generate: $(MANIFESTS_DIR) $(JSONNET_VENDOR)
 .PHONY: raw
 raw:
 	./raw/populate.sh
-
 
