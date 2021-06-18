@@ -18,7 +18,7 @@ spec:
         message: CoreDNS has disappeared from Prometheus target discovery.
         runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednsdown
       expr: |
-        absent(up{job="coredns"} == 1)
+        absent(up{job=~"kube-dns|coredns"} == 1)
       for: 15m
       labels:
         severity: critical
@@ -28,7 +28,7 @@ spec:
           {{ $labels.server }} zone {{ $labels.zone }} .
         runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednslatencyhigh
       expr: |
-        histogram_quantile(0.99, sum(rate(coredns_dns_request_duration_seconds_bucket{job="coredns"}[5m])) by(server, zone, le)) > 4
+        histogram_quantile(0.99, sum(rate(coredns_dns_request_duration_seconds_bucket{job=~"kube-dns|coredns"}[5m])) by(server, zone, le)) > 4
       for: 10m
       labels:
         severity: critical
@@ -38,9 +38,9 @@ spec:
           }} of requests.
         runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednserrorshigh
       expr: |
-        sum(rate(coredns_dns_response_rcode_count_total{job="coredns",rcode="SERVFAIL"}[5m]))
+        sum(rate(coredns_dns_responses_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
           /
-        sum(rate(coredns_dns_response_rcode_count_total{job="coredns"}[5m])) > 0.03
+        sum(rate(coredns_dns_responses_total{job=~"kube-dns|coredns"}[5m])) > 0.03
       for: 10m
       labels:
         severity: critical
@@ -50,9 +50,9 @@ spec:
           }} of requests.
         runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednserrorshigh
       expr: |
-        sum(rate(coredns_dns_response_rcode_count_total{job="coredns",rcode="SERVFAIL"}[5m]))
+        sum(rate(coredns_dns_responses_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
           /
-        sum(rate(coredns_dns_response_rcode_count_total{job="coredns"}[5m])) > 0.01
+        sum(rate(coredns_dns_responses_total{job=~"kube-dns|coredns"}[5m])) > 0.01
       for: 10m
       labels:
         severity: warning
@@ -64,7 +64,7 @@ spec:
           requests to {{ $labels.to }}.
         runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednsforwardlatencyhigh
       expr: |
-        histogram_quantile(0.99, sum(rate(coredns_forward_request_duration_seconds_bucket{job="coredns"}[5m])) by(to, le)) > 4
+        histogram_quantile(0.99, sum(rate(coredns_forward_request_duration_seconds_bucket{job=~"kube-dns|coredns"}[5m])) by(to, le)) > 4
       for: 10m
       labels:
         severity: critical
@@ -74,9 +74,9 @@ spec:
           }} of forward requests to {{ $labels.to }}.
         runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednsforwarderrorshigh
       expr: |
-        sum(rate(coredns_forward_response_rcode_count_total{job="coredns",rcode="SERVFAIL"}[5m]))
+        sum(rate(coredns_forward_responses_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
           /
-        sum(rate(coredns_forward_response_rcode_count_total{job="coredns"}[5m])) > 0.03
+        sum(rate(coredns_forward_responses_total{job=~"kube-dns|coredns"}[5m])) > 0.03
       for: 10m
       labels:
         severity: critical
@@ -86,9 +86,28 @@ spec:
           }} of forward requests to {{ $labels.to }}.
         runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednsforwarderrorshigh
       expr: |
-        sum(rate(coredns_dns_response_rcode_count_total{job="coredns",rcode="SERVFAIL"}[5m]))
+        sum(rate(coredns_forward_responses_total{job=~"kube-dns|coredns",rcode="SERVFAIL"}[5m]))
           /
-        sum(rate(coredns_dns_response_rcode_count_total{job="coredns"}[5m])) > 0.01
+        sum(rate(coredns_forward_responses_total{job=~"kube-dns|coredns"}[5m])) > 0.01
+      for: 10m
+      labels:
+        severity: warning
+    - alert: CoreDNSForwardHealthcheckFailureCount
+      annotations:
+        message: CoreDNS health checks have failed to upstream server {{ $labels.to
+          }}.
+        runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednsforwardhealthcheckfailurecount
+      expr: |
+        sum(rate(coredns_forward_healthcheck_failures_total{job=~"kube-dns|coredns"}[5m])) by (to) > 0
+      for: 10m
+      labels:
+        severity: warning
+    - alert: CoreDNSForwardHealthcheckBrokenCount
+      annotations:
+        message: CoreDNS health checks have failed for all upstream servers.
+        runbook_url: https://github.com/povilasv/coredns-mixin/tree/master/runbook.md#alert-name-corednsforwardhealthcheckbrokencount
+      expr: |
+        sum(rate(coredns_forward_healthcheck_broken_total{job=~"kube-dns|coredns"}[5m])) > 0
       for: 10m
       labels:
         severity: warning

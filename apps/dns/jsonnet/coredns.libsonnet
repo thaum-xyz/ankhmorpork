@@ -58,6 +58,17 @@ function(params) {
     },
   },
 
+  dashboardCM: {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: dns.metadata { name: dns.metadata.name + '-dashboards' },
+    //TODO: Fix this to loop over objects
+    //data: dns.mixin.grafanaDashboards,
+    data: {
+      'coredns.json': std.toString(dns.mixin.grafanaDashboards['coredns.json']),
+    },
+  },
+
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
