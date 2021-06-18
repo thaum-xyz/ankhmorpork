@@ -61,7 +61,12 @@ function(params) {
   dashboardCM: {
     apiVersion: 'v1',
     kind: 'ConfigMap',
-    metadata: dns.metadata { name: dns.metadata.name + '-dashboards' },
+    metadata: dns.metadata {
+      name: dns.metadata.name + '-dashboards',
+      labels+: {
+        grafana: 'dashboard',
+      },
+    },
     //TODO: Fix this to loop over objects
     //data: dns.mixin.grafanaDashboards,
     data: {
