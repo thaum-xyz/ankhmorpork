@@ -1,6 +1,6 @@
 local ghost = import 'github.com/thaum-xyz/jsonnet-libs/apps/ghost/ghost.libsonnet';
 
-local configYAML = (importstr './settings.yaml');
+local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];

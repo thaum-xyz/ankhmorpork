@@ -2,7 +2,7 @@ local miniflux = import './miniflux.libsonnet';
 local postgres = import './postgres.libsonnet';
 local sealedsecret = (import '../../../lib/sealedsecret.libsonnet').sealedsecret;
 
-local configYAML = (importstr './settings.yaml');
+local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];

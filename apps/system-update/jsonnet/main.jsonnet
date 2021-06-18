@@ -1,6 +1,6 @@
 local kured = import 'github.com/thaum-xyz/jsonnet-libs/apps/kured/kured.libsonnet';
 
-local configYAML = (importstr './settings.yaml');
+local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];

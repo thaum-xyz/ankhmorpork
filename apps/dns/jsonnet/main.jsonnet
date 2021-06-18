@@ -5,7 +5,7 @@ local external = import './externalDNS.libsonnet';
 local externaDNSCreds = import '../external-dns-creds.json';
 local corefile = importstr '../Corefile';
 
-local configYAML = (importstr './settings.yaml');
+local configYAML = (importstr '../settings.yaml');
 
 // TODO: figure out how to clean this mess
 local all = {
