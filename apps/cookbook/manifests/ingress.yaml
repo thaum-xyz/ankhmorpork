@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: mealie
     app.kubernetes.io/part-of: mealie
-    app.kubernetes.io/version: 0.4.3
+    app.kubernetes.io/version: 0.5.1
     probe: enabled
   name: mealie
   namespace: cookbook
