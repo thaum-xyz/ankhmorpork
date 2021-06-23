@@ -1,6 +1,6 @@
 # What is this?
 
-Customized kube-prometheus stack for @paulfantom personal homelab. This is also one of few public usages of kube-prometheus.
+Customized kube-prometheus stack for [@paulfantom](https://github.com/paulfantom) personal homelab. This is also one of few public usages of kube-prometheus.
 
 ## How this works?
 
