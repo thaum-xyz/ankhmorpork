@@ -8,12 +8,12 @@ JSONNETFMT_ARGS=-n 2 --max-blank-lines 2 --string-style s --comment-style s
 all: fmt generate
 
 .PHONY: fmt
-fmt:
+fmt:  ## Format code
 	find . -name 'vendor' -prune -o -name '*.libsonnet' -print -o -name '*.jsonnet' -print | \
 		xargs -n 1 -- jsonnetfmt $(JSONNETFMT_ARGS) -i
 
 .PHONY: generate
-generate: $(MANIFESTS_DIR) $(JSONNET_VENDOR)
+generate: $(MANIFESTS_DIR) $(JSONNET_VENDOR)  ## Generate yaml code from jsonnet
 	jsonnet -J jsonnet/vendor -c -m $(MANIFESTS_DIR) -S jsonnet/main.jsonnet
 	$(MAKE) beautify
 
@@ -25,20 +25,24 @@ $(JSONNET_VENDOR):
 	-cd jsonnet && jb install
 
 .PHONY: beautify
-beautify:
+beautify:  ## Make yaml files readable
 	for i in $(shell find $(MANIFESTS_DIR)/ -name '*.yaml'); do mv "$$i" "$$i.bak"; yamlfmt < "$$i.bak" > "$$i"; rm "$$i.bak"; done
 
 .PHONY: clean
-clean:
+clean:  ## Clean vendored code
 	rm -rf jsonnet/vendor
 
 .PHONY: update
-update:
+update:  ## Update jsonnet dependencies
 	cd jsonnet && jb update
 	rm -rf $(JSONNET_VENDOR)
 	$(MAKE) generate
 
 .PHONY: version-update
-version-update:
+version-update:  ## Upgrade component version and image
 	./../../hack/version-update.sh .
 	if ! git diff-index --quiet HEAD .; then $(MAKE) generate; fi
+
+.PHONY: help
+help:  ## Displays help.
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-z0-9A-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
