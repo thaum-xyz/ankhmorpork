@@ -48,10 +48,10 @@ data:
     # Optional navbar
     # links: [] # Allows for navbar (dark mode, layout, and search) without any links
     links:
-      - name: "Status Page"
+      - name: Status Page
         icon: "fa fa-question"
         url: "https://thaum.statuspage.io/"
-      - name: "Passwords"
+      - name: Passwords
         icon: "fa fa-key"
         url: "https://vault.bitwarden.com/"
 
@@ -64,49 +64,49 @@ data:
     # First level array represent a group.
     # Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
     services:
-      - name: "Ankh Cloud"
+      - name: Ankh Cloud
         icon: "fa fa-cloud"
         items:
           - name: Nextcloud
             subtitle: "Everything and more"
             logo: "https://avatars0.githubusercontent.com/u/19211038?s=200&v=4"
             url: "https://cloud.krupa.net.pl"
-          - name: "Cookbook"
+          - name: Cookbook
             subtitle: "Our recipes"
             logo: "https://github.com/hay-kot/mealie/raw/master/docs/docs/assets/img/favicon.png"
             url: "https://recipe.krupa.net.pl"
-          - name: "HomeAssistant"
+          - name: HomeAssistant
             subtitle: "Home automation system"
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png"
             url: "https://home.ankhmorpork.thaum.xyz/"
-          - name: "Image Compressor"
+          - name: Image Compressor
             subtitle: "Compress images online"
             logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
             url: "https://compressor.io/"
 
-      - name: "Multimedia"
+      - name: Multimedia
         icon: "fa fa-tv"
         items:
-          - name: "Plex"
+          - name: Plex
             subtitle: "Video on demand"
             logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
             <<: *Local
             url: "http://192.168.2.98:32400/web/index.html#"
-          - name: "Ombi"
+          - name: Ombi
             subtitle: "Media requests"
             logo: "http://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/ombi.png"
             url: "https://ombi.ankhmorpork.thaum.xyz/"
-          - name: "Radarr"
+          - name: Radarr
             subtitle: "Movie collection manager"
             logo: "https://avatars1.githubusercontent.com/u/25025331?s=200&v=4"
             <<: *Local
             url: "http://192.168.2.95:7878/"
-          - name: "Sonarr"
+          - name: Sonarr
             subtitle: "TV series collection manager"
             logo: "https://avatars3.githubusercontent.com/u/1082903?s=200&v=4"
             <<: *Local
             url: "http://192.168.2.95:8989/"
-          - name: "Transmission"
+          - name: Transmission
             subtitle: "downloader"
             logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
             <<: *Local
@@ -116,7 +116,7 @@ data:
           #  subtitle: "Photo management"
           #  url: "http://192.168.2.96"
 
-      - name: "Administration"
+      - name: Administration
         icon: "fa fa-user-shield"
         items:
           - name: Grafana
@@ -132,6 +132,13 @@ data:
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             <<: *Local
             url: "https://192.168.2.7:8443/"
+          - name: Qnap
+            logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
+            <<: *Local
+            url: "https://192.168.2.29/"
+          - name: NextDNS
+            logo: "https://appteka.store/api/1/icon/get?hash=AfxOnnAVC55q9P8wC41q8i3I9N%2FfQVVHjM4e2r8kVhJuU5GYQJSe3msYMbOpyZDC"
+            url: "https://my.nextdns.io/"
 kind: ConfigMap
 metadata:
   labels:
