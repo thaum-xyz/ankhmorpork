@@ -5,7 +5,6 @@
 // - kube-scheduler-prometheus-discovery
 
 // Things to fix in kube-prometheus
-// - addon/example for additionalScrapeConfigs?
 // - prometheus-pvc should be an addon
 // - better `examples/` directory schema
 // - addon to add 'runbook_url' annotation to every alert
@@ -77,8 +76,8 @@ local kp =
   (import 'kube-prometheus/main.libsonnet') +
   (import 'kube-prometheus/addons/anti-affinity.libsonnet') +
   (import 'kube-prometheus/addons/all-namespaces.libsonnet') +
+  (import 'kube-prometheus/addons/windows.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
-  // TODO: Can be enabled after dealing with lancre ENV
   // (import 'lib/additional-scrape-configs.libsonnet') +
   // (import './lib/k3s.libsonnet') +
   // (import './config.json') +
@@ -190,12 +189,6 @@ local kp =
           },
           // FIXME: reenable
           securityContext:: null,
-          // TODO: Move this to addon when lancre is dealt with
-          // additionalScrapeConfigs are stored as ConfigMapSecret in plain yaml file
-          additionalScrapeConfigs: {
-            name: 'scrapeconfigs',
-            key: 'additional.yaml',
-          },
           queryLogFile: '/prometheus/query.log',
 
           storage: {
@@ -410,6 +403,90 @@ local kp =
         name: 'testing-rules',
         groups: (import 'ext/rules/testing.json').groups,
       }),
+    },
+
+    // TODO: Move receiver part into separate addon and donate to kube-prometheus
+    receiver: {
+      // Move to a loop
+      serviceWrite0: {
+        apiVersion: 'v1',
+        kind: 'Service',
+        metadata: $.prometheus.service.metadata { name: 'prometheus-k8s-write-0' },
+        spec: {
+          ports: $.prometheus.service.spec.ports,
+          selector: $.prometheus.service.spec.selector { 'statefulset.kubernetes.io/pod-name': 'prometheus-k8s-0' },
+        },
+      },
+      serviceWrite1: {
+        apiVersion: 'v1',
+        kind: 'Service',
+        metadata: $.prometheus.service.metadata { name: 'prometheus-k8s-write-1' },
+        spec: {
+          ports: $.prometheus.service.spec.ports,
+          selector: $.prometheus.service.spec.selector { 'statefulset.kubernetes.io/pod-name': 'prometheus-k8s-1' },
+        },
+      },
+      ingress: {
+        apiVersion: 'networking.k8s.io/v1',
+        kind: 'Ingress',
+        metadata: {
+          name: 'prometheus-remote-write',
+          namespace: $.prometheus.prometheus.metadata.namespace,
+          annotations: {
+            'kubernetes.io/ingress.class': 'nginx',
+            'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+            'nginx.ingress.kubernetes.io/auth-type': 'basic',
+            'nginx.ingress.kubernetes.io/auth-secret': 'prometheus-remote-write-auth',
+            'nginx.ingress.kubernetes.io/rewrite-target': '/$2',
+          },
+        },
+        spec: {
+          tls: [{
+            hosts: ['push.ankhmorpork.thaum.xyz'],
+            secretName: 'prometheus-remote-write-tls',
+          }],
+          rules: [{
+            host: 'push.ankhmorpork.thaum.xyz',
+            http: {
+              paths: [
+                {
+                  path: '/primary(/|$)(.*)',
+                  pathType: 'Prefix',
+                  backend: {
+                    service: {
+                      name: 'prometheus-k8s-write-0',
+                      port: {
+                        name: 'web',
+                      },
+                    },
+                  },
+                },
+                {
+                  path: '/secondary(/|$)(.*)',
+                  pathType: 'Prefix',
+                  backend: {
+                    service: {
+                      name: 'prometheus-k8s-write-1',
+                      port: {
+                        name: 'web',
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          }],
+        },
+      },
+      remoteWriteAuth: sealedsecret(
+        {
+          name: 'prometheus-remote-write-auth',
+          namespace: $.prometheus.prometheus.metadata.namespace,
+        },
+        {
+          auth: $.values.prometheus.remoteWriteAuth,
+        },
+      ),
     },
 
   } +

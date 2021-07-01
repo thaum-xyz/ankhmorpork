@@ -4,9 +4,8 @@
 cd "$(git rev-parse --show-toplevel)"
 
 EXCLUDES=$( cat <<EOM
-apps/logging/loki/03_config.yaml
-apps/system-upgrade/plans/02_system.yaml
 apps/monitoring/manifests/grafana/dashboardDatasources.yaml
+apps/monitoring/manifests/prometheusk8s/windowsConfig.yaml
 EOM
 )
 
