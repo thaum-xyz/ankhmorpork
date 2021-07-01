@@ -19,3 +19,9 @@ generate:
 upgrade:
 	for d in $(DIRS); do $(MAKE) -C $$d version-update; done
 
+.PHONY: check
+check: secrets
+
+.PHONY: secrets
+secrets:
+	./hack/checksecrets.sh
