@@ -15,7 +15,7 @@ FAN_FREQ   = 100   # Shall be 25kHz. See README.md
 INTERVAL = 1
 MIN_DUTY = 22  # Shouldn't be less than 20
 MAX_DUTY = 50  # Shouldn't be less than MIN_DUTY
-MAX_TEMP = 79
+MAX_TEMP = 75
 
 TEMP_OFFSET = -6
 
