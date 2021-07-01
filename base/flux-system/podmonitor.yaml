@@ -21,7 +21,7 @@ spec:
           - image-automation-controller
           - image-reflector-controller
   podMetricsEndpoints:
-    - targetPort: http-prom
+    - port: http-prom
       # Custom
       honorLabels: true  # Allow overriding `namespace` label
       metricRelabelings:
