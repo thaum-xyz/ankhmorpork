@@ -5,7 +5,6 @@
 // - kube-scheduler-prometheus-discovery
 
 // Things to fix in kube-prometheus
-// - addon/example for additionalScrapeConfigs?
 // - prometheus-pvc should be an addon
 // - better `examples/` directory schema
 // - addon to add 'runbook_url' annotation to every alert
@@ -77,8 +76,8 @@ local kp =
   (import 'kube-prometheus/main.libsonnet') +
   (import 'kube-prometheus/addons/anti-affinity.libsonnet') +
   (import 'kube-prometheus/addons/all-namespaces.libsonnet') +
+  (import 'kube-prometheus/addons/windows.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
-  // TODO: Can be enabled after dealing with lancre ENV
   // (import 'lib/additional-scrape-configs.libsonnet') +
   // (import './lib/k3s.libsonnet') +
   // (import './config.json') +
@@ -190,11 +189,6 @@ local kp =
           },
           // FIXME: reenable
           securityContext:: null,
-          // TODO: Move this to addon
-          additionalScrapeConfigs: {
-            name: 'scrapeconfigs',
-            key: 'additional.yaml',
-          },
           queryLogFile: '/prometheus/query.log',
 
           storage: {
@@ -213,38 +207,6 @@ local kp =
           },
         },
       },
-
-      additionalScrapeConfigs: {
-        apiVersion: 'v1',
-        stringData: {
-          'additional.yaml': |||
-            - job_name: windows
-              static_configs:
-              - targets:
-                - '192.168.2.50:9182'
-                - '192.168.2.51:9182'
-              metric_relabel_configs:
-              - action: replace
-                replacement: pawelpc
-                regex: '192.168.2.50:9182'
-                source_labels:
-                - instance
-                target_label: node
-              - action: replace
-                replacement: aduspc
-                regex: '192.168.2.51:9182'
-                source_labels:
-                - instance
-                target_label: node
-          |||,
-        },
-        kind: 'Secret',
-        metadata: {
-          name: 'scrapeconfigs',
-          namespace: 'monitoring',
-        },
-      },
-
 
       ingress: {
         apiVersion: 'networking.k8s.io/v1',

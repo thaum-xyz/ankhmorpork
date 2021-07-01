@@ -9,6 +9,30 @@
     },
     baseDomain: 'ankhmorpork.thaum.xyz',
   },
+  windowsScrapeConfig+: {
+    job_name: 'windows',
+    static_configs: [{
+      targets: [
+        '192.168.2.50:9182',
+        '192.168.2.51:9182',
+      ],
+    }],
+    metric_relabel_configs: [
+      {
+        action: 'replace',
+        replacement: 'pawelpc',
+        regex: '192.168.2.50:9182',
+        source_labels: ['instance'],
+        target_label: 'node',
+      },{
+        action: 'replace',
+        replacement: 'aduspc',
+        regex: '192.168.2.51:9182',
+        source_labels: ['instance'],
+        target_label: 'node',
+      }
+    ],
+  },
   alertmanager+: {
     resources: {
       requests: { memory: '30Mi' },
