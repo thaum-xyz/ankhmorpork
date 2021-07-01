@@ -21,7 +21,7 @@ for f in $FILES; do
         LATEST="$(get_latest_version "$r")"
         CURRENT=$(grep "application-version-from-github:.*${r}" "$f" | cut -d: -f2 | cut -d# -f1 | sed -e 's/[^0-9.]//g')
 
-        if [ "$LATEST" == "" ]; then
+        if [ "$LATEST" == "" ] || [ "$LATEST" == "null" ]; then
             echo "Latest version detection failed"
             exit 1
         fi
