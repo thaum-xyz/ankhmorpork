@@ -198,8 +198,6 @@ local kp =
           },
           queryLogFile: '/prometheus/query.log',
 
-          enableFeatures: ['remote-write-receiver'],
-
           storage: {
             volumeClaimTemplate: {
               metadata: {

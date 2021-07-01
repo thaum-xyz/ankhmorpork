@@ -20,6 +20,7 @@
     externalLabels: {
       cluster: "ankhmorpork",
     },
+    enableFeatures: ['remote-write-receiver'],
     ruleSelector: {},
     resources: {
       requests: { cpu: '140m', memory: '1900Mi' },
