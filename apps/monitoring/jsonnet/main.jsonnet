@@ -190,8 +190,7 @@ local kp =
           },
           // FIXME: reenable
           securityContext:: null,
-          // TODO: Move this to addon when lancre is dealt with
-          // additionalScrapeConfigs are stored as ConfigMapSecret in plain yaml file
+          // TODO: Move this to addon
           additionalScrapeConfigs: {
             name: 'scrapeconfigs',
             key: 'additional.yaml',
@@ -214,6 +213,38 @@ local kp =
           },
         },
       },
+
+      additionalScrapeConfigs: {
+        apiVersion: 'v1',
+        stringData: {
+          'additional.yaml': |||
+            - job_name: windows
+              static_configs:
+              - targets:
+                - '192.168.2.50:9182'
+                - '192.168.2.51:9182'
+              metric_relabel_configs:
+              - action: replace
+                replacement: pawelpc
+                regex: '192.168.2.50:9182'
+                source_labels:
+                - instance
+                target_label: node
+              - action: replace
+                replacement: aduspc
+                regex: '192.168.2.51:9182'
+                source_labels:
+                - instance
+                target_label: node
+          |||,
+        },
+        kind: 'Secret',
+        metadata: {
+          name: 'scrapeconfigs',
+          namespace: 'monitoring',
+        },
+      },
+
 
       ingress: {
         apiVersion: 'networking.k8s.io/v1',
@@ -410,6 +441,90 @@ local kp =
         name: 'testing-rules',
         groups: (import 'ext/rules/testing.json').groups,
       }),
+    },
+
+    // TODO: Move receiver part into separate addon and donate to kube-prometheus
+    receiver: {
+      // Move to a loop
+      serviceWrite0: {
+        apiVersion: 'v1',
+        kind: 'Service',
+        metadata: $.prometheus.service.metadata { name: 'prometheus-k8s-write-0' },
+        spec: {
+          ports: $.prometheus.service.spec.ports,
+          selector: $.prometheus.service.spec.selector { 'statefulset.kubernetes.io/pod-name': 'prometheus-k8s-0' },
+        },
+      },
+      serviceWrite1: {
+        apiVersion: 'v1',
+        kind: 'Service',
+        metadata: $.prometheus.service.metadata { name: 'prometheus-k8s-write-1' },
+        spec: {
+          ports: $.prometheus.service.spec.ports,
+          selector: $.prometheus.service.spec.selector { 'statefulset.kubernetes.io/pod-name': 'prometheus-k8s-1' },
+        },
+      },
+      ingress: {
+        apiVersion: 'networking.k8s.io/v1',
+        kind: 'Ingress',
+        metadata: {
+          name: 'prometheus-remote-write',
+          namespace: $.prometheus.prometheus.metadata.namespace,
+          annotations: {
+            'kubernetes.io/ingress.class': 'nginx',
+            'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+            'nginx.ingress.kubernetes.io/auth-type': 'basic',
+            'nginx.ingress.kubernetes.io/auth-secret': 'prometheus-remote-write-auth',
+            'nginx.ingress.kubernetes.io/rewrite-target': '/$2',
+          },
+        },
+        spec: {
+          tls: [{
+            hosts: ['push.ankhmorpork.thaum.xyz'],
+            secretName: 'prometheus-remote-write-tls',
+          }],
+          rules: [{
+            host: 'push.ankhmorpork.thaum.xyz',
+            http: {
+              paths: [
+                {
+                  path: '/primary(/|$)(.*)',
+                  pathType: 'Prefix',
+                  backend: {
+                    service: {
+                      name: 'prometheus-k8s-write-0',
+                      port: {
+                        name: 'web',
+                      },
+                    },
+                  },
+                },
+                {
+                  path: '/secondary(/|$)(.*)',
+                  pathType: 'Prefix',
+                  backend: {
+                    service: {
+                      name: 'prometheus-k8s-write-1',
+                      port: {
+                        name: 'web',
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          }],
+        },
+      },
+      remoteWriteAuth: sealedsecret(
+        {
+          name: 'prometheus-remote-write-auth',
+          namespace: $.prometheus.prometheus.metadata.namespace,
+        },
+        {
+          auth: $.values.prometheus.remoteWriteAuth,
+        },
+      ),
     },
 
   } +
