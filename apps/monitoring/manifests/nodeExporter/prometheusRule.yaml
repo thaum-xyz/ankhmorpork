@@ -18,15 +18,15 @@ spec:
         description: Filesystem on {{ $labels.device }} at {{ $labels.instance }}
           has only {{ printf "%.2f" $value }}% available space left and is filling
           up.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemspacefillingup
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodefilesystemspacefillingup
         summary: Filesystem is predicted to run out of space within the next 24 hours.
       expr: |
         (
-          node_filesystem_avail_bytes{job="node-exporter",fstype!=""} / node_filesystem_size_bytes{job="node-exporter",fstype!=""} * 100 < 40
+          node_filesystem_avail_bytes{job="node",fstype!=""} / node_filesystem_size_bytes{job="node",fstype!=""} * 100 < 40
         and
-          predict_linear(node_filesystem_avail_bytes{job="node-exporter",fstype!=""}[6h], 24*60*60) < 0
+          predict_linear(node_filesystem_avail_bytes{job="node",fstype!=""}[6h], 24*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!=""} == 0
+          node_filesystem_readonly{job="node",fstype!=""} == 0
         )
       for: 1h
       labels:
@@ -36,15 +36,15 @@ spec:
         description: Filesystem on {{ $labels.device }} at {{ $labels.instance }}
           has only {{ printf "%.2f" $value }}% available space left and is filling
           up fast.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemspacefillingup
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodefilesystemspacefillingup
         summary: Filesystem is predicted to run out of space within the next 4 hours.
       expr: |
         (
-          node_filesystem_avail_bytes{job="node-exporter",fstype!=""} / node_filesystem_size_bytes{job="node-exporter",fstype!=""} * 100 < 15
+          node_filesystem_avail_bytes{job="node",fstype!=""} / node_filesystem_size_bytes{job="node",fstype!=""} * 100 < 20
         and
-          predict_linear(node_filesystem_avail_bytes{job="node-exporter",fstype!=""}[6h], 4*60*60) < 0
+          predict_linear(node_filesystem_avail_bytes{job="node",fstype!=""}[6h], 4*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!=""} == 0
+          node_filesystem_readonly{job="node",fstype!=""} == 0
         )
       for: 1h
       labels:
@@ -53,13 +53,13 @@ spec:
       annotations:
         description: Filesystem on {{ $labels.device }} at {{ $labels.instance }}
           has only {{ printf "%.2f" $value }}% available space left.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemalmostoutofspace
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodefilesystemalmostoutofspace
         summary: Filesystem has less than 5% space left.
       expr: |
         (
-          node_filesystem_avail_bytes{job="node-exporter",fstype!=""} / node_filesystem_size_bytes{job="node-exporter",fstype!=""} * 100 < 5
+          node_filesystem_avail_bytes{job="node",fstype!=""} / node_filesystem_size_bytes{job="node",fstype!=""} * 100 < 5
         and
-          node_filesystem_readonly{job="node-exporter",fstype!=""} == 0
+          node_filesystem_readonly{job="node",fstype!=""} == 0
         )
       for: 1h
       labels:
@@ -68,13 +68,13 @@ spec:
       annotations:
         description: Filesystem on {{ $labels.device }} at {{ $labels.instance }}
           has only {{ printf "%.2f" $value }}% available space left.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemalmostoutofspace
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodefilesystemalmostoutofspace
         summary: Filesystem has less than 3% space left.
       expr: |
         (
-          node_filesystem_avail_bytes{job="node-exporter",fstype!=""} / node_filesystem_size_bytes{job="node-exporter",fstype!=""} * 100 < 3
+          node_filesystem_avail_bytes{job="node",fstype!=""} / node_filesystem_size_bytes{job="node",fstype!=""} * 100 < 3
         and
-          node_filesystem_readonly{job="node-exporter",fstype!=""} == 0
+          node_filesystem_readonly{job="node",fstype!=""} == 0
         )
       for: 1h
       labels:
@@ -84,15 +84,15 @@ spec:
         description: Filesystem on {{ $labels.device }} at {{ $labels.instance }}
           has only {{ printf "%.2f" $value }}% available inodes left and is filling
           up.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemfilesfillingup
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodefilesystemfilesfillingup
         summary: Filesystem is predicted to run out of inodes within the next 24 hours.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!=""} / node_filesystem_files{job="node-exporter",fstype!=""} * 100 < 40
+          node_filesystem_files_free{job="node",fstype!=""} / node_filesystem_files{job="node",fstype!=""} * 100 < 40
         and
-          predict_linear(node_filesystem_files_free{job="node-exporter",fstype!=""}[6h], 24*60*60) < 0
+          predict_linear(node_filesystem_files_free{job="node",fstype!=""}[6h], 24*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!=""} == 0
+          node_filesystem_readonly{job="node",fstype!=""} == 0
         )
       for: 1h
       labels:
@@ -102,15 +102,15 @@ spec:
         description: Filesystem on {{ $labels.device }} at {{ $labels.instance }}
           has only {{ printf "%.2f" $value }}% available inodes left and is filling
           up fast.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemfilesfillingup
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodefilesystemfilesfillingup
         summary: Filesystem is predicted to run out of inodes within the next 4 hours.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!=""} / node_filesystem_files{job="node-exporter",fstype!=""} * 100 < 20
+          node_filesystem_files_free{job="node",fstype!=""} / node_filesystem_files{job="node",fstype!=""} * 100 < 20
         and
-          predict_linear(node_filesystem_files_free{job="node-exporter",fstype!=""}[6h], 4*60*60) < 0
+          predict_linear(node_filesystem_files_free{job="node",fstype!=""}[6h], 4*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!=""} == 0
+          node_filesystem_readonly{job="node",fstype!=""} == 0
         )
       for: 1h
       labels:
@@ -119,13 +119,13 @@ spec:
       annotations:
         description: Filesystem on {{ $labels.device }} at {{ $labels.instance }}
           has only {{ printf "%.2f" $value }}% available inodes left.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemalmostoutoffiles
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodefilesystemalmostoutoffiles
         summary: Filesystem has less than 5% inodes left.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!=""} / node_filesystem_files{job="node-exporter",fstype!=""} * 100 < 5
+          node_filesystem_files_free{job="node",fstype!=""} / node_filesystem_files{job="node",fstype!=""} * 100 < 5
         and
-          node_filesystem_readonly{job="node-exporter",fstype!=""} == 0
+          node_filesystem_readonly{job="node",fstype!=""} == 0
         )
       for: 1h
       labels:
@@ -134,13 +134,13 @@ spec:
       annotations:
         description: Filesystem on {{ $labels.device }} at {{ $labels.instance }}
           has only {{ printf "%.2f" $value }}% available inodes left.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemalmostoutoffiles
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodefilesystemalmostoutoffiles
         summary: Filesystem has less than 3% inodes left.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!=""} / node_filesystem_files{job="node-exporter",fstype!=""} * 100 < 3
+          node_filesystem_files_free{job="node",fstype!=""} / node_filesystem_files{job="node",fstype!=""} * 100 < 3
         and
-          node_filesystem_readonly{job="node-exporter",fstype!=""} == 0
+          node_filesystem_readonly{job="node",fstype!=""} == 0
         )
       for: 1h
       labels:
@@ -149,7 +149,7 @@ spec:
       annotations:
         description: '{{ $labels.instance }} interface {{ $labels.device }} has encountered
           {{ printf "%.0f" $value }} receive errors in the last two minutes.'
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodenetworkreceiveerrs
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodenetworkreceiveerrs
         summary: Network interface is reporting many receive errors.
       expr: |
         rate(node_network_receive_errs_total[2m]) / rate(node_network_receive_packets_total[2m]) > 0.01
@@ -160,7 +160,7 @@ spec:
       annotations:
         description: '{{ $labels.instance }} interface {{ $labels.device }} has encountered
           {{ printf "%.0f" $value }} transmit errors in the last two minutes.'
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodenetworktransmiterrs
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodenetworktransmiterrs
         summary: Network interface is reporting many transmit errors.
       expr: |
         rate(node_network_transmit_errs_total[2m]) / rate(node_network_transmit_packets_total[2m]) > 0.01
@@ -170,7 +170,7 @@ spec:
     - alert: NodeHighNumberConntrackEntriesUsed
       annotations:
         description: '{{ $value | humanizePercentage }} of conntrack entries are used.'
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodehighnumberconntrackentriesused
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodehighnumberconntrackentriesused
         summary: Number of conntrack are getting close to the limit.
       expr: |
         (node_nf_conntrack_entries / node_nf_conntrack_entries_limit) > 0.75
@@ -179,17 +179,17 @@ spec:
     - alert: NodeTextFileCollectorScrapeError
       annotations:
         description: Node Exporter text file collector failed to scrape.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodetextfilecollectorscrapeerror
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodetextfilecollectorscrapeerror
         summary: Node Exporter text file collector failed to scrape.
       expr: |
-        node_textfile_scrape_error{job="node-exporter"} == 1
+        node_textfile_scrape_error{job="node"} == 1
       labels:
         severity: warning
     - alert: NodeClockSkewDetected
       annotations:
         description: Clock on {{ $labels.instance }} is out of sync by more than 300s.
           Ensure NTP is configured correctly on this host.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodeclockskewdetected
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodeclockskewdetected
         summary: Clock skew detected.
       expr: |
         (
@@ -210,7 +210,7 @@ spec:
       annotations:
         description: Clock on {{ $labels.instance }} is not synchronising. Ensure
           NTP is configured on this host.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodeclocknotsynchronising
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodeclocknotsynchronising
         summary: Clock not synchronising.
       expr: |
         min_over_time(node_timex_sync_status[5m]) == 0
@@ -224,7 +224,7 @@ spec:
         description: RAID array '{{ $labels.device }}' on {{ $labels.instance }} is
           in degraded state due to one or more disks failures. Number of spare drives
           is insufficient to fix issue automatically.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/noderaiddegraded
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/noderaiddegraded
         summary: RAID Array is degraded
       expr: |
         node_md_disks_required - ignoring (state) (node_md_disks{state="active"}) > 0
@@ -235,7 +235,7 @@ spec:
       annotations:
         description: At least one device in RAID array on {{ $labels.instance }} failed.
           Array '{{ $labels.device }}' needs attention and possibly a disk swap.
-        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/noderaiddiskfailure
+        runbook_url: https://runbooks.thaum.xyz/runbooks/node/noderaiddiskfailure
         summary: Failed device in RAID array
       expr: |
         node_md_disks{state="failed"} > 0
@@ -246,55 +246,55 @@ spec:
     - expr: |
         count without (cpu) (
           count without (mode) (
-            node_cpu_seconds_total{job="node-exporter"}
+            node_cpu_seconds_total{job="node"}
           )
         )
       record: instance:node_num_cpu:sum
     - expr: |
         1 - avg without (cpu, mode) (
-          rate(node_cpu_seconds_total{job="node-exporter", mode="idle"}[5m])
+          rate(node_cpu_seconds_total{job="node", mode="idle"}[5m])
         )
       record: instance:node_cpu_utilisation:rate5m
     - expr: |
         (
-          node_load1{job="node-exporter"}
+          node_load1{job="node"}
         /
-          instance:node_num_cpu:sum{job="node-exporter"}
+          instance:node_num_cpu:sum{job="node"}
         )
       record: instance:node_load1_per_cpu:ratio
     - expr: |
         1 - (
-          node_memory_MemAvailable_bytes{job="node-exporter"}
+          node_memory_MemAvailable_bytes{job="node"}
         /
-          node_memory_MemTotal_bytes{job="node-exporter"}
+          node_memory_MemTotal_bytes{job="node"}
         )
       record: instance:node_memory_utilisation:ratio
     - expr: |
-        rate(node_vmstat_pgmajfault{job="node-exporter"}[5m])
+        rate(node_vmstat_pgmajfault{job="node"}[5m])
       record: instance:node_vmstat_pgmajfault:rate5m
     - expr: |
-        rate(node_disk_io_time_seconds_total{job="node-exporter", device=~"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+"}[5m])
+        rate(node_disk_io_time_seconds_total{job="node", device!=""}[5m])
       record: instance_device:node_disk_io_time_seconds:rate5m
     - expr: |
-        rate(node_disk_io_time_weighted_seconds_total{job="node-exporter", device=~"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+"}[5m])
+        rate(node_disk_io_time_weighted_seconds_total{job="node", device!=""}[5m])
       record: instance_device:node_disk_io_time_weighted_seconds:rate5m
     - expr: |
         sum without (device) (
-          rate(node_network_receive_bytes_total{job="node-exporter", device!="lo"}[5m])
+          rate(node_network_receive_bytes_total{job="node", device!="lo"}[5m])
         )
       record: instance:node_network_receive_bytes_excluding_lo:rate5m
     - expr: |
         sum without (device) (
-          rate(node_network_transmit_bytes_total{job="node-exporter", device!="lo"}[5m])
+          rate(node_network_transmit_bytes_total{job="node", device!="lo"}[5m])
         )
       record: instance:node_network_transmit_bytes_excluding_lo:rate5m
     - expr: |
         sum without (device) (
-          rate(node_network_receive_drop_total{job="node-exporter", device!="lo"}[5m])
+          rate(node_network_receive_drop_total{job="node", device!="lo"}[5m])
         )
       record: instance:node_network_receive_drop_excluding_lo:rate5m
     - expr: |
         sum without (device) (
-          rate(node_network_transmit_drop_total{job="node-exporter", device!="lo"}[5m])
+          rate(node_network_transmit_drop_total{job="node", device!="lo"}[5m])
         )
       record: instance:node_network_transmit_drop_excluding_lo:rate5m

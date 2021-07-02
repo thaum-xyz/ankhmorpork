@@ -56,6 +56,11 @@
       requests: { cpu: '140m', memory: '1900Mi' },
       limits: { cpu: '1' },
     },
+    mixin+: {
+      _config: {
+        runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/prometheus/%s',
+      },
+    },
     // More in https://kubernetes.github.io/ingress-nginx/examples/auth/basic/
     // Password stored in bitwarden
     remoteWriteAuth: 'AgDGeT9BN6FzkFxAGIEfp/DSRL+jQ+CFoLiwAXUWC6QtfDFgWyQGauDRQqWvsPCWrCFNNSi0qsb8ObppQpVAftJLXZL+HI44me3AviYfMUPif7r5XKvcjhMkR+X7Cpk3/67ewlPDO5kHMuVosyVVbtGF4uznwPsi1mH+pRHsdSo76muFNNY/Cvr5stEtk+6UYakFZvti0Pe24nOI+mf0weBRLkyo45uZWOG4Lgok4AO84h9lKEJb6ROWYHs5neJua6JevdtQSOUo5xKyBCHNpkCrtkn0QkX6pSwwTL90s7em1anJL5pXy/oHSfaqa2VkQ6pDvgFylrXAr049sen8v5zaQoemQ9m3jKD8b5sZbBRhV5AxEGd8AH4f0S33zeVmwNyc0DiSE7riFPPTxvXPmW0JVubYSj7rr1aANNKW8UVzTRNutsX/SyxN8FgLPb41miuNVN0GOH8qA58l3t4LxaoDeAeLfg8VgOZ6yf2g1yhEzpSG98VIvt5hDxwlQvOlpUqXjckuV+bWDhiQYUQZFmzLWNJ/ki7E9mGM8kJ0nIQHiB3zg1cfEIoeSB0930upjll48/r57+m/TSjrymVgMzGwzJ/dd7tjeBagpVBsxnPdLY4PTKA6g5SJsDTDLzdWKsjHhoQR62WIUhC8QV8m8m9xYSAyfnaNVUVwh5b2q+5Q3agilaquFO3Ay1AZbS0x4n3K6WkJQHF2h1qR97PmW5YFrDH3gg6YzNyEDDEUQlNv6KL0D+NUzXXotxMH67A3',
@@ -64,7 +69,7 @@
     mixin+: {
       _config: {
         prometheusOperatorSelector: 'job="prometheus-operator"',
-        runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/prometheus/%s',
+        runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/prometheus-operator/%s',
       },
     },
   },
@@ -127,6 +132,20 @@
         kubeApiserverSelector: 'job="kubelet"',
         cpuThrottlingPercent: 70,
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/kubernetes/%s',
+      },
+    },
+  },
+  nodeExporter+: {
+    mixin+: {
+      _config: {
+        runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/node/%s',
+      },
+    },
+  },
+  kubeStateMetrics+: {
+    mixin+: {
+      _config: {
+        runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/kube-state-metrics/%s',
       },
     },
   },
