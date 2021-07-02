@@ -14,7 +14,7 @@ spec:
       annotations:
         description: CPU Steal Time is very high on {{ $labels.instance }} hypervisor.
           This can lead to VM being stalled.
-        runbook_url: https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/CPUStealTimeHigh.md
+        runbook_url: https://runbooks.thaum.xyz/runbooks/ankhmorpork/CPUStealTimeHigh.md
         summary: High CPU Steal Time
       expr: |
         sum by (instance) (rate(node_cpu_seconds_total{mode="steal"}[3m])) / count by (instance) (node_cpu_seconds_total{mode="steal"}) > 0.1

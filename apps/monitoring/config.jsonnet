@@ -24,25 +24,31 @@
         regex: '192.168.2.50:9182',
         source_labels: ['instance'],
         target_label: 'node',
-      },{
+      },
+      {
         action: 'replace',
         replacement: 'aduspc',
         regex: '192.168.2.51:9182',
         source_labels: ['instance'],
         target_label: 'node',
-      }
+      },
     ],
   },
   alertmanager+: {
     resources: {
       requests: { memory: '30Mi' },
     },
+    mixin+: {
+      _config+: {
+        runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/alertmanager/%s',
+      },
+    },
   },
   prometheus+: {
     version: '2.28.0',  // application-version-from-github: prometheus/prometheus
     image: 'quay.io/prometheus/prometheus:v2.28.0',  // application-image-from-github: prometheus/prometheus
     externalLabels: {
-      cluster: "ankhmorpork",
+      cluster: 'ankhmorpork',
     },
     enableFeatures: ['remote-write-receiver'],
     ruleSelector: {},
@@ -58,6 +64,7 @@
     mixin+: {
       _config: {
         prometheusOperatorSelector: 'job="prometheus-operator"',
+        runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/prometheus/%s',
       },
     },
   },
@@ -119,6 +126,7 @@
         kubeControllerManagerSelector: 'job="kubelet"',
         kubeApiserverSelector: 'job="kubelet"',
         cpuThrottlingPercent: 70,
+        runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/kubernetes/%s',
       },
     },
   },

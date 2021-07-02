@@ -14,7 +14,7 @@ spec:
       annotations:
         description: '{{ $value }} packages are available for upgrade. Maybe it is
           time to upgrade?'
-        runbook_url: https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/PackagesAvailable.md
+        runbook_url: https://runbooks.thaum.xyz/runbooks/ankhmorpork/PackagesAvailable.md
         summary: Packages are available for upgrade
       expr: |
         sum by (node,instance) (yum_upgrades_pending) > 200
@@ -27,7 +27,7 @@ spec:
       annotations:
         description: Instance '{{ $labels.instance }}' was upgraded and now requires
           a reboot.
-        runbook_url: https://github.com/thaum-xyz/ankhmorpork/blob/master/docs/runbooks/RebootRequired.md
+        runbook_url: https://runbooks.thaum.xyz/runbooks/ankhmorpork/RebootRequired.md
         summary: Reboot is required to finish package upgrade
       expr: node_reboot_required > 0
       for: 4h
