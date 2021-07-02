@@ -14,7 +14,7 @@ spec:
       annotations:
         description: '{{ $value }} packages are available for upgrade. Maybe it is
           time to upgrade?'
-        runbook_url: https://runbooks.thaum.xyz/runbooks/ankhmorpork/PackagesAvailable.md
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/PackagesAvailable
         summary: Packages are available for upgrade
       expr: |
         sum by (node,instance) (yum_upgrades_pending) > 200
@@ -27,7 +27,7 @@ spec:
       annotations:
         description: Instance '{{ $labels.instance }}' was upgraded and now requires
           a reboot.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/ankhmorpork/RebootRequired.md
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/RebootRequired
         summary: Reboot is required to finish package upgrade
       expr: node_reboot_required > 0
       for: 4h
@@ -39,6 +39,7 @@ spec:
       annotations:
         description: Filesystem went read-only on {{ $labels.instance }}. Check FS
           for possible corruption.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/FilesystemReadOnly
         summary: Filesystem went read-only possibly due to device error.
       expr: |
         node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)"} != 0
@@ -47,6 +48,7 @@ spec:
     - alert: TouchscreenNotAvailable
       annotations:
         description: Powercycle device {{ $labels.instance }}
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/TouchscreenNotAvailable
         summary: Touchscreen not available and automatic remediation failed to restore
           it
       expr: |
@@ -58,6 +60,7 @@ spec:
       annotations:
         description: Temperature data is gone. Immediatelly switch off all relays
           and check OW bus.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/TemperaturesNotAvailable
         summary: Cannot obtain temperature data
       expr: |
         absent(evok_temperature_celsius{environment="lancre.thaum.xyz"})

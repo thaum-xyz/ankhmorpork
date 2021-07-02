@@ -14,7 +14,7 @@ spec:
       annotations:
         description: '{{ printf "%.4g" $value }}% of the {{ $labels.namespace }}/{{ $labels.job }} backup jobs succeeded.'
         summary: Less than 90% of backup jobs succeeded.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/ankhmorpork/BackupsNotCreated.md
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/BackupsNotCreated
       expr: |
         sum without (pod,instance) (backup_backups_successful_total) / sum without (pod,instance) (backup_backups_all_total) * 100 < 90
       labels:
@@ -23,7 +23,7 @@ spec:
       annotations:
         description: '{{ printf "%.4g" $value }}% of the {{ $labels.namespace }}/{{ $labels.job }} backup jobs succeeded.'
         summary: Less than 50% of backup jobs succeeded.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/ankhmorpork/BackupsNotCreated.md
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/BackupsNotCreated
       expr: |
         sum without (pod,instance) (backup_backups_successful_total) / sum without (pod,instance) (backup_backups_all_total) * 100 < 50
       labels:
