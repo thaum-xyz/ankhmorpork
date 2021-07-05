@@ -6,7 +6,7 @@ metadata:
   namespace: multimedia
   labels:
     app.kubernetes.io/name: transmission
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.6"
 spec:
   replicas: 1
   strategy:
@@ -20,7 +20,7 @@ spec:
         kubectl.kubernetes.io/default-container: transmission
       labels:
         app.kubernetes.io/name: transmission
-        app.kubernetes.io/version: "3.4"
+        app.kubernetes.io/version: "3.6"
     spec:
       containers:
       - env:
@@ -41,7 +41,7 @@ spec:
         - configMapRef:
             name: transmission-config
             optional: false
-        image: haugene/transmission-openvpn:3.4
+        image: haugene/transmission-openvpn:3.6
         name: transmission
         ports:
         - containerPort: 9091
