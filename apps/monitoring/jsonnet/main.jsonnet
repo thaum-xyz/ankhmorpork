@@ -65,6 +65,8 @@ local pagespeed = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pagespeed/page
 local kubeEventsExporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/kube-events-exporter/kube-events-exporter.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
+local mixin = (import 'kube-prometheus/lib/mixin.libsonnet');
+
 local ingressAnnotations = {
   'kubernetes.io/ingress.class': 'nginx',
   'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
@@ -394,15 +396,16 @@ local kp =
     sloth: sloth($.values.sloth),
 
     other: {
-      local externalRules = import 'lib/externalRules.libsonnet',
-      thaumPrometheusRule: externalRules({
+      local thaumMixin = import 'mixin/mixin.libsonnet',
+      thaumPrometheusRule: mixin({
         name: 'thaum-rules',
-        groups: (import 'ext/rules/thaum.json').groups,
-      }),
-      testingPrometheusRule: externalRules({
-        name: 'testing-rules',
-        groups: (import 'ext/rules/testing.json').groups,
-      }),
+        namespace: 'monitoring',
+        labels: {
+          prometheus: 'k8s',
+          role: 'alert-rules',
+        },
+        mixin: thaumMixin,
+      }).prometheusRules,
     },
 
     // TODO: Move receiver part into separate addon and donate to kube-prometheus
