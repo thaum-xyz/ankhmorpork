@@ -26,7 +26,8 @@ groups:
                 count without(pod) (namespace_workload_pod:kube_pod_owner:relabel) > 1
               )
             )
-          ) == 1
+          )
+        )== 1
       for: 1h
       labels:
         severity: warning
