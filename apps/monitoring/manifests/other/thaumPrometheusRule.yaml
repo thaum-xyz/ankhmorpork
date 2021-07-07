@@ -21,8 +21,6 @@ spec:
       for: 20m
       labels:
         severity: warning
-    - expr: time() - kube_namespace_created
-      record: :kube_namespace_created
     - alert: SiteNotUP
       annotations:
         description: UptimeRobot reports site {{ $labels.url }} not to be up for 15m.
