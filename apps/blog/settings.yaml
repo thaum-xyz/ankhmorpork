@@ -1,5 +1,5 @@
 ---
 namespace: blog
-version: 4.7.0  # github-repo: TryGhost/Ghost  # TODO: fix metadata for version updater after migrating to ghost 4
-image: ghost:4.7.0  # github-repo: TryGhost/Ghost
+version: 4.9.0  # application-version-from-github: TryGhost/Ghost
+image: ghost:4.9.0  # application-version-from-github: TryGhost/Ghost
 domain: pawel.krupa.net.pl
