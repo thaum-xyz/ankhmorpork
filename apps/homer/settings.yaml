@@ -1,6 +1,6 @@
 ---
-version: "21.03.2"  # application-version-from-github: bastienwirtz/homer
-image: "b4bz/homer:21.03.2"  # application-image-from-github: bastienwirtz/homer
+version: "21.07.1"  # application-version-from-github: bastienwirtz/homer
+image: "b4bz/homer:21.07.1"  # application-image-from-github: bastienwirtz/homer
 namespace: "homer"
 replicas: 2
 domain: "ankhmorpork.thaum.xyz"
