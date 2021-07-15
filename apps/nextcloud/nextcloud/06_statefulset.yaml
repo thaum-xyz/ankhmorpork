@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: phpfpm
-    app.kubernetes.io/version: 21.0.1
+    app.kubernetes.io/version: 22.0.0
     app.kubernetes.io/part-of: nextcloud
     app.kubernetes.io/component: server
   name: nextcloud
@@ -23,7 +23,7 @@ spec:
         kubectl.kubernetes.io/default-container: nextcloud
       labels:
         app.kubernetes.io/name: phpfpm
-        app.kubernetes.io/version: 21.0.1
+        app.kubernetes.io/version: 22.0.0
         app.kubernetes.io/part-of: nextcloud
         app.kubernetes.io/component: server
     spec:
@@ -37,7 +37,7 @@ spec:
             name: redis-password
         - secretRef:
             name: smtp
-        image: nextcloud:21.0.1-fpm
+        image: nextcloud:22.0.0-fpm
         # imagePullPolicy: Always
         name: nextcloud
         ports:

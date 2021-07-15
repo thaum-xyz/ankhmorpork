@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cron
     app.kubernetes.io/part-of: nextcloud
-    app.kubernetes.io/version: 21.0.1
+    app.kubernetes.io/version: 22.0.0
   name: cron
   namespace: nextcloud
 spec:
@@ -20,7 +20,7 @@ spec:
       labels:
         app.kubernetes.io/name: cron
         app.kubernetes.io/part-of: nextcloud
-        app.kubernetes.io/version: 21.0.1
+        app.kubernetes.io/version: 22.0.0
     spec:
       containers:
       - envFrom:
@@ -28,7 +28,7 @@ spec:
             name: nextcloud-envs
         - secretRef:
             name: mysql-creds
-        image: nextcloud:21.0.1-fpm
+        image: nextcloud:22.0.0-fpm
         name: cron
         command:
         - /cron.sh
