@@ -7,19 +7,14 @@ metadata:
   labels:
     app.kubernetes.io/name: nextcloud
 data:
-  status.conf: |
+  zzz-custom.conf: |
     [www]
-    pm.status_path = /status
-  www.conf: |
-    [www]
-    user = www-data
-    group = www-data
-    listen = 127.0.0.1:9000
     pm = dynamic
     pm.max_children = 42
     pm.start_servers = 12
     pm.min_spare_servers = 6
     pm.max_spare_servers = 18
+    pm.status_path = /status
 ---
 apiVersion: v1
 kind: ConfigMap

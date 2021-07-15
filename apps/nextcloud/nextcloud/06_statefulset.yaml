@@ -48,7 +48,8 @@ spec:
             port: phpfpm
         volumeMounts:
         - name: phpfpm-config
-          mountPath: /etc/php-fpm.d
+          mountPath: /usr/local/etc/php-fpm.d/zzz-custom.conf
+          subPath: zzz-custom.conf
         - name: php-config
           mountPath: /etc/php/conf.d
         - name: web
