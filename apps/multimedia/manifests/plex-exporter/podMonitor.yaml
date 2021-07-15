@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/component: exporter
 spec:
   podMetricsEndpoints:
-  - interval: 30s
+  - interval: 120s
     port: metrics
   selector:
     matchLabels:
