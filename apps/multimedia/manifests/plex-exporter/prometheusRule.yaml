@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: plex-rules
+  namespace: multimedia
+spec:
+  groups:
+  - name: plex.rules
+    rules:
+    - alert: PlexDown
+      annotations:
+        description: Cannot get data from plex server.
+        summary: Plex Server is down
+      expr: absent(plex_server_info) == 1
+      for: 10m
+      labels:
+        severity: warning
