@@ -49,7 +49,7 @@ spec:
         summary: Service monitored by exporter is Down
       expr: '{__name__=~".*_up",__name__!="node_network_up"} == 0'
       labels:
-        secerity: warning
+        severity: warning
   - name: custom node alert rules
     rules:
     - alert: PackagesAvailable
