@@ -35,7 +35,10 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
         - "--token=$(TOKEN)"
-        - "--plex-server=http://plex-0.plex.multimedia.svc:32400"
+        #- "--plex-server=http://plex-0.plex.multimedia.svc:32400"
+        # Using external IP to trick plex into local-network mode.
+        # log msg: Request came in with unrecognized domain / IP 'plex-0.plex.multimedia.svc' in header Host; treating as non-local
+        - "--plex-server=http://192.168.2.98:32400"  # Using external IP to trick plex into local-network mode
         #- "--auto-discover"
         ports:
         - containerPort: 9594
