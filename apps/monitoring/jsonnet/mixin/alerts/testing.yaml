@@ -27,3 +27,11 @@ groups:
     expr: (kube_pod_container_status_last_terminated_reason{reason="OOMKilled"} == 1) and on(container, namespace, pod) (increase(kube_pod_container_status_restarts_total[5m]) > 0)
     labels:
       severity: warning
+  - alert: ExporterTargetDown
+    annotations:
+      description: Exporter {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) reported its target being down. This results in lack of ability to scrape metrics from the main service.
+      summary: Service monitored by exporter is Down
+    expr: '{__name__=~".*_up",__name__!="node_network_up"} == 0'
+    labels:
+      secerity: warning
+
