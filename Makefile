@@ -13,11 +13,11 @@ MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./
 
 .PHONY: generate
 generate:
-	for d in $(DIRS); do $(MAKE) -C $$d generate; done
+	for d in $(DIRS); do $(MAKE) -C $$d generate || exit 1; done
 
 .PHONY: upgrade
 upgrade:
-	for d in $(DIRS); do $(MAKE) -C $$d version-update; done
+	for d in $(DIRS); do $(MAKE) -C $$d version-update || exit 1; done
 
 .PHONY: check
 check: secrets
@@ -25,3 +25,7 @@ check: secrets
 .PHONY: secrets
 secrets:
 	./hack/checksecrets.sh
+
+.PHONY: validate
+validate:
+	for d in $(DIRS); do $(MAKE) -C $$d validate || exit 1; done
