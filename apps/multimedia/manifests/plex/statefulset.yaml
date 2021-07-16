@@ -57,7 +57,7 @@ spec:
         #  timeoutSeconds: 10
         volumeMounts:
         - mountPath: /config
-          name: plexlib
+          name: plex-db
         - mountPath: /transcode
           name: transcode
         - mountPath: /backup
@@ -66,9 +66,6 @@ spec:
           name: movies
         - mountPath: /data/tv
           name: tv
-        #- mountPath: /data/mymultimedia
-        #  name: mymultimedia
-        #  readOnly: true
         resources:
           requests:
             memory: 2500Mi
@@ -84,15 +81,12 @@ spec:
       - name: tv
         persistentVolumeClaim:
           claimName: tv
-      - name: plexlib
+      - name: plex-db
         persistentVolumeClaim:
-          claimName: plex-library
+          claimName: plex-db
       - name: backups
         persistentVolumeClaim:
           claimName: plex-backups
-      #- name: mymultimedia
-      #  hostPath:
-      #    path: "/srv/nextcloud/data/paulfantom/files/My multimedia"
       - name: transcode
         emptyDir: {}
       nodeSelector:

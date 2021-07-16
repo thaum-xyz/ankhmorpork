@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: plex-library
+  name: plex-db
   namespace: multimedia
 spec:
-  storageClassName: "managed-nfs-storage"
+  storageClassName: "local-path"
   accessModes:
     - ReadWriteOnce
   resources:
