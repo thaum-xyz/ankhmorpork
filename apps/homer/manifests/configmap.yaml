@@ -59,6 +59,9 @@ data:
       Local: &Local
         - tag: local
           tagstyle: "is-danger"
+      Testing: &test
+        - tag: testing
+          tagstyle: "is-info"
 
     # Services
     # First level array represent a group.
@@ -67,6 +70,11 @@ data:
       - name: Ankh Cloud
         icon: "fa fa-cloud"
         items:
+          - name: Portal
+            subtitle: "Main Portal"
+            logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Internet-icon.svg"
+            <<: *Testing
+            url: "https://portal.krupa.net.pl"
           - name: Nextcloud
             subtitle: "Everything and more"
             logo: "https://avatars0.githubusercontent.com/u/19211038?s=200&v=4"
@@ -83,6 +91,11 @@ data:
             subtitle: "Compress images online"
             logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
             url: "https://compressor.io/"
+          - name: Seafile
+            subtitle: "Cloud Drive"
+            logo: "https://de.seafile.com/wp-content/uploads/2018/09/seafile-300x174.png"
+            <<: *Testing
+            url: "https://seafile.ankhmorpork.thaum.xyz/"
 
       - name: Multimedia
         icon: "fa fa-tv"
@@ -112,10 +125,12 @@ data:
             logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
             <<: *Local
             url: "http://192.168.2.95:9091/transmission/web/"
-          #- name: Photoprism
-          #  logo: ""
-          #  subtitle: "Photo management"
-          #  url: "http://192.168.2.96"
+          - name: Photoprism
+            logo: "https://dl.photoprism.org/assets/logo/logo-black-bold.svg"
+            <<: *Local
+            <<: *Testing
+            subtitle: "Photo management"
+            url: "http://192.168.2.96"
 
       - name: Administration
         icon: "fa fa-user-shield"
