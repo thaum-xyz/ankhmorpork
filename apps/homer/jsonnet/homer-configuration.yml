@@ -58,10 +58,10 @@ tags:
       tagstyle: "is-danger"
   Testing: &Testing
     - tag: testing
-      tagstyle: "is-info"
+      tagstyle: "is-warning"
   LocalTesting: &LocalTesting
     - tag: testing
-      tagstyle: "is-info"
+      tagstyle: "is-warning"
     - tag: local
       tagstyle: "is-danger"
 
