@@ -55,10 +55,10 @@ links:
 tags:
   Local: &Local
     - tag: local
-      tagstyle: "is-danger"
+      tagstyle: "is-success"
   Testing: &Testing
     - tag: testing
-      tagstyle: "is-warning"
+      tagstyle: "is-danger"
 
 # Services
 # First level array represent a group.
