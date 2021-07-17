@@ -59,6 +59,11 @@ tags:
   Testing: &Testing
     - tag: testing
       tagstyle: "is-info"
+  LocalTesting: &LocalTesting
+    - tag: testing
+      tagstyle: "is-info"
+    - tag: local
+      tagstyle: "is-danger"
 
 # Services
 # First level array represent a group.
@@ -124,8 +129,7 @@ services:
         url: "http://192.168.2.95:9091/transmission/web/"
       - name: Photoprism
         logo: "https://dl.photoprism.org/assets/logo/logo-black-bold.svg"
-        <<: *Local
-        <<: *Testing
+        <<: *LocalTesting
         subtitle: "Photo management"
         url: "http://192.168.2.96"
 
