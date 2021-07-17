@@ -96,6 +96,11 @@ data:
             logo: "https://de.seafile.com/wp-content/uploads/2018/09/seafile-300x174.png"
             <<: *Testing
             url: "https://seafile.ankhmorpork.thaum.xyz/"
+          - name: Miniflux
+            subtitle: "Minimalist RSS feed reader"
+            logo: "https://avatars.githubusercontent.com/u/10584991?s=200&v=4"
+            <<: *Testing
+            url: "https://rss.ankhmorpork.thaum.xyz/"
 
       - name: Multimedia
         icon: "fa fa-tv"
