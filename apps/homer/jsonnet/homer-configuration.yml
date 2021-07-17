@@ -56,7 +56,7 @@ tags:
   Local: &Local
     - tag: local
       tagstyle: "is-danger"
-  Testing: &test
+  Testing: &Testing
     - tag: testing
       tagstyle: "is-info"
 
