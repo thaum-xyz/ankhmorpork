@@ -55,7 +55,7 @@ data:
       prometheus :9153
       forward . tls://45.90.28.182 {
         tls_servername {$NEXTDNS_ID}.dns1.nextdns.io
-        health_check 5s
+        health_check 2s
       }
     }
 
@@ -65,6 +65,7 @@ data:
         tls_servername {$NEXTDNS_ID}.dns2.nextdns.io
         health_check 5s
       }
+      debug
     }
 kind: ConfigMap
 metadata:
