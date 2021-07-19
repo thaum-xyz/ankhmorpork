@@ -585,7 +585,6 @@ spec:
         
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/instance: ingress-nginx
-        app.kubernetes.io/version: 0.48.1
         
         app.kubernetes.io/component: admission-webhook
     spec:
@@ -633,7 +632,6 @@ spec:
         
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/instance: ingress-nginx
-        app.kubernetes.io/version: 0.48.1
         
         app.kubernetes.io/component: admission-webhook
     spec:
