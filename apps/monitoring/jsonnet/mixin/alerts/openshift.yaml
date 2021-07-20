@@ -13,21 +13,25 @@ groups:
         summary: Highly-available workload is incorrectly spread across multiple nodes
           and manual intervention is needed.
       expr: |
-        count by (workload, namespace) (
-          kube_pod_info{node!=""}
-          * on(namespace,pod) group_left(workload)
+        count without (node)
+        (
+          group by (node, workload, namespace)
           (
-            kube_pod_spec_volumes_persistentvolumeclaims_info
+            kube_pod_info{node!=""}
             * on(namespace,pod) group_left(workload)
             (
-              namespace_workload_pod:kube_pod_owner:relabel
-              * on(namespace,workload,workload_type) group_left()
+              kube_pod_spec_volumes_persistentvolumeclaims_info
+              * on(namespace,pod) group_left(workload)
               (
-                count without(pod) (namespace_workload_pod:kube_pod_owner:relabel) > 1
+                namespace_workload_pod:kube_pod_owner:relabel
+                * on(namespace,workload,workload_type) group_left()
+                (
+                  count without(pod) (namespace_workload_pod:kube_pod_owner:relabel{namespace=~"(openshift-.*|kube-.*|default)"}) > 1
+                )
               )
             )
           )
-        )== 1
+        ) == 1
       for: 1h
       labels:
         severity: warning
