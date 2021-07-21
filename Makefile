@@ -2,6 +2,7 @@ SHELL:=/bin/bash
 
 DIRS=\
 	apps/auth \
+	apps/blog \
 	apps/homer \
 	apps/monitoring \
 	apps/news \

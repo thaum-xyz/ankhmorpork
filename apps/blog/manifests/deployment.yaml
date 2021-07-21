@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: ghost
     app.kubernetes.io/part-of: ghost
-    app.kubernetes.io/version: 4.8.4
+    app.kubernetes.io/version: 4.10.0
   name: ghost
   namespace: blog
 spec:
@@ -23,13 +23,13 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: ghost
         app.kubernetes.io/part-of: ghost
-        app.kubernetes.io/version: 4.8.4
+        app.kubernetes.io/version: 4.10.0
     spec:
       containers:
       - env:
         - name: url
           value: https://pawel.krupa.net.pl
-        image: ghost:4.8.4
+        image: ghost:4.10.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           initialDelaySeconds: 30
