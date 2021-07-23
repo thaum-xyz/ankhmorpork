@@ -6,6 +6,18 @@ local config = std.parseYaml(configYAML)[0] {
   encryptedSecretsData: encryptedSecretsData,
 };
 
-local all = oauth(config);
+local all = oauth(config) + {
+  deployment+: {
+    spec+: {
+      template+: {
+        spec+: {
+          nodeSelector+: {
+            'network.infra/type': 'fast',
+          },
+        },
+      },
+    },
+  },
+};
 
 { [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }
