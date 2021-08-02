@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: plex
-    app.kubernetes.io/version: 1.23.5
+    app.kubernetes.io/version: 1.23.6
   name: plex
   namespace: multimedia
 spec:
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: plex
-        app.kubernetes.io/version: 1.23.5
+        app.kubernetes.io/version: 1.23.6
     spec:
       hostname: nas
       containers:
@@ -33,12 +33,12 @@ spec:
           value: "192.168.2.0/24,10.42.0.0/16"
         - name: ADVERTISE_IP  # Tied to LB Service IP
           value: "http://192.168.2.98:32400/"
-        - name: NVIDIA_DRIVER_CAPABILITIES
-          value: "all"
+        #- name: NVIDIA_DRIVER_CAPABILITIES
+        #  value: "all"
         envFrom:
         - secretRef:
             name: plex-claim
-        image: plexinc/pms-docker:1.23.5.4862-0f739d462
+        image: plexinc/pms-docker:1.23.6.4881-e2e58f321
         name: plex
         ports:
         - containerPort: 32400
