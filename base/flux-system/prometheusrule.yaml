@@ -16,4 +16,5 @@ spec:
       labels:
         severity: warning
       annotations:
-        summary: '{{ $labels.kind }} {{ $labels.namespace }}/{{ $labels.name }} reconciliation has been failing for more than ten minutes.'
+        summary: "Flux objects reconciliation failure"
+        description: '{{ $labels.kind }} {{ $labels.namespace }}/{{ $labels.name }} reconciliation has been failing for more than ten minutes.'
