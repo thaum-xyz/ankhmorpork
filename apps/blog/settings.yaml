@@ -1,5 +1,5 @@
 ---
 namespace: blog
-version: 4.10.0  # application-version-from-github: TryGhost/Ghost
-image: ghost:4.10.0  # application-version-from-github: TryGhost/Ghost
+version: 4.10.2  # application-version-from-github: TryGhost/Ghost
+image: ghost:4.10.2  # application-version-from-github: TryGhost/Ghost
 domain: pawel.krupa.net.pl
