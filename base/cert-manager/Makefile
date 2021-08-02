@@ -1,7 +1,7 @@
 .PHONY: generate
 generate: cert-manager.yaml
 
-VERSION=$(shell cat settings.yaml | cut -d' ' -f 2 | tail -n1)
+VERSION=$(shell cat VERSION | cut -d' ' -f1 | tail -n1)
 cert-manager.yaml:
 	wget -O cert-manager.yaml https://github.com/jetstack/cert-manager/releases/download/v$(VERSION)/cert-manager.yaml
 
