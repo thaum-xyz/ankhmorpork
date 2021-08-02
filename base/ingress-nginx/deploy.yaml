@@ -400,7 +400,7 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
         network.infra/type: "fast"
-        kubernetes.io/arch: "amd64"
+        # kubernetes.io/arch: "amd64"
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
       volumes:
