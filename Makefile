@@ -3,6 +3,7 @@ SHELL:=/bin/bash
 DIRS=\
 	apps/auth \
 	apps/blog \
+	apps/homeassistant \
 	apps/homer \
 	apps/monitoring \
 	apps/news \
