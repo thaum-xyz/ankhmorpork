@@ -9,7 +9,8 @@ DIRS=\
 	apps/news \
 	apps/recipe \
 	apps/unifi \
-	apps/system-update
+	apps/system-update \
+	base/cert-manager
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 
