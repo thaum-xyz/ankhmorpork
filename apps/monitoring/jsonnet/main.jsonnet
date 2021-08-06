@@ -96,6 +96,17 @@ local kp =
     // Objects customization
     // kube-prometheus objects first
     //
+    prometheusOperator+: {
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              containers: addArgs(['--log-level=debug'], 'prometheus-operator', super.containers)
+            },
+          },
+        },
+      },
+    },
 
     alertmanager+: {
       // alertmanager secret is stored as ConfigMapSecret in plain yaml file
@@ -349,33 +360,6 @@ local kp =
     //          },
     //        },
     //      },
-    //    },
-    //  },
-    //},
-    // TODO: rebuild exporter to be arm64 compliant
-    //uptimerobot: exporter($.values.uptimerobot) + {
-    //  secret: sealedsecret(
-    //    {
-    //      name: $.values.uptimerobot.secretRefName,
-    //      namespace: $.values.common.namespace,
-    //    },
-    //    { UPTIMEROBOT_API_KEY: $.values.uptimerobot.encryptedApiKey }
-    //  ),
-    //  deployment+: {
-    //    spec+: {
-    //      template+: {
-    //        spec+: {
-    //          nodeSelector+: {
-    //            'kubernetes.io/os': 'linux',
-    //            'kubernetes.io/arch': 'amd64',
-    //          },
-    //        },
-    //      },
-    //    },
-    //  },
-    //  podMonitor+: {
-    //    spec+: {
-    //      podMetricsEndpoints: [{ port: 'http', interval: '5m' }],
     //    },
     //  },
     //},
