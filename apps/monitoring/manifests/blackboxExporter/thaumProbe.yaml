@@ -15,8 +15,6 @@ spec:
   targets:
     staticConfig:
       labels:
-        environment: thaum.xyz
+        environment: lancre.thaum.xyz
       static:
-      - https://weirdo.blog/ghost
-      - https://alchemyof.it/ghost
       - https://zmc.krupa.net.pl

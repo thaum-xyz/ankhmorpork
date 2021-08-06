@@ -107,11 +107,9 @@
       thaumSites: {
         staticConfig: {
           static: [
-            'https://weirdo.blog/ghost',
-            'https://alchemyof.it/ghost',
             'https://zmc.krupa.net.pl',
           ],
-          labels: { environment: 'thaum.xyz' },
+          labels: { environment: 'lancre.thaum.xyz' },
         },
       },
       ingress: {
