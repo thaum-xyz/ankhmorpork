@@ -15,4 +15,4 @@ spec:
   targets:
     staticConfig:
       static:
-      - prometheus.io
+      - https://prometheus.io
