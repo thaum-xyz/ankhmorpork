@@ -75,10 +75,10 @@ local ingressAnnotations = {
 };
 
 local kp =
-  (import 'kube-prometheus/main.libsonnet') +
-  (import 'kube-prometheus/addons/anti-affinity.libsonnet') +
-  (import 'kube-prometheus/addons/all-namespaces.libsonnet') +
-  (import 'kube-prometheus/addons/windows.libsonnet') +
+  (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/main.libsonnet') +
+  (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/anti-affinity.libsonnet') +
+  (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/all-namespaces.libsonnet') +
+  (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/windows.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
   // (import 'lib/additional-scrape-configs.libsonnet') +
   // (import './lib/k3s.libsonnet') +
