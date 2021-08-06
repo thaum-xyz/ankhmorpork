@@ -1,0 +1,41 @@
+modules:
+  qnap:
+      walk:
+          - cpuUsage
+          - systemCPU-UsageEX
+          - systemFreeMemEX
+          - systemFreeMem
+          - systemUsedMemory
+          - systemAvailableMem
+          #- cpu-TemperatureEX
+          - systemTemperatureEX
+          - enclosureSystemTemp
+          - hdTemperatureEX
+          - ifPacketsReceivedEX
+          - ifPacketsSentEX
+          - sysFanSpeedEX
+          - sysVolumeFreeSizeEX
+          - sysVolumeStatusEX
+          - diskTemperture
+          - volumeStatus
+          - iops
+          - latency
+          #- availablePercent
+          - readHitRate
+          - writeHitRate
+  qnaplong:
+      walk:
+        - modelNameEX
+        - hostNameEX
+        - firmwareVersion
+        - firmwareUpgradeAvailable
+        - systemTotalMemEX
+        - systemTotalMem  # V5
+        - sysVolumeDescrEX
+        - sysVolumeTotalSizeEX
+        - diskModel
+        - diskCapacity
+        - diskSmartInfo
+        - volumeName
+        - volumeCapacity
+        - systemUptimeEX

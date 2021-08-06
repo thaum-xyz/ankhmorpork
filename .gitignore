@@ -15,3 +15,5 @@ templates/
 vendor/
 .crdschemas/
 tmp/
+apps/snmp/mibs/
+apps/snmp/snmp.yml

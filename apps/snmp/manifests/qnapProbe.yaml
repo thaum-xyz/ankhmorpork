@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: snmp-exporter
+    app.kubernetes.io/version: 0.20.0
+  name: qnap
+  namespace: snmp
+spec:
+  interval: 1m
+  module: qnap
+  prober:
+    path: /snmp
+    url: snmp-exporter.snmp.svc:9116
+  scrapeTimeout: 1m
+  targets:
+    staticConfig:
+      labels:
+        module: qnap
+      static:
+      - 192.168.2.29

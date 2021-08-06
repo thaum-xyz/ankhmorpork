@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: snmp-exporter
+    app.kubernetes.io/version: 0.20.0
+  name: snmp-exporter
+  namespace: snmp
+spec:
+  endpoints:
+  - port: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: snmp-exporter

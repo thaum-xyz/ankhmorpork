@@ -1,0 +1,12 @@
+---
+version: "0.20.0"  # application-version-from-github: prometheus/snmp_exporter
+image: "quay.io/prometheus/snmp-exporter:v0.20.0"  # application-image-from-github: prometheus/snmp_exporter
+namespace: "snmp"
+name: 'snmp-exporter'
+targets:
+  - module: qnap
+    hosts: [192.168.2.29]
+    interval: 1m
+  - module: qnaplong
+    hosts: [192.168.2.29]
+    interval: 5m

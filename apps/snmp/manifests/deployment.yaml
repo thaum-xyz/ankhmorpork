@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: snmp-exporter
+    app.kubernetes.io/version: 0.20.0
+  name: snmp-exporter
+  namespace: snmp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: snmp-exporter
+  template:
+    metadata:
+      annotations:
+        checksum.config/md5: 6afdaac99a5c925ba56d85129b2e510f
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: snmp-exporter
+        app.kubernetes.io/version: 0.20.0
+    spec:
+      containers:
+      - args:
+        - --config.file=/config/snmp.yaml
+        image: quay.io/prometheus/snmp-exporter:v0.20.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        name: snmp-exporter
+        ports:
+        - containerPort: 9116
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+        resources: {}
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+        volumeMounts:
+        - mountPath: /config/snmp.yaml
+          name: config
+          subPath: snmp.yaml
+      restartPolicy: Always
+      serviceAccountName: snmp-exporter
+      volumes:
+      - configMap:
+          name: snmp-exporter
+        name: config
