@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2021.7.4
+    app.kubernetes.io/version: 2021.8.4
     probe: enabled
   name: homeassistant
   namespace: homeassistant

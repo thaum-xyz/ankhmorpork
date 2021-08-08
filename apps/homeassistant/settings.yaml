@@ -1,6 +1,6 @@
 ---
-version: "2021.7.4"  # application-version-from-github: home-assistant/core
-image: "homeassistant/aarch64-homeassistant:2021.7.4"  # application-image-from-github: home-assistant/core
+version: "2021.8.4"  # application-version-from-github: home-assistant/core
+image: "homeassistant/aarch64-homeassistant:2021.8.4"  # application-image-from-github: home-assistant/core
 namespace: "homeassistant"
 domain: "home.ankhmorpork.thaum.xyz"
 hostNetwork: true  # Needed to enable WOL
