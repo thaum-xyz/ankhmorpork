@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels: {}
+  name: restarter
+  namespace: unifi
+spec:
+  groups:
+  - name: unifi-restarter
+    rules:
+    - alert: NodeDown
+      annotations:
+        description: Metrics from node_exporter and kubelet cannot be gathered for
+          node {{ $labels.node }} suggesting node is down. Alert should be automatically
+          remediated by attempting node power cycle
+        summary: Node is down for extended period of time
+      expr: count by (node) (up{job="node-exporter"} == 0) > 0 AND count by (node)
+        (up{job="kubelet", metrics_path="/metrics"} == 0) > 0
+      for: 15m
+      labels:
+        severity: warning

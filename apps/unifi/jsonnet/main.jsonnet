@@ -182,6 +182,38 @@ local all = {
       },
     },
   },
+  restarter: {
+    _metadata:: {
+      name: 'restarter',
+      namespace: config.namespace,
+      labels: {},
+    },
+
+    prometheusRule: {
+      apiVersion: 'monitoring.coreos.com/v1',
+      kind: 'PrometheusRule',
+      metadata: $.restarter._metadata,
+      spec: {
+        groups: [{
+          name: 'unifi-restarter',
+          rules: [
+            {
+              alert: 'NodeDown',
+              expr: 'count by (node) (up{job="node-exporter"} == 0) > 0 AND count by (node) (up{job="kubelet", metrics_path="/metrics"} == 0) > 0',
+              "for": "15m",
+              annotations: {
+                description: 'Metrics from node_exporter and kubelet cannot be gathered for node {{ $labels.node }} suggesting node is down. Alert should be automatically remediated by attempting node power cycle',
+                summary: 'Node is down for extended period of time',
+              },
+              labels: {
+                severity: 'warning', //TODO: change to `info` when automated restarter is finished and deployed
+              },
+            },
+          ],
+        }],
+      },
+    },
+  },
 };
 
 {
