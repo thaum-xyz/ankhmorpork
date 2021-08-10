@@ -117,6 +117,9 @@ local kp =
           externalUrl: 'https://alertmanager.' + $.values.common.baseDomain,
         },
       },
+      serviceAccount+: {
+        automountServiceAccountToken: false,
+      },
       ingress: {
         apiVersion: 'networking.k8s.io/v1',
         kind: 'Ingress',
@@ -156,8 +159,10 @@ local kp =
       },
     },
 
-    // TODO: Should service expose 2 ports???
     blackboxExporter+: {
+      serviceAccount+: {
+        automountServiceAccountToken: false,
+      },
       deployment+: {
         spec+: {
           template+: {
@@ -347,23 +352,33 @@ local kp =
     //
 
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
-    pushgateway: pushgateway($.values.pushgateway),
+    pushgateway: pushgateway($.values.pushgateway) + {
+      serviceAccount+: {
+        automountServiceAccountToken: false,
+      },
+    },
     // TODO: Add pagespeed API key to workaround rate limits
-    //pagespeed: pagespeed($.values.pagespeed) + {
-    //  deployment+: {
-    //    spec+: {
-    //      template+: {
-    //        spec+: {
-    //          nodeSelector+: {
-    //            'kubernetes.io/os': 'linux',
-    //            'kubernetes.io/arch': 'amd64',
-    //          },
-    //        },
-    //      },
-    //    },
-    //  },
-    //},
+    pagespeed: pagespeed($.values.pagespeed) + {
+      serviceAccount+: {
+        automountServiceAccountToken: false,
+      },
+      deployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              nodeSelector+: {
+                'kubernetes.io/os': 'linux',
+                'kubernetes.io/arch': 'amd64',
+              },
+            },
+          },
+        },
+      },
+    },
     smokeping: exporter($.values.smokeping) + {
+      serviceAccount+: {
+        automountServiceAccountToken: false,
+      },
       deployment+: {
         spec+: {
           template+: {
@@ -378,7 +393,11 @@ local kp =
       },
     },
 
-    sloth: sloth($.values.sloth),
+    sloth: sloth($.values.sloth) + {
+      serviceAccount+: {
+        automountServiceAccountToken: false,
+      },
+    },
 
     other: {
       local thaumMixin = import 'mixin/mixin.libsonnet',
