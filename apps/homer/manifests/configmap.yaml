@@ -162,7 +162,7 @@ data:
           - name: ESPHome
             logo: "https://esphome.io/_static/favicon-512x512.png"
             <<: *Local
-            url: "http://192.168.2.94:/"
+            url: "http://192.168.2.94:6052/"
 kind: ConfigMap
 metadata:
   labels:
