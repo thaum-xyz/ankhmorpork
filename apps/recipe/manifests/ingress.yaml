@@ -4,7 +4,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-body-size: 600K
+    nginx.ingress.kubernetes.io/proxy-body-size: 2M
   labels:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: mealie

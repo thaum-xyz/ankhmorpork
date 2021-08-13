@@ -25,7 +25,7 @@ local all = mealie(config) + {
       },
       annotations+: {
         //'nginx.ingress.kubernetes.io/proxy-body-size': '200M',  // Needed for migrations and bulk imports
-        'nginx.ingress.kubernetes.io/proxy-body-size': '600K',  // Prevent uploading large images
+        'nginx.ingress.kubernetes.io/proxy-body-size': '2M',  // Prevent uploading large images
       },
     },
   },
