@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/name: esphome
+    app.kubernetes.io/version: 1.20.4
+  name: esphome-config
+  namespace: homeassistant
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 300Mi
+  storageClassName: managed-nfs-storage

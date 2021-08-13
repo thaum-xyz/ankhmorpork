@@ -14,6 +14,15 @@
         "source": {
           "git": {
             "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+            "subdir": "apps/esphome"
+          }
+        },
+        "version": "main"
+      },
+      {
+        "source": {
+          "git": {
+            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
             "subdir": "utils"
           }
         },

@@ -15,7 +15,20 @@ local config = std.parseYaml(configYAML)[0] {
 };
 
 local all = {
-  homeassistant: homeassistant(config['homeassistant']) + {
+  esphome: esphome(config.esphome) + {
+    service+: {
+      metadata+: {
+        annotations: {
+          "metallb.universe.tf/address-pool": "default"
+        },
+      },
+      spec+: {
+        loadBalancerIP: "192.168.2.94",
+        type: "LoadBalancer",
+      },
+    },
+  },
+  homeassistant: homeassistant(config.homeassistant) + {
     credentials: sealedsecret(
       {
         name: config.homeassistant.apiTokenSecretKeySelector.name,

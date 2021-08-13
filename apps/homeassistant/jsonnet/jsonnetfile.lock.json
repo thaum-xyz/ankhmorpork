@@ -5,11 +5,21 @@
       "source": {
         "git": {
           "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/esphome"
+        }
+      },
+      "version": "00bc024098ffddded766af0f343827ebb7312e36",
+      "sum": "7JuXo53mv2GchZ+J3axlYJ65/PEKoJILYZWjlhKzjcY="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "apps/homeassistant"
         }
       },
-      "version": "d07a829724ccc732bb15f8e2559bda95c800cca5",
-      "sum": "s6ZId93yXv5QMd48E3BH3FGJ/BDndgmYg/f4ZlvxEpY="
+      "version": "00bc024098ffddded766af0f343827ebb7312e36",
+      "sum": "h6hZIMIgWwO9SEDyQVv693Pun6SzLxH7UDpK0qNZtrI="
     },
     {
       "source": {
@@ -18,7 +28,7 @@
           "subdir": "utils"
         }
       },
-      "version": "d07a829724ccc732bb15f8e2559bda95c800cca5",
+      "version": "00bc024098ffddded766af0f343827ebb7312e36",
       "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
     }
   ],
