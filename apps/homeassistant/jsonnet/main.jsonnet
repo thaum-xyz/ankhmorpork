@@ -25,6 +25,7 @@ local all = {
       spec+: {
         loadBalancerIP: "192.168.2.94",
         type: "LoadBalancer",
+        clusterIP:: null,
       },
     },
   },
