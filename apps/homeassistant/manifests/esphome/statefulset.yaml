@@ -11,6 +11,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: esphome
+  serviceName: esphome
   template:
     metadata:
       labels:
