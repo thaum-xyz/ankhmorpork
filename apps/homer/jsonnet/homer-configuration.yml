@@ -156,3 +156,7 @@ services:
       - name: NextDNS
         logo: "https://appteka.store/api/1/icon/get?hash=AfxOnnAVC55q9P8wC41q8i3I9N%2FfQVVHjM4e2r8kVhJuU5GYQJSe3msYMbOpyZDC"
         url: "https://my.nextdns.io/"
+      - name: ESPHome
+        logo: "https://esphome.io/_static/favicon-512x512.png"
+        <<: *Local
+        url: "http://192.168.2.94:/"
