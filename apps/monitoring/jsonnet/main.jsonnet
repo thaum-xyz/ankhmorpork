@@ -111,14 +111,14 @@ local kp =
     alertmanager+: {
       // alertmanager secret is stored as ConfigMapSecret in plain yaml file
       secret:: null,
-      // TODO: move ingress and externalURL to an addon
+      // TODO: move ingress and externalURL to an addon in kube-prometheus
       alertmanager+: {
         spec+: {
           externalUrl: 'https://alertmanager.' + $.values.common.baseDomain,
         },
       },
       serviceAccount+: {
-        automountServiceAccountToken: false,
+        automountServiceAccountToken: false,  // TODO: move into kube-prometheus
       },
       ingress: {
         apiVersion: 'networking.k8s.io/v1',
@@ -163,11 +163,6 @@ local kp =
       deployment+: {
         spec+: {
           template+: {
-            metadata+: {
-              annotations+: {
-                'kubectl.kubernetes.io/default-container': 'blackbox-exporter',
-              },
-            },
             spec+: {
               affinity: antiaffinity.podantiaffinity('blackbox-exporter'),
             },
@@ -349,16 +344,9 @@ local kp =
     //
 
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
-    pushgateway: pushgateway($.values.pushgateway) + {
-      serviceAccount+: {
-        automountServiceAccountToken: false,
-      },
-    },
+    pushgateway: pushgateway($.values.pushgateway),
     // TODO: Add pagespeed API key to workaround rate limits
     pagespeed: pagespeed($.values.pagespeed) + {
-      serviceAccount+: {
-        automountServiceAccountToken: false,
-      },
       deployment+: {
         spec+: {
           template+: {
@@ -373,9 +361,6 @@ local kp =
       },
     },
     smokeping: exporter($.values.smokeping) + {
-      serviceAccount+: {
-        automountServiceAccountToken: false,
-      },
       deployment+: {
         spec+: {
           template+: {
@@ -390,11 +375,7 @@ local kp =
       },
     },
 
-    sloth: sloth($.values.sloth) + {
-      serviceAccount+: {
-        automountServiceAccountToken: false,
-      },
-    },
+    sloth: sloth($.values.sloth),
 
     other: {
       local thaumMixin = import 'mixin/mixin.libsonnet',
