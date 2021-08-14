@@ -160,9 +160,6 @@ local kp =
     },
 
     blackboxExporter+: {
-      serviceAccount+: {
-        automountServiceAccountToken: false,
-      },
       deployment+: {
         spec+: {
           template+: {
