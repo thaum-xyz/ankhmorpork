@@ -4,11 +4,11 @@
 # Assign enable_smartmon=true label to enable SMART monitoring of disks
 
 master01 ansible_user=ubuntu ansible_host=192.168.2.30
-node01   ansible_user=ubuntu ansible_host=192.168.2.31 network=fast local_storage_device=/dev/disk/by-uuid/e13f201c-6898-4f5f-85f5-8494189f50a1
-node02   ansible_user=ubuntu ansible_host=192.168.2.32 network=fast local_storage_device=/dev/disk/by-uuid/734bcf0d-0e5e-4de2-af92-f786f6b7b951
+node01   ansible_user=ubuntu ansible_host=192.168.2.31 network=fast k3s_local_storage_device=/dev/disk/by-uuid/e13f201c-6898-4f5f-85f5-8494189f50a1
+node02   ansible_user=ubuntu ansible_host=192.168.2.32 network=fast k3s_local_storage_device=/dev/disk/by-uuid/734bcf0d-0e5e-4de2-af92-f786f6b7b951
 #node03   ansible_user=ubuntu ansible_host=192.168.2.33
 #node04   ansible_user=ubuntu ansible_host=192.168.2.34
-metal01  ansible_user=ubuntu ansible_host=192.168.2.40 network=fast local_storage_device=/dev/ubuntu-vg/k3s-local-storage enable_smartmon=true
+metal01  ansible_user=ubuntu ansible_host=192.168.2.40 network=fast k3s_local_storage_device=/dev/ubuntu-vg/k3s-local-storage enable_smartmon=true
 
 [fancontroler]
 master01
@@ -18,12 +18,6 @@ master01
 node0[1:2]
 
 [nvidia]
-metal01
-
-# Remove this group when all hosts have local storage disks
-[k3s-local-storage]
-node01
-node02
 metal01
 
 [k3s-master]

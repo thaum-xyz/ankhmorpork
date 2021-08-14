@@ -18,5 +18,13 @@ k3s_extra_agent_args: >-
   --kubelet-arg kube-reserved=cpu=100m,memory=200Mi
   --kubelet-arg system-reserved={{ kubelet_system_resources | default('cpu=100m,memory=200Mi') }}
   --node-label network.infra/type={{ network | default('slow') }}
+  --node-label storage.infra/local={{ 'true' if k3s_local_storage_device is defined else 'false' }}
 
 system_earlyoom_params: "-r 60 -m 4"
+
+system_mountpoints:
+  - description: k3s local storage
+    before: k3s-node.service
+    device: "{{ k3s_local_storage_device }}"
+    mountpoint: "/var/lib/rancher/k3s/storage"
+    type: "ext4"
