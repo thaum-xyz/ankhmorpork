@@ -1,0 +1,40 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: snmp-exporter
+    app.kubernetes.io/version: 0.20.0
+  name: snmp-exporter
+  namespace: snmp
+spec:
+  groups:
+  - name: qnap
+    rules:
+    - alert: QNAPDiskFailure
+      annotations:
+        description: SMART data for hard drives number {{ $labels.diskIndex }} on
+          QNAP NAS {{ $labels.instance }} reports disk failure. Disk most probably
+          needs to be replaced as soon as possible.
+        summary: QNAP hard drive is faulty
+      expr: diskSmartInfo != 0
+      for: 15m
+      labels:
+        severity: critical
+    - alert: QNAPFirmwareAvailable
+      annotations:
+        description: QNAP NAS {{ $labels.instance }} has pending firmware upgrade.
+        summary: QNAP NAS firmware upgrade available
+      expr: firmwareUpgradeAvailable != 0
+      for: 24h
+      labels:
+        severity: info
+    - alert: QNAPVolumeNotReady
+      annotations:
+        description: Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance
+          }} is not ready.
+        summary: QNAP volume is not ready
+      expr: volumeStatus != 1
+      for: 10m
+      labels:
+        severity: warning
