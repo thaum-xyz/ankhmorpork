@@ -47,6 +47,8 @@ spec:
             name: data
           - mountPath: /download/completed
             name: downloads
+          - mountPath: /backup
+            name: backup
         resources:
           requests:
             cpu: 20m
@@ -64,6 +66,9 @@ spec:
       - name: config
         persistentVolumeClaim:
           claimName: sonarr-config
+      - name: backup
+        persistentVolumeClaim:
+          claimName: sonarr-backup
       nodeSelector:
         kubernetes.io/arch: "amd64"
         storage.infra/main: "true"

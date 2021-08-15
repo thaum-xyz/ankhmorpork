@@ -45,6 +45,8 @@ spec:
             name: data
           - mountPath: /download/completed
             name: downloads
+          - mountPath: /backup
+            name: backup
         resources:
           requests:
             cpu: 40m
@@ -62,6 +64,9 @@ spec:
       - name: config
         persistentVolumeClaim:
           claimName: radarr-config
+      - name: backup
+        persistentVolumeClaim:
+          claimName: radarr-backup
       nodeSelector:
         kubernetes.io/arch: "amd64"
         storage.infra/main: "true"
