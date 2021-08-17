@@ -1,0 +1,13 @@
+---
+common:
+  loadBalancerIP: "192.168.2.95"
+jackett:
+  version: "0.18.547"  # application-image-from-github: Jackett/Jackett
+  image: "linuxserver/jackett:development-version-v0.18.547"  # application-image-from-github: Jackett/Jackett
+  namespace: multimedia
+  pvcSpec: 
+    storageClassName: "managed-nfs-storage"
+    accessModes: ["ReadWriteOnce"]
+    resources:     
+      requests:
+        storage: "300Mi"

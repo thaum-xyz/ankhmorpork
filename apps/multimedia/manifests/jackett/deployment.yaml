@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: jackett
+    app.kubernetes.io/part-of: jackett
+    app.kubernetes.io/version: 0.18.547
+  name: jackett
+  namespace: multimedia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: jackett
+      app.kubernetes.io/part-of: jackett
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: jackett
+        app.kubernetes.io/part-of: jackett
+        app.kubernetes.io/version: 0.18.547
+    spec:
+      containers:
+      - image: linuxserver/jackett:development-version-v0.18.547
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          tcpSocket:
+            port: 9117
+          timeoutSeconds: 5
+        name: jackett
+        ports:
+        - containerPort: 9117
+          name: http
+        resources:
+          requests:
+            memory: 120M
+        volumeMounts:
+        - mountPath: /config
+          name: config
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+      serviceAccountName: jackett
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: jackett
