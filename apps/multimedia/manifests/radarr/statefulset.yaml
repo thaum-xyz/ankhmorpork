@@ -13,10 +13,10 @@ spec:
   serviceName: radarr
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: radarr
       annotations:
         kubectl.kubernetes.io/default-container: radarr
+      labels:
+        app.kubernetes.io/name: radarr
     spec:
       containers:
       - env:
