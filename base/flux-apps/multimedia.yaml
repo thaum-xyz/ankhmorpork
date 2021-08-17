@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 60m0s
-  path: ./apps/multimedia
+  path: ./apps/multimedia/manifests
   prune: true
   sourceRef:
     kind: GitRepository
