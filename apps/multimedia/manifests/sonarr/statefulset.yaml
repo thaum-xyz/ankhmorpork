@@ -1,11 +1,10 @@
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: sonarr
-  namespace: multimedia
   labels:
     app.kubernetes.io/name: sonarr
+  name: sonarr
+  namespace: multimedia
 spec:
   replicas: 1
   selector:
@@ -26,37 +25,41 @@ spec:
         - name: PGID
           value: "1000"
         - name: TZ
-          value: "Europe/Berlin"
-        name: sonarr
+          value: Europe/Berlin
         image: ghcr.io/linuxserver/sonarr:latest
         imagePullPolicy: Always
+        name: sonarr
         ports:
-          - containerPort: 8989
-            name: http-sonarr
+        - containerPort: 8989
+          name: http-sonarr
         readinessProbe:
+          failureThreshold: 5
           tcpSocket:
             port: http-sonarr
-          failureThreshold: 5
           timeoutSeconds: 10
-        volumeMounts:
-          - mountPath: /config
-            name: config
-          - mountPath: /config/logs
-            name: logs
-          - mountPath: /tv
-            name: data
-          - mountPath: /download/completed
-            name: downloads
-          - mountPath: /backup
-            name: backup
         resources:
           requests:
             cpu: 20m
             memory: 320Mi
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /config/logs
+          name: logs
+        - mountPath: /tv
+          name: data
+        - mountPath: /download/completed
+          name: downloads
+        - mountPath: /backup
+          name: backup
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        storage.infra/main: "true"
       restartPolicy: Always
+      tolerations: []
       volumes:
-      - name: logs
-        emptyDir: {}
+      - emptyDir: {}
+        name: logs
       - name: data
         persistentVolumeClaim:
           claimName: tv
@@ -69,7 +72,3 @@ spec:
       - name: backup
         persistentVolumeClaim:
           claimName: sonarr-backup
-      nodeSelector:
-        kubernetes.io/arch: "amd64"
-        storage.infra/main: "true"
-      tolerations: []

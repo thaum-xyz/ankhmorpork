@@ -1,53 +1,46 @@
----
-# For convenience plex_exporter is run as separate deployment and not as sidecar.
-# This way TOKEN can be generated in webUI before starting plex_exporter
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: plex-exporter
-  namespace: multimedia
   labels:
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: plex_exporter
     app.kubernetes.io/part-of: plex
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 0.2.2
+  name: plex-exporter
+  namespace: multimedia
 spec:
+  replicas: 1
   selector:
     matchLabels:
+      app.kubernetes.io/component: exporter
       app.kubernetes.io/name: plex_exporter
       app.kubernetes.io/part-of: plex
-      app.kubernetes.io/component: exporter
-  replicas: 1
   template:
     metadata:
       labels:
+        app.kubernetes.io/component: exporter
         app.kubernetes.io/name: plex_exporter
         app.kubernetes.io/part-of: plex
-        app.kubernetes.io/component: exporter
         app.kubernetes.io/version: 0.2.2
     spec:
       containers:
-      - envFrom:
+      - args:
+        - --token=$(TOKEN)
+        - --plex-server=http://192.168.2.98:32400
+        envFrom:
         - secretRef:
             name: plex-token
-        name: plex-metrics
         image: quay.io/paulfantom/plex_exporter:0.2.2
         imagePullPolicy: IfNotPresent
-        args:
-        - "--token=$(TOKEN)"
-        #- "--plex-server=http://plex-0.plex.multimedia.svc:32400"
-        # Using external IP to trick plex into local-network mode.
-        # log msg: Request came in with unrecognized domain / IP 'plex-0.plex.multimedia.svc' in header Host; treating as non-local
-        - "--plex-server=http://192.168.2.98:32400"  # Using external IP to trick plex into local-network mode
-        #- "--auto-discover"
+        name: plex-metrics
         ports:
         - containerPort: 9594
           name: metrics
         resources:
-          requests:
-            memory: 11Mi
           limits:
             memory: 20Mi
-      restartPolicy: Always
+          requests:
+            memory: 11Mi
       nodeSelector:
-        kubernetes.io/arch: "amd64"  # TODO: complile exporter for other arch and remove this selector
+        kubernetes.io/arch: amd64
+      restartPolicy: Always

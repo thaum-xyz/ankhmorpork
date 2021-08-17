@@ -1,12 +1,11 @@
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ombi
-  namespace: multimedia
   labels:
     app.kubernetes.io/name: ombi
     app.kubernetes.io/version: 4.0.1446
+  name: ombi
+  namespace: multimedia
 spec:
   replicas: 1
   selector:
@@ -21,32 +20,32 @@ spec:
       containers:
       - env:
         - name: TZ
-          value: "Europe/Berlin"
-        name: ombi
+          value: Europe/Berlin
         image: linuxserver/ombi:development
         imagePullPolicy: Always
+        name: ombi
         ports:
-          - containerPort: 3579
-            name: http-ombi
+        - containerPort: 3579
+          name: http-ombi
         readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 60
           tcpSocket:
             port: http-ombi
-          initialDelaySeconds: 60
-          failureThreshold: 5
           timeoutSeconds: 10
-        volumeMounts:
-          - mountPath: /config
-            name: config
-          - mountPath: /config/Logs
-            name: logs
         resources:
           requests:
             cpu: 200m
             memory: 200Mi
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /config/Logs
+          name: logs
       restartPolicy: Always
       volumes:
       - name: config
         persistentVolumeClaim:
           claimName: ombi-config
-      - name: logs
-        emptyDir: {}
+      - emptyDir: {}
+        name: logs

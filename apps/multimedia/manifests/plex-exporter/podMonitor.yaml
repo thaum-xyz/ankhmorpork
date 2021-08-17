@@ -1,17 +1,16 @@
----
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: plex_exporter
   name: plex
   namespace: multimedia
-  labels:
-    app.kubernetes.io/name: plex_exporter
-    app.kubernetes.io/component: exporter
 spec:
   podMetricsEndpoints:
   - interval: 120s
     port: metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: plex_exporter
       app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: plex_exporter

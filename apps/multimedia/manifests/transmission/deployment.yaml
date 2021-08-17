@@ -1,19 +1,18 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transmission
-  namespace: multimedia
   labels:
     app.kubernetes.io/name: transmission
     app.kubernetes.io/version: "3.6"
+  name: transmission
+  namespace: multimedia
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: transmission
+  strategy:
+    type: Recreate
   template:
     metadata:
       annotations:
@@ -25,7 +24,7 @@ spec:
       containers:
       - env:
         - name: TRANSMISSION_ADDR
-          value: "http://127.0.0.1:9091"
+          value: http://127.0.0.1:9091
         image: metalmatze/transmission-exporter:master
         imagePullPolicy: Always
         name: exporter
@@ -33,10 +32,10 @@ spec:
         - containerPort: 19091
           name: metrics
         resources:
-          requests:
-            memory: 11Mi
           limits:
             memory: 20Mi
+          requests:
+            memory: 11Mi
       - envFrom:
         - configMapRef:
             name: transmission-config
@@ -47,41 +46,44 @@ spec:
         - containerPort: 9091
           name: http-api
         readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 10
           tcpSocket:
             port: http-api
-          initialDelaySeconds: 10
-          failureThreshold: 5
           timeoutSeconds: 10
+        resources:
+          requests:
+            cpu: 200m
+            memory: 500Mi
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
             add:
             - NET_ADMIN
         volumeMounts:
-          - mountPath: /data
-            name: data
-          - mountPath: /download/incomplete
-            name: incomplete
-          - mountPath: /download/completed
-            name: completed
-          - mountPath: /config/openvpn-credentials.txt
-            name: vpncreds
-            subPath: openvpn-credentials.txt
-        resources:
-          requests:
-            cpu: 200m
-            memory: 500Mi
-      dnsPolicy: "None"
+        - mountPath: /data
+          name: data
+        - mountPath: /download/incomplete
+          name: incomplete
+        - mountPath: /download/completed
+          name: completed
+        - mountPath: /config/openvpn-credentials.txt
+          name: vpncreds
+          subPath: openvpn-credentials.txt
       dnsConfig:
         nameservers:
+        #- 1.1.1.1
+        #- 1.0.0.1
         - 208.67.222.222
         - 208.67.220.220
+      dnsPolicy: None
       restartPolicy: Always
+      tolerations: []
       volumes:
       - name: vpncreds
         secret:
           secretName: transmission-vpn-creds
-      - name: data  # Allows resuming downloads after pod deletion
+      - name: data
         persistentVolumeClaim:
           claimName: transmission-data
       - name: incomplete
@@ -90,4 +92,3 @@ spec:
       - name: completed
         persistentVolumeClaim:
           claimName: torrents
-      tolerations: []

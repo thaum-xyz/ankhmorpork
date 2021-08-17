@@ -1,11 +1,10 @@
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: radarr
-  namespace: multimedia
   labels:
     app.kubernetes.io/name: radarr
+  name: radarr
+  namespace: multimedia
 spec:
   replicas: 1
   selector:
@@ -24,37 +23,41 @@ spec:
         - name: PGID
           value: "1000"
         - name: TZ
-          value: "Europe/Berlin"
-        name: radarr
+          value: Europe/Berlin
         image: ghcr.io/linuxserver/radarr:develop
         imagePullPolicy: Always
+        name: radarr
         ports:
-          - containerPort: 7878
-            name: http-radarr
+        - containerPort: 7878
+          name: http-radarr
         readinessProbe:
+          failureThreshold: 5
           tcpSocket:
             port: http-radarr
-          failureThreshold: 5
           timeoutSeconds: 10
-        volumeMounts:
-          - mountPath: /config
-            name: config
-          - mountPath: /config/logs
-            name: logs
-          - mountPath: /movies
-            name: data
-          - mountPath: /download/completed
-            name: downloads
-          - mountPath: /backup
-            name: backup
         resources:
           requests:
             cpu: 40m
             memory: 635Mi
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /config/logs
+          name: logs
+        - mountPath: /movies
+          name: data
+        - mountPath: /download/completed
+          name: downloads
+        - mountPath: /backup
+          name: backup
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        storage.infra/main: "true"
       restartPolicy: Always
+      tolerations: []
       volumes:
-      - name: logs
-        emptyDir: {}
+      - emptyDir: {}
+        name: logs
       - name: data
         persistentVolumeClaim:
           claimName: movies
@@ -67,7 +70,3 @@ spec:
       - name: backup
         persistentVolumeClaim:
           claimName: radarr-backup
-      nodeSelector:
-        kubernetes.io/arch: "amd64"
-        storage.infra/main: "true"
-      tolerations: []

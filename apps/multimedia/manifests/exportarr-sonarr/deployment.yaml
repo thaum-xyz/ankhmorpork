@@ -1,60 +1,56 @@
----
-# For convenience exportarr is run as separate deployment and not as sidecar.
-# This way APIKEY can be generated in webUI before starting exportarr
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sonarr-exporter
-  namespace: multimedia
   labels:
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: exportarr
     app.kubernetes.io/part-of: sonarr
-    app.kubernetes.io/component: exporter
+  name: sonarr-exporter
+  namespace: multimedia
 spec:
+  replicas: 1
   selector:
     matchLabels:
+      app.kubernetes.io/component: exporter
       app.kubernetes.io/name: exportarr
       app.kubernetes.io/part-of: sonarr
-      app.kubernetes.io/component: exporter
-  replicas: 1
   template:
     metadata:
       labels:
+        app.kubernetes.io/component: exporter
         app.kubernetes.io/name: exportarr
         app.kubernetes.io/part-of: sonarr
-        app.kubernetes.io/component: exporter
         app.kubernetes.io/version: 0.3.4
     spec:
       containers:
-      - env:
+      - args:
+        - sonarr
+        env:
         - name: URL
-          value: "http://sonarr.multimedia.svc:8989"
-        #- name: LOG_LEVEL
-        #  value: "DEBUG"
+          value: http://sonarr.multimedia.svc:8989
         - name: PORT
           value: "9707"
         envFrom:
         - secretRef:
             name: sonarr-apikey
-        name: exportarr
         image: onedr0p/exportarr:v0.3.4
-        args: ["sonarr"]
+        name: exportarr
         ports:
-        - name: metrics
-          containerPort: 9707
+        - containerPort: 9707
+          name: metrics
         readinessProbe:
+          failureThreshold: 5
           httpGet:
             path: /healthz
             port: metrics
-          failureThreshold: 5
           periodSeconds: 10
         resources:
-          requests:
-            cpu: 1m
-            memory: 11Mi
           limits:
             cpu: 50m
             memory: 100Mi
-      restartPolicy: Always
+          requests:
+            cpu: 1m
+            memory: 11Mi
       nodeSelector:
-        kubernetes.io/arch: "amd64"
+        kubernetes.io/arch: amd64
+      restartPolicy: Always

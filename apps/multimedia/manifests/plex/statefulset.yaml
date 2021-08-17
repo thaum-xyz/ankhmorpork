@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -20,21 +19,20 @@ spec:
         app.kubernetes.io/name: plex
         app.kubernetes.io/version: 1.23.4
     spec:
-      hostname: nas
       containers:
       - env:
         - name: TZ
-          value: "Europe/Berlin"
+          value: Europe/Berlin
         - name: PUID
           value: "1000"
         - name: PGID
           value: "1000"
         - name: ALLOWED_NETWORKS
-          value: "192.168.2.0/24,10.42.0.0/16"
-        - name: ADVERTISE_IP  # Tied to LB Service IP
-          value: "http://192.168.2.98:32400/"
+          value: 192.168.2.0/24,10.42.0.0/16
+        - name: ADVERTISE_IP
+          value: http://192.168.2.98:32400/
         - name: NVIDIA_DRIVER_CAPABILITIES
-          value: "all"
+          value: all
         envFrom:
         - secretRef:
             name: plex-claim
@@ -49,12 +47,12 @@ spec:
             port: 32400
           initialDelaySeconds: 15
           timeoutSeconds: 5
-        #livenessProbe:
-        #  httpGet:
-        #    path: /identity
-        #    port: 32400
-        #  initialDelaySeconds: 10
-        #  timeoutSeconds: 10
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+          requests:
+            cpu: 2
+            memory: 2500Mi
         volumeMounts:
         - mountPath: /config
           name: plex-db
@@ -66,14 +64,12 @@ spec:
           name: movies
         - mountPath: /data/tv
           name: tv
-        resources:
-          requests:
-            memory: 2500Mi
-            cpu: 2
-          limits:
-            # gpu.intel.com/i915: 1
-            nvidia.com/gpu: 1
+      hostname: nas
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        storage.infra/main: "true"
       restartPolicy: Always
+      tolerations: []
       volumes:
       - name: movies
         persistentVolumeClaim:
@@ -87,9 +83,5 @@ spec:
       - name: backups
         persistentVolumeClaim:
           claimName: plex-backups
-      - name: transcode
-        emptyDir: {}
-      nodeSelector:
-        kubernetes.io/arch: "amd64"
-        storage.infra/main: "true"
-      tolerations: []
+      - emptyDir: {}
+        name: transcode

@@ -13,17 +13,20 @@ spec:
     - alert: PlexDown
       annotations:
         description: Data from plex server cannot be retreived and server is not ready
-        summary: Plex Server is down
         runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/plexdown
-      expr: absent(plex_server_info{namespace="multimedia"}) == 1 AND kube_pod_container_status_ready{namespace="multimedia",container="plex"} != 1
+        summary: Plex Server is down
+      expr: |
+        absent(plex_server_info{namespace="multimedia"}) == 1
+        AND
+        kube_pod_container_status_ready{namespace="multimedia",container="plex"} != 1
       for: 20m
       labels:
         severity: critical
     - alert: PlexExporterNoData
       annotations:
         description: Plex exporter cannot get data from plex server.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/plexexporternodata
         summary: Plex Server is down
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/plexexporternodata 
       expr: absent(plex_server_info) == 1
       for: 10m
       labels:

@@ -1,27 +1,26 @@
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ombi
-  namespace: multimedia
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
   labels:
     probe: enabled
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  name: ombi
+  namespace: multimedia
 spec:
-  tls:
-  - hosts:
-    - ombi.ankhmorpork.thaum.xyz
-    secretName: ombi-tls
   rules:
   - host: ombi.ankhmorpork.thaum.xyz
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
+      - backend:
           service:
-           name: ombi
-           port: 
-             name: http-ombi
+            name: ombi
+            port:
+              name: http-ombi
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - ombi.ankhmorpork.thaum.xyz
+    secretName: ombi-tls
