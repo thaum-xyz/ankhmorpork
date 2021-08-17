@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonarr-backup
+  name: plex-backups
   namespace: multimedia
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 300Mi
+      storage: 30Gi
   storageClassName: managed-nfs-storage

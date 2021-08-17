@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonarr-backup
+  name: transmission-data
   namespace: multimedia
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 300Mi
+      storage: 50Mi
   storageClassName: managed-nfs-storage

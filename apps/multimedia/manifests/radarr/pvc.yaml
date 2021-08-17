@@ -1,26 +1,12 @@
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: radarr-config
   namespace: multimedia
 spec:
-  storageClassName: "managed-nfs-storage"
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
-      storage: "600Mi"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: radarr-backup
-  namespace: multimedia
-spec:
-  storageClassName: "managed-nfs-storage"
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: "300Mi"
+      storage: 600Mi
+  storageClassName: managed-nfs-storage

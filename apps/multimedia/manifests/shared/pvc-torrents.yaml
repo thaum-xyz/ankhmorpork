@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonarr-backup
+  name: torrents
   namespace: multimedia
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 300Mi
-  storageClassName: managed-nfs-storage
+      storage: 100Gi
+  storageClassName: manual
