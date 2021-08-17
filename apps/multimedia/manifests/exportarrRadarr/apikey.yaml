@@ -2,6 +2,11 @@ apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
   creationTimestamp: null
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: radarr-exportarr
+    app.kubernetes.io/part-of: radarr
+    app.kubernetes.io/version: 0.3.4
   name: radarr-apikey
   namespace: multimedia
 spec:
@@ -12,6 +17,10 @@ spec:
       annotations:
         sealedsecrets.bitnami.com/managed: "true"
       creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: radarr-exportarr
+        app.kubernetes.io/part-of: radarr
+        app.kubernetes.io/version: 0.3.4
       name: radarr-apikey
       namespace: multimedia
-    type: Opaque

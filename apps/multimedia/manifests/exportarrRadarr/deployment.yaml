@@ -3,22 +3,25 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/component: exporter
-    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/name: radarr-exportarr
     app.kubernetes.io/part-of: radarr
-  name: radarr-exporter
+    app.kubernetes.io/version: 0.3.4
+  name: radarr-exportarr
   namespace: multimedia
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter
-      app.kubernetes.io/name: exportarr
+      app.kubernetes.io/name: radarr-exportarr
       app.kubernetes.io/part-of: radarr
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app.kubernetes.io/component: exporter
-        app.kubernetes.io/name: exportarr
+        app.kubernetes.io/name: radarr-exportarr
         app.kubernetes.io/part-of: radarr
         app.kubernetes.io/version: 0.3.4
     spec:
@@ -34,7 +37,8 @@ spec:
         - secretRef:
             name: radarr-apikey
         image: onedr0p/exportarr:v0.3.4
-        name: exportarr
+        imagePullPolicy: IfNotPresent
+        name: radarr-exportarr
         ports:
         - containerPort: 9707
           name: metrics
@@ -54,3 +58,4 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
       restartPolicy: Always
+      serviceAccountName: radarr-exportarr

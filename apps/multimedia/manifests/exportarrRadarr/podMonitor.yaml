@@ -2,9 +2,11 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   labels:
-    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: radarr-exportarr
     app.kubernetes.io/part-of: radarr
-  name: radarr
+    app.kubernetes.io/version: 0.3.4
+  name: radarr-exportarr
   namespace: multimedia
 spec:
   podMetricsEndpoints:
@@ -14,5 +16,6 @@ spec:
     scrapeTimeout: 90s
   selector:
     matchLabels:
-      app.kubernetes.io/name: exportarr
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: radarr-exportarr
       app.kubernetes.io/part-of: radarr
