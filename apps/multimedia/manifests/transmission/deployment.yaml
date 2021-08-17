@@ -60,9 +60,6 @@ spec:
           capabilities:
             add:
             - NET_ADMIN
-          sysctls:
-          - name: net.ipv4.tcp_adv_win_scale
-            value: "4"
         volumeMounts:
         - mountPath: /data
           name: data
@@ -73,6 +70,10 @@ spec:
         - mountPath: /config/openvpn-credentials.txt
           name: vpncreds
           subPath: openvpn-credentials.txt
+      securityContext:
+        sysctls:
+        - name: net.ipv4.tcp_adv_win_scale
+          value: "4"
       dnsConfig:
         nameservers:
         - 1.1.1.1
