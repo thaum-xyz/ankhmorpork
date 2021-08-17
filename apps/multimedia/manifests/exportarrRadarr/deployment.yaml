@@ -27,6 +27,7 @@ spec:
     spec:
       containers:
       - args:
+        - exportarr
         - radarr
         env:
         - name: URL

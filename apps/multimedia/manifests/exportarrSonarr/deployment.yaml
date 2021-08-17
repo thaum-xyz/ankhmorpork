@@ -27,6 +27,7 @@ spec:
     spec:
       containers:
       - args:
+        - exportarr
         - sonarr
         env:
         - name: URL
