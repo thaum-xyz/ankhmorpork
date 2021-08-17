@@ -15,6 +15,10 @@ spec:
   - port: 7878
     protocol: TCP
     targetPort: http-radarr
+    name: http-radarr
+  - port: 9707
+    name: metrics
+    targetPort: metrics
   selector:
     app.kubernetes.io/name: radarr
   sessionAffinity: None

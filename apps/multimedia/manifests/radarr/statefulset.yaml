@@ -50,6 +50,37 @@ spec:
           name: downloads
         - mountPath: /backup
           name: backup
+      - args:
+        - exportarr
+        - radarr
+        env:
+        - name: CONFIG
+          value: /radarr/config.xml
+        - name: URL
+          value: http://localhost:7878
+        image: ghcr.io/onedr0p/exportarr:v0.6.1
+        imagePullPolicy: IfNotPresent
+        name: exportarr
+        ports:
+        - containerPort: 9707
+          name: metrics
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: metrics
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
+          requests:
+            cpu: 1m
+            memory: 11Mi
+        volumeMounts:
+        - mountPath: /radarr
+          name: config
+          readOnly: true
       nodeSelector:
         kubernetes.io/arch: amd64
         storage.infra/main: "true"
