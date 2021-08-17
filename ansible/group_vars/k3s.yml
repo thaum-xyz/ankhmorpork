@@ -17,6 +17,7 @@ k3s_token: "{{ hostvars[groups['k3s-master'][0]]['token'] }}"
 k3s_extra_agent_args: >-
   --kubelet-arg kube-reserved=cpu=100m,memory=200Mi
   --kubelet-arg system-reserved={{ kubelet_system_resources | default('cpu=100m,memory=200Mi') }}
+  --kubelet-arg allowed-unsafe-sysctls=net.ipv4.tcp_adv_win_scale
   --node-label network.infra/type={{ network | default('slow') }}
   --node-label storage.infra/local={{ 'true' if k3s_local_storage_device is defined else 'false' }}
 
