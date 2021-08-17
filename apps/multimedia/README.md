@@ -1,9 +1,5 @@
 ## Caveats
 
-### exportarr
-
-- For convenience exportarr is run as separate deployment and not as sidecar. This way APIKEY can be generated in webUI before starting exportarr
-
 ### plex-exporter
 
 - For convenience exportarr is run as separate deployment and not as sidecar. This way APIKEY can be generated in webUI before starting exportarr
