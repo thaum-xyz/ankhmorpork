@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: ombi
     app.kubernetes.io/part-of: ombi
-    app.kubernetes.io/version: 4.0.1446
+    app.kubernetes.io/version: 4.0.1466
   name: ombi
   namespace: multimedia
 spec:
@@ -24,13 +24,13 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: ombi
         app.kubernetes.io/part-of: ombi
-        app.kubernetes.io/version: 4.0.1446
+        app.kubernetes.io/version: 4.0.1466
     spec:
       containers:
       - env:
         - name: TZ
           value: Europe/Berlin
-        image: linuxserver/ombi:development
+        image: linuxserver/ombi:development-version-v4.0.1466
         imagePullPolicy: IfNotPresent
         name: ombi
         ports:

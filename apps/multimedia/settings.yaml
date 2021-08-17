@@ -12,8 +12,8 @@ jackett:
       requests:
         storage: "300Mi"
 ombi:
-  version: "4.0.1446"
-  image: "linuxserver/ombi:development"
+  version: "4.0.1466"  # application-image-from-github: Ombi-app/Ombi
+  image: "linuxserver/ombi:development-version-v4.0.1466"  # application-image-from-github: Ombi-app/Ombi
   namespace: multimedia
   domain: ombi.ankhmorpork.thaum.xyz
   pvcSpec:
