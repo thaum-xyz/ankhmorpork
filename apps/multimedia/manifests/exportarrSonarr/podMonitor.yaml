@@ -2,8 +2,10 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   labels:
-    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: sonarr-exportarr
     app.kubernetes.io/part-of: sonarr
+    app.kubernetes.io/version: 0.3.4
   name: sonarr
   namespace: multimedia
 spec:
@@ -14,5 +16,6 @@ spec:
     scrapeTimeout: 90s
   selector:
     matchLabels:
-      app.kubernetes.io/name: exportarr
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: sonarr-exportarr
       app.kubernetes.io/part-of: sonarr

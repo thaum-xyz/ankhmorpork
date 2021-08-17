@@ -3,22 +3,25 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/component: exporter
-    app.kubernetes.io/name: exportarr
+    app.kubernetes.io/name: sonarr-exportarr
     app.kubernetes.io/part-of: sonarr
-  name: sonarr-exporter
+    app.kubernetes.io/version: 0.3.4
+  name: sonarr-exportarr
   namespace: multimedia
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter
-      app.kubernetes.io/name: exportarr
+      app.kubernetes.io/name: sonarr-exportarr
       app.kubernetes.io/part-of: sonarr
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app.kubernetes.io/component: exporter
-        app.kubernetes.io/name: exportarr
+        app.kubernetes.io/name: sonarr-exportarr
         app.kubernetes.io/part-of: sonarr
         app.kubernetes.io/version: 0.3.4
     spec:
@@ -27,14 +30,15 @@ spec:
         - sonarr
         env:
         - name: URL
-          value: http://sonarr.multimedia.svc:8989
+          value: http://sonarr.multimedia.svc:7878
         - name: PORT
           value: "9707"
         envFrom:
         - secretRef:
             name: sonarr-apikey
         image: onedr0p/exportarr:v0.3.4
-        name: exportarr
+        imagePullPolicy: IfNotPresent
+        name: sonarr-exportarr
         ports:
         - containerPort: 9707
           name: metrics
@@ -54,3 +58,4 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
       restartPolicy: Always
+      serviceAccountName: sonarr-exportarr
