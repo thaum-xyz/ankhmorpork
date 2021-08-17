@@ -17,7 +17,7 @@ spec:
     protocol: TCP
     targetPort: http-radarr
   - name: metrics
-    port: 9707
+    port: 9708
     targetPort: metrics
   selector:
     app.kubernetes.io/name: radarr
