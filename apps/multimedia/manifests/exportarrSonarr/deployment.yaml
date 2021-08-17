@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: sonarr-exportarr
     app.kubernetes.io/part-of: sonarr
-    app.kubernetes.io/version: 0.3.4
+    app.kubernetes.io/version: 0.6.1
   name: sonarr-exportarr
   namespace: multimedia
 spec:
@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: sonarr-exportarr
         app.kubernetes.io/part-of: sonarr
-        app.kubernetes.io/version: 0.3.4
+        app.kubernetes.io/version: 0.6.1
     spec:
       containers:
       - args:
@@ -36,7 +36,7 @@ spec:
         envFrom:
         - secretRef:
             name: sonarr-apikey
-        image: onedr0p/exportarr:v0.3.4
+        image: onedr0p/exportarr:v0.6.1
         imagePullPolicy: IfNotPresent
         name: sonarr-exportarr
         ports:

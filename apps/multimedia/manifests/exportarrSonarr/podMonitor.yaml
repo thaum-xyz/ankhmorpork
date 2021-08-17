@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: sonarr-exportarr
     app.kubernetes.io/part-of: sonarr
-    app.kubernetes.io/version: 0.3.4
+    app.kubernetes.io/version: 0.6.1
   name: sonarr
   namespace: multimedia
 spec:

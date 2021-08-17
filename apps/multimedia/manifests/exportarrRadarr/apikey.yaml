@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: radarr-exportarr
     app.kubernetes.io/part-of: radarr
-    app.kubernetes.io/version: 0.3.4
+    app.kubernetes.io/version: 0.6.1
   name: radarr-apikey
   namespace: multimedia
 spec:
@@ -21,6 +21,6 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: radarr-exportarr
         app.kubernetes.io/part-of: radarr
-        app.kubernetes.io/version: 0.3.4
+        app.kubernetes.io/version: 0.6.1
       name: radarr-apikey
       namespace: multimedia
