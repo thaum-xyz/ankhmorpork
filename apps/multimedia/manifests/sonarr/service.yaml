@@ -12,13 +12,13 @@ spec:
   externalTrafficPolicy: Cluster
   loadBalancerIP: 192.168.2.95
   ports:
-  - port: 8989
+  - name: http-sonarr
+    port: 8989
     protocol: TCP
     targetPort: http-sonarr
-    name: http-sonarr
-  - port: 9707
-    name: metrics
-    targetPort: metrics    
+  - name: metrics
+    port: 9707
+    targetPort: metrics
   selector:
     app.kubernetes.io/name: sonarr
   sessionAffinity: None

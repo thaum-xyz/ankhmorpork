@@ -1,4 +1,5 @@
 local jackett = import 'jackett.libsonnet';
+local ombi = import 'ombi.libsonnet';
 
 local configYAML = (importstr '../settings.yaml');
 
@@ -34,6 +35,20 @@ local lbService = {
 local all = {
   jackett: jackett(config.jackett) + {
     service+: lbService,
+  },
+  ombi: ombi(config.ombi) + {
+    pvc+: {
+      metadata+: {
+        name: 'ombi-config',
+      },
+    },
+    ingress+: {
+      metadata+:{
+        labels+: {
+          probe: "enabled"
+        }
+      },
+    },
   },
 };
 

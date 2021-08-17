@@ -11,3 +11,18 @@ jackett:
     resources:     
       requests:
         storage: "300Mi"
+ombi:
+  version: "4.0.1446"
+  image: "linuxserver/ombi:development"
+  namespace: multimedia
+  domain: ombi.ankhmorpork.thaum.xyz
+  pvcSpec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 600Mi
+    storageClassName: managed-nfs-storage
+#exportarr:
+#  version: "0.6.1"  # application-image-from-github: onedr0p/exportarr
+#  image: "ghcr.io/onedr0p/exportarr:v0.6.1"  # application-image-from-github: onedr0p/exportarr
