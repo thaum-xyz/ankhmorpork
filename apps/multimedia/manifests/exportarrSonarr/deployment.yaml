@@ -36,7 +36,7 @@ spec:
         envFrom:
         - secretRef:
             name: sonarr-apikey
-        image: onedr0p/exportarr:v0.6.1
+        image: ghcr.io/onedr0p/exportarr:v0.6.1
         imagePullPolicy: IfNotPresent
         name: sonarr-exportarr
         ports:

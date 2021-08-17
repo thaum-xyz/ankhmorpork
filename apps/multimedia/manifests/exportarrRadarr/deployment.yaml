@@ -36,7 +36,7 @@ spec:
         envFrom:
         - secretRef:
             name: radarr-apikey
-        image: onedr0p/exportarr:v0.6.1
+        image: ghcr.io/onedr0p/exportarr:v0.6.1
         imagePullPolicy: IfNotPresent
         name: radarr-exportarr
         ports:
