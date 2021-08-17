@@ -15,6 +15,10 @@ spec:
   - port: 8989
     protocol: TCP
     targetPort: http-sonarr
+    name: http-sonarr
+  - port: 9707
+    name: metrics
+    targetPort: metrics    
   selector:
     app.kubernetes.io/name: sonarr
   sessionAffinity: None
