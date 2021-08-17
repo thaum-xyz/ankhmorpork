@@ -125,6 +125,11 @@ data:
             logo: "https://avatars3.githubusercontent.com/u/1082903?s=200&v=4"
             <<: *Local
             url: "http://192.168.2.95:8989/"
+          - name: Jackett
+            subtitle: "API Support for torrent trackers"
+            logo: "https://avatars.githubusercontent.com/u/15383019?s=200&v=4"
+            <<: *Local
+            url: "http://192.168.2.95:9117/"
           - name: Transmission
             subtitle: "downloader"
             logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
