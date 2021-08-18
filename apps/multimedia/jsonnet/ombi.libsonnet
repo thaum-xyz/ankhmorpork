@@ -108,7 +108,6 @@ function(params) {
     metadata: o._metadata,
     spec: {
       replicas: 1,
-      strategy: { type: 'Recreate' },
       serviceName: o.service.metadata.name,
       selector: { matchLabels: o._config.selectorLabels },
       template: {

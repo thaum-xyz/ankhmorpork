@@ -16,8 +16,6 @@ spec:
       app.kubernetes.io/name: ombi
       app.kubernetes.io/part-of: ombi
   serviceName: ombi
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
