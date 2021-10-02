@@ -4,6 +4,7 @@
       type: 'ClusterIP',
     },
   },
+  config:: null,
   dashboardSources:: null,
   dashboardDefinitions:: null,
   deployment: {
