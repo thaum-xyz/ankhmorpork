@@ -101,7 +101,7 @@ local kp =
         spec+: {
           template+: {
             spec+: {
-              containers: addArgs(['--log-level=debug'], 'prometheus-operator', super.containers)
+              containers: addArgs(['--log-level=debug'], 'prometheus-operator', super.containers),
             },
           },
         },
