@@ -2270,6 +2270,15 @@ spec:
                 items:
                   type: string
                 type: array
+              enforcedBodySizeLimit:
+                description: 'EnforcedBodySizeLimit defines the maximum size of uncompressed
+                  response body that will be accepted by Prometheus. Targets responding
+                  with a body larger than this many bytes will cause the scrape to
+                  fail. Example: 100MB. If defined, the limit will apply to all service/pod
+                  monitors and probes. This is an experimental feature, this behaviour
+                  could change or be removed in the future. Only valid in Prometheus
+                  versions 2.28.0 and newer.'
+                type: string
               enforcedLabelLimit:
                 description: Per-scrape limit on number of labels that will be accepted
                   for a sample. If more than this number of labels are present post
@@ -3441,6 +3450,14 @@ spec:
               logLevel:
                 description: Log level for Prometheus to be configured with.
                 type: string
+              minReadySeconds:
+                description: Minimum number of seconds for which a newly created pod
+                  should be ready without any of its container crashing for it to
+                  be considered available. Defaults to 0 (pod will be considered available
+                  as soon as it is ready) This is an alpha field and requires enabling
+                  StatefulSetMinReadySeconds feature gate.
+                format: int32
+                type: integer
               nodeSelector:
                 additionalProperties:
                   type: string
@@ -4297,6 +4314,12 @@ spec:
                     remoteTimeout:
                       description: Timeout for requests to the remote write endpoint.
                       type: string
+                    sendExemplars:
+                      description: Enables sending of exemplars over remote write.
+                        Note that exemplar-storage itself must be enabled using the
+                        enableFeature option for exemplars to be scraped in the first
+                        place.  Only valid in Prometheus versions 2.27.0 and newer.
+                      type: boolean
                     tlsConfig:
                       description: TLS Config to use for remote write.
                       properties:
@@ -5436,6 +5459,49 @@ spec:
                   version:
                     description: Version describes the version of Thanos to use.
                     type: string
+                  volumeMounts:
+                    description: VolumeMounts allows configuration of additional VolumeMounts
+                      on the output StatefulSet definition. VolumeMounts specified
+                      will be appended to other VolumeMounts in the thanos-sidecar
+                      container.
+                    items:
+                      description: VolumeMount describes a mounting of a Volume within
+                        a container.
+                      properties:
+                        mountPath:
+                          description: Path within the container at which the volume
+                            should be mounted.  Must not contain ':'.
+                          type: string
+                        mountPropagation:
+                          description: mountPropagation determines how mounts are
+                            propagated from the host to container and the other way
+                            around. When not set, MountPropagationNone is used. This
+                            field is beta in 1.10.
+                          type: string
+                        name:
+                          description: This must match the Name of a Volume.
+                          type: string
+                        readOnly:
+                          description: Mounted read-only if true, read-write otherwise
+                            (false or unspecified). Defaults to false.
+                          type: boolean
+                        subPath:
+                          description: Path within the volume from which the container's
+                            volume should be mounted. Defaults to "" (volume's root).
+                          type: string
+                        subPathExpr:
+                          description: Expanded path within the volume from which
+                            the container's volume should be mounted. Behaves similarly
+                            to SubPath but environment variable references $(VAR_NAME)
+                            are expanded using the container's environment. Defaults
+                            to "" (volume's root). SubPathExpr and SubPath are mutually
+                            exclusive.
+                          type: string
+                      required:
+                      - mountPath
+                      - name
+                      type: object
+                    type: array
                 type: object
               tolerations:
                 description: If specified, the pod's tolerations.

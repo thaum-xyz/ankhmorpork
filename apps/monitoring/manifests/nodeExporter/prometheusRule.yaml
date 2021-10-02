@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: node-exporter
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 1.2.0
+    app.kubernetes.io/version: 1.2.2
     role: alert-rules
   name: node-exporter-rules
   namespace: monitoring
@@ -61,7 +61,7 @@ spec:
         and
           node_filesystem_readonly{job="node",fstype!=""} == 0
         )
-      for: 1h
+      for: 30m
       labels:
         severity: warning
     - alert: NodeFilesystemAlmostOutOfSpace
@@ -76,7 +76,7 @@ spec:
         and
           node_filesystem_readonly{job="node",fstype!=""} == 0
         )
-      for: 1h
+      for: 30m
       labels:
         severity: critical
     - alert: NodeFilesystemFilesFillingUp
@@ -270,10 +270,8 @@ spec:
   - name: node-exporter.rules
     rules:
     - expr: |
-        count without (cpu) (
-          count without (mode) (
-            node_cpu_seconds_total{job="node"}
-          )
+        count without (cpu, mode) (
+          node_cpu_seconds_total{job="node",mode="idle"}
         )
       record: instance:node_num_cpu:sum
     - expr: |
@@ -291,6 +289,16 @@ spec:
     - expr: |
         1 - (
           node_memory_MemAvailable_bytes{job="node"}
+          or
+          (
+            node_memory_Buffers_bytes{job="node"}
+            +
+            node_memory_Cached_bytes{job="node"}
+            +
+            node_memory_MemFree_bytes{job="node"}
+            +
+            node_memory_Slab_bytes{job="node"}
+          )
         /
           node_memory_MemTotal_bytes{job="node"}
         )

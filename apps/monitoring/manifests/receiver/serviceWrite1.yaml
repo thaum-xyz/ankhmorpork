@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 2.29.0-rc.1
+    app.kubernetes.io/version: 2.30.2
     prometheus: k8s
   name: prometheus-k8s-write-1
   namespace: monitoring
@@ -17,6 +17,9 @@ spec:
   - name: web
     port: 9090
     targetPort: web
+  - name: reloader-web
+    port: 8080
+    targetPort: reloader-web
   selector:
     app: prometheus
     app.kubernetes.io/component: prometheus
