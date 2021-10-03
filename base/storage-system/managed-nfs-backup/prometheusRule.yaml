@@ -17,6 +17,8 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/BackupsNotCreated
       expr: |
         sum without (pod,instance) (backup_backups_successful_total) / sum without (pod,instance) (backup_backups_all_total) * 100 < 90
+        AND
+        on (job, namespace) increase(backup_backups_failed_total[1d]) > 0
       labels:
         severity: warning
     - alert: BackupsNotCreated
@@ -26,5 +28,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/BackupsNotCreated
       expr: |
         sum without (pod,instance) (backup_backups_successful_total) / sum without (pod,instance) (backup_backups_all_total) * 100 < 50
+        AND
+        on (job, namespace) increase(backup_backups_failed_total[1d]) > 0
       labels:
         severity: critical
