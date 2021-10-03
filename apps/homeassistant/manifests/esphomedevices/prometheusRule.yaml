@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: btbridge
+  namespace: homeassistant
+spec:
+  groups:
+  - name: esphome.alerts
+    rules:
+    - alert: ESPHomeSensorFailure
+      annotations:
+        description: ESPHome sensor named {{ $labels.name }} with {{ $labels.id }}
+          on {{ $labels.instance }} device failed to gather data for 4h.
+        summary: ESPHome sensor failed
+      expr: esphome_sensor_failed != 0
+      for: 4h
+      labels:
+        severity: warning
