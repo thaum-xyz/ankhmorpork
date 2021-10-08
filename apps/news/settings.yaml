@@ -1,8 +1,8 @@
 ---
 miniflux:
   namespace: news
-  version: "2.0.31"  # application-version-from-github: miniflux/v2
-  image: "miniflux/miniflux:2.0.31"  # application-image-from-github: miniflux/v2
+  version: "2.0.33"  # application-version-from-github: miniflux/v2
+  image: "miniflux/miniflux:2.0.33"  # application-image-from-github: miniflux/v2
   domain: "rss.ankhmorpork.thaum.xyz"
   admin:
     user: "AgCwdCVdKVM9832LU7H8fzMCzsvn1jLXfiMhcGy7m7QKchCoRIqhUakKcVVvVaWy15fYp3bMhSnh5uR/cmFCkjJ9qI/sSBgKsm7lUf6bDN5oy+vJ2TztjE6PVGvuBIsI/gk9YcCmVh1xMMmY2ZaGsyMvbOLLOudF9xUE0x6XWvg/qqTN/E+IRQLItkSSle1xsCR+C1WtYSFP7PyowdgmUMLdvYkjTU2rEmyCDIyChSrAnIPs0xbyri/b0mHYtdv8RfKUwYEmKggB98ZEMTEpY1RsWkYYnUweT+TpJa9iVd5jzKQQWXNkoyREdfAUEWZUF2tmqSh3Vct8Abc/Cth92RKYC7Q2o5rFfEQ2aLiN45YfxEqJrhy0L+Yso85LCUH246JlEFy7j5JxMMtYQTjkzdO5pQmtJvgHKS/Z8rykBsSyBp4oxBfjx6VWHBXdPbbVBnUGwPOzcJAHncdbTjXH/Kiatvl5084a+Uu8Sguatm096k42v23xyzVOSj90AoHRmU0w+yUEjIK+s7oHHwmiqGsmvAylBGimM0AzY1tScpr5hkS1BaXNGzBU8mChf3WVRCE6uvWr69wxHRyPRs6vDwjoJtBm2RMZbg0OF1x1KdRplE94mKpj4V7kkqRhNDZFyx2MY6sP1DT77nzry7tVNH+YG3Jj+eFNWasORyp8O8/moOO+6XOs64tHesySgkCyhJuNqB0VAQ=="
