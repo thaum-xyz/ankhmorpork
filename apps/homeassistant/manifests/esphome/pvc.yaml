@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   labels:
     app.kubernetes.io/name: esphome
-    app.kubernetes.io/version: 2021.9.2
+    app.kubernetes.io/version: 2021.9.3
   name: esphome-config
   namespace: homeassistant
 spec:

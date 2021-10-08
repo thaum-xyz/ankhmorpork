@@ -1,7 +1,7 @@
 ---
 homeassistant:
-  version: "2021.9.7"  # application-version-from-github: home-assistant/core
-  image: "homeassistant/aarch64-homeassistant:2021.9.7"  # application-image-from-github: home-assistant/core
+  version: "2021.10.1"  # application-version-from-github: home-assistant/core
+  image: "homeassistant/aarch64-homeassistant:2021.10.1"  # application-image-from-github: home-assistant/core
   namespace: "homeassistant"
   domain: "home.ankhmorpork.thaum.xyz"
   hostNetwork: true  # Needed to enable WOL
@@ -14,8 +14,8 @@ homeassistant:
         storage: 1Gi
   encryptedAPIToken: "AgA/Ri+rPl/uXghEhXK1AjUpvqpjy0UlG1DNRVP3Pu8PDWvGozJN4oyth3IDOJ0yePW4HaGxF9expzWJ0Ett9dD+5nooknLd4RwDVYXxiyWzIMVIfR7/Sy2es/YqPHH7g1IEkrYEEjf9QWzZybr739H/jTbBrXqmWN2v0lXPBoF/nt8hILdPb8uY4yzFFw2OGDIWw12hUTLaGs91LVZqEVhn1ypx6yCu4xAdA997/33ye8wQcYiLv9eGQBmtMOmDSKk43tT7G8iyB8HVhcJO7FFmo51XGMRLEKItr+bUpX/zIQpkNqQakiHUsmKwJL3A/6lnkDV0l443vaeFJQHqckM/MY0YM2yqhQrDCGgklK2bhoW8X2fgC/2ptThQYTrK6aPJSpcEC7Ap5IxAMFPq9QNGtffQc12moIKVyPMpZu3eNN1k5H02s2Bqf+f6X/s4fM5rvI6QZZPlT3ttQw3XnqB5smky70OH3JX56pqdVLdpjcyzuCmGBRWbA2ZRa2e3EZFteCOHUR9nP2h8Dekc6YltmScreDobm1e2v5TW7bHAmL86rM0T0lSCX/I40igTBv1xjC1ePzr6cxf0+XInRvd/wVav6hniQAQPBdg1P/mxmD2IXntku0m+l3dzaubwH8nmv4ZMsg8/w1ZpzQCVsHHpGH11uSFhUFPvLZ+kMEX6PUDbUPwZ+hayse6JiOFNlLlhPh+jmQJi27HLcC1f614y0wpoSaaW1Ze5xNauauL4/h/WbzZheUCn26eqvGICgobc1TB6xZmjEG644y0p0b5e3k2M1Z8jJdEDawd8LiFA+SHpDgozTv8AkrgvtYsf1s/sscPwDq2ZodhGWGBi9u/mv/MimGm79znCBpeQvrh45NaSRAYJAMgdC5VgIUg9Oviaf5P+DkTqj6jj9GplyQVNHbhmwg5lVW8gWSZRPildZWd8l7M9AaE="
 esphome:
-  version: "2021.9.2"  # application-version-from-github: esphome/esphome
-  image: "esphome/esphome:2021.9.2"  # application-image-from-github: esphome/esphome
+  version: "2021.9.3"  # application-version-from-github: esphome/esphome
+  image: "esphome/esphome:2021.9.3"  # application-image-from-github: esphome/esphome
   namespace: "homeassistant"
   pvcSpec:
     storageClassName: "managed-nfs-storage"
