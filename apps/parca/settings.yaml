@@ -1,0 +1,6 @@
+---
+agent:
+  version: "0.1.0"  # application-version-from-github: parca-dev/parca-agent
+  image: "ghcr.io/parca-dev/parca-agent:v0.1.0"  # application-image-from-github: parca-dev/parca-agent
+  namespace: "parca"
+  enablePodMonitor: true
