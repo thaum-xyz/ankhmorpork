@@ -28,7 +28,9 @@ spec:
         - --log-level=info
         - --node=$(NODE_NAME)
         - --kubernetes
-        - --store-address=dnssrv+_grpc._tcp.parca.parca.svc.cluster.local
+        - --store-address=parca.parca.svc:7070
+        - --insecure
+        - --insecure-skip-verify
         - --socket-path=/run/k3s/containerd/containerd.sock
         env:
         - name: NODE_NAME

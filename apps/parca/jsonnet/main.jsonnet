@@ -1,4 +1,6 @@
 local agent = import 'github.com/parca-dev/parca-agent/deploy/lib/parca-agent/parca-agent.libsonnet';
+// local ui = import 'github.com/parca-dev/parca/deploy/lib/parca/parca-ui.libsonnet';
+local parca = import 'github.com/parca-dev/parca/deploy/lib/parca/parca.libsonnet';
 
 // TODO: move this to thaum-xyz/jsonnet-libs
 local addArgs(args, name, containers) = std.map(
@@ -17,7 +19,7 @@ local config = std.parseYaml(configYAML)[0];
 
 local all = {
   agent: agent(config.agent) + {
-    // Remove after https://github.com/parca-dev/parca-agent/pull/88 is merged
+    // TODO: remove after https://github.com/parca-dev/parca-agent/pull/88 is merged
     metadata:: all.agent.serviceAccount.metadata,
     clusterRoleBinding+: {
       metadata: all.agent.metadata,
@@ -36,7 +38,7 @@ local all = {
     },
     daemonSet+: {
       metadata: all.agent.metadata,
-      // remove after https://github.com/parca-dev/parca-agent/issues/90 is solved
+      // TODO: remove after https://github.com/parca-dev/parca-agent/issues/90 is solved
       spec+: {
         template+: {
           spec+: {
@@ -45,7 +47,7 @@ local all = {
         },
       },
     },
-    // remove after https://github.com/parca-dev/parca-agent/pull/89 is merged
+    // TODO: remove after https://github.com/parca-dev/parca-agent/pull/89 is merged
     podMonitor: {
       apiVersion: 'monitoring.coreos.com/v1',
       kind: 'PodMonitor',
@@ -63,6 +65,20 @@ local all = {
         },
       },
     },
+  },
+  parca: parca(config.parca) + {
+  // TODO: remove after https://github.com/parca-dev/parca/pull/274 is merged
+    deployment+: {
+      spec+: {
+        template+: {
+          spec+: {
+            nodeSelector+: {
+              'kubernetes.io/arch': 'amd64',
+            },
+          },
+        },
+      },
+    }
   },
 };
 
