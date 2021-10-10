@@ -153,6 +153,9 @@ data:
           - name: Prometheus
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/200px-Prometheus_software_logo.svg.png"
             url: "https://prometheus.ankhmorpork.thaum.xyz/"
+          - name: Parca
+            logo: "https://avatars.githubusercontent.com/u/86306284?s=200&v=4"
+            url: "https://parca.ankhmorpork.thaum.xyz/"
           - name: Unifi
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             <<: *Local
