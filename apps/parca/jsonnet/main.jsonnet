@@ -78,7 +78,43 @@ local all = {
           },
         },
       },
-    }
+    },
+    ingress: {
+      apiVersion: 'networking.k8s.io/v1',
+      kind: 'Ingress',
+      metadata: all.parca.serviceAccount.metadata {
+        annotations: {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+          'kubernetes.io/ingress.class': 'nginx',
+          'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
+          'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
+        },
+      },
+      spec: {
+        tls: [{
+          secretName: 'parca-ingress-tls',
+          hosts: [config.domain],
+        }],
+        rules: [{
+          host: config.domain,
+          http: {
+            paths: [{
+              path: '/',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: all.parca.service.metadata.name,
+                  port: {
+                    name: all.parca.service.spec.ports[0].name,
+                  },
+                },
+              },
+            }],
+          },
+        }],
+      },
+    },
+
   },
 };
 

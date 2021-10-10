@@ -1,4 +1,5 @@
 ---
+domain: "parca.ankhmorpork.thaum.xyz"
 agent:
   version: "0.1.0"  # application-version-from-github: parca-dev/parca-agent
   image: "ghcr.io/parca-dev/parca-agent:v0.1.0"  # application-image-from-github: parca-dev/parca-agent
@@ -13,4 +14,3 @@ parca:
   namespace: "parca"
   replicas: 1
   serviceMonitor: true
-
