@@ -19,6 +19,7 @@ quay.io/prometheus/mysqld-exporter
 intel/intel-gpu-plugin
 nvidia/k8s-device-plugin
 foomo/pagespeed_exporter
+ghcr.io/parca-dev/parca-agent
 EOM
 )
 
