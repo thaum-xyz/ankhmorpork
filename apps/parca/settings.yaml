@@ -3,4 +3,14 @@ agent:
   version: "0.1.0"  # application-version-from-github: parca-dev/parca-agent
   image: "ghcr.io/parca-dev/parca-agent:v0.1.0"  # application-image-from-github: parca-dev/parca-agent
   namespace: "parca"
-  enablePodMonitor: true
+  stores: ['parca.parca.svc:7070']
+  podMonitor: true
+  insecure: true
+  insecureSkipVerify: true
+parca:
+  version: "0.1.0"  # application-version-from-github: parca-dev/parca
+  image: "ghcr.io/parca-dev/parca:v0.1.0"  # application-image-from-github: parca-dev/parca
+  namespace: "parca"
+  replicas: 1
+  serviceMonitor: true
+
