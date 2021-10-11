@@ -7,7 +7,6 @@ DIRS=\
 	apps/homer \
 	apps/monitoring \
 	apps/news \
-	apps/recipe \
 	apps/unifi \
 	apps/system-update \
 	base/cert-manager
