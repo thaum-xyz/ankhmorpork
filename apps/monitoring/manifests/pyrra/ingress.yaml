@@ -21,7 +21,7 @@ spec:
           service:
             name: pyrra-api
             port:
-              name: all
+              name: http
         path: /
         pathType: Prefix
   tls:
