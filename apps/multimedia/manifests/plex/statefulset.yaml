@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: plex
-    app.kubernetes.io/version: 1.23.4
+    app.kubernetes.io/version: 1.24.3
   name: plex
   namespace: multimedia
 spec:
@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: plex
-        app.kubernetes.io/version: 1.23.4
+        app.kubernetes.io/version: 1.24.3
     spec:
       containers:
       - env:
@@ -36,7 +36,7 @@ spec:
         envFrom:
         - secretRef:
             name: plex-claim
-        image: plexinc/pms-docker:1.23.4.4805-186bae04e
+        image: plexinc/pms-docker:1.24.3.5033-757abe6b4
         name: plex
         ports:
         - containerPort: 32400
