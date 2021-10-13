@@ -43,6 +43,9 @@ spec:
         - containerPort: 7071
           hostPort: 7071
           name: http
+        resources:
+          requests:
+            cpu: 150m
         securityContext:
           privileged: true
         volumeMounts:

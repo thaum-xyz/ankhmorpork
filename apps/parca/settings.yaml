@@ -8,9 +8,14 @@ agent:
   podMonitor: true
   insecure: true
   insecureSkipVerify: true
+  resources:
+    requests:
+      cpu: "150m"
+      # memory: ""
 parca:
   version: "0.1.1"  # application-version-from-github: parca-dev/parca
   image: "ghcr.io/parca-dev/parca:v0.1.1"  # application-image-from-github: parca-dev/parca
   namespace: "parca"
   replicas: 1
   serviceMonitor: true
+  storageRetentionTime: "3h"

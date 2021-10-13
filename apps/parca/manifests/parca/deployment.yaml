@@ -28,6 +28,7 @@ spec:
         - /parca
         - --config-path=/var/parca/parca.yaml
         - --log-level=info
+        - --storage-tsdb-retention-time=3h
         image: ghcr.io/parca-dev/parca:v0.1.1
         livenessProbe:
           exec:
