@@ -159,6 +159,9 @@ data:
           - name: Parca
             logo: "https://avatars.githubusercontent.com/u/86306284?s=200&v=4"
             url: "https://parca.ankhmorpork.thaum.xyz/"
+          - name: Freshping
+            logo: "https://avatars.slack-edge.com/2018-09-03/427590825217_ae87fee1f01a3539733e_512.png"
+            url: "https://paulfantom.freshping.io/dashboard"
           - name: Unifi
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             <<: *Local
