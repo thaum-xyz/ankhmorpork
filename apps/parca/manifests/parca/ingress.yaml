@@ -22,7 +22,7 @@ spec:
           service:
             name: parca
             port:
-              name: all
+              name: http
         path: /
         pathType: Prefix
   tls:

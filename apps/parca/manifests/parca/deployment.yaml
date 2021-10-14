@@ -40,7 +40,7 @@ spec:
         name: parca
         ports:
         - containerPort: 7070
-          name: all
+          name: http
         readinessProbe:
           exec:
             command:
