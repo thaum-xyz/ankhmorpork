@@ -88,11 +88,6 @@ services:
         subtitle: "Compress images online"
         logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
         url: "https://compressor.io/"
-      - name: Seafile
-        subtitle: "Cloud Drive"
-        logo: "https://de.seafile.com/wp-content/uploads/2018/09/seafile-300x174.png"
-        <<: *Testing
-        url: "https://seafile.ankhmorpork.thaum.xyz/"
       - name: Miniflux
         subtitle: "Minimalist RSS feed reader"
         logo: "https://avatars.githubusercontent.com/u/10584991?s=200&v=4"
