@@ -175,8 +175,8 @@
   },
   pushgateway: {
     namespace: 'monitoring',
-    version: '1.4.1',  // application-version-from-github: prometheus/pushgateway
-    image: 'quay.io/prometheus/pushgateway:v1.4.1',  // application-image-from-github: prometheus/pushgateway
+    version: '1.4.2',  // application-version-from-github: prometheus/pushgateway
+    image: 'quay.io/prometheus/pushgateway:v1.4.2',  // application-image-from-github: prometheus/pushgateway
     resources: {
       requests: { cpu: '10m', memory: '12Mi' },
     },

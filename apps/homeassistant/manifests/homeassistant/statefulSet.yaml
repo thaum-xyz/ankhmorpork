@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2021.10.3
+    app.kubernetes.io/version: 2021.10.4
   name: homeassistant
   namespace: homeassistant
 spec:
@@ -22,10 +22,10 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
         app.kubernetes.io/part-of: homeassistant
-        app.kubernetes.io/version: 2021.10.3
+        app.kubernetes.io/version: 2021.10.4
     spec:
       containers:
-      - image: homeassistant/aarch64-homeassistant:2021.10.3
+      - image: homeassistant/aarch64-homeassistant:2021.10.4
         imagePullPolicy: IfNotPresent
         name: homeassistant
         ports:
