@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kured
     app.kubernetes.io/part-of: kured
-    app.kubernetes.io/version: 1.7.0
+    app.kubernetes.io/version: 1.8.0
   name: kured
   namespace: system-update
 spec:
@@ -20,7 +20,7 @@ spec:
       labels:
         app.kubernetes.io/name: kured
         app.kubernetes.io/part-of: kured
-        app.kubernetes.io/version: 1.7.0
+        app.kubernetes.io/version: 1.8.0
       name: kured
       namespace: system-update
     spec:
@@ -37,7 +37,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: quay.io/paulfantom/kured:1.7.0
+        image: quay.io/paulfantom/kured:1.8.0
         imagePullPolicy: IfNotPresent
         name: kured
         ports:

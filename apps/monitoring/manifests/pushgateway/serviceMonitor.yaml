@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: pushgateway
-    app.kubernetes.io/version: 1.4.1
+    app.kubernetes.io/version: 1.4.2
   name: pushgateway
   namespace: monitoring
 spec:
