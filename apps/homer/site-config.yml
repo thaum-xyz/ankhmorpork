@@ -127,11 +127,11 @@ services:
         logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
         <<: *Local
         url: "http://192.168.2.95:9091/transmission/web/"
-      - name: Photoprism
-        logo: "https://dl.photoprism.org/assets/logo/logo-black-bold.svg"
-        <<: *Testing
-        subtitle: "Photo management"
-        url: "http://192.168.2.96"
+      #- name: Photoprism
+      #  logo: "https://dl.photoprism.org/assets/logo/logo-black-bold.svg"
+      #  <<: *Testing
+      #  subtitle: "Photo management"
+      #  url: "http://192.168.2.96"
 
   - name: Administration
     icon: "fa fa-user-shield"
