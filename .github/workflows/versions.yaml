@@ -10,16 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Import environment variables
+      run: cat ".github/env" >> $GITHUB_ENV
     - uses: actions/setup-go@v2
       with:
-        go-version: 1.16
+        go-version: '${{ env.golang-version }}'
     - name: Get jsonnet
-      # Some commits after introducing std.parseYaml. Around 2021-05-23
-      run: go get github.com/google/go-jsonnet/cmd/jsonnet@7373f5b6067899549aa7524ca2bba0dff22fe494
+      run: go install github.com/google/go-jsonnet/cmd/jsonnet@${{ env.jsonnet-version }}
     - name: Get jsonnet-bundler
-      run: go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@dafc283219baad354ecec101ec33070049e3a7b4
+      run: go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@${{ env.jb-version }}
     - name: Get yamlfmt
-      run: go get github.com/devopyio/yamlfmt
+      run: go install github.com/devopyio/yamlfmt@latest
     - name: Upgrade
       run: |
         export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
