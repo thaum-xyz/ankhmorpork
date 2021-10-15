@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: uptimerobot
+    app.kubernetes.io/version: master
+  name: uptimerobot
+  namespace: monitoring
+spec:
+  interval: 150s
+  metricRelabelings:
+  - sourceLabels:
+    - url
+    targetLabel: instance
+  - regex: (https://[a-zA-Z0-9.-]+).*
+    replacement: $1/
+    sourceLabels:
+    - url
+    targetLabel: instance
+  prober:
+    url: uptimerobot.monitoring.svc:7979
+  targets:
+    staticConfig:
+      static:
+      - https://api.uptimerobot.com/v2/getMonitors

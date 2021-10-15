@@ -220,6 +220,39 @@
     version: '0.3.1',
     image: 'slok/sloth:v0.3.1',
   },
+  uptimerobot: {
+    name: 'uptimerobot',
+    namespace: 'monitoring',
+    version: 'master',
+    image: 'quay.io/prometheuscommunity/json-exporter:master',
+    port: 7979,
+    args: [
+      '--config.file',
+      '/etc/json_exporter/config.yml',
+    ],
+    credentials: {
+      API_KEY: "AgDBgACduTClD7MpWPxletQQpxZRPDNrEHjtH5Ssn4IYh/ZVkFaNDcAjcISKRwgvwGZ8zkVsBGo3jfeGo47Tu+6uiHaWTtCKHn4wKmWDykaEHN/rGo+uP9qzbppoyosiAsalitdHzPacZ/IqgEiVLLJLf9S/Y4FcTcgOeeB1WUBQ8PyS5UhbNRyVkt3i9CG5u6WMKh+q8pioULec0C3KIkhSDorKRzcwr1Y446h9RCU57jVCbBr2hqQ68NNFqX37r2lnX+T6fNbkLploG2tkpg1CCYLzHJLGvYSHyP6EGjVBux/t4bOSP4bn8v+vNByBkhxxdiiyKTlmZq5E98bVIWaBMbis1i01u9/0snsTxAr3cXoRjCL/s+Kq6Mf+Fax9BZh+7okhJ8/Uz+1ReNsolV4u/xJnOeVxf4PUiL/1eLkNfxqUQbD8xsz9QR41N+hvpu4QkuaRv0BbEIt794X/nGpb+AJgFs8Xh+R+SNbqcqpLXg6yokETvZLszXZiRaheyhqPZB8j89p8QOiQYVeKQFhNjtknSXihdUXHs1z441ysDvjeap1DrXEHYUDgHFhQPF8sziyrVODwaQR65Iym0BC9cvfDM44q/cxGt2JtGeMp+6Oqw5ikGZOqVw9NmK1/GRMuTfAsHUrGZ0g2vyPYJUEo0qc5Ig28MfGPUi1q/bBgRc73ALIxNWGcN1137eTh5yQbA1/GlFaWYdT2eIJ+aPpxg6bbIsG+B2bxE1qiD5cRoTc1",
+    },
+    config: |||
+      headers:
+        Content-Type: "application/x-www-form-urlencoded"
+        Cache-Control: "no-cache"
+      body:
+        content: 'api_key={{ index . "API_KEY" }}&format=json&response_times=1'
+      metrics:
+      - name: "uptimerobot_monitor"
+        type: "object"
+        # Filter out components without a name
+        path: '{.monitors[?(@.friendly_name != "")]}'
+        help: "Information about uptimerobot monitor"
+        labels:
+          monitor: '{.friendly_name}'
+          url: '{.url}'
+        values:
+          status: '{.status}'
+          response_time_miliseconds: '{.average_response_time}'
+    |||
+  },
 
   other: {},
 }

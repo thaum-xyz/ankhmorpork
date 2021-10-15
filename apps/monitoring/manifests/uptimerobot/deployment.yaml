@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: uptimerobot
+    app.kubernetes.io/version: master
+  name: uptimerobot
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: uptimerobot
+  template:
+    metadata:
+      annotations:
+        checksum.config/md5: 9482c4e4a8cda7a10d594f51119c2087
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: uptimerobot
+        app.kubernetes.io/version: master
+    spec:
+      containers:
+      - args:
+        - --config.file
+        - /etc/json_exporter/config.yml
+        image: quay.io/prometheuscommunity/json-exporter:master
+        name: uptimerobot
+        ports:
+        - containerPort: 7979
+          name: http
+        readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 1
+          tcpSocket:
+            port: http
+          timeoutSeconds: 10
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/json_exporter/
+          name: uptimerobot
+          readOnly: true
+      serviceAccountName: uptimerobot
+      volumes:
+      - name: uptimerobot
+        secret:
+          secretName: uptimerobot
