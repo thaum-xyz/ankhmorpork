@@ -36,16 +36,6 @@ local all = {
         'parca.yaml': parcaConfig,
       }
     },
-    // FIXME: THAT'S AN UPSTREAM BUG
-    service+: {
-      spec+: {
-        ports: [{
-          name: 'http',
-          port: 7070,
-          targetPort: 7070,
-        }],
-      },
-    },
     ingress: {
       apiVersion: 'networking.k8s.io/v1',
       kind: 'Ingress',
