@@ -374,6 +374,96 @@ local kp =
         },
       },
     },
+    // Consider moving to a separate lib dedicated to json_exporter
+    uptimerobot: exporter($.values.uptimerobot) + {
+      deployment+: {
+        spec+: {
+          template+: {
+            metadata+: {
+              annotations+: {
+                'checksum.config/md5': std.md5($.values.uptimerobot.config),
+              },
+            },
+            spec+: {
+              containers: std.map(function(c) c {
+                volumeMounts: [{
+                  mountPath: '/etc/json_exporter/',
+                  name: "uptimerobot",
+                  readOnly: true,
+                }],
+              }, super.containers),
+              volumes: [{
+                name: "uptimerobot",
+                secret: {
+                  secretName: $.uptimerobot.configuration.spec.template.metadata.name
+                },
+              }],
+            },
+          },
+        },
+      },
+      service: {
+        apiVersion: "v1",
+        kind: "Service",
+        metadata: $.uptimerobot.deployment.metadata,
+        spec: {
+          ports: [{
+            name: $.uptimerobot.deployment.spec.template.spec.containers[0].ports[0].name,
+            port: $.uptimerobot.deployment.spec.template.spec.containers[0].ports[0].containerPort,
+            targetPort: $.uptimerobot.deployment.spec.template.spec.containers[0].ports[0].name,
+          }],
+          selector: $.uptimerobot.podMonitor.spec.selector.matchLabels,
+        },
+      },
+      // Using ServiceMonitor just to note that Service is necessary and to fail when it disappears
+      podMonitor+:: {},
+      serviceMonitor: {
+        apiVersion: "monitoring.coreos.com/v1",
+        kind: "ServiceMonitor",
+        metadata: $.uptimerobot.deployment.metadata,
+        spec: {
+          endpoints: $.uptimerobot.podMonitor.spec.podMetricsEndpoints,
+          selector: $.uptimerobot.podMonitor.spec.selector,
+        },
+      },
+      configuration: sealedsecret($.uptimerobot.deployment.metadata, $.values.uptimerobot.credentials) + {
+        spec+: {
+          template+: {
+            data: {
+              "config.yml": $.values.uptimerobot.config
+            },
+          },
+        },
+      },
+      probe: {
+        apiVersion: 'monitoring.coreos.com/v1',
+        kind: 'Probe',
+        metadata: $.uptimerobot.deployment.metadata,
+        spec: {
+          interval: "150s",
+          prober: {
+            url: $.uptimerobot.service.metadata.name + '.' + $.uptimerobot.service.metadata.namespace + '.svc:7979',
+          },
+          targets: {
+            staticConfig: {
+              static: ["https://api.uptimerobot.com/v2/getMonitors"],
+            },
+          },
+          metricRelabelings: [
+            {
+              sourceLabels: ["url"],
+              targetLabel: "instance",
+            },
+            {
+              sourceLabels: ["url"],
+              targetLabel: "instance",
+              regex: '(https://[a-zA-Z0-9.-]+).*',
+              replacement: '$1/'
+            }
+          ],
+        },
+      },
+    },
 
     sloth: sloth($.values.sloth),
 
