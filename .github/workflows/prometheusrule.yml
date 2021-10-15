@@ -12,10 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Import environment variables
+        run: cat ".github/env" >> $GITHUB_ENV
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.15'
-      - run: go get -u github.com/brancz/gojsontoyaml
+          go-version: '${{ env.golang-version }}'
+      - run: go install github.com/brancz/gojsontoyaml@latest
       #- run: go get -u github.com/prometheus/prometheus/cmd/promtool
       - name: Download latest release of promtool
         run: |

@@ -12,10 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Import environment variables
+        run: cat ".github/env" >> $GITHUB_ENV
+      - name: Show env
+        run: echo $GITHUB_ENV
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.15'
-      - run: go get -u github.com/brancz/gojsontoyaml
+          go-version: '${{ env.golang-version }}'
+      - run: go install github.com/brancz/gojsontoyaml@latest
       - run: wget https://github.com/estesp/manifest-tool/releases/download/v1.0.3/manifest-tool-linux-amd64 -O /tmp/manifest-tool && chmod +x /tmp/manifest-tool && sudo mv /tmp/manifest-tool /usr/bin/
       - run: sudo apt update && sudo apt install -y jq
       - run: ./hack/checkimages.sh

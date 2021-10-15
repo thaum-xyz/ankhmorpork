@@ -12,10 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Import environment variables
+        run: cat ".github/env" >> $GITHUB_ENV
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.15'
-      - run: go get -u github.com/yannh/kubeconform/cmd/kubeconform
+          go-version: '${{ env.golang-version }}'
+      - run: go install github.com/yannh/kubeconform/cmd/kubeconform@latest
       # - run: ./hack/generate-schemas.sh
       - run: >
           kubeconform
@@ -31,10 +33,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Import environment variables
+        run: cat ".github/env" >> $GITHUB_ENV
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.15'
-      - run: go get -u github.com/yannh/kubeconform/cmd/kubeconform
+          go-version: '${{ env.golang-version }}'
+      - run: go install github.com/yannh/kubeconform/cmd/kubeconform@latest
       # - run: ./hack/generate-schemas.sh
       - run: >
           kubeconform
