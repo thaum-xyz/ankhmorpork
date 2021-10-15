@@ -19,3 +19,6 @@ parca:
   replicas: 1
   serviceMonitor: true
   storageRetentionTime: "3h"
+  resources:
+    limits:
+      memory: "20Gi"
