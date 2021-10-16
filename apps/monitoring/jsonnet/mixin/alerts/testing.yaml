@@ -11,15 +11,24 @@ groups:
     for: 20m
     labels:
       severity: warning
-  - alert: SiteNotUP
+  - alert: SiteDown
     annotations:
-      description: UptimeRobot reports site {{ $labels.url }} not to be up for 15m. Site is either paused or down.
+      description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
       runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteNotUP
-      summary: UptimeRobot reports site to be up.
-    expr: uptimerobot_monitor_status != 2
+      summary: Site is down
+    expr: probe_success == 0 AND on (instance) uptimerobot_monitor_status == 9
     for: 15m
     labels:
       severity: critical
+  - alert: SiteExtrenallyDown
+    annotations:
+      description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
+      runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
+      summary: Site is not available from external network
+    expr: uptimerobot_monitor_status == 9
+    for: 10m
+    labels:
+      severity: warning
   - alert: KubePodOOMKilled
     annotations:
       description: Pod {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) was OOMKilled.
