@@ -27,11 +27,11 @@ spec:
           name: http
         resources:
           limits:
-            cpu: 400m
+            cpu: 800m
             memory: 600Mi
           requests:
-            cpu: 120m
-            memory: 200Mi
+            cpu: 400m
+            memory: 350Mi
         volumeMounts:
         - mountPath: /config
           name: config
