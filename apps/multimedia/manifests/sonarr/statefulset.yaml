@@ -18,6 +18,19 @@ spec:
       labels:
         app.kubernetes.io/name: sonarr
     spec:
+      initContainers:
+      - name: restore
+        image: 'quay.io/paulfantom/rsync'
+        command: ["/bin/sh"]
+        args:
+        - "-c"
+        - "cd /config && unzip $(find /backup/scheduled -type f -exec stat -c '%n' {} + | sort -r | head -n1) && chown 1000:1000 /config/*"
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /backup
+          name: backup
+          readOnly: true
       containers:
       - env:
         - name: PUID
@@ -44,8 +57,6 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: config
-        - mountPath: /config/logs
-          name: logs
         - mountPath: /tv
           name: data
         - mountPath: /download/completed
@@ -92,16 +103,13 @@ spec:
       tolerations: []
       volumes:
       - emptyDir: {}
-        name: logs
+        name: config
       - name: data
         persistentVolumeClaim:
           claimName: tv
       - name: downloads
         persistentVolumeClaim:
           claimName: torrents
-      - name: config
-        persistentVolumeClaim:
-          claimName: sonarr-config
       - name: backup
         persistentVolumeClaim:
           claimName: sonarr-backup
