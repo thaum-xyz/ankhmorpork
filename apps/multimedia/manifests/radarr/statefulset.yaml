@@ -18,6 +18,19 @@ spec:
       labels:
         app.kubernetes.io/name: radarr
     spec:
+      initContainers:
+      - name: restore
+        image: 'quay.io/paulfantom/rsync'
+        command: ["/bin/sh"]
+        args:
+        - "-c"
+        - "cd /config && unzip $(find /backup/scheduled -type f -exec stat -c '%n' {} + | sort -r | head -n1)"
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /backup
+          name: backup
+          readOnly: true
       containers:
       - env:
         - name: PUID
@@ -44,8 +57,6 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: config
-        - mountPath: /config/logs
-          name: logs
         - mountPath: /movies
           name: data
         - mountPath: /download/completed
@@ -91,17 +102,14 @@ spec:
       restartPolicy: Always
       tolerations: []
       volumes:
-      - emptyDir: {}
-        name: logs
+      - name: config
+        emptyDir: {}
       - name: data
         persistentVolumeClaim:
           claimName: movies
       - name: downloads
         persistentVolumeClaim:
           claimName: torrents
-      - name: config
-        persistentVolumeClaim:
-          claimName: radarr-config
       - name: backup
         persistentVolumeClaim:
           claimName: radarr-backup
