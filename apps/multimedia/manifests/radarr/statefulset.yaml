@@ -18,19 +18,6 @@ spec:
       labels:
         app.kubernetes.io/name: radarr
     spec:
-      initContainers:
-      - name: restore
-        image: 'quay.io/paulfantom/rsync'
-        command: ["/bin/sh"]
-        args:
-        - "-c"
-        - "cd /config && unzip $(find /backup/scheduled -type f -exec stat -c '%n' {} + | sort -r | head -n1)"
-        volumeMounts:
-        - mountPath: /config
-          name: config
-        - mountPath: /backup
-          name: backup
-          readOnly: true
       containers:
       - env:
         - name: PUID
@@ -96,14 +83,29 @@ spec:
         - mountPath: /radarr
           name: config
           readOnly: true
+      initContainers:
+      - args:
+        - -c
+        - cd /config && unzip $(find /backup/scheduled -type f -exec stat -c '%n'
+          {} + | sort -r | head -n1)
+        command:
+        - /bin/sh
+        image: quay.io/paulfantom/rsync
+        name: restore
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /backup
+          name: backup
+          readOnly: true
       nodeSelector:
         kubernetes.io/arch: amd64
         storage.infra/main: "true"
       restartPolicy: Always
       tolerations: []
       volumes:
-      - name: config
-        emptyDir: {}
+      - emptyDir: {}
+        name: config
       - name: data
         persistentVolumeClaim:
           claimName: movies
