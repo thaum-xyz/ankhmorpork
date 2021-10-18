@@ -1,6 +1,6 @@
 ---
 # TODO: use jsonnet library from https://github.com/bitnami-labs/sealed-secrets/tree/master/controller.jsonnet and apply customizations in jsonnet
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   annotations: {}
