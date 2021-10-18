@@ -6,7 +6,7 @@
   - { role: oefenweb.locales, when: (ansible_os_family == "Debian") }
   - { role: jnv.unattended-upgrades, when: (ansible_os_family == "Debian") }
   - dev-sec.ssh-hardening
-  - cloudalchemy.node-exporter
+  - cloudalchemy.node_exporter
   - cloudalchemy.systemd_exporter
 
 - hosts: all

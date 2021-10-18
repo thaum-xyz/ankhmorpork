@@ -1,5 +1,5 @@
 ---
-- name: cloudalchemy.node-exporter
+- name: cloudalchemy.node_exporter
 - name: cloudalchemy.systemd_exporter
 - name: oefenweb.locales
   version: v1.0.37
