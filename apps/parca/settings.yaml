@@ -13,8 +13,10 @@ agent:
       cpu: "150m"
       # memory: ""
 parca:
-  version: "0.1.1"  # application-version-from-github: parca-dev/parca
-  image: "ghcr.io/parca-dev/parca:v0.1.1"  # application-image-from-github: parca-dev/parca
+  #version: "0.1.1"  # application-version-from-github: parca-dev/parca
+  version: "0.1.1-dev"
+  #image: "ghcr.io/parca-dev/parca:v0.1.1"  # application-image-from-github: parca-dev/parca
+  image: "quay.io/paulfantom/parca:v0.1.1-67-gefccb159"
   namespace: "parca"
   replicas: 1
   serviceMonitor: true
