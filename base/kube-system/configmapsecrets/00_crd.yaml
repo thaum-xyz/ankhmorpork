@@ -1,9 +1,10 @@
+
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.3.0
+    controller-gen.kubebuilder.io/version: v0.5.0
   creationTimestamp: null
   name: configmapsecrets.secrets.mz.com
 spec:
@@ -14,128 +15,234 @@ spec:
     plural: configmapsecrets
     singular: configmapsecret
   scope: Namespaced
-  subresources:
-    status: {}
-  validation:
-    openAPIV3Schema:
-      description: ConfigMapSecret holds configuration data with embedded secrets.
-      properties:
-        apiVersion:
-          description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-          type: string
-        kind:
-          description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-          type: string
-        metadata:
-          description: 'Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata'
-          type: object
-        spec:
-          description: 'Desired state of the ConfigMapSecret. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
-          properties:
-            template:
-              description: 'Template that describes the config that will be rendered. Variable references $(VAR_NAME) in template data are expanded using the ConfigMapSecret''s variables. If a variable cannot be resolved, the reference in the input data will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not.'
-              properties:
-                binaryData:
-                  additionalProperties:
-                    format: byte
-                    type: string
-                  description: BinaryData contains the binary data. Each key must consist of alphanumeric characters, '-', '_' or '.'. BinaryData can contain byte sequences that are not in the UTF-8 range. The keys stored in BinaryData must not overlap with the keys in the Data field.
-                  type: object
-                data:
-                  additionalProperties:
-                    type: string
-                  description: Data contains the configuration data. Each key must consist of alphanumeric characters, '-', '_' or '.'. Values with non-UTF-8 byte sequences must use the BinaryData field. The keys stored in Data must not overlap with the keys in the BinaryData field.
-                  type: object
-                metadata:
-                  description: 'Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata'
-                  type: object
-              type: object
-            vars:
-              description: List of template variables.
-              items:
-                description: TemplateVariable is a template variable.
-                properties:
-                  configMapValue:
-                    description: ConfigMapValue selects a value by its key in a ConfigMap.
-                    properties:
-                      key:
-                        description: The key to select.
-                        type: string
-                      name:
-                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?'
-                        type: string
-                      optional:
-                        description: Specify whether the ConfigMap or its key must be defined
-                        type: boolean
-                    required:
-                    - key
-                    type: object
-                  name:
-                    description: Name of the template variable.
-                    type: string
-                  secretValue:
-                    description: SecretValue selects a value by its key in a Secret.
-                    properties:
-                      key:
-                        description: The key of the secret to select from.  Must be a valid secret key.
-                        type: string
-                      name:
-                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?'
-                        type: string
-                      optional:
-                        description: Specify whether the Secret or its key must be defined
-                        type: boolean
-                    required:
-                    - key
-                    type: object
-                  value:
-                    description: 'Variable references $(VAR_NAME) are expanded using the previous defined environment variables in the ConfigMapSecret. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".'
-                    type: string
-                required:
-                - name
-                type: object
-              type: array
-          type: object
-        status:
-          description: 'Observed state of the ConfigMapSecret. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
-          properties:
-            conditions:
-              description: Represents the latest available observations of a ConfigMapSecret's current state.
-              items:
-                description: ConfigMapSecretCondition describes the state of a ConfigMapSecret.
-                properties:
-                  lastTransitionTime:
-                    description: Last time the condition transitioned from one status to another.
-                    format: date-time
-                    type: string
-                  lastUpdateTime:
-                    description: The last time the condition was updated.
-                    format: date-time
-                    type: string
-                  message:
-                    description: A human readable message indicating details about the last update.
-                    type: string
-                  reason:
-                    description: The reason for the last update.
-                    type: string
-                  status:
-                    description: 'Status of the condition: True, False, or Unknown.'
-                    type: string
-                  type:
-                    description: Type of the condition.
-                    type: string
-                required:
-                - status
-                - type
-                type: object
-              type: array
-            observedGeneration:
-              description: The generation observed by the ConfigMapSecret controller.
-              format: int64
-              type: integer
-          type: object
-  version: v1alpha1
   versions:
   - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ConfigMapSecret holds configuration data with embedded secrets.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: 'Desired state of the ConfigMapSecret. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
+            properties:
+              template:
+                description: "Template that describes the config that will be rendered.
+                  \n Variable references $(VAR_NAME) in template data are expanded
+                  using the ConfigMapSecret's variables. If a variable cannot be resolved,
+                  the reference in the input data will be unchanged. The $(VAR_NAME)
+                  syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped
+                  references will never be expanded, regardless of whether the variable
+                  exists or not."
+                properties:
+                  binaryData:
+                    additionalProperties:
+                      format: byte
+                      type: string
+                    description: BinaryData contains the binary data. Each key must
+                      consist of alphanumeric characters, '-', '_' or '.'. BinaryData
+                      can contain byte sequences that are not in the UTF-8 range.
+                      The keys stored in BinaryData must not overlap with the keys
+                      in the Data field.
+                    type: object
+                  data:
+                    additionalProperties:
+                      type: string
+                    description: Data contains the configuration data. Each key must
+                      consist of alphanumeric characters, '-', '_' or '.'. Values
+                      with non-UTF-8 byte sequences must use the BinaryData field.
+                      The keys stored in Data must not overlap with the keys in the
+                      BinaryData field.
+                    type: object
+                  metadata:
+                    description: Metadata is a stripped down version of the standard
+                      object metadata. Its properties will be applied to the metadata
+                      of the generated Secret. If no name is provided, the name of
+                      the ConfigMapSecret will be used.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: 'Annotations is an unstructured key value map
+                          stored with a resource that may be set by external tools
+                          to store and retrieve arbitrary metadata. They are not queryable
+                          and should be preserved when modifying objects. More info:
+                          https://kubernetes.io/docs/user-guide/annotations'
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: 'Map of string keys and values that can be used
+                          to organize and categorize (scope and select) objects. May
+                          match selectors of replication controllers and services.
+                          More info: https://kubernetes.io/docs/user-guide/labels'
+                        type: object
+                      name:
+                        description: 'Name must be unique within a namespace. Is required
+                          when creating resources, although some resources may allow
+                          a client to request the generation of an appropriate name
+                          automatically. Name is primarily intended for creation idempotence
+                          and configuration definition. More info: https://kubernetes.io/docs/user-guide/identifiers#names'
+                        type: string
+                    type: object
+                type: object
+              vars:
+                description: List of template variables.
+                items:
+                  description: Var is a template variable.
+                  properties:
+                    configMapValue:
+                      description: ConfigMapValue selects a value by its key in a
+                        ConfigMap.
+                      properties:
+                        key:
+                          description: The key to select.
+                          type: string
+                        name:
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            TODO: Add other useful fields. apiVersion, kind, uid?'
+                          type: string
+                        optional:
+                          description: Specify whether the ConfigMap or its key must
+                            be defined
+                          type: boolean
+                      required:
+                      - key
+                      type: object
+                    name:
+                      description: Name of the template variable.
+                      type: string
+                    secretValue:
+                      description: SecretValue selects a value by its key in a Secret.
+                      properties:
+                        key:
+                          description: The key of the secret to select from.  Must
+                            be a valid secret key.
+                          type: string
+                        name:
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            TODO: Add other useful fields. apiVersion, kind, uid?'
+                          type: string
+                        optional:
+                          description: Specify whether the Secret or its key must
+                            be defined
+                          type: boolean
+                      required:
+                      - key
+                      type: object
+                    value:
+                      description: 'Variable references $(VAR_NAME) are expanded using
+                        the previous defined environment variables in the ConfigMapSecret.
+                        If a variable cannot be resolved, the reference in the input
+                        string will be unchanged. The $(VAR_NAME) syntax can be escaped
+                        with a double $$, ie: $$(VAR_NAME). Escaped references will
+                        never be expanded, regardless of whether the variable exists
+                        or not.'
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
+              varsFrom:
+                description: List of sources to populate template variables. Keys
+                  defined in a source must consist of alphanumeric characters, '-',
+                  '_' or '.'. When a key exists in multiple sources, the value associated
+                  with the last source will take precedence. Values defined by Vars
+                  with a duplicate key will take precedence.
+                items:
+                  description: VarsFromSource represents the source of a set of template
+                    variables.
+                  properties:
+                    configMapRef:
+                      description: The ConfigMap to select.
+                      properties:
+                        name:
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            TODO: Add other useful fields. apiVersion, kind, uid?'
+                          type: string
+                        optional:
+                          description: Specify whether the ConfigMap must be defined.
+                          type: boolean
+                      type: object
+                    prefix:
+                      description: An optional identifier to prepend to each key.
+                      type: string
+                    secretRef:
+                      description: The Secret to select.
+                      properties:
+                        name:
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            TODO: Add other useful fields. apiVersion, kind, uid?'
+                          type: string
+                        optional:
+                          description: Specify whether the Secret must be defined.
+                          type: boolean
+                      type: object
+                  type: object
+                type: array
+            type: object
+          status:
+            description: 'Observed state of the ConfigMapSecret. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
+            properties:
+              conditions:
+                description: Represents the latest available observations of a ConfigMapSecret's
+                  current state.
+                items:
+                  description: ConfigMapSecretCondition describes the state of a ConfigMapSecret.
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    lastUpdateTime:
+                      description: The last time the condition was updated.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the last update.
+                      type: string
+                    reason:
+                      description: The reason for the last update.
+                      type: string
+                    status:
+                      description: 'Status of the condition: True, False, or Unknown.'
+                      type: string
+                    type:
+                      description: Type of the condition.
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: The generation observed by the ConfigMapSecret controller.
+                format: int64
+                type: integer
+            type: object
+        type: object
     served: true
     storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

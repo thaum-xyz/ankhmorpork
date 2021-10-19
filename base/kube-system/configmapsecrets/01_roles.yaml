@@ -3,6 +3,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  creationTimestamp: null
   name: configmapsecret-controller
 rules:
 - apiGroups:
@@ -13,6 +14,13 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - update
 - apiGroups:
   - ""
   resources:
@@ -50,9 +58,25 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
+  creationTimestamp: null
   name: configmapsecret-controller
   namespace: kube-system
 rules:
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+- apiGroups:
+  - coordination.k8s.io
+  resourceNames:
+  - configmapsecret-controller-leader
+  resources:
+  - leases
+  verbs:
+  - get
+  - update
 - apiGroups:
   - ""
   resources:
@@ -68,10 +92,3 @@ rules:
   verbs:
   - get
   - update
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
