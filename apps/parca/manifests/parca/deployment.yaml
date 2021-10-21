@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: observability
     app.kubernetes.io/instance: parca
     app.kubernetes.io/name: parca
-    app.kubernetes.io/version: 0.1.1-dev
+    app.kubernetes.io/version: 0.2.0
   name: parca
   namespace: parca
 spec:
@@ -21,7 +21,7 @@ spec:
         app.kubernetes.io/component: observability
         app.kubernetes.io/instance: parca
         app.kubernetes.io/name: parca
-        app.kubernetes.io/version: 0.1.1-dev
+        app.kubernetes.io/version: 0.2.0
     spec:
       containers:
       - args:
@@ -29,7 +29,7 @@ spec:
         - --config-path=/var/parca/parca.yaml
         - --log-level=info
         - --storage-tsdb-retention-time=3h
-        image: quay.io/paulfantom/parca:v0.1.1-67-gefccb159
+        image: ghcr.io/parca-dev/parca:v0.2.0
         livenessProbe:
           exec:
             command:
