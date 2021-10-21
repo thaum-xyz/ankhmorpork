@@ -25,7 +25,10 @@ spec:
         app.kubernetes.io/version: 2021.10.4
     spec:
       containers:
-      - image: homeassistant/aarch64-homeassistant:2021.10.4
+      - env:
+        - name: TZ
+          value: Europe/Berlin
+        image: homeassistant/aarch64-homeassistant:2021.10.4
         imagePullPolicy: IfNotPresent
         name: homeassistant
         ports:

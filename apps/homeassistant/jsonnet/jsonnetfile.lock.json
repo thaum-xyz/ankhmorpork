@@ -8,7 +8,7 @@
           "subdir": "apps/esphome"
         }
       },
-      "version": "e09a27dec91702654d1467bd64e98d7604621d2e",
+      "version": "376e28ea96207f72b81d145ee2c108ab1ec9e4a7",
       "sum": "22G/dTc3b+ank38iGrlZoIdIQ3e9zPvHQ6FrkFB2LeU="
     },
     {
@@ -18,8 +18,8 @@
           "subdir": "apps/homeassistant"
         }
       },
-      "version": "e09a27dec91702654d1467bd64e98d7604621d2e",
-      "sum": "h6hZIMIgWwO9SEDyQVv693Pun6SzLxH7UDpK0qNZtrI="
+      "version": "376e28ea96207f72b81d145ee2c108ab1ec9e4a7",
+      "sum": "m9rR1iGDxdefSeyzxsV6uNMawCqdbMlifUGG1lzP70w="
     },
     {
       "source": {
@@ -28,7 +28,7 @@
           "subdir": "utils"
         }
       },
-      "version": "e09a27dec91702654d1467bd64e98d7604621d2e",
+      "version": "376e28ea96207f72b81d145ee2c108ab1ec9e4a7",
       "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
     }
   ],

@@ -5,6 +5,7 @@ homeassistant:
   namespace: "homeassistant"
   domain: "home.ankhmorpork.thaum.xyz"
   hostNetwork: true  # Needed to enable WOL
+  timezone: "Europe/Berlin"
   pvcSpec:
     storageClassName: "managed-nfs-storage"
     accessModes:
