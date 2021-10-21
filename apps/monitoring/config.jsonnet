@@ -130,6 +130,7 @@
         kubeSchedulerSelector: 'job="kubelet"',
         kubeControllerManagerSelector: 'job="kubelet"',
         kubeApiserverSelector: 'job="kubelet"',
+        kubeProxySelector: 'job="kubelet"',
         cpuThrottlingPercent: 70,
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/kubernetes/%s',
       },
