@@ -387,7 +387,7 @@ local kp =
         apiVersion: 'v1',
         metadata: {
           name: 'grafana-data',
-          namespace: $.grafana.deployment.namespace,
+          namespace: $.grafana.deployment.metadata.namespace,
         },
         spec: {
           storageClassName: 'managed-nfs-storage',
