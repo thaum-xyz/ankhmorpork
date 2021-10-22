@@ -337,7 +337,122 @@ local kp =
       },
     },
 
-    grafana+: (import 'lib/grafana-overrides.libsonnet'),
+    grafana+: {
+      service+: {
+        spec+: {
+          type: 'ClusterIP',
+        },
+      },
+      config+:: {},
+      dashboardSources+:: {},
+      dashboardDefinitions+:: {},
+      deployment+: {
+        spec+: {
+          template+: {
+            metadata+: {
+              // Unwanted when using persistance
+              annotations:: {},
+            },
+            spec+: {
+              containers: std.map(
+                function(c)
+                  if c.name == 'grafana' then
+                    c {
+                      volumeMounts: [
+                        {
+                          mountPath: '/var/lib/grafana',
+                          name: 'grafana-storage',
+                        },
+                        {
+                          mountPath: '/etc/grafana/provisioning/datasources',
+                          name: 'grafana-datasources',
+                        },
+                      ],
+                    }
+                  else c,
+                super.containers,
+              ),
+              // TODO: figure out why this was needed. Longhorn issues?
+              securityContext: {
+                runAsNonRoot: true,
+                runAsUser: 472,
+              },
+              // Enable storage persistence
+              volumes: [
+                {
+                  name: 'grafana-storage',
+                  persistentVolumeClaim: {
+                    claimName: 'grafana-data',
+                  },
+                },
+                {
+                  name: 'grafana-datasources',
+                  secret: {
+                    secretName: 'grafana-datasources',
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+
+      pvc: {
+        kind: 'PersistentVolumeClaim',
+        apiVersion: 'v1',
+        metadata: {
+          name: 'grafana-data',
+          namespace: 'monitoring',
+        },
+        spec: {
+          storageClassName: 'managed-nfs-storage',
+          accessModes: ['ReadWriteMany'],
+          resources: {
+            requests: {
+              storage: '60Mi',
+            },
+          },
+        },
+      },
+
+      ingress: {
+        apiVersion: 'networking.k8s.io/v1',
+        kind: 'Ingress',
+        metadata: {
+          name: 'grafana',
+          namespace: 'monitoring',
+          annotations: {
+            'kubernetes.io/ingress.class': 'nginx',
+            'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+            'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
+            'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
+            'nginx.ingress.kubernetes.io/auth-response-headers': 'X-Auth-Request-Email',
+          },
+        },
+        spec: {
+          tls: [{
+            hosts: ['grafana.ankhmorpork.thaum.xyz'],
+            secretName: 'grafana-tls',
+          }],
+          rules: [{
+            host: 'grafana.ankhmorpork.thaum.xyz',
+            http: {
+              paths: [{
+                path: '/',
+                pathType: 'Prefix',
+                backend: {
+                  service: {
+                    name: 'grafana',
+                    port: { name: 'http' },
+                  },
+                },
+              }],
+            },
+          }],
+        },
+      },
+
+    },
 
     //
     // Custom components
@@ -388,14 +503,14 @@ local kp =
               containers: std.map(function(c) c {
                 volumeMounts: [{
                   mountPath: '/etc/json_exporter/',
-                  name: "uptimerobot",
+                  name: 'uptimerobot',
                   readOnly: true,
                 }],
               }, super.containers),
               volumes: [{
-                name: "uptimerobot",
+                name: 'uptimerobot',
                 secret: {
-                  secretName: $.uptimerobot.configuration.spec.template.metadata.name
+                  secretName: $.uptimerobot.configuration.spec.template.metadata.name,
                 },
               }],
             },
@@ -403,8 +518,8 @@ local kp =
         },
       },
       service: {
-        apiVersion: "v1",
-        kind: "Service",
+        apiVersion: 'v1',
+        kind: 'Service',
         metadata: $.uptimerobot.deployment.metadata,
         spec: {
           ports: [{
@@ -418,8 +533,8 @@ local kp =
       // Using ServiceMonitor just to note that Service is necessary and to fail when it disappears
       podMonitor+:: {},
       serviceMonitor: {
-        apiVersion: "monitoring.coreos.com/v1",
-        kind: "ServiceMonitor",
+        apiVersion: 'monitoring.coreos.com/v1',
+        kind: 'ServiceMonitor',
         metadata: $.uptimerobot.deployment.metadata,
         spec: {
           endpoints: $.uptimerobot.podMonitor.spec.podMetricsEndpoints,
@@ -430,7 +545,7 @@ local kp =
         spec+: {
           template+: {
             data: {
-              "config.yml": $.values.uptimerobot.config
+              'config.yml': $.values.uptimerobot.config,
             },
           },
         },
@@ -440,26 +555,26 @@ local kp =
         kind: 'Probe',
         metadata: $.uptimerobot.deployment.metadata,
         spec: {
-          interval: "150s",
+          interval: '150s',
           prober: {
             url: $.uptimerobot.service.metadata.name + '.' + $.uptimerobot.service.metadata.namespace + '.svc:7979',
           },
           targets: {
             staticConfig: {
-              static: ["https://api.uptimerobot.com/v2/getMonitors"],
+              static: ['https://api.uptimerobot.com/v2/getMonitors'],
             },
           },
           metricRelabelings: [
             {
-              sourceLabels: ["url"],
-              targetLabel: "instance",
+              sourceLabels: ['url'],
+              targetLabel: 'instance',
             },
             {
-              sourceLabels: ["url"],
-              targetLabel: "instance",
+              sourceLabels: ['url'],
+              targetLabel: 'instance',
               regex: '(https://[a-zA-Z0-9.-]+).*',
-              replacement: '$1/'
-            }
+              replacement: '$1/',
+            },
           ],
         },
       },
