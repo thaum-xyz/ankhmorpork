@@ -88,8 +88,6 @@ local probe(name, namespace, labels, module, targets) = {
   },
 };
 
-// TODO: propose to https://github.com/slok/sloth
-local sloth = (import 'github.com/thaum-xyz/jsonnet-libs/apps/sloth/sloth.libsonnet');
 local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
 local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
@@ -543,8 +541,6 @@ local kp =
         },
       },
     },
-
-    sloth: sloth($.values.sloth),
 
     other: {
       local thaumMixin = import 'mixin/mixin.libsonnet',
