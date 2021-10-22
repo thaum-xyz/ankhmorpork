@@ -421,11 +421,7 @@ local kp =
         metadata: {
           name: 'grafana',
           namespace: 'monitoring',
-          annotations: {
-            'kubernetes.io/ingress.class': 'nginx',
-            'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-            'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
-            'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
+          annotations: ingressAnnotations {
             'nginx.ingress.kubernetes.io/auth-response-headers': 'X-Auth-Request-Email',
           },
         },
