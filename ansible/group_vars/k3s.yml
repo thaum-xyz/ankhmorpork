@@ -11,6 +11,8 @@ k3s_extra_server_args: >-
   --kubelet-arg kube-reserved=cpu=100m,memory=300Mi
   --kube-controller-manager-arg address={{ k3s_master_ip }}
   --kube-scheduler-arg address={{ k3s_master_ip }}
+  --etcd-expose-metrics=true
+  --kube-proxy-arg metrics-bind-address=0.0.0.0
 
 k3s_token: "{{ hostvars[groups['k3s-master'][0]]['token'] }}"
 
@@ -20,6 +22,7 @@ k3s_extra_agent_args: >-
   --kubelet-arg allowed-unsafe-sysctls=net.ipv4.tcp_adv_win_scale
   --node-label network.infra/type={{ network | default('slow') }}
   --node-label storage.infra/local={{ 'true' if k3s_local_storage_device is defined else 'false' }}
+  --kube-proxy-arg metrics-bind-address=0.0.0.0
 
 system_earlyoom_params: "-r 60 -m 4"
 
