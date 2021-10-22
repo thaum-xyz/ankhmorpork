@@ -333,22 +333,18 @@ local kp =
             },
             spec+: {
               containers: std.map(
-                function(c)
-                  if c.name == 'grafana' then
-                    c {
-                      volumeMounts: [
-                        {
-                          mountPath: '/var/lib/grafana',
-                          name: 'grafana-storage',
-                        },
-                        {
-                          mountPath: '/etc/grafana/provisioning/datasources',
-                          name: 'grafana-datasources',
-                        },
-                      ],
-                    }
-                  else c,
-                super.containers,
+                function(c) c {
+                  volumeMounts: [
+                    {
+                      mountPath: '/var/lib/grafana',
+                      name: 'grafana-storage',
+                    },
+                    {
+                      mountPath: '/etc/grafana/provisioning/datasources',
+                      name: 'grafana-datasources',
+                    },
+                  ],
+                }, super.containers,
               ),
               // TODO: figure out why this was needed. Longhorn issues?
               securityContext: {
