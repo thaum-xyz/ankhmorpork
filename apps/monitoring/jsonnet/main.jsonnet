@@ -29,6 +29,38 @@
 //       - redis
 //       - home dashboard
 
+local ingress(metadata, domain, service) = {
+  apiVersion: 'networking.k8s.io/v1',
+  kind: 'Ingress',
+  metadata: metadata {
+    annotations+: {
+      // Add those annotations to every ingress so oauth-proxy is used.
+      'kubernetes.io/ingress.class': 'nginx',
+      'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+      'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
+      'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
+    },
+  },
+  spec: {
+    tls: [{
+      hosts: [domain],
+      secretName: metadata.name + '-tls',
+    }],
+    rules: [{
+      host: domain,
+      http: {
+        paths: [{
+          path: '/',
+          pathType: 'Prefix',
+          backend: {
+            service: service,
+          },
+        }],
+      },
+    }],
+  },
+};
+
 local addArgs(args, name, containers) = std.map(
   function(c) if c.name == name then
     c {
@@ -120,43 +152,24 @@ local kp =
       serviceAccount+: {
         automountServiceAccountToken: false,  // TODO: move into kube-prometheus
       },
-      ingress: {
-        apiVersion: 'networking.k8s.io/v1',
-        kind: 'Ingress',
-        metadata: {
-          name: 'alertmanager',
-          namespace: $.alertmanager.alertmanager.metadata.namespace,
-          annotations: ingressAnnotations {
+      ingress: ingress(
+        $.alertmanager.service.metadata {
+          name: 'alertmanager',  // FIXME: that's an artifact from previous configuration, it should be removed.
+          annotations: {
             'nginx.ingress.kubernetes.io/affinity': 'cookie',
             'nginx.ingress.kubernetes.io/affinity-mode': 'persistent',
             'nginx.ingress.kubernetes.io/session-cookie-hash': 'sha1',
             'nginx.ingress.kubernetes.io/session-cookie-name': 'routing-cookie',
           },
         },
-        spec: {
-          tls: [{
-            hosts: ['alertmanager.ankhmorpork.thaum.xyz'],
-            secretName: 'alertmanager-tls',
-          }],
-          rules: [{
-            host: 'alertmanager.ankhmorpork.thaum.xyz',
-            http: {
-              paths: [{
-                path: '/',
-                pathType: 'Prefix',
-                backend: {
-                  service: {
-                    name: 'alertmanager-main',
-                    port: {
-                      name: 'web',
-                    },
-                  },
-                },
-              }],
-            },
-          }],
+        'alertmanager.ankhmorpork.thaum.xyz',
+        {
+          name: $.alertmanager.service.metadata.name,
+          port: {
+            name: $.alertmanager.service.spec.ports[0].name,
+          },
         },
-      },
+      ),
     },
 
     blackboxExporter+: {
@@ -218,39 +231,18 @@ local kp =
           },
         },
       },
-
-      ingress: {
-        apiVersion: 'networking.k8s.io/v1',
-        kind: 'Ingress',
-        metadata: {
-          name: 'prometheus',
-          namespace: $.prometheus.prometheus.metadata.namespace,
-          annotations: ingressAnnotations,
+      ingress: ingress(
+        $.prometheus.service.metadata {
+          name: 'prometheus',  // FIXME: that's an artifact from previous configuration, it should be removed.
         },
-        spec: {
-          tls: [{
-            hosts: ['prometheus.ankhmorpork.thaum.xyz'],
-            secretName: 'prometheus-tls',
-          }],
-          rules: [{
-            host: 'prometheus.ankhmorpork.thaum.xyz',
-            http: {
-              paths: [{
-                path: '/',
-                pathType: 'Prefix',
-                backend: {
-                  service: {
-                    name: 'prometheus-k8s',
-                    port: {
-                      name: 'web',
-                    },
-                  },
-                },
-              }],
-            },
-          }],
+        'prometheus.ankhmorpork.thaum.xyz',
+        {
+          name: $.prometheus.service.metadata.name,
+          port: {
+            name: $.prometheus.service.spec.ports[0].name,
+          },
         },
-      },
+      ),
     },
 
     kubeStateMetrics+: {
@@ -338,11 +330,6 @@ local kp =
     },
 
     grafana+: {
-      service+: {
-        spec+: {
-          type: 'ClusterIP',
-        },
-      },
       config+:: {},
       dashboardSources+:: {},
       dashboardDefinitions+:: {},
@@ -402,7 +389,7 @@ local kp =
         apiVersion: 'v1',
         metadata: {
           name: 'grafana-data',
-          namespace: 'monitoring',
+          namespace: $.grafana.deployment.namespace,
         },
         spec: {
           storageClassName: 'managed-nfs-storage',
@@ -415,39 +402,20 @@ local kp =
         },
       },
 
-      ingress: {
-        apiVersion: 'networking.k8s.io/v1',
-        kind: 'Ingress',
-        metadata: {
-          name: 'grafana',
-          namespace: 'monitoring',
-          annotations: ingressAnnotations {
+      ingress: ingress(
+        $.grafana.service.metadata {
+          annotations: {
             'nginx.ingress.kubernetes.io/auth-response-headers': 'X-Auth-Request-Email',
           },
         },
-        spec: {
-          tls: [{
-            hosts: ['grafana.ankhmorpork.thaum.xyz'],
-            secretName: 'grafana-tls',
-          }],
-          rules: [{
-            host: 'grafana.ankhmorpork.thaum.xyz',
-            http: {
-              paths: [{
-                path: '/',
-                pathType: 'Prefix',
-                backend: {
-                  service: {
-                    name: 'grafana',
-                    port: { name: 'http' },
-                  },
-                },
-              }],
-            },
-          }],
+        'grafana.ankhmorpork.thaum.xyz',
+        {
+          name: $.grafana.service.metadata.name,
+          port: {
+            name: $.grafana.service.spec.ports[0].name,
+          },
         },
-      },
-
+      ),
     },
 
     //
