@@ -192,7 +192,7 @@ local kp =
     // Using metrics-server instead of prometheus-adapter
     prometheusAdapter:: null,
 
-    // FIXME(paulfantom): Figure out what is hiding `prometheus` top-level object so remapping won't be necessary
+    // TODO: Remove remapping when https://github.com/prometheus-operator/kube-prometheus/pull/1455 is merged
     prometheusk8s: $.prometheus {
       prometheus+: {
         spec+: {
@@ -635,7 +635,6 @@ local kp =
 //
 // Manifestation
 //
-
 {
   [component + '/' + resource + '.yaml']: std.manifestYamlDoc(kp[component][resource])
   for component in std.objectFields(kp)
