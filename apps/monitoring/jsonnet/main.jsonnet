@@ -98,13 +98,6 @@ local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/
 
 local mixin = (import 'kube-prometheus/lib/mixin.libsonnet');
 
-local ingressAnnotations = {
-  'kubernetes.io/ingress.class': 'nginx',
-  'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-  'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
-  'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
-};
-
 local kp =
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/main.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/anti-affinity.libsonnet') +
@@ -160,7 +153,7 @@ local kp =
             'nginx.ingress.kubernetes.io/session-cookie-name': 'routing-cookie',
           },
         },
-        'alertmanager.ankhmorpork.thaum.xyz',
+        'alertmanager.' + $.values.common.baseDomain,
         {
           name: $.alertmanager.service.metadata.name,
           port: {
@@ -233,7 +226,7 @@ local kp =
         $.prometheus.service.metadata {
           name: 'prometheus',  // FIXME: that's an artifact from previous configuration, it should be removed.
         },
-        'prometheus.ankhmorpork.thaum.xyz',
+        'prometheus.' + $.values.common.baseDomain,
         {
           name: $.prometheus.service.metadata.name,
           port: {
@@ -406,7 +399,7 @@ local kp =
             'nginx.ingress.kubernetes.io/auth-response-headers': 'X-Auth-Request-Email',
           },
         },
-        'grafana.ankhmorpork.thaum.xyz',
+        'grafana.' + $.values.common.baseDomain,
         {
           name: $.grafana.service.metadata.name,
           port: {
@@ -592,11 +585,11 @@ local kp =
         },
         spec: {
           tls: [{
-            hosts: ['push.ankhmorpork.thaum.xyz'],
+            hosts: ['push.' + $.values.common.baseDomain],
             secretName: 'prometheus-remote-write-tls',
           }],
           rules: [{
-            host: 'push.ankhmorpork.thaum.xyz',
+            host: 'push.' + $.values.common.baseDomain,
             http: {
               paths: [
                 {

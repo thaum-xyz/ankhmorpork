@@ -166,51 +166,19 @@
         cpu: '400m',
       },
     },
+    // TODO: Consider moving those into `grafana.config`
     env: [
-      {
-        name: 'GF_SERVER_ROOT_URL',
-        value: 'https://grafana.ankhmorpork.thaum.xyz',
-      },
-      {
-        name: 'GF_AUTH_ANONYMOUS_ENABLED',
-        value: 'false',
-      },
-      {
-        name: 'GF_AUTH_DISABLE_LOGIN_FORM',
-        value: 'true',
-      },
-      {
-        name: 'GF_AUTH_SIGNOUT_REDIRECT_URL',
-        value: 'https://auth.ankhmorpork.thaum.xyz/oauth2?logout=true',
-      },
-      {
-        name: 'GF_AUTH_BASIC_ENABLED',
-        value: 'false',
-      },
-      {
-        name: 'GF_AUTH_PROXY_AUTO_SIGN_UP',
-        value: 'false',
-      },
-      {
-        name: 'GF_AUTH_PROXY_ENABLED',
-        value: 'true',
-      },
-      {
-        name: 'GF_AUTH_PROXY_HEADER_NAME',
-        value: 'X-Auth-Request-Email',
-      },
-      {
-        name: 'GF_AUTH_PROXY_HEADER_PROPERTY',
-        value: 'username',
-      },
-      {
-        name: 'GF_AUTH_PROXY_HEADERS',
-        value: 'Email:X-Auth-Request-Email',
-      },
-      {
-        name: 'GF_SNAPSHOTS_EXTERNAL_ENABLED',
-        value: 'false',
-      },
+      { name: 'GF_SERVER_ROOT_URL', value: 'https://grafana.ankhmorpork.thaum.xyz' },
+      { name: 'GF_AUTH_ANONYMOUS_ENABLED', value: 'false' },
+      { name: 'GF_AUTH_DISABLE_LOGIN_FORM', value: 'true' },
+      { name: 'GF_AUTH_SIGNOUT_REDIRECT_URL', value: 'https://auth.ankhmorpork.thaum.xyz/oauth2?logout=true' },
+      { name: 'GF_AUTH_BASIC_ENABLED', value: 'false' },
+      { name: 'GF_AUTH_PROXY_AUTO_SIGN_UP', value: 'false' },
+      { name: 'GF_AUTH_PROXY_ENABLED', value: 'true' },
+      { name: 'GF_AUTH_PROXY_HEADER_NAME', value: 'X-Auth-Request-Email' },
+      { name: 'GF_AUTH_PROXY_HEADER_PROPERTY', value: 'username' },
+      { name: 'GF_AUTH_PROXY_HEADERS', value: 'Email:X-Auth-Request-Email' },
+      { name: 'GF_SNAPSHOTS_EXTERNAL_ENABLED', value: 'false' },
     ],
   },
   // Following are not in kube-prometheus
