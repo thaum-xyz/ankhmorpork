@@ -178,16 +178,8 @@ local kp =
       ingressProbe: probe('ankhmorpork', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
     },
 
-    nodeExporter+: {
-      // node_exporter is deployed separately via Ansible
-      // TODO: Move node_exporter into k3s installation
-      clusterRole:: null,
-      clusterRoleBinding:: null,
-      daemonset:: null,
-      service:: null,
-      serviceAccount:: null,
-      serviceMonitor:: null,
-    },
+    // TODO: Remove Service and move ServiceMonitor to PodMonitor
+    nodeExporter+: {},
 
     // Using metrics-server instead of prometheus-adapter
     prometheusAdapter:: null,
@@ -272,32 +264,6 @@ local kp =
               tlsConfig: {
                 insecureSkipVerify: true,
               },
-            },
-            // This allows scraping external node-exporter endpoints
-            // TODO: Remove after moving node-exporter into a cluster
-            {
-              interval: '30s',
-              port: 'https-metrics',
-              relabelings: [
-                {
-                  action: 'replace',
-                  regex: '(.+)(?::\\d+)',
-                  replacement: '$1:9100',
-                  sourceLabels: ['__address__'],
-                  targetLabel: '__address__',
-                },
-                {
-                  action: 'replace',
-                  replacement: 'node-exporter',
-                  sourceLabels: ['endpoint'],
-                  targetLabel: 'endpoint',
-                },
-                {
-                  action: 'replace',
-                  replacement: 'node-exporter',
-                  targetLabel: 'job',
-                },
-              ],
             },
           ],
         },

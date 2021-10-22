@@ -104,23 +104,6 @@ spec:
     scheme: https
     tlsConfig:
       insecureSkipVerify: true
-  - interval: 30s
-    port: https-metrics
-    relabelings:
-    - action: replace
-      regex: (.+)(?::\d+)
-      replacement: $1:9100
-      sourceLabels:
-      - __address__
-      targetLabel: __address__
-    - action: replace
-      replacement: node-exporter
-      sourceLabels:
-      - endpoint
-      targetLabel: endpoint
-    - action: replace
-      replacement: node-exporter
-      targetLabel: job
   jobLabel: app.kubernetes.io/name
   namespaceSelector:
     matchNames:
