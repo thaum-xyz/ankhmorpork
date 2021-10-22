@@ -246,6 +246,7 @@ local kp =
       serviceMonitorApiserver:: null,
       serviceMonitorKubeControllerManager:: null,
       serviceMonitorKubeScheduler:: null,
+      podMonitorKubeProxy:: null,
       serviceMonitorKubelet+: {
         spec+: {
           endpoints+: [

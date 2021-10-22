@@ -123,6 +123,7 @@
     },
   },
   kubernetesControlPlane+: {
+    kubeProxy: true,
     mixin+: {
       _config+: {
         // k3s exposes all this data under single endpoint and those can be obtained via "kubelet" Service
