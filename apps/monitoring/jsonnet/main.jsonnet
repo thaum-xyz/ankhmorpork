@@ -113,7 +113,13 @@ local kp =
     //
 
     // TODO: figure out how to make this a JSON/YAML file!
-    values+:: (import '../config.jsonnet'),
+    values+:: (import '../config.jsonnet') +
+              // TODO: Remove this when https://github.com/prometheus-operator/kube-prometheus/pull/1458 is merged
+              {
+                grafana+: {
+                  dashboards+: (import 'github.com/grafana/grafana/grafana-mixin/mixin.libsonnet').grafanaDashboards,
+                },
+              },
 
     //
     // Objects customization
@@ -335,6 +341,20 @@ local kp =
               ],
             },
           },
+        },
+      },
+
+      // TODO: Remove PrometheusRule object when https://github.com/prometheus-operator/kube-prometheus/pull/1458 is merged
+      prometheusRule: {
+        apiVersion: 'monitoring.coreos.com/v1',
+        kind: 'PrometheusRule',
+        metadata: $.grafana.deployment.metadata {
+          name: $.grafana.deployment.metadata.name + '-rules',
+        },
+        spec: {
+          local r = std.parseYaml(importstr 'github.com/grafana/grafana/grafana-mixin/rules/rules.yaml').groups,
+          local a = std.parseYaml(importstr 'github.com/grafana/grafana/grafana-mixin/alerts/alerts.yaml').groups,
+          groups: a + r,
         },
       },
 

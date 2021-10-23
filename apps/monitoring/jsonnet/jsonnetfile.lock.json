@@ -24,6 +24,16 @@
     {
       "source": {
         "git": {
+          "remote": "https://github.com/grafana/grafana.git",
+          "subdir": "grafana-mixin"
+        }
+      },
+      "version": "f496c31018cdb5ecc8b3c30ea96a235a5bcf470a",
+      "sum": "9MEef25py18Q3NVHaW4NJF+pEL1HDSdR8VJAFD++Efw="
+    },
+    {
+      "source": {
+        "git": {
           "remote": "https://github.com/grafana/grafonnet-lib.git",
           "subdir": "grafonnet"
         }
@@ -204,16 +214,6 @@
       },
       "version": "376e28ea96207f72b81d145ee2c108ab1ec9e4a7",
       "sum": "LX92wD2SVhLG4ezLa/vNpO34kcd6/s2YCYXZBNfl7pE="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/sloth"
-        }
-      },
-      "version": "376e28ea96207f72b81d145ee2c108ab1ec9e4a7",
-      "sum": "lSwta4y7YmiW8+WUKhjbOBrXz3JFnFI3CpQJtLd9ZrU="
     },
     {
       "source": {

@@ -4,8 +4,8 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/prometheus-operator/kube-prometheus",
-          "subdir": "jsonnet/kube-prometheus"
+          "remote": "https://github.com/grafana/grafana.git",
+          "subdir": "grafana-mixin"
         }
       },
       "version": "main"
@@ -13,7 +13,7 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/kubernetes-monitoring/kubernetes-mixin",
+          "remote": "https://github.com/kubernetes-monitoring/kubernetes-mixin.git",
           "subdir": ""
         }
       },
@@ -22,7 +22,8 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/povilasv/coredns-mixin"
+          "remote": "https://github.com/povilasv/coredns-mixin.git",
+          "subdir": ""
         }
       },
       "version": "master"
@@ -30,7 +31,16 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "remote": "https://github.com/prometheus-operator/kube-prometheus.git",
+          "subdir": "jsonnet/kube-prometheus"
+        }
+      },
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "apps/kube-events-exporter"
         }
       },
@@ -39,7 +49,7 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "apps/pagespeed"
         }
       },
@@ -48,7 +58,7 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "apps/prometheus-exporter"
         }
       },
@@ -57,7 +67,7 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "apps/pushgateway"
         }
       },
@@ -66,16 +76,7 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
-          "subdir": "apps/sloth"
-        }
-      },
-      "version": "main"
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "utils"
         }
       },
