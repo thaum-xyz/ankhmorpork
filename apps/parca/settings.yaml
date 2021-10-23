@@ -20,6 +20,7 @@ parca:
   replicas: 1
   serviceMonitor: true
   storageRetentionTime: "3h"
+  logLevel: "debug"
   resources:
     limits:
       memory: "20Gi"
