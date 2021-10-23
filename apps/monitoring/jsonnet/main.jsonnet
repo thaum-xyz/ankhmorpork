@@ -290,7 +290,7 @@ local kp =
     grafana+: {
       config+:: {},
       dashboardSources+:: {},
-      dashboardDefinitions+:: {},
+      //dashboardDefinitions:: {},
       deployment+: {
         spec+: {
           template+: {
