@@ -190,7 +190,7 @@ local kp =
         spec+: {
           template+: {
             spec+: {
-              containers+: std.map(
+              containers: std.map(
                 function(c) if c.name == 'node-exporter' then
                   c {
                     args+: ['--collector.textfile.directory=/host/textfile'],
