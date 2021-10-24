@@ -189,6 +189,12 @@ local kp =
       daemonset+: {
         spec+: {
           template+: {
+            // TODO: move to kube-prometheus
+            metadata+: {
+              annotations+: {
+                "kubectl.kubernetes.io/default-container": "node-exporter"
+              },
+            },
             spec+: {
               containers: std.map(
                 function(c) if c.name == 'node-exporter' then
