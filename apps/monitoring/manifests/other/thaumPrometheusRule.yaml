@@ -21,36 +21,6 @@ spec:
       for: 20m
       labels:
         severity: warning
-    - alert: SiteDown
-      annotations:
-        description: Synthetic monitoring reports site {{ $labels.instance }} not
-          to be up for 15m.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteNotUP
-        summary: Site is down
-      expr: probe_success == 0 AND on (instance) uptimerobot_monitor_status == 9
-      for: 15m
-      labels:
-        severity: critical
-    - alert: SiteExtrenallyDown
-      annotations:
-        description: Synthetic monitoring reports site {{ $labels.instance }} not
-          to be up for 15m.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
-        summary: Site is not available from external network
-      expr: uptimerobot_monitor_status == 9
-      for: 10m
-      labels:
-        severity: warning
-    - alert: KubePodOOMKilled
-      annotations:
-        description: Pod {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container
-          }}) was OOMKilled.
-        summary: Pod was OOMKilled.
-      expr: (kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}
-        == 1) and on(container, namespace, pod) (increase(kube_pod_container_status_restarts_total[5m])
-        > 0)
-      labels:
-        severity: warning
     - alert: ExporterTargetDown
       annotations:
         description: Exporter {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container
@@ -60,7 +30,7 @@ spec:
       expr: '{__name__=~".*_up",__name__!="node_network_up"} == 0'
       labels:
         severity: warning
-  - name: custom node alert rules
+  - name: custom-node-alerts
     rules:
     - alert: PackagesAvailable
       annotations:
@@ -85,8 +55,6 @@ spec:
       for: 4h
       labels:
         severity: info
-  - name: alert rules specific to thaum.xyz
-    rules:
     - alert: FilesystemReadOnly
       annotations:
         description: Filesystem went read-only on {{ $labels.instance }}. Check FS
@@ -97,6 +65,35 @@ spec:
         node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)"} != 0
       labels:
         severity: critical
+  - name: sites
+    rules:
+    - expr: (uptimerobot_monitor_status == 2)/2 OR clamp(uptimerobot_monitor_status,0,0)
+      record: uptimerobot_monitor_normalized_status
+    - expr: probe_success == 0 AND on (instance) uptimerobot_monitor_normalized_status
+        == 0
+      record: instance:site_status
+    - alert: SiteDown
+      annotations:
+        description: Synthetic monitoring reports site {{ $labels.instance }} not
+          to be up for 15m.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteNotUP
+        summary: Site is down
+      expr: probe_success == 0 AND on (instance) uptimerobot_monitor_status == 9
+      for: 15m
+      labels:
+        severity: critical
+    - alert: SiteExtrenallyDown
+      annotations:
+        description: Synthetic monitoring reports site {{ $labels.instance }} not
+          to be up for 15m.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
+        summary: Site is not available from external network
+      expr: uptimerobot_monitor_status == 9
+      for: 10m
+      labels:
+        severity: warning
+  - name: thaum-xyz-alerts
+    rules:
     - alert: TouchscreenNotAvailable
       annotations:
         description: Powercycle device {{ $labels.instance }}
@@ -155,3 +152,15 @@ spec:
       for: 1h
       labels:
         severity: warning
+    - alert: MultipleContainersOOMKilled
+      annotations:
+        description: Multiple containers were out of memory killed within the past
+          15 minutes. There are many potential causes of OOM errors, however issues
+          on a specific node or containers breaching their limits is common.'
+        summary: Containers are being killed due to OOM
+      expr: "sum(\n  max by(namespace, container, pod) (\n    increase(kube_pod_container_status_restarts_total[12m])\n
+        \ )\n  and \n  max by(namespace, container, pod) (\n    kube_pod_container_status_last_terminated_reason{reason=\"OOMKilled\"}\n
+        \ ) == 1\n) > 2\n"
+      for: 15m
+      labels:
+        severity: info

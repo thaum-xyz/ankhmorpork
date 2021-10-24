@@ -35,3 +35,22 @@ groups:
       for: 1h
       labels:
         severity: warning
+    - alert: MultipleContainersOOMKilled
+      # Adapted from https://github.com/openshift/cluster-monitoring-operator/blob/df9329e810f53771a5ef70f995593f4a545c1071/jsonnet/rules.libsonnet#L416-L430
+      expr: |
+        sum(
+          max by(namespace, container, pod) (
+            increase(kube_pod_container_status_restarts_total[12m])
+          )
+          and
+          max by(namespace, container, pod) (
+            kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}
+          ) == 1
+        ) > 2
+      'for': '15m'
+      annotations:
+        summary: 'Containers are being killed due to OOM'
+        description: Multiple containers were out of memory killed within the past 15 minutes.
+          There are many potential causes of OOM errors, however issues on a specific node or containers breaching their limits is common.'
+      labels:
+        severity: 'info'

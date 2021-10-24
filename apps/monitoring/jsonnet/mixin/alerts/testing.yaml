@@ -11,6 +11,51 @@ groups:
     for: 20m
     labels:
       severity: warning
+  - alert: ExporterTargetDown
+    annotations:
+      description: Exporter {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) reported its target being down. This results in lack of ability to scrape metrics from the main service.
+      summary: Service monitored by exporter is Down
+    expr: '{__name__=~".*_up",__name__!="node_network_up"} == 0'
+    labels:
+      severity: warning
+- name: custom-node-alerts
+  rules:
+  - alert: PackagesAvailable
+    annotations:
+      description: '{{ $value }} packages are available for upgrade. Maybe it is time to upgrade?'
+      runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/PackagesAvailable
+      summary: Packages are available for upgrade
+    expr: |
+      sum by (node,instance) (yum_upgrades_pending) > 200
+      or
+      sum by (node,instance) (apt_upgrades_pending) > 200
+    for: 48h
+    labels:
+      severity: info
+  - alert: RebootRequired
+    annotations:
+      description: Instance '{{ $labels.instance }}' was upgraded and now requires a reboot.
+      runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/RebootRequired
+      summary: Reboot is required to finish package upgrade
+    expr: node_reboot_required > 0
+    for: 4h
+    labels:
+      severity: info
+  - alert: FilesystemReadOnly
+    annotations:
+      description: Filesystem went read-only on {{ $labels.instance }}. Check FS for possible corruption.
+      runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/FilesystemReadOnly
+      summary: Filesystem went read-only possibly due to device error.
+    expr: |
+      node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)"} != 0
+    labels:
+      severity: critical
+- name: sites
+  rules:
+  - record: uptimerobot_monitor_normalized_status
+    expr: (uptimerobot_monitor_status == 2)/2 OR clamp(uptimerobot_monitor_status,0,0)
+  - record: instance:site_status
+    expr: probe_success == 0 AND on (instance) uptimerobot_monitor_normalized_status == 0
   - alert: SiteDown
     annotations:
       description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
@@ -29,18 +74,3 @@ groups:
     for: 10m
     labels:
       severity: warning
-  - alert: KubePodOOMKilled
-    annotations:
-      description: Pod {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) was OOMKilled.
-      summary: Pod was OOMKilled.
-    expr: (kube_pod_container_status_last_terminated_reason{reason="OOMKilled"} == 1) and on(container, namespace, pod) (increase(kube_pod_container_status_restarts_total[5m]) > 0)
-    labels:
-      severity: warning
-  - alert: ExporterTargetDown
-    annotations:
-      description: Exporter {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) reported its target being down. This results in lack of ability to scrape metrics from the main service.
-      summary: Service monitored by exporter is Down
-    expr: '{__name__=~".*_up",__name__!="node_network_up"} == 0'
-    labels:
-      severity: warning
-
