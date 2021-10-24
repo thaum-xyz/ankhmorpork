@@ -185,7 +185,36 @@ local kp =
     },
 
     // TODO: Remove Service and move ServiceMonitor to PodMonitor
-    nodeExporter+: {},
+    nodeExporter+: {
+      daemonset+: {
+        spec+: {
+          template+: {
+            spec+: {
+              containers+: std.map(
+                function(c) if c.name == 'node-exporter' then
+                  c {
+                    args+: ['--collector.textfile.directory=/host/textfile'],
+                    volumeMounts+: [{
+                      mountPath: '/host/textfile',
+                      mountPropagation: 'HostToContainer',
+                      name: 'textfile',
+                      readOnly: true,
+                    }],
+                  }
+                else c,
+                super.containers
+              ),
+              volumes+: [{
+                hostPath: {
+                  path: '/var/lib/node_exporter',
+                },
+                name: 'textfile',
+              }],
+            },
+          },
+        },
+      },
+    },
 
     // Using metrics-server instead of prometheus-adapter
     prometheusAdapter:: null,
