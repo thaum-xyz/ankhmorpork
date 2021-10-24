@@ -22,7 +22,7 @@
       pkg_mgr: "{{ 'yum' if ansible_pkg_mgr == 'dnf' else ansible_pkg_mgr }}"
   - name: Download package manager textfile collector script
     get_url:
-      url: "https://github.com/prometheus-community/node-exporter-textfile-collector-scripts/blob/master/{{ pkg_mgr }}.sh"
+      url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/{{ pkg_mgr }}.sh"
       dest: "/usr/local/bin/{{ pkg_mgr }}.sh"
       mode: 0755
   - name: Set cronjob for package manager (/etc/crontab)
