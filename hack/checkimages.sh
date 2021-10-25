@@ -21,6 +21,7 @@ nvidia/k8s-device-plugin
 foomo/pagespeed_exporter
 ghcr.io/parca-dev/parca-agent
 ghcr.io/parca-dev/parca
+quay.io/paulfantom/parca
 EOM
 )
 
