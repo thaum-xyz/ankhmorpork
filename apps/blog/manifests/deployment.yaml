@@ -42,8 +42,12 @@ spec:
         - containerPort: 2368
           name: http
         resources:
+          limits:
+            cpu: 300m
+            memory: 500Mi
           requests:
-            memory: 120M
+            cpu: 30m
+            memory: 165Mi
         volumeMounts:
         - mountPath: /var/lib/ghost/content
           name: content

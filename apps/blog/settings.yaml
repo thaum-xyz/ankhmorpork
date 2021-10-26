@@ -3,3 +3,11 @@ namespace: blog
 version: 4.19.0  # application-version-from-github: TryGhost/Ghost
 image: ghost:4.19.0  # application-version-from-github: TryGhost/Ghost
 domain: pawel.krupa.net.pl
+resources:
+  requests:
+    cpu: 30m
+    memory: 165Mi
+  limits:
+    cpu: 300m
+    memory: 500Mi
+
