@@ -37,7 +37,13 @@ spec:
           tcpSocket:
             port: http
           timeoutSeconds: 10
-        resources: {}
+        resources:
+          limits:
+            cpu: 20m
+            memory: 50Mi
+          requests:
+            cpu: 3m
+            memory: 16Mi
         volumeMounts:
         - mountPath: /etc/json_exporter/
           name: uptimerobot

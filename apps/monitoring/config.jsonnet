@@ -34,7 +34,7 @@
     ],
   },
   alertmanager+: {
-    resources: {
+    resources+: {
       requests: { memory: '30Mi' },
     },
     mixin+: {
@@ -188,7 +188,8 @@
     version: '0.1.0',  // application-version-from-github: rhobs/kube-events-exporter
     image: 'quay.io/dgrisonnet/kube-events-exporter:v0.1.0',  // application-image-from-github: rhobs/kube-events-exporter
     resources: {
-      requests: { cpu: '2m', memory: '16Mi' },
+      requests: { cpu: '2m', memory: '11Mi' },
+      limits: { cpu: '5m', memory: '30Mi' },
     },
     commonLabels+: {
       'app.kubernetes.io/component': 'exporter',
@@ -199,7 +200,8 @@
     version: '1.4.2',  // application-version-from-github: prometheus/pushgateway
     image: 'quay.io/prometheus/pushgateway:v1.4.2',  // application-image-from-github: prometheus/pushgateway
     resources: {
-      requests: { cpu: '10m', memory: '12Mi' },
+      requests: { cpu: '3m', memory: '14Mi' },
+      limits: { cpu: '7m', memory: '30Mi' },
     },
   },
   smokeping: {
@@ -235,18 +237,16 @@
       'https://prometheus.io',
     ],
   },
-  sloth: {
-    name: 'sloth',
-    namespace: 'monitoring',
-    version: '0.3.1',
-    image: 'slok/sloth:v0.3.1',
-  },
   uptimerobot: {
     name: 'uptimerobot',
     namespace: 'monitoring',
     version: 'master',
     image: 'quay.io/prometheuscommunity/json-exporter:master',
     port: 7979,
+    resources: {
+      requests: { cpu: '3m', memory: '16Mi' },
+      limits: { cpu: '20m', memory: '50Mi' },
+    },
     args: [
       '--config.file',
       '/etc/json_exporter/config.yml',

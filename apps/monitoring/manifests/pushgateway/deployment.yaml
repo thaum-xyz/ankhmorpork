@@ -27,9 +27,12 @@ spec:
         - containerPort: 9091
           name: http-push
         resources:
+          limits:
+            cpu: 7m
+            memory: 30Mi
           requests:
-            cpu: 10m
-            memory: 12Mi
+            cpu: 3m
+            memory: 14Mi
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534

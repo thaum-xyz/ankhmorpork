@@ -30,9 +30,12 @@ spec:
         - containerPort: 8081
           name: exporter
         resources:
+          limits:
+            cpu: 5m
+            memory: 30Mi
           requests:
             cpu: 2m
-            memory: 16Mi
+            memory: 11Mi
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
