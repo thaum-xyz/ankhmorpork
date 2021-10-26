@@ -42,7 +42,13 @@ spec:
             - pg_isready -U $POSTGRES_USER
           initialDelaySeconds: 15
           timeoutSeconds: 2
-        resources: {}
+        resources:
+          limits:
+            cpu: 200m
+            memory: 400Mi
+          requests:
+            cpu: 25m
+            memory: 100Mi
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: data

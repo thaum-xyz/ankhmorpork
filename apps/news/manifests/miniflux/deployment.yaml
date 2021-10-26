@@ -40,6 +40,12 @@ spec:
         ports:
         - containerPort: 8080
           name: http
-        resources: {}
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
+          requests:
+            cpu: 3m
+            memory: 30Mi
       restartPolicy: Always
       serviceAccountName: miniflux
