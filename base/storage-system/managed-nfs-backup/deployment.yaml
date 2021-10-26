@@ -42,9 +42,13 @@ spec:
           - mountPath: /backup
             name: content
             readOnly: true
-        #resources:
-        #  requests:
-        #    memory: 120M
+        resources:
+          requests:
+            memory: 420Mi
+            cpu: 2m
+          limits:
+            memory: 800Mi
+            cpu: 40m
       nodeName: metal01
       volumes:
         - name: content

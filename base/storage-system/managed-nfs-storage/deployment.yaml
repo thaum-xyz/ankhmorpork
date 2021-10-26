@@ -31,6 +31,13 @@ spec:
               value: 192.168.2.40
             - name: NFS_PATH
               value: /srv/storage/kubernetes/nfs-dynamic
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 4m
+            limits:
+              memory: 20Mi
+              cpu: 20m
       volumes:
         - name: nfs-client-root
           nfs:
