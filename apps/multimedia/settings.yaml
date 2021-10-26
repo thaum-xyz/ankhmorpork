@@ -5,6 +5,13 @@ jackett:
   version: "0.18.929"  # application-image-from-github: Jackett/Jackett
   image: "linuxserver/jackett:0.18.929"  # application-image-from-github: Jackett/Jackett
   namespace: multimedia
+  resources:
+    requests:
+      cpu: 2400m  # TODO: Figure out how to reduce it. This is insane.
+      memory: 200Mi
+    limits:
+      cpu: 3000m
+      memory: 350Mi
   pvcSpec: 
     storageClassName: "managed-nfs-storage"
     accessModes: ["ReadWriteOnce"]
@@ -16,6 +23,13 @@ ombi:
   image: "linuxserver/ombi:4.2.10"  # application-image-from-github: Ombi-app/Ombi
   namespace: multimedia
   domain: ombi.ankhmorpork.thaum.xyz
+  resources:
+    requests:
+      cpu: 10m
+      memory: 250Mi
+    limits:
+      cpu: 100m
+      memory: 500Mi
   pvcSpec:
     accessModes:
     - ReadWriteOnce

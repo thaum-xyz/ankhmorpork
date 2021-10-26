@@ -39,8 +39,12 @@ spec:
         - containerPort: 9117
           name: http
         resources:
+          limits:
+            cpu: 3000m
+            memory: 350Mi
           requests:
-            memory: 120M
+            cpu: 2400m
+            memory: 200Mi
         volumeMounts:
         - mountPath: /config
           name: config
