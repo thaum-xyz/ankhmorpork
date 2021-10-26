@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 6afdaac99a5c925ba56d85129b2e510f
+        checksum.config/md5: d41d8cd98f00b204e9800998ecf8427e
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: snmp-exporter
@@ -39,7 +39,13 @@ spec:
           httpGet:
             path: /health
             port: http
-        resources: {}
+        resources:
+          limits:
+            cpu: 20m
+            memory: 50Mi
+          requests:
+            cpu: 3m
+            memory: 20Mi
         securityContext:
           readOnlyRootFilesystem: true
           runAsNonRoot: true

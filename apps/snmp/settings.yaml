@@ -3,6 +3,13 @@ version: "0.20.0"  # application-version-from-github: prometheus/snmp_exporter
 image: "quay.io/prometheus/snmp-exporter:v0.20.0"  # application-image-from-github: prometheus/snmp_exporter
 namespace: "snmp"
 name: 'snmp-exporter'
+resources:
+  requests:
+    cpu: 3m
+    memory: 20Mi
+  limits:
+    cpu: 20m
+    memory: 50Mi
 targets:
   - module: qnap
     hosts: [192.168.2.29]
