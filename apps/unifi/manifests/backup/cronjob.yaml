@@ -23,6 +23,13 @@ spec:
             - /backup/
             image: quay.io/paulfantom/rsync
             name: copier
+            resources:
+              limits:
+                cpu: 800m
+                memory: 100Mi
+              requests:
+                cpu: 520m
+                memory: 20Mi
             volumeMounts:
             - mountPath: /backups
               name: backups

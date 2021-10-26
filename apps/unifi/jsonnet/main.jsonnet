@@ -121,6 +121,16 @@ local all = {
         'root@' + config.backup.host + ':/data/autobackup/',
         '/backup/',
       ],
+      resources: {
+        requests: {
+          cpu: '520m',
+          memory: '20Mi',
+        },
+        limits: {
+          cpu: '800m',
+          memory: '100Mi',
+        },
+      },
       volumeMounts: [
         {
           name: 'backups',
