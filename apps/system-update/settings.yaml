@@ -7,7 +7,7 @@ kured:
     - "--reboot-days=sun,fri,sat"
     - "--period=2m"
   resources:
-    requirements:
+    requests:
       cpu: 14m
       memory: 23Mi
     limits:
