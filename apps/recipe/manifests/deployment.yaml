@@ -37,7 +37,11 @@ spec:
         - containerPort: 80
           name: http
         resources:
+          limits:
+            cpu: 200m
+            memory: 300Mi
           requests:
+            cpu: 54m
             memory: 150Mi
         volumeMounts:
         - mountPath: /app/data
