@@ -43,9 +43,16 @@ spec:
         ports:
         - containerPort: 8080
           name: metrics
-        resources: {}
+        resources:
+          limits:
+            cpu: 60m
+            memory: 30Mi
+          requirements:
+            cpu: 14m
+            memory: 23Mi
         securityContext:
           privileged: true
+          readOnlyRootFilesystem: true
       hostPID: true
       nodeSelector:
         kubernetes.io/arch: arm64

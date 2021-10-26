@@ -6,3 +6,10 @@ kured:
   args:
     - "--reboot-days=sun,fri,sat"
     - "--period=2m"
+  resources:
+    requirements:
+      cpu: 14m
+      memory: 23Mi
+    limits:
+      cpu: 60m
+      memory: 30Mi
