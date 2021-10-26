@@ -65,7 +65,8 @@
   },
   prometheusOperator+: {
     version: '0.51.1',
-    image: 'quay.io/prometheus-operator/prometheus-operator:v0.51.1',
+    # image: 'quay.io/prometheus-operator/prometheus-operator:v0.51.1',
+    image: 'quay.io/paulfantom/prometheus-operator-dev:v0.51.2-97d7df9eb',
     configReloaderImage: 'quay.io/prometheus-operator/prometheus-config-reloader:v0.51.1',
     mixin+: {
       _config: {

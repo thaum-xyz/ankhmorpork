@@ -30,7 +30,7 @@ spec:
         - --kubelet-service=kube-system/kubelet
         - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.51.1
         - --log-level=debug
-        image: quay.io/prometheus-operator/prometheus-operator:v0.51.1
+        image: quay.io/paulfantom/prometheus-operator-dev:v0.51.2-97d7df9eb
         name: prometheus-operator
         ports:
         - containerPort: 8080
