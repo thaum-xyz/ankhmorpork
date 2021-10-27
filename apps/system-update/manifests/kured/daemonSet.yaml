@@ -52,7 +52,6 @@ spec:
             memory: 23Mi
         securityContext:
           privileged: true
-          readOnlyRootFilesystem: true
       hostPID: true
       nodeSelector:
         kubernetes.io/arch: arm64
