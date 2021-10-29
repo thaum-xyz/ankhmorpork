@@ -10,6 +10,14 @@ spec:
   groups:
   - name: testing.rules
     rules:
+    - alert: TestOpsGenie
+      annotations:
+        description: Some description
+        runbook_url: https://runbook.link/asdf
+        summary: A summary
+      expr: absent(ops_genie)
+      labels:
+        severity: critical
     - alert: CPUStealTimeHigh
       annotations:
         description: CPU Steal Time is very high on {{ $labels.instance }} hypervisor.
