@@ -10,7 +10,7 @@ spec:
   groups:
   - name: testing.rules
     rules:
-    - alert: TestOpsGenie
+    - alert: TestOpsGenie2
       annotations:
         description: Some description
         runbook_url: https://runbook.link/asdf
