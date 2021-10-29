@@ -1,5 +1,5 @@
 ---
-name: monitoring-config-check
+name: monitoring-config
 
 on:
   push:
