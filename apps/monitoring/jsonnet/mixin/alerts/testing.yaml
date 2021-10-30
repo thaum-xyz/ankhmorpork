@@ -1,14 +1,6 @@
 groups:
 - name: testing.rules
   rules:
-  - alert: TestOpsGenie2
-    expr: absent(ops_genie)
-    annotations:
-      description: "Some description"
-      summary: "A summary"
-      runbook_url: "https://runbook.link/asdf"
-    labels:
-      severity: "critical"
   - alert: CPUStealTimeHigh
     annotations:
       description: CPU Steal Time is very high on {{ $labels.instance }} hypervisor. This can lead to VM being stalled.
