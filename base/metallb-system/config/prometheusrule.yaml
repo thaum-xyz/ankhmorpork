@@ -11,13 +11,44 @@ spec:
   groups:
     - name: metallb rules
       rules:
+      # "official" alerts with possible modifications.
+      # TODO: improve those!!!
       - alert: MetalLBConfigStale
-        expr: metallb_k8s_client_config_stale_bool != 0
-        for: 2m
+        expr: metallb_k8s_client_config_stale_bool == 1
+        for: 1m
         labels:
           severity: warning
         annotations:
-          message: 'MetalLB instance {{ $labels.instance }} has stale configuration.'
+          message: '{{ $labels.job }} - MetalLB {{ $labels.container }} on {{ $labels.pod }} has a stale config for > 1 minute'
+      - alert: MetalLBConfigNotLoaded
+        expr: metallb_k8s_client_config_loaded_bool == 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: '{{ $labels.job }} - MetalLB {{ $labels.container }} on {{ $labels.pod }} has not loaded for > 1 minute'
+      - alert: MetalLBAddressPoolExhausted
+        expr: metallb_allocator_addresses_in_use_total >= on(pool) metallb_allocator_addresses_total
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: '{{ $labels.job }} - MetalLB {{ $labels.container }} on {{ $labels.pod }} has exhausted address pool {{ $labels.pool }} for > 1 minute'
+      - alert: MetalLBAddressPoolUsagePercent
+        expr: ( metallb_allocator_addresses_in_use_total / on(pool) metallb_allocator_addresses_total ) * 100 > 80
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: '{{ $labels.job }} - MetalLB {{ $labels.container }} on {{ $labels.pod }} has address pool {{ $labels.pool }} usage of {{ $value }}for > 1 minute'
+      - alert: MetalLBBGPSessionDown
+        expr: metallb_bgp_session_up == 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: '{{ $labels.job }} - MetalLB {{ $labels.container }} on {{ $labels.pod }} has BGP session {{ $labels.peer }} down for > 1 minute'    
+      # Additional alerts
       - alert: MetalLBAlmostOutOfAddresses
         expr: |
           metallb_allocator_addresses_total - metallb_allocator_addresses_in_use_total < 2
@@ -32,3 +63,4 @@ spec:
           severity: critical
         annotations:
           message: 'MetalLB has no usable addresses.'
+
