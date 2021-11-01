@@ -249,8 +249,7 @@ local kp =
     // Using metrics-server instead of prometheus-adapter
     prometheusAdapter:: null,
 
-    // TODO: Remove remapping when https://github.com/prometheus-operator/kube-prometheus/pull/1455 is merged
-    prometheusk8s: $.prometheus {
+    prometheus+: {
       prometheus+: {
         spec+: {
           // TODO: move ingress and externalURL to an addon
