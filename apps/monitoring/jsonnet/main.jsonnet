@@ -220,6 +220,30 @@ local kp =
           },
         },
       },
+      # TODO: move to kube-prometheus
+      networkPolicy: {
+        apiVersion: 'networking.k8s.io/v1',
+        kind: 'NetworkPolicy',
+        metadata: $.nodeExporter.service.metadata,
+        spec: {
+          ingress: [{
+            from: [{
+              podSelector: {
+                # Selector should probably be customizable
+                matchExpressions: [{
+                  key: "app.kubernetes.io/name",
+                  operator: "In",
+                  values: ["prometheus"],
+                }],
+              },
+            }],
+            ports: $.nodeExporter.service.spec.ports,
+          }],
+          podSelector: {
+            matchLabels: $.nodeExporter.service.spec.selector,
+          },
+        },
+      },
     },
 
     // Using metrics-server instead of prometheus-adapter
@@ -277,6 +301,28 @@ local kp =
               containers:
                 addArgs(['--metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]'], 'kube-state-metrics', super.containers),
             },
+          },
+        },
+      },
+      # TODO: move to kube-prometheus
+      networkPolicy: {
+        apiVersion: 'networking.k8s.io/v1',
+        kind: 'NetworkPolicy',
+        metadata: $.kubeStateMetrics.service.metadata,
+        spec: {
+          ingress: [{
+            from: [{
+              podSelector: {
+                # Selector should probably be customizable
+                matchLabels: {
+                  'app.kubernetes.io/name': "prometheus",
+                },
+              },
+            }],
+            ports: $.kubeStateMetrics.service.spec.ports,
+          }],
+          podSelector: {
+            matchLabels: $.kubeStateMetrics.service.spec.selector,
           },
         },
       },
