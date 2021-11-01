@@ -12,15 +12,11 @@ spec:
   ingress:
   - from:
     - podSelector:
-        matchExpressions:
-        - key: app.kubernetes.io/name
-          operator: In
-          values:
-          - prometheus
+        matchLabels:
+          app.kubernetes.io/name: prometheus
     ports:
-    - name: https
-      port: 9100
-      targetPort: https
+    - port: 9100
+      protocol: TCP
   podSelector:
     matchLabels:
       app.kubernetes.io/component: exporter

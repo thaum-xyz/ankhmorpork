@@ -167,6 +167,33 @@ local kp =
           },
         },
       ),
+      # TODO: move to kube-prometheus
+      /*networkPolicy: {
+        apiVersion: 'networking.k8s.io/v1',
+        kind: 'NetworkPolicy',
+        metadata: $.alertmanager.service.metadata,
+        spec: {
+          ingress: [{
+            from: [{
+              podSelector: {
+                # Selector should probably be customizable
+                matchExpressions: [{
+                  key: "app.kubernetes.io/name",
+                  operator: "In",
+                  values: ["prometheus"],
+                }],
+              },
+            }],
+            ports: std.map(function(o) {
+              port: o.port,
+              protocol: "TCP",
+            }, $.alertmanager.service.spec.ports),
+          }],
+          podSelector: {
+            matchLabels: $.alertmanager.service.spec.selector,
+          },
+        },
+      },*/
     },
 
     blackboxExporter+: {
@@ -182,6 +209,33 @@ local kp =
       promDemoProbe: probe('prometheus-demo', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.promDemo),
       thaumProbe: probe('thaum-sites', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.thaumSites),
       ingressProbe: probe('ankhmorpork', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
+      # TODO: move to kube-prometheus
+      /*networkPolicy: {
+        apiVersion: 'networking.k8s.io/v1',
+        kind: 'NetworkPolicy',
+        metadata: $.blackboxExporter.service.metadata,
+        spec: {
+          ingress: [{
+            from: [{
+              podSelector: {
+                # Selector should probably be customizable
+                matchExpressions: [{
+                  key: "app.kubernetes.io/name",
+                  operator: "In",
+                  values: ["prometheus"],
+                }],
+              },
+            }],
+            ports: std.map(function(o) {
+              port: o.port,
+              protocol: "TCP",
+            }, $.blackboxExporter.service.spec.ports),
+          }],
+          podSelector: {
+            matchLabels: $.blackboxExporter.service.spec.selector,
+          },
+        },
+      },*/
     },
 
     // TODO: Remove Service and move ServiceMonitor to PodMonitor
@@ -230,14 +284,15 @@ local kp =
             from: [{
               podSelector: {
                 # Selector should probably be customizable
-                matchExpressions: [{
-                  key: "app.kubernetes.io/name",
-                  operator: "In",
-                  values: ["prometheus"],
-                }],
+                matchLabels: {
+                  'app.kubernetes.io/name': "prometheus",
+                },
               },
             }],
-            ports: $.nodeExporter.service.spec.ports,
+            ports: std.map(function(o) {
+              port: o.port,
+              protocol: "TCP",
+            }, $.nodeExporter.service.spec.ports),
           }],
           podSelector: {
             matchLabels: $.nodeExporter.service.spec.selector,
@@ -318,7 +373,10 @@ local kp =
                 },
               },
             }],
-            ports: $.kubeStateMetrics.service.spec.ports,
+            ports: std.map(function(o) {
+              port: o.port,
+              protocol: "TCP",
+            }, $.kubeStateMetrics.service.spec.ports),
           }],
           podSelector: {
             matchLabels: $.kubeStateMetrics.service.spec.selector,
@@ -423,6 +481,32 @@ local kp =
           },
         },
       },
+
+      # TODO: move to kube-prometheus
+      /*networkPolicy: {
+        apiVersion: 'networking.k8s.io/v1',
+        kind: 'NetworkPolicy',
+        metadata: $.grafana.service.metadata,
+        spec: {
+          ingress: [{
+            from: [{
+              podSelector: {
+                # Selector should probably be customizable
+                matchLabels: {
+                  'app.kubernetes.io/name': "prometheus",
+                },
+              },
+            }],
+            ports: std.map(function(o) {
+              port: o.port,
+              protocol: "TCP",
+            }, $.grafana.service.spec.ports),
+          }],
+          podSelector: {
+            matchLabels: $.grafana.service.spec.selector,
+          },
+        },
+      },*/
 
       // TODO: Remove PrometheusRule object when https://github.com/prometheus-operator/kube-prometheus/pull/1458 is merged
       prometheusRule: {

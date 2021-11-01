@@ -15,12 +15,10 @@ spec:
         matchLabels:
           app.kubernetes.io/name: prometheus
     ports:
-    - name: https-main
-      port: 8443
-      targetPort: https-main
-    - name: https-self
-      port: 9443
-      targetPort: https-self
+    - port: 8443
+      protocol: TCP
+    - port: 9443
+      protocol: TCP
   podSelector:
     matchLabels:
       app.kubernetes.io/component: exporter
