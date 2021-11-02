@@ -398,8 +398,8 @@ spec:
               readOnly: true
           resources:
             requests:
-              cpu: 100m
-              memory: 90Mi
+              cpu: 200m
+              memory: 190Mi
       nodeSelector:
         kubernetes.io/os: linux
         network.infra/type: "fast"
