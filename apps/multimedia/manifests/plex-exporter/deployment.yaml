@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: plex_exporter
     app.kubernetes.io/part-of: plex
-    app.kubernetes.io/version: 0.2.2
+    app.kubernetes.io/version: 0.1.0
   name: plex-exporter
   namespace: multimedia
 spec:
@@ -21,26 +21,39 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: plex_exporter
         app.kubernetes.io/part-of: plex
-        app.kubernetes.io/version: 0.2.2
+        app.kubernetes.io/version: 0.1.0
     spec:
       containers:
       - args:
-        - --token=$(TOKEN)
-        - --plex-server=http://192.168.2.98:32400
-        envFrom:
-        - secretRef:
-            name: plex-token
-        image: quay.io/paulfantom/plex_exporter:0.2.2
-        imagePullPolicy: IfNotPresent
+        - --config=/config.json
+        image: quay.io/paulfantom/plex_exporter:0.1.0
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: plex-metrics
         ports:
         - containerPort: 9594
           name: metrics
+        volumeMounts:
+        - name: config
+          mountPath: /config.json
+          subPath: config.json
         resources:
           limits:
             memory: 20Mi
           requests:
             memory: 11Mi
+        #livenessProbe:
+        #  exec:
+        #    command:
+        #    - curl
+        #    - localhost:9594/metrics
+        #  initialDelaySeconds: 60
+        #  periodSeconds: 300
+        #  failureThreshold: 2
       nodeSelector:
         kubernetes.io/arch: amd64
       restartPolicy: Always
+      volumes:
+      - name: config
+        secret:
+          secretName: plex-token
