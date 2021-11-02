@@ -7,6 +7,7 @@ spec:
   interval: 5m0s
   path: ./apps/monitoring/manifests
   prune: true
+  force: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
