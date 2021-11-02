@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: proxy
     app.kubernetes.io/name: oauth2-proxy
     app.kubernetes.io/part-of: auth
-    app.kubernetes.io/version: 7.1.3
+    app.kubernetes.io/version: 7.2.0
   name: oauth2-proxy
   namespace: auth
 spec:
@@ -21,7 +21,7 @@ spec:
         app.kubernetes.io/component: proxy
         app.kubernetes.io/name: oauth2-proxy
         app.kubernetes.io/part-of: auth
-        app.kubernetes.io/version: 7.1.3
+        app.kubernetes.io/version: 7.2.0
     spec:
       affinity:
         podAntiAffinity:
@@ -49,7 +49,7 @@ spec:
         envFrom:
         - secretRef:
             name: oauth-creds
-        image: quay.io/paulfantom/oauth2-proxy:7.1.3
+        image: quay.io/paulfantom/oauth2-proxy:7.2.0
         imagePullPolicy: IfNotPresent
         name: oauth2-proxy
         ports:
