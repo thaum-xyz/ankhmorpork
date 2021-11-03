@@ -49,7 +49,11 @@
     externalLabels: {
       cluster: 'ankhmorpork',
     },
-    enableFeatures: ['remote-write-receiver'],
+    enableFeatures: [
+      'remote-write-receiver',
+      'memory-snapshot-on-shutdown',
+      'new-service-discovery-manager',
+    ],
     resources: {
       requests: { cpu: '140m', memory: '1900Mi' },
       limits: { cpu: '1' },
