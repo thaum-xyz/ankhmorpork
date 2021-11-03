@@ -20,7 +20,7 @@ spec:
       priorityClassName: "system-node-critical"
       containers:
       - image: nvidia/k8s-device-plugin@sha256:194adbf675f90cecf9ef1c09fbec90a225c20edd73a01c0a19688c273a151d4a
-        args: ["--fail-on-init-error=false", "--pass-device-specs"]
+        args: ["--pass-device-specs"]
         name: nvidia-device-plugin-ctr
         securityContext:
           allowPrivilegeEscalation: false
