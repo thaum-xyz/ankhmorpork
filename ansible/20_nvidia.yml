@@ -17,8 +17,8 @@
       state: present
       filename: nvidia
     with_items:
-      - "deb https://nvidia.github.io/libnvidia-container/stable/ubuntu18.04/$(ARCH) /"
-      - "deb https://nvidia.github.io/nvidia-container-runtime/stable/ubuntu18.04/$(ARCH) /"
+      - "deb https://nvidia.github.io/libnvidia-container/stable/ubuntu20.04/$(ARCH) /"
+      - "deb https://nvidia.github.io/nvidia-container-runtime/stable/ubuntu20.04/$(ARCH) /"
 
   - name: Install drivers
     apt:
@@ -48,13 +48,3 @@
     - ipmi_devintf
     - nvidia
     - nvidia-uvm
-
-  - name: Create directory for containerd
-    file:
-      path: "/var/lib/rancher/k3s/agent/etc/containerd/"
-      state: directory
-
-  - name: Configure containerd
-    copy:
-      dest: "/var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl"
-      src: "nvidia-containerd-config.toml"
