@@ -19,7 +19,8 @@ spec:
     spec:
       priorityClassName: "system-node-critical"
       containers:
-      - image: nvidia/k8s-device-plugin@sha256:194adbf675f90cecf9ef1c09fbec90a225c20edd73a01c0a19688c273a151d4a
+      #- image: nvidia/k8s-device-plugin@sha256:194adbf675f90cecf9ef1c09fbec90a225c20edd73a01c0a19688c273a151d4a
+      - image: nvidia/k8s-device-plugin@sha256:e411f535ae6276acd1a5bf50dcd8a9afbead1e2d647801678e4ef4eb93629431
         #args: ["--fail-on-init-error=true"]
         name: nvidia-device-plugin-ctr
         securityContext:
