@@ -9,18 +9,15 @@ spec:
       name: nvidia-device-plugin-ds
   template:
     metadata:
-      # Mark this pod as a critical add-on; when enabled, the critical add-on scheduler
-      # reserves resources for critical add-on pods so that they can be rescheduled after
-      # a failure.  This annotation works in tandem with the toleration below.
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ""
       labels:
         name: nvidia-device-plugin-ds
     spec:
       priorityClassName: "system-node-critical"
+      runtimeClassName: "nvidia"
       containers:
-      #- image: nvidia/k8s-device-plugin@sha256:194adbf675f90cecf9ef1c09fbec90a225c20edd73a01c0a19688c273a151d4a
-      - image: nvidia/k8s-device-plugin@sha256:e411f535ae6276acd1a5bf50dcd8a9afbead1e2d647801678e4ef4eb93629431
+      #- image: nvidia/k8s-device-plugin:devel-ubuntu20.04
+      #- image: nvidia/k8s-device-plugin@sha256:e411f535ae6276acd1a5bf50dcd8a9afbead1e2d647801678e4ef4eb93629431
+      - image: nvidia/k8s-device-plugin:v0.9.0
         #args: ["--fail-on-init-error=true"]
         name: nvidia-device-plugin-ctr
         securityContext:
