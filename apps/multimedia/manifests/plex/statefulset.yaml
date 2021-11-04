@@ -70,7 +70,7 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
         storage.infra/main: "true"
-      runtimeClassName: "nvidia"
+      #runtimeClassName: "nvidia"
       restartPolicy: Always
       tolerations: []
       volumes:
