@@ -113,6 +113,18 @@ local all = {
       },
       { [config.homeassistant.apiTokenSecretKeySelector.key]: config.homeassistant.encryptedAPIToken }
     ),
+    configs: {
+      apiVersion: "v1",
+      kind: "ConfigMap",
+      metadata: $.homeassistant.statefulSet.metadata {
+        name: "homeassistant-configs",
+      },
+      data: {
+        'configuration.yaml': importstr '../config/configuration.yaml',
+        'customize.yaml': importstr '../config/customize.yaml',
+        'scripts.yaml': importstr '../config/scripts.yaml',
+      },
+    },
     ingress+: {
       metadata+: {
         labels+: {
@@ -128,9 +140,30 @@ local all = {
       spec+: {
         template+: {
           spec+: {
+            containers+: std.map(function(c) c {
+              volumeMounts+: [{
+                mountPath: '/test/configuration.yml',
+                name: 'config',
+                subPath: 'configuration.yaml'
+              },{
+                mountPath: '/test/customize.yaml',
+                name: 'customize',
+                subPath: 'customize.yaml'
+              },{
+                mountPath: '/test/scripts.yaml',
+                name: 'scripts',
+                subPath: 'scripts.yaml'
+              },],
+            }, super.containers),
             nodeSelector: {
               'kubernetes.io/arch': 'arm64',
             },
+            volumes+: [{
+              configMap: {
+                name: $.homeassistant.configs.metadata.name,
+              },
+              name: "configs"
+            }],
           },
         },
       },

@@ -54,6 +54,44 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: config
+      - env:
+        - name: TZ
+          value: Europe/Berlin
+        image: homeassistant/aarch64-homeassistant:2021.11.0
+        imagePullPolicy: IfNotPresent
+        name: homeassistant
+        ports:
+        - containerPort: 8123
+          name: http
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: 400m
+            memory: 1600Mi
+          requests:
+            cpu: 200m
+            memory: 800Mi
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /test/configuration.yml
+          name: config
+          subPath: configuration.yaml
+        - mountPath: /test/customize.yaml
+          name: customize
+          subPath: customize.yaml
+        - mountPath: /test/scripts.yaml
+          name: scripts
+          subPath: scripts.yaml
       hostNetwork: true
       nodeSelector:
         kubernetes.io/arch: arm64
@@ -63,3 +101,6 @@ spec:
       - name: config
         persistentVolumeClaim:
           claimName: config
+      - configMap:
+          name: homeassistant-configs
+        name: configs

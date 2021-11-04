@@ -1,0 +1,6 @@
+switch.adus_pc:
+  icon: 'mdi:desktop-classic'
+switch.pawel_pc:
+  icon: 'mdi:desktop-classic'
+sensor.mealie:
+  icon: 'mdi:food'
