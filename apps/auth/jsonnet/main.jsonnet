@@ -10,6 +10,11 @@ local all = oauth(config) + {
   deployment+: {
     spec+: {
       template+: {
+        metadata+: {
+          annotations: {
+            'checksum.config/md5': std.md5(std.toString(config)),
+          },
+        },
         spec+: {
           nodeSelector+: {
             'network.infra/type': 'fast',
