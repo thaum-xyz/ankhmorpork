@@ -139,6 +139,11 @@ local all = {
     statefulSet+: {
       spec+: {
         template+: {
+          metadata+: {
+            annotations: {
+              'checksum.config/md5': std.md5(std.toString($.homeassistant.configs.data)),
+            },
+          },
           spec+: {
             containers+: std.map(function(c) c {
               volumeMounts+: [{
