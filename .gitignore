@@ -14,6 +14,7 @@ bin/
 templates/
 vendor/
 .crdschemas/
+.cache_ggshield
 tmp/
 apps/snmp/mibs/
 apps/snmp/snmp.yml

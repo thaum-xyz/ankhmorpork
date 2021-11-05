@@ -36,3 +36,7 @@ secrets:  ## Check if secrets are not leaked
 .PHONY: validate
 validate:  ## Validate kubernetes manifests
 	for d in $(DIRS); do $(MAKE) -C $$d validate || exit 1; done
+
+.PHONY: bootstrap
+bootstrap:  ## Bootstrap development environment
+	ggshield install -m local
