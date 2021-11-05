@@ -82,7 +82,7 @@ local all = {
               description: "ESPHome sensor named {{ $labels.name }} with {{ $labels.id }} on {{ $labels.instance }} device failed to gather data for 4h.",
             },
             expr: "esphome_sensor_failed != 0",
-            "for": "4h",
+            "for": "8h",
             labels: {
               severity: "warning",
             },
