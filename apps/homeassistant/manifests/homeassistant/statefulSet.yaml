@@ -57,13 +57,13 @@ spec:
         - mountPath: /config
           name: config
         - mountPath: /test/configuration.yml
-          name: config
+          name: configs
           subPath: configuration.yaml
         - mountPath: /test/customize.yaml
-          name: customize
+          name: configs
           subPath: customize.yaml
         - mountPath: /test/scripts.yaml
-          name: scripts
+          name: configs
           subPath: scripts.yaml
       hostNetwork: true
       nodeSelector:

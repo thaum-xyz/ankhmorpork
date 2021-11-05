@@ -148,15 +148,15 @@ local all = {
             containers: std.map(function(c) c {
               volumeMounts+: [{
                 mountPath: '/test/configuration.yml',
-                name: 'config',
+                name: 'configs',
                 subPath: 'configuration.yaml'
               },{
                 mountPath: '/test/customize.yaml',
-                name: 'customize',
+                name: 'configs',
                 subPath: 'customize.yaml'
               },{
                 mountPath: '/test/scripts.yaml',
-                name: 'scripts',
+                name: 'configs',
                 subPath: 'scripts.yaml'
               },],
             }, super.containers),
