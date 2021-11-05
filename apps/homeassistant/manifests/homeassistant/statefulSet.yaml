@@ -56,7 +56,7 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: config
-        - mountPath: /config/configuration.yml
+        - mountPath: /config/configuration.yaml
           name: configs
           readOnly: true
           subPath: configuration.yaml

@@ -147,7 +147,7 @@ local all = {
           spec+: {
             containers: std.map(function(c) c {
               volumeMounts+: [{
-                mountPath: '/config/configuration.yml',
+                mountPath: '/config/configuration.yaml',
                 name: 'configs',
                 subPath: 'configuration.yaml',
                 readOnly: true,
