@@ -1,4 +1,6 @@
 ---
+#k3s_version: v1.21.6-rc3+k3s1
+
 nfs_exports:
   - "/mnt 192.168.2.40(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
   - "/srv/storage/kubernetes *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)"
