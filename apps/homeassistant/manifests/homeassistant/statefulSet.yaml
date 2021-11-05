@@ -57,7 +57,7 @@ spec:
       - env:
         - name: TZ
           value: Europe/Berlin
-        image: homeassistant/aarch64-homeassistant:2021.11.0
+        image: homeassistant/aarch64-homeassistant:2021.11.1
         imagePullPolicy: IfNotPresent
         name: homeassistant
         ports:
