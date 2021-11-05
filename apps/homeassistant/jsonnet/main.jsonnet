@@ -147,17 +147,20 @@ local all = {
           spec+: {
             containers: std.map(function(c) c {
               volumeMounts+: [{
-                mountPath: '/test/configuration.yml',
+                mountPath: '/config/configuration.yml',
                 name: 'configs',
-                subPath: 'configuration.yaml'
+                subPath: 'configuration.yaml',
+                readOnly: true,
               },{
-                mountPath: '/test/customize.yaml',
+                mountPath: '/config/customize.yaml',
                 name: 'configs',
-                subPath: 'customize.yaml'
+                subPath: 'customize.yaml',
+                readOnly: true,
               },{
-                mountPath: '/test/scripts.yaml',
+                mountPath: '/config/scripts.yaml',
                 name: 'configs',
-                subPath: 'scripts.yaml'
+                subPath: 'scripts.yaml',
+                readOnly: true,
               },],
             }, super.containers),
             nodeSelector: {

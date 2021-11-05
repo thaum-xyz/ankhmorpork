@@ -299,10 +299,10 @@ switch:
     host: "192.168.2.50"
     mac: !secret pawel_pc_mac
 
-google_assistant:
-  project_id: homeassistant-35c52
-  service_account: !include google_service_account.json
-  report_state: true
+#google_assistant:
+#  project_id: homeassistant-ankh
+#  service_account: !include google_service_account.json
+#  report_state: true
 
 google:
   client_id: !secret google_client_id

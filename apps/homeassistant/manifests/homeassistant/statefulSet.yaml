@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 72d01710d04ac2fea4718f9f0f1a416f
+        checksum.config/md5: c50ee86326459dbe9c81a8fea733c953
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
@@ -56,14 +56,17 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: config
-        - mountPath: /test/configuration.yml
+        - mountPath: /config/configuration.yml
           name: configs
+          readOnly: true
           subPath: configuration.yaml
-        - mountPath: /test/customize.yaml
+        - mountPath: /config/customize.yaml
           name: configs
+          readOnly: true
           subPath: customize.yaml
-        - mountPath: /test/scripts.yaml
+        - mountPath: /config/scripts.yaml
           name: configs
+          readOnly: true
           subPath: scripts.yaml
       hostNetwork: true
       nodeSelector:
