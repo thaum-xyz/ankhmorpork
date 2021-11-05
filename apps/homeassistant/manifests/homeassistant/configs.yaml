@@ -1,0 +1,399 @@
+apiVersion: v1
+data:
+  configuration.yaml: |
+    homeassistant:
+      name: Home
+      latitude: !secret home_latitude
+      longitude: !secret home_longitude
+      elevation: !secret home_elevation
+      unit_system: metric
+      time_zone: Europe/Berlin
+      customize: !include customize.yaml
+      #auth_providers:
+      #  - type: homeassistant
+      #  - type: trusted_networks
+      #    allow_bypass_login: true
+      #    trusted_networks:
+      #      - 192.168.2.0/24
+      external_url: https://home.ankhmorpork.thaum.xyz
+
+    # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+    http:
+      # base_url: https://home.ankhmorpork.thaum.xyz
+      use_x_forwarded_for: true
+      trusted_proxies: !secret trusted_proxies
+
+    #panel_iframe:
+    #  esphome:
+    #    title: "ESPHome"
+    #    url: "http://192.168.2.94:6052"
+    #    icon: "mdi:chip"
+    #    require_admin: true
+
+
+    # No-config integrations
+    #default_config:
+    # Redefine configuration options from default_config for more control
+    # Current list can be found in https://www.home-assistant.io/integrations/default_config/
+    automation: !include automations.yaml
+    #cloud:
+    config:
+    counter:
+    dhcp:
+    energy:
+    frontend:
+    history:
+    image:
+    input_boolean:
+    input_datetime:
+    input_number:
+    input_select:
+    input_text:
+    logbook:
+    map:
+    #media_source:
+    mobile_app:
+    my:
+    person:
+    scene: !include scenes.yaml
+    script: !include scripts.yaml
+    ssdp:
+    stream:
+    sun:
+    system_health:
+    #tag:
+    timer:
+    #updater:
+    webhook:
+    #zeroconf:
+    zone:
+    # END OF default_config
+
+    wake_on_lan:
+    media_extractor:
+
+    group:
+      people:
+        name: People
+        entities:
+        - person.pawel
+        - person.adrianna
+
+    prometheus:
+      namespace: hass
+      filter:
+        exclude_domains:
+        - device_tracker
+        - light
+
+    lock:
+      - platform: kiwi
+        username: !secret kiwi_username
+        password: !secret kiwi_password
+
+    # UniFi camera is not fully supported as 'generic' device
+    camera:
+      - platform: generic
+        name: spy
+        still_image_url: "http://192.168.2.10/snap.jpeg"
+        stream_source: "rtsp://192.168.2.10:554/s0"
+
+    #tplink:
+    #  discovery: false
+    #  switch:
+    #    - host: 192.168.2.143
+    #    - host: 192.168.2.144
+    #    - host: 192.168.2.145
+
+    alarm_control_panel:
+      - platform: manual
+        name: Home Alarm
+        code_arm_required: false
+        arming_time: 60
+        trigger_time: 600
+        disarmed:
+          trigger_time: 0
+        armed_home:
+          arming_time: 60
+          delay_time: 30
+
+    light:
+      - platform: group
+        name: Kitchen Lights
+        entities:
+          - light.ceiling_left
+          - light.ceiling_right
+          - light.countertop
+          - light.hue_white_lamp_1
+          - light.hue_white_lamp_2
+      - platform: group
+        name: Salon Lights
+        entities:
+          - light.disco
+          - light.flood_light
+          - light.vincent
+      - platform: group
+        name: Bedroom Lights
+        entities:
+          - light.red_ceiling
+          - light.floor_lamp
+
+    # Sensors
+    sensor:
+      - platform: time_date
+        display_options:
+          - 'time'
+          - 'date'
+      - platform: launch_library
+      - platform: rest
+        name: mealie
+        scan_interval: 3600
+        headers:
+          content-type: application/json
+          authorization: !secret mealie_token
+        resource: https://recipe.krupa.net.pl/api/meal-plans/today
+        value_template: "{{ value_json.name }}"
+
+    template:
+    - sensor:
+      - name: "Next meeting"
+        state: >
+          {% set timescale = as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int %}
+          {% set paulfantom =  as_timestamp(state_attr('calendar.paulfantom','start_time')) | int %}
+          {% set krupa = as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int %}
+          {% set sunrise = as_timestamp(state_attr('sun.sun','next_rising')) | int %}
+          {% set now = as_timestamp(utcnow()) | int %}
+          {% set next = sunrise %}
+          {% if next > krupa %}
+          {%   set next = krupa %}
+          {% endif %}
+          {% if next > paulfantom %}
+          {%   set next = paulfantom %}
+          {% endif %}
+          {% if next > timescale %}
+          {%   set next = timescale %}
+          {% endif %}
+          {% if next != sunrise %}
+          {{   next | timestamp_custom("%H:%M") }}
+          {% endif %}
+        attributes:
+          title: >
+            {% set timescale = as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int %}
+            {% set paulfantom =  as_timestamp(state_attr('calendar.paulfantom','start_time')) | int %}
+            {% set krupa = as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int %}
+            {% set sunrise = as_timestamp(state_attr('sun.sun','next_rising')) | int %}
+            {% set now = as_timestamp(utcnow()) | int %}
+            {% set title = "none left today :)" %}
+            {% set next = sunrise %}
+            {% if next > krupa %}
+            {%   set next = krupa %}
+            {%   set title = state_attr('calendar.pawel_krupa_net_pl','message') %}
+            {% endif %}
+            {% if next > paulfantom %}
+            {%   set next = paulfantom %}
+            {%   set title = state_attr('calendar.paulfantom','message') %}
+            {% endif %}
+            {% if next > timescale %}
+            {%   set next = timescale %}
+            {%   set title = state_attr('calendar.pawel_timescale_com','message') %}
+            {% endif %}
+            {{ title }}
+
+    plant:
+      svetlana:
+        sensors:
+          moisture: sensor.svetlana_moisture
+          temperature: sensor.svetlana_temperature
+          conductivity: sensor.svetlana_soil_conductivity
+          brightness: sensor.svetlana_illuminance
+        min_moisture: 15
+        max_moisture: 60
+        min_conductivity: 350
+        max_conductivity: 2000
+        min_temperature: 10
+        max_temperature: 32
+        min_brightness: 500
+        max_brightness: 12000
+      phil:
+        sensors:
+          moisture: sensor.phil_moisture
+          temperature: sensor.phil_temperature
+          conductivity: sensor.phil_soil_conductivity
+          brightness: sensor.phil_illuminance
+        min_moisture: 15
+        max_moisture: 60
+        min_conductivity: 350
+        max_conductivity: 2000
+        min_temperature: 8
+        max_temperature: 32
+        min_brightness: 1000
+        max_brightness: 15000
+      #sage:
+      #  sensors:
+      #    moisture: sensor.herbs_moisture
+      #    temperature: sensor.herbs_temperature
+      #    conductivity: sensor.herbs_soil_conductivity
+      #    brightness: sensor.herbs_illuminance
+      #  min_moisture: 15
+      #  max_moisture: 60
+      #  min_conductivity: 350
+      #  max_conductivity: 2000
+      #  min_temperature: 10
+      #  max_temperature: 32
+      #  min_brightness: 3700
+      #  max_brightness: 20000
+      #basilicum:
+      #  sensors:
+      #    moisture: sensor.herbs_moisture
+      #    temperature: sensor.herbs_temperature
+      #    conductivity: sensor.herbs_soil_conductivity
+      #    brightness: sensor.herbs_illuminance
+      #  min_moisture: 15
+      #  max_moisture: 60
+      #  min_conductivity: 350
+      #  max_conductivity: 2000
+      #  min_temperature: 8
+      #  max_temperature: 32
+      #  min_brightness: 2500
+      #  max_brightness: 60000
+      #mint:
+      #  sensors:
+      #    moisture: sensor.herbs_moisture
+      #    temperature: sensor.herbs_temperature
+      #    conductivity: sensor.herbs_soil_conductivity
+      #    brightness: sensor.herbs_illuminance
+      #  min_moisture: 15
+      #  max_moisture: 60
+      #  min_conductivity: 350
+      #  max_conductivity: 2000
+      #  min_temperature: 5
+      #  max_temperature: 35
+      #  min_brightness: 3700
+      #  max_brightness: 50000
+      vincent:
+        sensors:
+          moisture: sensor.vincent_moisture
+          temperature: sensor.vincent_temperature
+          conductivity: sensor.vincent_soil_conductivity
+          brightness: sensor.vincent_illuminance
+        min_moisture: 15
+        max_moisture: 60
+        min_conductivity: 350
+        max_conductivity: 2000
+        min_temperature: 10
+        max_temperature: 32
+        min_brightness: 600
+        max_brightness: 20000
+
+    notify:
+      - platform: slack
+        name: slack
+        api_key: !secret slack_api_key
+        default_channel: '#home'
+        username: "home-assistant"
+
+    switch:
+      - platform: wake_on_lan
+        name: adus-pc
+        host: "192.168.2.51"
+        mac: !secret adus_pc_mac
+      - platform: wake_on_lan
+        name: pawel-pc
+        host: "192.168.2.50"
+        mac: !secret pawel_pc_mac
+
+    google_assistant:
+      project_id: homeassistant-35c52
+      service_account: !include google_service_account.json
+      report_state: true
+
+    google:
+      client_id: !secret google_client_id
+      client_secret: !secret google_client_secret
+      calendar_access: "read_only"
+  customize.yaml: |
+    switch.adus_pc:
+      icon: 'mdi:desktop-classic'
+    switch.pawel_pc:
+      icon: 'mdi:desktop-classic'
+    sensor.mealie:
+      icon: 'mdi:food'
+  scripts.yaml: |
+    projector_toggle:
+      sequence:
+      - service: remote.send_command
+        data:
+          entity_id: remote.broadlink
+          device: nebula
+          command: toggle
+          num_repeats: 2
+      mode: single
+      icon: mdi:projector
+    alarm_picture_notification:
+      alias: Alarm Picture Notification
+      sequence:
+      - service: camera.snapshot
+        data:
+          entity_id: camera.spy
+          filename: /config/www/images/{{ filename }}
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - data_template:
+          data:
+            blocks:
+            - accessory:
+                style: danger
+                text:
+                  text: Go to HomeAssistant
+                  type: plain_text
+                type: button
+                url: https://home.ankhmorpork.thaum.xyz
+              text:
+                text: Alarm has been triggered at {{ states('sensor.time') }}
+                type: mrkdwn
+              type: section
+            - alt_text: Camera picture
+              image_url: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}
+              title:
+                text: Camera picture
+                type: plain_text
+              type: image
+          message: ALARM! @paulfantom
+          title: Last picture
+        service: notify.slack
+      - service: notify.mobile_app_ac2003
+        data:
+          message: Someone entered apartment while alarm is armed.
+          title: Alarm triggered!
+          data:
+            clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}
+            color: red
+            ledColor: red
+            persistent: true
+            tag: persistent
+      - service: notify.mobile_app_mi_a2
+        data:
+          message: Someone entered apartment while alarm is armed.
+          title: Alarm triggered!
+          data:
+            clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}
+            color: red
+            ledColor: red
+            persistent: true
+            tag: persistent
+      variables:
+        filename: hall_{{ now().strftime('%Y-%m-%d_%H:%M') }}.jpg
+      mode: single
+      icon: mdi:camera
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homeassistant
+    app.kubernetes.io/part-of: homeassistant
+    app.kubernetes.io/version: 2021.11.0
+  name: homeassistant-configs
+  namespace: homeassistant
