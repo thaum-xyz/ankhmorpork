@@ -325,13 +325,6 @@ data:
       client_id: !secret google_client_id
       client_secret: !secret google_client_secret
       calendar_access: "read_only"
-  customize.yaml: |
-    switch.adus_pc:
-      icon: 'mdi:desktop-classic'
-    switch.pawel_pc:
-      icon: 'mdi:desktop-classic'
-    sensor.mealie:
-      icon: 'mdi:food'
   scripts.yaml: |
     projector_toggle:
       sequence:
