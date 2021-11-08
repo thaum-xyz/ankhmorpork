@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 8babc40ab4b643f7ecc7dc6b763c6d79
+        checksum.config/md5: bb324fc1646e5a66ed9825b96e4fa658
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
@@ -60,6 +60,10 @@ spec:
           name: configs
           readOnly: true
           subPath: configuration.yaml
+        - mountPath: /config/customize.yaml
+          name: configs
+          readOnly: true
+          subPath: customize.yaml
         - mountPath: /config/scripts.yaml
           name: configs
           readOnly: true

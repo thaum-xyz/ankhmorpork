@@ -121,6 +121,7 @@ local all = {
       },
       data: {
         'configuration.yaml': importstr '../config/configuration.yaml',
+        'customize.yaml': importstr '../config/customize.yaml',
         'scripts.yaml': importstr '../config/scripts.yaml',
       },
     },
@@ -149,6 +150,11 @@ local all = {
                 mountPath: '/config/configuration.yaml',
                 name: 'configs',
                 subPath: 'configuration.yaml',
+                readOnly: true,
+              },{
+                mountPath: '/config/customize.yaml',
+                name: 'configs',
+                subPath: 'customize.yaml',
                 readOnly: true,
               },{
                 mountPath: '/config/scripts.yaml',
