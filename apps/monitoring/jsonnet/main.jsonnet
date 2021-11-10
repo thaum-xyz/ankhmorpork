@@ -394,7 +394,17 @@ local kp =
       podMonitorKubeProxy:: null,
       serviceMonitorKubelet+: {
         spec+: {
-          endpoints+: [
+          endpoints: std.map(function(e)
+            if !std.objectHas(e, 'path') then
+            e {
+              metricRelabelings+: [{
+                action: "labeldrop",
+                regex: "url",
+              }],
+            }
+            else e,
+            super.endpoints,
+          ) + [
             // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
             {
               bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
