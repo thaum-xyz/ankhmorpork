@@ -141,6 +141,7 @@
     },
   },
   nodeExporter+: {
+    filesystemMountPointsExclude:: '^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)',
     mixin+: {
       _config+: {
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/node/%s',
