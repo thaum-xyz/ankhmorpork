@@ -8,6 +8,9 @@ spec:
   endpoints:
   - interval: 30s
     port: http-metrics
+    metricRelabelings:
+    - action: labeldrop
+      regex: url
   selector:
     matchLabels:
       app.kubernetes.io/name: configmapsecret-controller
