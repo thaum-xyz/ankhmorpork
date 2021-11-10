@@ -142,7 +142,7 @@
   },
   nodeExporter+: {
     mixin+: {
-      _config: {
+      _config+: {
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/node/%s',
       },
     },
