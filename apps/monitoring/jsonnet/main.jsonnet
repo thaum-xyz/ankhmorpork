@@ -80,7 +80,6 @@ local probe(name, namespace, labels, module, targets) = {
   },
   spec: {
     prober: {
-      // TODO: point to https version at 9115
       url: 'blackbox-exporter.monitoring.svc:19115',
     },
     module: module,
@@ -96,13 +95,15 @@ local snmp = (import 'github.com/thaum-xyz/jsonnet-libs/apps/snmp-exporter/snmp-
 local kubeEventsExporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/kube-events-exporter/kube-events-exporter.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
+local windows = (import 'lib/windows-exporter.libsonnet');
+
 local mixin = (import 'kube-prometheus/lib/mixin.libsonnet');
 
 local kp =
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/main.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/anti-affinity.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/all-namespaces.libsonnet') +
-  (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/windows.libsonnet') +
+  // (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/windows.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
   // (import 'lib/additional-scrape-configs.libsonnet') +
   // (import './lib/k3s.libsonnet') +
@@ -167,7 +168,7 @@ local kp =
           },
         },
       ),
-      # TODO: move to kube-prometheus
+      // TODO: move to kube-prometheus
       /*networkPolicy: {
         apiVersion: 'networking.k8s.io/v1',
         kind: 'NetworkPolicy',
@@ -209,7 +210,7 @@ local kp =
       promDemoProbe: probe('prometheus-demo', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.promDemo),
       thaumProbe: probe('thaum-sites', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.thaumSites),
       ingressProbe: probe('ankhmorpork', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
-      # TODO: move to kube-prometheus
+      // TODO: move to kube-prometheus
       /*networkPolicy: {
         apiVersion: 'networking.k8s.io/v1',
         kind: 'NetworkPolicy',
@@ -246,7 +247,7 @@ local kp =
             // TODO: move to kube-prometheus
             metadata+: {
               annotations+: {
-                "kubectl.kubernetes.io/default-container": "node-exporter"
+                'kubectl.kubernetes.io/default-container': 'node-exporter',
               },
             },
             spec+: {
@@ -274,7 +275,7 @@ local kp =
           },
         },
       },
-      # TODO: move to kube-prometheus
+      // TODO: move to kube-prometheus
       networkPolicy: {
         apiVersion: 'networking.k8s.io/v1',
         kind: 'NetworkPolicy',
@@ -283,15 +284,15 @@ local kp =
           ingress: [{
             from: [{
               podSelector: {
-                # Selector should probably be customizable
+                // Selector should probably be customizable
                 matchLabels: {
-                  'app.kubernetes.io/name': "prometheus",
+                  'app.kubernetes.io/name': 'prometheus',
                 },
               },
             }],
             ports: std.map(function(o) {
               port: o.port,
-              protocol: "TCP",
+              protocol: 'TCP',
             }, $.nodeExporter.service.spec.ports),
           }],
           podSelector: {
@@ -359,7 +360,7 @@ local kp =
           },
         },
       },
-      # TODO: move to kube-prometheus
+      // TODO: move to kube-prometheus
       networkPolicy: {
         apiVersion: 'networking.k8s.io/v1',
         kind: 'NetworkPolicy',
@@ -368,15 +369,15 @@ local kp =
           ingress: [{
             from: [{
               podSelector: {
-                # Selector should probably be customizable
+                // Selector should probably be customizable
                 matchLabels: {
-                  'app.kubernetes.io/name': "prometheus",
+                  'app.kubernetes.io/name': 'prometheus',
                 },
               },
             }],
             ports: std.map(function(o) {
               port: o.port,
-              protocol: "TCP",
+              protocol: 'TCP',
             }, $.kubeStateMetrics.service.spec.ports),
           }],
           podSelector: {
@@ -394,15 +395,16 @@ local kp =
       podMonitorKubeProxy:: null,
       serviceMonitorKubelet+: {
         spec+: {
-          endpoints: std.map(function(e)
-            if !std.objectHas(e, 'path') then
-            e {
-              metricRelabelings+: [{
-                action: "labeldrop",
-                regex: "url",
-              }],
-            }
-            else e,
+          endpoints: std.map(
+            function(e)
+              if !std.objectHas(e, 'path') then
+                e {
+                  metricRelabelings+: [{
+                    action: 'labeldrop',
+                    regex: 'url',
+                  }],
+                }
+              else e,
             super.endpoints,
           ) + [
             // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
@@ -493,32 +495,6 @@ local kp =
         },
       },
 
-      # TODO: move to kube-prometheus
-      /*networkPolicy: {
-        apiVersion: 'networking.k8s.io/v1',
-        kind: 'NetworkPolicy',
-        metadata: $.grafana.service.metadata,
-        spec: {
-          ingress: [{
-            from: [{
-              podSelector: {
-                # Selector should probably be customizable
-                matchLabels: {
-                  'app.kubernetes.io/name': "prometheus",
-                },
-              },
-            }],
-            ports: std.map(function(o) {
-              port: o.port,
-              protocol: "TCP",
-            }, $.grafana.service.spec.ports),
-          }],
-          podSelector: {
-            matchLabels: $.grafana.service.spec.selector,
-          },
-        },
-      },*/
-
       // TODO: Remove PrometheusRule object when https://github.com/prometheus-operator/kube-prometheus/pull/1458 is merged
       prometheusRule: {
         apiVersion: 'monitoring.coreos.com/v1',
@@ -570,6 +546,8 @@ local kp =
     //
     // Custom components
     //
+
+    windowsExporter: windows($.values.windowsExporter),
 
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
