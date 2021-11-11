@@ -81,7 +81,7 @@ data:
             url: "https://cloud.krupa.net.pl"
           - name: Cookbook
             subtitle: "Our recipes"
-            logo: "https://github.com/hay-kot/mealie/raw/master/docs/docs/assets/img/favicon.png"
+            logo: "https://github.com/hay-kot/mealie/raw/dev/frontend/public/img/icons/android-chrome-512x512.png"
             url: "https://recipe.krupa.net.pl"
           - name: HomeAssistant
             subtitle: "Home automation system"
