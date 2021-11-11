@@ -10,7 +10,7 @@ data:
   zzz-custom.conf: |
     [www]
     pm = dynamic
-    pm.max_children = 42
+    pm.max_children = 80
     pm.start_servers = 12
     pm.min_spare_servers = 6
     pm.max_spare_servers = 18
