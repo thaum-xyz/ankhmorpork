@@ -42,11 +42,7 @@ local all = {
       metadata: all.esphomedevices.metadata,
       spec: {
         clusterIP: "None",
-        ports: [{
-          name: all.esphomedevices.endpoints.subsets[0].ports[0].name,
-          targetPort: all.esphomedevices.endpoints.subsets[0].ports[0].name,
-          port: all.esphomedevices.endpoints.subsets[0].ports[0].port,
-        }],
+        ports: all.esphomedevices.endpoints.subsets[0].ports,
       },
     },
     serviceMonitor: {
