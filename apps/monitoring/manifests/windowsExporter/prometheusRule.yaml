@@ -1,0 +1,145 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/name: windows-exporter
+    app.kubernetes.io/part-of: kube-prometheus
+  name: kubernetes-windows-monitoring-rules
+  namespace: monitoring
+spec:
+  groups:
+  - name: windows.node.rules
+    rules:
+    - expr: |
+        count (
+          windows_system_system_up_time{job="windows-exporter"}
+        )
+      record: node:windows_node:sum
+    - expr: |
+        count by (instance) (sum by (instance, core) (
+          windows_cpu_time_total{job="windows-exporter"}
+        ))
+      record: node:windows_node_num_cpu:sum
+    - expr: |
+        1 - avg(rate(windows_cpu_time_total{job="windows-exporter",mode="idle"}[1m]))
+      record: :windows_node_cpu_utilisation:avg1m
+    - expr: |
+        1 - avg by (instance) (
+          rate(windows_cpu_time_total{job="windows-exporter",mode="idle"}[1m])
+        )
+      record: node:windows_node_cpu_utilisation:avg1m
+    - expr: |
+        1 -
+        sum(windows_memory_available_bytes{job="windows-exporter"})
+        /
+        sum(windows_os_visible_memory_bytes{job="windows-exporter"})
+      record: ':windows_node_memory_utilisation:'
+    - expr: |
+        sum(windows_memory_available_bytes{job="windows-exporter"} + windows_memory_cache_bytes{job="windows-exporter"})
+      record: :windows_node_memory_MemFreeCached_bytes:sum
+    - expr: |
+        (windows_memory_cache_bytes{job="windows-exporter"} + windows_memory_modified_page_list_bytes{job="windows-exporter"} + windows_memory_standby_cache_core_bytes{job="windows-exporter"} + windows_memory_standby_cache_normal_priority_bytes{job="windows-exporter"} + windows_memory_standby_cache_reserve_bytes{job="windows-exporter"})
+      record: node:windows_node_memory_totalCached_bytes:sum
+    - expr: |
+        sum(windows_os_visible_memory_bytes{job="windows-exporter"})
+      record: :windows_node_memory_MemTotal_bytes:sum
+    - expr: |
+        sum by (instance) (
+          (windows_memory_available_bytes{job="windows-exporter"})
+        )
+      record: node:windows_node_memory_bytes_available:sum
+    - expr: |
+        sum by (instance) (
+          windows_os_visible_memory_bytes{job="windows-exporter"}
+        )
+      record: node:windows_node_memory_bytes_total:sum
+    - expr: |
+        (node:windows_node_memory_bytes_total:sum - node:windows_node_memory_bytes_available:sum)
+        /
+        scalar(sum(node:windows_node_memory_bytes_total:sum))
+      record: node:windows_node_memory_utilisation:ratio
+    - expr: |
+        1 - (node:windows_node_memory_bytes_available:sum / node:windows_node_memory_bytes_total:sum)
+      record: 'node:windows_node_memory_utilisation:'
+    - expr: |
+        irate(windows_memory_swap_page_operations_total{job="windows-exporter"}[5m])
+      record: node:windows_node_memory_swap_io_pages:irate
+    - expr: "avg(irate(windows_logical_disk_read_seconds_total{job=\"windows-exporter\"}[1m])
+        + \n    irate(windows_logical_disk_write_seconds_total{job=\"windows-exporter\"}[1m])\n
+        \ )\n"
+      record: :windows_node_disk_utilisation:avg_irate
+    - expr: |
+        avg by (instance) (
+          (irate(windows_logical_disk_read_seconds_total{job="windows-exporter"}[1m]) +
+           irate(windows_logical_disk_write_seconds_total{job="windows-exporter"}[1m]))
+        )
+      record: node:windows_node_disk_utilisation:avg_irate
+    - expr: |
+        max by (instance,volume)(
+          (windows_logical_disk_size_bytes{job="windows-exporter"}
+        - windows_logical_disk_free_bytes{job="windows-exporter"})
+        / windows_logical_disk_size_bytes{job="windows-exporter"}
+        )
+      record: 'node:windows_node_filesystem_usage:'
+    - expr: |
+        max by (instance, volume) (windows_logical_disk_free_bytes{job="windows-exporter"} / windows_logical_disk_size_bytes{job="windows-exporter"})
+      record: 'node:windows_node_filesystem_avail:'
+    - expr: |
+        sum(irate(windows_net_bytes_total{job="windows-exporter"}[1m]))
+      record: :windows_node_net_utilisation:sum_irate
+    - expr: |
+        sum by (instance) (
+          (irate(windows_net_bytes_total{job="windows-exporter"}[1m]))
+        )
+      record: node:windows_node_net_utilisation:sum_irate
+    - expr: |
+        sum(irate(windows_net_packets_received_discarded_total{job="windows-exporter"}[1m])) +
+        sum(irate(windows_net_packets_outbound_discarded_total{job="windows-exporter"}[1m]))
+      record: :windows_node_net_saturation:sum_irate
+    - expr: |
+        sum by (instance) (
+          (irate(windows_net_packets_received_discarded_total{job="windows-exporter"}[1m]) +
+          irate(windows_net_packets_outbound_discarded_total{job="windows-exporter"}[1m]))
+        )
+      record: node:windows_node_net_saturation:sum_irate
+  - name: windows.pod.rules
+    rules:
+    - expr: |
+        windows_container_available{job="windows-exporter"} * on(container_id) group_left(container, pod, namespace) max(kube_pod_container_info{job="kube-state-metrics"}) by(container, container_id, pod, namespace)
+      record: windows_pod_container_available
+    - expr: |
+        windows_container_cpu_usage_seconds_total{job="windows-exporter"} * on(container_id) group_left(container, pod, namespace) max(kube_pod_container_info{job="kube-state-metrics"}) by(container, container_id, pod, namespace)
+      record: windows_container_total_runtime
+    - expr: |
+        windows_container_memory_usage_commit_bytes{job="windows-exporter"} * on(container_id) group_left(container, pod, namespace) max(kube_pod_container_info{job="kube-state-metrics"}) by(container, container_id, pod, namespace)
+      record: windows_container_memory_usage
+    - expr: |
+        windows_container_memory_usage_private_working_set_bytes{job="windows-exporter"} * on(container_id) group_left(container, pod, namespace) max(kube_pod_container_info{job="kube-state-metrics"}) by(container, container_id, pod, namespace)
+      record: windows_container_private_working_set_usage
+    - expr: |
+        windows_container_network_receive_bytes_total{job="windows-exporter"} * on(container_id) group_left(container, pod, namespace) max(kube_pod_container_info{job="kube-state-metrics"}) by(container, container_id, pod, namespace)
+      record: windows_container_network_received_bytes_total
+    - expr: |
+        windows_container_network_transmit_bytes_total{job="windows-exporter"} * on(container_id) group_left(container, pod, namespace) max(kube_pod_container_info{job="kube-state-metrics"}) by(container, container_id, pod, namespace)
+      record: windows_container_network_transmitted_bytes_total
+    - expr: |
+        max by (namespace, pod, container) (
+          kube_pod_container_resource_requests{resource="memory",job="kube-state-metrics"}
+        ) * on(container,pod,namespace) (windows_pod_container_available)
+      record: kube_pod_windows_container_resource_memory_request
+    - expr: |
+        kube_pod_container_resource_limits{resource="memory",job="kube-state-metrics"} * on(container,pod,namespace) (windows_pod_container_available)
+      record: kube_pod_windows_container_resource_memory_limit
+    - expr: |
+        max by (namespace, pod, container) (
+          kube_pod_container_resource_requests{resource="cpu",job="kube-state-metrics"}
+        ) * on(container,pod,namespace) (windows_pod_container_available)
+      record: kube_pod_windows_container_resource_cpu_cores_request
+    - expr: |
+        kube_pod_container_resource_limits{resource="cpu",job="kube-state-metrics"} * on(container,pod,namespace) (windows_pod_container_available)
+      record: kube_pod_windows_container_resource_cpu_cores_limit
+    - expr: |
+        sum by (namespace, pod, container) (
+          rate(windows_container_total_runtime{}[5m])
+        )
+      record: namespace_pod_container:windows_container_cpu_usage_seconds_total:sum_rate

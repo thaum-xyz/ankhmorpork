@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/name: windows-exporter
+    app.kubernetes.io/part-of: kube-prometheus
+  namespace: monitoring
+spec:
+  endpoints:
+  - interval: 60s
+    port: http
+  jobName: windows-exporter
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: windows-exporter
+      app.kubernetes.io/part-of: kube-prometheus
