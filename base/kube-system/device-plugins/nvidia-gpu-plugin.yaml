@@ -15,9 +15,7 @@ spec:
       priorityClassName: "system-node-critical"
       runtimeClassName: "nvidia"
       containers:
-      #- image: nvidia/k8s-device-plugin:devel-ubuntu20.04
-      #- image: nvidia/k8s-device-plugin@sha256:e411f535ae6276acd1a5bf50dcd8a9afbead1e2d647801678e4ef4eb93629431
-      - image: nvidia/k8s-device-plugin:v0.9.0
+      - image: nvidia/k8s-device-plugin:v0.10.0
         #args: ["--fail-on-init-error=true"]
         name: nvidia-device-plugin-ctr
         securityContext:
