@@ -21,6 +21,33 @@ local all = ghost(config) + {
       },
     },
   },
+  psp: {
+    apiVersion: 'policy/v1beta1',
+    kind: 'PodSecurityPolicy',
+    metadata: $.deployment.metadata,
+    spec: {
+      fsGroup: {
+        rule: "RunAsAny",
+      },
+      hostPorts: [{
+        max: 0,
+        min: 0,
+      }],
+      runAsUser: {
+        rule: 'RunAsAny',
+      },
+      seLinux: {
+        rule: "RunAsAny",
+      },
+      supplementalGroups: {
+        rule: 'RunAsAny',
+      },
+      volumes: [
+        'persistentVolumeClaim',
+        'emptyDir',
+      ],
+    },
+  },
 };
 
 { [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }
