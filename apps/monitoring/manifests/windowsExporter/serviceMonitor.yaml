@@ -10,7 +10,7 @@ spec:
   endpoints:
   - interval: 60s
     port: http
-  jobName: windows-exporter
+  jobLabel: windows-exporter
   selector:
     matchLabels:
       app.kubernetes.io/name: windows-exporter

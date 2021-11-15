@@ -62,7 +62,7 @@ function(params) {
     kind: 'ServiceMonitor',
     metadata: windows._metadata,
     spec: {
-      jobName: 'windows-exporter',
+      jobLabel: 'windows-exporter',
       endpoints: [{
         interval: '60s',
         port: windows.endpoints.subsets[0].ports[0].name,
