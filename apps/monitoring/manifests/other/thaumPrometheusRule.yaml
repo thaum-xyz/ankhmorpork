@@ -35,8 +35,8 @@ spec:
         description: This alert fires when there are info alerts firing, but no matching
           alerts of greater severity.
         summary: Info-level alert inhibition
-      expr: ALERTS{severity = "info", alertstate="firing"} == 1 unless on(namespace)
-        ALERTS{severity != "info", alertstate="firing"} == 1
+      expr: ALERTS{severity = "info"} == 1 unless on(namespace) ALERTS{alertname !=
+        "InfoInhibitor", severity != "info", alertstate="firing"} == 1
       labels:
         severity: none
   - name: custom-node-alerts
