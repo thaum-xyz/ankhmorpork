@@ -4,6 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: windows-exporter
     app.kubernetes.io/part-of: kube-prometheus
+  name: windows-exporter
   namespace: monitoring
 spec:
   endpoints:

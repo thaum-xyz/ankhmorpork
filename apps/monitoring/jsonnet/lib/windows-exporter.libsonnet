@@ -23,6 +23,7 @@ function(params) {
   _metadata:: {
     labels: windows._config.commonLabels,
     namespace: windows._config.namespace,
+    name: 'windows-exporter',
   },
 
   mixin::
