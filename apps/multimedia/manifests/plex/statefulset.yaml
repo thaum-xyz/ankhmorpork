@@ -55,9 +55,6 @@ spec:
           requests:
             cpu: 2
             memory: 2500Mi
-        securityContext:
-          # TODO: remove after https://github.com/k3s-io/k3s/issues/4391 is fixed
-          privileged: true
         volumeMounts:
         - mountPath: /config
           name: plex-db
@@ -74,9 +71,6 @@ spec:
         kubernetes.io/arch: amd64
         storage.infra/main: "true"
       runtimeClassName: "nvidia"
-      securityContext:
-        # TODO: remove after https://github.com/k3s-io/k3s/issues/4391 is fixed
-        privileged: true
       restartPolicy: Always
       tolerations: []
       volumes:
