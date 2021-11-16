@@ -19,8 +19,8 @@ spec:
         runbook_url: https://runbooks.prometheus-operator.dev/runbooks/general/targetdown
         summary: One or more targets are unreachable.
       expr: 100 * (count(up{job!="windows",instance!="biuro:9100"} == 0) BY (job,
-        namespace, service) / count(up{job!="windows",instance!="biuro:9100"}) BY
-        (job, namespace, service)) > 10
+        namespace, service) / count(up{job!="windows",job!="windows-exporter",instance!="biuro:9100"})
+        BY (job, namespace, service)) > 10
       for: 10m
       labels:
         severity: warning
