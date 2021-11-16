@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: plex
-    app.kubernetes.io/version: 1.24.3
+    app.kubernetes.io/version: 1.24.5
   name: plex
   namespace: multimedia
 spec:
@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: plex
-        app.kubernetes.io/version: 1.24.3
+        app.kubernetes.io/version: 1.24.5
     spec:
       containers:
       - env:
@@ -38,7 +38,7 @@ spec:
         envFrom:
         - secretRef:
             name: plex-claim
-        image: plexinc/pms-docker:1.24.3.5033-757abe6b4
+        image: plexinc/pms-docker:1.24.5.5173-8dcc73a59
         name: plex
         ports:
         - containerPort: 32400
@@ -74,6 +74,9 @@ spec:
         kubernetes.io/arch: amd64
         storage.infra/main: "true"
       runtimeClassName: "nvidia"
+      securityContext:
+        # TODO: remove after https://github.com/k3s-io/k3s/issues/4391 is fixed
+        privileged: true
       restartPolicy: Always
       tolerations: []
       volumes:
