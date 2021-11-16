@@ -50,11 +50,14 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5
         resources:
-          #limits:
-          #  nvidia.com/gpu: 1
+          limits:
+            nvidia.com/gpu: 1
           requests:
             cpu: 2
             memory: 2500Mi
+        securityContext:
+          # TODO: remove after https://github.com/k3s-io/k3s/issues/4391 is fixed
+          privileged: true
         volumeMounts:
         - mountPath: /config
           name: plex-db
@@ -70,7 +73,7 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
         storage.infra/main: "true"
-      #runtimeClassName: "nvidia"
+      runtimeClassName: "nvidia"
       restartPolicy: Always
       tolerations: []
       volumes:
