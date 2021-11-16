@@ -17,8 +17,8 @@
       state: present
       filename: nvidia
     with_items:
-      - "deb https://nvidia.github.io/libnvidia-container/stable/ubuntu20.04/$(ARCH) /"
-      - "deb https://nvidia.github.io/nvidia-container-runtime/stable/ubuntu20.04/$(ARCH) /"
+      - "deb https://nvidia.github.io/libnvidia-container/experimental/ubuntu20.04/$(ARCH) /"
+      - "deb https://nvidia.github.io/nvidia-container-runtime/experimental/ubuntu20.04/$(ARCH) /"
 
   - name: Install drivers
     apt:
