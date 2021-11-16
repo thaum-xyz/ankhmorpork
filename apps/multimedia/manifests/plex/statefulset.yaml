@@ -33,8 +33,6 @@ spec:
           value: http://192.168.2.98:32400/
         - name: NVIDIA_DRIVER_CAPABILITIES
           value: all
-        - name: NVIDIA_VISIBLE_DEVICES
-          value: all
         envFrom:
         - secretRef:
             name: plex-claim
