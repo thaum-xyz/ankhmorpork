@@ -19,12 +19,9 @@ spec:
         #args: ["--fail-on-init-error=true"]
         name: nvidia-device-plugin-ctr
         securityContext:
-          # TODO: reenable when https://github.com/k3s-io/k3s/issues/4391 is fixed
-          #allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: false
           capabilities:
             drop: ["ALL"]
-          # TODO: remove after https://github.com/k3s-io/k3s/issues/4391 is fixed
-          privileged: true
         resources:
           requests:
             cpu: 50m
