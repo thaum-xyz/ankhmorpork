@@ -22,6 +22,8 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop: ["ALL"]
+          # TODO: remove after https://github.com/k3s-io/k3s/issues/4391 is fixed
+          privileged: true
         resources:
           requests:
             cpu: 50m
