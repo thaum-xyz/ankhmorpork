@@ -33,12 +33,13 @@ spec:
         envFrom:
         - secretRef:
             name: mysql-creds
-        image: mariadb:10.4.12
+        image: mariadb:10.5.13
         imagePullPolicy: IfNotPresent
         name: mysql
         args:
         - '--transaction-isolation=READ-COMMITTED'
         - '--max-allowed-packet=33554432'
+        - '--wait_timeout=28800'
         ports:
         - containerPort: 3306
           name: mysql
