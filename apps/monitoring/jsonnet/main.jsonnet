@@ -400,8 +400,9 @@ local kp =
               if !std.objectHas(e, 'path') then
                 e {
                   metricRelabelings+: [{
-                    action: 'labeldrop',
-                    regex: 'url',
+                    sourceLabels: ['url'],
+                    targetLabel: 'url',
+                    regex: '(.*)?.*',
                   }],
                 }
               else e,
