@@ -123,6 +123,8 @@
     },
   },
   nodeExporter+: {
+    version: '1.3.0',
+    image: 'quay.io/prometheus/node-exporter:v1.3.0',
     filesystemMountPointsExclude:: '^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)',
     mixin+: {
       _config+: {
