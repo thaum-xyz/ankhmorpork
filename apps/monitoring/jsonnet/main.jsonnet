@@ -402,7 +402,7 @@ local kp =
                   metricRelabelings+: [{
                     sourceLabels: ['url'],
                     targetLabel: 'url',
-                    regex: '(.*)?.*',
+                    regex: '(.*)\\?.*',
                   }],
                 }
               else e,
