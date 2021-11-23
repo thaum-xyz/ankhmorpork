@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: esphome
-    app.kubernetes.io/version: 2021.9.3
+    app.kubernetes.io/version: 2021.11.1
   name: esphome
   namespace: homeassistant
 spec:
@@ -16,10 +16,10 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: esphome
-        app.kubernetes.io/version: 2021.9.3
+        app.kubernetes.io/version: 2021.11.1
     spec:
       containers:
-      - image: esphome/esphome:2021.9.3
+      - image: esphome/esphome:2021.11.1
         imagePullPolicy: IfNotPresent
         name: esphome
         ports:
