@@ -34,7 +34,7 @@ local all = {
     configmap+: {
       data: {
         'parca.yaml': parcaConfig,
-      }
+      },
     },
     ingress: {
       apiVersion: 'networking.k8s.io/v1',

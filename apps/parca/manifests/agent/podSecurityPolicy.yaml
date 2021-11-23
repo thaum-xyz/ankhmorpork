@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: observability
     app.kubernetes.io/instance: parca-agent
     app.kubernetes.io/name: parca-agent
-    app.kubernetes.io/version: 0.2.0
+    app.kubernetes.io/version: 0.3.0
   name: parca-agent
   namespace: parca
 spec:
@@ -13,11 +13,8 @@ spec:
   allowedCapabilities:
   - '*'
   allowedHostPaths:
-  - pathPrefix: /proc
   - pathPrefix: /sys
-  - pathPrefix: /
-  - pathPrefix: /lib
-  - pathPrefix: /etc
+  - pathPrefix: /lib/modules
   fsGroup:
     rule: RunAsAny
   hostIPC: true
