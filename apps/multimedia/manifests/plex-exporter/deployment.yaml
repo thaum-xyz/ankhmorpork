@@ -27,29 +27,20 @@ spec:
       - args:
         - --config=/config.json
         image: quay.io/paulfantom/plex_exporter:0.1.0
-        #imagePullPolicy: IfNotPresent
         imagePullPolicy: Always
         name: plex-metrics
         ports:
         - containerPort: 9594
           name: metrics
-        volumeMounts:
-        - name: config
-          mountPath: /config.json
-          subPath: config.json
         resources:
           limits:
             memory: 20Mi
           requests:
             memory: 11Mi
-        #livenessProbe:
-        #  exec:
-        #    command:
-        #    - curl
-        #    - localhost:9594/metrics
-        #  initialDelaySeconds: 60
-        #  periodSeconds: 300
-        #  failureThreshold: 2
+        volumeMounts:
+        - mountPath: /config.json
+          name: config
+          subPath: config.json
       nodeSelector:
         kubernetes.io/arch: amd64
       restartPolicy: Always
