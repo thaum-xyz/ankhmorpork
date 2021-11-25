@@ -8,14 +8,14 @@ stringData:
     - "job_name": "windows"
       "metric_relabel_configs":
       - "action": "replace"
-        "regex": "192.168.2.50:9182"
-        "replacement": "pawelpc"
+        "regex": "192.168.2.51:9182"
+        "replacement": "pawel-pc"
         "source_labels":
         - "instance"
         "target_label": "node"
       - "action": "replace"
-        "regex": "192.168.2.51:9182"
-        "replacement": "aduspc"
+        "regex": "192.168.2.50:9182"
+        "replacement": "adus-pc"
         "source_labels":
         - "instance"
         "target_label": "node"
