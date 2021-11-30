@@ -94,7 +94,7 @@ spec:
         - secretRef:
             name: mysql-init
         image: quay.io/prometheus/mysqld-exporter:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: exporter
         args:
         - "--collect.info_schema.innodb_metrics"
