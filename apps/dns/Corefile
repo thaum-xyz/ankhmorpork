@@ -27,10 +27,8 @@
     192.168.2.91 home.ankhmorpork.thaum.xyz
     192.168.2.91 alertmanager.ankhmorpork.thaum.xyz
     192.168.2.91 push.ankhmopork.thaum.xyz
-    192.168.2.91 rss.ankhmorpork.thaum.xyz
     192.168.2.91 portal.krupa.net.pl
     192.168.2.91 pawel.krupa.net.pl
-    192.168.2.91 recipe.krupa.net.pl
     ### local ingress END ###
     fallthrough
   }
