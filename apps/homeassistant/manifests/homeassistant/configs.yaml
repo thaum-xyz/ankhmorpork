@@ -123,13 +123,10 @@ data:
         entities:
           - light.ceiling_left
           - light.ceiling_right
+          - light.ceiling_center
           - light.countertop
           - light.hue_white_lamp_1
           - light.hue_white_lamp_2
-      - platform: group
-        name: Salon Lights
-        entities:
-          - light.disco
           - light.flood_light
           - light.vincent
       - platform: group
