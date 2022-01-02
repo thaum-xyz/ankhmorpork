@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: miniflux
     app.kubernetes.io/part-of: miniflux
-    app.kubernetes.io/version: 2.0.33
+    app.kubernetes.io/version: 2.0.34
   name: miniflux
   namespace: news
 spec:
@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: miniflux
         app.kubernetes.io/part-of: miniflux
-        app.kubernetes.io/version: 2.0.33
+        app.kubernetes.io/version: 2.0.34
     spec:
       containers:
       - env:
@@ -34,7 +34,7 @@ spec:
             name: postgres
         - secretRef:
             name: miniflux
-        image: miniflux/miniflux:2.0.33
+        image: miniflux/miniflux:2.0.34
         imagePullPolicy: IfNotPresent
         name: miniflux
         ports:

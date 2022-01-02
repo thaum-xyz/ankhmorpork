@@ -1,8 +1,8 @@
 ---
 miniflux:
   namespace: news
-  version: "2.0.33"  # application-version-from-github: miniflux/v2
-  image: "miniflux/miniflux:2.0.33"  # application-image-from-github: miniflux/v2
+  version: "2.0.34"  # application-version-from-github: miniflux/v2
+  image: "miniflux/miniflux:2.0.34"  # application-image-from-github: miniflux/v2
   domain: "rss.ankhmorpork.thaum.xyz"
   resources:
     requests:
