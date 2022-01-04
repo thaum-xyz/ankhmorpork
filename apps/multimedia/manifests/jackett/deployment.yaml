@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: jackett
     app.kubernetes.io/part-of: jackett
-    app.kubernetes.io/version: 0.20.233
+    app.kubernetes.io/version: 0.20.238
   name: jackett
   namespace: multimedia
 spec:
@@ -23,10 +23,10 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: jackett
         app.kubernetes.io/part-of: jackett
-        app.kubernetes.io/version: 0.20.233
+        app.kubernetes.io/version: 0.20.238
     spec:
       containers:
-      - image: linuxserver/jackett:0.20.233
+      - image: linuxserver/jackett:0.20.238
         imagePullPolicy: IfNotPresent
         livenessProbe:
           initialDelaySeconds: 30
