@@ -28,7 +28,7 @@ spec:
       - env:
         - name: TZ
           value: Europe/Berlin
-        image: linuxserver/ombi:4.8.0
+        image: linuxserver/ombi:4.8.0-development
         imagePullPolicy: IfNotPresent
         name: ombi
         ports:
