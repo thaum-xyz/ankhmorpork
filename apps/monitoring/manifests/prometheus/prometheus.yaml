@@ -3,10 +3,10 @@ kind: Prometheus
 metadata:
   labels:
     app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 2.31.1
-    prometheus: k8s
+    app.kubernetes.io/version: 2.32.1
   name: k8s
   namespace: monitoring
 spec:
@@ -17,9 +17,9 @@ spec:
           labelSelector:
             matchLabels:
               app.kubernetes.io/component: prometheus
+              app.kubernetes.io/instance: k8s
               app.kubernetes.io/name: prometheus
               app.kubernetes.io/part-of: kube-prometheus
-              prometheus: k8s
           namespaces:
           - monitoring
           topologyKey: kubernetes.io/hostname
@@ -37,22 +37,21 @@ spec:
   externalLabels:
     cluster: ankhmorpork
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
-  image: quay.io/prometheus/prometheus:v2.31.1
+  image: quay.io/prometheus/prometheus:v2.32.1
   nodeSelector:
     kubernetes.io/os: linux
     storage.infra/local: "true"
   podMetadata:
     labels:
       app.kubernetes.io/component: prometheus
+      app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: kube-prometheus
-      app.kubernetes.io/version: 2.31.1
-      prometheus: k8s
+      app.kubernetes.io/version: 2.32.1
   podMonitorNamespaceSelector: {}
   podMonitorSelector: {}
   probeNamespaceSelector: {}
   probeSelector: {}
-  queryLogFile: /prometheus/query.log
   replicas: 2
   resources:
     limits:
@@ -78,4 +77,4 @@ spec:
           requests:
             storage: 40Gi
         storageClassName: local-path
-  version: 2.31.1
+  version: 2.32.1
