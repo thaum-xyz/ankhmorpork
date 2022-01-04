@@ -12,6 +12,10 @@ DIRECTORY="${1}"
 # Scan for files with `application-version-from-github:` comment
 FILES=$(grep --exclude=*./vendor/ -rl "$DIRECTORY" -e "application-version-from-github:")
 
+# Test connection to GitHub
+echo "Checking connection with GitHub. Expecting a design quote..."
+curl --retry 5 --silent --fail -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/zen" 2>/dev/null
+
 # Iterate over each file searching for mark
 for f in $FILES; do
     
