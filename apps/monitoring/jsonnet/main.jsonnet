@@ -317,7 +317,7 @@ local kp =
           },
           // FIXME: reenable
           securityContext:: null,
-          queryLogFile: '/prometheus/query.log',
+          // queryLogFile: '/prometheus/query.log',
 
           storage: {
             volumeClaimTemplate: {
@@ -504,8 +504,8 @@ local kp =
           name: $.grafana.deployment.metadata.name + '-rules',
         },
         spec: {
-          local r = std.parseYaml(importstr 'github.com/grafana/grafana/grafana-mixin/rules/rules.yaml').groups,
-          local a = std.parseYaml(importstr 'github.com/grafana/grafana/grafana-mixin/alerts/alerts.yaml').groups,
+          local r = (import 'github.com/grafana/grafana/grafana-mixin/rules/rules.libsonnet').prometheusRules.groups,
+          local a = (import 'github.com/grafana/grafana/grafana-mixin/alerts/alerts.libsonnet').prometheusAlerts.groups,
           groups: a + r,
         },
       },
