@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: game-server
+    app.kubernetes.io/name: valheim
+    app.kubernetes.io/part-of: valheim
+  name: valheim
+  namespace: valheim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: game-server
+      app.kubernetes.io/name: valheim
+      app.kubernetes.io/part-of: valheim
+  serviceName: valheim
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: game-server
+        app.kubernetes.io/name: valheim
+        app.kubernetes.io/part-of: valheim
+    spec:
+      containers:
+      - envFrom:
+        #- secretRef:
+        #    name: valheim-pass
+        - configMapRef:
+            name: valheim-config
+        image: lloesche/valheim-server:latest
+        imagePullPolicy: Always
+        name: valheim
+        ports:
+        - containerPort: 2456
+          name: gameport
+          protocol: UDP
+        - containerPort: 2457
+          name: queryport
+          protocol: UDP
+        resources:
+          requests:
+            cpu: 2
+            memory: 8Gi
+        volumeMounts:
+        - mountPath: /config
+          name: data
+          subPath: gamefiles
+        - mountPath: /opt/valheim
+          name: data
+          subPath: serverfiles
+      restartPolicy: Always
+      serviceAccountName: valheim
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        storage.infra/local: "true"
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 7Gi
+      storageClassName: local-path

@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: valheim-config
+  namespace: valheim
+  labels:
+    app.kubernetes.io/component: game-server
+    app.kubernetes.io/name: valheim
+    app.kubernetes.io/part-of: valheim
+data:
+  SERVER_NAME: "KitKat"
+  WORLD_NAME: "KitKat"
+  SERVER_PORT: "2456"
+  SERVER_PUBLIC: "false"
+  SERVER_PASS: "berliner"
