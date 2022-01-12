@@ -7,6 +7,7 @@ DIRS=\
 	apps/monitoring \
 	apps/multimedia \
 	apps/news \
+	apps/parca \
 	apps/unifi \
 	base/cert-manager
 

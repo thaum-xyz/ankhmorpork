@@ -25,6 +25,9 @@ local all = {
         template+: {
           spec+: {
             containers: addArgs(['--socket-path=/run/k3s/containerd/containerd.sock'], 'parca-agent', super.containers),
+            nodeSelector+: {
+              'thaum.xyz/instance': 'test-platform',
+            },
           },
         },
       },

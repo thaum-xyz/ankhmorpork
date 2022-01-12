@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/component: observability
     app.kubernetes.io/instance: parca
     app.kubernetes.io/name: parca
-    app.kubernetes.io/version: 0.5.0
+    app.kubernetes.io/version: 0.7.0
   name: parca
   namespace: parca
 spec:
