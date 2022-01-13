@@ -407,24 +407,25 @@ local kp =
                 }
               else e,
             super.endpoints,
-          ) + [
-            // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
-            {
-              bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
-              honorLabels: true,
-              interval: '30s',
-              path: '/metrics/resource',
-              port: 'https-metrics',
-              relabelings: [{
-                sourceLabels: ['__metrics_path__'],
-                targetLabel: 'metrics_path',
-              }],
-              scheme: 'https',
-              tlsConfig: {
-                insecureSkipVerify: true,
-              },
-            },
-          ],
+          ),
+          //+ [
+          //  // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
+          //  {
+          //    bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+          //    honorLabels: true,
+          //    interval: '30s',
+          //    path: '/metrics/resource',
+          //    port: 'https-metrics',
+          //    relabelings: [{
+          //      sourceLabels: ['__metrics_path__'],
+          //      targetLabel: 'metrics_path',
+          //    }],
+          //    scheme: 'https',
+          //    tlsConfig: {
+          //      insecureSkipVerify: true,
+          //    },
+          //  },
+          //],
         },
       },
     },
