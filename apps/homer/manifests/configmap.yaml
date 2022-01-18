@@ -160,7 +160,7 @@ data:
           - name: Unifi
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             <<: *Local
-            url: "https://192.168.2.7:8443/"
+            url: "https://192.168.2.1/"
           - name: Qnap
             logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
             <<: *Local
