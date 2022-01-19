@@ -96,7 +96,7 @@ local all = {
       },
     },
   },
-  backup: {
+  backup:: {
     _metadata:: {
       name: 'backup',
       namespace: config.namespace,
