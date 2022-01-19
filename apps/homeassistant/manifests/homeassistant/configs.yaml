@@ -92,11 +92,13 @@ data:
         password: !secret kiwi_password
 
     # UniFi camera is not fully supported as 'generic' device
-    camera:
-      - platform: generic
-        name: spy
-        still_image_url: "http://192.168.2.10/snap.jpeg"
-        stream_source: "rtsp://192.168.2.10:554/s0"
+    # Waiting for homeassistant 2022.2 for Unifi Protect support
+    # TODO(paulfantom): migrate to Unifi Protect
+    #camera:
+    #  - platform: generic
+    #    name: spy
+    #    still_image_url: "http://192.168.2.10/snap.jpeg"
+    #    stream_source: "rtsp://192.168.2.10:554/s0"
 
     #tplink:
     #  discovery: false
@@ -405,6 +407,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2021.12.7
+    app.kubernetes.io/version: 2021.12.10
   name: homeassistant-configs
   namespace: homeassistant
