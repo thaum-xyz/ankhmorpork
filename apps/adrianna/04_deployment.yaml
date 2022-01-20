@@ -50,6 +50,6 @@ spec:
       volumes:
         - name: content
           persistentVolumeClaim:
-            claimName: data
+            claimName: ghost-data
         - name: logs
           emptyDir: {}
