@@ -114,4 +114,4 @@ spec:
           claimName: torrents
       - name: backup
         persistentVolumeClaim:
-          claimName: sonarr-backup
+          claimName: sonarr-app-backup
