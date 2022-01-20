@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: torrents
+  name: downloaded
   namespace: multimedia
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
       storage: 100Gi
-  storageClassName: manual
+  storageClassName: qnap-nfs-storage

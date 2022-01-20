@@ -111,7 +111,7 @@ spec:
           claimName: tv
       - name: downloads
         persistentVolumeClaim:
-          claimName: torrents
+          claimName: downloaded
       - name: backup
         persistentVolumeClaim:
-          claimName: sonarr-app-backup
+          claimName: sonarr-config-backup

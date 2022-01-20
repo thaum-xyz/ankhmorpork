@@ -93,4 +93,4 @@ spec:
           claimName: torrents-incomplete
       - name: completed
         persistentVolumeClaim:
-          claimName: torrents
+          claimName: downloaded

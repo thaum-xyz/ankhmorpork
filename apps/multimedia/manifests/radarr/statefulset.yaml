@@ -111,7 +111,7 @@ spec:
           claimName: movies
       - name: downloads
         persistentVolumeClaim:
-          claimName: torrents
+          claimName: downloaded
       - name: backup
         persistentVolumeClaim:
           claimName: radarr-config-backup
