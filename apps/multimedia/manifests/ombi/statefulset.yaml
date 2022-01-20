@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: ombi
     app.kubernetes.io/part-of: ombi
-    app.kubernetes.io/version: 4.10.0
+    app.kubernetes.io/version: 4.3.3
   name: ombi
   namespace: multimedia
 spec:
@@ -22,13 +22,13 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: ombi
         app.kubernetes.io/part-of: ombi
-        app.kubernetes.io/version: 4.10.0
+        app.kubernetes.io/version: 4.3.3
     spec:
       containers:
       - env:
         - name: TZ
           value: Europe/Berlin
-        image: linuxserver/ombi:4.10.0-development
+        image: linuxserver/ombi:4.3.3
         imagePullPolicy: IfNotPresent
         name: ombi
         ports:
@@ -50,6 +50,7 @@ spec:
         startupProbe:
           tcpSocket:
             port: http-ombi
+          failureThreshold: 120
         volumeMounts:
         - mountPath: /config
           name: ombi-data
@@ -69,4 +70,4 @@ spec:
       resources:
         requests:
           storage: 600Mi
-      storageClassName: qnap-nfs-storage
+      storageClassName: local-path
