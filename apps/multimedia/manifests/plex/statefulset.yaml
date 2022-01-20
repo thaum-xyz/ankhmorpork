@@ -59,7 +59,7 @@ spec:
         - mountPath: /transcode
           name: transcode
         - mountPath: /backup
-          name: backups
+          name: backup
         - mountPath: /data/movies
           name: movies
         - mountPath: /data/tv
@@ -81,8 +81,8 @@ spec:
       - name: plex-db
         persistentVolumeClaim:
           claimName: plex-db
-      - name: backups
+      - name: backup
         persistentVolumeClaim:
-          claimName: plex-backups
+          claimName: plex-backup
       - emptyDir: {}
         name: transcode
