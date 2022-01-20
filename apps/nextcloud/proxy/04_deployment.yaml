@@ -82,10 +82,10 @@ spec:
       #    secretName: nginx-locations
       - name: web
         persistentVolumeClaim:
-          claimName: nextcloud-files
+          claimName: nc-web
       - name: apps
         persistentVolumeClaim:
-          claimName: nextcloud-apps
+          claimName: nc-apps
       nodeSelector:
         network.infra/type: "fast"
       tolerations: []

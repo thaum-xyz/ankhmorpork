@@ -66,13 +66,13 @@ spec:
           claimName: nextcloud-data
       - name: web
         persistentVolumeClaim:
-          claimName: nextcloud-files
+          claimName: nc-web
       - name: apps
         persistentVolumeClaim:
-          claimName: nextcloud-apps
+          claimName: nc-apps
       - name: theme
         persistentVolumeClaim:
-          claimName: nextcloud-theme
+          claimName: nc-theme
       - name: config
         persistentVolumeClaim:
-          claimName: nextcloud-config
+          claimName: nc-config
