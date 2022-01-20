@@ -118,7 +118,7 @@ spec:
           claimName: mysql-data
       - name: backup
         persistentVolumeClaim:
-          claimName: mysql-backup
+          claimName: mysql-backups
       - name: init
         secret:
           secretName: mysql-init
