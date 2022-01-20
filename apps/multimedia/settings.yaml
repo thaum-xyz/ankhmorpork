@@ -23,8 +23,8 @@ jackett:
 ombi:
   #version: "4.3.3"  # application-version-from-github: Ombi-app/Ombi
   #image: "linuxserver/ombi:4.3.3"  # application-image-from-github: Ombi-app/Ombi
-  version: "4.8.0"  # Ombi stopped publishing those as "latest"
-  image: "linuxserver/ombi:4.8.0-development"
+  version: "4.10.0"  # Ombi stopped publishing those as "latest"
+  image: "linuxserver/ombi:4.10.0-development"
   namespace: multimedia
   domain: ombi.ankhmorpork.thaum.xyz
   resources:
