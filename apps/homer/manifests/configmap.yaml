@@ -95,7 +95,7 @@ data:
             subtitle: "Minimalist RSS feed reader"
             logo: "https://avatars.githubusercontent.com/u/10584991?s=200&v=4"
             <<: *Testing
-            url: "https://rss.ankhmorpork.thaum.xyz/"
+            url: "https://news.krupa.net.pl/"
 
       - name: Multimedia
         icon: "fa fa-tv"
