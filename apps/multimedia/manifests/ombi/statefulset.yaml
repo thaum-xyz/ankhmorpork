@@ -36,7 +36,7 @@ spec:
           name: http-ombi
         readinessProbe:
           failureThreshold: 5
-          initialDelaySeconds: 60
+          initialDelaySeconds: 10
           tcpSocket:
             port: http-ombi
           timeoutSeconds: 10
@@ -47,6 +47,9 @@ spec:
           requests:
             cpu: 10m
             memory: 250Mi
+        startupProbe:
+          tcpSocket:
+            port: http-ombi
         volumeMounts:
         - mountPath: /config
           name: ombi-data

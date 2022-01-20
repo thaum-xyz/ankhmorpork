@@ -79,9 +79,12 @@ function(params) {
         containerPort: 3579,
         name: 'http-ombi',
       }],
+      startupProbe: {
+        tcpSocket: { port: c.ports[0].name },
+      },
       readinessProbe: {
         tcpSocket: { port: c.ports[0].name },
-        initialDelaySeconds: 60,
+        initialDelaySeconds: 10,
         timeoutSeconds: 10,
         failureThreshold: 5,
       },
