@@ -34,11 +34,17 @@ spec:
             memory: 350Mi
         volumeMounts:
         - mountPath: /config
-          name: config
+          name: esphome-data
       hostNetwork: true
       restartPolicy: Always
       serviceAccountName: esphome
-      volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: esphome-config
+  volumeClaimTemplates:
+  - metadata:
+      name: esphome-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 300Mi
+      storageClassName: qnap-nfs-storage

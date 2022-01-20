@@ -42,7 +42,7 @@ spec:
             path: /
             port: http
             scheme: HTTP
-          initialDelaySeconds: 60
+          initialDelaySeconds: 5
           timeoutSeconds: 10
         resources:
           limits:
@@ -53,9 +53,16 @@ spec:
             memory: 800Mi
         securityContext:
           privileged: false
+        startupProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          periodSeconds: 2
         volumeMounts:
         - mountPath: /config
-          name: config
+          name: homeassistant-config
         - mountPath: /config/configuration.yaml
           name: configs
           readOnly: true
@@ -74,9 +81,16 @@ spec:
       restartPolicy: Always
       serviceAccountName: homeassistant
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: config
       - configMap:
           name: homeassistant-configs
         name: configs
+  volumeClaimTemplates:
+  - metadata:
+      name: homeassistant-config
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: qnap-nfs-storage
