@@ -87,7 +87,7 @@ spec:
           secretName: transmission-vpn-creds
       - name: data
         persistentVolumeClaim:
-          claimName: transmission-data
+          claimName: transmission-appdata
       - name: incomplete
         persistentVolumeClaim:
           claimName: torrents-incomplete
