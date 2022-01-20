@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: overseer
+    app.kubernetes.io/part-of: overseer
+  name: overseer
+  namespace: multimedia
+spec:
+  ports:
+  - name: http
+    port: 5055
+    targetPort: http
+  selector:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: overseer
+    app.kubernetes.io/part-of: overseer

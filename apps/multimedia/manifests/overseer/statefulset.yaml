@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: overseer
+    app.kubernetes.io/part-of: overseer
+  name: overseer
+  namespace: multimedia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: overseer
+      app.kubernetes.io/part-of: overseer
+  serviceName: overseer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: overseer
+        app.kubernetes.io/part-of: overseer
+    spec:
+      containers:
+      # TODO: add prometheus exporter https://github.com/WillFantom/overseerr-exporter
+      - env:
+        - name: TZ
+          value: Europe/Berlin
+        - name: LOG_LEVEL
+          value: "debug"
+        image: sctx/overseerr:1.28.0
+        imagePullPolicy: IfNotPresent
+        name: overseer
+        ports:
+        - containerPort: 5055
+          name: http
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /api/v1/status
+            port: http
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+        resources:
+          #limits:
+          #  cpu: 100m
+          #  memory: 500Mi
+          requests:
+            cpu: 10m
+            memory: 250Mi
+        #startupProbe:
+        #  tcpSocket:
+        #    port: http
+        #  failureThreshold: 120
+        volumeMounts:
+        - mountPath: /app/config
+          name: appdata
+        - mountPath: /app/config/logs
+          name: logs
+      restartPolicy: Always
+      serviceAccountName: overseer
+      volumes:
+      - emptyDir: {}
+        name: logs
+  volumeClaimTemplates:
+  - metadata:
+      name: appdata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 600Mi
+      storageClassName: local-path
