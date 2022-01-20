@@ -77,7 +77,7 @@ spec:
       volumes:
       - name: grafana-storage
         persistentVolumeClaim:
-          claimName: grafana-data
+          claimName: grafana-app-data
       - name: grafana-datasources
         secret:
           secretName: grafana-datasources

@@ -482,7 +482,7 @@ local kp =
                 {
                   name: 'grafana-storage',
                   persistentVolumeClaim: {
-                    claimName: 'grafana-data',
+                    claimName: $.grafana.pvc.metadata.name,
                   },
                 },
                 {
@@ -515,12 +515,12 @@ local kp =
         kind: 'PersistentVolumeClaim',
         apiVersion: 'v1',
         metadata: {
-          name: 'grafana-data',
+          name: 'grafana-app-data',
           namespace: $.grafana.deployment.metadata.namespace,
         },
         spec: {
-          storageClassName: 'managed-nfs-storage',
-          accessModes: ['ReadWriteMany'],
+          storageClassName: 'qnap-nfs-storage',
+          accessModes: ['ReadWriteOnce'],
           resources: {
             requests: {
               storage: '60Mi',
