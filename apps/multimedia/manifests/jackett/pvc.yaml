@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: jackett
     app.kubernetes.io/part-of: jackett
     app.kubernetes.io/version: 0.20.238
-  name: jackett
+  name: jackett-config
   namespace: multimedia
 spec:
   accessModes:
@@ -14,4 +14,4 @@ spec:
   resources:
     requests:
       storage: 300Mi
-  storageClassName: managed-nfs-storage
+  storageClassName: qnap-nfs-storage

@@ -18,13 +18,15 @@ local defaults = {
     for labelName in std.objectFields(defaults.commonLabels)
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
-  // TODO: Make pvcSpec generic
-  pvcSpec: {
-    storageClassName: 'local-path',
-    accessModes: ['ReadWriteMany'],
-    resources: {
-      requests: {
-        storage: '2Gi',
+  storage: {
+    name: 'jackett-config',
+    pvcSpec: {
+      storageClassName: 'local-path',
+      accessModes: ['ReadWriteOnce'],
+      resources: {
+        requests: {
+          storage: '2Gi',
+        },
       },
     },
   },
@@ -67,8 +69,10 @@ function(params) {
   pvc: {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',
-    metadata: j._metadata,
-    spec: j._config.pvcSpec,
+    metadata: j._metadata {
+      name: j._config.storage.name,
+    },
+    spec: j._config.storage.pvcSpec,
   },
 
   deployment: {

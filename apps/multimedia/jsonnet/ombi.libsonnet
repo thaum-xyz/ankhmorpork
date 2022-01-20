@@ -5,7 +5,7 @@ local defaults = {
   version: error 'must provide version',
   image: error 'must provide image',
   resources: {
-    requests: { cpu: "200m", memory: '200Mi' },
+    requests: { cpu: '200m', memory: '200Mi' },
   },
   commonLabels:: {
     'app.kubernetes.io/name': defaults.name,
@@ -19,13 +19,15 @@ local defaults = {
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
   domain: '',
-  // TODO: Make pvcSpec generic
-  pvcSpec: {
-    storageClassName: 'local-path',
-    accessModes: ['ReadWriteMany'],
-    resources: {
-      requests: {
-        storage: '2Gi',
+  storage: {
+    name: 'data',
+    pvcSpec: {
+      storageClassName: 'local-path',
+      accessModes: ['ReadWriteOnce'],
+      resources: {
+        requests: {
+          storage: '2Gi',
+        },
       },
     },
   },
@@ -64,21 +66,14 @@ function(params) {
     },
   },
 
-  pvc: {
-    apiVersion: 'v1',
-    kind: 'PersistentVolumeClaim',
-    metadata: o._metadata,
-    spec: o._config.pvcSpec,
-  },
-
   statefulset: {
     local c = {
       name: o._config.name,
       image: o._config.image,
       imagePullPolicy: 'IfNotPresent',
       env: [{
-        name: "TZ",
-        value: "Europe/Berlin"
+        name: 'TZ',
+        value: 'Europe/Berlin',
       }],
       ports: [{
         containerPort: 3579,
@@ -93,7 +88,7 @@ function(params) {
       volumeMounts: [
         {
           mountPath: '/config',
-          name: 'config',
+          name: o._config.storage.name,
         },
         {
           mountPath: '/config/Logs',
@@ -118,20 +113,18 @@ function(params) {
           containers: [c],
           restartPolicy: 'Always',
           serviceAccountName: o.serviceAccount.metadata.name,
-          volumes: [
-            {
-              name: 'config',
-              persistentVolumeClaim: {
-                claimName: o.pvc.metadata.name,
-              },
-            },
-            {
-              emptyDir: {},
-              name: 'logs'
-            },
-          ],
+          volumes: [{
+            emptyDir: {},
+            name: 'logs',
+          }],
         },
       },
+      volumeClaimTemplates: [{
+        metadata: {
+          name: o._config.storage.name,
+        },
+        spec: o._config.storage.pvcSpec,
+      }],
     },
   },
 

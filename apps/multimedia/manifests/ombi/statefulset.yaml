@@ -49,14 +49,21 @@ spec:
             memory: 250Mi
         volumeMounts:
         - mountPath: /config
-          name: config
+          name: ombi-data
         - mountPath: /config/Logs
           name: logs
       restartPolicy: Always
       serviceAccountName: ombi
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: ombi-config
       - emptyDir: {}
         name: logs
+  volumeClaimTemplates:
+  - metadata:
+      name: ombi-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 600Mi
+      storageClassName: qnap-nfs-storage

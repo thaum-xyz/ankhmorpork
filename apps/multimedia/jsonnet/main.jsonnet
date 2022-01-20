@@ -37,16 +37,11 @@ local all = {
     service+: lbService,
   },
   ombi: ombi(config.ombi) + {
-    pvc+: {
-      metadata+: {
-        name: 'ombi-config',
-      },
-    },
     ingress+: {
-      metadata+:{
+      metadata+: {
         labels+: {
-          probe: "enabled"
-        }
+          probe: 'enabled',
+        },
       },
     },
   },

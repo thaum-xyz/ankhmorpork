@@ -55,4 +55,4 @@ spec:
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: jackett
+          claimName: jackett-config
