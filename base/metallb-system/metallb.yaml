@@ -418,6 +418,17 @@ spec:
         app: metallb
         component: controller
     spec:
+      # Soft requirement to put controller in control-plane
+      # Not using nodeSelector as this is not a hard requirement
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: In
+                values: "true"
+      priorityClassName: "system-node-critical"
       containers:
       - args:
         - --port=7472
@@ -451,3 +462,7 @@ spec:
         fsGroup: 65534
       serviceAccountName: controller
       terminationGracePeriodSeconds: 0
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
