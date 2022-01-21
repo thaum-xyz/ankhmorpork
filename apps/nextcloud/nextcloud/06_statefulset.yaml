@@ -91,7 +91,7 @@ spec:
           name: php-config
       - name: data
         persistentVolumeClaim:
-          claimName: nextcloud-data
+          claimName: data
       - name: web
         persistentVolumeClaim:
           claimName: nc-web
