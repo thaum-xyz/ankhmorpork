@@ -423,11 +423,13 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
+          - weight: 1
+            preference:
+              matchExpressions:
               - key: node-role.kubernetes.io/control-plane
                 operator: In
-                values: "true"
+                values:
+                - "true"
       priorityClassName: "system-node-critical"
       containers:
       - args:
