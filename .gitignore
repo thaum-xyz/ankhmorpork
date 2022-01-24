@@ -7,7 +7,7 @@ roles/*
 !roles/fans/*
 !roles/fans
 *.retry
-ansible/kubeconfig
+metal/kubeconfig
 master.key
 .kube
 bin/
