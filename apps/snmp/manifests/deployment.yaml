@@ -8,7 +8,7 @@ metadata:
   name: snmp-exporter
   namespace: snmp
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter
@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 75905670045d97ae969e27b10d6ea6de
+        checksum.config/md5: c1a3da0a413c029cb0b804d2dd17b1bd
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: snmp-exporter

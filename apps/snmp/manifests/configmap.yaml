@@ -3,25 +3,113 @@ data:
   snmp.yaml: |
     # WARNING: This file was auto-generated using snmp_exporter generator, manual changes will be lost.
     qnap:
-      walk:
-      - 1.3.6.1.4.1.24681.1.3.17.1.4
-      - 1.3.6.1.4.1.24681.1.3.17.1.5
-      - 1.3.6.1.4.1.24681.1.3.9.1.3
-      - 1.3.6.1.4.1.24681.1.3.9.1.4
-      - 1.3.6.1.4.1.24681.1.4.1.1.1.1.4.3.1.3
-      - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.3
-      - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.4
       get:
       - 1.3.6.1.4.1.24681.1.3.1.0
-      - 1.3.6.1.4.1.24681.1.4.1.1.1.3.3.0
-      - 1.3.6.1.4.1.24681.1.4.1.1.1.3.4.0
+      - 1.3.6.1.4.1.24681.1.3.4.0
+      - 1.3.6.1.4.1.24681.1.3.6.0
+      - 1.3.6.1.4.1.55062.1.10.10.0
+      - 1.3.6.1.4.1.55062.1.10.11.0
+      - 1.3.6.1.4.1.55062.1.10.12.0
+      - 1.3.6.1.4.1.55062.1.10.13.0
+      - 1.3.6.1.4.1.55062.1.12.10.0
       - 1.3.6.1.4.1.55062.1.12.13.0
+      - 1.3.6.1.4.1.55062.1.12.14.0
+      - 1.3.6.1.4.1.55062.1.12.15.0
       - 1.3.6.1.4.1.55062.1.12.16.0
+      - 1.3.6.1.4.1.55062.1.12.17.0
+      - 1.3.6.1.4.1.55062.1.12.18.0
+      - 1.3.6.1.4.1.55062.1.12.20.0
+      - 1.3.6.1.4.1.55062.1.12.7.0
       metrics:
       - name: systemCPU_UsageEX
         oid: 1.3.6.1.4.1.24681.1.3.1
         type: gauge
         help: system CPU usage - 1.3.6.1.4.1.24681.1.3.1
+      - name: systemUptimeEX
+        oid: 1.3.6.1.4.1.24681.1.3.4
+        type: gauge
+        help: The amount of time since this host was last initialized - 1.3.6.1.4.1.24681.1.3.4
+      - name: systemTemperatureEX
+        oid: 1.3.6.1.4.1.24681.1.3.6
+        type: gauge
+        help: System temperature in centigrade - 1.3.6.1.4.1.24681.1.3.6
+      - name: cacheAccelerationServiceEnabled
+        oid: 1.3.6.1.4.1.55062.1.10.10
+        type: gauge
+        help: If acceleration service of cache is enabled. - 1.3.6.1.4.1.55062.1.10.10
+        enum_values:
+          0: "no"
+          1: "yes"
+      - name: cacheAvailablePercent
+        oid: 1.3.6.1.4.1.55062.1.10.11
+        type: gauge
+        help: Available percent of cache. - 1.3.6.1.4.1.55062.1.10.11
+      - name: cacheReadHitRate
+        oid: 1.3.6.1.4.1.55062.1.10.12
+        type: gauge
+        help: Read hit rate percent of cache. - 1.3.6.1.4.1.55062.1.10.12
+      - name: cacheWriteHitRate
+        oid: 1.3.6.1.4.1.55062.1.10.13
+        type: gauge
+        help: Write hit rate percent of cache. - 1.3.6.1.4.1.55062.1.10.13
+      - name: cpuTemperature
+        oid: 1.3.6.1.4.1.55062.1.12.10
+        type: gauge
+        help: CPU temperature - 1.3.6.1.4.1.55062.1.12.10
+      - name: systemTotalMem
+        oid: 1.3.6.1.4.1.55062.1.12.13
+        type: counter
+        help: System total memory - 1.3.6.1.4.1.55062.1.12.13
+      - name: systemFreeMem
+        oid: 1.3.6.1.4.1.55062.1.12.14
+        type: counter
+        help: System free memory - 1.3.6.1.4.1.55062.1.12.14
+      - name: systemAvailableMem
+        oid: 1.3.6.1.4.1.55062.1.12.15
+        type: counter
+        help: System available memory - 1.3.6.1.4.1.55062.1.12.15
+      - name: systemUsedMemory
+        oid: 1.3.6.1.4.1.55062.1.12.16
+        type: counter
+        help: System used memory - 1.3.6.1.4.1.55062.1.12.16
+      - name: systemCacheMemory
+        oid: 1.3.6.1.4.1.55062.1.12.17
+        type: counter
+        help: System cached memory - 1.3.6.1.4.1.55062.1.12.17
+      - name: systemBufferMemory
+        oid: 1.3.6.1.4.1.55062.1.12.18
+        type: counter
+        help: System buffered memory - 1.3.6.1.4.1.55062.1.12.18
+      - name: sysUPSStatus
+        oid: 1.3.6.1.4.1.55062.1.12.20
+        type: gauge
+        help: System UPS status. - 1.3.6.1.4.1.55062.1.12.20
+      - name: firmwareUpgradeAvailable
+        oid: 1.3.6.1.4.1.55062.1.12.7
+        type: gauge
+        help: Firmware can upgrade or not - 1.3.6.1.4.1.55062.1.12.7
+    qnaplong:
+      walk:
+      - 1.3.6.1.4.1.24681.1.3.15.1.3
+      - 1.3.6.1.4.1.24681.1.3.17.1.4
+      - 1.3.6.1.4.1.24681.1.3.17.1.5
+      - 1.3.6.1.4.1.24681.1.3.9.1.3
+      - 1.3.6.1.4.1.24681.1.3.9.1.4
+      - 1.3.6.1.4.1.24681.1.4.1.1.1.1.4.3.1.3
+      - 1.3.6.1.4.1.24681.1.4.1.1.1.1.5.2.1.5
+      - 1.3.6.1.4.1.24681.1.4.1.1.1.1.5.2.1.6
+      - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.3
+      - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.4
+      - 1.3.6.1.4.1.55062.1.10.34.1.7
+      - 1.3.6.1.4.1.55062.1.10.9.1.5
+      metrics:
+      - name: sysFanSpeedEX
+        oid: 1.3.6.1.4.1.24681.1.3.15.1.3
+        type: gauge
+        help: System fan speed (RPM). - 1.3.6.1.4.1.24681.1.3.15.1.3
+        indexes:
+        - labelname: sysFanIndexEX
+          type: gauge
       - name: sysVolumeTotalSizeEX
         oid: 1.3.6.1.4.1.24681.1.3.17.1.4
         type: counter
@@ -57,99 +145,6 @@ data:
         indexes:
         - labelname: cpuIndex
           type: gauge
-      - name: readHitRate
-        oid: 1.3.6.1.4.1.24681.1.4.1.1.1.3.3
-        type: gauge
-        help: Read hit rate percent of cache. - 1.3.6.1.4.1.24681.1.4.1.1.1.3.3
-      - name: writeHitRate
-        oid: 1.3.6.1.4.1.24681.1.4.1.1.1.3.4
-        type: gauge
-        help: Write hit rate percent of cache. - 1.3.6.1.4.1.24681.1.4.1.1.1.3.4
-      - name: iops
-        oid: 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.3
-        type: gauge
-        help: IOPS. - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.3
-        indexes:
-        - labelname: diskPerformanceIndex
-          type: gauge
-      - name: latency
-        oid: 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.4
-        type: gauge
-        help: Latency. - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.4
-        indexes:
-        - labelname: diskPerformanceIndex
-          type: gauge
-      - name: systemTotalMem
-        oid: 1.3.6.1.4.1.55062.1.12.13
-        type: counter
-        help: System total memory - 1.3.6.1.4.1.55062.1.12.13
-      - name: systemUsedMemory
-        oid: 1.3.6.1.4.1.55062.1.12.16
-        type: counter
-        help: System used memory - 1.3.6.1.4.1.55062.1.12.16
-    qnaplong:
-      walk:
-      - 1.3.6.1.4.1.24681.1.3.11.1.3
-      - 1.3.6.1.4.1.24681.1.3.15.1.3
-      - 1.3.6.1.4.1.24681.1.3.17.1.2
-      - 1.3.6.1.4.1.24681.1.3.17.1.6
-      - 1.3.6.1.4.1.24681.1.4.1.1.1.1.5.2.1.5
-      - 1.3.6.1.4.1.24681.1.4.1.1.1.1.5.2.1.6
-      - 1.3.6.1.4.1.55062.1.10.2.1.4
-      - 1.3.6.1.4.1.55062.1.10.2.1.7
-      - 1.3.6.1.4.1.55062.1.10.2.1.9
-      - 1.3.6.1.4.1.55062.1.10.34.1.7
-      - 1.3.6.1.4.1.55062.1.10.9.1.3
-      - 1.3.6.1.4.1.55062.1.10.9.1.4
-      - 1.3.6.1.4.1.55062.1.10.9.1.5
-      - 1.3.6.1.4.1.55062.1.10.9.1.8
-      get:
-      - 1.3.6.1.4.1.24681.1.3.4.0
-      - 1.3.6.1.4.1.24681.1.3.6.0
-      - 1.3.6.1.4.1.55062.1.12.10.0
-      - 1.3.6.1.4.1.55062.1.12.14.0
-      - 1.3.6.1.4.1.55062.1.12.15.0
-      - 1.3.6.1.4.1.55062.1.12.17.0
-      - 1.3.6.1.4.1.55062.1.12.18.0
-      - 1.3.6.1.4.1.55062.1.12.6.0
-      - 1.3.6.1.4.1.55062.1.12.7.0
-      metrics:
-      - name: hdTemperatureEX
-        oid: 1.3.6.1.4.1.24681.1.3.11.1.3
-        type: gauge
-        help: Hard disk temperature in centigrade. - 1.3.6.1.4.1.24681.1.3.11.1.3
-        indexes:
-        - labelname: hdIndex
-          type: gauge
-      - name: sysFanSpeedEX
-        oid: 1.3.6.1.4.1.24681.1.3.15.1.3
-        type: gauge
-        help: System fan speed (RPM). - 1.3.6.1.4.1.24681.1.3.15.1.3
-        indexes:
-        - labelname: sysFanIndexEX
-          type: gauge
-      - name: sysVolumeDescrEX
-        oid: 1.3.6.1.4.1.24681.1.3.17.1.2
-        type: OctetString
-        help: A textual string containing information about the volume. - 1.3.6.1.4.1.24681.1.3.17.1.2
-        indexes:
-        - labelname: sysVolumeIndexEX
-          type: gauge
-      - name: sysVolumeStatusEX
-        oid: 1.3.6.1.4.1.24681.1.3.17.1.6
-        type: OctetString
-        help: System Volume status. - 1.3.6.1.4.1.24681.1.3.17.1.6
-        indexes:
-        - labelname: sysVolumeIndexEX
-          type: gauge
-      - name: systemUptimeEX
-        oid: 1.3.6.1.4.1.24681.1.3.4
-        type: gauge
-        help: The amount of time since this host was last initialized - 1.3.6.1.4.1.24681.1.3.4
-      - name: systemTemperatureEX
-        oid: 1.3.6.1.4.1.24681.1.3.6
-        type: gauge
-        help: System temperature in centigrade - 1.3.6.1.4.1.24681.1.3.6
       - name: diskSmartInfo
         oid: 1.3.6.1.4.1.24681.1.4.1.1.1.1.5.2.1.5
         type: gauge
@@ -169,26 +164,19 @@ data:
         indexes:
         - labelname: diskIndex
           type: gauge
-      - name: diskModel
-        oid: 1.3.6.1.4.1.55062.1.10.2.1.4
-        type: OctetString
-        help: Hard disk Model - 1.3.6.1.4.1.55062.1.10.2.1.4
+      - name: iops
+        oid: 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.3
+        type: gauge
+        help: IOPS. - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.3
         indexes:
-        - labelname: diskIndex
+        - labelname: diskPerformanceIndex
           type: gauge
-      - name: diskStatus
-        oid: 1.3.6.1.4.1.55062.1.10.2.1.7
-        type: OctetString
-        help: The status of hard drive. - 1.3.6.1.4.1.55062.1.10.2.1.7
+      - name: latency
+        oid: 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.4
+        type: gauge
+        help: Latency. - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.4
         indexes:
-        - labelname: diskIndex
-          type: gauge
-      - name: diskCapacity
-        oid: 1.3.6.1.4.1.55062.1.10.2.1.9
-        type: counter
-        help: The capacity in byte of hard drive. - 1.3.6.1.4.1.55062.1.10.2.1.9
-        indexes:
-        - labelname: diskIndex
+        - labelname: diskPerformanceIndex
           type: gauge
       - name: enclosureSystemTemp
         oid: 1.3.6.1.4.1.55062.1.10.34.1.7
@@ -197,20 +185,6 @@ data:
         indexes:
         - labelname: enclosureIndex
           type: gauge
-      - name: volumeCapacity
-        oid: 1.3.6.1.4.1.55062.1.10.9.1.3
-        type: counter
-        help: System Volume total size in byte. - 1.3.6.1.4.1.55062.1.10.9.1.3
-        indexes:
-        - labelname: volumeIndex
-          type: gauge
-      - name: volumeFreeSize
-        oid: 1.3.6.1.4.1.55062.1.10.9.1.4
-        type: counter
-        help: System Volume free size in byte. - 1.3.6.1.4.1.55062.1.10.9.1.4
-        indexes:
-        - labelname: volumeIndex
-          type: gauge
       - name: volumeStatus
         oid: 1.3.6.1.4.1.55062.1.10.9.1.5
         type: OctetString
@@ -218,67 +192,28 @@ data:
         indexes:
         - labelname: volumeIndex
           type: gauge
-      - name: volumeName
-        oid: 1.3.6.1.4.1.55062.1.10.9.1.8
-        type: OctetString
-        help: Volume Name. - 1.3.6.1.4.1.55062.1.10.9.1.8
-        indexes:
-        - labelname: volumeIndex
-          type: gauge
-      - name: cpuTemperature
-        oid: 1.3.6.1.4.1.55062.1.12.10
-        type: gauge
-        help: CPU temperature - 1.3.6.1.4.1.55062.1.12.10
-      - name: systemFreeMem
-        oid: 1.3.6.1.4.1.55062.1.12.14
-        type: counter
-        help: System free memory - 1.3.6.1.4.1.55062.1.12.14
-      - name: systemAvailableMem
-        oid: 1.3.6.1.4.1.55062.1.12.15
-        type: counter
-        help: System available memory - 1.3.6.1.4.1.55062.1.12.15
-      - name: systemCacheMemory
-        oid: 1.3.6.1.4.1.55062.1.12.17
-        type: counter
-        help: System cached memory - 1.3.6.1.4.1.55062.1.12.17
-      - name: systemBufferMemory
-        oid: 1.3.6.1.4.1.55062.1.12.18
-        type: counter
-        help: System buffered memory - 1.3.6.1.4.1.55062.1.12.18
-      - name: firmwareVersion
-        oid: 1.3.6.1.4.1.55062.1.12.6
-        type: OctetString
-        help: Firmware Version - 1.3.6.1.4.1.55062.1.12.6
-      - name: firmwareUpgradeAvailable
-        oid: 1.3.6.1.4.1.55062.1.12.7
-        type: gauge
-        help: Firmware can upgrade or not - 1.3.6.1.4.1.55062.1.12.7
     qnapnew:
       walk:
       - 1.3.6.1.4.1.24681.1.2.9.1.3
       - 1.3.6.1.4.1.24681.1.2.9.1.4
       - 1.3.6.1.4.1.24681.1.2.9.1.5
+      - 1.3.6.1.4.1.24681.1.3.11.1.3
+      - 1.3.6.1.4.1.24681.1.3.17.1.6
       - 1.3.6.1.4.1.24681.1.3.9.1.5
       - 1.3.6.1.4.1.24681.1.4.1.1.1.2.1.2.1.4
+      - 1.3.6.1.4.1.55062.1.10.2.1.7
+      - 1.3.6.1.4.1.55062.1.10.2.1.9
       - 1.3.6.1.4.1.55062.1.10.20.1.3
       - 1.3.6.1.4.1.55062.1.10.20.1.4
       - 1.3.6.1.4.1.55062.1.10.20.1.5
       - 1.3.6.1.4.1.55062.1.10.20.1.7
-      - 1.3.6.1.4.1.55062.1.10.5.1.3
       - 1.3.6.1.4.1.55062.1.10.5.1.4
       - 1.3.6.1.4.1.55062.1.10.5.1.5
       - 1.3.6.1.4.1.55062.1.10.7.1.3
       - 1.3.6.1.4.1.55062.1.10.7.1.4
       - 1.3.6.1.4.1.55062.1.10.7.1.5
-      get:
-      - 1.3.6.1.4.1.24681.1.4.1.1.1.1.4.2.0
-      - 1.3.6.1.4.1.55062.1.10.10.0
-      - 1.3.6.1.4.1.55062.1.10.11.0
-      - 1.3.6.1.4.1.55062.1.10.12.0
-      - 1.3.6.1.4.1.55062.1.10.13.0
-      - 1.3.6.1.4.1.55062.1.10.14.0
-      - 1.3.6.1.4.1.55062.1.12.12.0
-      - 1.3.6.1.4.1.55062.1.13.1.0
+      - 1.3.6.1.4.1.55062.1.10.9.1.3
+      - 1.3.6.1.4.1.55062.1.10.9.1.4
       metrics:
       - name: ifPacketsReceived
         oid: 1.3.6.1.4.1.24681.1.2.9.1.3
@@ -301,6 +236,20 @@ data:
         indexes:
         - labelname: ifIndex
           type: gauge
+      - name: hdTemperatureEX
+        oid: 1.3.6.1.4.1.24681.1.3.11.1.3
+        type: gauge
+        help: Hard disk temperature in centigrade. - 1.3.6.1.4.1.24681.1.3.11.1.3
+        indexes:
+        - labelname: hdIndex
+          type: gauge
+      - name: sysVolumeStatusEX
+        oid: 1.3.6.1.4.1.24681.1.3.17.1.6
+        type: OctetString
+        help: System Volume status. - 1.3.6.1.4.1.24681.1.3.17.1.6
+        indexes:
+        - labelname: sysVolumeIndexEX
+          type: gauge
       - name: ifErrorPacketsEX
         oid: 1.3.6.1.4.1.24681.1.3.9.1.5
         type: counter
@@ -308,10 +257,6 @@ data:
         indexes:
         - labelname: ifIndexEX
           type: gauge
-      - name: cpuTemp
-        oid: 1.3.6.1.4.1.24681.1.4.1.1.1.1.4.2
-        type: gauge
-        help: CPU temperature in centigrade. - 1.3.6.1.4.1.24681.1.4.1.1.1.1.4.2
       - name: raidFreeSize
         oid: 1.3.6.1.4.1.24681.1.4.1.1.1.2.1.2.1.4
         type: counter
@@ -319,29 +264,20 @@ data:
         indexes:
         - labelname: raidIndex
           type: gauge
-      - name: cacheAccelerationServiceEnabled
-        oid: 1.3.6.1.4.1.55062.1.10.10
-        type: gauge
-        help: If acceleration service of cache is enabled. - 1.3.6.1.4.1.55062.1.10.10
-        enum_values:
-          0: "no"
-          1: "yes"
-      - name: cacheAvailablePercent
-        oid: 1.3.6.1.4.1.55062.1.10.11
-        type: gauge
-        help: Available percent of cache. - 1.3.6.1.4.1.55062.1.10.11
-      - name: cacheReadHitRate
-        oid: 1.3.6.1.4.1.55062.1.10.12
-        type: gauge
-        help: Read hit rate percent of cache. - 1.3.6.1.4.1.55062.1.10.12
-      - name: cacheWriteHitRate
-        oid: 1.3.6.1.4.1.55062.1.10.13
-        type: gauge
-        help: Write hit rate percent of cache. - 1.3.6.1.4.1.55062.1.10.13
-      - name: cacheStatus
-        oid: 1.3.6.1.4.1.55062.1.10.14
-        type: gauge
-        help: Status of cache. - 1.3.6.1.4.1.55062.1.10.14
+      - name: diskStatus
+        oid: 1.3.6.1.4.1.55062.1.10.2.1.7
+        type: OctetString
+        help: The status of hard drive. - 1.3.6.1.4.1.55062.1.10.2.1.7
+        indexes:
+        - labelname: diskIndex
+          type: gauge
+      - name: diskCapacity
+        oid: 1.3.6.1.4.1.55062.1.10.2.1.9
+        type: counter
+        help: The capacity in byte of hard drive. - 1.3.6.1.4.1.55062.1.10.2.1.9
+        indexes:
+        - labelname: diskIndex
+          type: gauge
       - name: lunCapacity
         oid: 1.3.6.1.4.1.55062.1.10.20.1.3
         type: counter
@@ -375,13 +311,6 @@ data:
           1: backup
           2: restore
           3: snapshot
-      - name: raidName
-        oid: 1.3.6.1.4.1.55062.1.10.5.1.3
-        type: OctetString
-        help: The name of RAID - 1.3.6.1.4.1.55062.1.10.5.1.3
-        indexes:
-        - labelname: raidIndex
-          type: gauge
       - name: raidStatus
         oid: 1.3.6.1.4.1.55062.1.10.5.1.4
         type: OctetString
@@ -424,14 +353,20 @@ data:
           -2: notReady
           -1: warning
           0: ready
-      - name: systemCPU_Usage
-        oid: 1.3.6.1.4.1.55062.1.12.12
-        type: gauge
-        help: System CPU usage - 1.3.6.1.4.1.55062.1.12.12
-      - name: upsStatus
-        oid: 1.3.6.1.4.1.55062.1.13.1
-        type: OctetString
-        help: ups status - 1.3.6.1.4.1.55062.1.13.1
+      - name: volumeCapacity
+        oid: 1.3.6.1.4.1.55062.1.10.9.1.3
+        type: counter
+        help: System Volume total size in byte. - 1.3.6.1.4.1.55062.1.10.9.1.3
+        indexes:
+        - labelname: volumeIndex
+          type: gauge
+      - name: volumeFreeSize
+        oid: 1.3.6.1.4.1.55062.1.10.9.1.4
+        type: counter
+        help: System Volume free size in byte. - 1.3.6.1.4.1.55062.1.10.9.1.4
+        indexes:
+        - labelname: volumeIndex
+          type: gauge
 kind: ConfigMap
 metadata:
   labels:

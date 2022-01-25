@@ -1,67 +1,62 @@
 modules:
-  qnap:
+  qnap: # only queries that are performed with snmpget
     walk:
-        - systemUsedMemory
+        # Needed by dashboard
+        - systemTemperatureEX
+        - cacheAvailablePercent
+        - cacheReadHitRate
+        - cacheWriteHitRate
         - systemTotalMem
-        - cpuUsage
+        - systemUsedMemory
         - systemCPU-UsageEX
-        - ifPacketsSentEX
-        - ifPacketsReceivedEX
-        - sysVolumeFreeSizeEX
-        - sysVolumeTotalSizeEX
-        - iops
-        - latency
-        - readHitRate
-        - writeHitRate
-  qnaplong:  # additional
-      walk:
+        - firmwareUpgradeAvailable
+        - systemUptimeEX
+        - cacheAccelerationServiceEnabled
+        - cpuTemperature
+        # Other
         - systemFreeMem
         - systemAvailableMem
         - systemCacheMemory
         - systemBufferMemory
-        - sysVolumeStatusEX
-        - systemUptimeEX
-        - firmwareVersion
-        - firmwareUpgradeAvailable
-        - systemFreeMem
-        - systemAvailableMem
-        - sysVolumeDescrEX
-        - diskModel
-        - diskCapacity
-        - diskStatus
-        - diskTemperture
-        - diskSmartInfo  # abnormal(2), warning(1), good(0), error(-1)
-        - volumeName
-        - volumeCapacity
-        - volumeStatus
-        - volumeFreeSize
-        - cpuTemperature
-        - systemTemperatureEX
-        - enclosureSystemTemp
-        - hdTemperatureEX
-        - sysFanSpeedEX
-  qnapnew:  # additional
-      walk:
-        - ifPacketsReceived
-        - ifPacketsSent
-        - ifErrorPackets
-        - ifErrorPacketsEX
-        - systemCPU-Usage
-        - cpuTemp
-        - lunCapacity
-        - lunUsedPercent
-        - lunStatus
-        - lunBackupStatus
-        - raidStatus
-        - raidName
-        - raidCapacity
-        - raidFreeSize
-        - storagepoolCapacity
-        - storagepoolFreeSize
-        - storagepoolStatus
-        - upsStatus
-        - cacheAvailablePercent
-        - cacheReadHitRate
-        - cacheWriteHitRate
-        - cacheStatus
-        - cacheAccelerationServiceEnabled # bool
+        #- cpuTemp  # This is usually 1-2deg lower than cpuTemperature
+        #- cacheStatus
+        - sysUPSStatus
+  qnaplong: # only queries that are performed with snmpwalk
+    walk:
+      # Needed by dashboard
+      - diskSmartInfo  # abnormal(2), warning(1), good(0), error(-1)
+      - diskTemperture
+      - enclosureSystemTemp
+      - iops
+      - latency
+      - sysVolumeTotalSizeEX
+      - sysVolumeFreeSizeEX
+      - ifPacketsReceivedEX
+      - ifPacketsSentEX
+      - cpuUsage
+      - volumeStatus
+      - sysFanSpeedEX # TODO: consider removing
+  qnapnew: # testing new metrics. Do not use for alerts
+    walk:      
+      # Other
+      - hdTemperatureEX
+      - sysVolumeStatusEX
+      - diskStatus
+      - diskCapacity
+      - volumeCapacity
+      - volumeFreeSize
+      # new
+      - ifPacketsReceived
+      - ifPacketsSent
+      - ifErrorPackets
+      - ifErrorPacketsEX
+      - lunCapacity
+      - lunUsedPercent
+      - lunStatus
+      - lunBackupStatus
+      - raidStatus
+      - raidCapacity
+      - raidFreeSize
+      - storagepoolCapacity
+      - storagepoolFreeSize
+      - storagepoolStatus
