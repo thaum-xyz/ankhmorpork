@@ -52,6 +52,14 @@ local all = snmp(config) + {
     config.targets[1].hosts,
     config.targets[1].interval
   ),
+  qnapnewProbe: probe(
+    config.targets[2].module,
+    config.namespace,
+    $.deployment.metadata.labels,
+    config.targets[2].module,
+    config.targets[2].hosts,
+    config.targets[2].interval
+  ),
   prometheusRule: {
     apiVersion: "monitoring.coreos.com/v1",
     kind: "PrometheusRule",

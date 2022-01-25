@@ -1,41 +1,67 @@
 modules:
   qnap:
+    walk:
+        - systemUsedMemory
+        - systemTotalMem
+        - cpuUsage
+        - systemCPU-UsageEX
+        - ifPacketsSentEX
+        - ifPacketsReceivedEX
+        - sysVolumeFreeSizeEX
+        - sysVolumeTotalSizeEX
+        - iops
+        - latency
+        - readHitRate
+        - writeHitRate
+  qnaplong:  # additional
       walk:
-          - cpuUsage
-          - systemCPU-UsageEX
-          - systemFreeMemEX
-          - systemFreeMem
-          - systemUsedMemory
-          - systemAvailableMem
-          #- cpu-TemperatureEX
-          - systemTemperatureEX
-          - enclosureSystemTemp
-          - hdTemperatureEX
-          - ifPacketsReceivedEX
-          - ifPacketsSentEX
-          - sysFanSpeedEX
-          - sysVolumeFreeSizeEX
-          - sysVolumeStatusEX
-          - diskTemperture
-          - volumeStatus
-          - iops
-          - latency
-          #- availablePercent
-          - readHitRate
-          - writeHitRate
-  qnaplong:
-      walk:
-        - modelNameEX
-        - hostNameEX
+        - systemFreeMem
+        - systemAvailableMem
+        - systemCacheMemory
+        - systemBufferMemory
+        - sysVolumeStatusEX
+        - systemUptimeEX
         - firmwareVersion
         - firmwareUpgradeAvailable
-        - systemTotalMemEX
-        - systemTotalMem  # V5
+        - systemFreeMem
+        - systemAvailableMem
         - sysVolumeDescrEX
-        - sysVolumeTotalSizeEX
         - diskModel
         - diskCapacity
-        - diskSmartInfo
+        - diskStatus
+        - diskTemperture
+        - diskSmartInfo  # abnormal(2), warning(1), good(0), error(-1)
         - volumeName
         - volumeCapacity
-        - systemUptimeEX
+        - volumeStatus
+        - volumeFreeSize
+        - cpuTemperature
+        - systemTemperatureEX
+        - enclosureSystemTemp
+        - hdTemperatureEX
+        - sysFanSpeedEX
+  qnapnew:  # additional
+      walk:
+        - ifPacketsReceived
+        - ifPacketsSent
+        - ifErrorPackets
+        - ifErrorPacketsEX
+        - systemCPU-Usage
+        - cpuTemp
+        - lunCapacity
+        - lunUsedPercent
+        - lunStatus
+        - lunBackupStatus
+        - raidStatus
+        - raidName
+        - raidCapacity
+        - raidFreeSize
+        - storagepoolCapacity
+        - storagepoolFreeSize
+        - storagepoolStatus
+        - upsStatus
+        - cacheAvailablePercent
+        - cacheReadHitRate
+        - cacheWriteHitRate
+        - cacheStatus
+        - cacheAccelerationServiceEnabled # bool
