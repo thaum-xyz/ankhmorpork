@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: overseer
     app.kubernetes.io/part-of: overseer
-    #probe: enabled
+    probe: enabled
   name: overseer
   namespace: multimedia
 spec:
