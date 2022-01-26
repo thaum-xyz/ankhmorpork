@@ -4,11 +4,14 @@ kind: ServiceMonitor
 metadata:
   name: ingress-nginx
   namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
 spec:
   endpoints:
   - interval: 30s
     port: metrics
     honorLabels: true
+  jobLabel: app.kubernetes.io/name
   selector:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
