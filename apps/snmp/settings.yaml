@@ -17,4 +17,4 @@ targets:
     interval: 1m
   - module: qnaplong
     hosts: [192.168.2.29]
-    interval: 150s
+    interval: 4m
