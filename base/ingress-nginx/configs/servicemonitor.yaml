@@ -8,6 +8,7 @@ spec:
   endpoints:
   - interval: 30s
     port: metrics
+    honorLabels: true
   selector:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
