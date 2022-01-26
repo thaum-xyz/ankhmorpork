@@ -1,49 +1,47 @@
 # Assumptions:
 # - Gathering data via SNMP is slow
 # - Higher-level data is more important than lower-level one (better to get RAID group status than individual disk status)
-# - 
 
 modules:
   qnap: # only queries that are performed with snmpget
     walk:
         # Needed by dashboard
-        - systemTemperatureEX
-        - cacheAvailablePercent
-        - cacheReadHitRate
-        - cacheWriteHitRate
-        - systemTotalMem
-        - systemUsedMemory
-        - systemCPU-UsageEX
-        - firmwareUpgradeAvailable
-        - systemUptimeEX
-        - cacheAccelerationServiceEnabled
-        - cpuTemperature
-        # Other
         - systemFreeMem
         - systemAvailableMem
         - systemCacheMemory
         - systemBufferMemory
+        - systemTotalMem
+        - systemUsedMemory
+        - systemCPU-UsageEX
+        - cacheAccelerationServiceEnabled
+        - cacheAvailablePercent
+        - cacheReadHitRate
+        - cacheWriteHitRate
+        - cpuTemperature
+        - systemTemperatureEX
+        - systemUptimeEX
         - sysUPSStatus
+        - firmwareUpgradeAvailable
   qnaplong: # only queries that are performed with snmpwalk
     walk:
       # Needed by dashboard
       - diskSmartInfo  # abnormal(2), warning(1), good(0), error(-1)
-      - diskTemperture
-      - enclosureSystemTemp
-      - iops
-      - latency
+      - raidStatus
+      - volumeStatus
+      - volumeCapacity
+      - volumeFreeSize
+      - storagepoolStatus
+      - storagepoolCapacity
+      - storagepoolFreeSize
       - ifPacketsReceivedEX
       - ifPacketsSentEX
       - ifErrorPacketsEX
+      - iops     # Disk IOps
+      - latency  # Disk latency
       - cpuUsage
-      - volumeStatus
+      - diskTemperture
+      - enclosureSystemTemp
       - sysFanSpeedEX # TODO: consider removing
-      - volumeCapacity
-      - volumeFreeSize
-      - raidStatus
-      - storagepoolCapacity
-      - storagepoolFreeSize
-      - storagepoolStatus
     overrides: # 0 is critical, 1 is normal, 0< is abnormal
       raidStatus:
         regex_extracts:
