@@ -8,7 +8,7 @@ metadata:
   name: snmp-exporter
   namespace: snmp
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter
@@ -25,7 +25,6 @@ spec:
       containers:
       - args:
         - --config.file=/config/snmp.yaml
-        - --log.level=debug
         image: quay.io/prometheus/snmp-exporter:v0.20.0
         imagePullPolicy: IfNotPresent
         livenessProbe:

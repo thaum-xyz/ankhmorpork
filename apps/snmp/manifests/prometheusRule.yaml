@@ -32,9 +32,36 @@ spec:
     - alert: QNAPVolumeNotReady
       annotations:
         description: Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance
-          }} is not ready.
+          }} is not ready for last 2h.
         summary: QNAP volume is not ready
-      expr: volumeStatus != 1
+      expr: volumeStatus != 0
+      for: 2h
+      labels:
+        severity: warning
+    - alert: QNAPVolumeNotReady
+      annotations:
+        description: Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance
+          }} is in critical state and needs immediate attention.
+        summary: QNAP volume is in critical state
+      expr: volumeStatus < 0
       for: 10m
+      labels:
+        severity: critical
+    - alert: QNAPRAIDProblem
+      annotations:
+        description: RAID array number {{ $labels.raidIndex }} on QNAP {{ $labels.instance
+          }} is in critical state and needs immediate attention.
+        summary: QNAP RAID is in error state
+      expr: raidStatus < 0
+      for: 20m
+      labels:
+        severity: critical
+    - alert: QNAPRAIDProblem
+      annotations:
+        description: RAID array number {{ $labels.raidIndex }} on QNAP {{ $labels.instance
+          }} is in warning state for last 12h.
+        summary: QNAP RAID is in warning state
+      expr: raidStatus != 0
+      for: 12h
       labels:
         severity: warning

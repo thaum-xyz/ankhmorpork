@@ -92,14 +92,53 @@ local all = snmp(config) + {
           },
           {
             alert: "QNAPVolumeNotReady",
-            expr: "volumeStatus != 1",
-            "for": "10m",
+            expr: "volumeStatus != 0",
+            "for": "2h",
             labels: {
-              severity: "warning", // TODO: maybe it should be critical?
+              severity: "warning",
             },
             annotations: {
               summary: "QNAP volume is not ready",
-              description: "Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance }} is not ready.",
+              description: "Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance }} is not ready for last 2h.",
+              //runbook_url: ""
+            },
+          },
+          {
+            alert: "QNAPVolumeNotReady",
+            expr: "volumeStatus < 0",
+            "for": "10m",
+            labels: {
+              severity: "critical",
+            },
+            annotations: {
+              summary: "QNAP volume is in critical state",
+              description: "Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance }} is in critical state and needs immediate attention.",
+              //runbook_url: ""
+            },
+          },
+          {
+            alert: "QNAPRAIDProblem",
+            expr: "raidStatus < 0",
+            "for": "20m",
+            labels: {
+              severity: "critical",
+            },
+            annotations: {
+              summary: "QNAP RAID is in error state",
+              description: "RAID array number {{ $labels.raidIndex }} on QNAP {{ $labels.instance }} is in critical state and needs immediate attention.",
+              //runbook_url: ""
+            },
+          },
+          {
+            alert: "QNAPRAIDProblem",
+            expr: "raidStatus != 0",
+            "for": "12h",
+            labels: {
+              severity: "warning",
+            },
+            annotations: {
+              summary: "QNAP RAID is in warning state",
+              description: "RAID array number {{ $labels.raidIndex }} on QNAP {{ $labels.instance }} is in warning state for last 12h.",
               //runbook_url: ""
             },
           },
