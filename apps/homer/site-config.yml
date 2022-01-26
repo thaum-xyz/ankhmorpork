@@ -128,7 +128,7 @@ services:
         <<: *Local
         url: "http://192.168.2.95:9117/"
       - name: Prowlarr
-        subtitle: "Indexer manager/proxy to integrate with PVR apps"
+        subtitle: "Indexer manager/proxy"
         logo: "https://avatars.githubusercontent.com/u/73049443?s=200&v=4"
         <<: *Local
         url: "http://192.168.2.95:9696/"
