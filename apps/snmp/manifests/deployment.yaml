@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: c1a3da0a413c029cb0b804d2dd17b1bd
+        checksum.config/md5: a0002c163f5ae3d956bcf99d385d20c9
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: snmp-exporter

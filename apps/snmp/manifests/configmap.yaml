@@ -91,16 +91,21 @@ data:
     qnaplong:
       walk:
       - 1.3.6.1.4.1.24681.1.3.15.1.3
-      - 1.3.6.1.4.1.24681.1.3.17.1.4
-      - 1.3.6.1.4.1.24681.1.3.17.1.5
       - 1.3.6.1.4.1.24681.1.3.9.1.3
       - 1.3.6.1.4.1.24681.1.3.9.1.4
+      - 1.3.6.1.4.1.24681.1.3.9.1.5
       - 1.3.6.1.4.1.24681.1.4.1.1.1.1.4.3.1.3
       - 1.3.6.1.4.1.24681.1.4.1.1.1.1.5.2.1.5
       - 1.3.6.1.4.1.24681.1.4.1.1.1.1.5.2.1.6
       - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.3
       - 1.3.6.1.4.1.24681.1.4.1.11.5.6.2.1.4
       - 1.3.6.1.4.1.55062.1.10.34.1.7
+      - 1.3.6.1.4.1.55062.1.10.5.1.4
+      - 1.3.6.1.4.1.55062.1.10.7.1.3
+      - 1.3.6.1.4.1.55062.1.10.7.1.4
+      - 1.3.6.1.4.1.55062.1.10.7.1.5
+      - 1.3.6.1.4.1.55062.1.10.9.1.3
+      - 1.3.6.1.4.1.55062.1.10.9.1.4
       - 1.3.6.1.4.1.55062.1.10.9.1.5
       metrics:
       - name: sysFanSpeedEX
@@ -109,20 +114,6 @@ data:
         help: System fan speed (RPM). - 1.3.6.1.4.1.24681.1.3.15.1.3
         indexes:
         - labelname: sysFanIndexEX
-          type: gauge
-      - name: sysVolumeTotalSizeEX
-        oid: 1.3.6.1.4.1.24681.1.3.17.1.4
-        type: counter
-        help: System Volume total size in byte. - 1.3.6.1.4.1.24681.1.3.17.1.4
-        indexes:
-        - labelname: sysVolumeIndexEX
-          type: gauge
-      - name: sysVolumeFreeSizeEX
-        oid: 1.3.6.1.4.1.24681.1.3.17.1.5
-        type: counter
-        help: System Volume free size in byte. - 1.3.6.1.4.1.24681.1.3.17.1.5
-        indexes:
-        - labelname: sysVolumeIndexEX
           type: gauge
       - name: ifPacketsReceivedEX
         oid: 1.3.6.1.4.1.24681.1.3.9.1.3
@@ -135,6 +126,13 @@ data:
         oid: 1.3.6.1.4.1.24681.1.3.9.1.4
         type: counter
         help: System packets sent. - 1.3.6.1.4.1.24681.1.3.9.1.4
+        indexes:
+        - labelname: ifIndexEX
+          type: gauge
+      - name: ifErrorPacketsEX
+        oid: 1.3.6.1.4.1.24681.1.3.9.1.5
+        type: counter
+        help: System error packets. - 1.3.6.1.4.1.24681.1.3.9.1.5
         indexes:
         - labelname: ifIndexEX
           type: gauge
@@ -185,132 +183,6 @@ data:
         indexes:
         - labelname: enclosureIndex
           type: gauge
-      - name: volumeStatus
-        oid: 1.3.6.1.4.1.55062.1.10.9.1.5
-        type: OctetString
-        help: Volume status - 1.3.6.1.4.1.55062.1.10.9.1.5
-        indexes:
-        - labelname: volumeIndex
-          type: gauge
-    qnapnew:
-      walk:
-      - 1.3.6.1.4.1.24681.1.2.9.1.3
-      - 1.3.6.1.4.1.24681.1.2.9.1.4
-      - 1.3.6.1.4.1.24681.1.2.9.1.5
-      - 1.3.6.1.4.1.24681.1.3.11.1.3
-      - 1.3.6.1.4.1.24681.1.3.17.1.6
-      - 1.3.6.1.4.1.24681.1.3.9.1.5
-      - 1.3.6.1.4.1.24681.1.4.1.1.1.2.1.2.1.4
-      - 1.3.6.1.4.1.55062.1.10.2.1.7
-      - 1.3.6.1.4.1.55062.1.10.2.1.9
-      - 1.3.6.1.4.1.55062.1.10.20.1.3
-      - 1.3.6.1.4.1.55062.1.10.20.1.4
-      - 1.3.6.1.4.1.55062.1.10.20.1.5
-      - 1.3.6.1.4.1.55062.1.10.20.1.7
-      - 1.3.6.1.4.1.55062.1.10.5.1.4
-      - 1.3.6.1.4.1.55062.1.10.5.1.5
-      - 1.3.6.1.4.1.55062.1.10.7.1.3
-      - 1.3.6.1.4.1.55062.1.10.7.1.4
-      - 1.3.6.1.4.1.55062.1.10.7.1.5
-      - 1.3.6.1.4.1.55062.1.10.9.1.3
-      - 1.3.6.1.4.1.55062.1.10.9.1.4
-      metrics:
-      - name: ifPacketsReceived
-        oid: 1.3.6.1.4.1.24681.1.2.9.1.3
-        type: counter
-        help: System packets received. - 1.3.6.1.4.1.24681.1.2.9.1.3
-        indexes:
-        - labelname: ifIndex
-          type: gauge
-      - name: ifPacketsSent
-        oid: 1.3.6.1.4.1.24681.1.2.9.1.4
-        type: counter
-        help: System packets sent. - 1.3.6.1.4.1.24681.1.2.9.1.4
-        indexes:
-        - labelname: ifIndex
-          type: gauge
-      - name: ifErrorPackets
-        oid: 1.3.6.1.4.1.24681.1.2.9.1.5
-        type: counter
-        help: System error packets. - 1.3.6.1.4.1.24681.1.2.9.1.5
-        indexes:
-        - labelname: ifIndex
-          type: gauge
-      - name: hdTemperatureEX
-        oid: 1.3.6.1.4.1.24681.1.3.11.1.3
-        type: gauge
-        help: Hard disk temperature in centigrade. - 1.3.6.1.4.1.24681.1.3.11.1.3
-        indexes:
-        - labelname: hdIndex
-          type: gauge
-      - name: sysVolumeStatusEX
-        oid: 1.3.6.1.4.1.24681.1.3.17.1.6
-        type: OctetString
-        help: System Volume status. - 1.3.6.1.4.1.24681.1.3.17.1.6
-        indexes:
-        - labelname: sysVolumeIndexEX
-          type: gauge
-      - name: ifErrorPacketsEX
-        oid: 1.3.6.1.4.1.24681.1.3.9.1.5
-        type: counter
-        help: System error packets. - 1.3.6.1.4.1.24681.1.3.9.1.5
-        indexes:
-        - labelname: ifIndexEX
-          type: gauge
-      - name: raidFreeSize
-        oid: 1.3.6.1.4.1.24681.1.4.1.1.1.2.1.2.1.4
-        type: counter
-        help: RAID freesize in byte. - 1.3.6.1.4.1.24681.1.4.1.1.1.2.1.2.1.4
-        indexes:
-        - labelname: raidIndex
-          type: gauge
-      - name: diskStatus
-        oid: 1.3.6.1.4.1.55062.1.10.2.1.7
-        type: OctetString
-        help: The status of hard drive. - 1.3.6.1.4.1.55062.1.10.2.1.7
-        indexes:
-        - labelname: diskIndex
-          type: gauge
-      - name: diskCapacity
-        oid: 1.3.6.1.4.1.55062.1.10.2.1.9
-        type: counter
-        help: The capacity in byte of hard drive. - 1.3.6.1.4.1.55062.1.10.2.1.9
-        indexes:
-        - labelname: diskIndex
-          type: gauge
-      - name: lunCapacity
-        oid: 1.3.6.1.4.1.55062.1.10.20.1.3
-        type: counter
-        help: LUN capacity in byte. - 1.3.6.1.4.1.55062.1.10.20.1.3
-        indexes:
-        - labelname: lunIndex
-          type: gauge
-      - name: lunUsedPercent
-        oid: 1.3.6.1.4.1.55062.1.10.20.1.4
-        type: gauge
-        help: LUN used percent. - 1.3.6.1.4.1.55062.1.10.20.1.4
-        indexes:
-        - labelname: lunIndex
-          type: gauge
-      - name: lunStatus
-        oid: 1.3.6.1.4.1.55062.1.10.20.1.5
-        type: OctetString
-        help: LUN status. - 1.3.6.1.4.1.55062.1.10.20.1.5
-        indexes:
-        - labelname: lunIndex
-          type: gauge
-      - name: lunBackupStatus
-        oid: 1.3.6.1.4.1.55062.1.10.20.1.7
-        type: gauge
-        help: LUN backup status. - 1.3.6.1.4.1.55062.1.10.20.1.7
-        indexes:
-        - labelname: lunIndex
-          type: gauge
-        enum_values:
-          0: none
-          1: backup
-          2: restore
-          3: snapshot
       - name: raidStatus
         oid: 1.3.6.1.4.1.55062.1.10.5.1.4
         type: OctetString
@@ -318,13 +190,16 @@ data:
         indexes:
         - labelname: raidIndex
           type: gauge
-      - name: raidCapacity
-        oid: 1.3.6.1.4.1.55062.1.10.5.1.5
-        type: counter
-        help: The total capacity in byte of RAID. - 1.3.6.1.4.1.55062.1.10.5.1.5
-        indexes:
-        - labelname: raidIndex
-          type: gauge
+        regex_extracts:
+          "":
+          - value: "1"
+            regex: ^(?:Ready)$
+          - value: "0"
+            regex: ^(?:Degraded)$
+          - value: "-1"
+            regex: ^(?:Rebuilding.*)$
+          - value: "-2"
+            regex: ^(?:Migrating.*)$
       - name: storagepoolCapacity
         oid: 1.3.6.1.4.1.55062.1.10.7.1.3
         type: counter
@@ -367,6 +242,21 @@ data:
         indexes:
         - labelname: volumeIndex
           type: gauge
+      - name: volumeStatus
+        oid: 1.3.6.1.4.1.55062.1.10.9.1.5
+        type: OctetString
+        help: Volume status - 1.3.6.1.4.1.55062.1.10.9.1.5
+        indexes:
+        - labelname: volumeIndex
+          type: gauge
+        regex_extracts:
+          "":
+          - value: "1"
+            regex: ^(?:Good)$
+          - value: "0"
+            regex: ^(?:Error)$
+          - value: "-1"
+            regex: ^(?:Warning.*)$
 kind: ConfigMap
 metadata:
   labels:

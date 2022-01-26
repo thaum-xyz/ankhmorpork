@@ -1,3 +1,8 @@
+# Assumptions:
+# - Gathering data via SNMP is slow
+# - Higher-level data is more important than lower-level one (better to get RAID group status than individual disk status)
+# - 
+
 modules:
   qnap: # only queries that are performed with snmpget
     walk:
@@ -18,8 +23,6 @@ modules:
         - systemAvailableMem
         - systemCacheMemory
         - systemBufferMemory
-        #- cpuTemp  # This is usually 1-2deg lower than cpuTemperature
-        #- cacheStatus
         - sysUPSStatus
   qnaplong: # only queries that are performed with snmpwalk
     walk:
@@ -29,34 +32,55 @@ modules:
       - enclosureSystemTemp
       - iops
       - latency
-      - sysVolumeTotalSizeEX
-      - sysVolumeFreeSizeEX
       - ifPacketsReceivedEX
       - ifPacketsSentEX
+      - ifErrorPacketsEX
       - cpuUsage
       - volumeStatus
       - sysFanSpeedEX # TODO: consider removing
-  qnapnew: # testing new metrics. Do not use for alerts
-    walk:      
-      # Other
-      - hdTemperatureEX
-      - sysVolumeStatusEX
-      - diskStatus
-      - diskCapacity
       - volumeCapacity
       - volumeFreeSize
-      # new
-      - ifPacketsReceived
-      - ifPacketsSent
-      - ifErrorPackets
-      - ifErrorPacketsEX
-      - lunCapacity
-      - lunUsedPercent
-      - lunStatus
-      - lunBackupStatus
       - raidStatus
-      - raidCapacity
-      - raidFreeSize
       - storagepoolCapacity
       - storagepoolFreeSize
       - storagepoolStatus
+    overrides: # 0 is critical, 1 is normal, 0< is abnormal
+      raidStatus:
+        regex_extracts:
+          '':
+            - regex: 'Ready'
+              value: 1
+            - regex: 'Degraded'
+              value: 0
+            - regex: 'Rebuilding.*'
+              value: -1
+            - regex: 'Migrating.*'
+              value: -2
+      volumeStatus:
+        regex_extracts:
+          '':
+            - regex: 'Good'
+              value: 1
+            - regex: 'Error'
+              value: 0
+            - regex: 'Warning.*'
+              value: -1
+
+# Additional objects that were checked before but are not used:
+# - raidCapacity  # storagepoolCapacity and volumeCapacity are more important
+# - raidFreeSize  # storagepoolFreeSize and volumeFreeSize are more important
+# - ifPacketsReceived  # Same as ifPacketsReceivedEX
+# - ifPacketsSent   # Same as ifPacketsSentEX
+# - ifErrorPackets  # Same as ifErrorPacketsEX
+# - lunCapacity # FIXME: no luns at the moment
+# - lunUsedPercent # FIXME: no luns at the moment
+# - lunStatus # FIXME: This is a string and needs overrides
+# - lunBackupStatus # FIXME: This is a string and needs overrides
+# - diskStatus  # FIXME: This needs overrides, but it doesn't look useful when all disks are in RAID groups
+# - diskCapacity # Not needded as all disks are in RAID groups
+# - hdTemperatureEX  # same as diskTemperture
+# - sysVolumeTotalSizeEX # same as volumeCapacity
+# - sysVolumeFreeSizeEX # same as volumeFreeSize
+# - sysVolumeStatusEX # same as volumeStatus
+# - cpuTemp  # This is usually 1-2deg lower than cpuTemperature
+# - cacheStatus
