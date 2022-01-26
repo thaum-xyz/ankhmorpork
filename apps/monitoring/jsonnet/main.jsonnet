@@ -548,6 +548,69 @@ local kp =
     //
     // Custom components
     //
+    qnap: {
+      _metadata:: $.nodeExporter.serviceMonitor.metadata {
+        name: 'node-exporter-qnap',
+        labels+: {
+          'app.kubernetes.io/version':: '',
+          'app.kubernetes.io/part-of': 'qnap',
+        },
+      },
+      serviceMonitor: $.nodeExporter.serviceMonitor {
+        metadata+: $.qnap._metadata,
+        spec+: {
+          endpoints: [{
+            interval: '15s',
+            port: 'http',
+            relabelings: [
+              {
+                action: 'replace',
+                regex: '(.*)',
+                replacement: '$1',
+                sourceLabels: ['__meta_kubernetes_service_label_app_kubernetes_io_part_of'],
+                targetLabel: 'instance',
+              },
+              {
+                action: 'replace',
+                regex: '(.*)',
+                replacement: '$1',
+                sourceLabels: ['__meta_kubernetes_endpoints_name'],
+                targetLabel: 'pod',
+              },
+            ],
+          }],
+          selector+: {
+            matchLabels+: {
+              'app.kubernetes.io/part-of': 'qnap',
+            },
+          },
+        },
+      },
+      service: $.nodeExporter.service {
+        metadata+: $.qnap._metadata,
+        spec: {
+          clusterIP: 'None',
+          ports: [{
+            name: 'http',
+            port: 9100,
+          }],
+        },
+      },
+      endpoints: {
+        apiVersion: 'v1',
+        kind: 'Endpoints',
+        metadata: $.qnap._metadata,
+        subsets: [{
+          addresses: [{
+            ip: '192.168.2.29',
+          }],
+          ports: [{
+            name: 'http',
+            port: 9100,
+          }],
+        }],
+      },
+    },
 
     windowsExporter: windows($.values.windowsExporter),
 
