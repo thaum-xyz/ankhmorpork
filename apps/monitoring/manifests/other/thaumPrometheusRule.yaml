@@ -71,7 +71,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/FilesystemReadOnly
         summary: Filesystem went read-only possibly due to device error.
       expr: |
-        node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)"} != 0
+        node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)",mountpoint!~"/mnt/snapshot.*"} != 0
       labels:
         severity: critical
   - name: sites
