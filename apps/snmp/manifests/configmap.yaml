@@ -88,6 +88,7 @@ data:
         oid: 1.3.6.1.4.1.55062.1.12.7
         type: gauge
         help: Firmware can upgrade or not - 1.3.6.1.4.1.55062.1.12.7
+      timeout: 10s
     qnaplong:
       walk:
       - 1.3.6.1.4.1.24681.1.3.15.1.3
@@ -200,6 +201,8 @@ data:
             regex: ^(?:0x52656275696C64696E67.*)$
           - value: "2"
             regex: ^(?:0x4D6967726174696E67.*)$
+          - value: "3"
+            regex: ^(?:.*)$
       - name: storagepoolCapacity
         oid: 1.3.6.1.4.1.55062.1.10.7.1.3
         type: counter
@@ -257,6 +260,9 @@ data:
             regex: ^(?:0x4572726F72.*)$
           - value: "1"
             regex: ^(?:0x5761726E696E67.*)$
+          - value: "2"
+            regex: ^(?:.*)$
+      timeout: 10s
 kind: ConfigMap
 metadata:
   labels:

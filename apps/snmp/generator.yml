@@ -4,6 +4,7 @@
 
 modules:
   qnap: # only queries that are performed with snmpget
+    timeout: 10s
     walk:
         # Needed by dashboard
         - systemFreeMem
@@ -23,6 +24,7 @@ modules:
         - sysUPSStatus
         - firmwareUpgradeAvailable
   qnaplong: # only queries that are performed with snmpwalk
+    timeout: 10s
     walk:
       # Needed by dashboard
       - diskSmartInfo  # abnormal(2), warning(1), good(0), error(-1)
@@ -45,7 +47,7 @@ modules:
     overrides:
     # Values: -1 is critical, 0 is normal, >0 is abnormal
       raidStatus:
-        regex_extracts:
+        regex_extracts: # First regex match wins
           '':
             - regex: '0x4465677261646564.*' # Degraded
               value: -1
@@ -55,6 +57,8 @@ modules:
               value: 1
             - regex: '0x4D6967726174696E67.*' # Migrating
               value: 2
+            - regex: '.*' # Unk
+              value: 3
       volumeStatus:
         regex_extracts:
           '':
@@ -64,6 +68,8 @@ modules:
               value: -1
             - regex: '0x5761726E696E67.*' # Warning
               value: 1
+            - regex: '.*' # Unk
+              value: 2
 
 # Additional objects that were checked before but are not used:
 # - raidCapacity  # storagepoolCapacity and volumeCapacity are more important
