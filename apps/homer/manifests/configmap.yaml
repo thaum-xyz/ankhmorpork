@@ -130,6 +130,11 @@ data:
             logo: "https://avatars.githubusercontent.com/u/15383019?s=200&v=4"
             <<: *Local
             url: "http://192.168.2.95:9117/"
+          - name: Prowlarr
+            subtitle: "Indexer manager/proxy to integrate with PVR apps"
+            logo: "https://avatars.githubusercontent.com/u/73049443?s=200&v=4"
+            <<: *Local
+            url: "http://192.168.2.95:9696/"
           - name: Transmission
             subtitle: "downloader"
             logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
