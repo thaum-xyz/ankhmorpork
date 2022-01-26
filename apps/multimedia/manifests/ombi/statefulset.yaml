@@ -41,16 +41,15 @@ spec:
             port: http-ombi
           timeoutSeconds: 10
         resources:
-          #limits:
-          #  cpu: 100m
-          #  memory: 500Mi
+          limits:
+            cpu: 100m
+            memory: 500Mi
           requests:
             cpu: 10m
             memory: 250Mi
         startupProbe:
           tcpSocket:
             port: http-ombi
-          failureThreshold: 120
         volumeMounts:
         - mountPath: /config
           name: ombi-data

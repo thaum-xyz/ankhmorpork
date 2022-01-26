@@ -1,5 +1,6 @@
 local jackett = import 'jackett.libsonnet';
 local ombi = import 'ombi.libsonnet';
+local prowlarr = import 'prowlarr.libsonnet';
 
 local configYAML = (importstr '../settings.yaml');
 
@@ -33,6 +34,9 @@ local lbService = {
 };
 
 local all = {
+  prowlarr: prowlarr(config.prowlarr) + {
+    service+: lbService,
+  },
   jackett: jackett(config.jackett) + {
     service+: lbService,
   },

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+    metallb.universe.tf/allow-shared-ip: multimedia-svc
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: prowlarr
+    app.kubernetes.io/part-of: prowlarr
+    app.kubernetes.io/version: v0.2.0.1439
+  name: prowlarr
+  namespace: multimedia
+spec:
+  externalTrafficPolicy: Cluster
+  loadBalancerIP: 192.168.2.95
+  ports:
+  - name: http
+    port: 9696
+    targetPort: http
+  selector:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: prowlarr
+    app.kubernetes.io/part-of: prowlarr
+  sessionAffinity: None
+  type: LoadBalancer

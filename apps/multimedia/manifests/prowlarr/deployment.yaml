@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: prowlarr
+    app.kubernetes.io/part-of: prowlarr
+    app.kubernetes.io/version: v0.2.0.1439
+  name: prowlarr
+  namespace: multimedia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: prowlarr
+      app.kubernetes.io/part-of: prowlarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: prowlarr
+        app.kubernetes.io/part-of: prowlarr
+        app.kubernetes.io/version: v0.2.0.1439
+    spec:
+      containers:
+      - env:
+        - name: TZ
+          value: UTC
+        image: ghcr.io/k8s-at-home/prowlarr:v0.2.0.1439
+        imagePullPolicy: IfNotPresent
+        name: prowlarr
+        ports:
+        - containerPort: 9696
+          name: http
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          periodSeconds: 60
+          tcpSocket:
+            port: 9696
+          timeoutSeconds: 1
+        resources: {}
+        startupProbe:
+          failureThreshold: 30
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          tcpSocket:
+            port: 9696
+          timeoutSeconds: 1
+        volumeMounts:
+        - mountPath: /config
+          name: config
+      restartPolicy: Always
+      serviceAccountName: prowlarr
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: prowlarr-config

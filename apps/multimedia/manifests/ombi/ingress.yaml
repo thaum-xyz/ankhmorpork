@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: ombi
     app.kubernetes.io/part-of: ombi
     app.kubernetes.io/version: 4.3.3
-    # probe: enabled
+    probe: enabled
   name: ombi
   namespace: multimedia
 spec:
