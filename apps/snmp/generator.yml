@@ -42,27 +42,28 @@ modules:
       - diskTemperture
       - enclosureSystemTemp
       - sysFanSpeedEX # TODO: consider removing
-    overrides: # 0 is critical, 1 is normal, 0< is abnormal
+    overrides:
+    # Values: -1 is critical, 0 is normal, >0 is abnormal
       raidStatus:
         regex_extracts:
           '':
-            - regex: 'Ready'
-              value: 1
-            - regex: 'Degraded'
-              value: 0
-            - regex: 'Rebuilding.*'
+            - regex: '0x4465677261646564.*' # Degraded
               value: -1
-            - regex: 'Migrating.*'
-              value: -2
+            - regex: '0x5265616479.*' # Ready
+              value: 0
+            - regex: '0x52656275696C64696E67.*' # Rebuilding
+              value: 1
+            - regex: '0x4D6967726174696E67.*' # Migrating
+              value: 2
       volumeStatus:
         regex_extracts:
           '':
-            - regex: 'Good'
-              value: 1
-            - regex: 'Error'
+            - regex: '0x476F6F64.*'  # Good
               value: 0
-            - regex: 'Warning.*'
+            - regex: '0x4572726F72.*' # Error
               value: -1
+            - regex: '0x5761726E696E67.*' # Warning
+              value: 1
 
 # Additional objects that were checked before but are not used:
 # - raidCapacity  # storagepoolCapacity and volumeCapacity are more important
@@ -73,7 +74,7 @@ modules:
 # - lunCapacity # FIXME: no luns at the moment
 # - lunUsedPercent # FIXME: no luns at the moment
 # - lunStatus # FIXME: This is a string and needs overrides
-# - lunBackupStatus # FIXME: This is a string and needs overrides
+# - lunBackupStatus # FIXME: This is a string and needs overrides. Values: (0) none, (1) backup, (2) restore, (3) snapshot
 # - diskStatus  # FIXME: This needs overrides, but it doesn't look useful when all disks are in RAID groups
 # - diskCapacity # Not needded as all disks are in RAID groups
 # - hdTemperatureEX  # same as diskTemperture
