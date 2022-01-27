@@ -217,7 +217,7 @@ function(params) {
 
     local init = {
       command: ['/bin/sh'],
-      args: ['-c', "cd /config && unzip $(find /backup -type f -exec stat --format '%Y :%y %n' {} + | sort -nr | head -n1 | cut -d' ' -f5) && chown 1000:1000 /config/*"],
+      args: ['-c', "cd /config && unzip $(find /backup -type f -exec stat -c '%Y :%y %n' {} + | sort -nr | head -n1 | cut -d' ' -f4) && chown 1000:1000 /config/*"],
       image: 'quay.io/paulfantom/rsync',
       name: 'restore',
       volumeMounts: [
