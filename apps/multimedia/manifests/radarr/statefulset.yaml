@@ -101,8 +101,8 @@ spec:
       initContainers:
       - args:
         - -c
-        - cd /config && unzip $(find /backup -type f -exec stat -c '%n' {} + | sort
-          -r | head -n1) && chown 1000:1000 /config/*
+        - cd /config && unzip $(find /backup -type f -exec stat --format '%Y :%y %n'
+          {} + | sort -nr | head -n1 | cut -d' ' -f5) && chown 1000:1000 /config/*
         command:
         - /bin/sh
         image: quay.io/paulfantom/rsync
