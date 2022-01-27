@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: broker
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/version: "6.0"
+  name: redis
+  namespace: paper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: broker
+      app.kubernetes.io/name: redis
+  serviceName: redis
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: redis
+      labels:
+        app.kubernetes.io/component: broker
+        app.kubernetes.io/name: redis
+        app.kubernetes.io/version: "6.0"
+    spec:
+      containers:
+      - image: redis:6.0
+        name: redis
+        ports:
+        - containerPort: 6379
+          name: redis
+        resources:
+          requests:
+            cpu: 50m
+            memory: 70Mi
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /data
+          name: broker-data
+      - args:
+        - --redis.addr
+        - 127.0.0.1
+        image: oliver006/redis_exporter:latest
+        name: exporter
+        ports:
+        - containerPort: 9121
+          name: metrics
+        resources:
+          limits:
+            memory: 20Mi
+          requests:
+            cpu: 2m
+            memory: 13Mi
+        securityContext:
+          privileged: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      restartPolicy: Always
+      serviceAccountName: redis
+  volumeClaimTemplates:
+  - metadata:
+      name: broker-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 300Mi
+      storageClassName: qnap-nfs-storage

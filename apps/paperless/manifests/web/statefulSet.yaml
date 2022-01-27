@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: webservice
+    app.kubernetes.io/name: paperless
+    app.kubernetes.io/version: 1.7.1
+  name: paperless
+  namespace: paper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: webservice
+      app.kubernetes.io/name: paperless
+  serviceName: paperless
+  template:
+    metadata:
+      annotations:
+        checksum.config/md5: a11626cbe2906e4e5196a51b333b7df7
+        checksum.database/md5: 73f7c8eaa935265ae74b46f4a83de2a7
+        checksum.secrets/md5: 8dea432d03fb648cef21e26577cc0ffb
+        kubectl.kubernetes.io/default-container: paperless
+      labels:
+        app.kubernetes.io/component: webservice
+        app.kubernetes.io/name: paperless
+        app.kubernetes.io/version: 1.7.1
+    spec:
+      containers:
+      - env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: PAPERLESS_ALLOWED_HOSTS
+          value: paperless.paper.svc,$(POD_IP)
+        envFrom:
+        - configMapRef:
+            name: paperless-config
+        - secretRef:
+            name: paperless-secrets
+        - secretRef:
+            name: paperless-db
+        image: ghcr.io/paperless-ngx/paperless-ngx:1.7.1
+        name: paperless
+        ports:
+        - containerPort: 8000
+          name: http
+        resources:
+          limits:
+            cpu: 500m
+            memory: 800Mi
+          requests:
+            cpu: 200m
+            memory: 500Mi
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /usr/src/paperless/data
+          name: data
+        - mountPath: /usr/src/paperless/media
+          name: media
+        - mountPath: /usr/src/paperless/consume
+          name: consume
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      restartPolicy: Always
+      serviceAccountName: paperless
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data
+      - name: media
+        persistentVolumeClaim:
+          claimName: media
+      - name: consume
+        persistentVolumeClaim:
+          claimName: consume
