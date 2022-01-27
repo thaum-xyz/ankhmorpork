@@ -106,10 +106,10 @@ data:
             # <<: *Local
             # url: "http://192.168.2.98:32400/web/index.html#"
             url: "https://app.plex.tv/"
-          - name: Ombi
-            subtitle: "Media requests"
-            logo: "http://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/ombi.png"
-            url: "https://ombi.ankhmorpork.thaum.xyz/"
+          #- name: Ombi
+          #  subtitle: "Media requests"
+          #  logo: "http://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/ombi.png"
+          #  url: "https://ombi.ankhmorpork.thaum.xyz/"
           - name: Seeker
             subtitle: "Media requests"
             logo: "https://overseerr.dev/_next/image?url=%2Fos_logo_filled.svg&w=48&q=75"
@@ -125,11 +125,6 @@ data:
             logo: "https://avatars3.githubusercontent.com/u/1082903?s=200&v=4"
             <<: *Local
             url: "http://192.168.2.95:8989/"
-          - name: Jackett
-            subtitle: "API Support for torrent trackers"
-            logo: "https://avatars.githubusercontent.com/u/15383019?s=200&v=4"
-            <<: *Local
-            url: "http://192.168.2.95:9117/"
           - name: Prowlarr
             subtitle: "Indexer manager/proxy"
             logo: "https://avatars.githubusercontent.com/u/73049443?s=200&v=4"
@@ -153,10 +148,10 @@ data:
             logo: "https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg"
             url: "https://grafana.ankhmorpork.thaum.xyz/"
           - name: Alertmanager
-            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/200px-Prometheus_software_logo.svg.png"
+            logo: "https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.png"
             url: "https://alertmanager.ankhmorpork.thaum.xyz/"
           - name: Prometheus
-            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/200px-Prometheus_software_logo.svg.png"
+            logo: "https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.png"
             url: "https://prometheus.ankhmorpork.thaum.xyz/"
           - name: Pyrra
             logo: "https://avatars.githubusercontent.com/u/87393422?s=200&v=4"
@@ -167,6 +162,9 @@ data:
           - name: UptimeRobot
             logo: "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"
             url: "https://uptimerobot.com/dashboard"
+          - name: NextDNS
+            logo: "https://appteka.store/api/1/icon/get?hash=AfxOnnAVC55q9P8wC41q8i3I9N%2FfQVVHjM4e2r8kVhJuU5GYQJSe3msYMbOpyZDC"
+            url: "https://my.nextdns.io/"
           - name: Unifi
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             <<: *Local
@@ -175,9 +173,6 @@ data:
             logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
             <<: *Local
             url: "https://192.168.2.29/"
-          - name: NextDNS
-            logo: "https://appteka.store/api/1/icon/get?hash=AfxOnnAVC55q9P8wC41q8i3I9N%2FfQVVHjM4e2r8kVhJuU5GYQJSe3msYMbOpyZDC"
-            url: "https://my.nextdns.io/"
           - name: ESPHome
             logo: "https://esphome.io/_static/favicon-512x512.png"
             <<: *Local
