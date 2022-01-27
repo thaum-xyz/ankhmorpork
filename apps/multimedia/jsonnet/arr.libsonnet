@@ -7,6 +7,7 @@ local defaults = {
   port: error 'must provide port',
   exporter: {
     image: 'ghcr.io/onedr0p/exportarr:v0.6.2',
+    port: 9708,
     resources: {
       limits: {
         cpu: '50m',
@@ -52,7 +53,10 @@ local defaults = {
 
 function(params) {
   local j = self,
-  _config:: defaults + params,
+  _config:: defaults + params {
+    exporter: if std.objectHas(params, 'exporter') then defaults.exporter + params.exporter else defaults.exporter,
+  },
+
   // Safety check
   assert std.isObject($._config.resources),
   assert std.isNumber($._config.port),
@@ -186,13 +190,13 @@ function(params) {
         },
         {
           name: 'PORT',
-          value: "9708",
+          value: std.toString($._config.exporter.port),
         },
       ],
       image: $._config.exporter.image,
       name: 'exportarr',
       ports: [{
-        containerPort: 9708,
+        containerPort: $._config.exporter.port,
         name: 'metrics',
       }],
       readinessProbe: {

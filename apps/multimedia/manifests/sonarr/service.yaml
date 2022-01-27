@@ -20,7 +20,7 @@ spec:
     protocol: TCP
     targetPort: http
   - name: metrics
-    port: 9708
+    port: 9707
     protocol: TCP
     targetPort: metrics
   selector:

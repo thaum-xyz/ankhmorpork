@@ -73,6 +73,8 @@ sonarr:
   port: 8989
   multimediaPVCName: "tv"
   downloadsPVCName: "downloaded"
+  exporter:
+    port: 9707
   storage:
     name: sonarr-config-backup
     pvcSpec:
