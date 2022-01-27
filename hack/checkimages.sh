@@ -3,28 +3,6 @@
 set -euo pipefail
 
 CPU_ARCHS="amd64 arm64"
-MULTI_ARCH_EXCLUDED=$(
-	cat <<EOM
-eu.gcr.io/k8s-artifacts-prod/descheduler/descheduler
-homeassistant/aarch64-homeassistant
-plexinc/pms-docker
-quay.io/paulfantom/plex_exporter
-metalmatze/transmission-exporter
-mariadb
-woolfg/mysql-backup-sidecar
-oliver006/redis_exporter
-hipages/php-fpm_exporter
-xperimental/nextcloud-exporter
-quay.io/prometheus/mysqld-exporter
-intel/intel-gpu-plugin
-nvidia/k8s-device-plugin
-foomo/pagespeed_exporter
-ghcr.io/parca-dev/parca-agent
-ghcr.io/parca-dev/parca
-quay.io/paulfantom/parca
-lloesche/valheim-server
-EOM
-)
 
 FAIL="[ \e[1m\e[31mFAIL\e[0m ]"
 SKIP="[ \e[1m\e[33mSKIP\e[0m ]"
@@ -49,8 +27,21 @@ check_cross_compatibility() {
 	fi
 }
 
+# Check if tools are available
+if ! command -v manifest-tool &>/dev/null; then
+	echo -e "$FAIL 'manifest-tool' is not available"
+	exit 1
+fi
+
+if ! command -v gojsontoyaml &>/dev/null; then
+	echo -e "$FAIL 'gojsontoyaml' is not available"
+	exit 1
+fi
+
 # Go to top-level
 cd "$(git rev-parse --show-toplevel)"
+
+MULTI_ARCH_EXCLUDED=$(cat .ignoredimages)
 
 # Find all images used in environment
 DETECTED_IMAGES=""
