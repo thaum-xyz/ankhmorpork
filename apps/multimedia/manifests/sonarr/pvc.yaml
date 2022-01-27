@@ -1,6 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: sonarr
+    app.kubernetes.io/version: 3.0.6.1451
   name: sonarr-config-backup
   namespace: multimedia
 spec:

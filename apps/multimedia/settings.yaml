@@ -65,6 +65,20 @@ radarr:
       resources:
         requests:
           storage: 300Mi
-#exportarr:
-#  version: "0.6.2"  # application-version-from-github: onedr0p/exportarr
-#  image: "ghcr.io/onedr0p/exportarr:v0.6.2"  # application-image-from-github: onedr0p/exportarr
+sonarr:
+  name: sonarr
+  version: "3.0.6.1451"
+  image: "lscr.io/linuxserver/sonarr:develop-3.0.6.1451-ls247"
+  namespace: "multimedia"
+  port: 8989
+  multimediaPVCName: "tv"
+  downloadsPVCName: "downloaded"
+  storage:
+    name: sonarr-config-backup
+    pvcSpec:
+      storageClassName: qnap-nfs-storage
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 300Mi

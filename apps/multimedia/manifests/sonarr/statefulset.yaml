@@ -2,69 +2,84 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
+    app.kubernetes.io/component: server
     app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: sonarr
+    app.kubernetes.io/version: 3.0.6.1451
   name: sonarr
   namespace: multimedia
 spec:
   replicas: 1
   selector:
     matchLabels:
+      app.kubernetes.io/component: server
       app.kubernetes.io/name: sonarr
+      app.kubernetes.io/part-of: sonarr
   serviceName: sonarr
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: sonarr
       labels:
+        app.kubernetes.io/component: server
         app.kubernetes.io/name: sonarr
+        app.kubernetes.io/part-of: sonarr
+        app.kubernetes.io/version: 3.0.6.1451
     spec:
       containers:
       - env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
         - name: TZ
           value: Europe/Berlin
-        image: lscr.io/linuxserver/sonarr:develop
-        imagePullPolicy: Always
+        - name: PUID
+          value: "1000"
+        - name: GUID
+          value: "1000"
+        image: lscr.io/linuxserver/sonarr:develop-3.0.6.1451-ls247
+        imagePullPolicy: IfNotPresent
         name: sonarr
         ports:
         - containerPort: 8989
-          name: http-sonarr
+          name: http
         readinessProbe:
           failureThreshold: 5
+          initialDelaySeconds: 2
           tcpSocket:
-            port: http-sonarr
+            port: http
           timeoutSeconds: 10
         resources:
           requests:
-            cpu: 20m
-            memory: 320Mi
+            cpu: 60m
+            memory: 635Mi
+        startupProbe:
+          failureThreshold: 60
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          tcpSocket:
+            port: http
+          timeoutSeconds: 1
         volumeMounts:
         - mountPath: /config
           name: config
-        - mountPath: /tv
-          name: data
-        - mountPath: /download/completed
-          name: downloads
         - mountPath: /backup
           name: backup
+        - mountPath: /multimedia
+          name: multimedia
+        - mountPath: /download/completed
+          name: downloads
       - args:
         - exportarr
         - sonarr
         env:
         - name: CONFIG
-          value: /sonarr/config.xml
+          value: /app/config.xml
         - name: URL
           value: http://localhost
         - name: PORT
-          value: "9707"
+          value: "9708"
         image: ghcr.io/onedr0p/exportarr:v0.6.2
-        imagePullPolicy: IfNotPresent
         name: exportarr
         ports:
-        - containerPort: 9707
+        - containerPort: 9708
           name: metrics
         readinessProbe:
           failureThreshold: 5
@@ -80,7 +95,7 @@ spec:
             cpu: 1m
             memory: 11Mi
         volumeMounts:
-        - mountPath: /sonarr
+        - mountPath: /app
           name: config
           readOnly: true
       initContainers:
@@ -102,16 +117,16 @@ spec:
         kubernetes.io/arch: amd64
         storage.infra/main: "true"
       restartPolicy: Always
-      tolerations: []
+      serviceAccountName: sonarr
       volumes:
       - emptyDir: {}
         name: config
-      - name: data
+      - name: backup
+        persistentVolumeClaim:
+          claimName: sonarr-config-backup
+      - name: multimedia
         persistentVolumeClaim:
           claimName: tv
       - name: downloads
         persistentVolumeClaim:
           claimName: downloaded
-      - name: backup
-        persistentVolumeClaim:
-          claimName: sonarr-config-backup

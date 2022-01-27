@@ -39,6 +39,18 @@ local lbService = {
 };
 
 local all = {
+  sonarr: arr(config.sonarr) + {
+    service+: lbService,
+    statefulset+: {
+      spec+: {
+        template+: {
+          spec+: {
+            nodeSelector: nodeSelector,
+          },
+        },
+      },
+    },
+  },
   radarr: arr(config.radarr) + {
     service+: lbService,
     statefulset+: {
