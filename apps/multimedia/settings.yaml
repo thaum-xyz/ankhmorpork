@@ -47,6 +47,24 @@ prowlarr:
   version: "v0.2.0.1439"
   image: "ghcr.io/k8s-at-home/prowlarr:v0.2.0.1439"
   namespace: multimedia
+
+radarr:
+  name: radarr
+  version: "4.0.4.5909"
+  image: "lscr.io/linuxserver/radarr:develop-4.0.4.5909-ls48"
+  namespace: "multimedia"
+  port: 7878
+  multimediaPVCName: "movies"
+  downloadsPVCName: "downloaded"
+  storage:
+    name: radarr-config-backup
+    pvcSpec:
+      storageClassName: qnap-nfs-storage
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 300Mi
 #exportarr:
 #  version: "0.6.2"  # application-version-from-github: onedr0p/exportarr
 #  image: "ghcr.io/onedr0p/exportarr:v0.6.2"  # application-image-from-github: onedr0p/exportarr

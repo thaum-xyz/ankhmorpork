@@ -2,7 +2,10 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
+    app.kubernetes.io/component: server
     app.kubernetes.io/name: radarr
+    app.kubernetes.io/part-of: radarr
+    app.kubernetes.io/version: 4.0.4.5909
   name: radarr
   namespace: multimedia
 spec:
@@ -10,4 +13,6 @@ spec:
   - port: metrics
   selector:
     matchLabels:
+      app.kubernetes.io/component: server
       app.kubernetes.io/name: radarr
+      app.kubernetes.io/part-of: radarr

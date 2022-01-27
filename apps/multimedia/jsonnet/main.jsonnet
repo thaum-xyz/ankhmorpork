@@ -1,3 +1,4 @@
+local arr = import 'arr.libsonnet';
 local ombi = import 'ombi.libsonnet';
 local prowlarr = import 'prowlarr.libsonnet';
 
@@ -16,6 +17,11 @@ local config = {
 };
 */
 
+local nodeSelector = {
+  "kubernetes.io/arch": "amd64",
+  "storage.infra/main": "true",
+};
+
 local lbService = {
   metadata+: {
     annotations+: {
@@ -33,6 +39,18 @@ local lbService = {
 };
 
 local all = {
+  radarr: arr(config.radarr) + {
+    service+: lbService,
+    statefulset+: {
+      spec+: {
+        template+: {
+          spec+: {
+            nodeSelector: nodeSelector,
+          },
+        },
+      },
+    },
+  },
   prowlarr: prowlarr(config.prowlarr) + {
     service+: lbService,
   },

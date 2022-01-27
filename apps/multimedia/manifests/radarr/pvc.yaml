@@ -1,6 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/part-of: radarr
+    app.kubernetes.io/version: 4.0.4.5909
   name: radarr-config-backup
   namespace: multimedia
 spec:
