@@ -1,4 +1,3 @@
-local jackett = import 'jackett.libsonnet';
 local ombi = import 'ombi.libsonnet';
 local prowlarr = import 'prowlarr.libsonnet';
 
@@ -35,9 +34,6 @@ local lbService = {
 
 local all = {
   prowlarr: prowlarr(config.prowlarr) + {
-    service+: lbService,
-  },
-  jackett: jackett(config.jackett) + {
     service+: lbService,
   },
   ombi: ombi(config.ombi) + {
