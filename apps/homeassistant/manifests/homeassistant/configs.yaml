@@ -151,7 +151,14 @@ data:
           content-type: application/json
           authorization: !secret mealie_token
         resource: https://recipe.krupa.net.pl/api/meal-plans/today
-        value_template: "{{ value_json.name }}"
+        value_template: >
+          {% if value_json.name %}
+          {{   value_json.name }}
+          {% elif value_json.details %}
+          {{   value_json.details }}
+          {% else %}
+            "unknown issue"
+          {% endif %}
 
     template:
     - sensor:
