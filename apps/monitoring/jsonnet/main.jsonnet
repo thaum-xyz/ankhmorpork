@@ -578,6 +578,11 @@ local kp =
                 targetLabel: 'pod',
               },
             ],
+            metricRelabelings: [{
+              action: "drop",
+              regex: "node_md_disks_required(md9|md13)",
+              sourceLabels: ["__name__", "device"],
+            }],
           }],
           selector+: {
             matchLabels+: {
