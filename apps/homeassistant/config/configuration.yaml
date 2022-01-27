@@ -154,7 +154,7 @@ sensor:
       {% elif value_json.details %}
       {{   value_json.details }}
       {% else %}
-        "unknown issue"
+        "unknown"
       {% endif %}
 
 template:
