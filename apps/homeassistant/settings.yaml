@@ -1,8 +1,10 @@
 ---
+common:
+  namespace: &namespace "homeassistant"
 homeassistant:
   version: "2021.12.10"  # application-version-from-github: home-assistant/core
   image: "homeassistant/aarch64-homeassistant:2021.12.10"  # application-image-from-github: home-assistant/core
-  namespace: "homeassistant"
+  namespace: *namespace
   domain: "home.ankhmorpork.thaum.xyz"
   hostNetwork: true  # Needed to enable WOL
   timezone: "Europe/Berlin"
@@ -19,7 +21,7 @@ homeassistant:
 esphome:
   version: "2022.1.2"  # application-version-from-github: esphome/esphome
   image: "esphome/esphome:2022.1.2"  # application-image-from-github: esphome/esphome
-  namespace: "homeassistant"
+  namespace: *namespace
   resources:
     requests:
       cpu: 400m

@@ -1,10 +1,11 @@
 ---
 common:
   loadBalancerIP: "192.168.2.95"
+  namespace: &namespace "multimedia"
 jackett:
   version: "0.20.238"  # application-version-from-github: Jackett/Jackett
   image: "linuxserver/jackett:0.20.238"  # application-image-from-github: Jackett/Jackett
-  namespace: multimedia
+  namespace: *namespace
   resources:
     requests:
       cpu: 2400m  # TODO: Figure out how to reduce it. This is insane.
@@ -25,7 +26,7 @@ ombi:
   #image: "linuxserver/ombi:4.3.3"  # application-image-from-github: Ombi-app/Ombi
   version: "4.3.3"  # Ombi stopped publishing those as "latest"
   image: "linuxserver/ombi:4.3.3"
-  namespace: multimedia
+  namespace: *namespace
   domain: ombi.ankhmorpork.thaum.xyz
   resources:
     requests:
@@ -46,13 +47,13 @@ ombi:
 prowlarr:
   version: "v0.2.0.1439"
   image: "ghcr.io/k8s-at-home/prowlarr:v0.2.0.1439"
-  namespace: multimedia
+  namespace: *namespace
 
 radarr:
   name: radarr
   version: "4.0.4.5909"
   image: "lscr.io/linuxserver/radarr:develop-4.0.4.5909-ls48"
-  namespace: "multimedia"
+  namespace: *namespace
   port: 7878
   multimediaPVCName: "movies"
   downloadsPVCName: "downloaded"
@@ -69,7 +70,7 @@ sonarr:
   name: sonarr
   version: "3.0.6.1451"
   image: "lscr.io/linuxserver/sonarr:develop-3.0.6.1451-ls247"
-  namespace: "multimedia"
+  namespace: *namespace
   port: 8989
   multimediaPVCName: "tv"
   downloadsPVCName: "downloaded"
