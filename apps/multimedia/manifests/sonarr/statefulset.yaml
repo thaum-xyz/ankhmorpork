@@ -26,7 +26,7 @@ spec:
           value: "1000"
         - name: TZ
           value: Europe/Berlin
-        image: ghcr.io/linuxserver/sonarr:latest
+        image: lscr.io/linuxserver/sonarr:develop
         imagePullPolicy: Always
         name: sonarr
         ports:
