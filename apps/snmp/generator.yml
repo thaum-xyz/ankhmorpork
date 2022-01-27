@@ -68,6 +68,8 @@ modules:
               value: -1
             - regex: '0x5761726E696E67.*' # Warning
               value: 1
+            - regex: '0x5265616479.*' # Ready
+              value: 0
             - regex: '.*' # Unk
               value: 2
 
