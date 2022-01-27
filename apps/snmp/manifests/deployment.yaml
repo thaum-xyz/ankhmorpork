@@ -8,7 +8,7 @@ metadata:
   name: snmp-exporter
   namespace: snmp
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter
@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 774d623dc58c2bef56cdfcaafc160db7
+        checksum.config/md5: 6e4abe83bc74bd847bfddfd9a292624e
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: snmp-exporter
@@ -25,7 +25,6 @@ spec:
       containers:
       - args:
         - --config.file=/config/snmp.yaml
-        - --log.level=debug
         image: quay.io/prometheus/snmp-exporter:v0.20.0
         imagePullPolicy: IfNotPresent
         livenessProbe:

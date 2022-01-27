@@ -256,6 +256,8 @@ data:
           "":
           - value: "0"
             regex: ^(?:0x476F6F64.*)$
+          - value: "0"
+            regex: ^(?:0x5265616479.*)$
           - value: "-1"
             regex: ^(?:0x4572726F72.*)$
           - value: "1"
