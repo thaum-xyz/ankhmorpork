@@ -29,7 +29,7 @@ local all = {
       kind: "Endpoints",
       metadata: all.esphomedevices.metadata,
       subsets: [{
-        addresses: [{ ip: "192.168.2.221" }],
+        addresses: [{ ip: "192.168.2.223" }],
         ports: [{
           port: 80,
           name: "http",
