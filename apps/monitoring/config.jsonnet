@@ -26,8 +26,8 @@
     },
   },
   prometheus+: {
-    // version: '2.32.1',  // application-version-from-github: prometheus/prometheus
-    // image: 'quay.io/prometheus/prometheus:v2.32.1',  // application-image-from-github: prometheus/prometheus
+    // version: '2.33.0',  // application-version-from-github: prometheus/prometheus
+    // image: 'quay.io/prometheus/prometheus:v2.33.0',  // application-image-from-github: prometheus/prometheus
     externalLabels: {
       cluster: 'ankhmorpork',
     },

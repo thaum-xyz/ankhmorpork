@@ -54,6 +54,8 @@ spec:
             cpu: 30m
             memory: 16Mi
         securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
         volumeMounts:
@@ -73,6 +75,8 @@ spec:
             cpu: 30m
             memory: 16Mi
         securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
         terminationMessagePath: /dev/termination-log
@@ -99,6 +103,8 @@ spec:
             cpu: 30m
             memory: 16Mi
         securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
           runAsGroup: 65532
           runAsNonRoot: true
           runAsUser: 65532
