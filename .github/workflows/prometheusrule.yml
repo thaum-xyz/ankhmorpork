@@ -19,6 +19,8 @@ jobs:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/brancz/gojsontoyaml@latest
       #- run: go get -u github.com/prometheus/prometheus/cmd/promtool
+      - run: |
+          echo "HOSTNAME: $HOSTNAME"
       - name: Download latest release of promtool
         run: |
           VERSION=$(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}' | sed 's/v//')
