@@ -9,8 +9,8 @@ spec:
   capacity:
     storage: 4000Gi
   nfs:
-    path: /srv/storage/kubernetes/vod/tv
-    server: 192.168.40.2
+    path: /tv
+    server: 192.168.2.29
   persistentVolumeReclaimPolicy: Retain
   storageClassName: manual
   volumeMode: Filesystem
