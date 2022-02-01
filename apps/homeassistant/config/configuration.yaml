@@ -97,13 +97,6 @@ lock:
 #    still_image_url: "http://192.168.2.10/snap.jpeg"
 #    stream_source: "rtsp://192.168.2.10:554/s0"
 
-#tplink:
-#  discovery: false
-#  switch:
-#    - host: 192.168.2.143
-#    - host: 192.168.2.144
-#    - host: 192.168.2.145
-
 alarm_control_panel:
   - platform: manual
     name: Home Alarm
@@ -115,27 +108,6 @@ alarm_control_panel:
     armed_home:
       arming_time: 60
       delay_time: 30
-
-#light:
-#  - platform: group
-#    name: Kitchen Lights
-#    entities:
-#      - light.ceiling_left
-#      - light.ceiling_right
-#      - light.ceiling_center
-#      - light.countertop
-#      - light.ceiling_fan_1
-#      - light.ceiling_fan_2
-#      - light.ceiling_fan_3
-#      - light.ceiling_fan_4
-#      - light.ceiling_fan_5
-#  - platform: group
-#    name: Bedroom Lights
-#    entities:
-#      - light.ceiling_1
-#      - light.ceiling_2
-#      - light.floor_lamp
-#      - light.flood_light
 
 # Sensors
 sensor:
