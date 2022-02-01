@@ -14,17 +14,17 @@ speakers_line1:
     data:
       entity_id: remote.broadlink
       device: speakers
-      command: opt/coax
+      command: "opt/coax"
   - delay:
       hours: 0
       minutes: 0
-      seconds: 1
+      seconds: 2
       miliseconds: 0
   - service: remote.send_command
     data:
       entity_id: remote.broadlink
       device: speakers
-      command: line1/2  
+      command: "line1/2"
   mode: single
   icon: mdi:cast-audio 
 alarm_picture_notification:

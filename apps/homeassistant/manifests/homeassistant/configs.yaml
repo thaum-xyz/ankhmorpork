@@ -326,10 +326,10 @@ data:
     \   data:\n      entity_id: remote.broadlink\n      device: nebula\n      command:
     toggle\n      num_repeats: 2\n  mode: single\n  icon: mdi:projector\nspeakers_line1:\n
     \ sequence:\n  - service: remote.send_command\n    data:\n      entity_id: remote.broadlink\n
-    \     device: speakers\n      command: opt/coax\n  - delay:\n      hours: 0\n
-    \     minutes: 0\n      seconds: 1\n      miliseconds: 0\n  - service: remote.send_command\n
+    \     device: speakers\n      command: \"opt/coax\"\n  - delay:\n      hours:
+    0\n      minutes: 0\n      seconds: 2\n      miliseconds: 0\n  - service: remote.send_command\n
     \   data:\n      entity_id: remote.broadlink\n      device: speakers\n      command:
-    line1/2  \n  mode: single\n  icon: mdi:cast-audio \nalarm_picture_notification:\n
+    \"line1/2\"\n  mode: single\n  icon: mdi:cast-audio \nalarm_picture_notification:\n
     \ alias: Alarm Picture Notification\n  sequence:\n  - service: camera.snapshot\n
     \   data:\n      entity_id: camera.spy\n      filename: /config/www/images/{{
     filename }}\n  - delay:\n      hours: 0\n      minutes: 0\n      seconds: 10\n
