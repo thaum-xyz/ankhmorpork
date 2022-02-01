@@ -322,76 +322,36 @@ data:
       icon: 'mdi:desktop-classic'
     sensor.mealie:
       icon: 'mdi:food'
-  scripts.yaml: |
-    projector_toggle:
-      sequence:
-      - service: remote.send_command
-        data:
-          entity_id: remote.broadlink
-          device: nebula
-          command: toggle
-          num_repeats: 2
-      mode: single
-      icon: mdi:projector
-    alarm_picture_notification:
-      alias: Alarm Picture Notification
-      sequence:
-      - service: camera.snapshot
-        data:
-          entity_id: camera.spy
-          filename: /config/www/images/{{ filename }}
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 10
-          milliseconds: 0
-      - data_template:
-          data:
-            blocks:
-            - accessory:
-                style: danger
-                text:
-                  text: Go to HomeAssistant
-                  type: plain_text
-                type: button
-                url: https://home.ankhmorpork.thaum.xyz
-              text:
-                text: Alarm has been triggered at {{ states('sensor.time') }}
-                type: mrkdwn
-              type: section
-            - alt_text: Camera picture
-              image_url: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}
-              title:
-                text: Camera picture
-                type: plain_text
-              type: image
-          message: ALARM! @paulfantom
-          title: Last picture
-        service: notify.slack
-      - service: notify.mobile_app_ac2003
-        data:
-          message: Someone entered apartment while alarm is armed.
-          title: Alarm triggered!
-          data:
-            clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}
-            color: red
-            ledColor: red
-            persistent: true
-            tag: persistent
-      - service: notify.mobile_app_mi_a2
-        data:
-          message: Someone entered apartment while alarm is armed.
-          title: Alarm triggered!
-          data:
-            clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}
-            color: red
-            ledColor: red
-            persistent: true
-            tag: persistent
-      variables:
-        filename: hall_{{ now().strftime('%Y-%m-%d_%H:%M') }}.jpg
-      mode: single
-      icon: mdi:camera
+  scripts.yaml: "projector_toggle:\n  sequence:\n  - service: remote.send_command\n
+    \   data:\n      entity_id: remote.broadlink\n      device: nebula\n      command:
+    toggle\n      num_repeats: 2\n  mode: single\n  icon: mdi:projector\nspeakers_line1:\n
+    \ sequence:\n  - service: remote.send_command\n    data:\n      entity_id: remote.broadlink\n
+    \     device: speakers\n      command: opt/coax\n  - delay:\n      hours: 0\n
+    \     minutes: 0\n      seconds: 1\n      miliseconds: 0\n  - service: remote.send_command\n
+    \   data:\n      entity_id: remote.broadlink\n      device: speakers\n      command:
+    line1/2  \n  mode: single\n  icon: mdi:cast-audio \nalarm_picture_notification:\n
+    \ alias: Alarm Picture Notification\n  sequence:\n  - service: camera.snapshot\n
+    \   data:\n      entity_id: camera.spy\n      filename: /config/www/images/{{
+    filename }}\n  - delay:\n      hours: 0\n      minutes: 0\n      seconds: 10\n
+    \     milliseconds: 0\n  - data_template:\n      data:\n        blocks:\n        -
+    accessory:\n            style: danger\n            text:\n              text:
+    Go to HomeAssistant\n              type: plain_text\n            type: button\n
+    \           url: https://home.ankhmorpork.thaum.xyz\n          text:\n            text:
+    Alarm has been triggered at {{ states('sensor.time') }}\n            type: mrkdwn\n
+    \         type: section\n        - alt_text: Camera picture\n          image_url:
+    https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}\n          title:\n
+    \           text: Camera picture\n            type: plain_text\n          type:
+    image\n      message: ALARM! @paulfantom\n      title: Last picture\n    service:
+    notify.slack\n  - service: notify.mobile_app_ac2003\n    data:\n      message:
+    Someone entered apartment while alarm is armed.\n      title: Alarm triggered!\n
+    \     data:\n        clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{
+    filename }}\n        color: red\n        ledColor: red\n        persistent: true\n
+    \       tag: persistent\n  - service: notify.mobile_app_mi_a2\n    data:\n      message:
+    Someone entered apartment while alarm is armed.\n      title: Alarm triggered!\n
+    \     data:\n        clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{
+    filename }}\n        color: red\n        ledColor: red\n        persistent: true\n
+    \       tag: persistent\n  variables:\n    filename: hall_{{ now().strftime('%Y-%m-%d_%H:%M')
+    }}.jpg\n  mode: single\n  icon: mdi:camera\n"
 kind: ConfigMap
 metadata:
   labels:
