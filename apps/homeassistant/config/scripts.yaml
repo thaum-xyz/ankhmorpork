@@ -19,7 +19,7 @@ speakers_line1:
       hours: 0
       minutes: 0
       seconds: 2
-      miliseconds: 0
+      milliseconds: 0
   - service: remote.send_command
     data:
       entity_id: remote.broadlink
