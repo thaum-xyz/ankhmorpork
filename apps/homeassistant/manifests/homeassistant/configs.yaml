@@ -127,15 +127,18 @@ data:
           - light.ceiling_right
           - light.ceiling_center
           - light.countertop
-          - light.hue_white_lamp_1
-          - light.hue_white_lamp_2
-          - light.flood_light
-          - light.vincent
+          - light.ceiling_fan_1
+          - light.ceiling_fan_2
+          - light.ceiling_fan_3
+          - light.ceiling_fan_4
+          - light.ceiling_fan_5
       - platform: group
         name: Bedroom Lights
         entities:
-          - light.red_ceiling
+          - light.ceiling_1
+          - light.ceiling_2
           - light.floor_lamp
+          - light.flood_light
 
     # Sensors
     sensor:
@@ -143,7 +146,6 @@ data:
         display_options:
           - 'time'
           - 'date'
-      - platform: launch_library
       - platform: rest
         name: mealie
         scan_interval: 3600
