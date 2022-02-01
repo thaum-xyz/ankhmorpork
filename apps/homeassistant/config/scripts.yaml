@@ -6,21 +6,6 @@ projector_toggle:
       device: nebula
       command: toggle
       num_repeats: 2
-  - service: remote.send_command
-    data:
-      entity_id: remote.broadlink
-      device: speakers
-      command: opt/coax
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      miliseconds: 0
-  - service: remote.send_command
-    data:
-      entity_id: remote.broadlink
-      device: speakers
-      command: line1/2
   mode: single
   icon: mdi:projector
 alarm_picture_notification:
