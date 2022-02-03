@@ -176,6 +176,24 @@ template:
         {% endif %}
         {{ title }}
 
+input_boolean:
+  projector:
+    name: Projector State
+    icon: mdi:projector
+  projector_screen:
+    name: Projector Screen State
+    icon: mdi:projector-screen-variant-outline
+
+input_select:
+  speakers:
+    name: Speakers Input
+    icon: mdi:speakers
+    options:
+    - opt/coax
+    - line1/2
+    - bt
+    initial: line1/2
+
 plant:
   jovita:
     sensors:
