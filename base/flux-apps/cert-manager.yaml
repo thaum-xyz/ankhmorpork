@@ -4,10 +4,10 @@ metadata:
   name: cert-manager
   namespace: flux-apps
 spec:
+  force: true
   interval: 30m0s
   path: ./base/cert-manager
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
-  validation: client
