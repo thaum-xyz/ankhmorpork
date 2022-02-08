@@ -66,15 +66,7 @@ local all = {
   prowlarr: prowlarr(config.prowlarr) + {
     service+: lbService,
   },
-  ombi: ombi(config.ombi) + {
-    ingress+: {
-      metadata+: {
-        labels+: {
-          probe: 'enabled',
-        },
-      },
-    },
-  },
+  ombi: ombi(config.ombi),
 };
 
 {
