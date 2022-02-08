@@ -4,6 +4,8 @@ metadata:
   labels:
     app.kubernetes.io/instance: flux-system
     app.kubernetes.io/part-of: flux
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: latest
   name: flux-system
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -221,7 +223,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.5.0
+    controller-gen.kubebuilder.io/version: v0.7.0
   creationTimestamp: null
   labels:
     app.kubernetes.io/instance: flux-system
@@ -341,8 +343,8 @@ spec:
                   of this source.
                 type: boolean
               timeout:
-                default: 20s
-                description: The timeout for download operations, defaults to 20s.
+                default: 60s
+                description: The timeout for download operations, defaults to 60s.
                 type: string
             required:
             - bucketName
@@ -480,7 +482,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.5.0
+    controller-gen.kubebuilder.io/version: v0.7.0
   creationTimestamp: null
   labels:
     app.kubernetes.io/instance: flux-system
@@ -642,9 +644,9 @@ spec:
                   of this source.
                 type: boolean
               timeout:
-                default: 20s
+                default: 60s
                 description: The timeout for remote Git operations like cloning, defaults
-                  to 20s.
+                  to 60s.
                 type: string
               url:
                 description: The repository URL, can be a HTTP/S or SSH address.
@@ -838,7 +840,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.5.0
+    controller-gen.kubebuilder.io/version: v0.7.0
   creationTimestamp: null
   labels:
     app.kubernetes.io/instance: flux-system
@@ -1898,7 +1900,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.5.0
+    controller-gen.kubebuilder.io/version: v0.7.0
   creationTimestamp: null
   labels:
     app.kubernetes.io/instance: flux-system
@@ -3127,14 +3129,27 @@ spec:
                   labels.
                 properties:
                   namespaceSelectors:
+                    description: NamespaceSelectors is the list of namespace selectors
+                      to which this ACL applies. Items in this list are evaluated
+                      using a logical OR operation.
                     items:
+                      description: NamespaceSelector selects the namespaces to which
+                        this ACL applies. An empty map of MatchLabels matches all
+                        namespaces in a cluster.
                       properties:
                         matchLabels:
                           additionalProperties:
                             type: string
+                          description: MatchLabels is a map of {key,value} pairs.
+                            A single {key,value} in the matchLabels map is equivalent
+                            to an element of matchExpressions, whose key field is
+                            "key", the operator is "In", and the values array contains
+                            only "value". The requirements are ANDed.
                           type: object
                       type: object
                     type: array
+                required:
+                - namespaceSelectors
                 type: object
               certSecretRef:
                 description: "CertSecretRef can be given the name of a secret containing
@@ -3937,16 +3952,20 @@ spec:
                   to a git repository.
                 properties:
                   apiVersion:
-                    description: API version of the referent
+                    description: API version of the referent.
                     type: string
                   kind:
                     default: GitRepository
-                    description: Kind of the referent
+                    description: Kind of the referent.
                     enum:
                     - GitRepository
                     type: string
                   name:
-                    description: Name of the referent
+                    description: Name of the referent.
+                    type: string
+                  namespace:
+                    description: Namespace of the referent, defaults to the namespace
+                      of the Kubernetes resource object that contains the reference.
                     type: string
                 required:
                 - kind
@@ -3982,6 +4001,8 @@ spec:
             - sourceRef
             type: object
           status:
+            default:
+              observedGeneration: -1
             description: ImageUpdateAutomationStatus defines the observed state of
               ImageUpdateAutomation
             properties:
@@ -5885,7 +5906,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: fluxcd/helm-controller:v0.15.0
+        image: fluxcd/helm-controller:v0.16.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -5895,6 +5916,7 @@ spec:
         ports:
         - containerPort: 8080
           name: http-prom
+          protocol: TCP
         - containerPort: 9440
           name: healthz
           protocol: TCP
@@ -5911,7 +5933,13 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /tmp
           name: temp
@@ -5955,7 +5983,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: fluxcd/image-automation-controller:v0.19.0
+        image: fluxcd/image-automation-controller:v0.20.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -5965,6 +5993,7 @@ spec:
         ports:
         - containerPort: 8080
           name: http-prom
+          protocol: TCP
         - containerPort: 9440
           name: healthz
           protocol: TCP
@@ -5981,7 +6010,13 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /tmp
           name: temp
@@ -6027,7 +6062,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: fluxcd/image-reflector-controller:v0.15.0
+        image: fluxcd/image-reflector-controller:v0.16.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -6037,6 +6072,7 @@ spec:
         ports:
         - containerPort: 8080
           name: http-prom
+          protocol: TCP
         - containerPort: 9440
           name: healthz
           protocol: TCP
@@ -6053,7 +6089,13 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /tmp
           name: temp
@@ -6103,7 +6145,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: fluxcd/kustomize-controller:v0.19.0
+        image: fluxcd/kustomize-controller:v0.20.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -6113,6 +6155,7 @@ spec:
         ports:
         - containerPort: 8080
           name: http-prom
+          protocol: TCP
         - containerPort: 9440
           name: healthz
           protocol: TCP
@@ -6129,7 +6172,13 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /tmp
           name: temp
@@ -6174,7 +6223,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: fluxcd/notification-controller:v0.20.1
+        image: fluxcd/notification-controller:v0.21.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -6184,10 +6233,13 @@ spec:
         ports:
         - containerPort: 9090
           name: http
+          protocol: TCP
         - containerPort: 9292
           name: http-webhook
+          protocol: TCP
         - containerPort: 8080
           name: http-prom
+          protocol: TCP
         - containerPort: 9440
           name: healthz
           protocol: TCP
@@ -6204,7 +6256,13 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /tmp
           name: temp
@@ -6252,7 +6310,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: fluxcd/source-controller:v0.20.1
+        image: fluxcd/source-controller:v0.21.2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -6262,10 +6320,13 @@ spec:
         ports:
         - containerPort: 9090
           name: http
+          protocol: TCP
         - containerPort: 8080
           name: http-prom
+          protocol: TCP
         - containerPort: 9440
           name: healthz
+          protocol: TCP
         readinessProbe:
           httpGet:
             path: /
@@ -6279,7 +6340,13 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /data
           name: data
