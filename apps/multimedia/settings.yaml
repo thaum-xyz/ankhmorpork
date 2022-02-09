@@ -21,29 +21,6 @@ jackett:
       resources:     
         requests:
           storage: "300Mi"
-ombi:
-  #version: "4.3.3"  # application-version-from-github: Ombi-app/Ombi
-  #image: "linuxserver/ombi:4.3.3"  # application-image-from-github: Ombi-app/Ombi
-  version: "4.3.3"  # Ombi stopped publishing those as "latest"
-  image: "linuxserver/ombi:4.3.3"
-  namespace: *namespace
-  domain: ombi.ankhmorpork.thaum.xyz
-  resources:
-    requests:
-      cpu: 10m
-      memory: 250Mi
-    limits:
-      cpu: 100m
-      memory: 500Mi
-  storage:
-    name: ombi-data
-    pvcSpec:
-      storageClassName: local-path  # FIXME: pinning to node can cause ombi to be unavailable when node is unavailable
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 600Mi
 prowlarr:
   version: "v0.2.0.1439"
   image: "ghcr.io/k8s-at-home/prowlarr:v0.2.0.1439"

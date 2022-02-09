@@ -1,5 +1,4 @@
 local arr = import 'arr.libsonnet';
-local ombi = import 'ombi.libsonnet';
 local prowlarr = import 'prowlarr.libsonnet';
 
 local configYAML = (importstr '../settings.yaml');
@@ -66,7 +65,6 @@ local all = {
   prowlarr: prowlarr(config.prowlarr) + {
     service+: lbService,
   },
-  ombi: ombi(config.ombi),
 };
 
 {
