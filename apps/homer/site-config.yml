@@ -103,14 +103,9 @@ services:
         # <<: *Local
         # url: "http://192.168.2.98:32400/web/index.html#"
         url: "https://app.plex.tv/"
-      #- name: Ombi
-      #  subtitle: "Media requests"
-      #  logo: "http://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/ombi.png"
-      #  url: "https://ombi.ankhmorpork.thaum.xyz/"
       - name: Seeker
         subtitle: "Media requests"
         logo: "https://overseerr.dev/_next/image?url=%2Fos_logo_filled.svg&w=48&q=75"
-        <<: *Testing
         url: "https://seek.ankhmorpork.thaum.xyz/"
       - name: Radarr
         subtitle: "Movie collection manager"
