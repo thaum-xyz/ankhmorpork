@@ -351,7 +351,7 @@ data:
     \   data:\n      entity_id: remote.broadlink\n      device: speakers\n      command:
     \"line1/2\"\n  mode: single\n  icon: mdi:cast-audio \nalarm_picture_notification:\n
     \ alias: Alarm Picture Notification\n  sequence:\n  - service: camera.snapshot\n
-    \   data:\n      entity_id: camera.spy\n      filename: /config/www/images/{{
+    \   data:\n      entity_id: camera.hall_high\n      filename: /config/www/images/{{
     filename }}\n  - delay:\n      hours: 0\n      minutes: 0\n      seconds: 10\n
     \     milliseconds: 0\n  - data_template:\n      data:\n        blocks:\n        -
     accessory:\n            style: danger\n            text:\n              text:
@@ -362,15 +362,11 @@ data:
     https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}\n          title:\n
     \           text: Camera picture\n            type: plain_text\n          type:
     image\n      message: ALARM! @paulfantom\n      title: Last picture\n    service:
-    notify.slack\n  - service: notify.mobile_app_ac2003\n    data:\n      message:
-    Someone entered apartment while alarm is armed.\n      title: Alarm triggered!\n
-    \     data:\n        clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{
-    filename }}\n        color: red\n        ledColor: red\n        persistent: true\n
-    \       tag: persistent\n  - service: notify.mobile_app_mi_a2\n    data:\n      message:
-    Someone entered apartment while alarm is armed.\n      title: Alarm triggered!\n
-    \     data:\n        clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{
-    filename }}\n        color: red\n        ledColor: red\n        persistent: true\n
-    \       tag: persistent\n  variables:\n    filename: hall_{{ now().strftime('%Y-%m-%d_%H:%M')
+    notify.slack\n  - service: notify.notify\n    data:\n      message: Someone entered
+    apartment while alarm is armed.\n      title: Home alarm triggered!\n      data:\n
+    \       clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename
+    }}\n        color: red\n        ledColor: red\n        persistent: true\n        tag:
+    persistent\n  variables:\n    filename: hall_{{ now().strftime('%Y-%m-%d_%H:%M')
     }}.jpg\n  mode: single\n  icon: mdi:camera\n"
 kind: ConfigMap
 metadata:
@@ -378,6 +374,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2022.2.3
+    app.kubernetes.io/version: 2022.2.6
   name: homeassistant-configs
   namespace: homeassistant

@@ -32,7 +32,7 @@ alarm_picture_notification:
   sequence:
   - service: camera.snapshot
     data:
-      entity_id: camera.spy
+      entity_id: camera.hall_high
       filename: /config/www/images/{{ filename }}
   - delay:
       hours: 0
@@ -62,20 +62,10 @@ alarm_picture_notification:
       message: ALARM! @paulfantom
       title: Last picture
     service: notify.slack
-  - service: notify.mobile_app_ac2003
+  - service: notify.notify
     data:
       message: Someone entered apartment while alarm is armed.
-      title: Alarm triggered!
-      data:
-        clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}
-        color: red
-        ledColor: red
-        persistent: true
-        tag: persistent
-  - service: notify.mobile_app_mi_a2
-    data:
-      message: Someone entered apartment while alarm is armed.
-      title: Alarm triggered!
+      title: Home alarm triggered!
       data:
         clickAction: https://home.ankhmorpork.thaum.xyz/local/images/{{ filename }}
         color: red
