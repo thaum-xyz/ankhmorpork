@@ -7,6 +7,8 @@ JSONNETFMT_ARGS=-n 2 --max-blank-lines 2 --string-style s --comment-style s
 TLD=$(shell git rev-parse --show-toplevel)
 SCHEMAS_DIR=$(TLD)/tmp/schemas
 
+KUBESCAPE_THRESHOLD=10
+
 .PHONY: all
 all: fmt generate
 
@@ -58,6 +60,9 @@ validate: $(MANIFESTS_DIR) $(SCHEMAS_DIR)
 	-summary \
 	$(MANIFESTS_DIR)
 
+.PHONY: sec-scan
+sec-scan:  ## Security scanning of manifests
+	kubescape scan -s framework -t $(KUBESCAPE_THRESHOLD) nsa $(shell find $(MANIFESTS_DIR)/ -name '*.yaml') --exceptions 'kubescape-exceptions.json'
 
 .PHONY: help
 help:  ## Displays help.
