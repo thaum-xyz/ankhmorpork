@@ -2,7 +2,7 @@
 - name: cloudalchemy.node_exporter
 - name: cloudalchemy.systemd_exporter
 - name: oefenweb.locales
-  version: v1.0.37
+  version: v1.0.49
 - name: jnv.unattended-upgrades
   version: v1.7.1
 - name: dev-sec.ssh-hardening
