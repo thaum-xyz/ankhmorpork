@@ -4,7 +4,7 @@
 - name: oefenweb.locales
   version: v1.0.49
 - name: jnv.unattended-upgrades
-  version: v1.7.1
+  version: v1.12.1
 - name: dev-sec.ssh-hardening
 #- name: geerlingguy.nfs # conflicts with current ZFS setup
 - name: paulfantom.raspberry
