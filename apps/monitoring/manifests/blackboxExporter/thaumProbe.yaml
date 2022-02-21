@@ -15,6 +15,7 @@ spec:
   targets:
     staticConfig:
       labels:
-        environment: lancre.thaum.xyz
+        environment: krupa.net.pl
       static:
       - https://zmc.krupa.net.pl/
+      - https://recipe.krupa.net.pl/api/debug/version
