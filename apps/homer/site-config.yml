@@ -97,6 +97,10 @@ services:
   - name: Multimedia
     icon: "fa fa-tv"
     items:
+      - name: Qnap
+        logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
+        <<: *Local
+        url: "https://192.168.2.29/"
       - name: Plex
         subtitle: "Video on demand"
         logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
@@ -161,10 +165,6 @@ services:
         logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
         <<: *Local
         url: "https://192.168.2.1/"
-      - name: Qnap
-        logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
-        <<: *Local
-        url: "https://192.168.2.29/"
       - name: ESPHome
         logo: "https://esphome.io/_static/favicon-512x512.png"
         <<: *Local
