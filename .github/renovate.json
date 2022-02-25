@@ -2,5 +2,13 @@
   "extends": [
     "config:base"
   ],
-  "assignees": ["paulfantom"]
+  "assignees": ["paulfantom"],
+  "regexManagers": [
+    {
+      "fileMatch": "metal/group_vars/k3s.yml",
+      "matchStrings": ["k3s_version: (?<currentValue>.*?)\\n"],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "k3s-io/k3s"
+    }
+  ]
 }
