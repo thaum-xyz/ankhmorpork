@@ -4,23 +4,6 @@ locales_present:
   - en_GB.UTF-8
 unattended_automatic_reboot: false
 
-node_exporter_enabled_collectors:
-  - textfile:
-      directory: "/var/lib/node_exporter"
-  - filesystem:
-      ignored-fs-types: "^(ns|sys|proc|auto|overlay)fs|overlay$"
-      ignored-mount-points: "^/(sys|proc|dev)($|/)"
-  - diskstats:
-      ignored-devices: '^(ram|loop|fd|(h|v|xv)d[a-z]|dm-)\\\d+$'
-  - netdev:
-      device-blacklist: "^(veth.*|br.*)$"
-  - netclass:
-      ignored-devices: "^(veth.*|br.*)$"
-  - mountstats
-node_exporter_disabled_collectors:
-  - logind
-  - ntp
-
 systemd_exporter_enable_ip_accounting: true
 systemd_exporter_enable_restart_count: true
 systemd_exporter_unit_blacklist: '.*.mount|user-runtime-dir@0.service'
