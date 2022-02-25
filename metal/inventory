@@ -10,9 +10,6 @@ node02   ansible_user=ubuntu ansible_host=192.168.2.32 network=fast k3s_local_st
 #node04   ansible_user=ubuntu ansible_host=192.168.2.34
 metal01  ansible_user=ubuntu ansible_host=192.168.2.40 network=fast k3s_local_storage_device=/dev/ubuntu-vg/k3s-local-storage enable_smartmon=true
 
-[fancontroler]
-master01
-
 [raspberry]
 master01
 node0[1:2]

@@ -1,7 +1,0 @@
----
-- name: restart fan service
-  systemd:
-    name: fan.service
-    state: restarted
-    enabled: true
-    daemon_reload: true

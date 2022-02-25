@@ -7,12 +7,14 @@
 - name: Check current k3s version
   command: /usr/local/bin/k3s --version
   register: _k3s_local_version_string
+  check_mode: no
   when: _k3s_binary.stat.exists
 
 - name: Extract current version
   set_fact:
     _k3s_local_version: "{{ _k3s_local_version_string.stdout.split(' ')[2] }}"
-  when: _k3s_binary.stat.exists
+  check_mode: no
+  when: _k3s_binary.stat.exists and (_k3s_local_version_string is defined)
 
 - name: Download k3s binary
   get_url:
