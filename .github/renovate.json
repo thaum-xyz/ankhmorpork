@@ -30,6 +30,16 @@
       "addLabels": ["github_actions"],
       "groupName": "github actions",
       "matchPaths": [".github/**"]
+    },
+    {
+      "addLabels": ["infra"],
+      "groupName": "base infrastructure",
+      "matchPaths": ["base/**", "metal/**"]
+    },
+    {
+      "addLabels": ["apps"],
+      "groupName": "applications",
+      "matchPaths": ["apps/**"]
     }
   ]
 }
