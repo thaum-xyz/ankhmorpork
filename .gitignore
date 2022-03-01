@@ -4,8 +4,7 @@ roles/*
 !roles/system
 !roles/rpi/*
 !roles/rpi
-!roles/fans/*
-!roles/fans
+!roles/k3s-*
 *.retry
 metal/kubeconfig
 master.key
