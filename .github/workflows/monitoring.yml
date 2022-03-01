@@ -11,7 +11,7 @@ jobs:
   alertmanager:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Import environment variables
         run: cat ".github/env" >> $GITHUB_ENV
       - uses: actions/setup-go@v3
