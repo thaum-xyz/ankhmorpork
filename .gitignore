@@ -1,16 +1,11 @@
 roles/*
 !roles/requirements.yml
-!roles/system/*
-!roles/system
-!roles/rpi/*
-!roles/rpi
 !roles/k3s-*
 *.retry
 metal/kubeconfig
 master.key
 .kube
 bin/
-templates/
 vendor/
 .crdschemas/
 .cache_ggshield
