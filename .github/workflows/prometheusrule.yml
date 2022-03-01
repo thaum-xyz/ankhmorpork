@@ -7,20 +7,19 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  golang-version: 1.17.7
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Import environment variables
-        run: cat ".github/env" >> $GITHUB_ENV
       - uses: actions/setup-go@v3
         with:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/brancz/gojsontoyaml@latest
       #- run: go get -u github.com/prometheus/prometheus/cmd/promtool
-      - run: |
-          echo "HOSTNAME: $HOSTNAME"
       - name: Download latest release of promtool
         run: |
           VERSION=$(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}' | sed 's/v//')

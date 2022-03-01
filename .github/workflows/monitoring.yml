@@ -7,20 +7,21 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  golang-version: 1.17.7
+
 jobs:
   alertmanager:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Import environment variables
-        run: cat ".github/env" >> $GITHUB_ENV
       - uses: actions/setup-go@v3
         with:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/brancz/gojsontoyaml@latest
       - run: go install -a github.com/prometheus/alertmanager/cmd/amtool@latest
       - name: Unpack config
-        run: gojsontoyaml -yamltojson <apps/monitoring/manifests/alertmanager/secret.yaml  | jq -rc '.spec.template.data["alertmanager.yaml"]' > alertmanager.yaml
+        run: gojsontoyaml -yamltojson <apps/monitoring/manifests/alertmanager/secret.yaml | jq -rc '.spec.template.data["alertmanager.yaml"]' > alertmanager.yaml
       - name: Replace secrets
         run: |
           sed -i 's|$(SLACK_API_URL)|https://example.org|g' alertmanager.yaml

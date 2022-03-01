@@ -5,13 +5,17 @@ on:
     - cron: '15 */6 * * *'
   #push:
   #  branch: main
+
+env:
+  golang-version: 1.17.7
+  jsonnet-version: 0.18.0
+  jb-version: 3aec759b6a423f5b50751443ccc81e91a0887c02  # Commit from mid February 2022
+
 jobs:
   versions:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Import environment variables
-      run: cat ".github/env" >> $GITHUB_ENV
     - uses: actions/setup-go@v3
       with:
         go-version: '${{ env.golang-version }}'

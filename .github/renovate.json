@@ -3,12 +3,32 @@
     "config:base"
   ],
   "assignees": ["paulfantom"],
+  "reviewers": ["paulfantom"],
   "regexManagers": [
     {
       "fileMatch": "metal/group_vars/k3s.yml",
       "matchStrings": ["k3s_version: (?<currentValue>.*?)\\n"],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "k3s-io/k3s"
+    },
+    {
+      "fileMatch": ["^\\.github\\/workflows\\/[^/]+\\.ya?ml$"],
+      "matchStrings": ["jsonnet-version:\\s(?<currentValue>.*?)\\n"],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "google/jsonnet"
+    },
+    {
+      "fileMatch": ["^\\.github\\/workflows\\/[^/]+\\.ya?ml$"],
+      "matchStrings": ["golang-version:\\s(?<currentValue>.*?)\\n"],
+      "datasourceTemplate": "golang-version",
+      "depNameTemplate": "golang"
+    }
+  ],
+  "packageRules": [
+    {
+      "addLabels": ["github_actions"],
+      "groupName": "github actions",
+      "matchPaths": [".github/**"]
     }
   ]
 }

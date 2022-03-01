@@ -7,13 +7,14 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  golang-version: 1.17.7
+
 jobs:
   apps:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Import environment variables
-        run: cat ".github/env" >> $GITHUB_ENV
       - uses: actions/setup-go@v3
         with:
           go-version: '${{ env.golang-version }}'
@@ -33,8 +34,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Import environment variables
-        run: cat ".github/env" >> $GITHUB_ENV
       - uses: actions/setup-go@v3
         with:
           go-version: '${{ env.golang-version }}'
