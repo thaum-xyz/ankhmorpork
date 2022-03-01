@@ -9,7 +9,8 @@
       "fileMatch": "metal/group_vars/k3s.yml",
       "matchStrings": ["k3s_version: (?<currentValue>.*?)\\n"],
       "datasourceTemplate": "github-tags",
-      "depNameTemplate": "k3s-io/k3s"
+      "depNameTemplate": "k3s-io/k3s",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": ["^\\.github\\/workflows\\/[^/]+\\.ya?ml$"],
