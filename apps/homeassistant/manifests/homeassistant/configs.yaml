@@ -91,15 +91,6 @@ data:
         username: !secret kiwi_username
         password: !secret kiwi_password
 
-    # UniFi camera is not fully supported as 'generic' device
-    # Waiting for homeassistant 2022.2 for Unifi Protect support
-    # TODO(paulfantom): migrate to Unifi Protect
-    #camera:
-    #  - platform: generic
-    #    name: spy
-    #    still_image_url: "http://192.168.2.10/snap.jpeg"
-    #    stream_source: "rtsp://192.168.2.10:554/s0"
-
     alarm_control_panel:
       - platform: manual
         name: Home Alarm
@@ -130,8 +121,8 @@ data:
             No meal plan
           {% elif value_json.name %}
           {{   value_json.name }}
-          {% elif value_json.details %}
-          {{   value_json.details }}
+          {% elif value_json.detail %}
+          {{   value_json.detail }}
           {% else %}
             unknown
           {% endif %}
