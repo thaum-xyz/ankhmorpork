@@ -3,12 +3,12 @@
 
 # Assign enable_smartmon=true label to enable SMART monitoring of disks
 
-master01 ansible_user=ubuntu ansible_host=192.168.2.30
-node01   ansible_user=ubuntu ansible_host=192.168.2.31 network=fast k3s_local_storage_device=/dev/disk/by-uuid/e13f201c-6898-4f5f-85f5-8494189f50a1
-node02   ansible_user=ubuntu ansible_host=192.168.2.32 network=fast k3s_local_storage_device=/dev/disk/by-uuid/734bcf0d-0e5e-4de2-af92-f786f6b7b951
+master01 ansible_user=ubuntu ansible_host=192.168.2.30 enable_smartmon=true
+node01   ansible_user=ubuntu ansible_host=192.168.2.31 network=fast enable_smartmon=true
+node02   ansible_user=ubuntu ansible_host=192.168.2.32 network=fast enable_smartmon=true
 #node03   ansible_user=ubuntu ansible_host=192.168.2.33
 #node04   ansible_user=ubuntu ansible_host=192.168.2.34
-metal01  ansible_user=ubuntu ansible_host=192.168.2.40 network=fast k3s_local_storage_device=/dev/ubuntu-vg/k3s-local-storage enable_smartmon=true
+metal01  ansible_user=ubuntu ansible_host=192.168.2.40 network=fast enable_smartmon=true
 
 [raspberry]
 master01

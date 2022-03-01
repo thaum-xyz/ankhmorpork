@@ -1,33 +1,48 @@
 ---
 k3s_version: v1.23.4+k3s1
 k3s_master_ip: "{{ hostvars[groups['k3s-master'][0]]['ansible_default_ipv4']['address'] }}"
-k3s_extra_server_args: >-
-  --disable servicelb
-  --disable traefik
-  --disable local-storage
-  --disable-cloud-controller
-  --kubelet-arg system-reserved=cpu=100m,memory=200Mi
-  --kubelet-arg kube-reserved=cpu=100m,memory=300Mi
-  --kube-controller-manager-arg address={{ k3s_master_ip }}
-  --kube-scheduler-arg address={{ k3s_master_ip }}
-  --etcd-expose-metrics=true
-  --kube-proxy-arg metrics-bind-address=0.0.0.0
+
+k3s_server_config:
+  disable:
+  - servicelb
+  - traefik
+  - local-storage
+  disable-cloud-controller: "true"
+  kubelet-arg:
+  - "system-reserved=cpu=100m,memory=200Mi"
+  - "kube-reserved=cpu=100m,memory=300Mi"
+  kube-controller-manager-arg:
+  - "address={{ k3s_master_ip }}"
+  kube-scheduler-arg:
+  - "address={{ k3s_master_ip }}"
+  etcd-expose-metrics: "true"
+  kube-proxy-arg:
+  - "metrics-bind-address=0.0.0.0"
 
 k3s_token: "{{ hostvars[groups['k3s-master'][0]]['token'] }}"
 
-k3s_extra_agent_args: >-
-  --kubelet-arg kube-reserved=cpu=100m,memory=200Mi
-  --kubelet-arg system-reserved={{ kubelet_system_resources | default('cpu=100m,memory=200Mi') }}
-  --kubelet-arg allowed-unsafe-sysctls=net.ipv4.tcp_adv_win_scale
-  --node-label network.infra/type={{ network | default('slow') }}
-  --node-label storage.infra/local={{ 'true' if k3s_local_storage_device is defined else 'false' }}
-  --kube-proxy-arg metrics-bind-address=0.0.0.0
+k3s_agent_config:
+  kubelet-arg:
+  - "kube-reserved=cpu=100m,memory=200Mi"
+  - "system-reserved={{ kubelet_system_resources | default('cpu=100m,memory=200Mi') }}"
+  - "allowed-unsafe-sysctls=net.ipv4.tcp_adv_win_scale"
+  node-label:
+  - "network.infra/type={{ network | default('slow') }}"
+  - "storage.infra/local={{ 'false' if k3s_no_local_storage is defined else 'true' }}"
+  kube-proxy-arg:
+  - "metrics-bind-address=0.0.0.0"
+  resolv-conf: "/run/systemd/resolve/resolv.conf"
 
 system_earlyoom_params: "-r 60 -m 4"
 
 system_mountpoints:
-  - description: k3s local storage
-    before: k3s-node.service
-    device: "{{ k3s_local_storage_device }}"
-    mountpoint: "/var/lib/rancher/k3s/storage"
+  - description: k3s data
+    before: "k3s.service"
+    device: "/dev/disk/by-label/rancher"
+    mountpoint: "/var/lib/rancher"
+    type: "ext4"
+  - description: logs
+    before: "local-fs.target"
+    device: "/dev/disk/by-label/logs"
+    mountpoint: "/var/log"
     type: "ext4"

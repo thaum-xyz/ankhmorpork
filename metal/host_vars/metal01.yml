@@ -13,3 +13,5 @@ nfs_exports:
 node_labels:
   - "storage.infra/main=true"
   - "gpu.infra/nvidia=true"
+
+system_mountpoints: []

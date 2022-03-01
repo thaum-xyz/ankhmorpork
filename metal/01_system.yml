@@ -12,7 +12,7 @@
   become: true
   serial: 1
   roles:
-  - system
+  - paulfantom.system
   tasks:
   - name: Install dependencies
     package:
@@ -44,8 +44,9 @@
       state: present
     when: '"GenuineIntel" in ansible_processor'
 
-- hosts: raspberry
-  become: true
-  any_errors_fatal: true
-  roles:
-  - paulfantom.raspberry
+# TODO: fix handling /var/log in the role
+#- hosts: raspberry
+#  become: true
+#  any_errors_fatal: true
+#  roles:
+#  - paulfantom.raspberry

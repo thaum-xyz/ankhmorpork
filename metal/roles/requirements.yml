@@ -6,3 +6,5 @@
   version: v1.12.1
 - name: dev-sec.ssh-hardening
 - name: paulfantom.raspberry
+- name: paulfantom.system
+- name: xanmanning.k3s

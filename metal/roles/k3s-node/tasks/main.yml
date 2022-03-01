@@ -1,9 +1,34 @@
 ---
-- name: Copy K3s service file
-  template:
-    src: "k3s.service.j2"
-    dest: "{{ k3s_systemd_dir }}/k3s-node.service"
+- name: Ensure config dir exists
+  file:
+    dest: "/etc/rancher/k3s"
+    state: directory
     owner: root
     group: root
     mode: 0755
+
+- name: Ensure token is present
+  template:
+    src: "cluster-token.j2"
+    dest: "/etc/rancher/k3s/token"
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Ensure configuration file is present
+  template:
+    src: "config.yaml.j2"
+    dest: "/etc/rancher/k3s/config.yaml"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart k3s
+
+- name: Copy K3s service file
+  template:
+    src: "k3s.service.j2"
+    dest: "/etc/systemd/system/k3s.service"
+    owner: root
+    group: root
+    mode: 0644
   notify: restart k3s

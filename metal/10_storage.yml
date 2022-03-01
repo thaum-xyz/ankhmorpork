@@ -3,9 +3,11 @@
   become: true
   tasks:
   - name: Install nfs mount client software
-    apt:
-      name: nfs-client
+    package:
+      name: "{{ item }}"
       state: present
+    with_items:
+    - "{{ 'nfs-common' if (ansible_os_family | lower == 'debian') else 'nfs-utils' }}"
   - block:
     - name: Install dependencies
       package:
