@@ -17,6 +17,7 @@ spec:
   revisionHistoryLimit: 3
   strategy:
     type: Recreate
+  replicas: 0
   template:
     metadata:
       annotations:

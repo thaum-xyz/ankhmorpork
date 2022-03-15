@@ -15,6 +15,7 @@ spec:
       app.kubernetes.io/name: nginx
       app.kubernetes.io/part-of: nextcloud
       app.kubernetes.io/component: proxy
+  replicas: 0
   template:
     metadata:
       annotations:
