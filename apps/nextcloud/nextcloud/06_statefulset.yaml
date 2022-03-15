@@ -14,7 +14,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: phpfpm
       app.kubernetes.io/part-of: nextcloud
-  replicas: 1
+  replicas: 0
   revisionHistoryLimit: 3
   serviceName: nextcloud
   template:
