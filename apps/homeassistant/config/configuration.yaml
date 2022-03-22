@@ -131,7 +131,7 @@ template:
       {% set timescale = as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int %}
       {% set paulfantom =  as_timestamp(state_attr('calendar.paulfantom','start_time')) | int %}
       {% set krupa = as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int %}
-      {% set adrianna = as_timestamp(state_attr('calendar.iadrianna_wojas_gmail_com','start_time')) | int %}
+      {% set adrianna = as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time')) | int %}
       {% set sunrise = as_timestamp(state_attr('sun.sun','next_rising')) | int %}
       {% set now = as_timestamp(utcnow()) | int %}
       {% set next = sunrise %}
