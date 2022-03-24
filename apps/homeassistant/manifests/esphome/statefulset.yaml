@@ -22,6 +22,9 @@ spec:
       - image: esphome/esphome:2022.3.0
         imagePullPolicy: IfNotPresent
         name: esphome
+        env:
+        - name: ESPHOME_DASHBOARD_USE_PING
+          value: "true"
         ports:
         - containerPort: 6052
           name: http
