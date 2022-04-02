@@ -19,12 +19,12 @@ spec:
         app.kubernetes.io/version: 2022.3.1
     spec:
       containers:
-      - image: esphome/esphome:2022.3.1
-        imagePullPolicy: IfNotPresent
-        name: esphome
-        env:
+      - env:
         - name: ESPHOME_DASHBOARD_USE_PING
           value: "true"
+        image: esphome/esphome:2022.3.1
+        imagePullPolicy: IfNotPresent
+        name: esphome
         ports:
         - containerPort: 6052
           name: http
