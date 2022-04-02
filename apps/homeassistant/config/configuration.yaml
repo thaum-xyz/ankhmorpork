@@ -295,6 +295,20 @@ plant:
     max_temperature: 32
     min_brightness: 600
     max_brightness: 20000
+  basil:
+    sensors:
+      moisture: sensor.basil_moisture
+      temperature: sensor.basil_temperature
+      conductivity: sensor.basil_soil_conductivity
+      brightness: sensor.basil_illuminance
+    min_moisture: 15
+    max_moisture: 60
+    min_conductivity: 350
+    max_conductivity: 2000
+    min_temperature: 8
+    max_temperature: 32
+    min_brightness: 2500
+    max_brightness: 60000
 
 notify:
   - platform: slack
