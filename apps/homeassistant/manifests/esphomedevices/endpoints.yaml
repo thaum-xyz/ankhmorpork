@@ -8,7 +8,8 @@ metadata:
   namespace: homeassistant
 subsets:
 - addresses:
-  - ip: 192.168.2.223
+  - ip: 192.168.2.221
+  - ip: 192.168.2.224
   ports:
   - name: http
     port: 80
