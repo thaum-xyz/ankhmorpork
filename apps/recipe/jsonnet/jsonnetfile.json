@@ -1,0 +1,25 @@
+{
+    "version": 1,
+    "dependencies": [
+      {
+        "source": {
+          "git": {
+            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+            "subdir": "apps/mealie"
+          }
+        },
+        "version": "main"
+      },
+      {
+        "source": {
+          "git": {
+            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
+            "subdir": "utils"
+          }
+        },
+        "version": "main"
+      }
+    ],
+    "legacyImports": true
+  }
+  
