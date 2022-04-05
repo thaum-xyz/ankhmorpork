@@ -2,9 +2,9 @@ apiVersion: v1
 kind: Endpoints
 metadata:
   labels:
-    app.kubernetes.io/name: btbridge
+    app.kubernetes.io/name: esp-dev
     app.kubernetes.io/part-of: homeassistant
-  name: btbridge
+  name: esp-dev
   namespace: homeassistant
 subsets:
 - addresses:

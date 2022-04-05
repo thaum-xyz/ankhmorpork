@@ -17,10 +17,10 @@ local config = std.parseYaml(configYAML)[0] {
 local all = {
   esphomedevices: {
     metadata:: {
-      name: "btbridge",
+      name: "esp-dev",
       namespace: config.homeassistant.namespace,
       labels: {
-        "app.kubernetes.io/name": "btbridge",
+        "app.kubernetes.io/name": "esp-dev",
         "app.kubernetes.io/part-of": "homeassistant",
       },
     },
