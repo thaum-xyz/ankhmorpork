@@ -9,3 +9,6 @@ allowVolumeExpansion: true
 reclaimPolicy: Retain
 parameters:
   archiveOnDelete: "true"
+mountOptions:
+# `hard` will disable IO tiemout and make NFS volume behave more like block device
+- hard
