@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: mimir
+    app.kubernetes.io/part-of: mimir
+  name: mimir
+  namespace: mimir
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: mimir
+      app.kubernetes.io/part-of: mimir
+  serviceName: mimir
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: mimir
+        app.kubernetes.io/part-of: mimir
+    spec:
+      containers:
+      - env:
+        - name: TZ
+          value: Europe/Berlin
+        args:
+        - '--config.file=/etc/mimir/config.yaml'
+        image: grafana/mimir:2.0.0
+        imagePullPolicy: IfNotPresent
+        name: mimir
+        ports:
+        - containerPort: 9009
+          name: http
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /ready
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /etc/mimir
+          name: config
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      restartPolicy: Always
+      serviceAccountName: mimir
+      volumes:
+      - configMap:
+          name: config
+        name: config
