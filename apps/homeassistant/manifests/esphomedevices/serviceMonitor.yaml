@@ -8,7 +8,7 @@ metadata:
   namespace: homeassistant
 spec:
   endpoints:
-  - interval: 120s
+  - interval: 60s
     port: http
   selector:
     matchLabels:

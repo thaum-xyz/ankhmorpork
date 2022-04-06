@@ -13,6 +13,11 @@ data:
     # It is for demonstration purposes only.
     multitenancy_enabled: false
 
+    limits:
+      ha_replica_label: prometheus_replica
+      max_global_series_per_user: 300000
+      ingestion_rate: 150000
+
     blocks_storage:
       backend: filesystem
       bucket_store:
@@ -29,6 +34,11 @@ data:
           store: memberlist
 
     distributor:
+      #ha_tracker:
+      #  enable_ha_tracker: true
+        #enable_for_all_users: true
+        #kvstore:
+        #  store: consul
       ring:
         instance_addr: 127.0.0.1
         kvstore:

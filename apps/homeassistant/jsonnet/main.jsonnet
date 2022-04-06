@@ -54,7 +54,7 @@ local all = {
       metadata: all.esphomedevices.metadata,
       spec: {
         endpoints: [{
-          interval: "120s",
+          interval: "60s",
           port: all.esphomedevices.endpoints.subsets[0].ports[0].name,
         }],
         selector: {
