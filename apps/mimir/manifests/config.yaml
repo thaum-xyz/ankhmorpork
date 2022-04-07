@@ -16,7 +16,8 @@ data:
     limits:
       ha_replica_label: prometheus_replica
       max_global_series_per_user: 300000
-      ingestion_rate: 150000
+      ingestion_burst_size: 300000
+      ingestion_rate: 30000
 
     blocks_storage:
       backend: filesystem
