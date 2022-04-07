@@ -1,354 +1,105 @@
 apiVersion: v1
 data:
-  configuration.yaml: |
-    homeassistant:
-      name: Home
-      latitude: !secret home_latitude
-      longitude: !secret home_longitude
-      elevation: !secret home_elevation
-      unit_system: metric
-      time_zone: Europe/Berlin
-      customize: !include customize.yaml
-      #auth_providers:
-      #  - type: homeassistant
-      #  - type: trusted_networks
-      #    allow_bypass_login: true
-      #    trusted_networks:
-      #      - 192.168.2.0/24
-      external_url: https://home.ankhmorpork.thaum.xyz
-
-    # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-    http:
-      # base_url: https://home.ankhmorpork.thaum.xyz
-      use_x_forwarded_for: true
-      trusted_proxies: !secret trusted_proxies
-
-    #panel_iframe:
-    #  esphome:
-    #    title: "ESPHome"
-    #    url: "http://192.168.2.94:6052"
-    #    icon: "mdi:chip"
-    #    require_admin: true
-
-
-    # No-config integrations
-    #default_config:
-    # Redefine configuration options from default_config for more control
-    # Current list can be found in https://www.home-assistant.io/integrations/default_config/
-    automation: !include automations.yaml
-    #cloud:
-    config:
-    counter:
-    dhcp:
-    energy:
-    frontend:
-    history:
-    image:
-    #input_boolean: # configured in lower part of the file
-    input_datetime: # configured in lower part of the file
-    input_number:
-    #input_select:
-    input_text:
-    logbook:
-    map:
-    #media_source:
-    mobile_app:
-    my:
-    person:
-    scene: !include scenes.yaml
-    script: !include scripts.yaml
-    ssdp:
-    stream:
-    sun:
-    system_health:
-    #tag:
-    timer:
-    #updater:
-    webhook:
-    #zeroconf:
-    zone:
-    # END OF default_config
-
-    wake_on_lan:
-    media_extractor:
-
-    group:
-      people:
-        name: People
-        entities:
-        - person.pawel
-        - person.adrianna
-
-    prometheus:
-      namespace: hass
-      filter:
-        exclude_domains:
-        - device_tracker
-        - light
-
-    lock:
-      - platform: kiwi
-        username: !secret kiwi_username
-        password: !secret kiwi_password
-
-    alarm_control_panel:
-      - platform: manual
-        name: Home Alarm
-        code_arm_required: false
-        arming_time: 60
-        trigger_time: 600
-        disarmed:
-          trigger_time: 0
-        armed_home:
-          arming_time: 60
-          delay_time: 30
-
-    # Sensors
-    sensor:
-      - platform: time_date
-        display_options:
-          - 'time'
-          - 'date'
-      - platform: rest
-        name: mealie
-        scan_interval: 3600
-        headers:
-          content-type: application/json
-          authorization: !secret mealie_token
-        resource: https://recipe.krupa.net.pl/api/meal-plans/today
-        value_template: >
-          {% if value_json is none %}
-            No meal plan
-          {% elif value_json.name %}
-          {{   value_json.name }}
-          {% elif value_json.detail %}
-          {{   value_json.detail }}
-          {% else %}
-            unknown
-          {% endif %}
-
-    template:
-    - sensor:
-      - name: "Next meeting"
-        state: >
-          {% set timescale = as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int %}
-          {% set paulfantom =  as_timestamp(state_attr('calendar.paulfantom','start_time')) | int %}
-          {% set krupa = as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int %}
-          {% set adrianna = as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time')) | int %}
-          {% set sunrise = as_timestamp(state_attr('sun.sun','next_rising')) | int %}
-          {% set now = as_timestamp(utcnow()) | int %}
-          {% set next = sunrise %}
-          {% if next > adrianna %}
-          {%   set next = adrianna %}
-          {% endif %}
-          {% if next > krupa %}
-          {%   set next = krupa %}
-          {% endif %}
-          {% if next > paulfantom %}
-          {%   set next = paulfantom %}
-          {% endif %}
-          {% if next > timescale %}
-          {%   set next = timescale %}
-          {% endif %}
-          {% if next != sunrise %}
-          {{   next | timestamp_custom("%H:%M") }}
-          {% endif %}
-        attributes:
-          title: >
-            {% set timescale = as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int %}
-            {% set paulfantom =  as_timestamp(state_attr('calendar.paulfantom','start_time')) | int %}
-            {% set krupa = as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int %}
-            {% set adrianna = as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time')) | int %}
-            {% set sunrise = as_timestamp(state_attr('sun.sun','next_rising')) | int %}
-            {% set now = as_timestamp(utcnow()) | int %}
-            {% set title = "none left today :)" %}
-            {% set next = sunrise %}
-            {% if next > adrianna %}
-            {%   set next = adrianna %}
-            {%   set title = state_attr('calendar.adrianna_wojas_gmail_com','message') %}
-            {% endif %}
-            {% if next > krupa %}
-            {%   set next = krupa %}
-            {%   set title = state_attr('calendar.pawel_krupa_net_pl','message') %}
-            {% endif %}
-            {% if next > paulfantom %}
-            {%   set next = paulfantom %}
-            {%   set title = state_attr('calendar.paulfantom','message') %}
-            {% endif %}
-            {% if next > timescale %}
-            {%   set next = timescale %}
-            {%   set title = state_attr('calendar.pawel_timescale_com','message') %}
-            {% endif %}
-            {{ title }}
-
-    input_boolean:
-      projector:
-        name: Projector State
-        icon: mdi:projector
-      projector_screen:
-        name: Projector Screen State
-        icon: mdi:projector-screen-variant-outline
-
-    input_select:
-      speakers:
-        name: Speakers Input
-        icon: mdi:speakers
-        options:
-        - opt/coax
-        - line1/2
-        - bt
-        initial: line1/2
-
-    plant:
-      jovita:
-        sensors:
-          moisture: sensor.jovita_moisture
-          temperature: sensor.jovita_temperature
-          conductivity: sensor.jovita_soil_conductivity
-          brightness: sensor.jovita_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 10
-        max_temperature: 32
-        min_brightness: 500
-        max_brightness: 12000
-      svetlana:
-        sensors:
-          moisture: sensor.svetlana_moisture
-          temperature: sensor.svetlana_temperature
-          conductivity: sensor.svetlana_soil_conductivity
-          brightness: sensor.svetlana_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 10
-        max_temperature: 32
-        min_brightness: 500
-        max_brightness: 12000
-      phil:
-        sensors:
-          moisture: sensor.phil_moisture
-          temperature: sensor.phil_temperature
-          conductivity: sensor.phil_soil_conductivity
-          brightness: sensor.phil_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 8
-        max_temperature: 32
-        min_brightness: 1000
-        max_brightness: 15000
-      #sage:
-      #  sensors:
-      #    moisture: sensor.herbs_moisture
-      #    temperature: sensor.herbs_temperature
-      #    conductivity: sensor.herbs_soil_conductivity
-      #    brightness: sensor.herbs_illuminance
-      #  min_moisture: 15
-      #  max_moisture: 60
-      #  min_conductivity: 350
-      #  max_conductivity: 2000
-      #  min_temperature: 10
-      #  max_temperature: 32
-      #  min_brightness: 3700
-      #  max_brightness: 20000
-      #basilicum:
-      #  sensors:
-      #    moisture: sensor.herbs_moisture
-      #    temperature: sensor.herbs_temperature
-      #    conductivity: sensor.herbs_soil_conductivity
-      #    brightness: sensor.herbs_illuminance
-      #  min_moisture: 15
-      #  max_moisture: 60
-      #  min_conductivity: 350
-      #  max_conductivity: 2000
-      #  min_temperature: 8
-      #  max_temperature: 32
-      #  min_brightness: 2500
-      #  max_brightness: 60000
-      #mint:
-      #  sensors:
-      #    moisture: sensor.herbs_moisture
-      #    temperature: sensor.herbs_temperature
-      #    conductivity: sensor.herbs_soil_conductivity
-      #    brightness: sensor.herbs_illuminance
-      #  min_moisture: 15
-      #  max_moisture: 60
-      #  min_conductivity: 350
-      #  max_conductivity: 2000
-      #  min_temperature: 5
-      #  max_temperature: 35
-      #  min_brightness: 3700
-      #  max_brightness: 50000
-      vincent:
-        sensors:
-          moisture: sensor.vincent_moisture
-          temperature: sensor.vincent_temperature
-          conductivity: sensor.vincent_soil_conductivity
-          brightness: sensor.vincent_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 10
-        max_temperature: 32
-        min_brightness: 600
-        max_brightness: 20000
-      basil:
-        sensors:
-          moisture: sensor.basil_moisture
-          temperature: sensor.basil_temperature
-          conductivity: sensor.basil_soil_conductivity
-          brightness: sensor.basil_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 8
-        max_temperature: 32
-        min_brightness: 2500
-        max_brightness: 60000
-
-    notify:
-      - platform: slack
-        name: slack
-        api_key: !secret slack_api_key
-        default_channel: '#home'
-        username: "home-assistant"
-
-    switch:
-      - platform: wake_on_lan
-        name: pawel-pc
-        host: "192.168.2.51"
-        mac: !secret pawel_pc_mac
-      - platform: wake_on_lan
-        name: adus-pc
-        host: "192.168.2.50"
-        mac: !secret adus_pc_mac
-
-    google_assistant:
-      project_id: ankhhomeassistant
-      service_account: !include google_service_account.json
-      report_state: true
-
-    google:
-      client_id: !secret google_client_id
-      client_secret: !secret google_client_secret
-      calendar_access: "read_only"
-
-    sonoff:
-      username: !secret sonoff_username
-      password: !secret sonoff_password
-      scan_interval: 60 #(optional, lower values than 60 won't work anymore!)
-      mode: cloud
-      #grace_period: 600 #(optional)
-      #api_region: 'eu' #(optional)
-      #entity_prefix: True #(optional)
-      #debug: False #(optional)
+  configuration.yaml: "homeassistant:\n  name: Home\n  latitude: !secret home_latitude\n
+    \ longitude: !secret home_longitude\n  elevation: !secret home_elevation\n  unit_system:
+    metric\n  time_zone: Europe/Berlin\n  customize: !include customize.yaml\n  #auth_providers:\n
+    \ #  - type: homeassistant\n  #  - type: trusted_networks\n  #    allow_bypass_login:
+    true\n  #    trusted_networks:\n  #      - 192.168.2.0/24\n  external_url: https://home.ankhmorpork.thaum.xyz\n\n#
+    Uncomment this if you are using SSL/TLS, running in Docker container, etc.\nhttp:\n
+    \ # base_url: https://home.ankhmorpork.thaum.xyz\n  use_x_forwarded_for: true\n
+    \ trusted_proxies: !secret trusted_proxies\n\n#panel_iframe:\n#  esphome:\n#    title:
+    \"ESPHome\"\n#    url: \"http://192.168.2.94:6052\"\n#    icon: \"mdi:chip\"\n#
+    \   require_admin: true\n\n\n# No-config integrations\n#default_config:\n# Redefine
+    configuration options from default_config for more control\n# Current list can
+    be found in https://www.home-assistant.io/integrations/default_config/\nautomation:
+    !include automations.yaml\n#cloud:\nconfig:\ncounter:\ndhcp:\nenergy:\nfrontend:\nhistory:\nimage:\n#input_boolean:
+    # configured in lower part of the file\ninput_datetime: # configured in lower
+    part of the file\ninput_number:\n#input_select:\ninput_text:\nlogbook:\nmap:\n#media_source:\nmobile_app:\nmy:\nperson:\nscene:
+    !include scenes.yaml\nscript: !include scripts.yaml\nssdp:\nstream:\nsun:\nsystem_health:\n#tag:\ntimer:\n#updater:\nwebhook:\n#zeroconf:\nzone:\n#
+    END OF default_config\n\nwake_on_lan:\nmedia_extractor:\n\ngroup:\n  people:\n
+    \   name: People\n    entities:\n    - person.pawel\n    - person.adrianna\n\nprometheus:\n
+    \ namespace: hass\n  filter:\n    exclude_domains:\n    - device_tracker\n    -
+    light\n\nlock:\n  - platform: kiwi\n    username: !secret kiwi_username\n    password:
+    !secret kiwi_password\n\nalarm_control_panel:\n  - platform: manual\n    name:
+    Home Alarm\n    code_arm_required: false\n    arming_time: 60\n    trigger_time:
+    600\n    disarmed:\n      trigger_time: 0\n    armed_home:\n      arming_time:
+    60\n      delay_time: 30\n\n# Sensors\nsensor:\n  - platform: time_date\n    display_options:\n
+    \     - 'time'\n      - 'date'\n  - platform: rest\n    name: mealie\n    scan_interval:
+    3600\n    headers:\n      content-type: application/json\n      authorization:
+    !secret mealie_token\n    resource: https://recipe.krupa.net.pl/api/meal-plans/today\n
+    \   value_template: >\n      {% if value_json is none %}\n        No meal plan\n
+    \     {% elif value_json.name %}\n      {{   value_json.name }}\n      {% elif
+    value_json.detail %}\n      {{   value_json.detail }}\n      {% else %}\n        unknown\n
+    \     {% endif %}\n\ntemplate:\n- sensor:\n  - name: \"LCD Display\"\n    state:
+    >\n      {%\n        set calendars = [{\n          \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int,\n          \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n          \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
+    \       },\n        {\n          \"timestamp\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
+    | int,\n          \"prefix\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n          \"data\": state_attr('calendar.pawel_timescale_com','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
+    \       },\n        {\n          \"timestamp\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
+    | int,\n          \"prefix\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n          \"data\": state_attr('calendar.adrianna_wojas_gmail_com','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
+    \       }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int +
+    24*60*60) | sort(attribute='timestamp') \n      %}\n      {%\n        set lines
+    = [{\n          \"prefix\": \"Lunch\",\n          \"data\": states('sensor.mealie')\n
+    \       }] + calendars\n      %}\n      {{ lines[0:4] }}\n\ninput_boolean:\n  projector:\n
+    \   name: Projector State\n    icon: mdi:projector\n  projector_screen:\n    name:
+    Projector Screen State\n    icon: mdi:projector-screen-variant-outline\n\ninput_select:\n
+    \ speakers:\n    name: Speakers Input\n    icon: mdi:speakers\n    options:\n
+    \   - opt/coax\n    - line1/2\n    - bt\n    initial: line1/2\n\nplant:\n  jovita:\n
+    \   sensors:\n      moisture: sensor.jovita_moisture\n      temperature: sensor.jovita_temperature\n
+    \     conductivity: sensor.jovita_soil_conductivity\n      brightness: sensor.jovita_illuminance\n
+    \   min_moisture: 15\n    max_moisture: 60\n    min_conductivity: 350\n    max_conductivity:
+    2000\n    min_temperature: 10\n    max_temperature: 32\n    min_brightness: 500\n
+    \   max_brightness: 12000\n  svetlana:\n    sensors:\n      moisture: sensor.svetlana_moisture\n
+    \     temperature: sensor.svetlana_temperature\n      conductivity: sensor.svetlana_soil_conductivity\n
+    \     brightness: sensor.svetlana_illuminance\n    min_moisture: 15\n    max_moisture:
+    60\n    min_conductivity: 350\n    max_conductivity: 2000\n    min_temperature:
+    10\n    max_temperature: 32\n    min_brightness: 500\n    max_brightness: 12000\n
+    \ phil:\n    sensors:\n      moisture: sensor.phil_moisture\n      temperature:
+    sensor.phil_temperature\n      conductivity: sensor.phil_soil_conductivity\n      brightness:
+    sensor.phil_illuminance\n    min_moisture: 15\n    max_moisture: 60\n    min_conductivity:
+    350\n    max_conductivity: 2000\n    min_temperature: 8\n    max_temperature:
+    32\n    min_brightness: 1000\n    max_brightness: 15000\n  #sage:\n  #  sensors:\n
+    \ #    moisture: sensor.herbs_moisture\n  #    temperature: sensor.herbs_temperature\n
+    \ #    conductivity: sensor.herbs_soil_conductivity\n  #    brightness: sensor.herbs_illuminance\n
+    \ #  min_moisture: 15\n  #  max_moisture: 60\n  #  min_conductivity: 350\n  #
+    \ max_conductivity: 2000\n  #  min_temperature: 10\n  #  max_temperature: 32\n
+    \ #  min_brightness: 3700\n  #  max_brightness: 20000\n  #basilicum:\n  #  sensors:\n
+    \ #    moisture: sensor.herbs_moisture\n  #    temperature: sensor.herbs_temperature\n
+    \ #    conductivity: sensor.herbs_soil_conductivity\n  #    brightness: sensor.herbs_illuminance\n
+    \ #  min_moisture: 15\n  #  max_moisture: 60\n  #  min_conductivity: 350\n  #
+    \ max_conductivity: 2000\n  #  min_temperature: 8\n  #  max_temperature: 32\n
+    \ #  min_brightness: 2500\n  #  max_brightness: 60000\n  #mint:\n  #  sensors:\n
+    \ #    moisture: sensor.herbs_moisture\n  #    temperature: sensor.herbs_temperature\n
+    \ #    conductivity: sensor.herbs_soil_conductivity\n  #    brightness: sensor.herbs_illuminance\n
+    \ #  min_moisture: 15\n  #  max_moisture: 60\n  #  min_conductivity: 350\n  #
+    \ max_conductivity: 2000\n  #  min_temperature: 5\n  #  max_temperature: 35\n
+    \ #  min_brightness: 3700\n  #  max_brightness: 50000\n  vincent:\n    sensors:\n
+    \     moisture: sensor.vincent_moisture\n      temperature: sensor.vincent_temperature\n
+    \     conductivity: sensor.vincent_soil_conductivity\n      brightness: sensor.vincent_illuminance\n
+    \   min_moisture: 15\n    max_moisture: 60\n    min_conductivity: 350\n    max_conductivity:
+    2000\n    min_temperature: 10\n    max_temperature: 32\n    min_brightness: 600\n
+    \   max_brightness: 20000\n  basil:\n    sensors:\n      moisture: sensor.basil_moisture\n
+    \     temperature: sensor.basil_temperature\n      conductivity: sensor.basil_soil_conductivity\n
+    \     brightness: sensor.basil_illuminance\n    min_moisture: 15\n    max_moisture:
+    60\n    min_conductivity: 350\n    max_conductivity: 2000\n    min_temperature:
+    8\n    max_temperature: 32\n    min_brightness: 2500\n    max_brightness: 60000\n\nnotify:\n
+    \ - platform: slack\n    name: slack\n    api_key: !secret slack_api_key\n    default_channel:
+    '#home'\n    username: \"home-assistant\"\n\nswitch:\n  - platform: wake_on_lan\n
+    \   name: pawel-pc\n    host: \"192.168.2.51\"\n    mac: !secret pawel_pc_mac\n
+    \ - platform: wake_on_lan\n    name: adus-pc\n    host: \"192.168.2.50\"\n    mac:
+    !secret adus_pc_mac\n\ngoogle_assistant:\n  project_id: ankhhomeassistant\n  service_account:
+    !include google_service_account.json\n  report_state: true\n\ngoogle:\n  client_id:
+    !secret google_client_id\n  client_secret: !secret google_client_secret\n  calendar_access:
+    \"read_only\"\n\nsonoff:\n  username: !secret sonoff_username\n  password: !secret
+    sonoff_password\n  scan_interval: 60 #(optional, lower values than 60 won't work
+    anymore!)\n  mode: cloud\n  #grace_period: 600 #(optional)\n  #api_region: 'eu'
+    #(optional)\n  #entity_prefix: True #(optional)\n  #debug: False #(optional)\n"
   customize.yaml: |
     switch.adus_pc:
       icon: 'mdi:desktop-classic'
