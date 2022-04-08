@@ -116,6 +116,18 @@ local all = {
         "POSTGRES_PASSWORD": config.timescaledb.database.encryptedPass,
       }
     ),
+    service+: {
+      metadata+: {
+        annotations: {
+          "metallb.universe.tf/address-pool": "default"
+        },
+      },
+      spec+: {
+        loadBalancerIP: "192.168.2.93",
+        type: "LoadBalancer",
+        clusterIP:: null,
+      },
+    },
   },
   homeassistant: homeassistant(config.homeassistant) + {
     credentials: sealedsecret(
