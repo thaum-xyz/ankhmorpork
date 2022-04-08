@@ -100,6 +100,13 @@ alarm_control_panel:
       arming_time: 60
       delay_time: 30
 
+climate:
+- platform: generic_thermostat
+  name: Fridge
+  heater: switch.fridge
+  target_sensor: sensor.fridge_temperature
+  ac_mode: true
+
 # Sensors
 sensor:
   - platform: time_date

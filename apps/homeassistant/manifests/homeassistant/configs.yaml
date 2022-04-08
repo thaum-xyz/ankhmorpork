@@ -23,7 +23,9 @@ data:
     !secret kiwi_password\n\nalarm_control_panel:\n  - platform: manual\n    name:
     Home Alarm\n    code_arm_required: false\n    arming_time: 60\n    trigger_time:
     600\n    disarmed:\n      trigger_time: 0\n    armed_home:\n      arming_time:
-    60\n      delay_time: 30\n\n# Sensors\nsensor:\n  - platform: time_date\n    display_options:\n
+    60\n      delay_time: 30\n\nclimate:\n- platform: generic_thermostat\n  name:
+    Fridge\n  heater: switch.fridge\n  target_sensor: sensor.fridge_temperature\n
+    \ ac_mode: true\n\n# Sensors\nsensor:\n  - platform: time_date\n    display_options:\n
     \     - 'time'\n      - 'date'\n  - platform: rest\n    name: mealie\n    scan_interval:
     3600\n    headers:\n      content-type: application/json\n      authorization:
     !secret mealie_token\n    resource: https://recipe.krupa.net.pl/api/meal-plans/today\n
