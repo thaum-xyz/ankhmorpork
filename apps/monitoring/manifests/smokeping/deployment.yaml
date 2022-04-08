@@ -38,7 +38,6 @@ spec:
         - 1.1.1.1
         - lancre.thaum.xyz
         - krupa.net.pl
-        - cloud.krupa.net.pl
         - pawel.krupa.net.pl
         image: quay.io/superq/smokeping-prober:v0.5.0
         name: smokeping

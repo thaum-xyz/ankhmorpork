@@ -209,7 +209,6 @@
       '1.1.1.1',
       'lancre.thaum.xyz',
       'krupa.net.pl',
-      'cloud.krupa.net.pl',
       'pawel.krupa.net.pl',
     ],
   },
