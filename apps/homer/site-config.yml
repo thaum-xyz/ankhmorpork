@@ -72,10 +72,10 @@ services:
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Internet-icon.svg"
         <<: *Testing
         url: "https://portal.krupa.net.pl"
-      - name: Nextcloud
-        subtitle: "Everything and more"
-        logo: "https://avatars0.githubusercontent.com/u/19211038?s=200&v=4"
-        url: "https://cloud.krupa.net.pl"
+      #- name: Nextcloud
+      #  subtitle: "Everything and more"
+      #  logo: "https://avatars0.githubusercontent.com/u/19211038?s=200&v=4"
+      #  url: "https://cloud.krupa.net.pl"
       - name: Cookbook
         subtitle: "Our recipes"
         logo: "https://github.com/hay-kot/mealie/raw/dev/frontend/public/img/icons/android-chrome-512x512.png"
@@ -88,11 +88,6 @@ services:
         subtitle: "Compress images online"
         logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
         url: "https://compressor.io/"
-      - name: Miniflux
-        subtitle: "Minimalist RSS feed reader"
-        logo: "https://avatars.githubusercontent.com/u/10584991?s=200&v=4"
-        <<: *Testing
-        url: "https://news.krupa.net.pl/"
 
   - name: Multimedia
     icon: "fa fa-tv"
@@ -137,8 +132,8 @@ services:
       #  subtitle: "Photo management"
       #  url: "http://192.168.2.96"
 
-  - name: Administration
-    icon: "fa fa-user-shield"
+  - name: Observability
+    icon: "fa fa-user-doctor-message"
     items:
       - name: Grafana
         logo: "https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg"
@@ -158,6 +153,10 @@ services:
       - name: UptimeRobot
         logo: "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"
         url: "https://uptimerobot.com/dashboard"
+
+  - name: Administration
+    icon: "fa fa-user-shield"
+    items:
       - name: NextDNS
         logo: "https://appteka.store/api/1/icon/get?hash=AfxOnnAVC55q9P8wC41q8i3I9N%2FfQVVHjM4e2r8kVhJuU5GYQJSe3msYMbOpyZDC"
         url: "https://my.nextdns.io/"
