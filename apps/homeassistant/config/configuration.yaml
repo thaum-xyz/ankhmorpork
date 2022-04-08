@@ -333,3 +333,6 @@ sonoff:
   #api_region: 'eu' #(optional)
   #entity_prefix: True #(optional)
   #debug: False #(optional)
+
+recorder:
+  db_url: !secret postgresql_uri

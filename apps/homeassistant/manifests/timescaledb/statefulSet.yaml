@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: database
+    app.kubernetes.io/name: timescaledb
+    app.kubernetes.io/version: 2.6.0
+  name: timescaledb
+  namespace: homeassistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: database
+      app.kubernetes.io/name: timescaledb
+  serviceName: timescaledb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: database
+        app.kubernetes.io/name: timescaledb
+        app.kubernetes.io/version: 2.6.0
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: homeassistant
+        - name: TIMESCALEDB_TELEMETRY
+          value: basic
+        - name: TS_TUNE_MEMORY
+          value: 300MB
+        - name: TS_TUNE_NUM_CPUS
+          value: "1"
+        envFrom:
+        - secretRef:
+            name: timescaledb
+        image: timescale/timescaledb:2.6.0-pg14
+        imagePullPolicy: IfNotPresent
+        name: timescaledb
+        ports:
+        - containerPort: 5432
+          name: psql
+        resources:
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: timescaledb-data
+      restartPolicy: Always
+      serviceAccountName: timescaledb
+  volumeClaimTemplates:
+  - metadata:
+      name: timescaledb-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 300Mi
+      storageClassName: qnap-nfs-storage

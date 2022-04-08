@@ -1,5 +1,6 @@
 local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassistant/homeassistant.libsonnet';
 local esphome = import 'github.com/thaum-xyz/jsonnet-libs/apps/esphome/esphome.libsonnet';
+local timescaledb = import 'timescaledb.libsonnet';
 local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 
 local configYAML = (importstr '../settings.yaml');
@@ -103,6 +104,18 @@ local all = {
         clusterIP:: null,
       },
     },
+  },
+  timescaledb: timescaledb(config.timescaledb) + {
+    credentials: sealedsecret(
+      {
+        name: "timescaledb",
+        namespace: config.timescaledb.namespace,
+      },
+      {
+        "POSTGRES_USER": config.timescaledb.database.encryptedUser,
+        "POSTGRES_PASSWORD": config.timescaledb.database.encryptedPass,
+      }
+    ),
   },
   homeassistant: homeassistant(config.homeassistant) + {
     credentials: sealedsecret(
