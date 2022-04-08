@@ -102,8 +102,8 @@ data:
     \"read_only\"\n\nsonoff:\n  username: !secret sonoff_username\n  password: !secret
     sonoff_password\n  scan_interval: 60 #(optional, lower values than 60 won't work
     anymore!)\n  mode: cloud\n  #grace_period: 600 #(optional)\n  #api_region: 'eu'
-    #(optional)\n  #entity_prefix: True #(optional)\n  #debug: False #(optional)\n\nrecorder:\n
-    \ db_url: !secret postgresql_uri"
+    #(optional)\n  #entity_prefix: True #(optional)\n  #debug: False #(optional)\n\n#
+    FIXME: re-enable later\n#recorder:\n#  db_url: !secret postgresql_uri\n"
   customize.yaml: |
     switch.adus_pc:
       icon: 'mdi:desktop-classic'

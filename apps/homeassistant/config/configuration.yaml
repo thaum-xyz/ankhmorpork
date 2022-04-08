@@ -334,5 +334,6 @@ sonoff:
   #entity_prefix: True #(optional)
   #debug: False #(optional)
 
-recorder:
-  db_url: !secret postgresql_uri
+# FIXME: re-enable later
+#recorder:
+#  db_url: !secret postgresql_uri
