@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 4463627fd3f015e55de1ea9ee5855636
+        checksum.config/md5: c58640a6cf48f3925fa14b9f2a5aa735
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
@@ -54,7 +54,7 @@ spec:
         securityContext:
           privileged: false
         startupProbe:
-          failureThreshold: 120
+          failureThreshold: 30
           httpGet:
             path: /
             port: http

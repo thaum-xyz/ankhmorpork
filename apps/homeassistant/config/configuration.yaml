@@ -212,68 +212,12 @@ plant:
     max_temperature: 32
     min_brightness: 500
     max_brightness: 12000
-  phil:
+  violet:
     sensors:
-      moisture: sensor.phil_moisture
-      temperature: sensor.phil_temperature
-      conductivity: sensor.phil_soil_conductivity
-      brightness: sensor.phil_illuminance
-    min_moisture: 15
-    max_moisture: 60
-    min_conductivity: 350
-    max_conductivity: 2000
-    min_temperature: 8
-    max_temperature: 32
-    min_brightness: 1000
-    max_brightness: 15000
-  #sage:
-  #  sensors:
-  #    moisture: sensor.herbs_moisture
-  #    temperature: sensor.herbs_temperature
-  #    conductivity: sensor.herbs_soil_conductivity
-  #    brightness: sensor.herbs_illuminance
-  #  min_moisture: 15
-  #  max_moisture: 60
-  #  min_conductivity: 350
-  #  max_conductivity: 2000
-  #  min_temperature: 10
-  #  max_temperature: 32
-  #  min_brightness: 3700
-  #  max_brightness: 20000
-  #basilicum:
-  #  sensors:
-  #    moisture: sensor.herbs_moisture
-  #    temperature: sensor.herbs_temperature
-  #    conductivity: sensor.herbs_soil_conductivity
-  #    brightness: sensor.herbs_illuminance
-  #  min_moisture: 15
-  #  max_moisture: 60
-  #  min_conductivity: 350
-  #  max_conductivity: 2000
-  #  min_temperature: 8
-  #  max_temperature: 32
-  #  min_brightness: 2500
-  #  max_brightness: 60000
-  #mint:
-  #  sensors:
-  #    moisture: sensor.herbs_moisture
-  #    temperature: sensor.herbs_temperature
-  #    conductivity: sensor.herbs_soil_conductivity
-  #    brightness: sensor.herbs_illuminance
-  #  min_moisture: 15
-  #  max_moisture: 60
-  #  min_conductivity: 350
-  #  max_conductivity: 2000
-  #  min_temperature: 5
-  #  max_temperature: 35
-  #  min_brightness: 3700
-  #  max_brightness: 50000
-  vincent:
-    sensors:
-      moisture: sensor.vincent_moisture
-      temperature: sensor.vincent_temperature
-      conductivity: sensor.vincent_soil_conductivity
-      brightness: sensor.vincent_illuminance
+      moisture: sensor.violet_moisture
+      temperature: sensor.violet_temperature
+      conductivity: sensor.violet_soil_conductivity
+      brightness: sensor.violet_illuminance
     min_moisture: 15
     max_moisture: 60
     min_conductivity: 350
@@ -282,6 +226,20 @@ plant:
     max_temperature: 32
     min_brightness: 600
     max_brightness: 20000
+  herbs:
+    sensors:
+      moisture: sensor.herbs_moisture
+      temperature: sensor.herbs_temperature
+      conductivity: sensor.herbs_soil_conductivity
+      brightness: sensor.herbs_illuminance
+    min_moisture: 15
+    max_moisture: 60
+    min_conductivity: 350
+    max_conductivity: 2000
+    min_temperature: 10
+    max_temperature: 32
+    min_brightness: 3700
+    max_brightness: 60000
   basil:
     sensors:
       moisture: sensor.basil_moisture

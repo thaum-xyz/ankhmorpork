@@ -63,32 +63,18 @@ data:
     \     brightness: sensor.svetlana_illuminance\n    min_moisture: 15\n    max_moisture:
     60\n    min_conductivity: 350\n    max_conductivity: 2000\n    min_temperature:
     10\n    max_temperature: 32\n    min_brightness: 500\n    max_brightness: 12000\n
-    \ phil:\n    sensors:\n      moisture: sensor.phil_moisture\n      temperature:
-    sensor.phil_temperature\n      conductivity: sensor.phil_soil_conductivity\n      brightness:
-    sensor.phil_illuminance\n    min_moisture: 15\n    max_moisture: 60\n    min_conductivity:
-    350\n    max_conductivity: 2000\n    min_temperature: 8\n    max_temperature:
-    32\n    min_brightness: 1000\n    max_brightness: 15000\n  #sage:\n  #  sensors:\n
-    \ #    moisture: sensor.herbs_moisture\n  #    temperature: sensor.herbs_temperature\n
-    \ #    conductivity: sensor.herbs_soil_conductivity\n  #    brightness: sensor.herbs_illuminance\n
-    \ #  min_moisture: 15\n  #  max_moisture: 60\n  #  min_conductivity: 350\n  #
-    \ max_conductivity: 2000\n  #  min_temperature: 10\n  #  max_temperature: 32\n
-    \ #  min_brightness: 3700\n  #  max_brightness: 20000\n  #basilicum:\n  #  sensors:\n
-    \ #    moisture: sensor.herbs_moisture\n  #    temperature: sensor.herbs_temperature\n
-    \ #    conductivity: sensor.herbs_soil_conductivity\n  #    brightness: sensor.herbs_illuminance\n
-    \ #  min_moisture: 15\n  #  max_moisture: 60\n  #  min_conductivity: 350\n  #
-    \ max_conductivity: 2000\n  #  min_temperature: 8\n  #  max_temperature: 32\n
-    \ #  min_brightness: 2500\n  #  max_brightness: 60000\n  #mint:\n  #  sensors:\n
-    \ #    moisture: sensor.herbs_moisture\n  #    temperature: sensor.herbs_temperature\n
-    \ #    conductivity: sensor.herbs_soil_conductivity\n  #    brightness: sensor.herbs_illuminance\n
-    \ #  min_moisture: 15\n  #  max_moisture: 60\n  #  min_conductivity: 350\n  #
-    \ max_conductivity: 2000\n  #  min_temperature: 5\n  #  max_temperature: 35\n
-    \ #  min_brightness: 3700\n  #  max_brightness: 50000\n  vincent:\n    sensors:\n
-    \     moisture: sensor.vincent_moisture\n      temperature: sensor.vincent_temperature\n
-    \     conductivity: sensor.vincent_soil_conductivity\n      brightness: sensor.vincent_illuminance\n
-    \   min_moisture: 15\n    max_moisture: 60\n    min_conductivity: 350\n    max_conductivity:
-    2000\n    min_temperature: 10\n    max_temperature: 32\n    min_brightness: 600\n
-    \   max_brightness: 20000\n  basil:\n    sensors:\n      moisture: sensor.basil_moisture\n
-    \     temperature: sensor.basil_temperature\n      conductivity: sensor.basil_soil_conductivity\n
+    \ violet:\n    sensors:\n      moisture: sensor.violet_moisture\n      temperature:
+    sensor.violet_temperature\n      conductivity: sensor.violet_soil_conductivity\n
+    \     brightness: sensor.violet_illuminance\n    min_moisture: 15\n    max_moisture:
+    60\n    min_conductivity: 350\n    max_conductivity: 2000\n    min_temperature:
+    10\n    max_temperature: 32\n    min_brightness: 600\n    max_brightness: 20000\n
+    \ herbs:\n    sensors:\n      moisture: sensor.herbs_moisture\n      temperature:
+    sensor.herbs_temperature\n      conductivity: sensor.herbs_soil_conductivity\n
+    \     brightness: sensor.herbs_illuminance\n    min_moisture: 15\n    max_moisture:
+    60\n    min_conductivity: 350\n    max_conductivity: 2000\n    min_temperature:
+    10\n    max_temperature: 32\n    min_brightness: 3700\n    max_brightness: 60000\n
+    \ basil:\n    sensors:\n      moisture: sensor.basil_moisture\n      temperature:
+    sensor.basil_temperature\n      conductivity: sensor.basil_soil_conductivity\n
     \     brightness: sensor.basil_illuminance\n    min_moisture: 15\n    max_moisture:
     60\n    min_conductivity: 350\n    max_conductivity: 2000\n    min_temperature:
     8\n    max_temperature: 32\n    min_brightness: 2500\n    max_brightness: 60000\n\nnotify:\n
