@@ -54,7 +54,7 @@ spec:
         securityContext:
           privileged: false
         startupProbe:
-          failureThreshold: 30
+          failureThreshold: 120
           httpGet:
             path: /
             port: http
