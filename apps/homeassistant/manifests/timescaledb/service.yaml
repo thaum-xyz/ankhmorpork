@@ -15,6 +15,9 @@ spec:
   - name: psql
     port: 5432
     targetPort: psql
+  - name: metrics
+    port: 9187
+    targetPort: metrics
   selector:
     app.kubernetes.io/component: database
     app.kubernetes.io/name: timescaledb

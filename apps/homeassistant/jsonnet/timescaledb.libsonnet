@@ -4,6 +4,7 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  exporterImage: "quay.io/prometheuscommunity/postgres-exporter:latest",
   resources: {
     requests: { cpu: '100m', memory: '300Mi' },
   },
@@ -38,40 +39,39 @@ local defaults = {
 };
 
 function(params) {
-  local h = self,
   _config:: defaults + params,
   _metadata:: {
-    name: h._config.name,
-    namespace: h._config.namespace,
-    labels: h._config.commonLabels,
+    name: $._config.name,
+    namespace: $._config.namespace,
+    labels: $._config.commonLabels,
   },
   // Safety check
-  assert std.isObject(h._config.resources),
+  assert std.isObject($._config.resources),
 
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
     automountServiceAccountToken: false,
-    metadata: h._metadata,
+    metadata: $._metadata,
   },
 
   service: {
     apiVersion: 'v1',
     kind: 'Service',
-    metadata: h._metadata,
+    metadata: $._metadata,
     spec: {
       ports: [
         {
           name: 'psql',
-          targetPort: h.statefulSet.spec.template.spec.containers[0].ports[0].name,
+          targetPort: $.statefulSet.spec.template.spec.containers[0].ports[0].name,
           port: 5432,
-        //},{
-        //  name: 'metrics',
-        //  targetPort: h.statefulSet.spec.template.spec.containers[1].ports[0].name,
-        //  port: 9187,
-        }
+        },{
+          name: 'metrics',
+          targetPort: $.statefulSet.spec.template.spec.containers[1].ports[0].name,
+          port: 9187,
+        },
       ],
-      selector: h._config.selectorLabels,
+      selector: $._config.selectorLabels,
       clusterIP: 'None',
     },
   },
@@ -79,22 +79,22 @@ function(params) {
   credentials: {
     apiVersion: "v1",
     kind: "Secret",
-    metadata: h._metadata,
+    metadata: $._metadata,
     data: {
-      POSTGRES_USER: h._config.database.user,
-      POSTGRES_PASSWORD: h._config.database.pass,
+      POSTGRES_USER: $._config.database.user,
+      POSTGRES_PASSWORD: $._config.database.pass,
     },
   },
 
   statefulSet: {
     local c = {
-      name: h._config.name,
-      image: h._config.image,
+      name: $._config.name,
+      image: $._config.image,
       imagePullPolicy: 'IfNotPresent',
       env: [
         {
           name: "POSTGRES_DB",
-          value: h._config.database.name,
+          value: $._config.database.name,
         },{
           name: "TIMESCALEDB_TELEMETRY",
           value: "basic",
@@ -108,7 +108,7 @@ function(params) {
       ],
       envFrom: [{
         secretRef: {
-          name: h.credentials.metadata.name,
+          name: $.credentials.metadata.name,
         },
       }],
       ports: [{
@@ -120,33 +120,68 @@ function(params) {
       },
       volumeMounts: [{
         mountPath: '/var/lib/postgresql/data',
-        name: h._config.storage.name,
+        name: $._config.storage.name,
       }],
-      resources: h._config.resources,
+      resources: $._config.resources,
+    },
+
+    local e = {
+      name: "exporter",
+      image: $._config.exporterImage,
+      env: [
+        {
+          name: "DATA_SOURCE_URI",
+          value: "127.0.0.1",
+        },{
+          name: "DATA_SOURCE_USER",
+          value: "${POSTGRES_USER}",
+        },{
+          name: "DATA_SOURCE_PASS",
+          value: "${POSTGRES_PASSWORD}",
+        },{
+          name: "PG_EXPORTER_AUTO_DISCOVER_DATABASES",
+          value: "true",
+        },
+      ],
+      envFrom: [{
+        secretRef: {
+          name: $.credentials.metadata.name,
+        },
+      }],
+      ports: [{
+        containerPort: 9187,
+        name: 'metrics',
+      }],
+      securityContext: {
+        privileged: false,
+      },
     },
 
     apiVersion: 'apps/v1',
     kind: 'StatefulSet',
-    metadata: h._metadata,
+    metadata: $._metadata,
     spec: {
-      serviceName: h.service.metadata.name,
+      serviceName: $.service.metadata.name,
       replicas: 1,
-      selector: { matchLabels: h._config.selectorLabels },
+      selector: { matchLabels: $._config.selectorLabels },
       template: {
         metadata: {
-          labels: h._config.commonLabels,
+          labels: $._config.commonLabels,
+          annotations: {
+            "kubectl.kubernetes.io/default-container": c.name,
+          },
         },
         spec: {
-          containers: [c],
+          containers: [c,e],
           restartPolicy: 'Always',
-          serviceAccountName: h.serviceAccount.metadata.name,
+          serviceAccountName: $.serviceAccount.metadata.name,
         },
       },
       volumeClaimTemplates: [{
         metadata: {
-          name: h._config.storage.name,
+          name: $._config.storage.name,
         },
-        spec: h._config.storage.pvcSpec,
+        spec: $._config.storage.pvcSpec,
       }],
     },
   },
@@ -154,14 +189,14 @@ function(params) {
   [if std.objectHas(params, 'exporter') && std.length(params.domain) > 0 then 'serviceMonitor']: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'ServiceMonitor',
-    metadata: h._metadata,
+    metadata: $._metadata,
     spec: {
       endpoints: [{
         interval: '90s',
-        port: h.service.spec.ports[1].name,
+        port: $.service.spec.ports[1].name,
       }],
       selector: {
-        matchLabels: h._config.selectorLabels,
+        matchLabels: $._config.selectorLabels,
       },
     },
   },
@@ -169,9 +204,9 @@ function(params) {
   [if std.objectHas(params, 'exporter') && std.length(params.domain) > 0 then 'prometheusRule']: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PrometheusRule',
-    metadata: h._metadata,
+    metadata: $._metadata,
     // TODO: Create timescaledb monitoring mixin
-    // FIXME: Create SLO?
+    // FIXME: Create/find SLO?
     spec: {
       groups: [{
         name: 'timescaledb.alerts',
