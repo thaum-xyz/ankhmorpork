@@ -79,6 +79,7 @@ local addContainerParameter(parameter, value, name, containers) = std.map(
   containers,
 );
 
+// FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
 local allowIngressNetworkPolicy(port) = {
   spec+: {
     ingress+: [{
@@ -88,6 +89,11 @@ local allowIngressNetworkPolicy(port) = {
             "app.kubernetes.io/name": "ingress-nginx",
           },
         },
+        namespaceSelector: {
+          matchLabels: {
+            "kubernetes.io/metadata.name": "ingress-nginx",
+          }
+        }
       }],
       ports: [{
         port: port,
@@ -172,7 +178,8 @@ local kp =
       serviceAccount+: {
         automountServiceAccountToken: false,  // TODO: move into kube-prometheus
       },
-      networkPolicy+: allowIngressNetworkPolicy($.alertmanager.service.spec.ports[0].port),
+      // FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
+      networkPolicy+:: allowIngressNetworkPolicy($.alertmanager.service.spec.ports[0].port),
       ingress: ingress(
         $.alertmanager.service.metadata {
           name: 'alertmanager',  // FIXME: that's an artifact from previous configuration, it should be removed.
@@ -281,7 +288,8 @@ local kp =
           },
         },
       },
-      networkPolicy+: allowIngressNetworkPolicy($.prometheus.service.spec.ports[0].port),
+      // FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
+      networkPolicy+:: allowIngressNetworkPolicy($.prometheus.service.spec.ports[0].port),
       ingress: ingress(
         $.prometheus.service.metadata {
           name: 'prometheus',  // FIXME: that's an artifact from previous configuration, it should be removed.
@@ -485,7 +493,8 @@ local kp =
         },
       },
 
-      networkPolicy+: allowIngressNetworkPolicy($.grafana.service.spec.ports[0].port),
+      // FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
+      networkPolicy+:: allowIngressNetworkPolicy($.grafana.service.spec.ports[0].port),
       ingress: ingress(
         $.grafana.service.metadata {
           annotations: {
