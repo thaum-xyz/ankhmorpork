@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: prometheus-operator
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.54.0
+    app.kubernetes.io/version: 0.55.1
   name: prometheus-operator
   namespace: monitoring
 spec:
@@ -23,15 +23,15 @@ spec:
         app.kubernetes.io/component: controller
         app.kubernetes.io/name: prometheus-operator
         app.kubernetes.io/part-of: kube-prometheus
-        app.kubernetes.io/version: 0.54.0
+        app.kubernetes.io/version: 0.55.1
     spec:
       automountServiceAccountToken: true
       containers:
       - args:
         - --kubelet-service=kube-system/kubelet
-        - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.54.0
+        - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.55.1
         - --log-level=debug
-        image: quay.io/prometheus-operator/prometheus-operator:v0.54.0
+        image: quay.io/prometheus-operator/prometheus-operator:v0.55.1
         name: prometheus-operator
         ports:
         - containerPort: 8080
@@ -45,6 +45,9 @@ spec:
             memory: 100Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
       - args:
         - --logtostderr
@@ -65,6 +68,9 @@ spec:
             memory: 20Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
           runAsGroup: 65532
           runAsNonRoot: true

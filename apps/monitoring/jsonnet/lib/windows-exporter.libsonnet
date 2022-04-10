@@ -12,7 +12,7 @@ local defaults = {
     _config: {
       runbookURLPattern: 'https://runbooks.prometheus-operator.dev/runbooks/kubernetes/%s',
       kubeStateMetricsSelector: 'job="kube-state-metrics"',
-      wmiExporterSelector: 'job="windows-exporter"',
+      windowsExporterSelector: 'job="windows-exporter"',
     },
   },
 };

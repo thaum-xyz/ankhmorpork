@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: blackbox-exporter
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.19.0
+    app.kubernetes.io/version: 0.20.0
   name: blackbox-exporter
   namespace: monitoring
 spec:
@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: blackbox-exporter
         app.kubernetes.io/part-of: kube-prometheus
-        app.kubernetes.io/version: 0.19.0
+        app.kubernetes.io/version: 0.20.0
     spec:
       affinity:
         podAntiAffinity:
@@ -37,11 +37,12 @@ spec:
                   - blackbox-exporter
               topologyKey: kubernetes.io/hostname
             weight: 100
+      automountServiceAccountToken: true
       containers:
       - args:
         - --config.file=/etc/blackbox_exporter/config.yml
         - --web.listen-address=:19115
-        image: quay.io/prometheus/blackbox-exporter:v0.19.0
+        image: quay.io/prometheus/blackbox-exporter:v0.20.0
         name: blackbox-exporter
         ports:
         - containerPort: 19115
@@ -55,6 +56,9 @@ spec:
             memory: 16Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
@@ -76,6 +80,9 @@ spec:
             memory: 16Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
@@ -104,6 +111,9 @@ spec:
             memory: 16Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
           runAsGroup: 65532
           runAsNonRoot: true

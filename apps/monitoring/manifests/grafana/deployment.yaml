@@ -23,6 +23,7 @@ spec:
         app.kubernetes.io/part-of: kube-prometheus
         app.kubernetes.io/version: 8.2.1
     spec:
+      automountServiceAccountToken: false
       containers:
       - env:
         - name: GF_SERVER_ROOT_URL
@@ -65,6 +66,9 @@ spec:
             memory: 100Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /var/lib/grafana

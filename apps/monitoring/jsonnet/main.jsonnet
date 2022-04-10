@@ -103,6 +103,7 @@ local kp =
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/main.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/anti-affinity.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/all-namespaces.libsonnet') +
+  #(import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/pyrra.libsonnet') +
   // (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/windows.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
   // (import 'lib/additional-scrape-configs.libsonnet') +
@@ -114,13 +115,7 @@ local kp =
     //
 
     // TODO: figure out how to make this a JSON/YAML file!
-    values+:: (import '../config.jsonnet') +
-              // TODO: Remove this when https://github.com/prometheus-operator/kube-prometheus/pull/1458 is merged
-              {
-                grafana+: {
-                  dashboards+: (import 'github.com/grafana/grafana/grafana-mixin/mixin.libsonnet').grafanaDashboards,
-                },
-              },
+    values+:: (import '../config.jsonnet'),
 
     //
     // Objects customization
@@ -319,7 +314,7 @@ local kp =
           securityContext:: null,
           // queryLogFile: '/prometheus/query.log',
 
-          // TODO: expose remoteWrite as a top-level config
+          // TODO: expose remoteWrite as a top-level config in kube-prometheus
           remoteWrite: [{
             url: "http://mimir.mimir.svc:9009/api/v1/push",
           }],

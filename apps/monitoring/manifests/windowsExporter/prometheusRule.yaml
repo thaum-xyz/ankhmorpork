@@ -64,9 +64,10 @@ spec:
     - expr: |
         irate(windows_memory_swap_page_operations_total{job="windows-exporter"}[5m])
       record: node:windows_node_memory_swap_io_pages:irate
-    - expr: "avg(irate(windows_logical_disk_read_seconds_total{job=\"windows-exporter\"}[1m])
-        + \n    irate(windows_logical_disk_write_seconds_total{job=\"windows-exporter\"}[1m])\n
-        \ )\n"
+    - expr: |
+        avg(irate(windows_logical_disk_read_seconds_total{job="windows-exporter"}[1m]) +
+            irate(windows_logical_disk_write_seconds_total{job="windows-exporter"}[1m])
+          )
       record: :windows_node_disk_utilisation:avg_irate
     - expr: |
         avg by (instance) (
