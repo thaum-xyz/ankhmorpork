@@ -70,6 +70,15 @@ local addArgs(args, name, containers) = std.map(
   containers,
 );
 
+local addContainerParameter(parameter, value, name, containers) = std.map(
+  function(c) if c.name == name then
+    c {
+      [parameter]+: value,
+    }
+    else c,
+    containers,
+);
+
 local probe(name, namespace, labels, module, targets) = {
   apiVersion: 'monitoring.coreos.com/v1',
   kind: 'Probe',
@@ -350,6 +359,59 @@ local kp =
           },
         },
       ),
+      # TODO: Remove this when https://github.com/prometheus-operator/kube-prometheus/issues/1718 is finished
+      apiDeployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              containers: addContainerParameter(
+                'resources', 
+                {
+                  requests: {
+                    cpu: '100m',
+                    memory: '20Mi',
+                  },
+                  limits: {
+                    cpu: '100Mi',
+                    memory: '30Mi',
+                  }
+                },
+                'pyrra',
+                super.containers
+              ),
+              nodeSelector+: {
+                "kubernetes.io/arch": "amd64",
+              },
+            },
+          },
+        },
+      },
+      kubernetesDeployment+: {
+        spec+: {
+          template+: {
+            spec+: {
+              containers: addContainerParameter(
+                'resources', 
+                {
+                  requests: {
+                    cpu: '100m',
+                    memory: '20Mi',
+                  },
+                  limits: {
+                    cpu: '100Mi',
+                    memory: '30Mi',
+                  }
+                },
+                'pyrra',
+                super.containers
+              ),
+              nodeSelector+: {
+                "kubernetes.io/arch": "amd64",
+              },
+            },
+          },
+        },
+      },
     },
 
     grafana+: {

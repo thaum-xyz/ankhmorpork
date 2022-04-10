@@ -34,9 +34,17 @@ spec:
         name: pyrra
         ports:
         - containerPort: 9099
+        resources:
+          limits:
+            cpu: 100Mi
+            memory: 30Mi
+          requests:
+            cpu: 100m
+            memory: 20Mi
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         kubernetes.io/os: linux
       serviceAccountName: pyrra-kubernetes
