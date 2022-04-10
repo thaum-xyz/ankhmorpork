@@ -1,10 +1,8 @@
-
----
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.6.2
+    controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
   name: servicelevelobjectives.pyrra.dev
 spec:
@@ -13,6 +11,8 @@ spec:
     kind: ServiceLevelObjective
     listKind: ServiceLevelObjectiveList
     plural: servicelevelobjectives
+    shortNames:
+    - slo
     singular: servicelevelobjective
   scope: Namespaced
   versions:
@@ -20,7 +20,7 @@ spec:
     schema:
       openAPIV3Schema:
         description: ServiceLevelObjective is the Schema for the ServiceLevelObjectives
-          API
+          API.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -35,7 +35,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ServiceLevelObjectiveSpec defines the desired state of ServiceLevelObjective
+            description: ServiceLevelObjectiveSpec defines the desired state of ServiceLevelObjective.
             properties:
               description:
                 description: Description describes the ServiceLevelObjective in more
@@ -51,6 +51,12 @@ spec:
                     description: Latency is the indicator that measures a certain
                       percentage to be fast than.
                     properties:
+                      grouping:
+                        description: Grouping allows an SLO to be defined for many
+                          SLI at once, like HTTP handlers for example.
+                        items:
+                          type: string
+                        type: array
                       success:
                         description: Success is the metric that returns how many errors
                           there are.
@@ -86,6 +92,12 @@ spec:
                         required:
                         - metric
                         type: object
+                      grouping:
+                        description: Grouping allows an SLO to be defined for many
+                          SLI at once, like HTTP handlers for example.
+                        items:
+                          type: string
+                        type: array
                       total:
                         description: Total is the metric that returns how many requests
                           there are in total.
@@ -116,7 +128,7 @@ spec:
             type: object
           status:
             description: ServiceLevelObjectiveStatus defines the observed state of
-              ServiceLevelObjective
+              ServiceLevelObjective.
             type: object
         type: object
     served: true

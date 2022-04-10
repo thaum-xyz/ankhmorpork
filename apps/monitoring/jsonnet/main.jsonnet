@@ -103,8 +103,7 @@ local kp =
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/main.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/anti-affinity.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/all-namespaces.libsonnet') +
-  // TODO: convert custom pyrra component into one from upstream
-  // (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/pyrra.libsonnet') +
+  (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/pyrra.libsonnet') +
   // (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/windows.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
   // (import 'lib/additional-scrape-configs.libsonnet') +
@@ -226,7 +225,7 @@ local kp =
             'storage.infra/local': 'true',
           },
           // FIXME: reenable
-          //securityContext:: null,
+          securityContext:: null,
           // queryLogFile: '/prometheus/query.log',
 
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
@@ -338,6 +337,19 @@ local kp =
           }, super.groups),
         },
       },
+    },
+
+    pyrra+: {
+      ingress: ingress(
+        $.pyrra.apiService.metadata,
+        'pyrra.' + $.values.common.baseDomain,
+        {
+          name: $.pyrra.apiService.metadata.name,
+          port: {
+            name: $.pyrra.apiService.spec.ports[0].name,
+          },
+        },
+      ),
     },
 
     grafana+: {
