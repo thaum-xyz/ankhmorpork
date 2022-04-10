@@ -33,7 +33,7 @@ spec:
             cpu: 800m
             memory: 600Mi
           requests:
-            cpu: 400m
+            cpu: 600m
             memory: 350Mi
         volumeMounts:
         - mountPath: /config

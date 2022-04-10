@@ -46,11 +46,11 @@ spec:
           timeoutSeconds: 10
         resources:
           limits:
-            cpu: 400m
-            memory: 1600Mi
+            cpu: 500m
+            memory: 900Mi
           requests:
-            cpu: 200m
-            memory: 800Mi
+            cpu: 100m
+            memory: 700Mi
         securityContext:
           privileged: false
         startupProbe:

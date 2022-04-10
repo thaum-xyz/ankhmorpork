@@ -8,6 +8,13 @@ homeassistant:
   domain: "home.ankhmorpork.thaum.xyz"
   hostNetwork: true  # Needed to enable WOL
   timezone: "Europe/Berlin"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 700Mi
+    limits:
+      cpu: 500m
+      memory: 900Mi
   storage:
     name: "homeassistant-config"
     pvcSpec:
@@ -19,9 +26,16 @@ homeassistant:
           storage: 1Gi
   encryptedAPIToken: "AgA/Ri+rPl/uXghEhXK1AjUpvqpjy0UlG1DNRVP3Pu8PDWvGozJN4oyth3IDOJ0yePW4HaGxF9expzWJ0Ett9dD+5nooknLd4RwDVYXxiyWzIMVIfR7/Sy2es/YqPHH7g1IEkrYEEjf9QWzZybr739H/jTbBrXqmWN2v0lXPBoF/nt8hILdPb8uY4yzFFw2OGDIWw12hUTLaGs91LVZqEVhn1ypx6yCu4xAdA997/33ye8wQcYiLv9eGQBmtMOmDSKk43tT7G8iyB8HVhcJO7FFmo51XGMRLEKItr+bUpX/zIQpkNqQakiHUsmKwJL3A/6lnkDV0l443vaeFJQHqckM/MY0YM2yqhQrDCGgklK2bhoW8X2fgC/2ptThQYTrK6aPJSpcEC7Ap5IxAMFPq9QNGtffQc12moIKVyPMpZu3eNN1k5H02s2Bqf+f6X/s4fM5rvI6QZZPlT3ttQw3XnqB5smky70OH3JX56pqdVLdpjcyzuCmGBRWbA2ZRa2e3EZFteCOHUR9nP2h8Dekc6YltmScreDobm1e2v5TW7bHAmL86rM0T0lSCX/I40igTBv1xjC1ePzr6cxf0+XInRvd/wVav6hniQAQPBdg1P/mxmD2IXntku0m+l3dzaubwH8nmv4ZMsg8/w1ZpzQCVsHHpGH11uSFhUFPvLZ+kMEX6PUDbUPwZ+hayse6JiOFNlLlhPh+jmQJi27HLcC1f614y0wpoSaaW1Ze5xNauauL4/h/WbzZheUCn26eqvGICgobc1TB6xZmjEG644y0p0b5e3k2M1Z8jJdEDawd8LiFA+SHpDgozTv8AkrgvtYsf1s/sscPwDq2ZodhGWGBi9u/mv/MimGm79znCBpeQvrh45NaSRAYJAMgdC5VgIUg9Oviaf5P+DkTqj6jj9GplyQVNHbhmwg5lVW8gWSZRPildZWd8l7M9AaE="
 timescaledb:
-  version: "2.6.0"
-  image: "timescale/timescaledb:2.6.0-pg14"
+  version: "2.6.0"  # application-version-from-github: timescale/timescaledb
+  image: "timescale/timescaledb:2.6.0-pg14"  # application-version-from-github: timescale/timescaledb
   namespace: *namespace
+  resources:
+    requests:
+      cpu: 100m
+      memory: 150Mi
+    limits:
+      cpu: 100m
+      memory: 300Mi
   storage:
     name: "timescaledb-data"
     pvcSpec:
@@ -32,8 +46,8 @@ timescaledb:
         requests:
           storage: 300Mi
   database:
-    encryptedUser: AgAmbp6Q8JngIVkZw7ZSBggkFSil0VUaLPwbRTJVPYLhmIwcp4w8rK1u5/ofgF/fkDe0Lk1ctgeqgEUWHFB4kV0MuJdbF7RPsSUYNlSMcPFML+HENzdQ05RAoI2f80QKpkTH3cP4GtTaHmpwe//1na8Ql6U7EiUCS5gylSSMB4B6r74XbkAbGmy2ByKBOLvW1qbJMFHBkW0vDrql2CmkjQd2dFEX2W4Hvyu1+X+j9t3h6zsZaYPdlKCtW58knXKqNd0d5V5M3spBJTmGUbJkmjeuefHAVpJd0HSAw+QtIyrRzuaNKNsPJcKQA7wJ67XFHjEtQs9X/sMQJ5qW2bFHUHJW8cZwDOlr6+qB5bF5H2Iih315iRcIdDKP8rwU/uqHfAAc/lBtAKw/kTzqtXCB78wIrmrrXAHPpPTeyNBspw9HtdSHMGBV87oRSYJZsi7mzh5JOQcpimORVrzR7UwospfxcHGWrijZ5O3wswI1fFCKqzuyncsiNQAx2guqRoQDalowrX3QRuFem0/nd17cATtcwvPZQ6orKNTKz2UPzbHejZiDebbIaqKChtVGpUCEUzcHaA0wIGNUdhwGuNqCJxjOZ4Qv6PbLorGbWifsF2+3fSMlab7nWuzgl0Nk0Wfq1iXyOK7wQ0uwZDjzUsLAzJcJUCTj0whuf0MUp66K2yyaefnxj+d/8dro7vL4Zn8zpMZpmbQvirqi/KcVAo6i
-    encryptedPass: AgCgQU36N4VN261JWmbJyNkmIDbbWWcgt8zS6+6lo20CMrodztxcZk50Jid6RATcpn2FKcd/DZWavadqJbvgK+/shkzo0+LjFRUMvhGPKvyRCEAV+1dxs1Mo2TuqA57SuR3rg1BlfHQaXSUgQJHbbi1y0dV7k9kXnHSsrkJkZx011rhUeC/U4Z8EC7NEqP1SlV+LBw5SWl5nnZk1XYHFVhu1SQ4gIxaWVe5Kr7EX4VzZh+9bVPPqGzGvnL6XvuvvsNmL+m59G/vOSr+JKsS89Rx3+IzZC+XWtPqgNYcQYzeYLxX2K2oKEstw6dYSP1+7F3q+kfQYMvPkFlP6CTFqQ2uDkh+3Pijv2nvgzF6qQA5r4B9P6JA8C4bQtfgljE7jx2p77REvF8O+vnh63huvr6Vdf47BHoBgWoaOmbx2MAWyzhXR8stuzaZ1KbI7oPe9DsIhG/TGvujrlybboSC4WwGWmz7Xei9Z634ahumu6rTYZMmpAKmXAr4uL7PUaOLPgwsknSODDDXlUtFt7509rkNf7MJd1SXl78c0EH8e3oc5SViCOXV22nqzRgrmcBJ8SpOkatQRxvl1T3cqK4ZX8AvNSe6ZWihiYcmHtEpiM46grKydlisDuUYKFdEAK5IKXY7pnGibIZ+NPANQ/38+nUEp5uLJaWvQqUQ95zzoLrPRzjayTPdneZfJzKS6m9LXY/oH24y8YJaoBg71wcW5zODRNBs6Uy5UEhBnMzn/nyDS
+    encryptedUser: "AgAmbp6Q8JngIVkZw7ZSBggkFSil0VUaLPwbRTJVPYLhmIwcp4w8rK1u5/ofgF/fkDe0Lk1ctgeqgEUWHFB4kV0MuJdbF7RPsSUYNlSMcPFML+HENzdQ05RAoI2f80QKpkTH3cP4GtTaHmpwe//1na8Ql6U7EiUCS5gylSSMB4B6r74XbkAbGmy2ByKBOLvW1qbJMFHBkW0vDrql2CmkjQd2dFEX2W4Hvyu1+X+j9t3h6zsZaYPdlKCtW58knXKqNd0d5V5M3spBJTmGUbJkmjeuefHAVpJd0HSAw+QtIyrRzuaNKNsPJcKQA7wJ67XFHjEtQs9X/sMQJ5qW2bFHUHJW8cZwDOlr6+qB5bF5H2Iih315iRcIdDKP8rwU/uqHfAAc/lBtAKw/kTzqtXCB78wIrmrrXAHPpPTeyNBspw9HtdSHMGBV87oRSYJZsi7mzh5JOQcpimORVrzR7UwospfxcHGWrijZ5O3wswI1fFCKqzuyncsiNQAx2guqRoQDalowrX3QRuFem0/nd17cATtcwvPZQ6orKNTKz2UPzbHejZiDebbIaqKChtVGpUCEUzcHaA0wIGNUdhwGuNqCJxjOZ4Qv6PbLorGbWifsF2+3fSMlab7nWuzgl0Nk0Wfq1iXyOK7wQ0uwZDjzUsLAzJcJUCTj0whuf0MUp66K2yyaefnxj+d/8dro7vL4Zn8zpMZpmbQvirqi/KcVAo6i"
+    encryptedPass: "AgCgQU36N4VN261JWmbJyNkmIDbbWWcgt8zS6+6lo20CMrodztxcZk50Jid6RATcpn2FKcd/DZWavadqJbvgK+/shkzo0+LjFRUMvhGPKvyRCEAV+1dxs1Mo2TuqA57SuR3rg1BlfHQaXSUgQJHbbi1y0dV7k9kXnHSsrkJkZx011rhUeC/U4Z8EC7NEqP1SlV+LBw5SWl5nnZk1XYHFVhu1SQ4gIxaWVe5Kr7EX4VzZh+9bVPPqGzGvnL6XvuvvsNmL+m59G/vOSr+JKsS89Rx3+IzZC+XWtPqgNYcQYzeYLxX2K2oKEstw6dYSP1+7F3q+kfQYMvPkFlP6CTFqQ2uDkh+3Pijv2nvgzF6qQA5r4B9P6JA8C4bQtfgljE7jx2p77REvF8O+vnh63huvr6Vdf47BHoBgWoaOmbx2MAWyzhXR8stuzaZ1KbI7oPe9DsIhG/TGvujrlybboSC4WwGWmz7Xei9Z634ahumu6rTYZMmpAKmXAr4uL7PUaOLPgwsknSODDDXlUtFt7509rkNf7MJd1SXl78c0EH8e3oc5SViCOXV22nqzRgrmcBJ8SpOkatQRxvl1T3cqK4ZX8AvNSe6ZWihiYcmHtEpiM46grKydlisDuUYKFdEAK5IKXY7pnGibIZ+NPANQ/38+nUEp5uLJaWvQqUQ95zzoLrPRzjayTPdneZfJzKS6m9LXY/oH24y8YJaoBg71wcW5zODRNBs6Uy5UEhBnMzn/nyDS"
     name: "homeassistant"
 esphome:
   version: "2022.3.1"  # application-version-from-github: esphome/esphome
@@ -41,7 +55,7 @@ esphome:
   namespace: *namespace
   resources:
     requests:
-      cpu: 400m
+      cpu: 600m
       memory: 350Mi
     limits:
       cpu: 800m

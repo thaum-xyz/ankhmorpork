@@ -41,9 +41,12 @@ spec:
         - containerPort: 5432
           name: psql
         resources:
-          requests:
+          limits:
             cpu: 100m
             memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 150Mi
         securityContext:
           privileged: false
         volumeMounts:
