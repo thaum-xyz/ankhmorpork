@@ -366,16 +366,7 @@ local kp =
             spec+: {
               containers: addContainerParameter(
                 'resources',
-                {
-                  requests: {
-                    cpu: '100m',
-                    memory: '20Mi',
-                  },
-                  limits: {
-                    cpu: '100Mi',
-                    memory: '30Mi',
-                  },
-                },
+                $.values.pyrra.resources,
                 'pyrra',
                 super.containers
               ),
@@ -392,16 +383,7 @@ local kp =
             spec+: {
               containers: addContainerParameter(
                 'resources',
-                {
-                  requests: {
-                    cpu: '100m',
-                    memory: '20Mi',
-                  },
-                  limits: {
-                    cpu: '100Mi',
-                    memory: '30Mi',
-                  },
-                },
+                $.values.pyrra.resources,
                 'pyrra',
                 super.containers
               ),
