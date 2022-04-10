@@ -118,7 +118,7 @@
         kubeControllerManagerSelector: 'job="kubelet"',
         kubeApiserverSelector: 'job="kubelet"',
         kubeProxySelector: 'job="kubelet"',
-        #windowsExporterSelector: 'job="windows-exporter"',  # FIXME: this is set in lib/windows-exporter.libsonnet
+        //windowsExporterSelector: 'job="windows-exporter"',  # FIXME: this is set in lib/windows-exporter.libsonnet
         cpuThrottlingPercent: 70,
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/kubernetes/%s',
       },
@@ -141,15 +141,15 @@
       },
     },
   },
-  #pyrra+: {
-  #  version: "",
-  #  image: "",
-  #  namespace: "monitoring",
-  #  resources: {
-  #    requests: { cpu: '100m', memory: '20Mi' },
-  #    limits: { cpu: '100m', memory: '30Mi' },
-  #  },
-  #},
+  //pyrra+: {
+  //  version: "",
+  //  image: "",
+  //  namespace: "monitoring",
+  //  resources: {
+  //    requests: { cpu: '100m', memory: '20Mi' },
+  //    limits: { cpu: '100m', memory: '30Mi' },
+  //  },
+  //},
   grafana+: {
     version: '8.2.1',
     image: 'grafana/grafana:8.2.1',

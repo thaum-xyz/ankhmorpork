@@ -75,8 +75,8 @@ local addContainerParameter(parameter, value, name, containers) = std.map(
     c {
       [parameter]+: value,
     }
-    else c,
-    containers,
+  else c,
+  containers,
 );
 
 local probe(name, namespace, labels, module, targets) = {
@@ -239,7 +239,7 @@ local kp =
 
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
           remoteWrite: [{
-            url: "http://mimir.mimir.svc:9009/api/v1/push",
+            url: 'http://mimir.mimir.svc:9009/api/v1/push',
           }],
 
           // remoteRead: [{
@@ -359,13 +359,13 @@ local kp =
           },
         },
       ),
-      # TODO: Remove this when https://github.com/prometheus-operator/kube-prometheus/issues/1718 is finished
+      // TODO: Remove this when https://github.com/prometheus-operator/kube-prometheus/issues/1718 is finished
       apiDeployment+: {
         spec+: {
           template+: {
             spec+: {
               containers: addContainerParameter(
-                'resources', 
+                'resources',
                 {
                   requests: {
                     cpu: '100m',
@@ -374,13 +374,13 @@ local kp =
                   limits: {
                     cpu: '100Mi',
                     memory: '30Mi',
-                  }
+                  },
                 },
                 'pyrra',
                 super.containers
               ),
               nodeSelector+: {
-                "kubernetes.io/arch": "amd64",
+                'kubernetes.io/arch': 'amd64',
               },
             },
           },
@@ -391,7 +391,7 @@ local kp =
           template+: {
             spec+: {
               containers: addContainerParameter(
-                'resources', 
+                'resources',
                 {
                   requests: {
                     cpu: '100m',
@@ -400,13 +400,13 @@ local kp =
                   limits: {
                     cpu: '100Mi',
                     memory: '30Mi',
-                  }
+                  },
                 },
                 'pyrra',
                 super.containers
               ),
               nodeSelector+: {
-                "kubernetes.io/arch": "amd64",
+                'kubernetes.io/arch': 'amd64',
               },
             },
           },
@@ -533,9 +533,9 @@ local kp =
               },
             ],
             metricRelabelings: [{
-              action: "drop",
-              regex: "node_md_disks_required(md9|md13)",
-              sourceLabels: ["__name__", "device"],
+              action: 'drop',
+              regex: 'node_md_disks_required(md9|md13)',
+              sourceLabels: ['__name__', 'device'],
             }],
           }],
           selector+: {
