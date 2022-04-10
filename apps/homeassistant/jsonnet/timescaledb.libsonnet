@@ -131,7 +131,7 @@ function(params) {
       env: [
         {
           name: "DATA_SOURCE_URI",
-          value: "127.0.0.1",
+          value: "127.0.0.1?sslmode=disabled",
         },{
           name: "DATA_SOURCE_USER",
           value: "${POSTGRES_USER}",
