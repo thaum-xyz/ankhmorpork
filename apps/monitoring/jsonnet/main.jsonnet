@@ -103,7 +103,8 @@ local kp =
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/main.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/anti-affinity.libsonnet') +
   (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/all-namespaces.libsonnet') +
-  #(import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/pyrra.libsonnet') +
+  // TODO: convert custom pyrra component into one from upstream
+  // (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/pyrra.libsonnet') +
   // (import 'github.com/prometheus-operator/kube-prometheus/jsonnet/kube-prometheus/addons/windows.libsonnet') +
   // (import 'lib/ingress.libsonnet') +
   // (import 'lib/additional-scrape-configs.libsonnet') +
@@ -180,17 +181,10 @@ local kp =
       ingressProbe: probe('ankhmorpork', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
     },
 
-    // TODO: Remove Service and move ServiceMonitor to PodMonitor
     nodeExporter+: {
       daemonset+: {
         spec+: {
           template+: {
-            // TODO: move to kube-prometheus
-            metadata+: {
-              annotations+: {
-                'kubectl.kubernetes.io/default-container': 'node-exporter',
-              },
-            },
             spec+: {
               containers: std.map(
                 function(c) if c.name == 'node-exporter' then
@@ -232,7 +226,7 @@ local kp =
             'storage.infra/local': 'true',
           },
           // FIXME: reenable
-          securityContext:: null,
+          //securityContext:: null,
           // queryLogFile: '/prometheus/query.log',
 
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
@@ -337,7 +331,7 @@ local kp =
           groups: std.map(function(ruleGroup) ruleGroup {
             rules: std.map(
               function(rule) if 'alert' in rule && rule.alert == 'TargetDown' then
-                rule { expr: '100 * (count(up{job!="windows",instance!="biuro:9100"} == 0) BY (job, namespace, service) / count(up{job!="windows",job!="windows-exporter",instance!="biuro:9100"}) BY (job, namespace, service)) > 10' }
+                rule { expr: '100 * (count(up{job!="windows-exporter"} == 0) BY (job, namespace, service) / count(up{job!="windows-exporter"}) BY (job, namespace, service)) > 10' }
               else rule,
               ruleGroup.rules,
             ),
@@ -394,20 +388,6 @@ local kp =
               ],
             },
           },
-        },
-      },
-
-      // TODO: Remove PrometheusRule object when https://github.com/prometheus-operator/kube-prometheus/pull/1458 is merged
-      prometheusRule: {
-        apiVersion: 'monitoring.coreos.com/v1',
-        kind: 'PrometheusRule',
-        metadata: $.grafana.deployment.metadata {
-          name: $.grafana.deployment.metadata.name + '-rules',
-        },
-        spec: {
-          local r = (import 'github.com/grafana/grafana/grafana-mixin/rules/rules.libsonnet').prometheusRules.groups,
-          local a = (import 'github.com/grafana/grafana/grafana-mixin/alerts/alerts.libsonnet').prometheusAlerts.groups,
-          groups: a + r,
         },
       },
 
