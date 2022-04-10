@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: database
+    app.kubernetes.io/name: timescaledb
+    app.kubernetes.io/version: 2.6.0
+  name: timescaledb
+  namespace: homeassistant
+spec:
+  endpoints:
+  - interval: 30s
+    port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: database
+      app.kubernetes.io/name: timescaledb

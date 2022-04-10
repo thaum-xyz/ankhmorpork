@@ -35,7 +35,13 @@ local defaults = {
     pass: "",
     name: "postgres",
   },
-  exporter: false,
+  /*mixin:: {
+    ruleLabels: {},
+    _config: {
+      runbookURLPattern: 'https://runbooks.prometheus-operator.dev/runbooks/kubernetes/%s',
+      jobSelector: 'job="%s", namespace="%s"' % (defaults.name, defaults.namespace),
+    },
+  },*/
 };
 
 function(params) {
@@ -47,6 +53,13 @@ function(params) {
   },
   // Safety check
   assert std.isObject($._config.resources),
+
+  /*mixin:: {
+    (import 'github.com/prometheus-community/postgres_exporter/postgres_mixin/mixin.libsonnet') +
+    (import 'github.com/kubernetes-monitoring/kubernetes-mixin/lib/add-runbook-links.libsonnet') + {
+      _config+:: g._config.mixin._config,
+    },
+  }*/
 
   serviceAccount: {
     apiVersion: 'v1',
@@ -186,13 +199,13 @@ function(params) {
     },
   },
 
-  [if std.objectHas(params, 'exporter') && std.length(params.domain) > 0 then 'serviceMonitor']: {
+  serviceMonitor: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'ServiceMonitor',
     metadata: $._metadata,
     spec: {
       endpoints: [{
-        interval: '90s',
+        interval: '30s',
         port: $.service.spec.ports[1].name,
       }],
       selector: {
@@ -201,28 +214,26 @@ function(params) {
     },
   },
 
-  [if std.objectHas(params, 'exporter') && std.length(params.domain) > 0 then 'prometheusRule']: {
+  // TODO: include https://github.com/prometheus-community/postgres_exporter/tree/master/postgres_mixin
+  /*prometheusRule: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PrometheusRule',
     metadata: $._metadata,
-    // TODO: Create timescaledb monitoring mixin
-    // FIXME: Create/find SLO?
     spec: {
       groups: [{
         name: 'timescaledb.alerts',
         rules: [{
-          alert: 'timescaledbDown',
+          alert: 'timescaledbExporterDown',
           annotations: {
-            description: 'TimescaleDB instance {{ $labels.instance }} is down',
-            summary: 'TimescaleDB is down',
+            description: 'TimescaleDB exporter instance {{ $labels.instance }} is down',
+            summary: 'TimescaleDB exporter is down',
           },
-          expr: 'up{job=~"timescaledb.*"} == 0',
+          expr: 'up{job=~"timescaledb.*",namespace="%s"} == 0' % $._metadata.namespace,
           'for': '30m',
           labels: {
             severity: 'warning',
-          },
         }],
       }],
     },
-  },
+  },*/
 }
