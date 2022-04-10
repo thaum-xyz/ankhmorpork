@@ -79,6 +79,24 @@ local addContainerParameter(parameter, value, name, containers) = std.map(
   containers,
 );
 
+local allowIngressNetworkPolicy(port) = {
+  spec+: {
+    ingress+: [{
+      from: [{
+        podSelector: {
+          matchLabels: {
+            "app.kubernetes.io/name": "ingress-nginx",
+          },
+        },
+      }],
+      ports: [{
+        port: port,
+        protocol: "TCP",
+      }]
+    }]
+  },
+};
+
 local probe(name, namespace, labels, module, targets) = {
   apiVersion: 'monitoring.coreos.com/v1',
   kind: 'Probe',
@@ -154,6 +172,7 @@ local kp =
       serviceAccount+: {
         automountServiceAccountToken: false,  // TODO: move into kube-prometheus
       },
+      networkPolicy+: allowIngressNetworkPolicy($.alertmanager.service.spec.ports[0].port),
       ingress: ingress(
         $.alertmanager.service.metadata {
           name: 'alertmanager',  // FIXME: that's an artifact from previous configuration, it should be removed.
@@ -262,6 +281,7 @@ local kp =
           },
         },
       },
+      networkPolicy+: allowIngressNetworkPolicy($.prometheus.service.spec.ports[0].port),
       ingress: ingress(
         $.prometheus.service.metadata {
           name: 'prometheus',  // FIXME: that's an artifact from previous configuration, it should be removed.
@@ -465,6 +485,7 @@ local kp =
         },
       },
 
+      networkPolicy+: allowIngressNetworkPolicy($.grafana.service.spec.ports[0].port),
       ingress: ingress(
         $.grafana.service.metadata {
           annotations: {
