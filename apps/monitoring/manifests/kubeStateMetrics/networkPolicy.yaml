@@ -9,6 +9,8 @@ metadata:
   name: kube-state-metrics
   namespace: monitoring
 spec:
+  egress:
+  - {}
   ingress:
   - from:
     - podSelector:
@@ -24,3 +26,6 @@ spec:
       app.kubernetes.io/component: exporter
       app.kubernetes.io/name: kube-state-metrics
       app.kubernetes.io/part-of: kube-prometheus
+  policyTypes:
+  - Egress
+  - Ingress
