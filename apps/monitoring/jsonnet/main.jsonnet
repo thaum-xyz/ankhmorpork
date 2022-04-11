@@ -367,7 +367,8 @@ local kp =
           groups: std.map(function(ruleGroup) ruleGroup {
             rules: std.map(
               function(rule) if 'alert' in rule && rule.alert == 'TargetDown' then
-                rule { expr: '100 * (count(up{job!="windows-exporter"} == 0) BY (job, namespace, service) / count(up{job!="windows-exporter"}) BY (job, namespace, service)) > 10' }
+                // FIXME: possibly port to kube-prometheus
+                rule { expr: '100 * (count(up{job!="windows-exporter"} == 0) BY (job, namespace) / count(up{job!="windows-exporter"}) BY (job, namespace)) > 10' }
               else rule,
               ruleGroup.rules,
             ),
