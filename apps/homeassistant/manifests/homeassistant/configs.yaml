@@ -33,9 +33,9 @@ data:
     \   value_template: >\n      {% if value_json is none %}\n        No meal plan\n
     \     {% elif value_json.name %}\n      {{   value_json.name }}\n      {% elif
     value_json.detail %}\n      {{   value_json.detail }}\n      {% else %}\n        unknown\n
-    \     {% endif %}\n\ntemplate:\n- sensor:\n  - name: \"LCD Display\"\n    state:
+    \     {% endif %}\n\ntemplate:\n- sensor:\n  - name: \"ESP Display\"\n    state:
     \"{{ states('switch.espdisplay_backlight') }}\"\n    attributes:\n      # First
-    6 characters of each line are considered a static prefix\n      line1: \"Lunch
+    6 characters of each line are considered a static prefix\n      line1: \"LUNCH
     {{ states('sensor.mealie') }}\"\n      line2: >\n        {%\n          set calendars
     = [{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))

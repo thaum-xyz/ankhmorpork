@@ -138,11 +138,11 @@ sensor:
 
 template:
 - sensor:
-  - name: "LCD Display"
+  - name: "ESP Display"
     state: "{{ states('switch.espdisplay_backlight') }}"
     attributes:
       # First 6 characters of each line are considered a static prefix
-      line1: "Lunch {{ states('sensor.mealie') }}"
+      line1: "LUNCH {{ states('sensor.mealie') }}"
       line2: >
         {%
           set calendars = [{
