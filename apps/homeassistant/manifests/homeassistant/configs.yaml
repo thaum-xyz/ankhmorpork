@@ -45,9 +45,9 @@ data:
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_timescale_com','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom_gmail_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom_gmail_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom_gmail_com','message')
+    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
     \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
@@ -64,9 +64,9 @@ data:
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_timescale_com','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom_gmail_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom_gmail_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom_gmail_com','message')
+    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
     \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
@@ -83,9 +83,9 @@ data:
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_timescale_com','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom_gmail_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom_gmail_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom_gmail_com','message')
+    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
     \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
