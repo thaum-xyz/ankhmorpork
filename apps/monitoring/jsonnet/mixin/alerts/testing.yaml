@@ -1,4 +1,26 @@
 groups:
+- name: sites
+  rules:
+  - record: uptimerobot_monitor_normalized_status
+    expr: (uptimerobot_monitor_status == 2)/2 OR clamp(uptimerobot_monitor_status,0,0)
+  - alert: SiteExtrenallyDown
+    annotations:
+      description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
+      runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
+      summary: Site is not available from external network
+    expr: uptimerobot_monitor_status == 9
+    for: 10m
+    labels:
+      severity: warning
+  - alert: SiteDown
+    annotations:
+      description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
+      runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteNotUP
+      summary: Site is down
+    expr: probe_success == 0 AND on (instance) uptimerobot_monitor_status == 9
+    for: 15m
+    labels:
+      severity: critical
 - name: testing.rules
   rules:
   - alert: CPUStealTimeHigh
@@ -50,27 +72,3 @@ groups:
       node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)",mountpoint!~"/mnt/snapshot.*"} != 0
     labels:
       severity: critical
-- name: sites
-  rules:
-  - record: uptimerobot_monitor_normalized_status
-    expr: (uptimerobot_monitor_status == 2)/2 OR clamp(uptimerobot_monitor_status,0,0)
-  - record: instance:site_status
-    expr: probe_success == 0 AND on (instance) uptimerobot_monitor_normalized_status == 0
-  - alert: SiteDown
-    annotations:
-      description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
-      runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteNotUP
-      summary: Site is down
-    expr: probe_success == 0 AND on (instance) uptimerobot_monitor_status == 9
-    for: 15m
-    labels:
-      severity: critical
-  - alert: SiteExtrenallyDown
-    annotations:
-      description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
-      runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
-      summary: Site is not available from external network
-    expr: uptimerobot_monitor_status == 9
-    for: 10m
-    labels:
-      severity: warning
