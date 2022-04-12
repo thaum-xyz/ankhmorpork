@@ -222,19 +222,6 @@
       'pawel.krupa.net.pl',
     ],
   },
-  pagespeed: {
-    name: 'pagespeed',
-    namespace: 'monitoring',
-    version: 'latest',
-    image: 'foomo/pagespeed_exporter',
-    resources: {
-      requests: { cpu: '10m', memory: '13Mi' },
-      limits: { memory: '30Mi' },
-    },
-    sites: [
-      'https://prometheus.io',
-    ],
-  },
   uptimerobot: {
     name: 'uptimerobot',
     namespace: 'monitoring',

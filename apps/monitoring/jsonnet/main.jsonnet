@@ -123,7 +123,6 @@ local probe(name, namespace, labels, module, targets) = {
 local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
 local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
-local pagespeed = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pagespeed/pagespeed.libsonnet');
 local snmp = (import 'github.com/thaum-xyz/jsonnet-libs/apps/snmp-exporter/snmp-exporter.libsonnet');
 local kubeEventsExporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/kube-events-exporter/kube-events-exporter.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
@@ -588,21 +587,6 @@ local kp =
 
     kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
-    // TODO: Add pagespeed API key to workaround rate limits
-    pagespeed: pagespeed($.values.pagespeed) + {
-      deployment+: {
-        spec+: {
-          template+: {
-            spec+: {
-              nodeSelector+: {
-                'kubernetes.io/os': 'linux',
-                'kubernetes.io/arch': 'amd64',
-              },
-            },
-          },
-        },
-      },
-    },
     smokeping: exporter($.values.smokeping) + {
       deployment+: {
         spec+: {
