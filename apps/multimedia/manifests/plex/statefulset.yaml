@@ -48,8 +48,8 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5
         resources:
-          #limits:
-          #  nvidia.com/gpu: 1
+          limits:
+            nvidia.com/gpu: 1
           requests:
             cpu: 2
             memory: 2500Mi
