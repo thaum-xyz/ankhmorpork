@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: plex
-    app.kubernetes.io/version: 1.24.5
+    app.kubernetes.io/version: 1.25.9
   name: plex
   namespace: multimedia
 spec:
@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: plex
-        app.kubernetes.io/version: 1.24.5
+        app.kubernetes.io/version: 1.25.9
     spec:
       containers:
       - env:
@@ -36,7 +36,7 @@ spec:
         envFrom:
         - secretRef:
             name: plex-claim
-        image: plexinc/pms-docker:1.24.5.5173-8dcc73a59
+        image: plexinc/pms-docker:1.25.9.5721-965587f64
         name: plex
         ports:
         - containerPort: 32400
@@ -48,8 +48,8 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5
         resources:
-          limits:
-            nvidia.com/gpu: 1
+          #limits:
+          #  nvidia.com/gpu: 1
           requests:
             cpu: 2
             memory: 2500Mi
