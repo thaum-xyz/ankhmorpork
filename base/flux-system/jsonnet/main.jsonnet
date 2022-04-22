@@ -147,7 +147,7 @@ local all = {
   ),
   slackAddress: sealedsecret(
     {
-      name: 'SealedSecret',
+      name: 'slack-url',
       namespace: $._metadata.namespace,
     },
     {

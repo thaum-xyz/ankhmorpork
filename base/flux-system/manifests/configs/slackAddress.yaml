@@ -2,7 +2,7 @@ apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
   creationTimestamp: null
-  name: SealedSecret
+  name: slack-url
   namespace: flux-system
 spec:
   encryptedData:
@@ -12,5 +12,5 @@ spec:
       annotations:
         sealedsecrets.bitnami.com/managed: "true"
       creationTimestamp: null
-      name: SealedSecret
+      name: slack-url
       namespace: flux-system
