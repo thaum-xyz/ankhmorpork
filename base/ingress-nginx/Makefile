@@ -1,6 +1,6 @@
 include ../../Makefile.common
 
-MANIFESTS_DIR=configs
+MANIFESTS_DIR=manifests/configs
 
 version-update:
-	wget -O deploy.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+	wget -O manifests/deploy.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
