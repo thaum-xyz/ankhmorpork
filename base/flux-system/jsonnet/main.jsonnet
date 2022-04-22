@@ -14,7 +14,7 @@ local all = {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'NetworkPolicy',
     metadata: $._metadata {
-      name: "allow-cert-manager",
+      name: 'allow-cert-manager',
     },
     spec: {
       ingress: [{
@@ -55,11 +55,11 @@ local all = {
             path: '/',
             pathType: 'Prefix',
           }],
-          tls: [{
-            hosts: ['flux.ankhmorpork.thaum.xyz'],
-            secretName: 'flux-tls',
-          }],
         },
+        tls: [{
+          hosts: ['flux.ankhmorpork.thaum.xyz'],
+          secretName: 'flux-tls',
+        }],
       }],
     },
   },
