@@ -1,7 +1,7 @@
 ---
 kured:
-  version: "1.8.2"  # application-version-from-github: weaveworks/kured
-  image: "quay.io/paulfantom/kured:1.8.2"  # application-image-from-github: weaveworks/kured
+  version: "1.9.2"  # application-version-from-github: weaveworks/kured
+  image: "quay.io/paulfantom/kured:1.9.2"  # application-image-from-github: weaveworks/kured
   namespace: "system-update"
   args:
     - "--reboot-days=sun,fri,sat"
