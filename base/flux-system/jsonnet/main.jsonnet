@@ -56,10 +56,10 @@ local all = {
             pathType: 'Prefix',
           }],
         },
-        tls: [{
-          hosts: ['flux.ankhmorpork.thaum.xyz'],
-          secretName: 'flux-tls',
-        }],
+      }],
+      tls: [{
+        hosts: ['flux.ankhmorpork.thaum.xyz'],
+        secretName: 'flux-tls',
       }],
     },
   },
