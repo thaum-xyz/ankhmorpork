@@ -173,6 +173,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homer
     app.kubernetes.io/part-of: homer
-    app.kubernetes.io/version: 21.09.2
+    app.kubernetes.io/version: 22.02.1
   name: homer-config
   namespace: homer
