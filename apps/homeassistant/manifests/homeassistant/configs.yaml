@@ -24,7 +24,7 @@ data:
     Home Alarm\n    code_arm_required: false\n    arming_time: 60\n    trigger_time:
     600\n    disarmed:\n      trigger_time: 0\n    armed_home:\n      arming_time:
     60\n      delay_time: 30\n\nclimate:\n- platform: generic_thermostat\n  name:
-    Fridge\n  heater: switch.fridge\n  target_sensor: sensor.fridge_temperature\n
+    Fridge\n  heater: light.on_off_plug_1\n  target_sensor: sensor.fridge_temperature\n
     \ ac_mode: true\n  min_temp: 4\n  max_temp: 10\n  target_temp: 6\n  cold_tolerance:
     1\n  hot_tolerance: 1\n\n# Sensors\nsensor:\n  - platform: time_date\n    display_options:\n
     \     - 'time'\n      - 'date'\n  - platform: rest\n    name: mealie\n    scan_interval:
@@ -173,6 +173,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2022.4.2
+    app.kubernetes.io/version: 2022.4.6
   name: homeassistant-configs
   namespace: homeassistant
