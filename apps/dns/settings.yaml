@@ -1,6 +1,6 @@
 ---
-version: "1.8.4"  # application-version-from-github: coredns/coredns
-image: "coredns/coredns:1.8.4"  # application-image-from-github: coredns/coredns
+version: "1.9.1"  # application-version-from-github: coredns/coredns
+image: "coredns/coredns:1.9.1"  # application-image-from-github: coredns/coredns
 name: 'coredns'
 namespace: 'dns'
 loadBalancerIP: '192.168.2.99'
