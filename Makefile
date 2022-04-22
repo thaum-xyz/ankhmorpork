@@ -9,7 +9,8 @@ DIRS=\
 	apps/news \
 	apps/parca \
 	apps/unifi \
-	base/cert-manager
+	base/cert-manager \
+	base/ingress-nginx
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 

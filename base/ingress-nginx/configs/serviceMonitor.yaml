@@ -1,17 +1,18 @@
----
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
+  labels:
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
   name: ingress-nginx
   namespace: ingress-nginx
-  labels:
-    app.kubernetes.io/name: ingress-nginx
 spec:
   endpoints:
-  - interval: 30s
+  - honorLabels: true
+    interval: 30s
     port: metrics
-    honorLabels: true
   jobLabel: app.kubernetes.io/name
   selector:
     matchLabels:
+      app.kubernetes.io/instance: ingress-nginx
       app.kubernetes.io/name: ingress-nginx

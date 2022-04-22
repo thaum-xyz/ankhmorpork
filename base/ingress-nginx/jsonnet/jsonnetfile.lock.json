@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/grafonnet-lib.git",
+          "subdir": "grafonnet"
+        }
+      },
+      "version": "6db00c292d3a1c71661fc875f90e0ec7caa538c2",
+      "sum": "gF8foHByYcB25jcUOBqP6jxk0OPifQMjPvKY0HaCk6w="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "grafana-builder"
+        }
+      },
+      "version": "a291ecab46a858eb097ae5fab2f566815da0f17d",
+      "sum": "0KkygBQd/AFzUvVzezE4qF/uDYgrwUXVpZfINBti0oc="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/nlamirault/monitoring-mixins.git",
+          "subdir": "mixins/nginx-ingress-controller-mixin/"
+        }
+      },
+      "version": "6aa01cf8f89c5f3ae3b85432c94b9236ddfead2f",
+      "sum": "AsllpIwa+ujmIJkWs0FizuXnfPNwwZA3Yd2/n0AzfcI="
+    }
+  ],
+  "legacyImports": false
+}
