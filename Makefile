@@ -1,16 +1,21 @@
 SHELL:=/bin/bash
 
 DIRS=\
+	base/cert-manager \
+	base/ingress-nginx \
+	base/flux-system \
 	apps/auth \
+	apps/dns \
 	apps/homeassistant \
 	apps/homer \
 	apps/monitoring \
 	apps/multimedia \
-	apps/news \
 	apps/parca \
-	apps/unifi \
-	base/cert-manager \
-	base/ingress-nginx
+	apps/portal \
+	apps/recipe \
+	apps/snmp \
+	apps/system-update \
+	apps/unifi
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 
