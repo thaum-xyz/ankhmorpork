@@ -1,34 +1,42 @@
 {
-    "version": 1,
-    "dependencies": [
-      {
-        "source": {
-          "git": {
-            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
-            "subdir": "apps/homeassistant"
-          }
-        },
-        "version": "main"
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/prometheus-community/postgres_exporter.git",
+          "subdir": "postgres_mixin"
+        }
       },
-      {
-        "source": {
-          "git": {
-            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
-            "subdir": "apps/esphome"
-          }
-        },
-        "version": "main"
+      "version": "master"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/esphome"
+        }
       },
-      {
-        "source": {
-          "git": {
-            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
-            "subdir": "utils"
-          }
-        },
-        "version": "main"
-      }
-    ],
-    "legacyImports": false
-  }
-  
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/homeassistant"
+        }
+      },
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "utils"
+        }
+      },
+      "version": "main"
+    }
+  ],
+  "legacyImports": false
+}

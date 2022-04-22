@@ -4,6 +4,16 @@
     {
       "source": {
         "git": {
+          "remote": "https://github.com/prometheus-community/postgres_exporter.git",
+          "subdir": "postgres_mixin"
+        }
+      },
+      "version": "92bdb8755de886b2366de245e559538030ba3668",
+      "sum": "MVorPR3kqTL+Iqcm/+fM2rb1smwYb476M8benM1MkDI="
+    },
+    {
+      "source": {
+        "git": {
           "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "apps/esphome"
         }

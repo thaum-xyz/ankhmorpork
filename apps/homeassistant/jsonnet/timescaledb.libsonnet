@@ -242,12 +242,19 @@ function(params) {
     },
   },
 
-  // TODO: include https://github.com/prometheus-community/postgres_exporter/tree/master/postgres_mixin
-  /*prometheusRule: {
+  mixin:: (import 'github.com/prometheus-community/postgres_exporter/postgres_mixin/mixin.libsonnet') + {
+    _config+:: {
+      postgresExporterSelector: 'job="timescaledb"',
+    },
+  },
+
+  prometheusRule: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PrometheusRule',
     metadata: $._metadata,
     spec: {
+      local r = if std.objectHasAll($.mixin, 'prometheusRules') then $.mixin.prometheusRules.groups else [],
+      local a = if std.objectHasAll($.mixin, 'prometheusAlerts') then $.mixin.prometheusAlerts.groups else [],
       groups: [{
         name: 'timescaledb.alerts',
         rules: [{
@@ -260,8 +267,29 @@ function(params) {
           'for': '30m',
           labels: {
             severity: 'warning',
+          },
         }],
-      }],
+      }] + a + r,
     },
-  },*/
+  },
+
+  dashboards: {
+    apiVersion: 'v1',
+    kind: 'ConfigMapList',
+    items: [
+      {
+        local dashboardName = 'grafana-dashboard-' + std.strReplace(name, '.json', ''),
+        apiVersion: 'v1',
+        kind: 'ConfigMap',
+        metadata: $._metadata {
+          name: dashboardName,
+          labels+: {
+            'dashboard.grafana.com/load': 'true',
+          },
+        },
+        data: { [name]: std.manifestJsonEx($.mixin.grafanaDashboards[name], '    ') },
+      }
+      for name in std.objectFields($.mixin.grafanaDashboards)
+    ],
+  },
 }
