@@ -1,5 +1,5 @@
-local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassistant/homeassistant.libsonnet';
 local esphome = import 'github.com/thaum-xyz/jsonnet-libs/apps/esphome/esphome.libsonnet';
+local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassistant/homeassistant.libsonnet';
 local timescaledb = import 'timescaledb.libsonnet';
 local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 
@@ -18,44 +18,44 @@ local config = std.parseYaml(configYAML)[0] {
 local all = {
   esphomedevices: {
     metadata:: {
-      name: "esp-dev",
+      name: 'esp-dev',
       namespace: config.homeassistant.namespace,
       labels: {
-        "app.kubernetes.io/name": "esp-dev",
-        "app.kubernetes.io/part-of": "homeassistant",
+        'app.kubernetes.io/name': 'esp-dev',
+        'app.kubernetes.io/part-of': 'homeassistant',
       },
     },
     endpoints: {
-      apiVersion: "v1",
-      kind: "Endpoints",
+      apiVersion: 'v1',
+      kind: 'Endpoints',
       metadata: all.esphomedevices.metadata,
       subsets: [{
         addresses: [
-          { ip: "192.168.2.221" },
-          { ip: "192.168.2.224" }
+          { ip: '192.168.2.221' },
+          { ip: '192.168.2.224' },
         ],
         ports: [{
           port: 80,
-          name: "http",
+          name: 'http',
         }],
-      }]
+      }],
     },
     service: {
-      apiVersion: "v1",
-      kind: "Service",
+      apiVersion: 'v1',
+      kind: 'Service',
       metadata: all.esphomedevices.metadata,
       spec: {
-        clusterIP: "None",
+        clusterIP: 'None',
         ports: all.esphomedevices.endpoints.subsets[0].ports,
       },
     },
     serviceMonitor: {
-      apiVersion: "monitoring.coreos.com/v1",
-      kind: "ServiceMonitor",
+      apiVersion: 'monitoring.coreos.com/v1',
+      kind: 'ServiceMonitor',
       metadata: all.esphomedevices.metadata,
       spec: {
         endpoints: [{
-          interval: "60s",
+          interval: '60s',
           port: all.esphomedevices.endpoints.subsets[0].ports[0].name,
         }],
         selector: {
@@ -64,27 +64,27 @@ local all = {
       },
     },
     prometheusRule: {
-      apiVersion: "monitoring.coreos.com/v1",
-      kind: "PrometheusRule",
-      metadata: all.esphomedevices.metadata + {
+      apiVersion: 'monitoring.coreos.com/v1',
+      kind: 'PrometheusRule',
+      metadata: all.esphomedevices.metadata {
         labels: {
-          prometheus: "k8s",
-          role: "alert-rules",
+          prometheus: 'k8s',
+          role: 'alert-rules',
         },
       },
       spec: {
         groups: [{
-          name: "esphome.alerts",
+          name: 'esphome.alerts',
           rules: [{
-            alert: "ESPHomeSensorFailure",
+            alert: 'ESPHomeSensorFailure',
             annotations: {
-              summary: "ESPHome sensor failed",
-              description: "ESPHome sensor named {{ $labels.name }} with {{ $labels.id }} on {{ $labels.instance }} device failed to gather data for 4h.",
+              summary: 'ESPHome sensor failed',
+              description: 'ESPHome sensor named {{ $labels.name }} with {{ $labels.id }} on {{ $labels.instance }} device failed to gather data for 4h.',
             },
-            expr: "esphome_sensor_failed != 0",
-            "for": "8h",
+            expr: 'esphome_sensor_failed != 0',
+            'for': '8h',
             labels: {
-              severity: "warning",
+              severity: 'warning',
             },
           }],
         }],
@@ -95,12 +95,12 @@ local all = {
     service+: {
       metadata+: {
         annotations: {
-          "metallb.universe.tf/address-pool": "default"
+          'metallb.universe.tf/address-pool': 'default',
         },
       },
       spec+: {
-        loadBalancerIP: "192.168.2.94",
-        type: "LoadBalancer",
+        loadBalancerIP: '192.168.2.94',
+        type: 'LoadBalancer',
         clusterIP:: null,
       },
     },
@@ -108,23 +108,23 @@ local all = {
   timescaledb: timescaledb(config.timescaledb) + {
     credentials: sealedsecret(
       {
-        name: "timescaledb",
+        name: 'timescaledb',
         namespace: config.timescaledb.namespace,
       },
       {
-        "POSTGRES_USER": config.timescaledb.database.encryptedUser,
-        "POSTGRES_PASSWORD": config.timescaledb.database.encryptedPass,
+        POSTGRES_USER: config.timescaledb.database.encryptedUser,
+        POSTGRES_PASSWORD: config.timescaledb.database.encryptedPass,
       }
     ),
     service+: {
       metadata+: {
         annotations: {
-          "metallb.universe.tf/address-pool": "default"
+          'metallb.universe.tf/address-pool': 'default',
         },
       },
       spec+: {
-        loadBalancerIP: "192.168.2.93",
-        type: "LoadBalancer",
+        loadBalancerIP: '192.168.2.93',
+        type: 'LoadBalancer',
         clusterIP:: null,
       },
     },
@@ -138,10 +138,10 @@ local all = {
       { [config.homeassistant.apiTokenSecretKeySelector.key]: config.homeassistant.encryptedAPIToken }
     ),
     configs: {
-      apiVersion: "v1",
-      kind: "ConfigMap",
+      apiVersion: 'v1',
+      kind: 'ConfigMap',
       metadata: $.homeassistant.statefulSet.metadata {
-        name: "homeassistant-configs",
+        name: 'homeassistant-configs',
       },
       data: {
         'configuration.yaml': importstr '../config/configuration.yaml',
@@ -175,17 +175,17 @@ local all = {
                 name: 'configs',
                 subPath: 'configuration.yaml',
                 readOnly: true,
-              },{
+              }, {
                 mountPath: '/config/customize.yaml',
                 name: 'configs',
                 subPath: 'customize.yaml',
                 readOnly: true,
-              },{
+              }, {
                 mountPath: '/config/scripts.yaml',
                 name: 'configs',
                 subPath: 'scripts.yaml',
                 readOnly: true,
-              },],
+              }],
             }, super.containers),
             nodeSelector: {
               'kubernetes.io/arch': 'arm64',
@@ -194,7 +194,7 @@ local all = {
               configMap: {
                 name: $.homeassistant.configs.metadata.name,
               },
-              name: "configs"
+              name: 'configs',
             }],
           },
         },
@@ -208,7 +208,7 @@ local all = {
         },
       },
     },
-  }
+  },
 };
 
 {

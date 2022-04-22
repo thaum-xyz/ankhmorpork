@@ -4,7 +4,7 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
-  exporterImage: "quay.io/prometheuscommunity/postgres-exporter:latest",
+  exporterImage: 'quay.io/prometheuscommunity/postgres-exporter:latest',
   resources: {
     requests: { cpu: '100m', memory: '300Mi' },
   },
@@ -21,7 +21,7 @@ local defaults = {
   storage: {
     name: 'timescaledb-data',
     pvcSpec: {
-      # storageClassName: 'local-path',
+      // storageClassName: 'local-path',
       accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
@@ -31,9 +31,9 @@ local defaults = {
     },
   },
   database: {
-    user: "postgres",
-    pass: "",
-    name: "postgres",
+    user: 'postgres',
+    pass: '',
+    name: 'postgres',
   },
   /*mixin:: {
     ruleLabels: {},
@@ -78,7 +78,8 @@ function(params) {
           name: 'psql',
           targetPort: $.statefulSet.spec.template.spec.containers[0].ports[0].name,
           port: 5432,
-        },{
+        },
+        {
           name: 'metrics',
           targetPort: $.statefulSet.spec.template.spec.containers[1].ports[0].name,
           port: 9187,
@@ -90,12 +91,23 @@ function(params) {
   },
 
   credentials: {
-    apiVersion: "v1",
-    kind: "Secret",
+    apiVersion: 'v1',
+    kind: 'Secret',
     metadata: $._metadata,
     data: {
       POSTGRES_USER: $._config.database.user,
       POSTGRES_PASSWORD: $._config.database.pass,
+    },
+  },
+
+  additionalSQL: {
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    metadata: $._metadata {
+      name: 'additional-sql',
+    },
+    data: {
+      'alter-extension.sql': 'ALTER EXTENSION timescaledb UPDATE;',
     },
   },
 
@@ -106,18 +118,21 @@ function(params) {
       imagePullPolicy: 'IfNotPresent',
       env: [
         {
-          name: "POSTGRES_DB",
+          name: 'POSTGRES_DB',
           value: $._config.database.name,
-        },{
-          name: "TIMESCALEDB_TELEMETRY",
-          value: "basic",
-        },{
-          name: "TS_TUNE_MEMORY",
-          value: "300MB",  // FIXME: Take value from resource limits
-        },{
-          name: "TS_TUNE_NUM_CPUS",
-          value: "1",  // FIXME: Take value from resource limits
-        }
+        },
+        {
+          name: 'TIMESCALEDB_TELEMETRY',
+          value: 'basic',
+        },
+        {
+          name: 'TS_TUNE_MEMORY',
+          value: '300MB',  // FIXME: Take value from resource limits
+        },
+        {
+          name: 'TS_TUNE_NUM_CPUS',
+          value: '1',  // FIXME: Take value from resource limits
+        },
       ],
       envFrom: [{
         secretRef: {
@@ -134,26 +149,33 @@ function(params) {
       volumeMounts: [{
         mountPath: '/var/lib/postgresql/data',
         name: $._config.storage.name,
+      }, {
+        mountPath: '/docker-entrypoint-initdb.d/alter-extension.sql',
+        name: 'alter-extension',
+        subPath: 'alter-extension.sql',
       }],
       resources: $._config.resources,
     },
 
     local e = {
-      name: "exporter",
+      name: 'exporter',
       image: $._config.exporterImage,
       env: [
         {
-          name: "DATA_SOURCE_URI",
-          value: "127.0.0.1?sslmode=disable",
-        },{
-          name: "DATA_SOURCE_USER",
-          value: "$(POSTGRES_USER)",
-        },{
-          name: "DATA_SOURCE_PASS",
-          value: "$(POSTGRES_PASSWORD)",
-        },{
-          name: "PG_EXPORTER_AUTO_DISCOVER_DATABASES",
-          value: "true",
+          name: 'DATA_SOURCE_URI',
+          value: '127.0.0.1?sslmode=disable',
+        },
+        {
+          name: 'DATA_SOURCE_USER',
+          value: '$(POSTGRES_USER)',
+        },
+        {
+          name: 'DATA_SOURCE_PASS',
+          value: '$(POSTGRES_PASSWORD)',
+        },
+        {
+          name: 'PG_EXPORTER_AUTO_DISCOVER_DATABASES',
+          value: 'true',
         },
       ],
       envFrom: [{
@@ -181,13 +203,19 @@ function(params) {
         metadata: {
           labels: $._config.commonLabels,
           annotations: {
-            "kubectl.kubernetes.io/default-container": c.name,
+            'kubectl.kubernetes.io/default-container': c.name,
           },
         },
         spec: {
-          containers: [c,e],
+          containers: [c, e],
           restartPolicy: 'Always',
           serviceAccountName: $.serviceAccount.metadata.name,
+          volumes: [{
+            name: 'alter-extension',
+            configMap: {
+              name: $.additionalSQL.metadata.name,
+            },
+          }],
         },
       },
       volumeClaimTemplates: [{

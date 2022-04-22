@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  alter-extension.sql: ALTER EXTENSION timescaledb UPDATE;
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: database
+    app.kubernetes.io/name: timescaledb
+    app.kubernetes.io/version: 2.6.1
+  name: additional-sql
+  namespace: homeassistant
