@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 2m0s
-  path: ./base/flux-system
+  path: ./base/flux-system/manifests
   prune: false  # TODO: check if this can be set to 'true' without compromising the cluster
   sourceRef:
     kind: GitRepository

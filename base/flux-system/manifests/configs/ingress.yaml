@@ -5,6 +5,9 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/limit-rps: "100"
+  labels:
+    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/part-of: flux
   name: flux
   namespace: flux-system
 spec:
@@ -19,7 +22,7 @@ spec:
               name: http
         path: /
         pathType: Prefix
-  tls:
-  - hosts:
-    - flux.ankhmorpork.thaum.xyz
-    secretName: flux-tls
+      tls:
+      - hosts:
+        - flux.ankhmorpork.thaum.xyz
+        secretName: flux-tls
