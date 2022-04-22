@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./base/kube-system
+  path: ./base/kube-system/manifests
   prune: true
   sourceRef:
     kind: GitRepository
