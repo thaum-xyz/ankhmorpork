@@ -2,25 +2,7 @@
 common:
   loadBalancerIP: "192.168.2.95"
   namespace: &namespace "multimedia"
-jackett:
-  version: "0.20.238"  # application-version-from-github: Jackett/Jackett
-  image: "linuxserver/jackett:0.20.238"  # application-image-from-github: Jackett/Jackett
-  namespace: *namespace
-  resources:
-    requests:
-      cpu: 2400m  # TODO: Figure out how to reduce it. This is insane.
-      memory: 200Mi
-    limits:
-      cpu: 3000m
-      memory: 350Mi
-  storage:
-    name: jackett-config
-    pvcSpec: 
-      storageClassName: qnap-nfs-storage
-      accessModes: ["ReadWriteOnce"]
-      resources:     
-        requests:
-          storage: "300Mi"
+
 prowlarr:
   version: "v0.2.0.1439"
   image: "ghcr.io/k8s-at-home/prowlarr:v0.2.0.1439"

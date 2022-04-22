@@ -6,16 +6,6 @@ local configYAML = (importstr '../settings.yaml');
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];
 
-/*
-local config = {
-  jackett: {
-    version: "1",
-    image: "asd",
-    namespace: "multimedia",
-  },
-};
-*/
-
 local nodeSelector = {
   "kubernetes.io/arch": "amd64",
   "storage.infra/main": "true",
