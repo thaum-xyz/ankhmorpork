@@ -438,6 +438,9 @@ spec:
         - containerPort: 8443
           name: webhook
           protocol: TCP
+        - containerPort: 10254
+          name: metrics
+          protocol: TCP
         readinessProbe:
           failureThreshold: 3
           httpGet:
