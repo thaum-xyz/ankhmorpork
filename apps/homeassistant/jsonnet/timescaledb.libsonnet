@@ -36,7 +36,10 @@ local defaults = {
     name: 'postgres',
   },
   mixin:: {
-    ruleLabels: {},
+    ruleLabels: {
+      prometheus: 'k8s',
+      role: 'alert-rules',
+    },
     _config: {
       runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/postgresql/%s',
       postgresExporterSelector: 'job="%s", namespace="%s"' % [defaults.name, defaults.namespace],

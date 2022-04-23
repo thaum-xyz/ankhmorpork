@@ -5,6 +5,8 @@ metadata:
     app.kubernetes.io/component: database
     app.kubernetes.io/name: timescaledb
     app.kubernetes.io/version: 2.6.1
+    prometheus: k8s
+    role: alert-rules
   name: timescaledb
   namespace: homeassistant
 spec:
