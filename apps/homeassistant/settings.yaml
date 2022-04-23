@@ -10,11 +10,11 @@ homeassistant:
   timezone: "Europe/Berlin"
   resources:
     requests:
-      cpu: 100m
-      memory: 700Mi
+      cpu: 200m
+      memory: 500Mi
     limits:
       cpu: 500m
-      memory: 900Mi
+      memory: 800Mi
   storage:
     name: "homeassistant-config"
     pvcSpec:
@@ -31,11 +31,11 @@ timescaledb:
   namespace: *namespace
   resources:
     requests:
-      cpu: 100m
-      memory: 150Mi
+      cpu: 70m
+      memory: 190Mi
     limits:
-      cpu: 100m
-      memory: 300Mi
+      cpu: 200m
+      memory: 320Mi
   storage:
     name: "timescaledb-data"
     pvcSpec:
