@@ -38,9 +38,8 @@ local defaults = {
   mixin:: {
     ruleLabels: {},
     _config: {
-      runbookURLPattern: 'https://runbooks.prometheus-operator.dev/runbooks/kubernetes/%s',
+      runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/postgresql/%s',
       postgresExporterSelector: 'job="%s", namespace="%s"' % [defaults.name, defaults.namespace],
-      //postgresExporterSelector: 'job="%s"' % defaults.name,
     },
   },
 };
@@ -56,7 +55,7 @@ function(params) {
   assert std.isObject($._config.resources),
 
   mixin:: (import 'github.com/prometheus-community/postgres_exporter/postgres_mixin/mixin.libsonnet') +
-          //(import 'github.com/kubernetes-monitoring/kubernetes-mixin/lib/add-runbook-links.libsonnet') +
+          (import 'github.com/kubernetes-monitoring/kubernetes-mixin/lib/add-runbook-links.libsonnet') +
           {
             _config+:: $._config.mixin._config,
           },
@@ -65,7 +64,7 @@ function(params) {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PrometheusRule',
     metadata: $._metadata + {
-      labels+: $._config.ruleLabels,
+      labels+: $._config.mixin.ruleLabels,
     },
     spec: {
       local r = if std.objectHasAll($.mixin, 'prometheusRules') then $.mixin.prometheusRules.groups else [],

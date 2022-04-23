@@ -27,6 +27,7 @@ spec:
           maximum Postgres connection limit (current value: {{ $value }}s). Services
           may be degraded - please take immediate action (you probably need to increase
           max_connections in the Docker image and re-deploy.'
+        runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqlmaxconnectionsreached
         summary: '{{ $labels.instance }} has maxed out Postgres connections.'
       expr: |
         sum by (instance) (pg_stat_activity_count{job="timescaledb", namespace="homeassistant"})
@@ -44,6 +45,7 @@ spec:
           check utilization graphs and confirm if this is normal service growth, abuse
           or an otherwise temporary condition or if new resources need to be provisioned
           (or the limits increased, which is mostly likely).'
+        runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqlhighconnections
         summary: '{{ $labels.instance }} is over 80% of max Postgres connections.'
       expr: |
         sum by (instance) (pg_stat_activity_count{job="timescaledb", namespace="homeassistant"})
@@ -61,6 +63,7 @@ spec:
         description: '{{ $labels.instance }} is rejecting query requests from the
           exporter, and thus probably not allowing DNS requests to work either. User
           services should not be effected provided at least 1 node is still alive.'
+        runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqldown
         summary: 'PostgreSQL is not processing queries: {{ $labels.instance }}'
       expr: pg_up{job="timescaledb", namespace="homeassistant"} != 1
       for: 1m
@@ -70,6 +73,7 @@ spec:
       annotations:
         description: 'PostgreSQL high number of slow queries {{ $labels.cluster }}
           for database {{ $labels.datname }} with a value of {{ $value }} '
+        runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqlslowqueries
         summary: 'PostgreSQL high number of slow on {{ $labels.cluster }} for database
           {{ $labels.datname }} '
       expr: |
@@ -85,6 +89,7 @@ spec:
       annotations:
         description: PostgreSQL high number of queries per second on {{ $labels.cluster
           }} for database {{ $labels.datname }} with a value of {{ $value }}
+        runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqlqps
         summary: PostgreSQL high number of queries per second {{ $labels.cluster }}
           for database {{ $labels.datname }}
       expr: |
@@ -104,6 +109,7 @@ spec:
       annotations:
         description: PostgreSQL low on cache hit rate on {{ $labels.cluster }} for
           database {{ $labels.datname }} with a value of {{ $value }}
+        runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqlcachehitratio
         summary: PostgreSQL low cache hit rate on {{ $labels.cluster }} for database
           {{ $labels.datname }}
       expr: |
