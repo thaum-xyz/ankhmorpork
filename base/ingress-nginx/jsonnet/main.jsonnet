@@ -21,6 +21,7 @@ local all = {
         metadata: $._metadata {
           name: dashboardName,
           labels+: {
+            'grafana_dashboard': 'true',
             'dashboard.grafana.com/load': 'true',
           },
         },

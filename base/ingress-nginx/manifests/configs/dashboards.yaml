@@ -1580,6 +1580,7 @@ items:
       app.kubernetes.io/instance: ingress-nginx
       app.kubernetes.io/name: ingress-nginx
       dashboard.grafana.com/load: "true"
+      grafana_dashboard: "true"
     name: grafana-dashboard-nginx
     namespace: ingress-nginx
 - apiVersion: v1
@@ -2690,6 +2691,7 @@ items:
       app.kubernetes.io/instance: ingress-nginx
       app.kubernetes.io/name: ingress-nginx
       dashboard.grafana.com/load: "true"
+      grafana_dashboard: "true"
     name: grafana-dashboard-request-handling-performance
     namespace: ingress-nginx
 kind: ConfigMapList
