@@ -35,13 +35,14 @@ local defaults = {
     pass: '',
     name: 'postgres',
   },
-  /*mixin:: {
+  mixin:: {
     ruleLabels: {},
     _config: {
       runbookURLPattern: 'https://runbooks.prometheus-operator.dev/runbooks/kubernetes/%s',
-      jobSelector: 'job="%s", namespace="%s"' % (defaults.name, defaults.namespace),
+      postgresExporterSelector: 'job="%s", namespace="%s"' % [defaults.name, defaults.namespace],
+      //postgresExporterSelector: 'job="%s"' % defaults.name,
     },
-  },*/
+  },
 };
 
 function(params) {
@@ -54,12 +55,58 @@ function(params) {
   // Safety check
   assert std.isObject($._config.resources),
 
-  /*mixin:: {
-    (import 'github.com/prometheus-community/postgres_exporter/postgres_mixin/mixin.libsonnet') +
-    (import 'github.com/kubernetes-monitoring/kubernetes-mixin/lib/add-runbook-links.libsonnet') + {
-      _config+:: g._config.mixin._config,
+  mixin:: (import 'github.com/prometheus-community/postgres_exporter/postgres_mixin/mixin.libsonnet') +
+          //(import 'github.com/kubernetes-monitoring/kubernetes-mixin/lib/add-runbook-links.libsonnet') +
+          {
+            _config+:: $._config.mixin._config,
+          },
+
+  prometheusRule: {
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'PrometheusRule',
+    metadata: $._metadata + {
+      labels+: $._config.ruleLabels,
     },
-  }*/
+    spec: {
+      local r = if std.objectHasAll($.mixin, 'prometheusRules') then $.mixin.prometheusRules.groups else [],
+      local a = if std.objectHasAll($.mixin, 'prometheusAlerts') then $.mixin.prometheusAlerts.groups else [],
+      groups: [{
+        name: 'timescaledb.alerts',
+        rules: [{
+          alert: 'timescaledbExporterDown',
+          annotations: {
+            description: 'TimescaleDB exporter instance {{ $labels.instance }} is down',
+            summary: 'TimescaleDB exporter is down',
+          },
+          expr: 'up{job=~"timescaledb.*",namespace="%s"} == 0' % $._metadata.namespace,
+          'for': '30m',
+          labels: {
+            severity: 'warning',
+          },
+        }],
+      }] + a + r,
+    },
+  },
+
+  dashboards: {
+    apiVersion: 'v1',
+    kind: 'ConfigMapList',
+    items: [
+      {
+        local dashboardName = 'grafana-dashboard-' + std.strReplace(name, '.json', ''),
+        apiVersion: 'v1',
+        kind: 'ConfigMap',
+        metadata: $._metadata {
+          name: dashboardName,
+          labels+: {
+            'dashboard.grafana.com/load': 'true',
+          },
+        },
+        data: { [name]: std.manifestJsonEx($.mixin.grafanaDashboards[name], '    ') },
+      }
+      for name in std.objectFields($.mixin.grafanaDashboards)
+    ],
+  },
 
   serviceAccount: {
     apiVersion: 'v1',
@@ -240,56 +287,5 @@ function(params) {
         matchLabels: $._config.selectorLabels,
       },
     },
-  },
-
-  mixin:: (import 'github.com/prometheus-community/postgres_exporter/postgres_mixin/mixin.libsonnet') + {
-    _config+:: {
-      postgresExporterSelector: 'job="timescaledb"',
-    },
-  },
-
-  prometheusRule: {
-    apiVersion: 'monitoring.coreos.com/v1',
-    kind: 'PrometheusRule',
-    metadata: $._metadata,
-    spec: {
-      local r = if std.objectHasAll($.mixin, 'prometheusRules') then $.mixin.prometheusRules.groups else [],
-      local a = if std.objectHasAll($.mixin, 'prometheusAlerts') then $.mixin.prometheusAlerts.groups else [],
-      groups: [{
-        name: 'timescaledb.alerts',
-        rules: [{
-          alert: 'timescaledbExporterDown',
-          annotations: {
-            description: 'TimescaleDB exporter instance {{ $labels.instance }} is down',
-            summary: 'TimescaleDB exporter is down',
-          },
-          expr: 'up{job=~"timescaledb.*",namespace="%s"} == 0' % $._metadata.namespace,
-          'for': '30m',
-          labels: {
-            severity: 'warning',
-          },
-        }],
-      }] + a + r,
-    },
-  },
-
-  dashboards: {
-    apiVersion: 'v1',
-    kind: 'ConfigMapList',
-    items: [
-      {
-        local dashboardName = 'grafana-dashboard-' + std.strReplace(name, '.json', ''),
-        apiVersion: 'v1',
-        kind: 'ConfigMap',
-        metadata: $._metadata {
-          name: dashboardName,
-          labels+: {
-            'dashboard.grafana.com/load': 'true',
-          },
-        },
-        data: { [name]: std.manifestJsonEx($.mixin.grafanaDashboards[name], '    ') },
-      }
-      for name in std.objectFields($.mixin.grafanaDashboards)
-    ],
   },
 }
