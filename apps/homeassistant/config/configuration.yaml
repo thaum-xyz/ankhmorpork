@@ -215,7 +215,7 @@ template:
             "data": state_attr('calendar.adrianna_wojas_gmail_com','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim
           }] | rejectattr("timestamp", "gt", as_timestamp(utcnow()) | int + 24*60*60) | sort(attribute='timestamp') 
         %}
-        {% if calendars|length > 2 %}
+        {% if calendars|length >= 2 %}
         {{ calendars[2].prefix }} {{ calendars[2].data }}
         {% endif %}
 

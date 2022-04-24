@@ -98,7 +98,7 @@ data:
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
     \         }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int
     + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {% if calendars|length
-    > 2 %}\n        {{ calendars[2].prefix }} {{ calendars[2].data }}\n        {%
+    >= 2 %}\n        {{ calendars[2].prefix }} {{ calendars[2].data }}\n        {%
     endif %}\n\ninput_boolean:\n  projector:\n    name: Projector State\n    icon:
     mdi:projector\n  projector_screen:\n    name: Projector Screen State\n    icon:
     mdi:projector-screen-variant-outline\n\ninput_select:\n  speakers:\n    name:
