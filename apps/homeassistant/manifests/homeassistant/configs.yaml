@@ -38,8 +38,8 @@ data:
     6 characters of each line are considered a static prefix\n      line1: \"LUNCH
     {{ states('sensor.mealie') }}\"\n      line2: >\n        {%\n          set calendars
     = [{\n            \"timestamp\": as_timestamp(state_attr('sun.sun','next_midnight'))
-    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"--- NEXT DAY
-    ---\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"-- NEXT DAY
+    --\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
@@ -59,8 +59,8 @@ data:
     + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {{ calendars[0].prefix
     }} {{ calendars[0].data }}\n      line3: >\n        {%\n          set calendars
     = [{\n            \"timestamp\": as_timestamp(state_attr('sun.sun','next_midnight'))
-    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"--- NEXT DAY
-    ---\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"-- NEXT DAY
+    --\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
