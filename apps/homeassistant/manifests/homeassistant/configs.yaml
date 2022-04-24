@@ -37,7 +37,9 @@ data:
     \"{{ states('switch.espdisplay_backlight') }}\"\n    attributes:\n      # First
     6 characters of each line are considered a static prefix\n      line1: \"LUNCH
     {{ states('sensor.mealie') }}\"\n      line2: >\n        {%\n          set calendars
-    = [{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    = [{\n            \"timestamp\": as_timestamp(state_attr('sun.sun','next_midnight'))
+    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"--- NEXT DAY
+    ---\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
@@ -56,7 +58,9 @@ data:
     \         }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int
     + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {{ calendars[0].prefix
     }} {{ calendars[0].data }}\n      line3: >\n        {%\n          set calendars
-    = [{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    = [{\n            \"timestamp\": as_timestamp(state_attr('sun.sun','next_midnight'))
+    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"--- NEXT DAY
+    ---\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
@@ -73,10 +77,13 @@ data:
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.adrianna_wojas_gmail_com','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
     \         }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int
-    + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {{ calendars[1].prefix
-    }} {{ calendars[1].data }}\n      line4: >\n        {%\n          set calendars
-    = [{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {% if calendars|length
+    > 1 %}\n        {{ calendars[1].prefix }} {{ calendars[1].data }}\n        {%
+    endif %}\n      line4: >\n        {%\n          set calendars = [{\n            \"timestamp\":
+    as_timestamp(state_attr('sun.sun','next_midnight')) | int,\n            \"prefix\":
+    \"00:00\",\n            \"data\": \"--- NEXT DAY ---\"\n          },{\n            \"timestamp\":
+    as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int,\n
+    \           \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
     \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
@@ -92,14 +99,15 @@ data:
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.adrianna_wojas_gmail_com','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
     \         }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int
-    + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {{ calendars[2].prefix
-    }} {{ calendars[2].data }}\n\ninput_boolean:\n  projector:\n    name: Projector
-    State\n    icon: mdi:projector\n  projector_screen:\n    name: Projector Screen
-    State\n    icon: mdi:projector-screen-variant-outline\n\ninput_select:\n  speakers:\n
-    \   name: Speakers Input\n    icon: mdi:speakers\n    options:\n    - opt/coax\n
-    \   - line1/2\n    - bt\n    initial: line1/2\n\nplant:\n  jovita:\n    sensors:\n
-    \     moisture: sensor.jovita_moisture\n      temperature: sensor.jovita_temperature\n
-    \     conductivity: sensor.jovita_soil_conductivity\n      brightness: sensor.jovita_illuminance\n
+    + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {% if calendars|length
+    > 2 %}\n        {{ calendars[2].prefix }} {{ calendars[2].data }}\n        {%
+    endif %}\n\ninput_boolean:\n  projector:\n    name: Projector State\n    icon:
+    mdi:projector\n  projector_screen:\n    name: Projector Screen State\n    icon:
+    mdi:projector-screen-variant-outline\n\ninput_select:\n  speakers:\n    name:
+    Speakers Input\n    icon: mdi:speakers\n    options:\n    - opt/coax\n    - line1/2\n
+    \   - bt\n    initial: line1/2\n\nplant:\n  jovita:\n    sensors:\n      moisture:
+    sensor.jovita_moisture\n      temperature: sensor.jovita_temperature\n      conductivity:
+    sensor.jovita_soil_conductivity\n      brightness: sensor.jovita_illuminance\n
     \   min_moisture: 15\n    max_moisture: 60\n    min_conductivity: 350\n    max_conductivity:
     2000\n    min_temperature: 10\n    max_temperature: 32\n    min_brightness: 500\n
     \   max_brightness: 12000\n  svetlana:\n    sensors:\n      moisture: sensor.svetlana_moisture\n

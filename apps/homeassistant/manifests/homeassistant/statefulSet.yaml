@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 1b08ef1fd424819407a2529116b4f8a1
+        checksum.config/md5: 805cdad289f06ca1670879bd7fa8b552
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
