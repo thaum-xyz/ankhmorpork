@@ -198,10 +198,6 @@ template:
       line4: >
         {%
           set calendars = [{
-            "timestamp": as_timestamp(state_attr('sun.sun','next_midnight')) | int,
-            "prefix": "00:00",
-            "data": "--- NEXT DAY ---"
-          },{
             "timestamp": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int,
             "prefix": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int | timestamp_custom("%H:%M"),
             "data": state_attr('calendar.pawel_krupa_net_pl','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim
