@@ -2,6 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
+    app.kubernetes.io/component: endpoint
     app.kubernetes.io/name: esp-dev
     app.kubernetes.io/part-of: homeassistant
   name: esp-dev
@@ -12,5 +13,6 @@ spec:
     port: http
   selector:
     matchLabels:
+      app.kubernetes.io/component: endpoint
       app.kubernetes.io/name: esp-dev
       app.kubernetes.io/part-of: homeassistant

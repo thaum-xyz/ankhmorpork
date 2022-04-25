@@ -1,3 +1,4 @@
+local externalTargets = import 'externalTargets.libsonnet';
 local esphome = import 'github.com/thaum-xyz/jsonnet-libs/apps/esphome/esphome.libsonnet';
 local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassistant/homeassistant.libsonnet';
 local timescaledb = import 'timescaledb.libsonnet';
@@ -16,57 +17,16 @@ local config = std.parseYaml(configYAML)[0] {
 };
 
 local all = {
-  esphomedevices: {
-    metadata:: {
-      name: 'esp-dev',
-      namespace: config.homeassistant.namespace,
-      labels: {
-        'app.kubernetes.io/name': 'esp-dev',
+  esphomedevices: externalTargets(config.espdevices) {
+    _metadata+:: {
+      labels+: {
         'app.kubernetes.io/part-of': 'homeassistant',
-      },
-    },
-    endpoints: {
-      apiVersion: 'v1',
-      kind: 'Endpoints',
-      metadata: all.esphomedevices.metadata,
-      subsets: [{
-        addresses: [
-          { ip: '192.168.2.221' },
-          { ip: '192.168.2.224' },
-        ],
-        ports: [{
-          port: 80,
-          name: 'http',
-        }],
-      }],
-    },
-    service: {
-      apiVersion: 'v1',
-      kind: 'Service',
-      metadata: all.esphomedevices.metadata,
-      spec: {
-        clusterIP: 'None',
-        ports: all.esphomedevices.endpoints.subsets[0].ports,
-      },
-    },
-    serviceMonitor: {
-      apiVersion: 'monitoring.coreos.com/v1',
-      kind: 'ServiceMonitor',
-      metadata: all.esphomedevices.metadata,
-      spec: {
-        endpoints: [{
-          interval: '60s',
-          port: all.esphomedevices.endpoints.subsets[0].ports[0].name,
-        }],
-        selector: {
-          matchLabels: all.esphomedevices.service.metadata.labels,
-        },
       },
     },
     prometheusRule: {
       apiVersion: 'monitoring.coreos.com/v1',
       kind: 'PrometheusRule',
-      metadata: all.esphomedevices.metadata {
+      metadata: $.esphomedevices._metadata {
         labels: {
           prometheus: 'k8s',
           role: 'alert-rules',

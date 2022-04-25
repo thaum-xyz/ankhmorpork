@@ -66,7 +66,7 @@ function(params) {
   prometheusRule: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PrometheusRule',
-    metadata: $._metadata + {
+    metadata: $._metadata {
       labels+: $._config.mixin.ruleLabels,
     },
     spec: {
