@@ -55,11 +55,11 @@ esphome:
   namespace: *namespace
   resources:
     requests:
-      cpu: 600m
-      memory: 350Mi
+      cpu: 1
+      memory: 500Mi
     limits:
-      cpu: 800m
-      memory: 600Mi
+      cpu: 1400m
+      memory: 800Mi
   storage:
     name: "esphome-data"
     pvcSpec:
