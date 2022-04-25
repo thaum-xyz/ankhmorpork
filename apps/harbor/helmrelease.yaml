@@ -52,6 +52,29 @@ spec:
         enabled: true
     trace:
       enabled: false
+    exporter:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+    redis:
+      internal:
+        nodeSelector:
+          kubernetes.io/arch: "amd64"
+    database:
+      internal:
+        nodeSelector:
+          kubernetes.io/arch: "amd64"
+    registry:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+    jobservice:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+    core:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+    portal:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
   valuesFrom:
   - kind: Secret
     # Read database.internal.password
