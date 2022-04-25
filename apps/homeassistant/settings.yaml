@@ -59,7 +59,7 @@ esphome:
       memory: 500Mi
     limits:
       cpu: 1400m
-      memory: 800Mi
+      memory: 1400Mi
   storage:
     name: "esphome-data"
     pvcSpec:
