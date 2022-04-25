@@ -11,3 +11,4 @@ spec:
     kind: GitRepository
     name: ankhmorpork
   validation: client
+  suspend: true
