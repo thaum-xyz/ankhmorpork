@@ -2,8 +2,8 @@
 common:
   namespace: &namespace "homeassistant"
 homeassistant:
-  version: "2022.4.6"  # application-version-from-github: home-assistant/core
-  image: "homeassistant/aarch64-homeassistant:2022.4.6"  # application-image-from-github: home-assistant/core
+  version: "2022.4.7"  # application-version-from-github: home-assistant/core
+  image: "homeassistant/aarch64-homeassistant:2022.4.7"  # application-image-from-github: home-assistant/core
   namespace: *namespace
   domain: "home.ankhmorpork.thaum.xyz"
   hostNetwork: true  # Needed to enable WOL
