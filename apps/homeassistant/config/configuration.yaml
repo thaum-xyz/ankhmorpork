@@ -200,6 +200,10 @@ template:
       line4: >
         {%
           set calendars = [{
+            "timestamp": as_timestamp(state_attr('sun.sun','next_midnight')) | int,
+            "prefix": "00:00",
+            "data": "-- NEXT DAY --"
+          },{
             "timestamp": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int,
             "prefix": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int | timestamp_custom("%H:%M"),
             "data": state_attr('calendar.pawel_krupa_net_pl','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim
@@ -217,8 +221,8 @@ template:
             "data": state_attr('calendar.adrianna_wojas_gmail_com','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim
           }] | rejectattr("timestamp", "gt", as_timestamp(utcnow()) | int + 24*60*60) | sort(attribute='timestamp') 
         %}
-        {% if calendars|length > 1 %}
-        {{ calendars[1].prefix }} {{ calendars[1].data }}
+        {% if calendars|length > 2 and calendars[2].data != "-- NEXT DAY --" %}
+        {{ calendars[2].prefix }} {{ calendars[2].data }}
         {% else %}
         
         {% endif %}

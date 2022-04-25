@@ -80,7 +80,9 @@ data:
     + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {% if calendars|length
     > 1 %}\n        {{ calendars[1].prefix }} {{ calendars[1].data }}\n        {%
     else %}\n        \n        {% endif %}\n      line4: >\n        {%\n          set
-    calendars = [{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    calendars = [{\n            \"timestamp\": as_timestamp(state_attr('sun.sun','next_midnight'))
+    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"-- NEXT DAY
+    --\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
     | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
@@ -98,10 +100,10 @@ data:
     | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
     \         }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int
     + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {% if calendars|length
-    > 1 %}\n        {{ calendars[1].prefix }} {{ calendars[1].data }}\n        {%
-    else %}\n        \n        {% endif %}\n\ninput_boolean:\n  projector:\n    name:
-    Projector State\n    icon: mdi:projector\n  projector_screen:\n    name: Projector
-    Screen State\n    icon: mdi:projector-screen-variant-outline\n\ninput_select:\n
+    > 2 and calendars[2].data != \"-- NEXT DAY --\" %}\n        {{ calendars[2].prefix
+    }} {{ calendars[2].data }}\n        {% else %}\n        \n        {% endif %}\n\ninput_boolean:\n
+    \ projector:\n    name: Projector State\n    icon: mdi:projector\n  projector_screen:\n
+    \   name: Projector Screen State\n    icon: mdi:projector-screen-variant-outline\n\ninput_select:\n
     \ speakers:\n    name: Speakers Input\n    icon: mdi:speakers\n    options:\n
     \   - opt/coax\n    - line1/2\n    - bt\n    initial: line1/2\n\nplant:\n  jovita:\n
     \   sensors:\n      moisture: sensor.jovita_moisture\n      temperature: sensor.jovita_temperature\n
