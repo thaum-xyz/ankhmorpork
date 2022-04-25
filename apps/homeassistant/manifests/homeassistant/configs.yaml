@@ -37,71 +37,68 @@ data:
     \"{{ states('switch.espdisplay_backlight') }}\"\n    attributes:\n      # First
     6 characters of each line are considered a static prefix\n      line1: \"LUNCH
     {{ states('sensor.mealie') }}\"\n      line2: >\n        {%\n          set calendars
-    = [{\n            \"timestamp\": as_timestamp(state_attr('sun.sun','next_midnight'))
-    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"-- NEXT DAY
-    --\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_timescale_com','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.adrianna_wojas_gmail_com','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int
-    + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {{ calendars[0].prefix
-    }} {{ calendars[0].data }}\n      line3: >\n        {%\n          set calendars
-    = [{\n            \"timestamp\": as_timestamp(state_attr('sun.sun','next_midnight'))
-    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"-- NEXT DAY
-    --\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_timescale_com','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.adrianna_wojas_gmail_com','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int
-    + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {% if calendars|length
-    > 1 %}\n        {{ calendars[1].prefix }} {{ calendars[1].data }}\n        {%
-    else %}\n        \n        {% endif %}\n      line4: >\n        {%\n          set
-    calendars = [{\n            \"timestamp\": as_timestamp(state_attr('sun.sun','next_midnight'))
-    | int,\n            \"prefix\": \"00:00\",\n            \"data\": \"-- NEXT DAY
-    --\"\n          },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_krupa_net_pl','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.pawel_timescale_com','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.paulfantom','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.paulfantom','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         },{\n            \"timestamp\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
-    | int,\n            \"prefix\": as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
-    | int | timestamp_custom(\"%H:%M\"),\n            \"data\": state_attr('calendar.adrianna_wojas_gmail_com','message')
-    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim\n
-    \         }] | rejectattr(\"timestamp\", \"gt\", as_timestamp(utcnow()) | int
-    + 24*60*60) | sort(attribute='timestamp') \n        %}\n        {% if calendars|length
-    > 2 and calendars[2].data != \"-- NEXT DAY --\" %}\n        {{ calendars[2].prefix
-    }} {{ calendars[2].data }}\n        {% else %}\n        \n        {% endif %}\n\ninput_boolean:\n
+    = [(\n            \"00:00\",\n            \"-- NEXT DAY --\",\n            as_timestamp(state_attr('sun.sun','next_midnight'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.pawel_krupa_net_pl','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.pawel_timescale_com','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.paulfantom','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.paulfantom','start_time')) | int\n
+    \         ),(\n            as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.adrianna_wojas_gmail_com','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
+    | int\n          )] | rejectattr(2, \"gt\", as_timestamp(utcnow()) | int + 24*60*60)
+    | sort(attribute=2) | unique | list\n        %}\n        {{ calendars[0][0] }}
+    {{ calendars[0][1] }}\n      line3: >\n        {%\n          set calendars = [(\n
+    \           \"00:00\",\n            \"-- NEXT DAY --\",\n            as_timestamp(state_attr('sun.sun','next_midnight'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.pawel_krupa_net_pl','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.pawel_timescale_com','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.paulfantom','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.paulfantom','start_time')) | int\n
+    \         ),(\n            as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.adrianna_wojas_gmail_com','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
+    | int\n          )] | rejectattr(2, \"gt\", as_timestamp(utcnow()) | int + 24*60*60)
+    | sort(attribute=2) | unique | list\n        %}\n        {% if calendars|length
+    > 1 %}\n        {{ calendars[1][0] }} {{ calendars[1][1] }}\n        {% else %}\n
+    \       \n        {% endif %}\n      line4: >\n        {%\n          set calendars
+    = [(\n            \"00:00\",\n            \"-- NEXT DAY --\",\n            as_timestamp(state_attr('sun.sun','next_midnight'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.pawel_krupa_net_pl','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.pawel_timescale_com','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.pawel_timescale_com','start_time'))
+    | int\n          ),(\n            as_timestamp(state_attr('calendar.paulfantom','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.paulfantom','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.paulfantom','start_time')) | int\n
+    \         ),(\n            as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
+    | int | timestamp_custom(\"%H:%M\"),\n            state_attr('calendar.adrianna_wojas_gmail_com','message')
+    | regex_replace(find='[^\\x00-\\x7F]+', replace='', ignorecase=False) | trim,\n
+    \           as_timestamp(state_attr('calendar.adrianna_wojas_gmail_com','start_time'))
+    | int\n          )] | rejectattr(2, \"gt\", as_timestamp(utcnow()) | int + 24*60*60)
+    | sort(attribute=2) | unique | list\n        %}\n        {% if calendars|length
+    > 2 and calendars[2][1] != \"-- NEXT DAY --\" %}\n        {{ calendars[2][0] }}
+    {{ calendars[2][1] }}\n        {% else %}\n        \n        {% endif %}\n\ninput_boolean:\n
     \ projector:\n    name: Projector State\n    icon: mdi:projector\n  projector_screen:\n
     \   name: Projector Screen State\n    icon: mdi:projector-screen-variant-outline\n\ninput_select:\n
     \ speakers:\n    name: Speakers Input\n    icon: mdi:speakers\n    options:\n
