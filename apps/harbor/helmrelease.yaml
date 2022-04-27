@@ -16,6 +16,7 @@ spec:
         namespace: harbor
       interval: 5m
   values:
+    logLevel: info
     expose:
       type: ingress
       ingress:
