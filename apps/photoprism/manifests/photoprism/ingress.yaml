@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 512M
+  labels:
+    app.kubernetes.io/name: photoprism
+    app.kubernetes.io/version: "220302"
+    probe: enabled
+  name: photoprism
+  namespace: photoprism
+spec:
+  rules:
+  - host: photo.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          service:
+            name: photoprism
+            port:
+              name: http
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - photo.ankhmorpork.thaum.xyz
+    secretName: photoprism-tls

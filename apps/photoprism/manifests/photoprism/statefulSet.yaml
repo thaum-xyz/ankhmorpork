@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: photoprism
+    app.kubernetes.io/version: "220302"
+  name: photoprism
+  namespace: photoprism
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: photoprism
+  serviceName: photoprism
+  template:
+    metadata:
+      annotations:
+        checksum.config/md5: 5440125f7f7b1a4b3ca9188561792453
+        kubectl.kubernetes.io/default-container: photoprism
+      labels:
+        app.kubernetes.io/name: photoprism
+        app.kubernetes.io/version: "220302"
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: credentials
+        - configMapRef:
+            name: config
+        image: photoprism/photoprism:220302-impish
+        imagePullPolicy: IfNotPresent
+        name: photoprism
+        ports:
+        - containerPort: 2342
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /api/v1/status
+            port: http
+        resources:
+          limits:
+            cpu: 500m
+            memory: 800Mi
+          requests:
+            cpu: 200m
+            memory: 500Mi
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /photoprism/storage
+          name: storage
+      restartPolicy: Always
+      serviceAccountName: photoprism
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 300Mi
+      storageClassName: qnap-nfs-storage
