@@ -25,44 +25,24 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <th>Description</th>
   </tr>
   <tr>
+    <td><img width="32" src="https://jsonnet.org/img/isologo.svg"></td>
+    <td><a href="https://jsonnet.org">Jsonnet</a></td>
+    <td>Data templating language</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://avatars.githubusercontent.com/u/44036562?s=200&v=4"></td>
+    <td><a href="https://github.com/features/actions">GitHub Actions</a></td>
+    <td>CI system</td>
+  </tr>
+  <tr>
     <td><img width="32" src="https://simpleicons.org/icons/ansible.svg"></td>
     <td><a href="https://www.ansible.com">Ansible</a></td>
     <td>Automate bare metal provisioning and configuration</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/flux/icon/color/flux-icon-color.svg"></td>
-    <td><a href="https://fluxcd.io/">Flux</a></td>
-    <td>GitOps tool built to deploy applications to Kubernetes</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://github.com/jetstack/cert-manager/raw/master/logo/logo.png"></td>
-    <td><a href="https://cert-manager.io">cert-manager</a></td>
-    <td>Cloud native certificate management</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/314135?s=200&v=4"></td>
-    <td><a href="https://www.cloudflare.com">Cloudflare</a></td>
-    <td>DNS</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://grafana.com/static/img/menu/grafana2.svg"></td>
-    <td><a href="https://grafana.com">Grafana</a></td>
-    <td>Operational dashboards</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.svg"></td>
-    <td><a href="https://prometheus.io">Prometheus</a></td>
-    <td>Infrastructure monitoring</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://www.parca.dev/img/logo.svg"></td>
-    <td><a href="https://parca.dev">Parca</a></td>
-    <td>Continuous profiling</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://jsonnet.org/img/isologo.svg"></td>
-    <td><a href="https://jsonnet.org">Jsonnet</a></td>
-    <td>Data templating language</td>
+    <td><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Logo-ubuntu_cof-orange-hex.svg"></td>
+    <td><a href="https://ubuntu.com">Ubuntu</a></td>
+    <td>Base OS for Kubernetes nodes</td>
   </tr>
   <tr>
     <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/k3s/icon/color/k3s-icon-color.svg"></td>
@@ -75,34 +55,14 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Container-orchestration system, the backbone of this project</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://github.com/grafana/loki/blob/main/docs/sources/logo.png?raw=true"></td>
-    <td><a href="https://grafana.com/oss/loki">Loki</a></td>
-    <td>Log aggregation system</td>
+    <td><img width="32" src="https://github.com/weaveworks/kured/raw/main/img/logo.png"></td>
+    <td><a href="https://github.com/weaveworks/kured">kured</a></td>
+    <td>Kubernetes Reboot Daemon</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/60239468?s=200&v=4"></td>
-    <td><a href="https://metallb.org">MetalLB</a></td>
-    <td>Bare metal load-balancer for Kubernetes</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/1412239?s=200&v=4"></td>
-    <td><a href="https://www.nginx.com">NGINX</a></td>
-    <td>Kubernetes Ingress Controller</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.svg"></td>
-    <td><a href="https://prometheus.io">Prometheus</a></td>
-    <td>Systems monitoring and alerting toolkit</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Logo-ubuntu_cof-orange-hex.svg"></td>
-    <td><a href="https://ubuntu.com">Ubuntu</a></td>
-    <td>Base OS for Kubernetes nodes</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/44036562?s=200&v=4"></td>
-    <td><a href="https://github.com/features/actions">GitHub Actions</a></td>
-    <td>CI system</td>
+    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/flux/icon/color/flux-icon-color.svg"></td>
+    <td><a href="https://fluxcd.io/">Flux</a></td>
+    <td>GitOps tool built to deploy applications to Kubernetes</td>
   </tr>
   <tr>
     <td></td>
@@ -110,9 +70,84 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Secrets and encryption management system</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://github.com/weaveworks/kured/raw/main/img/logo.png"></td>
-    <td><a href="https://github.com/weaveworks/kured">kured</a></td>
-    <td>Kubernetes Reboot Daemon</td>
+    <td><img width="32" src="https://avatars.githubusercontent.com/u/60239468?s=200&v=4"></td>
+    <td><a href="https://metallb.org">MetalLB</a></td>
+    <td>Bare metal load-balancer for Kubernetes</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://github.com/jetstack/cert-manager/raw/master/logo/logo.png"></td>
+    <td><a href="https://cert-manager.io">cert-manager</a></td>
+    <td>Cloud native certificate management</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://avatars.githubusercontent.com/u/314135?s=200&v=4"></td>
+    <td><a href="https://www.cloudflare.com">Cloudflare</a></td>
+    <td>DNS</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://avatars.githubusercontent.com/u/1412239?s=200&v=4"></td>
+    <td><a href="https://www.nginx.com">NGINX</a></td>
+    <td>Kubernetes Ingress Controller</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://raw.githubusercontent.com/oauth2-proxy/oauth2-proxy/master/docs/static/img/logos/OAuth2_Proxy_horizontal.svg"></td>
+    <td><a href="https://oauth2-proxy.github.io/oauth2-proxy/">oauth2-proxy</a></td>
+    <td>Authentication proxy</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.svg"></td>
+    <td><a href="https://prometheus.io">Prometheus</a></td>
+    <td>Systems monitoring and alerting toolkit</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://grafana.com/static/img/menu/grafana2.svg"></td>
+    <td><a href="https://grafana.com">Grafana</a></td>
+    <td>Operational dashboards</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://www.parca.dev/img/logo.svg"></td>
+    <td><a href="https://parca.dev">Parca</a></td>
+    <td>Continuous profiling</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://github.com/grafana/loki/blob/main/docs/sources/logo.png?raw=true"></td>
+    <td><a href="https://grafana.com/oss/loki">Loki</a></td>
+    <td>Log aggregation system</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://goharbor.io/img/logos/harbor-icon-color.png"></td>
+    <td><a href="https://goharbor.io/">Harbor</a></td>
+    <td>Container Image Registry</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png"></td>
+    <td><a href="https://github.com/bastienwirtz/homer">Homer</a></td>
+    <td>Portal Site</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg"></td>
+    <td><a href="https://www.home-assistant.io/">HomeAssistant</a></td>
+    <td>Home Automation System</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://esphome.io/_images/logo.png"></td>
+    <td><a href="https://esphome.io/">ESPhome</a></td>
+    <td>Microcontrollers Management</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://cdn.statically.io/gh/KakersUK/docker-templates/master/KakersUK/images/Mealie.png"></td>
+    <td><a href="https://hay-kot.github.io/mealie/">Mealie</a></td>
+    <td>Cookbook</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://avatars.githubusercontent.com/u/32436079?s=400&v=4"></td>
+    <td><a href="https://photoprism.app/">Photoprism</a></td>
+    <td>Photo Management</td>
+  </tr>
+  <tr>
+    <td>AND</td>
+    <td>MANY</td>
+    <td>OTHERS</td>
   </tr>
 </table>
 
