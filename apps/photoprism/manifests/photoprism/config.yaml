@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  PHOTOPRISM_DATABASE_DRIVER: sqlite
+  PHOTOPRISM_DEBUG: "true"
+  PHOTOPRISM_DISABLE_WEBDAV: "true"
+  PHOTOPRISM_ORIGINALS_PATH: /photoprism/originals
+  PHOTOPRISM_PUBLIC: "false"
+  PHOTOPRISM_READONLY: "true"
+  TZ: Europe/Berlin
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: photoprism
+    app.kubernetes.io/version: "220302"
+  name: config
+  namespace: photoprism
