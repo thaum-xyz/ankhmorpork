@@ -27,7 +27,7 @@ spec:
         description: Plex exporter cannot get data from plex server.
         runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/plexexporternodata
         summary: Plex Server is down
-      expr: absent(plex_media_server_library_media_count) == 1
+      expr: absent(plex_sessions_active_count) == 1
       for: 14m
       labels:
         severity: warning
