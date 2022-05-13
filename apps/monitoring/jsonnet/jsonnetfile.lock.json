@@ -189,16 +189,6 @@
       "source": {
         "git": {
           "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/kube-events-exporter"
-        }
-      },
-      "version": "f84f5e2473d2f4bad278b82e07fa017471563059",
-      "sum": "w/+FA9/N5Tn25zUtE88EZz2VlohnTih2AtGWl3N5sac="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "apps/pagespeed"
         }
       },

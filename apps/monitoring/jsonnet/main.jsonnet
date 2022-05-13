@@ -124,7 +124,6 @@ local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-expo
 local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
 local snmp = (import 'github.com/thaum-xyz/jsonnet-libs/apps/snmp-exporter/snmp-exporter.libsonnet');
-local kubeEventsExporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/kube-events-exporter/kube-events-exporter.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
 local windows = (import 'lib/windows-exporter.libsonnet');
@@ -585,7 +584,6 @@ local kp =
 
     windowsExporter: windows($.values.windowsExporter),
 
-    kubeEventsExporter: kubeEventsExporter($.values.kubeEventsExporter),
     pushgateway: pushgateway($.values.pushgateway),
     smokeping: exporter($.values.smokeping) + {
       deployment+: {
