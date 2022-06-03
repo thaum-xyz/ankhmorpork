@@ -6,6 +6,6 @@ metadata:
   labels:
     app.kubernetes.io/component: database
     app.kubernetes.io/name: timescaledb
-    app.kubernetes.io/version: 2.6.1
+    app.kubernetes.io/version: 2.7.0
   name: additional-sql
   namespace: homeassistant
