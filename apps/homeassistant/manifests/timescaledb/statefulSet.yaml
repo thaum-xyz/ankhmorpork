@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: database
     app.kubernetes.io/name: timescaledb
-    app.kubernetes.io/version: 2.6.1
+    app.kubernetes.io/version: 2.7.0
   name: timescaledb
   namespace: homeassistant
 spec:
@@ -21,7 +21,7 @@ spec:
       labels:
         app.kubernetes.io/component: database
         app.kubernetes.io/name: timescaledb
-        app.kubernetes.io/version: 2.6.1
+        app.kubernetes.io/version: 2.7.0
     spec:
       containers:
       - env:
@@ -36,7 +36,7 @@ spec:
         envFrom:
         - secretRef:
             name: timescaledb
-        image: timescale/timescaledb:2.6.1-pg14
+        image: timescale/timescaledb:2.7.0-pg14
         imagePullPolicy: IfNotPresent
         name: timescaledb
         ports:

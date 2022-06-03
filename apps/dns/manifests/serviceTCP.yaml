@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns
-    app.kubernetes.io/version: 1.9.1
+    app.kubernetes.io/version: 1.9.3
   name: coredns-tcp
   namespace: dns
 spec:

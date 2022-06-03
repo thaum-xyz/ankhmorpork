@@ -9,7 +9,6 @@ DIRS=\
 	apps/homeassistant \
 	apps/homer \
 	apps/monitoring \
-	apps/multimedia \
 	apps/parca \
 	apps/portal \
 	apps/recipe \
