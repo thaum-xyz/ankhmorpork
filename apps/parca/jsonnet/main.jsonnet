@@ -18,21 +18,7 @@ local configYAML = (importstr '../settings.yaml');
 local config = std.parseYaml(configYAML)[0];
 
 local all = {
-  agent: agent(config.agent) + {
-    daemonSet+: {
-      // TODO: remove after https://github.com/parca-dev/parca-agent/issues/90 is solved
-      spec+: {
-        template+: {
-          spec+: {
-            containers: addArgs(['--socket-path=/run/k3s/containerd/containerd.sock'], 'parca-agent', super.containers),
-            nodeSelector+: {
-              'thaum.xyz/instance': 'test-platform',
-            },
-          },
-        },
-      },
-    },
-  },
+  agent: agent(config.agent),
   parca: parca(config.parca) + {
     configmap+: {
       data: {
