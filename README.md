@@ -105,7 +105,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Operational dashboards</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://www.parca.dev/img/logo.svg"></td>
+    <td><img width="32" src="https://avatars.githubusercontent.com/u/86306284?s=200&v=4"></td>
     <td><a href="https://parca.dev">Parca</a></td>
     <td>Continuous profiling</td>
   </tr>
