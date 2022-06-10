@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: plex_exporter
     app.kubernetes.io/part-of: plex
-    app.kubernetes.io/version: 0.1.0
+    app.kubernetes.io/version: 1.0.0
   name: plex-exporter
   namespace: multimedia
 spec:
@@ -21,12 +21,12 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: plex_exporter
         app.kubernetes.io/part-of: plex
-        app.kubernetes.io/version: 0.1.0
+        app.kubernetes.io/version: 1.0.0
     spec:
       containers:
       - args:
         - --config=/config.json
-        image: quay.io/paulfantom/plex_exporter:0.1.0
+        image: quay.io/paulfantom/plex_exporter:1.0.0
         imagePullPolicy: Always
         name: plex-metrics
         ports:
