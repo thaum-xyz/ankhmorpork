@@ -18,8 +18,8 @@
           "subdir": "grafana-builder"
         }
       },
-      "version": "c26cc0815dfd32e84d1caba3d9bbb75f2b119937",
-      "sum": "0KkygBQd/AFzUvVzezE4qF/uDYgrwUXVpZfINBti0oc="
+      "version": "9e9d5cddd4f02a25b9dec09a5910878a8ba8e045",
+      "sum": "TieGrr7GyKjURk1+wXHFpdoCiwNaIVfZvyc5mbI9OM0="
     },
     {
       "source": {
@@ -28,8 +28,8 @@
           "subdir": ""
         }
       },
-      "version": "62ad10fe9ceb53c6b846871997abbfe8e0bd7cf5",
-      "sum": "6gD9F29f8T2a71n35Y61P7TBiF5NQuhk4JUwEafsA1E="
+      "version": "3422a511bf8f645e3e684632785b27864ee5dc0c",
+      "sum": "tpgokDM1s/6CL4p+tlq3Nu54r62/kPfGnLUKRgYIC4k="
     },
     {
       "source": {
@@ -38,7 +38,7 @@
           "subdir": "postgres_mixin"
         }
       },
-      "version": "0bacea243a6889e4941c6c89c17587043fa99de6",
+      "version": "1b492a6c59d7967112e53a71a45fb9127f025206",
       "sum": "H+okh0mBSyJSyvkCadCXck1ouZUhdokidsoDGA9h25c="
     },
     {
@@ -48,8 +48,8 @@
           "subdir": "apps/esphome"
         }
       },
-      "version": "f84f5e2473d2f4bad278b82e07fa017471563059",
-      "sum": "A0S+dWl7+3qIxDmlQe7j4rqtI1CZH40jLUcjkfivwq8="
+      "version": "1cc085ee92a3c0488086352c32e9163c20201882",
+      "sum": "02liVsaeLzHM+kc9VK5dcERbDW8r0Z8rfC4pR3UNCH8="
     },
     {
       "source": {
@@ -58,8 +58,18 @@
           "subdir": "apps/homeassistant"
         }
       },
-      "version": "f84f5e2473d2f4bad278b82e07fa017471563059",
-      "sum": "ffOZGIvSHTjJmH/Ql5Pq+HmBIB+HAINTFG1UzSts3yo="
+      "version": "1cc085ee92a3c0488086352c32e9163c20201882",
+      "sum": "z7TKwdc/VrlezzrDT48MTbmBqwhFdvg6kUmV9EKrehA="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "apps/timescaledb"
+        }
+      },
+      "version": "1cc085ee92a3c0488086352c32e9163c20201882",
+      "sum": "0v6CoIFrK98Ww+Q3idArcpDBz3MLoeSySFd583gqa94="
     },
     {
       "source": {
@@ -68,7 +78,7 @@
           "subdir": "utils"
         }
       },
-      "version": "f84f5e2473d2f4bad278b82e07fa017471563059",
+      "version": "1cc085ee92a3c0488086352c32e9163c20201882",
       "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
     }
   ],
