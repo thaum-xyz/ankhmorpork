@@ -60,6 +60,11 @@ local defaults = {
     consume: {
       storageClassName: 'manual',
       accessModes: ['ReadWriteOnce'],
+      resources: {
+        requests: {
+          storage: '10Gi',
+        },
+      },
     },
   },
 };

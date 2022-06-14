@@ -31,6 +31,9 @@ paperless:
       storageClassName: "manual"
       accessModes:
         - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
   domain: "papers.krupa.net.pl"
   timezone: "Europe/Berlin"
   database:
