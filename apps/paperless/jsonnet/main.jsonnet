@@ -14,14 +14,21 @@ local all = {
     databaseEnc: sealedsecret(
       $.web.database.metadata,
       {
-        PAPERLESS_DBHOST: 'db.paperless.svc',
-        PAPERLESS_DBNAME: config.paperless.database.name,
-        PAPERLESS_DBPORT: '5432',
-        PAPERLESS_DBSSLMODE: 'prefer',
         PAPERLESS_DBUSER: config.paperless.database.encryptedUser,
         PAPERLESS_DBPASS: config.paperless.database.encryptedPass,
       }
-    ),
+    ) + {
+      spec+: {
+        template+: {
+          data+: {
+            PAPERLESS_DBHOST: 'db.paperless.svc',
+            PAPERLESS_DBNAME: config.paperless.database.name,
+            PAPERLESS_DBPORT: '5432',
+            PAPERLESS_DBSSLMODE: 'prefer',
+          }
+        }
+      }
+    },
     secrets+:: {},
     secretsEnc: sealedsecret(
       $.web.secrets.metadata,
