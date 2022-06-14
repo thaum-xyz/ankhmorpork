@@ -54,6 +54,9 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: db-data
+        - mountPath: /docker-entrypoint-initdb.d/alter-extension.sql
+          name: alter-extension
+          subPath: alter-extension.sql
       - env:
         - name: DATA_SOURCE_URI
           value: 127.0.0.1?sslmode=disable
