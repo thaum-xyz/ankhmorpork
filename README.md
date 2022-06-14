@@ -145,6 +145,11 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Photo Management</td>
   </tr>
   <tr>
+    <td><img width="32" src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png"></td>
+    <td><a href="https://paperless-ngx.readthedocs.io/en/latest/">Paperless-ngx</a></td>
+    <td>Document Management</td>
+  </tr>
+  <tr>
     <td>AND</td>
     <td>MANY</td>
     <td>OTHERS</td>

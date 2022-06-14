@@ -88,6 +88,11 @@ services:
         subtitle: "Compress images online"
         logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
         url: "https://compressor.io/"
+      - name: Paperless
+        subtitle: "Document management system"
+        logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png"
+        <<: *Testing
+        url: "https://papers.krupa.net.pl/"
 
   - name: Multimedia
     icon: "fa fa-tv"
