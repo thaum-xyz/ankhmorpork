@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: redis
     app.kubernetes.io/version: "6.0"
   name: redis
-  namespace: paper
+  namespace: paperless
 spec:
   replicas: 1
   selector:

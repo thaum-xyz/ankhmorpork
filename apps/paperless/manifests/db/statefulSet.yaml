@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: db
     app.kubernetes.io/version: 2.7.0
   name: db
-  namespace: paper
+  namespace: paperless
 spec:
   replicas: 1
   selector:

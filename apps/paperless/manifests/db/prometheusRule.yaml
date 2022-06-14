@@ -8,7 +8,7 @@ metadata:
     prometheus: k8s
     role: alert-rules
   name: db
-  namespace: paper
+  namespace: paperless
 spec:
   groups:
   - name: timescaledb.alerts
@@ -17,7 +17,7 @@ spec:
       annotations:
         description: TimescaleDB exporter instance {{ $labels.instance }} is down
         summary: TimescaleDB exporter is down
-      expr: up{job=~"timescaledb.*",namespace="paper"} == 0
+      expr: up{job=~"timescaledb.*",namespace="paperless"} == 0
       for: 30m
       labels:
         severity: warning
@@ -32,11 +32,11 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqlmaxconnectionsreached
         summary: '{{ $labels.instance }} has maxed out Postgres connections.'
       expr: |
-        sum by (instance) (pg_stat_activity_count{job="db", namespace="paper"})
+        sum by (instance) (pg_stat_activity_count{job="db", namespace="paperless"})
         >=
-        sum by (instance) (pg_settings_max_connections{job="db", namespace="paper"})
+        sum by (instance) (pg_settings_max_connections{job="db", namespace="paperless"})
         -
-        sum by (instance) (pg_settings_superuser_reserved_connections{job="db", namespace="paper"})
+        sum by (instance) (pg_settings_superuser_reserved_connections{job="db", namespace="paperless"})
       for: 1m
       labels:
         severity: warning
@@ -50,12 +50,12 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqlhighconnections
         summary: '{{ $labels.instance }} is over 80% of max Postgres connections.'
       expr: |
-        sum by (instance) (pg_stat_activity_count{job="db", namespace="paper"})
+        sum by (instance) (pg_stat_activity_count{job="db", namespace="paperless"})
         >
         (
-          sum by (instance) (pg_settings_max_connections{job="db", namespace="paper"})
+          sum by (instance) (pg_settings_max_connections{job="db", namespace="paperless"})
           -
-          sum by (instance) (pg_settings_superuser_reserved_connections{job="db", namespace="paper"})
+          sum by (instance) (pg_settings_superuser_reserved_connections{job="db", namespace="paperless"})
         ) * 0.8
       for: 10m
       labels:
@@ -67,7 +67,7 @@ spec:
           services should not be effected provided at least 1 node is still alive.'
         runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqldown
         summary: 'PostgreSQL is not processing queries: {{ $labels.instance }}'
-      expr: pg_up{job="db", namespace="paper"} != 1
+      expr: pg_up{job="db", namespace="paperless"} != 1
       for: 1m
       labels:
         severity: warning
@@ -81,7 +81,7 @@ spec:
       expr: |
         avg by (datname) (
           rate (
-            pg_stat_activity_max_tx_duration{datname!~"template.*",job="db", namespace="paper"}[2m]
+            pg_stat_activity_max_tx_duration{datname!~"template.*",job="db", namespace="paperless"}[2m]
           )
         ) > 2 * 60
       for: 2m
@@ -97,11 +97,11 @@ spec:
       expr: |
         avg by (datname) (
           irate(
-            pg_stat_database_xact_commit{datname!~"template.*",job="db", namespace="paper"}[5m]
+            pg_stat_database_xact_commit{datname!~"template.*",job="db", namespace="paperless"}[5m]
           )
           +
           irate(
-            pg_stat_database_xact_rollback{datname!~"template.*",job="db", namespace="paper"}[5m]
+            pg_stat_database_xact_rollback{datname!~"template.*",job="db", namespace="paperless"}[5m]
           )
         ) > 10000
       for: 5m
@@ -116,15 +116,15 @@ spec:
           {{ $labels.datname }}
       expr: |
         avg by (datname) (
-          rate(pg_stat_database_blks_hit{datname!~"template.*",job="db", namespace="paper"}[5m])
+          rate(pg_stat_database_blks_hit{datname!~"template.*",job="db", namespace="paperless"}[5m])
           /
           (
             rate(
-              pg_stat_database_blks_hit{datname!~"template.*",job="db", namespace="paper"}[5m]
+              pg_stat_database_blks_hit{datname!~"template.*",job="db", namespace="paperless"}[5m]
             )
             +
             rate(
-              pg_stat_database_blks_read{datname!~"template.*",job="db", namespace="paper"}[5m]
+              pg_stat_database_blks_read{datname!~"template.*",job="db", namespace="paperless"}[5m]
             )
           )
         ) < 0.98

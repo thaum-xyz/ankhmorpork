@@ -1599,5 +1599,5 @@ items:
       app.kubernetes.io/version: 2.7.0
       dashboard.grafana.com/load: "true"
     name: grafana-dashboard-postgres-overview
-    namespace: paper
+    namespace: paperless
 kind: ConfigMapList

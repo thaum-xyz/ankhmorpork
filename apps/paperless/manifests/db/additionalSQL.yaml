@@ -8,4 +8,4 @@ metadata:
     app.kubernetes.io/name: db
     app.kubernetes.io/version: 2.7.0
   name: additional-sql
-  namespace: paper
+  namespace: paperless

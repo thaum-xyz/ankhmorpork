@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   PAPERLESS_CONSUMER_POLLING: "30"
-  PAPERLESS_CORS_ALLOWED_HOSTS: paperless.paper.svc
+  PAPERLESS_CORS_ALLOWED_HOSTS: paperless.paperless.svc
   PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{asn} - {title}'
   PAPERLESS_OCR_LANGUAGE: eng+deu+pol
   PAPERLESS_OCR_LANGUAGES: pol
@@ -18,4 +18,4 @@ metadata:
     app.kubernetes.io/name: paperless
     app.kubernetes.io/version: 1.7.1
   name: paperless-config
-  namespace: paper
+  namespace: paperless

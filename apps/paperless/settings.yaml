@@ -1,6 +1,6 @@
 ---
 common:
-  namespace: &namespace "paper"
+  namespace: &namespace "paperless"
 paperless:
   version: "1.7.1"  # application-version-from-github: paperless-ngx/paperless-ngx
   image: "ghcr.io/paperless-ngx/paperless-ngx:1.7.1"  # application-image-from-github: paperless-ngx/paperless-ngx
