@@ -118,10 +118,10 @@ function(params) {
       name: $._config.name + '-config',
     },
     data: $._config.config {
-      PAPERLESS_URL: 'http://' + $._config.domain,
+      PAPERLESS_URL: 'https://' + $._config.domain,
       PAPERLESS_REDIS: $._config.broker.address,
       PAPERLESS_TIME_ZONE: $._config.timezone,
-      PAPERLESS_CORS_ALLOWED_HOSTS: 'http://%(name)s.%(namespace)s.svc,http://%(domain)s,https://%(domain)s' % $._config,
+      PAPERLESS_CORS_ALLOWED_HOSTS: 'http://%(name)s.%(namespace)s.svc,https://%(domain)s' % $._config,
     },
   },
 
