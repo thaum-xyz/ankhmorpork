@@ -33,10 +33,10 @@ local all = {
     secretsEnc: sealedsecret(
       $.web.secrets.metadata,
       {
-        PAPERLESS_ADMIN_USER: config.paperless.encryptedSecrets.user,
-        PAPERLESS_ADMIN_PASSWORD: config.paperless.encryptedSecrets.pass,
-        PAPERLESS_ADMIN_MAIL: config.paperless.encryptedSecrets.email,
-        PAPERLESS_SECRET_KEY: config.paperless.encryptedSecrets.key,
+        PAPERLESS_ADMIN_USER: config.paperless.secrets.user,
+        PAPERLESS_ADMIN_PASSWORD: config.paperless.secrets.pass,
+        PAPERLESS_ADMIN_MAIL: config.paperless.secrets.email,
+        PAPERLESS_SECRET_KEY: config.paperless.secrets.key,
       }
     ),
 

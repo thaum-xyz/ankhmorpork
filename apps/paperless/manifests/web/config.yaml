@@ -5,7 +5,7 @@ data:
   PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{asn} - {title}'
   PAPERLESS_OCR_LANGUAGE: eng+deu+pol
   PAPERLESS_OCR_LANGUAGES: pol
-  PAPERLESS_REDIS: redis://broker.paperless.svc:6379
+  PAPERLESS_REDIS: redis://redis.paperless.svc:6379
   PAPERLESS_TASK_WORKERS: "1"
   PAPERLESS_TIKA_ENABLED: "0"
   PAPERLESS_TIME_ZONE: Europe/Berlin

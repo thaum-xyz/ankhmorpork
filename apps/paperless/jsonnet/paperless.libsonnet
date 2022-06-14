@@ -26,7 +26,7 @@ local defaults = {
     pass: '',
   },
   broker: {
-    address: 'redis://broker.paperless.svc:6379',
+    address: 'redis://redis.paperless.svc:6379',
   },
   config: {
     PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{asn} - {title}',

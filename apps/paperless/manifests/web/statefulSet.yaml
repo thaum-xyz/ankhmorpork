@@ -19,7 +19,7 @@ spec:
       annotations:
         checksum.config/md5: a11626cbe2906e4e5196a51b333b7df7
         checksum.database/md5: 35a99cbc768e7168fec5e374bdb964b7
-        checksum.secrets/md5: 8dea432d03fb648cef21e26577cc0ffb
+        checksum.secrets/md5: 9aa8755169fd680444330b9e1d948f68
         kubectl.kubernetes.io/default-container: paperless
       labels:
         app.kubernetes.io/component: webservice
