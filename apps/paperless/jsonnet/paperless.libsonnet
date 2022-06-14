@@ -248,7 +248,7 @@ function(params) {
           labels: $._config.commonLabels,
           annotations: {
             'kubectl.kubernetes.io/default-container': c.name,
-            'checksum.config/md5': std.md5(std.manifestJsonMinified($._config.config)),
+            'checksum.config/md5': std.md5(std.manifestJsonMinified($.config.data)),
             'checksum.secrets/md5': std.md5(std.manifestJsonMinified($._config.secrets)),
             'checksum.database/md5': std.md5(std.manifestJsonMinified($._config.database)),
           },
