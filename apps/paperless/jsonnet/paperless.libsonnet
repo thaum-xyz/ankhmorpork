@@ -121,7 +121,7 @@ function(params) {
       PAPERLESS_URL: 'http://' + $._config.domain,
       PAPERLESS_REDIS: $._config.broker.address,
       PAPERLESS_TIME_ZONE: $._config.timezone,
-      PAPERLESS_CORS_ALLOWED_HOSTS: $._config.name + '.' + $._config.namespace + '.svc',
+      PAPERLESS_CORS_ALLOWED_HOSTS: 'http://' + $._config.name + '.' + $._config.namespace + '.svc,http://' + $._config.domain + ',https://' + $._config.domain,
     },
   },
 
