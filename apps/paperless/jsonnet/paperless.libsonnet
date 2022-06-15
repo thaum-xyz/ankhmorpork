@@ -287,6 +287,7 @@ function(params) {
     kind: 'Ingress',
     metadata: $._metadata {
       annotations: {
+        'nginx.ingress.kubernetes.io/proxy-body-size': '20M',
         'kubernetes.io/ingress.class': 'nginx',
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
       },
