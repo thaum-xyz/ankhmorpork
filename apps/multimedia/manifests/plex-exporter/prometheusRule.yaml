@@ -31,3 +31,12 @@ spec:
       for: 14m
       labels:
         severity: warning
+    - alert: PlexNoMediaLibraries
+      annotations:
+        description: Plex is not reporting any content in a library
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/plexnomedialibraries
+        summary: Plex is not reporting any content in one of libraries
+      expr: plex_media_server_library_media_count
+      for: 30m
+      labels:
+        severity: warning
