@@ -142,6 +142,18 @@ local all = snmp(config) + {
               //runbook_url: ""
             },
           },
+          {
+            alert: "QNAPWriteCacheUnused",
+            expr: "max_over_time(cacheWriteHitRate[24h]) == 0 AND cacheAccelerationServiceEnabled == 1",
+            labels: {
+              severity: "warning",
+            },
+            annotations: {
+              summary: "QNAP Write Cache has 0% hit rate.",
+              description: "Write cache on QNAP {{ $labels.instance }} has 0% hit rate and is most likely unusued. Consider checking if cache setup didn't switch to read-only mode.",
+              //runbook_url: ""
+            },
+          },
         ],
       }],
     },
