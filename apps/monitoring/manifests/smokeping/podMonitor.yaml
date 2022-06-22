@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: smokeping
-    app.kubernetes.io/version: 0.6.0
+    app.kubernetes.io/version: 0.6.1
   name: smokeping
   namespace: monitoring
 spec:

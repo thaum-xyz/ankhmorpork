@@ -26,8 +26,8 @@
     },
   },
   prometheus+: {
-    // version: '2.36.0',  // application-version-from-github: prometheus/prometheus
-    // image: 'quay.io/prometheus/prometheus:v2.36.0',  // application-image-from-github: prometheus/prometheus
+    // version: '2.36.2',  // application-version-from-github: prometheus/prometheus
+    // image: 'quay.io/prometheus/prometheus:v2.36.2',  // application-image-from-github: prometheus/prometheus
     externalLabels: {
       cluster: 'ankhmorpork',
     },
@@ -206,8 +206,8 @@
   smokeping: {
     name: 'smokeping',
     namespace: 'monitoring',
-    version: '0.6.0',  // application-version-from-github: SuperQ/smokeping_prober
-    image: 'quay.io/superq/smokeping-prober:v0.6.0',  // application-image-from-github: SuperQ/smokeping_prober
+    version: '0.6.1',  // application-version-from-github: SuperQ/smokeping_prober
+    image: 'quay.io/superq/smokeping-prober:v0.6.1',  // application-image-from-github: SuperQ/smokeping_prober
     port: 9374,
     resources: {
       requests: { cpu: '40m', memory: '30Mi' },
