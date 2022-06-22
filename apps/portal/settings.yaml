@@ -1,6 +1,6 @@
 ---
-version: "22.02.2"  # application-version-from-github: bastienwirtz/homer
-image: "b4bz/homer:22.02.2"  # application-image-from-github: bastienwirtz/homer
+version: "22.06.1"  # application-version-from-github: bastienwirtz/homer
+image: "b4bz/homer:22.06.1"  # application-image-from-github: bastienwirtz/homer
 namespace: "portal"
 replicas: 1
 domain: "portal.krupa.net.pl"
