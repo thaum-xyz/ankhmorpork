@@ -317,12 +317,12 @@ plant:
     min_brightness: 2500
     max_brightness: 60000
 
-notify:
-  - platform: slack
-    name: slack
-    api_key: !secret slack_api_key
-    default_channel: '#home'
-    username: "home-assistant"
+#notify:
+#  - platform: slack
+#    name: slack
+#    api_key: !secret slack_api_key
+#    default_channel: '#home'
+#    username: "home-assistant"
 
 switch:
   - platform: wake_on_lan
