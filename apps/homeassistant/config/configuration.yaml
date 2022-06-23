@@ -339,10 +339,10 @@ google_assistant:
   service_account: !include google_service_account.json
   report_state: true
 
-google:
-  client_id: !secret google_client_id
-  client_secret: !secret google_client_secret
-  calendar_access: "read_only"
+#google:
+#  client_id: !secret google_client_id
+#  client_secret: !secret google_client_secret
+#  calendar_access: "read_only"
 
 sonoff:
   username: !secret sonoff_username
