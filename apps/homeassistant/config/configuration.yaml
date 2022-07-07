@@ -348,7 +348,7 @@ sonoff:
   username: !secret sonoff_username
   password: !secret sonoff_password
   scan_interval: 60 #(optional, lower values than 60 won't work anymore!)
-  mode: cloud
+  mode: auto
   #grace_period: 600 #(optional)
   #api_region: 'eu' #(optional)
   #entity_prefix: True #(optional)
