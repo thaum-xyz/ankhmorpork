@@ -14,5 +14,5 @@ spec:
         metric: coredns_dns_responses_total{job="kube-dns",rcode="SERVFAIL"}
       total:
         metric: coredns_dns_responses_total{job="kube-dns"}
-  target: "99.99"
+  target: "99.9"
   window: 2w

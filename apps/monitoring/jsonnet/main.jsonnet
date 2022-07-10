@@ -421,6 +421,11 @@ local kp =
           },
         },
       },
+      'slo-coredns-response-errors'+: {
+         spec+: {
+          target: "99.9"
+         }
+      }
     },
 
     grafana+: {
