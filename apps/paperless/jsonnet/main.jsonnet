@@ -59,6 +59,14 @@ local all = {
       },
     },
 
+    ingress+: {
+      metadata+: {
+        labels+: {
+          probe: 'enabled',
+        },
+      },
+    },
+
     statefulSet+: {
       spec+: {
         template+: {

@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
     app.kubernetes.io/version: 1.7.1
+    probe: enabled
   name: paperless
   namespace: paperless
 spec:
