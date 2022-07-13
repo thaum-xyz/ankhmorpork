@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: prometheus-operator
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.56.0
+    app.kubernetes.io/version: 0.57.0
     role: alert-rules
   name: prometheus-operator-rules
   namespace: monitoring
@@ -76,7 +76,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/prometheus-operator/prometheusoperatornotready
         summary: Prometheus operator not ready
       expr: |
-        min by(namespace, controller) (max_over_time(prometheus_operator_ready{job="prometheus-operator"}[5m]) == 0)
+        min by (controller,namespace) (max_over_time(prometheus_operator_ready{job="prometheus-operator"}[5m]) == 0)
       for: 5m
       labels:
         severity: warning
