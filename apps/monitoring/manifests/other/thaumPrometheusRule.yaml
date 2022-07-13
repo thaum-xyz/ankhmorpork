@@ -52,6 +52,7 @@ spec:
           metrics from the main service.
         summary: Service monitored by exporter is Down
       expr: '{__name__=~".*_up",__name__!="node_network_up"} == 0'
+      for: 5m
       labels:
         severity: warning
   - name: custom-node-alerts
