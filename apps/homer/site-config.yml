@@ -88,6 +88,10 @@ services:
         subtitle: "Compress images online"
         logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
         url: "https://compressor.io/"
+      - name: Storage Unit
+        subtitle: Tracking content stored remotely
+        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
+        url: "https://docs.google.com/spreadsheets/d/1-aFb40yjIjdcJNJ3Ngvbw9HWo5r1eGugZBWqSPcU-HU"
       - name: Paperless
         subtitle: "Document management system"
         logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png"
