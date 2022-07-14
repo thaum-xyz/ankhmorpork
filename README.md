@@ -115,11 +115,6 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Log aggregation system</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://goharbor.io/img/logos/harbor-icon-color.png"></td>
-    <td><a href="https://goharbor.io/">Harbor</a></td>
-    <td>Container Image Registry</td>
-  </tr>
-  <tr>
     <td><img width="32" src="https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png"></td>
     <td><a href="https://github.com/bastienwirtz/homer">Homer</a></td>
     <td>Portal Site</td>
