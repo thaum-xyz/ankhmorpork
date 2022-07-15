@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: github
+  name: exporter
+  namespace: github
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: github
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: github
+      name: exporter
+      namespace: github
+    spec:
+      serviceAccountName: github
+      automountServiceAccountToken: false
+      containers:
+      - image: infinityworks/github-exporter:latest
+        name: exporter
+        env:
+        - name: ORGS
+          value: "prometheus,prometheus-operator,prometheus-community,open-telemetry,timescale"
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: credentials
+              key: token
+        ports:
+        - containerPort: 9171
+          name: metrics
+          protocol: TCP
+        resources:
+          limits:
+            memory: 100Mi
+            # cpu: 5m
+          requests:
+            cpu: 5m
+            memory: 20Mi
+      restartPolicy: Always
