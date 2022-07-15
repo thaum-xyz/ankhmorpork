@@ -17,8 +17,6 @@ spec:
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: github
-      name: exporter
-      namespace: github
     spec:
       serviceAccountName: github
       automountServiceAccountToken: false
