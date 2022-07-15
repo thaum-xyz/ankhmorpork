@@ -18,7 +18,7 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: github
     spec:
-      serviceAccountName: github
+      serviceAccountName: exporter
       automountServiceAccountToken: false
       containers:
       - image: infinityworks/github-exporter:latest
