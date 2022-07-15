@@ -24,8 +24,8 @@ spec:
       - image: infinityworks/github-exporter:latest
         name: exporter
         env:
-        - name: ORGS
-          value: "prometheus, prometheus-operator, prometheus-community, open-telemetry, timescale"
+        - name: REPOS
+          value: "prometheus/prometheus, prometheus-operator/prometheus-operator, prometheus-operator/kube-prometheus, prometheus-community/helm-charts, open-telemetry/opentelemetry-operator, open-telemetry/opentelemetry-collector, open-telemetry/opentelemetry-helm-charts, timescale/promscale, timescale/tobs, jaegertracing/jaeger, grafana/mimir, grafana/tempo"
         - name: GITHUB_TOKEN
           valueFrom:
             secretKeyRef:
