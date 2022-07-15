@@ -25,7 +25,7 @@ spec:
         name: exporter
         env:
         - name: ORGS
-          value: "prometheus,prometheus-operator,prometheus-community,open-telemetry,timescale"
+          value: "prometheus, prometheus-operator, prometheus-community, open-telemetry, timescale"
         - name: GITHUB_TOKEN
           valueFrom:
             secretKeyRef:
