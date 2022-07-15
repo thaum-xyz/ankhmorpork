@@ -8,7 +8,7 @@ metadata:
   namespace: github
 spec:
   podMetricsEndpoints:
-  - interval: 120s
+  - interval: 270s
     scrapeTimeout: 90s
     port: metrics
   selector:
