@@ -9,6 +9,7 @@ metadata:
 spec:
   podMetricsEndpoints:
   - interval: 120s
+    scrapeTimeout: 90s
     port: metrics
   selector:
     matchLabels:
