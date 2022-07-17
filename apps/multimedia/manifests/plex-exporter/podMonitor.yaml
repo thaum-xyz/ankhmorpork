@@ -12,5 +12,4 @@ spec:
     port: metrics
   selector:
     matchLabels:
-      app.kubernetes.io/component: exporter
-      app.kubernetes.io/name: plex_exporter
+      app.kubernetes.io/name: plex

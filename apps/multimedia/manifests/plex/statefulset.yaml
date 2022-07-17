@@ -64,6 +64,23 @@ spec:
           name: movies
         - mountPath: /data/tv
           name: tv
+      - args:
+        - --config=/config.json
+        image: quay.io/paulfantom/plex_exporter:1.0.0
+        imagePullPolicy: Always
+        name: plex-metrics
+        ports:
+        - containerPort: 9594
+          name: metrics
+        resources:
+          limits:
+            memory: 20Mi
+          requests:
+            memory: 11Mi
+        volumeMounts:
+        - mountPath: /config.json
+          name: exporter-config
+          subPath: config.json
       hostname: nas
       nodeSelector:
         kubernetes.io/arch: amd64
@@ -86,3 +103,7 @@ spec:
           claimName: plex-backup
       - emptyDir: {}
         name: transcode
+      - name: exporter-config
+        secret:
+          secretName: plex-token
+          optional: true

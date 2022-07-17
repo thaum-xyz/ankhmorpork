@@ -15,7 +15,7 @@ spec:
             "port": 9594
           },
           "server": {
-            "address": "192.168.2.98",
+            "address": "127.0.0.1",
             "port": 32400,
             "token": "{{ index . "TOKEN" }}"
           }
