@@ -19,7 +19,6 @@ parca:
   namespace: *namespace
   replicas: 1
   serviceMonitor: true
-  storageRetentionTime: "3h"
   logLevel: "debug"
   resources:
     limits:
