@@ -18,6 +18,8 @@ spec:
       labels:
         app.kubernetes.io/name: plex
         app.kubernetes.io/version: 1.25.9
+      annotations:
+        kubectl.kubernetes.io/default-container: node-exporter
     spec:
       containers:
       - env:
