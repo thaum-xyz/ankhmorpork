@@ -28,7 +28,8 @@ spec:
         - /parca
         - --config-path=/var/parca/parca.yaml
         - --log-level=debug
-        - --storage-tsdb-retention-time=3h
+        - --debug-infod-upstream-servers=https://debuginfod.systemtap.org
+        - --debug-infod-http-request-timeout=5m
         image: ghcr.io/parca-dev/parca:v0.12.0-rc.0
         livenessProbe:
           exec:
@@ -56,7 +57,6 @@ spec:
         - mountPath: /var/parca
           name: parca-config
       nodeSelector:
-        kubernetes.io/arch: amd64
         kubernetes.io/os: linux
       securityContext:
         fsGroup: 65534
