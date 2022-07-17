@@ -105,5 +105,5 @@ spec:
         name: transcode
       - name: exporter-config
         secret:
-          secretName: plex-token
           optional: true
+          secretName: plex-token

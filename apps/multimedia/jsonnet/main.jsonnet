@@ -76,6 +76,7 @@ local all = {
       'pv-downloaded':: {},
       'pvc-downloaded'+: {
         spec+: {
+          accessModes: ['ReadWriteMany'],
           volumeName:: {},
         },
       },
