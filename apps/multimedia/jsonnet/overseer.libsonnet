@@ -1,17 +1,17 @@
 local defaults = {
   local defaults = self,
-  name: 'ombi',
+  name: 'overseer',
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
   resources: {
-    requests: { cpu: '200m', memory: '200Mi' },
+    requests: { cpu: '50m', memory: '250Mi' },
   },
   commonLabels:: {
     'app.kubernetes.io/name': defaults.name,
     'app.kubernetes.io/version': defaults.version,
     'app.kubernetes.io/component': 'server',
-    'app.kubernetes.io/part-of': 'ombi',
+    'app.kubernetes.io/part-of': 'overseer',
   },
   selectorLabels:: {
     [labelName]: defaults.commonLabels[labelName]
@@ -20,13 +20,13 @@ local defaults = {
   },
   domain: '',
   storage: {
-    name: 'data',
+    name: 'appdata',
     pvcSpec: {
       storageClassName: 'local-path',
       accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: '2Gi',
+          storage: '600Mi',
         },
       },
     },
@@ -71,30 +71,36 @@ function(params) {
       name: o._config.name,
       image: o._config.image,
       imagePullPolicy: 'IfNotPresent',
-      env: [{
-        name: 'TZ',
-        value: 'Europe/Berlin',
-      }],
+      env: [
+        {
+          name: 'TZ',
+          value: 'Europe/Berlin',
+        },
+        {
+          name: 'LOG_LEVEL',
+          value: 'debug',
+        },
+      ],
       ports: [{
-        containerPort: 3579,
-        name: 'http-ombi',
+        containerPort: 5055,
+        name: 'http',
       }],
-      startupProbe: {
-        tcpSocket: { port: c.ports[0].name },
-      },
       readinessProbe: {
-        tcpSocket: { port: c.ports[0].name },
+        httpGet: {
+          path: '/api/v1/status',
+          port: c.ports[0].name,
+        },
         initialDelaySeconds: 10,
         timeoutSeconds: 10,
         failureThreshold: 5,
       },
       volumeMounts: [
         {
-          mountPath: '/config',
+          mountPath: '/app/config',
           name: o._config.storage.name,
         },
         {
-          mountPath: '/config/Logs',
+          mountPath: '/app/config/logs',
           name: 'logs',
         },
       ],

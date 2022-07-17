@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: overseer
     app.kubernetes.io/part-of: overseer
+    app.kubernetes.io/version: 1.28.0
     probe: enabled
   name: overseer
   namespace: multimedia

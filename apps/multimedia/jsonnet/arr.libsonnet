@@ -84,13 +84,14 @@ function(params) {
           name: $.statefulset.spec.template.spec.containers[0].ports[0].name,
           targetPort: $.statefulset.spec.template.spec.containers[0].ports[0].name,
           port: $.statefulset.spec.template.spec.containers[0].ports[0].containerPort,
-          protocol: "TCP",
-        },{
+          protocol: 'TCP',
+        },
+        {
           name: $.statefulset.spec.template.spec.containers[1].ports[0].name,
           targetPort: $.statefulset.spec.template.spec.containers[1].ports[0].name,
           port: $.statefulset.spec.template.spec.containers[1].ports[0].containerPort,
-          protocol: "TCP",
-        }
+          protocol: 'TCP',
+        },
       ],
       selector: $._config.selectorLabels,
       clusterIP: 'None',
@@ -98,8 +99,8 @@ function(params) {
   },
 
   serviceMonitor: {
-    apiVersion: "monitoring.coreos.com/v1",
-    kind: "ServiceMonitor",
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'ServiceMonitor',
     metadata: $._metadata,
     spec: {
       endpoints: [{
@@ -243,7 +244,7 @@ function(params) {
       template: {
         metadata: {
           annotations: {
-            "kubectl.kubernetes.io/default-container": c.name,
+            'kubectl.kubernetes.io/default-container': c.name,
           },
           labels: $._config.commonLabels,
         },

@@ -44,3 +44,10 @@ sonarr:
       resources:
         requests:
           storage: 300Mi
+
+overseer:
+  name: overseer
+  version: "1.28.0"
+  image: "sctx/overseerr:1.28.0"
+  namespace: *namespace
+  domain: "seek.ankhmorpork.thaum.xyz"
