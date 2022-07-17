@@ -23,6 +23,9 @@ local all = {
       spec+: {
         template+: {
           metadata+: {
+            annotations: {
+              'checksum.config/md5': std.md5(std.toString(config.parca.config)),
+            },
             labels+: {
               "parca.dev/scrape": "true",
             },

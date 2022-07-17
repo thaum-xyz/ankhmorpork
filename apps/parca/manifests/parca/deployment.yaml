@@ -17,6 +17,8 @@ spec:
       app.kubernetes.io/name: parca
   template:
     metadata:
+      annotations:
+        checksum.config/md5: 610e44ed11041b003d6dd9fb8de6408f
       labels:
         app.kubernetes.io/component: observability
         app.kubernetes.io/instance: parca
