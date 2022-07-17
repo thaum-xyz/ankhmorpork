@@ -19,6 +19,17 @@ local config = std.parseYaml(configYAML)[0];
 local all = {
   agent: agent(config.agent),
   parca: parca(config.parca) + {
+    deployment+: {
+      spec+: {
+        template+: {
+          metadata+: {
+            labels+: {
+              "parca.dev/scrape": "true",
+            },
+          },
+        },
+      },
+    },
     ingress: {
       apiVersion: 'networking.k8s.io/v1',
       kind: 'Ingress',
