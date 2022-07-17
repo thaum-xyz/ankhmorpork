@@ -70,7 +70,7 @@ spec:
         - --config=/config.json
         image: quay.io/paulfantom/plex_exporter:1.0.0
         imagePullPolicy: Always
-        name: plex-metrics
+        name: exporter
         ports:
         - containerPort: 9594
           name: metrics
