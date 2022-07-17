@@ -24,6 +24,7 @@ spec:
         app.kubernetes.io/name: oauth2-proxy
         app.kubernetes.io/part-of: auth
         app.kubernetes.io/version: 7.3.0
+        parca.dev/scrape: "true"
     spec:
       affinity:
         podAntiAffinity:

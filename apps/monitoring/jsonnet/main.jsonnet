@@ -156,6 +156,11 @@ local kp =
       deployment+: {
         spec+: {
           template+: {
+            metadata+: {
+              labels+: {
+                "parca.dev/scrape": "true",
+              },
+            },
             spec+: {
               containers: addArgs(['--log-level=debug'], 'prometheus-operator', super.containers),
             },
@@ -170,6 +175,11 @@ local kp =
       // TODO: move ingress and externalURL to an addon in kube-prometheus
       alertmanager+: {
         spec+: {
+          podMetadata+: {
+            labels+: {
+              "parca.dev/scrape": "true",
+            },
+          },
           externalUrl: 'https://alertmanager.' + $.values.common.baseDomain,
         },
       },
@@ -202,6 +212,11 @@ local kp =
       deployment+: {
         spec+: {
           template+: {
+            metadata+: {
+              labels+: {
+                "parca.dev/scrape": "true",
+              },
+            },
             spec+: {
               affinity: antiaffinity.podantiaffinity('blackbox-exporter'),
             },
@@ -217,6 +232,11 @@ local kp =
       daemonset+: {
         spec+: {
           template+: {
+            metadata+: {
+              labels+: {
+                "parca.dev/scrape": "true",
+              },
+            },
             spec+: {
               containers: std.map(
                 function(c) if c.name == 'node-exporter' then
@@ -256,6 +276,12 @@ local kp =
           retentionSize: '40GB',
           nodeSelector+: {
             'storage.infra/local': 'true',
+          },
+
+          podMetadata+: {
+            labels+: {
+              "parca.dev/scrape": "true",
+            },
           },
           // FIXME: reenable
           securityContext:: null,
@@ -407,6 +433,11 @@ local kp =
       kubernetesDeployment+: {
         spec+: {
           template+: {
+            metadata+: {
+              labels+: {
+                "parca.dev/scrape": "true",
+              },
+            },
             spec+: {
               containers: addContainerParameter(
                 'resources',
@@ -438,6 +469,9 @@ local kp =
             metadata+: {
               // Unwanted when using persistance
               annotations:: {},
+              labels+: {
+                "parca.dev/scrape": "true",
+              },
             },
             spec+: {
               containers: std.map(
@@ -594,6 +628,11 @@ local kp =
       deployment+: {
         spec+: {
           template+: {
+            metadata+: {
+              labels+: {
+                "parca.dev/scrape": "true",
+              },
+            },
             spec+: {
               affinity: antiaffinity.podantiaffinity('smokeping'),
               containers: std.map(function(c) c {
@@ -612,6 +651,9 @@ local kp =
             metadata+: {
               annotations+: {
                 'checksum.config/md5': std.md5($.values.uptimerobot.config),
+              },
+              labels+: {
+                "parca.dev/scrape": "true",
               },
             },
             spec+: {

@@ -24,6 +24,7 @@ spec:
         app.kubernetes.io/name: blackbox-exporter
         app.kubernetes.io/part-of: kube-prometheus
         app.kubernetes.io/version: 0.21.1
+        parca.dev/scrape: "true"
     spec:
       affinity:
         podAntiAffinity:

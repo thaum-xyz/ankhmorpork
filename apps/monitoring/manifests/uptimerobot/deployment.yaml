@@ -21,6 +21,7 @@ spec:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: uptimerobot
         app.kubernetes.io/version: master
+        parca.dev/scrape: "true"
     spec:
       containers:
       - args:
