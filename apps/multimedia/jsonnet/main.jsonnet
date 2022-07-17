@@ -1,5 +1,6 @@
 local arr = import 'arr.libsonnet';
 local prowlarr = import 'prowlarr.libsonnet';
+local utils = import 'utils.libsonnet';
 
 local configYAML = (importstr '../settings.yaml');
 
@@ -10,6 +11,8 @@ local nodeSelector = {
   "kubernetes.io/arch": "amd64",
   "storage.infra/main": "true",
 };
+
+
 
 local lbService = {
   metadata+: {
@@ -55,6 +58,19 @@ local all = {
   prowlarr: prowlarr(config.prowlarr) + {
     service+: lbService,
   },
+
+  shared:
+    utils.persistentVolume({name: "downloaded", namespace: config.common.namespace}, "100Gi", "qnap-nfs-storage") +
+    utils.persistentVolume({name: "tv", namespace: config.common.namespace}, "4000Gi", "manual", "192.168.2.29") +
+    utils.persistentVolume({name: "movies", namespace: config.common.namespace}, "4000Gi", "manual", "192.168.2.29") +
+    {
+      "pv-downloaded":: {},
+      "pvc-downloaded"+: {
+        spec+: {
+          volumeName:: {},
+        },
+      },
+    }
 };
 
 {
