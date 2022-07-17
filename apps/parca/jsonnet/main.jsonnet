@@ -13,18 +13,12 @@ local addArgs(args, name, containers) = std.map(
 );
 
 
-local parcaConfig = (importstr '../parca.yaml');
 local configYAML = (importstr '../settings.yaml');
 local config = std.parseYaml(configYAML)[0];
 
 local all = {
   agent: agent(config.agent),
   parca: parca(config.parca) + {
-    configmap+: {
-      data: {
-        'parca.yaml': parcaConfig,
-      },
-    },
     ingress: {
       apiVersion: 'networking.k8s.io/v1',
       kind: 'Ingress',
