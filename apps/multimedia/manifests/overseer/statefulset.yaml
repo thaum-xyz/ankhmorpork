@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: overseer
     app.kubernetes.io/part-of: overseer
-    app.kubernetes.io/version: 1.28.0
+    app.kubernetes.io/version: 1.29.1
   name: overseer
   namespace: multimedia
 spec:
@@ -22,7 +22,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: overseer
         app.kubernetes.io/part-of: overseer
-        app.kubernetes.io/version: 1.28.0
+        app.kubernetes.io/version: 1.29.1
     spec:
       containers:
       - env:
@@ -30,7 +30,7 @@ spec:
           value: Europe/Berlin
         - name: LOG_LEVEL
           value: debug
-        image: sctx/overseerr:1.28.0
+        image: ghcr.io/sct/overseerr:1.29.1
         imagePullPolicy: IfNotPresent
         name: overseer
         ports:

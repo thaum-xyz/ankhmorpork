@@ -47,7 +47,7 @@ sonarr:
 
 overseer:
   name: overseer
-  version: "1.28.0"
-  image: "sctx/overseerr:1.28.0"
+  version: "1.29.1"  # application-version-from-github: sct/overseerr
+  image: "ghcr.io/sct/overseerr:1.29.1"  # application-image-from-github: sct/overseerr
   namespace: *namespace
   domain: "seek.ankhmorpork.thaum.xyz"
