@@ -33,6 +33,37 @@ local all = {
         },
       },
     },
+    clusterRole: {
+      apiVersion: "rbac.authorization.k8s.io/v1",
+      kind: "ClusterRole",
+      metadata: all.parca.serviceAccount.metadata + { namespace:: "" },
+      rules: [
+        {
+          apiGroups: [""],
+          resources: ["pods"],
+          verbs: ["list", "watch"],
+        },{
+          apiGroups: [""],
+          resources: ["nodes"],
+          verbs: ["get"],
+        }
+      ]
+    },
+    clusterRoleBinding: {
+      apiVersion: "rbac.authorization.k8s.io/v1",
+      kind: "ClusterRoleBinding",
+      metadata: all.parca.serviceAccount.metadata + { namespace:: "" },
+      roleRef: {
+        apiGroup: "rbac.authorization.k8s.io",
+        kind: "ClusterRole",
+        name: all.parca.clusterRole.metadata.name,
+      },
+      subjects: [{
+        kind: "ServiceAccount",
+        name: all.parca.serviceAccount.metadata.name,
+        namespace: all.parca.serviceAccount.metadata.namespace,
+      }],
+    },
     ingress: {
       apiVersion: 'networking.k8s.io/v1',
       kind: 'Ingress',
