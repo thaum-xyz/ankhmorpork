@@ -10,8 +10,8 @@ prowlarr:
 
 radarr:
   name: radarr
-  version: "4.0.4.5909"
-  image: "lscr.io/linuxserver/radarr:develop-4.0.4.5909-ls48"
+  version: "4.1.0"
+  image: "lscr.io/linuxserver/radarr:4.1.0"
   namespace: *namespace
   port: 7878
   multimediaPVCName: "movies"
@@ -27,8 +27,8 @@ radarr:
           storage: 300Mi
 sonarr:
   name: sonarr
-  version: "3.0.6.1451"
-  image: "lscr.io/linuxserver/sonarr:develop-3.0.6.1451-ls247"
+  version: "3.0.8"
+  image: "lscr.io/linuxserver/sonarr:3.0.8"
   namespace: *namespace
   port: 8989
   multimediaPVCName: "tv"

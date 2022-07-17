@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: sonarr
     app.kubernetes.io/part-of: sonarr
-    app.kubernetes.io/version: 3.0.6.1451
+    app.kubernetes.io/version: 3.0.8
   name: sonarr
   namespace: multimedia
 spec:
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: sonarr
         app.kubernetes.io/part-of: sonarr
-        app.kubernetes.io/version: 3.0.6.1451
+        app.kubernetes.io/version: 3.0.8
     spec:
       containers:
       - env:
@@ -34,7 +34,7 @@ spec:
           value: "1000"
         - name: GUID
           value: "1000"
-        image: lscr.io/linuxserver/sonarr:develop-3.0.6.1451-ls247
+        image: lscr.io/linuxserver/sonarr:3.0.8
         imagePullPolicy: IfNotPresent
         name: sonarr
         ports:
