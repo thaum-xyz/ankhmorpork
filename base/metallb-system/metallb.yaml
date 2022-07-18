@@ -332,6 +332,7 @@ spec:
       annotations:
         prometheus.io/port: '7472'
         prometheus.io/scrape: 'true'
+        parca.dev/scrape: "true"
       labels:
         app: metallb
         component: speaker
@@ -414,6 +415,7 @@ spec:
       annotations:
         prometheus.io/port: '7472'
         prometheus.io/scrape: 'true'
+        parca.dev/scrape: "true"
       labels:
         app: metallb
         component: controller

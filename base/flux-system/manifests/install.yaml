@@ -7158,6 +7158,7 @@ spec:
       annotations:
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
+        parca.dev/scrape: "true"
       labels:
         app: helm-controller
     spec:
@@ -7237,6 +7238,7 @@ spec:
       annotations:
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
+        parca.dev/scrape: "true"
       labels:
         app: image-automation-controller
     spec:
@@ -7316,6 +7318,7 @@ spec:
       annotations:
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
+        parca.dev/scrape: "true"
       labels:
         app: image-reflector-controller
     spec:
@@ -7399,6 +7402,7 @@ spec:
       annotations:
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
+        parca.dev/scrape: "true"
       labels:
         app: kustomize-controller
     spec:
@@ -7478,6 +7482,7 @@ spec:
       annotations:
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
+        parca.dev/scrape: "true"
       labels:
         app: notification-controller
     spec:
@@ -7564,6 +7569,7 @@ spec:
       annotations:
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
+        parca.dev/scrape: "true"
       labels:
         app: source-controller
     spec:

@@ -239,7 +239,8 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      annotations: {}
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/managed-by: jsonnet
         app.kubernetes.io/name: kubeseal

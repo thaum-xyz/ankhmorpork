@@ -50,6 +50,8 @@ spec:
       app: local-path-provisioner
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app: local-path-provisioner
     spec:

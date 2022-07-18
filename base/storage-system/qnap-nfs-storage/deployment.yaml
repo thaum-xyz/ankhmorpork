@@ -14,6 +14,8 @@ spec:
       app: nfs-client-provisioner
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app: nfs-client-provisioner
     spec:

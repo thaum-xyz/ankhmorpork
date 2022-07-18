@@ -12,6 +12,8 @@ spec:
       app.kubernetes.io/name: configmapsecret-controller
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/name: configmapsecret-controller
         app.kubernetes.io/version: 0.4.0

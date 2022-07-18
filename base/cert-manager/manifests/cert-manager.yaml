@@ -5142,6 +5142,8 @@ spec:
         app.kubernetes.io/instance: cert-manager
         app.kubernetes.io/component: "cainjector"
         app.kubernetes.io/version: "v1.8.0"
+      annotations:
+        parca.dev/scrape: "true"
     spec:
       serviceAccountName: cert-manager-cainjector
       securityContext:
@@ -5194,6 +5196,7 @@ spec:
         prometheus.io/path: "/metrics"
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9402'
+        parca.dev/scrape: "true"
     spec:
       serviceAccountName: cert-manager
       securityContext:
@@ -5242,6 +5245,8 @@ spec:
       app.kubernetes.io/component: "webhook"
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app: webhook
         app.kubernetes.io/name: webhook
