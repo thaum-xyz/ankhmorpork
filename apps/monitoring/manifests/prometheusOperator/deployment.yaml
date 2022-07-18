@@ -19,12 +19,12 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: prometheus-operator
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: controller
         app.kubernetes.io/name: prometheus-operator
         app.kubernetes.io/part-of: kube-prometheus
         app.kubernetes.io/version: 0.57.0
-        parca.dev/scrape: "true"
     spec:
       automountServiceAccountToken: true
       containers:

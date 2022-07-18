@@ -157,7 +157,7 @@ local kp =
         spec+: {
           template+: {
             metadata+: {
-              labels+: {
+              annotations+: {
                 "parca.dev/scrape": "true",
               },
             },
