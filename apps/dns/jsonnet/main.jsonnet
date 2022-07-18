@@ -46,6 +46,11 @@ local all = {
     deployment+: {
       spec+: {
         template+: {
+          metadata+: {
+            annotations+: {
+              'parca.dev/scrape': "true",
+            },
+          },
           spec+: {
             dnsConfig+: {
               nameservers: [
