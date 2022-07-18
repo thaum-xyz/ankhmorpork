@@ -16,6 +16,8 @@ spec:
       app.kubernetes.io/name: parca-agent
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: observability
         app.kubernetes.io/instance: parca-agent

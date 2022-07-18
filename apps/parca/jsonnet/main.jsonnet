@@ -17,7 +17,19 @@ local configYAML = (importstr '../settings.yaml');
 local config = std.parseYaml(configYAML)[0];
 
 local all = {
-  agent: agent(config.agent),
+  agent: agent(config.agent) + {
+    daemonSet+: {
+      spec+: {
+        template+: {
+          metadata+: {
+            annotations: {
+              "parca.dev/scrape": "true",
+            },
+          },
+        },
+      },
+    }
+  },
   parca: parca(config.parca) + {
     deployment+: {
       spec+: {
@@ -25,8 +37,6 @@ local all = {
           metadata+: {
             annotations: {
               'checksum.config/md5': std.md5(std.toString(config.parca.config)),
-            },
-            labels+: {
               "parca.dev/scrape": "true",
             },
           },

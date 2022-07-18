@@ -19,12 +19,12 @@ spec:
     metadata:
       annotations:
         checksum.config/md5: 610e44ed11041b003d6dd9fb8de6408f
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: observability
         app.kubernetes.io/instance: parca
         app.kubernetes.io/name: parca
         app.kubernetes.io/version: 0.12.0-rc.0
-        parca.dev/scrape: "true"
     spec:
       containers:
       - args:
