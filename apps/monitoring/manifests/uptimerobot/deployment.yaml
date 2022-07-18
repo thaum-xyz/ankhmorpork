@@ -17,11 +17,11 @@ spec:
     metadata:
       annotations:
         checksum.config/md5: 9482c4e4a8cda7a10d594f51119c2087
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: uptimerobot
         app.kubernetes.io/version: master
-        parca.dev/scrape: "true"
     spec:
       containers:
       - args:

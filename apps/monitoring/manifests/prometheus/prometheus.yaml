@@ -42,13 +42,14 @@ spec:
     kubernetes.io/os: linux
     storage.infra/local: "true"
   podMetadata:
+    annotations:
+      parca.dev/scrape: "true"
     labels:
       app.kubernetes.io/component: prometheus
       app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: kube-prometheus
       app.kubernetes.io/version: 2.36.2
-      parca.dev/scrape: "true"
   podMonitorNamespaceSelector: {}
   podMonitorSelector: {}
   probeNamespaceSelector: {}

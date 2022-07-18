@@ -15,11 +15,12 @@ spec:
       app.kubernetes.io/name: smokeping
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: smokeping
         app.kubernetes.io/version: 0.6.1
-        parca.dev/scrape: "true"
     spec:
       affinity:
         podAntiAffinity:

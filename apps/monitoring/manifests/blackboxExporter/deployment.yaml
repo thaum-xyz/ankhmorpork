@@ -19,12 +19,12 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: blackbox-exporter
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: blackbox-exporter
         app.kubernetes.io/part-of: kube-prometheus
         app.kubernetes.io/version: 0.21.1
-        parca.dev/scrape: "true"
     spec:
       affinity:
         podAntiAffinity:

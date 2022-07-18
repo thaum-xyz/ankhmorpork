@@ -19,12 +19,12 @@ spec:
     metadata:
       annotations:
         checksum.config/md5: f71e524e8e7b3d273e9278ca9f171cf9
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: proxy
         app.kubernetes.io/name: oauth2-proxy
         app.kubernetes.io/part-of: auth
         app.kubernetes.io/version: 7.3.0
-        parca.dev/scrape: "true"
     spec:
       affinity:
         podAntiAffinity:

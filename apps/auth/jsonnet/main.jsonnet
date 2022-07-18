@@ -13,9 +13,7 @@ local all = oauth(config) + {
         metadata+: {
           annotations: {
             'checksum.config/md5': std.md5(std.toString(config)),
-          },
-          labels+: {
-            "parca.dev/scrape": "true",
+            'parca.dev/scrape': "true",
           },
         },
         spec+: {

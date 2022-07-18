@@ -21,12 +21,13 @@ spec:
       maxUnavailable: 1
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: kubernetes
         app.kubernetes.io/name: pyrra
         app.kubernetes.io/part-of: kube-prometheus
         app.kubernetes.io/version: 0.4.4
-        parca.dev/scrape: "true"
     spec:
       containers:
       - args:

@@ -176,7 +176,7 @@ local kp =
       alertmanager+: {
         spec+: {
           podMetadata+: {
-            labels+: {
+            annotations+: {
               "parca.dev/scrape": "true",
             },
           },
@@ -213,7 +213,7 @@ local kp =
         spec+: {
           template+: {
             metadata+: {
-              labels+: {
+              annotations+: {
                 "parca.dev/scrape": "true",
               },
             },
@@ -233,7 +233,7 @@ local kp =
         spec+: {
           template+: {
             metadata+: {
-              labels+: {
+              annotations+: {
                 "parca.dev/scrape": "true",
               },
             },
@@ -279,7 +279,7 @@ local kp =
           },
 
           podMetadata+: {
-            labels+: {
+            annotations+: {
               "parca.dev/scrape": "true",
             },
           },
@@ -434,7 +434,7 @@ local kp =
         spec+: {
           template+: {
             metadata+: {
-              labels+: {
+              annotations+: {
                 "parca.dev/scrape": "true",
               },
             },
@@ -467,9 +467,7 @@ local kp =
         spec+: {
           template+: {
             metadata+: {
-              // Unwanted when using persistance
-              annotations:: {},
-              labels+: {
+              annotations: {
                 "parca.dev/scrape": "true",
               },
             },
@@ -629,7 +627,7 @@ local kp =
         spec+: {
           template+: {
             metadata+: {
-              labels+: {
+              annotations+: {
                 "parca.dev/scrape": "true",
               },
             },
@@ -651,8 +649,6 @@ local kp =
             metadata+: {
               annotations+: {
                 'checksum.config/md5': std.md5($.values.uptimerobot.config),
-              },
-              labels+: {
                 "parca.dev/scrape": "true",
               },
             },

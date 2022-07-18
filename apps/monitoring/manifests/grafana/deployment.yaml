@@ -17,12 +17,13 @@ spec:
       app.kubernetes.io/part-of: kube-prometheus
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: grafana
         app.kubernetes.io/name: grafana
         app.kubernetes.io/part-of: kube-prometheus
         app.kubernetes.io/version: 8.2.1
-        parca.dev/scrape: "true"
     spec:
       automountServiceAccountToken: false
       containers:

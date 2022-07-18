@@ -29,13 +29,14 @@ spec:
   nodeSelector:
     kubernetes.io/os: linux
   podMetadata:
+    annotations:
+      parca.dev/scrape: "true"
     labels:
       app.kubernetes.io/component: alert-router
       app.kubernetes.io/instance: main
       app.kubernetes.io/name: alertmanager
       app.kubernetes.io/part-of: kube-prometheus
       app.kubernetes.io/version: 0.24.0
-      parca.dev/scrape: "true"
   replicas: 3
   resources:
     limits:
