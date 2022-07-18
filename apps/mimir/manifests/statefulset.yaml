@@ -21,6 +21,8 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: mimir
         app.kubernetes.io/part-of: mimir
+      annotations:
+        parca.dev/scrape: "true"
     spec:
       containers:
       - env:
