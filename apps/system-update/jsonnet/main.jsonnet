@@ -10,6 +10,11 @@ local all = {
     daemonSet+: {
       spec+: {
         template+: {
+          metadata+: {
+            annotations+: {
+              'parca.dev/scrape': "true",
+            },
+          },
           spec+: {
             nodeSelector: {
               'kubernetes.io/arch': 'arm64',  // TODO: Move NFS storage to QNAP and allow amd64 hosts to reboot
