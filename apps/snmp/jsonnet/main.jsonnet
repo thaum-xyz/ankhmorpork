@@ -36,6 +36,17 @@ local probe(name, namespace, labels, module, targets, interval) = {
 };
 
 local all = snmp(config) + {
+  deployment+: {
+    spec+: {
+      template+: {
+        metadata+: {
+          annotations+: {
+            'parca.dev/scrape': "true",
+          },
+        },
+      },
+    },
+  },
   qnapProbe: probe(
     config.targets[0].module,
     config.namespace,

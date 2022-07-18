@@ -17,6 +17,7 @@ spec:
     metadata:
       annotations:
         checksum.config/md5: 6e4abe83bc74bd847bfddfd9a292624e
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: snmp-exporter
