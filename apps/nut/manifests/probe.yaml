@@ -12,11 +12,11 @@ spec:
   prober:
     path: /ups_metrics
     url: exporter.nut.svc:9199
-  relabelings:
-  - sourceLabels:
-    - __address__
-    targetLabel: __param_server
   targets:
     staticConfig:
+      relabelingConfigs:
+      - sourceLabels:
+        - __address__
+        targetLabel: __param_server
       static:
       - 192.168.2.29
