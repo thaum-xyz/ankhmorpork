@@ -42,6 +42,7 @@ local all = exporter(config) + {
         name: $.deployment.spec.template.spec.containers[0].ports[0].name,
         port: config.port,
       }],
+      selector: $.deployment.spec.template.metadata.labels,
     },
   },
   serviceMonitor: {
