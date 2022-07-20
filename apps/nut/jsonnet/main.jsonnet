@@ -69,6 +69,10 @@ local all = exporter(config) + {
           static: config.upses,
         },
       },
+      metricRelabelings: [{
+        sourceLabels: ["__address__"],
+        targetLabel: "__param_server",
+      }],
     },
   },
 };
