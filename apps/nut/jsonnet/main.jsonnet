@@ -67,10 +67,16 @@ local all = exporter(config) + {
       targets: {
         staticConfig: {
           static: config.upses,
-          relabelingConfigs: [{
-            sourceLabels: ["__address__"],
-            targetLabel: "__param_server",
-          }],
+          relabelingConfigs: [
+            {
+              sourceLabels: ["__address__"],
+              targetLabel: "__param_server",
+            },
+            {
+              sourceLabels: ["__param_server"],
+              targetLabel: "instance",
+            },
+          ],
         },
       },
     },

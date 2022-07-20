@@ -18,5 +18,8 @@ spec:
       - sourceLabels:
         - __address__
         targetLabel: __param_server
+      - sourceLabels:
+        - __param_server
+        targetLabel: instance
       static:
       - 192.168.2.29
