@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: exporter
+    app.kubernetes.io/version: 2.4.2
+  name: exporter
+  namespace: nut
+spec:
+  interval: 150s
+  prober:
+    path: /ups_metrics
+    url: exporter.nut.svc:9199
+  targets:
+    staticConfig:
+      relabelingConfigs:
+      - sourceLabels:
+        - __address__
+        targetLabel: __param_server
+      - sourceLabels:
+        - __param_server
+        targetLabel: instance
+      static:
+      - 192.168.2.29

@@ -1,5 +1,5 @@
 apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
+kind: ServiceMonitor
 metadata:
   labels:
     app.kubernetes.io/component: exporter
@@ -8,11 +8,8 @@ metadata:
   name: exporter
   namespace: nut
 spec:
-  podMetricsEndpoints:
+  endpoints:
   - interval: 30s
-    port: http
-  - interval: 30s
-    path: /ups_metrics
     port: http
   selector:
     matchLabels:
