@@ -10,7 +10,15 @@ local all = exporter(config) + {
   nutConfig: sealedsecret({
     name: config.name,
     namespace: config.namespace,
-  },config.encryptedCredentials),
+  },config.encryptedCredentials) {
+    spec+: {
+      template+: {
+        data+: {
+          NUT_EXPORTER_SERVER: config.ups,
+        },
+      },
+    },      
+  },
   deployment+: {
     spec+: {
       template+: {
@@ -31,54 +39,11 @@ local all = exporter(config) + {
       },
     },
   },
-  podMonitor+:: {},
-  service: {
-    apiVersion: "v1",
-    kind: "Service",
-    metadata: $.podMonitor.metadata,
-    spec: {
-      clusterIP: "None",
-      ports: [{
-        name: $.deployment.spec.template.spec.containers[0].ports[0].name,
-        port: config.port,
-      }],
-      selector: $.deployment.spec.selector.matchLabels,
-    },
-  },
-  serviceMonitor: {
-    apiVersion: "monitoring.coreos.com/v1",
-    kind: "ServiceMonitor",
-    metadata: $.podMonitor.metadata,
-    spec: $.podMonitor.spec {
-      podMetricsEndpoints:: {},
-      endpoints: $.podMonitor.spec.podMetricsEndpoints,
-    },
-  },
-  probe: {
-    apiVersion: 'monitoring.coreos.com/v1',
-    kind: 'Probe',
-    metadata: $.deployment.metadata,
-    spec: {
-      interval: '150s',
-      prober: {
-        url: $.service.metadata.name + '.' + $.service.metadata.namespace + '.svc:' + std.toString(config.port),
+  podMonitor+: {
+    spec+: {
+      podMetricsEndpoints+: [$.podMonitor.spec.podMetricsEndpoints[0] + {
         path: '/ups_metrics',
-      },
-      targets: {
-        staticConfig: {
-          static: config.upses,
-          relabelingConfigs: [
-            {
-              sourceLabels: ["__address__"],
-              targetLabel: "__param_server",
-            },
-            {
-              sourceLabels: ["__param_server"],
-              targetLabel: "instance",
-            },
-          ],
-        },
-      },
+      }],
     },
   },
 };
