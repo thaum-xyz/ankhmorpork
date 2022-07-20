@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: exporter
+    app.kubernetes.io/version: 2.4.2
+  name: exporter
+  namespace: nut
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: exporter
+  template:
+    metadata:
+      annotations:
+        parca.dev/scrape: "true"
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: exporter
+        app.kubernetes.io/version: 2.4.2
+    spec:
+      containers:
+      - args: []
+        envFrom:
+        - secretRef:
+            name: exporter
+        image: ghcr.io/druggeri/nut_exporter:2.4.2
+        name: exporter
+        ports:
+        - containerPort: 9199
+          name: http
+        readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 1
+          tcpSocket:
+            port: http
+          timeoutSeconds: 10
+        resources: {}
+      serviceAccountName: exporter
