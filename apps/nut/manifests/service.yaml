@@ -15,4 +15,3 @@ spec:
   selector:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: exporter
-    app.kubernetes.io/version: 2.4.2
