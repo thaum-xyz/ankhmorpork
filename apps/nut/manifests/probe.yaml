@@ -9,13 +9,13 @@ metadata:
   namespace: nut
 spec:
   interval: 150s
-  metricRelabelings:
-  - sourceLabels:
-    - __address__
-    targetLabel: __param_server
   prober:
     path: /ups_metrics
     url: exporter.nut.svc:9199
+  relabelings:
+  - sourceLabels:
+    - __address__
+    targetLabel: __param_server
   targets:
     staticConfig:
       static:
