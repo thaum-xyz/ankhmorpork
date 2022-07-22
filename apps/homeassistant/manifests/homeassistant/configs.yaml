@@ -100,7 +100,8 @@ data:
     > 2 and calendars[2][1] != \"-- NEXT DAY --\" %}\n        {{ calendars[2][0] }}
     {{ calendars[2][1] }}\n        {% else %}\n        \n        {% endif %}\n\ninput_boolean:\n
     \ projector:\n    name: Projector State\n    icon: mdi:projector\n  projector_screen:\n
-    \   name: Projector Screen State\n    icon: mdi:projector-screen-variant-outline\n\ninput_select:\n
+    \   name: Projector Screen State\n    icon: mdi:projector-screen-variant-outline\n
+    \ door_balcony:\n    name: Balcony Door\n    icon: mdi:door\n\ninput_select:\n
     \ speakers:\n    name: Speakers Input\n    icon: mdi:speakers\n    options:\n
     \   - opt/coax\n    - line1/2\n    - bt\n    initial: line1/2\n\nplant:\n  jovita:\n
     \   sensors:\n      moisture: sensor.jovita_moisture\n      temperature: sensor.jovita_temperature\n

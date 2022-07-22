@@ -234,6 +234,9 @@ input_boolean:
   projector_screen:
     name: Projector Screen State
     icon: mdi:projector-screen-variant-outline
+  door_balcony:
+    name: Balcony Door
+    icon: mdi:door
 
 input_select:
   speakers:
