@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: pics-mgmt-alert-rules
+  namespace: pics-mgmt
+spec:
+  groups:
+  - name: Pictures job completion alerts
+    rules:
+    - alert: JobNotCompleted
+      expr: |
+        ((time() - (pictures_job_success_timestamp_seconds > 0)) > pictures_job_max_age_seconds)
+        or
+        (time() - pictures_job_start_timestamp_seconds > pictures_job_max_age_seconds and pictures_job_success_timestamp_seconds == 0)
+      for: 1m
+      labels:
+        severity: warning
+        alert_type: symptom
+      annotations:
+        title: Pictures Job has not completed recently
+        description: >
+          The pictures job "{{ $labels.resource }}" has not started/completed in {{ $value | humanizeDuration }}.
+        runbook: https://runbooks.thaum.xyz/runbooks/thaum-xyz/job_completion
+    - alert: JobFailed
+      expr: pictures_job_failed == 1
+      labels:
+        severity: warning
+        alert_type: symptom
+      annotations:
+        title: Pictures Job has failed
+        description: >
+          The pictures job "{{ $labels.job}}" resource "{{ $labels.resource }}" has failed.
+        runbook: https://runbooks.thaum.xyz/runbooks/thaum-xyz/job_completion
