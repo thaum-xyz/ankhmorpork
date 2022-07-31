@@ -1,0 +1,84 @@
+#!/bin/bash
+
+INPUT_DIR="$1"
+OUTPUT_DIR="$2"
+
+PROM_PREFIX="pictures"
+PROM_MAX_AGE="7200"  # 2h
+
+# PROM_PGW=""
+
+set -euo pipefail
+
+metrics_reset() {
+# Report start to the monitoring system
+cat <<PROM | curl -iv --data-binary @- "http://${PROM_PGW}:9091/metrics/job/${PROM_PREFIX}"
+# HELP ${PROM_PREFIX}_job_start_timestamp_seconds The start time of the job.
+# TYPE ${PROM_PREFIX}_job_start_timestamp_seconds gauge
+${PROM_PREFIX}_job_start_timestamp_seconds $(date +%s)
+# HELP ${PROM_PREFIX}_job_success_timestamp_seconds The time the job succeeded.
+# TYPE ${PROM_PREFIX}_job_success_timestamp_seconds gauge
+${PROM_PREFIX}_job_success_timestamp_seconds 0
+# HELP ${PROM_PREFIX}_job_max_age_seconds How long the job is allowed to run before marking it failed.
+# TYPE ${PROM_PREFIX}_job_max_age_seconds gauge
+${PROM_PREFIX}_job_max_age_seconds ${PROM_MAX_AGE}
+# HELP ${PROM_PREFIX}_job_failed Boolean status of the job.
+# TYPE ${PROM_PREFIX}_job_failed gauge
+${PROM_PREFIX}_job_failed 0
+PROM
+}
+
+success() {
+cat <<PROM | curl -iv --data-binary @- "http://${PROM_PGW}:9091/metrics/job/${PROM_PREFIX}"
+# HELP ${PROM_PREFIX}_job_success_timestamp_seconds The time the job succeeded.
+# TYPE ${PROM_PREFIX}_job_success_timestamp_seconds gauge
+${PROM_PREFIX}_job_success_timestamp_seconds $(date +%s)
+PROM
+}
+
+fail() {
+cat <<PROM | curl -iv --data-binary @- "http://${PROM_PGW}:9091/metrics/job/${PROM_PREFIX}"
+# HELP ${PROM_PREFIX}_job_failed Boolean status of the job.
+# TYPE ${PROM_PREFIX}_job_failed gauge
+${PROM_PREFIX}_job_failed 1
+PROM
+}
+
+custom_metrics() {
+cat /tmp/output.txt |\
+    sed 's/ /_/g;s/.*\([0-9]\+\)_\(.*\)$/\2 \1/' |\
+    sed "s/.*/${PROM_PREFIX}_&/" |\
+    curl -iv --data-binary @- "http://${PROM_PGW}:9091/metrics/job/${PROM_PREFIX}"
+}
+
+metrics() {
+if [ -z "${PROM_PGW+x}" ]; then
+    :
+else
+    if [ -f "/tmp/output.txt" ]; then
+    success
+    custom_metrics
+    else
+    fail
+    fi
+fi
+}
+
+trap metrics EXIT
+
+if [ -z "${PROM_PGW+x}" ]; then
+    echo "WARNING: Sending data to prometheus pushgateway is not available. Please set PROM_PGW env variable to enable."
+else
+    metrics_reset
+fi
+
+# Move files to correct directories
+exiftool \
+    -r -o . \
+    -if 'time() - 7*86400 > ${createdate#;DateFmt("%s")}' \
+    -d "${OUTPUT_DIR}/%Y/%m/%Y-%m-%d-%%f%%-c.%%e" \
+    "-filename<filemodifydate" \
+    "-filename<createdate" \
+    "-filename<datetimeoriginal" \
+    "-overwrite_original" \
+    "${INPUT_DIR}" | tee /tmp/output.txt
