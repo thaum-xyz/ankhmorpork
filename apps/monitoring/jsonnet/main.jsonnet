@@ -35,7 +35,6 @@ local ingress(metadata, domain, service) = {
   metadata: metadata {
     annotations+: {
       // Add those annotations to every ingress so oauth-proxy is used.
-      'kubernetes.io/ingress.class': 'nginx',
       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
       'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
       'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
@@ -46,6 +45,7 @@ local ingress(metadata, domain, service) = {
       hosts: [domain],
       secretName: metadata.name + '-tls',
     }],
+    ingressClassName: 'nginx',
     rules: [{
       host: domain,
       http: {

@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/affinity: cookie
     nginx.ingress.kubernetes.io/affinity-mode: persistent
     nginx.ingress.kubernetes.io/auth-signin: https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri
@@ -19,6 +18,7 @@ metadata:
   name: alertmanager
   namespace: monitoring
 spec:
+  ingressClassName: nginx
   rules:
   - host: alertmanager.ankhmorpork.thaum.xyz
     http:

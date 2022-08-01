@@ -5,7 +5,6 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator
       CRDs
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/auth-signin: https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri
     nginx.ingress.kubernetes.io/auth-url: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
   labels:
@@ -17,6 +16,7 @@ metadata:
   name: prometheus
   namespace: monitoring
 spec:
+  ingressClassName: nginx
   rules:
   - host: prometheus.ankhmorpork.thaum.xyz
     http:
