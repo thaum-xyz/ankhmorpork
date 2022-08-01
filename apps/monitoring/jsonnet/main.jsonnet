@@ -241,7 +241,13 @@ local kp =
               containers: std.map(
                 function(c) if c.name == 'node-exporter' then
                   c {
-                    args+: ['--collector.textfile.directory=/host/textfile'],
+                    args: std.filter(
+                      function(a) if a == '--no-collector.hwmon' then
+                        false
+                      else
+                        true,
+                      c.args
+                    ) + ['--collector.textfile.directory=/host/textfile'],
                     volumeMounts+: [{
                       mountPath: '/host/textfile',
                       mountPropagation: 'HostToContainer',
