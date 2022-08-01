@@ -8,7 +8,7 @@ on:
     branches: [master]
 
 env:
-  golang-version: 1.18.4
+  golang-version: 1.18.5
 
 jobs:
   apps:
