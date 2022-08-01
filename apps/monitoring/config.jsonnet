@@ -138,15 +138,15 @@
   kubeStateMetrics+: {
     mixin+: {
       _config: {
-        
+
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/kube-state-metrics/%s',
       },
     },
   },
   pyrra+: {
-    #version: "",
-    #image: "",
-    #namespace: "monitoring",
+    //version: "",
+    //image: "",
+    //namespace: "monitoring",
     resources: {
       requests: { cpu: '100m', memory: '20Mi' },
       limits: { cpu: '100m', memory: '30Mi' },
@@ -222,10 +222,7 @@
       requests: { cpu: '3m', memory: '16Mi' },
       limits: { cpu: '20m', memory: '50Mi' },
     },
-    args: [
-      '--config.file',
-      '/etc/json_exporter/config.yml',
-    ],
+    targets: ['https://api.uptimerobot.com/v2/getMonitors'],
     credentials: {
       API_KEY: 'AgDBgACduTClD7MpWPxletQQpxZRPDNrEHjtH5Ssn4IYh/ZVkFaNDcAjcISKRwgvwGZ8zkVsBGo3jfeGo47Tu+6uiHaWTtCKHn4wKmWDykaEHN/rGo+uP9qzbppoyosiAsalitdHzPacZ/IqgEiVLLJLf9S/Y4FcTcgOeeB1WUBQ8PyS5UhbNRyVkt3i9CG5u6WMKh+q8pioULec0C3KIkhSDorKRzcwr1Y446h9RCU57jVCbBr2hqQ68NNFqX37r2lnX+T6fNbkLploG2tkpg1CCYLzHJLGvYSHyP6EGjVBux/t4bOSP4bn8v+vNByBkhxxdiiyKTlmZq5E98bVIWaBMbis1i01u9/0snsTxAr3cXoRjCL/s+Kq6Mf+Fax9BZh+7okhJ8/Uz+1ReNsolV4u/xJnOeVxf4PUiL/1eLkNfxqUQbD8xsz9QR41N+hvpu4QkuaRv0BbEIt794X/nGpb+AJgFs8Xh+R+SNbqcqpLXg6yokETvZLszXZiRaheyhqPZB8j89p8QOiQYVeKQFhNjtknSXihdUXHs1z441ysDvjeap1DrXEHYUDgHFhQPF8sziyrVODwaQR65Iym0BC9cvfDM44q/cxGt2JtGeMp+6Oqw5ikGZOqVw9NmK1/GRMuTfAsHUrGZ0g2vyPYJUEo0qc5Ig28MfGPUi1q/bBgRc73ALIxNWGcN1137eTh5yQbA1/GlFaWYdT2eIJ+aPpxg6bbIsG+B2bxE1qiD5cRoTc1',
     },

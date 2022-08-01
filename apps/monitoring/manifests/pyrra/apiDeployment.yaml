@@ -21,6 +21,8 @@ spec:
       maxUnavailable: 1
   template:
     metadata:
+      annotations:
+        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: api
         app.kubernetes.io/name: pyrra

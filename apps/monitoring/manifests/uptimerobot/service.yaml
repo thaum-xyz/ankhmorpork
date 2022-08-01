@@ -4,7 +4,6 @@ metadata:
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: uptimerobot
-    app.kubernetes.io/version: master
   name: uptimerobot
   namespace: monitoring
 spec:

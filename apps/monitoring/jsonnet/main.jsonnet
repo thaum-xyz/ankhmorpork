@@ -29,6 +29,12 @@
 //       - redis
 //       - home dashboard
 
+local parcaEnable = {
+  annotations+: {
+    'parca.dev/scrape': 'true',
+  },
+};
+
 local ingress(metadata, domain, service) = {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'Ingress',
@@ -86,20 +92,20 @@ local allowIngressNetworkPolicy(port) = {
       from: [{
         podSelector: {
           matchLabels: {
-            "app.kubernetes.io/name": "ingress-nginx",
+            'app.kubernetes.io/name': 'ingress-nginx',
           },
         },
         namespaceSelector: {
           matchLabels: {
-            "kubernetes.io/metadata.name": "ingress-nginx",
-          }
-        }
+            'kubernetes.io/metadata.name': 'ingress-nginx',
+          },
+        },
       }],
       ports: [{
         port: port,
-        protocol: "TCP",
-      }]
-    }]
+        protocol: 'TCP',
+      }],
+    }],
   },
 };
 
@@ -123,10 +129,10 @@ local probe(name, namespace, labels, module, targets) = {
 local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
 local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
-local snmp = (import 'github.com/thaum-xyz/jsonnet-libs/apps/snmp-exporter/snmp-exporter.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
 local windows = (import 'lib/windows-exporter.libsonnet');
+local jsonExporter = (import 'lib/json-exporter.libsonnet');
 
 local mixin = (import 'kube-prometheus/lib/mixin.libsonnet');
 
@@ -156,11 +162,7 @@ local kp =
       deployment+: {
         spec+: {
           template+: {
-            metadata+: {
-              annotations+: {
-                "parca.dev/scrape": "true",
-              },
-            },
+            metadata+: parcaEnable,
             spec+: {
               containers: addArgs(['--log-level=debug'], 'prometheus-operator', super.containers),
             },
@@ -175,11 +177,7 @@ local kp =
       // TODO: move ingress and externalURL to an addon in kube-prometheus
       alertmanager+: {
         spec+: {
-          podMetadata+: {
-            annotations+: {
-              "parca.dev/scrape": "true",
-            },
-          },
+          podMetadata+: parcaEnable,
           externalUrl: 'https://alertmanager.' + $.values.common.baseDomain,
         },
       },
@@ -212,11 +210,7 @@ local kp =
       deployment+: {
         spec+: {
           template+: {
-            metadata+: {
-              annotations+: {
-                "parca.dev/scrape": "true",
-              },
-            },
+            metadata+: parcaEnable,
             spec+: {
               affinity: antiaffinity.podantiaffinity('blackbox-exporter'),
             },
@@ -232,11 +226,7 @@ local kp =
       daemonset+: {
         spec+: {
           template+: {
-            metadata+: {
-              annotations+: {
-                "parca.dev/scrape": "true",
-              },
-            },
+            metadata+: parcaEnable,
             spec+: {
               containers: std.map(
                 function(c) if c.name == 'node-exporter' then
@@ -284,14 +274,9 @@ local kp =
             'storage.infra/local': 'true',
           },
 
-          podMetadata+: {
-            annotations+: {
-              "parca.dev/scrape": "true",
-            },
-          },
+          podMetadata+: parcaEnable,
           // FIXME: reenable
           securityContext:: null,
-          // queryLogFile: '/prometheus/query.log',
 
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
           remoteWrite: [{
@@ -422,6 +407,7 @@ local kp =
       apiDeployment+: {
         spec+: {
           template+: {
+            metadata+: parcaEnable,
             spec+: {
               containers: addContainerParameter(
                 'resources',
@@ -439,11 +425,7 @@ local kp =
       kubernetesDeployment+: {
         spec+: {
           template+: {
-            metadata+: {
-              annotations+: {
-                "parca.dev/scrape": "true",
-              },
-            },
+            metadata+: parcaEnable,
             spec+: {
               containers: addContainerParameter(
                 'resources',
@@ -459,10 +441,10 @@ local kp =
         },
       },
       'slo-coredns-response-errors'+: {
-         spec+: {
-          target: "99.9"
-         }
-      }
+        spec+: {
+          target: '99.9',
+        },
+      },
     },
 
     grafana+: {
@@ -472,11 +454,7 @@ local kp =
       deployment+: {
         spec+: {
           template+: {
-            metadata+: {
-              annotations: {
-                "parca.dev/scrape": "true",
-              },
-            },
+            metadata+: parcaEnable,
             spec+: {
               containers: std.map(
                 function(c) c {
@@ -556,6 +534,8 @@ local kp =
     //
     // Custom components
     //
+
+    // TODO: Consider moving this out of monitoring NS
     qnap: {
       _metadata:: $.nodeExporter.serviceMonitor.metadata {
         name: 'node-exporter-qnap',
@@ -632,11 +612,7 @@ local kp =
       deployment+: {
         spec+: {
           template+: {
-            metadata+: {
-              annotations+: {
-                "parca.dev/scrape": "true",
-              },
-            },
+            metadata+: parcaEnable,
             spec+: {
               affinity: antiaffinity.podantiaffinity('smokeping'),
               containers: std.map(function(c) c {
@@ -647,57 +623,17 @@ local kp =
         },
       },
     },
-    // Consider moving to a separate lib dedicated to json_exporter
-    uptimerobot: exporter($.values.uptimerobot) + {
+
+    uptimerobot: jsonExporter($.values.uptimerobot) + {
       deployment+: {
         spec+: {
           template+: {
-            metadata+: {
+            metadata+: parcaEnable {
               annotations+: {
                 'checksum.config/md5': std.md5($.values.uptimerobot.config),
-                "parca.dev/scrape": "true",
               },
             },
-            spec+: {
-              containers: std.map(function(c) c {
-                volumeMounts: [{
-                  mountPath: '/etc/json_exporter/',
-                  name: 'uptimerobot',
-                  readOnly: true,
-                }],
-              }, super.containers),
-              volumes: [{
-                name: 'uptimerobot',
-                secret: {
-                  secretName: $.uptimerobot.configuration.spec.template.metadata.name,
-                },
-              }],
-            },
           },
-        },
-      },
-      service: {
-        apiVersion: 'v1',
-        kind: 'Service',
-        metadata: $.uptimerobot.deployment.metadata,
-        spec: {
-          ports: [{
-            name: $.uptimerobot.deployment.spec.template.spec.containers[0].ports[0].name,
-            port: $.uptimerobot.deployment.spec.template.spec.containers[0].ports[0].containerPort,
-            targetPort: $.uptimerobot.deployment.spec.template.spec.containers[0].ports[0].name,
-          }],
-          selector: $.uptimerobot.podMonitor.spec.selector.matchLabels,
-        },
-      },
-      // Using ServiceMonitor just to note that Service is necessary and to fail when it disappears
-      podMonitor+:: {},
-      serviceMonitor: {
-        apiVersion: 'monitoring.coreos.com/v1',
-        kind: 'ServiceMonitor',
-        metadata: $.uptimerobot.deployment.metadata,
-        spec: {
-          endpoints: $.uptimerobot.podMonitor.spec.podMetricsEndpoints,
-          selector: $.uptimerobot.podMonitor.spec.selector,
         },
       },
       configuration: sealedsecret($.uptimerobot.deployment.metadata, $.values.uptimerobot.credentials) + {
@@ -707,34 +643,6 @@ local kp =
               'config.yml': $.values.uptimerobot.config,
             },
           },
-        },
-      },
-      probe: {
-        apiVersion: 'monitoring.coreos.com/v1',
-        kind: 'Probe',
-        metadata: $.uptimerobot.deployment.metadata,
-        spec: {
-          interval: '150s',
-          prober: {
-            url: $.uptimerobot.service.metadata.name + '.' + $.uptimerobot.service.metadata.namespace + '.svc:7979',
-          },
-          targets: {
-            staticConfig: {
-              static: ['https://api.uptimerobot.com/v2/getMonitors'],
-            },
-          },
-          metricRelabelings: [
-            {
-              sourceLabels: ['url'],
-              targetLabel: 'instance',
-            },
-            {
-              sourceLabels: ['url'],
-              targetLabel: 'instance',
-              regex: '(https://[a-zA-Z0-9.-]+).*',
-              replacement: '$1/',
-            },
-          ],
         },
       },
     },
