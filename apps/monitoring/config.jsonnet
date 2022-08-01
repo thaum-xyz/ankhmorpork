@@ -125,8 +125,8 @@
     },
   },
   nodeExporter+: {
-    version: '1.3.0',
-    image: 'quay.io/prometheus/node-exporter:v1.3.0',
+    // version: '1.3.0',
+    // image: 'quay.io/prometheus/node-exporter:v1.3.0',
     filesystemMountPointsExclude:: '^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)',
     mixin+: {
       _config+: {
@@ -184,18 +184,6 @@
     ],
   },
   // Following are not in kube-prometheus
-  kubeEventsExporter: {
-    namespace: 'monitoring',
-    version: '0.1.0',  // application-version-from-github: rhobs/kube-events-exporter
-    image: 'quay.io/dgrisonnet/kube-events-exporter:v0.1.0',  // application-image-from-github: rhobs/kube-events-exporter
-    resources: {
-      requests: { cpu: '2m', memory: '11Mi' },
-      limits: { cpu: '5m', memory: '30Mi' },
-    },
-    commonLabels+: {
-      'app.kubernetes.io/component': 'exporter',
-    },
-  },
   pushgateway: {
     namespace: 'monitoring',
     version: '1.4.3',  // application-version-from-github: prometheus/pushgateway
