@@ -98,7 +98,6 @@ data:
           - name: Paperless
             subtitle: "Document management system"
             logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png"
-            <<: *Testing
             url: "https://papers.krupa.net.pl/"
 
       - name: Multimedia
@@ -108,6 +107,11 @@ data:
             logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
             <<: *Local
             url: "https://192.168.2.29/"
+          - name: Photoprism
+            subtitle: "Photo management system"
+            logo: "https://avatars.githubusercontent.com/u/32436079?s=400&v=4"
+            <<: *Testing
+            url: "https://photo.ankhmorpork.thaum.xyz/"
           - name: Plex
             subtitle: "Video on demand"
             logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
