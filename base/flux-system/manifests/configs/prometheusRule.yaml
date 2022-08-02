@@ -18,9 +18,7 @@ spec:
           reconciliation has been failing for more than 10 minutes.'
         summary: Flux objects reconciliation failure
       expr: |
-        max by(namespace, name, kind) (
-          gotk_reconcile_condition{status=~"False|Unknown",type="Ready"}
-        ) == 1
+        max_over_time(gotk_reconcile_condition{status=~"False|Unknown",type="Ready"}[3m]) == 1
       for: 10m
       labels:
         severity: warning
