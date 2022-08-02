@@ -137,6 +137,7 @@ function(params) {
             {
               name: dir,
               mountPath: params.additionalPVCs[dir].mountPath,
+              [if std.objectHas(params.additionalPVCs[dir], 'readOnly') then 'readOnly']: params.additionalPVCs[dir].readOnly,
             }
             for dir in std.objectFields(params.additionalPVCs)
           ]
@@ -168,7 +169,7 @@ function(params) {
             {
               name: dir,
               persistentVolumeClaim: {
-                name: params.additionalPVCs[dir].name,
+                claimName: params.additionalPVCs[dir].name,
               },
             }
             for dir in std.objectFields(params.additionalPVCs)

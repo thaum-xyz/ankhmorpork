@@ -34,11 +34,12 @@ photoprism:
     resources:
       requests:
         storage: 300Mi
-  #additionalPVCs:
-  #  originals:
-  #    name: 'photoprism-originals'
-  #    mountPath: '/photoprism/originals'
-  #    spec:
-  #      storageClassName: "manual"
-  #      accessModes:
-  #        - ReadWriteOnce
+  additionalPVCs:
+    originals:
+      name: 'originals'
+      mountPath: '/photoprism/originals'
+      readOnly: true
+      spec:
+        storageClassName: "manual"
+        accessModes:
+          - ReadWriteOnce

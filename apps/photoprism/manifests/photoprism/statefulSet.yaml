@@ -49,8 +49,15 @@ spec:
         volumeMounts:
         - mountPath: /photoprism/storage
           name: storage
+        - mountPath: /photoprism/originals
+          name: originals
+          readOnly: true
       restartPolicy: Always
       serviceAccountName: photoprism
+      volumes:
+      - name: originals
+        persistentVolumeClaim:
+          claimName: originals
   volumeClaimTemplates:
   - metadata:
       name: storage

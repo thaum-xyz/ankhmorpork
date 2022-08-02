@@ -26,6 +26,27 @@ local all = {
         },
       },
     },
+    pv: {
+      apiVersion: 'v1',
+      kind: 'PersistentVolume',
+      metadata: {
+        name: 'originals',
+        namespace: 'photoprism',
+      },
+      spec: {
+        accessModes: ['ReadWriteOnce'],
+        capacity: {
+          storage: '4000Gi',
+        },
+        nfs: {
+          path: '/Multimedia/Final Cut',
+          server: '192.168.2.29',
+        },
+        persistentVolumeReclaimPolicy: 'Retain',
+        storageClassName: 'manual',
+        volumeMode: 'Filesystem',
+      },
+    },
   },
 };
 

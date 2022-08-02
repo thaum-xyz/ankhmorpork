@@ -1,0 +1,21 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    labels:
+      app.kubernetes.io/name: photoprism
+      app.kubernetes.io/version: "220302"
+    name: originals
+    namespace: photoprism
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    storageClassName: manual
+kind: PersistentVolumeClaimList
+metadata:
+  labels:
+    app.kubernetes.io/name: photoprism
+    app.kubernetes.io/version: "220302"
+  name: photoprism
+  namespace: photoprism
