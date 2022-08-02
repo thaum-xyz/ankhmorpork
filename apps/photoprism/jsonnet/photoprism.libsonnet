@@ -188,7 +188,6 @@ function(params) {
   [if std.objectHas(params, 'additionalPVCs') then 'additionalPVCs']: {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaimList',
-    metadata: $._metadata,
     items: [
       {
         apiVersion: 'v1',

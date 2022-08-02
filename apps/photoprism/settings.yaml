@@ -43,3 +43,6 @@ photoprism:
         storageClassName: "manual"
         accessModes:
           - ReadWriteOnce
+        resources:
+          requests:
+            storage: 4000Gi

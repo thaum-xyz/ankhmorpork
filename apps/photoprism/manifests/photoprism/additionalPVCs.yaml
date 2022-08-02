@@ -11,11 +11,8 @@ items:
   spec:
     accessModes:
     - ReadWriteOnce
+    resources:
+      requests:
+        storage: 4000Gi
     storageClassName: manual
 kind: PersistentVolumeClaimList
-metadata:
-  labels:
-    app.kubernetes.io/name: photoprism
-    app.kubernetes.io/version: "220302"
-  name: photoprism
-  namespace: photoprism
