@@ -52,6 +52,8 @@ spec:
         - mountPath: /photoprism/originals
           name: originals
           readOnly: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
       restartPolicy: Always
       serviceAccountName: photoprism
       volumes:

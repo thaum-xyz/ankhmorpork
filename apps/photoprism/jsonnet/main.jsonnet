@@ -26,6 +26,17 @@ local all = {
         },
       },
     },
+    statefulSet+: {
+      spec+: {
+        template+: {
+          spec+: {
+            nodeSelector: {
+              'kubernetes.io/arch': 'amd64',
+            },
+          },
+        },
+      },
+    },
     pv: {
       apiVersion: 'v1',
       kind: 'PersistentVolume',
