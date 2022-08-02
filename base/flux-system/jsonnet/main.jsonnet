@@ -79,11 +79,9 @@ local all = {
         rules: [{
           alert: 'ReconciliationFailure',
           expr: |||
-            max by (namespace, name, kind) (gotk_reconcile_condition{status="False",type="Ready"})
-            +
-            on(namespace, name, kind) (
-              max by (namespace, name, kind) (gotk_reconcile_condition{status="Deleted"})
-            ) * 2 == 1
+            max by(namespace, name, kind) (
+              gotk_reconcile_condition{status=~"False|Unknown",type="Ready"}
+            ) == 1
           |||,
           'for': '10m',
           labels: {
