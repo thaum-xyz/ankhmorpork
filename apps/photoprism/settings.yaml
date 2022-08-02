@@ -2,8 +2,8 @@
 common:
   namespace: &namespace "photoprism"
 photoprism:
-  version: "220302"  # application-version-from-github: home-assistant/core
-  image: "photoprism/photoprism:220302-impish"  # application-image-from-github: home-assistant/core
+  version: "220730"  # application-version-from-github: photoprism/photoprism
+  image: "photoprism/photoprism:220730-jammy"  # application-image-from-github: photoprism/photoprism
   namespace: *namespace
   domain: "photo.ankhmorpork.thaum.xyz"
   timezone: "Europe/Berlin"
@@ -24,9 +24,9 @@ photoprism:
     requests:
       cpu: 200m
       memory: 500Mi
-    limits:
-      cpu: 500m
-      memory: 800Mi
+    #limits:
+    #  cpu: 500m
+    #  memory: 800Mi
   storageSpec:
     storageClassName: "qnap-nfs-storage"
     accessModes:

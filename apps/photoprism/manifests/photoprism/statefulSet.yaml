@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: photoprism
-    app.kubernetes.io/version: "220302"
+    app.kubernetes.io/version: "220730"
   name: photoprism
   namespace: photoprism
 spec:
@@ -19,7 +19,7 @@ spec:
         kubectl.kubernetes.io/default-container: photoprism
       labels:
         app.kubernetes.io/name: photoprism
-        app.kubernetes.io/version: "220302"
+        app.kubernetes.io/version: "220730"
     spec:
       containers:
       - envFrom:
@@ -27,7 +27,7 @@ spec:
             name: credentials
         - configMapRef:
             name: config
-        image: photoprism/photoprism:220302-impish
+        image: photoprism/photoprism:220730-jammy
         imagePullPolicy: IfNotPresent
         name: photoprism
         ports:
@@ -38,9 +38,6 @@ spec:
             path: /api/v1/status
             port: http
         resources:
-          limits:
-            cpu: 500m
-            memory: 800Mi
           requests:
             cpu: 200m
             memory: 500Mi
