@@ -4,7 +4,7 @@ metadata:
   name: manager
   namespace: pics-mgmt
 spec:
-  schedule: "23 59 7 * *"
+  schedule: "59 23 7 * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 3
