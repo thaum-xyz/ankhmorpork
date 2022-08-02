@@ -1570,6 +1570,7 @@ spec:
       annotations:
         prometheus.io/port: "7472"
         prometheus.io/scrape: "true"
+        parca.dev/scrape: "true"
       labels:
         app: metallb
         component: controller
@@ -1719,6 +1720,7 @@ spec:
       hostNetwork: true
       nodeSelector:
         kubernetes.io/os: linux
+        network.infra/type: "fast"
       serviceAccountName: speaker
       terminationGracePeriodSeconds: 2
       tolerations:
