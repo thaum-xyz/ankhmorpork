@@ -55,6 +55,9 @@ spec:
             - -addr=:7070
           initialDelaySeconds: 10
         resources:
+          requests:
+            cpu: 1000m
+            memory: 2Gi
           limits:
             cpu: 2000m
             memory: 10Gi
