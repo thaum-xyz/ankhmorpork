@@ -39,8 +39,8 @@ spec:
             port: http
         resources:
           requests:
-            cpu: 200m
-            memory: 500Mi
+            cpu: 4500m
+            memory: 4Gi
         securityContext:
           privileged: false
         volumeMounts:
