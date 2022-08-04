@@ -59,7 +59,7 @@ local all = exporter(config) + {
     kind: 'Probe',
     metadata: $.deployment.metadata,
     spec: {
-      interval: '150s',
+      interval: '30s',
       prober: {
         url: $.service.metadata.name + '.' + $.service.metadata.namespace + '.svc:' + std.toString(config.port),
         path: '/ups_metrics',
@@ -107,7 +107,7 @@ local all = exporter(config) + {
               description: 'UPS {{ $labels.instance }} has less than {{ $value | humanizePercentage }} of battery remaining.',
               summary: "UPS exited 'online' mode",
             },
-            expr: 'network_ups_tools_battery_charge < 90',
+            expr: 'network_ups_tools_battery_charge < 50',
             labels: {
               severity: 'critical',
             },

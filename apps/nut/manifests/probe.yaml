@@ -8,7 +8,7 @@ metadata:
   name: exporter
   namespace: nut
 spec:
-  interval: 150s
+  interval: 30s
   prober:
     path: /ups_metrics
     url: exporter.nut.svc:9199

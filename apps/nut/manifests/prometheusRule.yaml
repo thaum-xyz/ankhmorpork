@@ -26,6 +26,6 @@ spec:
         description: UPS {{ $labels.instance }} has less than {{ $value | humanizePercentage
           }} of battery remaining.
         summary: UPS exited 'online' mode
-      expr: network_ups_tools_battery_charge < 90
+      expr: network_ups_tools_battery_charge < 50
       labels:
         severity: critical
