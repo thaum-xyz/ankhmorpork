@@ -79,9 +79,11 @@ local all = {
         rules: [{
           alert: 'ReconciliationFailure',
           expr: |||
-            max_over_time(gotk_reconcile_condition{status=~"False|Unknown",type="Ready"}[3m]) == 1
+            sum by (kind, name, namespace) (
+              max_over_time(gotk_reconcile_condition{status=~"False|Unknown",type="Ready"}[3m])
+            ) != 0
           |||,
-          'for': '10m',
+          'for': '20m',
           labels: {
             severity: 'warning',
           },
