@@ -10,7 +10,7 @@ local all = exporter(config) + {
   nutConfig: sealedsecret({
     name: config.name,
     namespace: config.namespace,
-  },config.encryptedCredentials),
+  }, config.encryptedCredentials),
   deployment+: {
     spec+: {
       template+: {
@@ -33,11 +33,11 @@ local all = exporter(config) + {
   },
   podMonitor+:: {},
   service: {
-    apiVersion: "v1",
-    kind: "Service",
+    apiVersion: 'v1',
+    kind: 'Service',
     metadata: $.podMonitor.metadata,
     spec: {
-      clusterIP: "None",
+      clusterIP: 'None',
       ports: [{
         name: $.deployment.spec.template.spec.containers[0].ports[0].name,
         port: config.port,
@@ -46,8 +46,8 @@ local all = exporter(config) + {
     },
   },
   serviceMonitor: {
-    apiVersion: "monitoring.coreos.com/v1",
-    kind: "ServiceMonitor",
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'ServiceMonitor',
     metadata: $.podMonitor.metadata,
     spec: $.podMonitor.spec {
       podMetricsEndpoints:: {},
@@ -69,12 +69,51 @@ local all = exporter(config) + {
           static: config.upses,
           relabelingConfigs: [
             {
-              sourceLabels: ["__param_target"],
-              targetLabel: "__param_server",
+              sourceLabels: ['__param_target'],
+              targetLabel: '__param_server',
             },
           ],
         },
       },
+    },
+  },
+  prometheusRule: {
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'PrometheusRule',
+    metadata: $.deployment.metadata {
+      labels+: {
+        prometheus: 'k8s',
+        role: 'alert-rules',
+      },
+    },
+    spec: {
+      groups: [{
+        name: 'nut.alerts',
+        rules: [
+          {
+            alert: 'UPSOnBattery',
+            annotations: {
+              description: 'UPS {{ $labels.instance }} is now supplying power to the system from the battery.',
+              summary: "UPS has gone on battery power",
+            },
+            expr: 'network_ups_tools_ups_status{flag="OL"} == 0',
+            labels: {
+              severity: 'warning',
+            },
+          },
+          {
+            alert: 'UPSBatteryCritical',
+            annotations: {
+              description: 'UPS {{ $labels.instance }} has less than {{ $value | humanizePercent}} battery remaining.',
+              summary: "UPS exited 'online' mode",
+            },
+            expr: 'network_ups_tools_battery_charge < 90',
+            labels: {
+              severity: 'critical',
+            },
+          },
+        ],
+      }],
     },
   },
 };

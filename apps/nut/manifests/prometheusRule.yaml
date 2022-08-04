@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: exporter
+    app.kubernetes.io/version: 2.4.2
+    prometheus: k8s
+    role: alert-rules
+  name: exporter
+  namespace: nut
+spec:
+  groups:
+  - name: nut.alerts
+    rules:
+    - alert: UPSOnBattery
+      annotations:
+        description: UPS {{ $labels.instance }} is now supplying power to the system
+          from the battery.
+        summary: UPS has gone on battery power
+      expr: network_ups_tools_ups_status{flag="OL"} == 0
+      labels:
+        severity: warning
+    - alert: UPSBatteryCritical
+      annotations:
+        description: UPS {{ $labels.instance }} has less than {{ $value | humanizePercent}}
+          battery remaining.
+        summary: UPS exited 'online' mode
+      expr: network_ups_tools_battery_charge < 90
+      labels:
+        severity: critical
