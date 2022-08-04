@@ -54,8 +54,6 @@ spec:
   podMonitorSelector: {}
   probeNamespaceSelector: {}
   probeSelector: {}
-  remoteWrite:
-  - url: http://mimir.mimir.svc:9009/api/v1/push
   replicas: 2
   resources:
     limits:

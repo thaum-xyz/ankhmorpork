@@ -279,9 +279,10 @@ local kp =
           securityContext:: null,
 
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
-          remoteWrite: [{
-            url: 'http://mimir.mimir.svc:9009/api/v1/push',
-          }],
+          // TODO: Re-enable after configuring consul for mimir
+          // remoteWrite: [{
+          //   url: 'http://mimir.mimir.svc:9009/api/v1/push',
+          // }],
 
           // remoteRead: [{
           //   url: "http://mimir.mimir.svc:9009/prometheus/api/v1/read",
