@@ -104,7 +104,7 @@ local all = exporter(config) + {
           {
             alert: 'UPSBatteryCritical',
             annotations: {
-              description: 'UPS {{ $labels.instance }} has less than {{ $value | humanizePercent}} battery remaining.',
+              description: 'UPS {{ $labels.instance }} has less than {{ $value | humanizePercentage }} of battery remaining.',
               summary: "UPS exited 'online' mode",
             },
             expr: 'network_ups_tools_battery_charge < 90',
