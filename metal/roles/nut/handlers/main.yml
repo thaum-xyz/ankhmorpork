@@ -1,0 +1,7 @@
+---
+- name: restart nut-client
+  systemd:
+    name: nut-client
+    daemon_reload: yes
+    state: restarted
+    enabled: yes

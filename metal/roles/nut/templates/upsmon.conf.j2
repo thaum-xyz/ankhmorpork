@@ -1,0 +1,30 @@
+{{ ansible_managed | comment }}
+
+{% for monitor in nut_monitors %}
+MONITOR {{ monitor.address }} {{ monitor.power}} {{ monitor.user }} {{ monitor.pass }} {{ monitor.type }}
+{% endfor %}
+
+SHUTDOWNCMD "/opt/ups-exec.sh shutdown"
+
+NOTIFYCMD /usr/sbin/upssched
+
+POLLFREQ 5
+
+POLLFREQALERT 5
+
+HOSTSYNC 15
+
+DEADTIME 15
+
+POWERDOWNFLAG /etc/killpower
+
+NOTIFYFLAG ONLINE	SYSLOG+EXEC
+NOTIFYFLAG ONBATT	SYSLOG+EXEC
+NOTIFYFLAG LOWBATT	SYSLOG+EXEC
+NOTIFYFLAG SHUTDOWN	SYSLOG+WALL+EXEC
+
+RBWARNTIME 43200
+
+NOCOMMWARNTIME 300
+
+FINALDELAY 5

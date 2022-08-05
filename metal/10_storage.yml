@@ -11,11 +11,14 @@
   - block:
     - name: Install dependencies
       package:
-        name: moreutils
+        name: "{{ item }}"
         state: present
+      with_items:
+      - moreutils
+      - smartmontools
     - name: Download smartmon textfile collector script
       get_url:
-        url: "https://github.com/prometheus-community/node-exporter-textfile-collector-scripts/blob/master/smartmon.sh"
+        url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/smartmon.sh"
         dest: "/usr/local/bin/smartmon.sh"
         mode: 0755
     - name: Set global cronjobs (/etc/crontab)

@@ -4,6 +4,13 @@ locales_present:
   - en_GB.UTF-8
 unattended_automatic_reboot: false
 
+nut_monitors:
+- address: qnapups@192.168.2.29
+  power: 0
+  user: admin
+  pass: TODO(paulfantom) - add correct password
+  type: slave
+
 systemd_exporter_enable_ip_accounting: true
 systemd_exporter_enable_restart_count: true
 systemd_exporter_unit_blacklist: '.*.mount|user-runtime-dir@0.service'

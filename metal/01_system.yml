@@ -7,6 +7,7 @@
   - { role: jnv.unattended-upgrades, when: (ansible_os_family == "Debian") }
   - dev-sec.ssh-hardening
   - cloudalchemy.systemd_exporter
+  - nut
 
 - hosts: all
   become: true

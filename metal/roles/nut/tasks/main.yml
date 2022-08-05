@@ -1,0 +1,26 @@
+- name: ensure NUT is installed
+  package:
+    name: nut-client
+    state: present
+  notify: restart nut-client
+
+- name: Configure NUT
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/nut/{{ item }}"
+    owner: nut
+    group: root
+    mode: 0640
+  with_items:
+  - nut.conf
+  - upsmon.conf
+  - upssched.conf
+  notify: restart nut-client
+
+- name: Copy shutdown script
+  template:
+    src: "ups-exec.sh.j2"
+    dest: "/opt/ups-exec.sh"
+    owner: nut
+    group: root
+    mode: 0750

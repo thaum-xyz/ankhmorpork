@@ -1,0 +1,18 @@
+#!/bin/bash
+{{ ansible_managed | comment }}
+
+case $1 in
+	shutdown)
+        logger -t upssched-cmd "Initiating system shutdown due to too long on battery runtime."
+        if [ -f /opt/ups-slack ]; then
+            source /opt/ups-slack
+            curl -X POST "${SLACK_WEBHOOK}" \
+			    -H 'Content-Type: application/json' \
+			    -d '{"text": "Triggered system shutdown on {{ ansible_nodename }}."}'
+        fi
+        shutdown -h now
+		;;
+	*)
+		logger -t upssched-cmd "Unrecognized command: $1"
+		;;
+esac

@@ -1,0 +1,7 @@
+{{ ansible_managed | comment }}
+
+CMDSCRIPT /opt/ups-exec.sh
+
+AT ONBATT * START-TIMER shutdown {{ nut_shutdown_timeout }}
+AT ONLINE * CANCEL-TIMER shutdown
+AT SHUTDOWN * EXECUTE shutdown

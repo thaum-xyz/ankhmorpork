@@ -1,0 +1,9 @@
+nut_monitors: []
+# nut_monitors:
+# - address: ups@192.168.1.1
+#   power: 1
+#   user: admin
+#   pass: password
+#   type: slave
+
+nut_shutdown_timeout: 900
