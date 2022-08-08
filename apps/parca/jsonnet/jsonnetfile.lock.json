@@ -8,8 +8,8 @@
           "subdir": "deploy/lib/parca-agent"
         }
       },
-      "version": "0678514702cbf8dce1fdda98109e58f75bdd76fa",
-      "sum": "e1CSEedAJMLE0YuyMUs++SV+bKkP6MZkHJwgwYK7kEg="
+      "version": "22a2c60d26ba282b4b46d4daac9620f7b5fbbe4f",
+      "sum": "lqMMsyDbrkJY1BeNzC+Ot2UfaRlCDUZbrmtVru2qzl4="
     },
     {
       "source": {
@@ -18,8 +18,8 @@
           "subdir": "deploy/lib/parca"
         }
       },
-      "version": "4de982096c25c77d9e19c94df3879623d2e9e76f",
-      "sum": "pNOj299Y8nXjYMhvxHpeN/VfLLD+xdXXhPnJE8I49a0="
+      "version": "790294ac3518c6edacc68645b3e678b626a6caff",
+      "sum": "dn2ryBP/B+FFwFEwuNYXKSU6tFSoSsjm/wf7QNczTKY="
     }
   ],
   "legacyImports": false

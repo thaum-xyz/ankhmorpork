@@ -2,8 +2,8 @@
 domain: "parca.ankhmorpork.thaum.xyz"
 namespace: &namespace "parca"
 agent:
-  version: "0.9.0-rc.0"  # application-version-from-github: parca-dev/parca-agent
-  image: "ghcr.io/parca-dev/parca-agent:v0.9.0-rc.0"  # application-image-from-github: parca-dev/parca-agent
+  version: "0.9.1"  # application-version-from-github: parca-dev/parca-agent
+  image: "ghcr.io/parca-dev/parca-agent:v0.9.1"  # application-image-from-github: parca-dev/parca-agent
   namespace: *namespace
   stores: ['parca.parca.svc:7070']
   podMonitor: true
@@ -14,15 +14,19 @@ agent:
       cpu: "150m"
       # memory: ""
 parca:
-  version: "0.12.0-rc.0"  # application-version-from-github: parca-dev/parca
-  image: "ghcr.io/parca-dev/parca:v0.12.0-rc.0"  # application-image-from-github: parca-dev/parca
+  version: "0.12.1"  # application-version-from-github: parca-dev/parca
+  image: "ghcr.io/parca-dev/parca:v0.12.1"  # application-image-from-github: parca-dev/parca
   namespace: *namespace
-  replicas: 1
+  replicas: 0
   serviceMonitor: true
   logLevel: "debug"
   resources:
+    requests:
+      cpu: 1000m
+      memory: 2Gi
     limits:
-      memory: "20Gi"
+      cpu: 2000m
+      memory: 10Gi
   config:
     debug_info:
       bucket:
