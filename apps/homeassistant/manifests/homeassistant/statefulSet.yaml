@@ -78,6 +78,7 @@ spec:
       hostNetwork: true
       nodeSelector:
         kubernetes.io/arch: arm64
+      priorityClassName: production-high
       restartPolicy: Always
       serviceAccountName: homeassistant
       volumes:

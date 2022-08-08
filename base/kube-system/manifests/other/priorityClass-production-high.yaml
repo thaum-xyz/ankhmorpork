@@ -1,0 +1,8 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+description: High priority production applications
+metadata:
+  name: production-high
+preemptionPolicy: PreemptLowerPriority
+value: 30000
+globalDefault: false

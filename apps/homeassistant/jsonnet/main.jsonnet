@@ -129,6 +129,7 @@ local all = {
             },
           },
           spec+: {
+            priorityClassName: 'production-high',
             containers: std.map(function(c) c {
               volumeMounts+: [{
                 mountPath: '/config/configuration.yaml',
