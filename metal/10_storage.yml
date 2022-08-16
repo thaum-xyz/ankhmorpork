@@ -18,11 +18,11 @@
         url: "https://github.com/prometheus-community/node-exporter-textfile-collector-scripts/blob/master/smartmon.sh"
         dest: "/usr/local/bin/smartmon.sh"
         mode: 0755
-    - name: Set global cronjobs (/etc/crontab)
+    - name: Set SMART metrics collection cronjob
       cron:
-        cron_file: "/etc/crontab"
+        cron_file: "/etc/cron.d/metrics"
         user: root
-        name: "smartmon-metrics"
+        name: "smartmon"
         minute: "*/10"
         job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
     when: enable_smartmon is defined

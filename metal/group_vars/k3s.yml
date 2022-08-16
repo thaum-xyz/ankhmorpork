@@ -12,9 +12,9 @@ k3s_server_config:
   - "system-reserved=cpu=100m,memory=200Mi"
   - "kube-reserved=cpu=100m,memory=300Mi"
   kube-controller-manager-arg:
-  - "address={{ k3s_master_ip }}"
+  - "bind-address={{ k3s_master_ip }}"
   kube-scheduler-arg:
-  - "address={{ k3s_master_ip }}"
+  - "bind-address={{ k3s_master_ip }}"
   etcd-expose-metrics: "true"
   kube-proxy-arg:
   - "metrics-bind-address=0.0.0.0"
