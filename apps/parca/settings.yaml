@@ -2,8 +2,8 @@
 domain: "parca.ankhmorpork.thaum.xyz"
 namespace: &namespace "parca"
 agent:
-  version: "0.9.1"  # application-version-from-github: parca-dev/parca-agent
-  image: "ghcr.io/parca-dev/parca-agent:v0.9.1"  # application-image-from-github: parca-dev/parca-agent
+  version: "0.9.2-dev"  # application-version-from-github: parca-dev/parca-agent
+  image: "ghcr.io/parca-dev/parca-agent:sha256-c098d5ba1880ff9ed035b9ad0a70f291adb2d40e9006976f5c56448a36182385.sig"  # application-image-from-github: parca-dev/parca-agent
   namespace: *namespace
   stores: ['parca.parca.svc:7070']
   podMonitor: true
