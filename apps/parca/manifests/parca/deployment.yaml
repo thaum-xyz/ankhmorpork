@@ -9,7 +9,7 @@ metadata:
   name: parca
   namespace: parca
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: observability
