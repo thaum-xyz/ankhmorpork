@@ -144,7 +144,7 @@ local all = {
       ],
     },
     cronjob: {
-      apiVersion: 'batch/v1beta1',
+      apiVersion: 'batch/v1',
       kind: 'CronJob',
       metadata: $.backup._metadata,
       spec: {
