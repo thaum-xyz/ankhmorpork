@@ -8,7 +8,7 @@ metadata:
   name: mimir
   namespace: mimir
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/component: server
@@ -30,7 +30,7 @@ spec:
           value: Europe/Berlin
         args:
         - '--config.file=/etc/mimir/config.yaml'
-        image: grafana/mimir:2.0.0
+        image: grafana/mimir:2.2.0
         imagePullPolicy: IfNotPresent
         name: mimir
         ports:
