@@ -29,10 +29,9 @@ spec:
         - /bin/parca-agent
         - --log-level=info
         - --node=$(NODE_NAME)
-        - --kubernetes
-        - --store-address=parca.parca.svc:7070
-        - --insecure
-        - --insecure-skip-verify
+        - --remote-store-address=parca.parca.svc:7070
+        - --remote-store-insecure
+        - --remote-store-insecure-skip-verify
         env:
         - name: NODE_NAME
           valueFrom:

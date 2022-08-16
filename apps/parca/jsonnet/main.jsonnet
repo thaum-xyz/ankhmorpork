@@ -28,9 +28,15 @@ local all = {
           },
         },
       },
-    }
+    },
+    podSecurityPolicy+: {
+      apiVersion: 'policy/v1',
+    },
   },
   parca: parca(config.parca) + {
+    podSecurityPolicy+: {
+      apiVersion: 'policy/v1',
+    },
     deployment+: {
       spec+: {
         template+: {
