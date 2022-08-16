@@ -8,8 +8,8 @@
           "subdir": "grafonnet"
         }
       },
-      "version": "3082bfca110166cd69533fa3c0875fdb1b68c329",
-      "sum": "4/sUV0Kk+o8I+wlYxL9R6EPhL/NiLfYHk+NXlU64RUk="
+      "version": "30280196507e0fe6fa978a3e0eaca3a62844f817",
+      "sum": "342u++/7rViR/zj2jeJOjshzglkZ1SY+hFNuyCBFMdc="
     },
     {
       "source": {
@@ -18,8 +18,8 @@
           "subdir": "grafana-builder"
         }
       },
-      "version": "eac3c4cf1c2d38dc11d63b6acbda3c8b455ab712",
-      "sum": "GRf2GvwEU4jhXV+JOonXSZ4wdDv8mnHBPCQ6TUVd+g8="
+      "version": "a2ba95acc8b7653d33bd57075678d8de2a64e5b3",
+      "sum": "1Ge62JmmPDq7fWyDAt3uCTobGEj4sJdbkqxRGWK22p0="
     },
     {
       "source": {
@@ -28,8 +28,8 @@
           "subdir": ""
         }
       },
-      "version": "aead52cf40f07c39794d20cc17ed08343e8ece01",
-      "sum": "S9oOow4cXQGfrAiwpOS1tqmCZiciBxMJmh/5BBdxj7I="
+      "version": "b8f44bb7be728423836bef0e904ec7166895a34b",
+      "sum": "LCgSosxceeYuoau5fYSPtE5eXOFe46DxexfkrctUv7c="
     },
     {
       "source": {
@@ -38,8 +38,8 @@
           "subdir": ""
         }
       },
-      "version": "dfba2975946008f4b1e51fd5e554607331118fd0",
-      "sum": "2VXzu8ERsmBJRXatQ0vH13Ik0pr7682iairpv3l7tzA="
+      "version": "8b121c41b6c0741f1603b2d75ccd324050c4bd03",
+      "sum": "4CxwtfVX/OIS5w5+FkExG5evxiatOEMhaWChWaFc9S4="
     },
     {
       "source": {
@@ -48,8 +48,8 @@
           "subdir": "apps/coredns"
         }
       },
-      "version": "d07a829724ccc732bb15f8e2559bda95c800cca5",
-      "sum": "nYp3K0QxpwYqzSiofEzcMxySYBzBNmMVi+tEaZE60T8="
+      "version": "82f8ef50974d5dad69c243b6cba3a51b4645ff0b",
+      "sum": "W0UwCzrPHr4ZYQoJWYuCGUXC6gcxiaS1QnVTgC7S0MY="
     },
     {
       "source": {
@@ -58,7 +58,7 @@
           "subdir": "utils"
         }
       },
-      "version": "d07a829724ccc732bb15f8e2559bda95c800cca5",
+      "version": "82f8ef50974d5dad69c243b6cba3a51b4645ff0b",
       "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
     }
   ],

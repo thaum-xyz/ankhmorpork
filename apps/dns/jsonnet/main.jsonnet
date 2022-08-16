@@ -48,7 +48,7 @@ local all = {
         template+: {
           metadata+: {
             annotations+: {
-              'parca.dev/scrape': "true",
+              'parca.dev/scrape': 'true',
             },
           },
           spec+: {
