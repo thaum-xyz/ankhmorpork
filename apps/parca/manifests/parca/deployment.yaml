@@ -35,22 +35,16 @@ spec:
         - --debug-infod-http-request-timeout=5m
         image: ghcr.io/parca-dev/parca:v0.12.1
         livenessProbe:
-          exec:
-            command:
-            - /grpc_health_probe
-            - -v
-            - -addr=:7070
+          grpc:
+            port: 7070
           initialDelaySeconds: 5
         name: parca
         ports:
         - containerPort: 7070
           name: http
         readinessProbe:
-          exec:
-            command:
-            - /grpc_health_probe
-            - -v
-            - -addr=:7070
+          grpc:
+            port: 7070
           initialDelaySeconds: 10
         resources:
           limits:

@@ -46,6 +46,27 @@ local all = {
               "parca.dev/scrape": "true",
             },
           },
+          spec+: {
+            containers: std.map(
+              function(c) if c.name == "parca" then
+              c {
+                readinessProbe: {
+                  grpc: {
+                    port: 7070
+                  },
+                  initialDelaySeconds: 10,
+                },
+                livenessProbe: {
+                  grpc: {
+                    port: 7070
+                  },
+                  initialDelaySeconds: 5,
+                },
+              }
+              else c,
+              super.containers
+            ),
+          },
         },
       },
     },
