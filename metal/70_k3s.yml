@@ -12,7 +12,7 @@
         path: /usr/sbin/iptables-legacy
       when: ansible_os_family == 'Debian'
 
-- hosts: k3s-master
+- hosts: k3s_control_plane
   become: true
   any_errors_fatal: true
   roles:
@@ -38,7 +38,7 @@
         dest: "/var/lib/rancher/k3s/server/manifests/{{ item | basename }}"
       with_fileglob: "templates/manifests/*.yaml"
 
-- hosts: k3s-node
+- hosts: k3s_nodes
   become: true
   serial: 2
   roles:

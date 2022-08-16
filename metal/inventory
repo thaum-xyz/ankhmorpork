@@ -17,16 +17,16 @@ node0[1:2]
 [nvidia]
 metal01
 
-[k3s-master]
+[k3s_control_plane]
 master01
 
-[k3s-node]
+[k3s_nodes]
 node0[1:2]
 metal01
 
 [k3s:children]
-k3s-master
-k3s-node
+k3s_control_plane
+k3s_nodes
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
