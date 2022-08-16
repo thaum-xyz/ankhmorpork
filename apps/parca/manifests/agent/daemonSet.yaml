@@ -37,7 +37,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: ghcr.io/parca-dev/parca-agent:sha256-c098d5ba1880ff9ed035b9ad0a70f291adb2d40e9006976f5c56448a36182385.sig
+        image: ghcr.io/parca-dev/parca-agent:main-c09f3b16
         name: parca-agent
         ports:
         - containerPort: 7071
