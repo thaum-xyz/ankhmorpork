@@ -1,5 +1,5 @@
 ---
-k3s_version: v1.24.3+k3s1
+k3s_version: v1.24.4-rc1+k3s1
 k3s_master_ip: "{{ hostvars[groups['k3s_control_plane'][0]]['ansible_default_ipv4']['address'] }}"
 
 k3s_server_config:
