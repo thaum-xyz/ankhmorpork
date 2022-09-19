@@ -4,7 +4,8 @@ INPUT_DIR="$1"
 OUTPUT_DIR="$2"
 
 PROM_PREFIX="pictures"
-PROM_MAX_AGE="7200"  # 2h
+# MAX_AGE needs to account for job scheduling frequency and job runtime
+PROM_MAX_AGE="2851200"  # 33d
 
 # PROM_PGW=""
 
