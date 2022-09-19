@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: overseer
     app.kubernetes.io/part-of: overseer
-    app.kubernetes.io/version: 1.29.1
+    app.kubernetes.io/version: 1.30.0
   name: overseer
   namespace: multimedia
 spec:
