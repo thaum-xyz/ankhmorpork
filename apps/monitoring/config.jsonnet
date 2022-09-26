@@ -26,8 +26,8 @@
     },
   },
   prometheus+: {
-    // version: '2.36.2',  // application-version-from-github: prometheus/prometheus
-    // image: 'quay.io/prometheus/prometheus:v2.36.2',  // application-image-from-github: prometheus/prometheus
+    // version: '2.37.1',  // application-version-from-github: prometheus/prometheus
+    // image: 'quay.io/prometheus/prometheus:v2.37.1',  // application-image-from-github: prometheus/prometheus
     externalLabels: {
       cluster: 'ankhmorpork',
     },
@@ -125,8 +125,8 @@
     },
   },
   nodeExporter+: {
-    // version: '1.3.0',
-    // image: 'quay.io/prometheus/node-exporter:v1.3.0',
+    version: '1.4.0',
+    image: 'quay.io/prometheus/node-exporter:v1.4.0',
     filesystemMountPointsExclude:: '^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)',
     mixin+: {
       _config+: {
