@@ -15,7 +15,7 @@ data:
     !include automations.yaml\n#cloud:\nconfig:\ncounter:\ndhcp:\nenergy:\nfrontend:\nhistory:\nimage:\n#input_boolean:
     # configured in lower part of the file\ninput_datetime: # configured in lower
     part of the file\ninput_number:\n#input_select:\ninput_text:\nlogbook:\nmap:\n#media_source:\nmobile_app:\nmy:\nperson:\nscene:
-    !include scenes.yaml\nscript: !include scripts.yaml\nssdp:\nstream:\nsun:\nsystem_health:\n#tag:\ntimer:\n#updater:\nwebhook:\n#zeroconf:\nzone:\n#
+    !include scenes.yaml\nschedule:\nscript: !include scripts.yaml\nssdp:\nstream:\nsun:\nsystem_health:\n#tag:\ntimer:\n#updater:\nwebhook:\n#zeroconf:\nzone:\n#
     END OF default_config\n\nwake_on_lan:\nmedia_extractor:\n\ngroup:\n  people:\n
     \   name: People\n    entities:\n    - person.pawel\n    - person.adrianna\n\nprometheus:\n
     \ namespace: hass\n  filter:\n    exclude_domains:\n    - device_tracker\n    -

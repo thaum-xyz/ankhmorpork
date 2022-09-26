@@ -53,6 +53,7 @@ mobile_app:
 my:
 person:
 scene: !include scenes.yaml
+schedule:
 script: !include scripts.yaml
 ssdp:
 stream:
