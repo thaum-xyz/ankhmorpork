@@ -18,6 +18,7 @@ local config = std.parseYaml(configYAML)[0];
 
 local all = {
   agent: agent(config.agent) + {
+    podSecurityPolicy+:: {},
     daemonSet+: {
       spec+: {
         template+: {
@@ -31,6 +32,7 @@ local all = {
     },
   },
   parca: parca(config.parca) + {
+    podSecurityPolicy+:: {},
     deployment+: {
       spec+: {
         template+: {
