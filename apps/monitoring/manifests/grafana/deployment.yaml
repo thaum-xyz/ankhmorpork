@@ -53,8 +53,6 @@ spec:
           value: Email:X-Auth-Request-Email
         - name: GF_SNAPSHOTS_EXTERNAL_ENABLED
           value: "false"
-        - name: GF_INSTALL_PLUGINS
-          value: devopsprodigy-kubegraf-app
         image: grafana/grafana:9.1.7
         name: grafana
         ports:
