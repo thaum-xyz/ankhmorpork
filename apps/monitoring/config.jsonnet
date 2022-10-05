@@ -181,6 +181,7 @@
       { name: 'GF_AUTH_PROXY_HEADER_PROPERTY', value: 'username' },
       { name: 'GF_AUTH_PROXY_HEADERS', value: 'Email:X-Auth-Request-Email' },
       { name: 'GF_SNAPSHOTS_EXTERNAL_ENABLED', value: 'false' },
+      { name: 'GF_INSTALL_PLUGINS', value: 'devopsprodigy-kubegraf-app,grafana-piechart-panel' },
     ],
   },
   // Following are not in kube-prometheus
