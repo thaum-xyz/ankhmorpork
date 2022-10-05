@@ -1,5 +1,5 @@
 [Unit]
-Description=Lightweight Kubernetes
+Description=Lightweight Kubernetes {{ k3s_version | default(omit) }}
 Documentation=https://k3s.io
 After=network-online.target
 
