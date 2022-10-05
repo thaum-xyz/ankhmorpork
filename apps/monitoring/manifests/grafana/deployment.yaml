@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: grafana
     app.kubernetes.io/name: grafana
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 8.2.1
+    app.kubernetes.io/version: 9.1.7
   name: grafana
   namespace: monitoring
 spec:
@@ -18,15 +18,15 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/grafana-config: 11905dc0549e921f5d3befd288dbf9d5
-        checksum/grafana-dashboardproviders: 4278ba47b6379fd0ee12ad9c15fedda2
-        checksum/grafana-datasources: 3a90aee49474dd8f8da591aaa4d3d215
+        checksum/grafana-config: 0ef4c7db13c72102f31c8ad529156e4e
+        checksum/grafana-dashboardproviders: 2d7e919d4989f84795096640ec87a55e
+        checksum/grafana-datasources: 5a2b4b9dc83293c1727c73f13508e127
         parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: grafana
         app.kubernetes.io/name: grafana
         app.kubernetes.io/part-of: kube-prometheus
-        app.kubernetes.io/version: 8.2.1
+        app.kubernetes.io/version: 9.1.7
     spec:
       automountServiceAccountToken: false
       containers:
@@ -55,7 +55,7 @@ spec:
           value: "false"
         - name: GF_INSTALL_PLUGINS
           value: devopsprodigy-kubegraf-app,grafana-piechart-panel
-        image: grafana/grafana:8.2.1
+        image: grafana/grafana:9.1.7
         name: grafana
         ports:
         - containerPort: 3000

@@ -153,8 +153,8 @@
     },
   },
   grafana+: {
-    version: '8.2.1',
-    image: 'grafana/grafana:8.2.1',
+    version: '9.1.7',
+    image: 'grafana/grafana:9.1.7',
     datasources: [{
       name: 'Prometheus',
       type: 'prometheus',
