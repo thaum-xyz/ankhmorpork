@@ -1,10 +1,14 @@
 ---
+roles:
 - name: cloudalchemy.systemd_exporter
 - name: oefenweb.locales
   version: v1.0.49
 - name: jnv.unattended-upgrades
   version: v1.12.2
-- name: dev-sec.ssh-hardening
 - name: paulfantom.raspberry
 - name: paulfantom.system
 - name: xanmanning.k3s
+
+collections:
+- name: devsec.hardening
+  version: 8.2.0
