@@ -82,6 +82,8 @@ spec:
           name: grafana-storage
         - mountPath: /etc/grafana/provisioning/datasources
           name: grafana-datasources
+        - mountPath: /tmp
+          name: tmp
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
@@ -95,3 +97,5 @@ spec:
       - name: grafana-datasources
         secret:
           secretName: grafana-datasources
+      - emptyDir: {}
+        name: tmp

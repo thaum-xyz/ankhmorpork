@@ -468,6 +468,10 @@ local kp =
                       mountPath: '/etc/grafana/provisioning/datasources',
                       name: 'grafana-datasources',
                     },
+                    {
+                      mountPath: '/tmp',
+                      name: 'tmp',
+                    },
                   ],
                 }, super.containers,
               ),
@@ -489,6 +493,10 @@ local kp =
                   secret: {
                     secretName: 'grafana-datasources',
                   },
+                },
+                {
+                  name: 'tmp',
+                  emptyDir: {},
                 },
               ],
             },
