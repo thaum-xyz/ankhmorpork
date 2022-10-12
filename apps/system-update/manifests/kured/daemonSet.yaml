@@ -17,8 +17,6 @@ spec:
       app.kubernetes.io/part-of: kured
   template:
     metadata:
-      annotations:
-        parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/name: kured
         app.kubernetes.io/part-of: kured
@@ -55,8 +53,6 @@ spec:
         securityContext:
           privileged: true
       hostPID: true
-      nodeSelector:
-        kubernetes.io/arch: arm64
       restartPolicy: Always
       serviceAccountName: kured
       tolerations:

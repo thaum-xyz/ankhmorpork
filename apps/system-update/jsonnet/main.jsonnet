@@ -6,25 +6,7 @@ local configYAML = (importstr '../settings.yaml');
 local config = std.parseYaml(configYAML)[0];
 
 local all = {
-  kured: kured(config.kured) {
-    daemonSet+: {
-      spec+: {
-        template+: {
-          metadata+: {
-            annotations+: {
-              'parca.dev/scrape': "true",
-            },
-          },
-          spec+: {
-            nodeSelector: {
-              'kubernetes.io/arch': 'arm64',  // TODO: Move NFS storage to QNAP and allow amd64 hosts to reboot
-            },
-          },
-        },
-      },
-
-    },
-  },
+  kured: kured(config.kured)
 };
 
 {
