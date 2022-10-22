@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: mealie
+    app.kubernetes.io/version: 1.0.0beta-5
+  name: api
+  namespace: recipe-next
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: api
+      app.kubernetes.io/part-of: mealie
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: api
+        app.kubernetes.io/part-of: mealie
+        app.kubernetes.io/version: 1.0.0beta-5
+    spec:
+      containers:
+      - env:
+        - name: ALLOW_SIGNUP
+          value: "false"
+        - name: DB_ENGINE
+          value: sqlite
+        image: hkotel/mealie:api-v1.0.0beta-5
+        imagePullPolicy: IfNotPresent
+        name: api
+        ports:
+        - containerPort: 9000
+          name: http
+        resources:
+          requests:
+            cpu: 54m
+            memory: 150Mi
+        volumeMounts:
+        - mountPath: /app/data
+          name: appdata
+      restartPolicy: Always
+      serviceAccountName: api
+      volumes:
+      - name: appdata
+        persistentVolumeClaim:
+          claimName: data

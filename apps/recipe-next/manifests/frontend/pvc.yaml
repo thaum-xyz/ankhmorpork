@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: mealie
+    app.kubernetes.io/version: 1.0.0beta-5
+  name: data
+  namespace: recipe-next
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: qnap-nfs-storage

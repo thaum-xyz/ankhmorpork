@@ -1,0 +1,26 @@
+---
+common:
+  version: 1.0.0beta-5  # application-version-from-github: hay-kot/mealie
+  namespace: recipe-next
+  domain: recipe-next.ankhmorpork.thaum.xyz
+  storage:
+    name: data
+    pvcSpec:
+      storageClassName: qnap-nfs-storage
+      accessModes: ['ReadWriteMany']
+      resources:
+        requests:
+          storage: '1Gi'
+
+frontend:
+  image: hkotel/mealie:frontend-v1.0.0beta-5  # application-image-from-github: hay-kot/mealie
+
+api:
+  image: hkotel/mealie:api-v1.0.0beta-5  # application-image-from-github: hay-kot/mealie
+  resources:
+    requests:
+      cpu: 54m
+      memory: '150Mi'
+  #  limits:
+  #    cpu: 400m
+  #    memory: '500Mi'
