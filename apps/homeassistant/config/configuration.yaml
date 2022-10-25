@@ -331,11 +331,11 @@ plant:
 switch:
   - platform: wake_on_lan
     name: pawel-pc
-    host: "192.168.2.51"
+    host: "192.168.2.50"
     mac: !secret pawel_pc_mac
   - platform: wake_on_lan
     name: adus-pc
-    host: "192.168.2.50"
+    host: "192.168.2.51"
     mac: !secret adus_pc_mac
 
 google_assistant:
