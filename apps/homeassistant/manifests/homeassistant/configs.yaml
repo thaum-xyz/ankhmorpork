@@ -130,9 +130,9 @@ data:
     8\n    max_temperature: 32\n    min_brightness: 2500\n    max_brightness: 60000\n\n#notify:\n#
     \ - platform: slack\n#    name: slack\n#    api_key: !secret slack_api_key\n#
     \   default_channel: '#home'\n#    username: \"home-assistant\"\n\nswitch:\n  -
-    platform: wake_on_lan\n    name: pawel-pc\n    host: \"192.168.2.50\"\n    mac:
+    platform: wake_on_lan\n    name: pawel-pc\n    host: \"192.168.2.51\"\n    mac:
     !secret pawel_pc_mac\n  - platform: wake_on_lan\n    name: adus-pc\n    host:
-    \"192.168.2.51\"\n    mac: !secret adus_pc_mac\n\ngoogle_assistant:\n  project_id:
+    \"192.168.2.50\"\n    mac: !secret adus_pc_mac\n\ngoogle_assistant:\n  project_id:
     ankhhomeassistant\n  service_account: !include google_service_account.json\n  report_state:
     true\n\n#google:\n#  client_id: !secret google_client_id\n#  client_secret: !secret
     google_client_secret\n#  calendar_access: \"read_only\"\n\nsonoff:\n  username:
