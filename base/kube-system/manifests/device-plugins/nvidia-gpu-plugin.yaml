@@ -15,9 +15,11 @@ spec:
       priorityClassName: "system-node-critical"
       runtimeClassName: "nvidia"
       containers:
-      - image: nvidia/k8s-device-plugin:v0.10.0
-        #args: ["--fail-on-init-error=true"]
+      - image: nvcr.io/nvidia/k8s-device-plugin:v0.12.3
         name: nvidia-device-plugin-ctr
+        env:
+        - name: FAIL_ON_INIT_ERROR
+          value: "false"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
