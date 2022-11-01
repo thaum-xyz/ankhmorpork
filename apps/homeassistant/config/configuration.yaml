@@ -196,7 +196,7 @@ template:
         {% if calendars|length > 1 %}
         {{ calendars[1][0] }} {{ calendars[1][1] }}
         {% else %}
-        
+
         {% endif %}
       line4: >
         {%
@@ -225,7 +225,7 @@ template:
         {% if calendars|length > 2 and calendars[2][1] != "-- NEXT DAY --" %}
         {{ calendars[2][0] }} {{ calendars[2][1] }}
         {% else %}
-        
+
         {% endif %}
 
 input_boolean:
@@ -235,9 +235,6 @@ input_boolean:
   projector_screen:
     name: Projector Screen State
     icon: mdi:projector-screen-variant-outline
-  door_balcony:
-    name: Balcony Door
-    icon: mdi:door
 
 input_select:
   speakers:
