@@ -238,6 +238,9 @@ data:
       projector_screen:
         name: Projector Screen State
         icon: mdi:projector-screen-variant-outline
+      movie_time:
+        name: Movie Time
+        icon: mdi:movie-open
 
     input_select:
       speakers:
@@ -399,6 +402,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2022.10.5
+    app.kubernetes.io/version: 2022.11.1
   name: homeassistant-configs
   namespace: homeassistant
