@@ -1,0 +1,17 @@
+# Config reference: https://github.com/kubernetes-sigs/node-feature-discovery/blob/master/deployment/helm/node-feature-discovery/values.yaml
+
+master:
+  resources:
+    requests:
+      cpu: 10m
+      # memory: 128Mi
+
+worker:
+  resources:
+    requests:
+      cpu: 10m
+
+  config:
+    core:
+      sleepInterval: 300s
+    
