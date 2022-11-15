@@ -14,4 +14,7 @@ worker:
   config:
     core:
       sleepInterval: 300s
-    
+      labelSources:
+        - "all"
+        - "-cpu"
+
