@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./base/node-feature-discovery/kustomization.yaml
+  path: ./base/node-feature-discovery
   prune: true
   sourceRef:
     kind: GitRepository
