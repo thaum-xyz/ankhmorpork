@@ -94,9 +94,14 @@ local all = {
           http: {
             paths: [{
               path: '/',
+              pathType: 'Prefix',
               backend: {
-                serviceName: 'thanos-receive-router',
-                servicePort: 19291,
+                service: {
+                  name: 'thanos-receive-router',
+                  port: {
+                    name: 'remote-write',
+                  },
+                },
               },
             }],
           },
