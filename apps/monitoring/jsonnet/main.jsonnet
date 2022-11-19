@@ -223,6 +223,19 @@ local kp =
     },
 
     nodeExporter+: {
+      serviceMonitor+: {
+        spec+: {
+          endpoints: std.map(
+            function(e) if e.port == 'https' then
+              e {
+                interval: '20s',
+                scrapeTimeout: '20s',
+              }
+            else e,
+            super.endpoints
+          ),
+        },
+      },
       daemonset+: {
         spec+: {
           template+: {
