@@ -5,8 +5,7 @@ local i = t.receiveIngestor(settings {
   replicas: 1,
   replicaLabels: ['receive_replica'],
   replicationFactor: 1,
-  // Disable shipping to object storage for the purposes of this setup
-  objectStorageConfig: null,
+  // objectStorageConfig: null,
   serviceMonitor: true,
 });
 
@@ -14,8 +13,7 @@ local r = t.receiveRouter(settings {
   replicas: 1,
   replicaLabels: ['receive_replica'],
   replicationFactor: 1,
-  // Disable shipping to object storage for the purposes of this setup
-  objectStorageConfig: null,
+  // objectStorageConfig: null,
   endpoints: i.endpoints,
 });
 
@@ -44,6 +42,19 @@ local all = {
     for hashring in std.objectFields(i.ingestors)
     for resource in std.objectFields(i.ingestors[hashring])
     if i.ingestors[hashring][resource] != null
+  },
+  configs: {
+    [settings.objectStorageConfig.name]: {
+      apiVersion: 'v1',
+      kind: 'Secret',
+      metadata: {
+        name: settings.objectStorageConfig.name,
+        namespace: settings.namespace,
+      },
+      data: {
+        [settings.objectStorageConfig.key]: std.base64(std.toString(settings.objectStorageConfig.content)),
+      },
+    },
   },
 };
 

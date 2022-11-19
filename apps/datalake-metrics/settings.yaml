@@ -3,13 +3,18 @@ version: 'v0.29.0'  # application-version-from-github: thanos-io/thanos
 image: "quay.io/thanos/thanos:v0.29.0"  # application-image-from-github: thanos-io/thanos
 namespace: "datalake-metrics"
 imagePullPolicy: 'IfNotPresent'
-objectStorageConfig:
-  name: 'thanos-objectstorage'
-  key: 'thanos.yaml'
 hashringConfigMapName: 'hashring-config'
 volumeClaimTemplate:
   spec:
     accessModes: ['ReadWriteOnce']
     resources:
       requests:
-        storage: '10Gi'
+        storage: '100Gi'
+objectStorageConfig:
+  name: 'thanos-objectstorage'
+  key: 'thanos.yaml'
+  content:
+    type: FILESYSTEM
+    config:
+      directory: /var/thanos/store/data
+    prefix: ""
