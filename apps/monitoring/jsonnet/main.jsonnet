@@ -292,10 +292,9 @@ local kp =
           securityContext:: null,
 
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
-          // TODO: Re-enable after configuring consul for mimir
-          // remoteWrite: [{
-          //   url: 'http://mimir.mimir.svc:9009/api/v1/push',
-          // }],
+          remoteWrite: [{
+            url: 'http://thanos-receive-ingestor-default.datalake-metrics.svc:19291/api/v1/receive',
+          }],
 
           // remoteRead: [{
           //   url: "http://mimir.mimir.svc:9009/prometheus/api/v1/read",
