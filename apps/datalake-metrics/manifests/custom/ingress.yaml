@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/auth-realm: Authentication Required
+    nginx.ingress.kubernetes.io/auth-secret: thanos-receive-ingress-auth
+    nginx.ingress.kubernetes.io/auth-type: basic
+  name: thanos-receive
+  namespace: datalake-metrics
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: metrics.datalake.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: thanos-receive-router
+          servicePort: 19291
+        path: /
+  tls:
+  - hosts:
+    - metrics.datalake.ankhmorpork.thaum.xyz
+    secretName: thanos-receive-ingress-tls

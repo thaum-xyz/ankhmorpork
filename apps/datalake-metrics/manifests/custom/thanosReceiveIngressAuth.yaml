@@ -1,0 +1,12 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: thanos-receive-ingress-auth
+  namespace: datalake-metrics
+spec:
+  encryptedData:
+    auth: AgDJqfrb+mSzHQ9DsiuO6iF+TYeS4EdHtM2l2ds9XlX+by5P3pmHHwY/gMSCfgyDUfLOV8+gaBmwGAkybDUJ9Aijc3O/YvCIR4clnm0DvvefZ2L2TlrApPGZdOjm8Rvgsa1D10ZLrav5yv/krBEgf10cShh6HvABidEZt+mbbVsSQ35cyM4mK60GWIDJyNIqxVn3dl2TxAQFQSpNxPlj5lo7K6qg7vobbp9oV7yX6JTAmqgN2kUNiFcvJtSulchFHnss1ZKtG5PSm1Sl7T8gdoQrfKlMu+jp2o86HXl1UtAf1Zx/BKAWpWl/lHTtuM2bK2r1ET7StEhuenLZUPgE6D8wqVqk95WqIcKP/usuVP7ztPEr/rns6Nm5WfXWc6EDAtPRzkYWcAxnR04uRB+PzRYKDeb/EpqfPuNK8O65/OFwzBeMykmIHZNvWKL18tH1OQeDr1+zgiwzkcV/4olm2g1Q2Y2zKQA5K2c7wf3uA+WqgXofB26ZOYkHuJ3Vpgy5udTxpLToUlCYSxn1dVd7ouitZkIjrLWFPDZORw0eIX/JiyabtYeLnEQOZDJQVkdHNoWyU/IuI6nRyo8q0ltzrdezpHUNld2HwBZd9PbuJ2dz0Asm77apeqRRTUoFOXMThhO/RVS/l5kO1SiI+2Ef1WANYMP0sBckhzdOJ7VuoEkbPsBarvZJvPivWCew7f+og5mIHfoxda2t/xhdBIbZgXRTHjOTUT57yzxP237/v4QV1rx47vc3L87MKNsJei1K
+  template:
+    metadata:
+      name: thanos-receive-ingress-auth
+      namespace: datalake-metrics
