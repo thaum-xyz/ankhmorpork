@@ -8,6 +8,7 @@ spec:
   path: ./apps/datalake-metrics/manifests
   prune: true
   force: true
+  suspend: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
