@@ -294,6 +294,8 @@ local kp =
           // FIXME: reenable
           securityContext:: null,
 
+          logLevel: 'debug',
+
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
           remoteWrite: [{
             url: 'http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive',
