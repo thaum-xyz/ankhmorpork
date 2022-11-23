@@ -37,6 +37,7 @@ spec:
         - --collector.netclass.ignored-devices=^(veth.*|[a-f0-9]{15})$
         - --collector.netdev.device-exclude=^(veth.*|[a-f0-9]{15})$
         - --collector.textfile.directory=/host/textfile
+        - --log.level=debug
         image: quay.io/prometheus/node-exporter:v1.4.0
         name: node-exporter
         resources:
@@ -69,6 +70,7 @@ spec:
           readOnly: true
       - args:
         - --logtostderr
+        - --v=9
         - --secure-listen-address=[$(IP)]:9100
         - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
         - --upstream=http://127.0.0.1:9100/
