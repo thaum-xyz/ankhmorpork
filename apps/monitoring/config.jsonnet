@@ -33,7 +33,6 @@
     },
     enableFeatures: [
       'memory-snapshot-on-shutdown',
-      'new-service-discovery-manager',
     ],
     resources: {
       requests: { cpu: '140m', memory: '1900Mi' },
