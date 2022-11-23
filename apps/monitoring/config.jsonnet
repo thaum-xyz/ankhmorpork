@@ -32,7 +32,6 @@
       cluster: 'ankhmorpork',
     },
     enableFeatures: [
-      'remote-write-receiver',
       'memory-snapshot-on-shutdown',
       'new-service-discovery-manager',
     ],

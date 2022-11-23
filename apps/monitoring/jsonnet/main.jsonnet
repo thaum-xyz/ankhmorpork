@@ -295,9 +295,9 @@ local kp =
           securityContext:: null,
 
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
-          remoteWrite: [{
-            url: 'http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive',
-          }],
+          // remoteWrite: [{
+          //   url: 'http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive',
+          // }],
 
           // remoteRead: [{
           //   url: "http://mimir.mimir.svc:9009/prometheus/api/v1/read",

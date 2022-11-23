@@ -31,7 +31,6 @@ spec:
       namespace: monitoring
       port: web
   enableFeatures:
-  - remote-write-receiver
   - memory-snapshot-on-shutdown
   - new-service-discovery-manager
   externalLabels:
@@ -54,8 +53,6 @@ spec:
   podMonitorSelector: {}
   probeNamespaceSelector: {}
   probeSelector: {}
-  remoteWrite:
-  - url: http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive
   replicas: 2
   resources:
     limits:
