@@ -1,7 +1,0 @@
-apiVersion: v1
-data:
-  thanos.yaml: eyJjb25maWciOiB7ImRpcmVjdG9yeSI6ICIvdmFyL3RoYW5vcy9zdG9yZS9kYXRhIn0sICJwcmVmaXgiOiAiIiwgInR5cGUiOiAiRklMRVNZU1RFTSJ9
-kind: Secret
-metadata:
-  name: thanos-objectstorage
-  namespace: datalake-metrics

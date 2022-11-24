@@ -9,14 +9,21 @@ volumeClaimTemplate:
     accessModes: ['ReadWriteOnce']
     resources:
       requests:
-        storage: '100Gi'
+        storage: '30Gi'
 objectStorageConfig:
   name: 'thanos-objectstorage'
   key: 'thanos.yaml'
-  content:
-    type: FILESYSTEM
+  encryptedData:
+    ACCESS_KEY: AgAnW6Ar9rMIXJAb2H2uaJkYppB9h4NG/slkshNwRy+s2KTQuxjic5SdinzLatFWIgETHVhUbiV1mvgCZbrtc5Wc36q+TDBD5D+GmcdDLwC+1X2NQf+5fYEc5aJVjG/RlNhb4AWDzh3QPN8xjrad+Wbar0ixrePvWJLYxuQcxH+PBgaW80HGhCzeMoZVTTVyl8QADU5+C2Awc3zDFJ7MZbM1qitsBnJ9Zjo5ZYHCsdMM7JJXnYyA4dCkCj9nflVuBB1/Iljdjipb9oq7xn6P7RIgB9krULU8IzkSNgZVjQtImBOIKLCGyhPSbUlUtj5HPMqdyOVUx+US46tSTRU8M3TrGI+M81BYMAPtUPWqgafY4spfpKIo+D+L7sLzD2aOU00pbwZvffcazSZ8HOKZEjZjgKcIN0N03eVxHX8Q4QxjuJZR0lxQbrofzfKL3l6FticNUIdicRDlRCQOv6PY3B/OPTRMHBIxzfXM3ivmIYGAZTh3W0Ciao+2NIQp0c4ar/GIRn7ycniY88X1nWDmG+tm3ppHZp3YBvs6QDAOCLs5B/kzmljdscrbvtQ2yuSJJ+AQXyDiUjEAKzTdIqMZjdJeDgjH8tksE+C+5J9sxhYPZQc38Ji//aZpO942XXPg5MuxZ9fqCnG9LYKn0Go930fyiFc9V383Pn98KLfk0j4SpSEPAhs6vg5bKxc0/gkHDxohL9BmyHL97gJRA92JRVZj38I/4A==
+    SECRET_KEY: AgCVZxRNqAgFNUiRIYy1+peRnoCKtBeGVinslBRJkjlJtyKr6yjvSLR//k+Ov/cKagpNBOdi3isIWrz7/AKYjvCeuEHkQepe+AT1/B0XJkXDvNN0su7GM0Ieja8T36NO0WmL8PsxgHgmZCbJfeI6NlHcmUs78/krHMooDZXdFY/f1fjrIS5geqJdE6n28pYil14Z467Qz25+isgOEnXKeDX9w/hk3UlZWygqaDvXi1/DZUKHi4c3Gj2frSKyLQwVJlKm/XYrBRzjZdGsu4Oas5wTSs8UVhaSndlqOyKvUzLWB4VGm9G1O3i/tAVuHmdCiR5FEksUh2dBEPuBh+EmtzN0rz/DI2QuKQsFkDUR/njDGs3ri/XdPruvFCoSh+L2Bo2/6c0Ppl8NR4jCbxMZguTB7YLYOUhGTs8Wsb86dwGwJnpvZm2c6fmJlugYMzCS/5If3R6Y9DfmUe5SJ5sru55sirhcWU3V4trs8tfNViOC5H/rTR+yy4EoZ9o26QWWCMiZchEqpQ3Z4i1HGve8KuiBIeUxA/6cXha6Dd5GCVRe2+2bU3XDcI35OS/XVMbe1PprTyG8z8304TdlgS+PPbHZbnBC8pjdSCD2zKlF+thwqQBQ3SytKiv1iExqG5CFIvuiHEYkY4qrTAeISnX5WZ6VEqLHi6zfYmIRGttZqdd6LWc9WvuAwx4U8Ajg5523ZaaOWoaL8sI703DrEG6w98ypkvzIhKVRbbAD2q5DwNn5PV69dn6Yh4fZMVOH
+  content: |
+    type: S3
     config:
-      directory: /var/thanos/store/data
-    prefix: ""
+      bucket: thaum-datalake-metrics
+      endpoint: fra1.digitaloceanspaces.com
+      access_key: {{ index . "ACCESS_KEY" }}
+      secret_key: {{ index . "SECRET_KEY" }}
+    prefix: thanos
+
 # SealedSecrets Encrypted htpasswd file. Content later available in Secret 'thanos-receive-ingress-auth'.
 ingressAuth: AgCDoo2h4FKulGsv4m1qdjr+zdB5RJ60XCa2uQuQUk/B8da7ZICIVpSe1iOcfaqrj0sXEFTd7KgpqusL9XVfbmZTZN+WNdSFqN0IoOSRZwNVhnzmqivXKge8mzqL2M8O9szZaKEGcJ9Xs5XJ5zJAHFdzfQRgt3drBNAN9trYdssJOxlRDPxDBc4HqVaOct6flVTs84SZkkAU4vBTytAN9jKQ/+v9gCf3QHERPy5uezuYX/PIH3LeXhG3KBntf6+2gYpSk3N5eaU2lAJT3pvDacqaIYeIFCadW0bUtuq3tVlYVlqqcZIvUcfxwnMWhpRlj+6zsiaHqlYLyE3y44Vb/3tbdxI5Vqbn8TOIkwzlgl4C7e36qw5TOvuvhgo8x3z8U/efROa8Qoh7jRcl7hR0UBO8Z3jOYnDq4ybo8ARr5JpV5SeIxGUqBvo131902oisUXrjwTfkVH4IUMBIDiTzlGWHUe6Oy870Yu+1cWCpR2CZTwdFJp3RN+h+PizpGeldp3brSm+RFnkoxhQu90rjkLNBrF67fom+bFC4tKtcsEifaBII5h8/6pJ8reU/yCOmih39BUjRTS9gTM61SJIqTAs13VW8yBXFcQ0eaxLA6+9yWFNPoZMTKcMXlbT9WFXhrwK6IlEWVl3Xhhh84H3tuzJ+2DFct9bOqR1vUMvabQCejW5GNbPKK7i0e7B0PimeQtLbJGSK1dXe0pkln2nXrW26adUsSZjyN7ZHxbMrqEVVsT6WXzE9fzUntuwlXZEZ

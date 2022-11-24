@@ -1,11 +1,11 @@
 local t = import 'kube-thanos/thanos.libsonnet';
+local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 local settings = std.parseYaml(importstr '../settings.yaml')[0];
 
 local i = t.receiveIngestor(settings {
   replicas: 1,
   replicaLabels: ['receive_replica'],
   replicationFactor: 1,
-  // objectStorageConfig: null,
   serviceMonitor: true,
 });
 
@@ -13,7 +13,6 @@ local r = t.receiveRouter(settings {
   replicas: 1,
   replicaLabels: ['receive_replica'],
   replicationFactor: 1,
-  // objectStorageConfig: null,
   endpoints: i.endpoints,
 });
 
@@ -44,15 +43,21 @@ local all = {
     if i.ingestors[hashring][resource] != null
   },
   custom: {
-    [settings.objectStorageConfig.name]: {
-      apiVersion: 'v1',
-      kind: 'Secret',
-      metadata: {
+    bucketConfig: sealedsecret(
+      {
         name: settings.objectStorageConfig.name,
         namespace: settings.namespace,
-      },
-      data: {
-        [settings.objectStorageConfig.key]: std.base64(std.toString(settings.objectStorageConfig.content)),
+      }, {
+        ACCESS_KEY: settings.objectStorageConfig.encryptedData.ACCESS_KEY,
+        SECRET_KEY: settings.objectStorageConfig.encryptedData.SECRET_KEY,
+      }
+    ) + {
+      spec+: {
+        template+: {
+          data: {
+            [settings.objectStorageConfig.key]: settings.objectStorageConfig.content,
+          },
+        },
       },
     },
     thanosReceiveIngressAuth: {

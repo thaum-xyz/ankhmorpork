@@ -10,6 +10,16 @@
       },
       "version": "c5c9cd256cd91bede770a03fa26ac89154071217",
       "sum": "sFdq83b0xqzvAREQcYyLKhnd+1MPYzyCxBOfctpiTDA="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
+          "subdir": "utils"
+        }
+      },
+      "version": "82f8ef50974d5dad69c243b6cba3a51b4645ff0b",
+      "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
     }
   ],
   "legacyImports": false
