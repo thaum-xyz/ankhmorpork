@@ -7,11 +7,11 @@ port: 9199
 replicas: 1
 resources:
   requests:
-    cpu: 2m
+    cpu: 4m
     memory: 17Mi
   limits:
     memory: 100Mi
-    cpu: 10m
+    cpu: 20m
 upses: ["192.168.2.29"]
 encryptedCredentials:
   NUT_EXPORTER_PASSWORD: AgBwX00erqQz8aLdEZuVRZd8RUtHYY98/Nj2zC4syuxJeq0uUqXrmnyTHWg5K1R4lCiL+9wJsg7gSBXu2bJ0oFU9j4jebA67hbtj0kL42Y/pQtodByAMbu50TNF+SHCZCvvHyVy7X0w8da6Jk+RtKXvkPQzRSy28WAlF2oX9F7xY0lMa/ior/MarxSVOF8luFkltFJI7dqaSlHmVwHxRjl36Nzm69RyvWstjLTlOHTf2zgWtONBHwW/FLpe2s2wnMnlUxNAkbH4vLY4cto3lxbNV/eZdN8ORpu2HBQWj9vmxQMUQUffViZZ+jltrx5KASYTDE3FI7AfUsUIWuIXXfX7/Vvi0BCIxehtWzJgmeKbj+Bx3b1Q+zW5cqouxdf8F5QMvH2OqS4zrOQD7/owXIjkWAofDhoOUmGj7BvTwIQLQ2nl948EMI5E6ruJB/P76DLgjZcYqW3G9sqm1wJzEtbz5erj6gXtVc7xMjYkck/t2sTXJ4FdMS3u9LIL5yIhl5xpu50WWyN4YVAHdB74AhqGg2gCzZaLYn0pQzIPQVRmZhxauvuP4RkO4OrT2DjqF94dcfdkk1RNNaXFdtnk3e7i7+JYHEXfORtgVV49zkl8TFQnYAC4Dks1RjL39ohhuQIcgyyp5ZSNlBUybN/rtxrU+4n0hpJ+3g0qHZ1xQNhDgb4guUB5yhD6do6faTpDEAtppsGScdT8=

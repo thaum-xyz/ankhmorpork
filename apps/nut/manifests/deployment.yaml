@@ -40,9 +40,9 @@ spec:
           timeoutSeconds: 10
         resources:
           limits:
-            cpu: 10m
+            cpu: 20m
             memory: 100Mi
           requests:
-            cpu: 2m
+            cpu: 4m
             memory: 17Mi
       serviceAccountName: exporter
