@@ -57,7 +57,9 @@ spec:
         - mountPath: /docker-entrypoint-initdb.d/alter-extension.sql
           name: alter-extension
           subPath: alter-extension.sql
-      - env:
+      - args:
+        - --no-collector.database
+        env:
         - name: DATA_SOURCE_URI
           value: 127.0.0.1?sslmode=disable
         - name: DATA_SOURCE_USER
