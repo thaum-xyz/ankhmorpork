@@ -11,7 +11,7 @@ metadata:
 spec:
   endpoints:
   - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-    interval: 30s
+    interval: 90s
     port: https
     relabelings:
     - action: replace
@@ -21,7 +21,7 @@ spec:
       - __meta_kubernetes_pod_node_name
       targetLabel: instance
     scheme: https
-    scrapeTimeout: 30s
+    scrapeTimeout: 90s
     tlsConfig:
       insecureSkipVerify: true
   jobLabel: app.kubernetes.io/name
