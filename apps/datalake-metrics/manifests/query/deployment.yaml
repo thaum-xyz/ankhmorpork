@@ -76,7 +76,10 @@ spec:
             port: 9090
             scheme: HTTP
           periodSeconds: 5
-        resources: {}
+        resources:
+          requests:
+            cpu: 10m
+            memory: 40Mi
         terminationMessagePolicy: FallbackToLogsOnError
       nodeSelector:
         kubernetes.io/os: linux

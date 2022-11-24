@@ -85,7 +85,10 @@ spec:
             port: 10902
             scheme: HTTP
           periodSeconds: 5
-        resources: {}
+        resources:
+          requests:
+            cpu: 15m
+            memory: 45Mi
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /var/thanos/store

@@ -119,7 +119,10 @@ spec:
             port: 10902
             scheme: HTTP
           periodSeconds: 5
-        resources: {}
+        resources:
+          requests:
+            cpu: 900m
+            memory: 1Gi
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /var/thanos/receive

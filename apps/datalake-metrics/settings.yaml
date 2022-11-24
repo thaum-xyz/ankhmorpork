@@ -27,3 +27,24 @@ objectStorageConfig:
 
 # SealedSecrets Encrypted htpasswd file. Content later available in Secret 'thanos-receive-ingress-auth'.
 ingressAuth: AgCDoo2h4FKulGsv4m1qdjr+zdB5RJ60XCa2uQuQUk/B8da7ZICIVpSe1iOcfaqrj0sXEFTd7KgpqusL9XVfbmZTZN+WNdSFqN0IoOSRZwNVhnzmqivXKge8mzqL2M8O9szZaKEGcJ9Xs5XJ5zJAHFdzfQRgt3drBNAN9trYdssJOxlRDPxDBc4HqVaOct6flVTs84SZkkAU4vBTytAN9jKQ/+v9gCf3QHERPy5uezuYX/PIH3LeXhG3KBntf6+2gYpSk3N5eaU2lAJT3pvDacqaIYeIFCadW0bUtuq3tVlYVlqqcZIvUcfxwnMWhpRlj+6zsiaHqlYLyE3y44Vb/3tbdxI5Vqbn8TOIkwzlgl4C7e36qw5TOvuvhgo8x3z8U/efROa8Qoh7jRcl7hR0UBO8Z3jOYnDq4ybo8ARr5JpV5SeIxGUqBvo131902oisUXrjwTfkVH4IUMBIDiTzlGWHUe6Oy870Yu+1cWCpR2CZTwdFJp3RN+h+PizpGeldp3brSm+RFnkoxhQu90rjkLNBrF67fom+bFC4tKtcsEifaBII5h8/6pJ8reU/yCOmih39BUjRTS9gTM61SJIqTAs13VW8yBXFcQ0eaxLA6+9yWFNPoZMTKcMXlbT9WFXhrwK6IlEWVl3Xhhh84H3tuzJ+2DFct9bOqR1vUMvabQCejW5GNbPKK7i0e7B0PimeQtLbJGSK1dXe0pkln2nXrW26adUsSZjyN7ZHxbMrqEVVsT6WXzE9fzUntuwlXZEZ
+
+receiveIngestor:
+  resources:
+    requests:
+      cpu: 900m
+      memory: 1Gi
+receiveRouter:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 100Mi
+store:
+  resources:
+    requests:
+      cpu: 15m
+      memory: 45Mi
+query:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 40Mi
