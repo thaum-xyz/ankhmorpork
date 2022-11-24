@@ -22,7 +22,8 @@ photoprism:
     database: "AgAm1WdqgZ4i5Yl6vXI/CQ2lauOXGauKQI9Mooq4Suyi3QEr6yFE0m/qKdmaygWv6Rfvwvd+bXBEwieHW1QWON5odz+olN5jFhnveWTDVFG4ZUAjN0tQoHl3pQMGbHTydclcw26QyGDvW1c9h8HBEHRGm3rdbWHer1jHIAQUkVfHlG7m7JCk0tvxbWi3kP5DUE+WAvtQuZIz5GEk7HcIynZYuARWL4X3vTfRU9pbXaTFD8xSxpsREAX/WwngZheU7BDCgPhJPhWYqOgwpQ26ngbpFX7GvLiRNyior9jMHj9WPWK+NS642H9IGjgO0cO3xukC3SfjuN7trYPdd/uTM7H2aVdHnUDJ4Ew+1q5t31ltupkAbyeBWEn8zJwTVrT32ci1JMkzr/th5gt2LruRgcKbWJC7QTZ/0MlEJcwBNQLZUPTg/Jy4K65tzCtke02q+sIKytICAt31MOI6jmRWHcwXFkktpOpsmQ8veR0jna1KnWM/WZxQSXs6G2ZIxaVA35vdvxEaKNkVt59lC3KMmIBHEOiJ7vGv92JVcTY4ISexlufKqDTIVZeoN850wsQhBoQvH6RkEoc9Aj7SNkA264A5w8OmeVetMsYFdhQfLVx8XbE8eSUjwHwPrpDc3u3KkH86ICFRQEIYhrt1M9+po08HfEAp65c9T0vQHRfuDWIMjHqLVhTNV3rso9HOTpduYAkkLiUnmLPKJJzFYyccH3QjI/PGZiNrE+mmSsybF8vfatLTrSBpWnBm"
   resources:
     requests:
-      cpu: 4500m
+    #  cpu: 4500m
+      cpu: 2500m
       memory: 4Gi
     #limits:
     #  cpu: 500m

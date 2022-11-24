@@ -39,7 +39,7 @@ spec:
             port: http
         resources:
           requests:
-            cpu: 4500m
+            cpu: 2500m
             memory: 4Gi
         securityContext:
           privileged: false
