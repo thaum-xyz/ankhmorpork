@@ -50,7 +50,7 @@ spec:
             memory: 800Mi
           requests:
             cpu: 200m
-            memory: 500Mi
+            memory: 350Mi
         securityContext:
           privileged: false
         startupProbe:

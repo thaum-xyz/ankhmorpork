@@ -11,7 +11,7 @@ homeassistant:
   resources:
     requests:
       cpu: 200m
-      memory: 500Mi
+      memory: 350Mi
     limits:
       cpu: 500m
       memory: 800Mi
@@ -31,10 +31,10 @@ timescaledb:
   namespace: *namespace
   resources:
     requests:
-      cpu: 70m
-      memory: 190Mi
+      cpu: 30m
+      memory: 160Mi
     limits:
-      cpu: 200m
+      cpu: 220m
       memory: 320Mi
   storage:
     name: "timescaledb-data"

@@ -44,11 +44,11 @@ spec:
           name: psql
         resources:
           limits:
-            cpu: 200m
+            cpu: 220m
             memory: 320Mi
           requests:
-            cpu: 70m
-            memory: 190Mi
+            cpu: 30m
+            memory: 160Mi
         securityContext:
           privileged: false
         volumeMounts:
