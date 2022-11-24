@@ -36,12 +36,12 @@ spec:
           name: metrics
           protocol: TCP
         resources:
+          requests:
+            cpu: 13m
+            memory: 20Mi
           limits:
             memory: 100Mi
-            # cpu: 5m
-          requests:
-            cpu: 5m
-            memory: 20Mi
+            cpu: 20m
       restartPolicy: Always
       nodeSelector:
         kubernetes.io/arch: amd64
