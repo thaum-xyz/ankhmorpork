@@ -47,10 +47,10 @@ spec:
         resources:
           limits:
             cpu: 10m
-            memory: 10Mi
+            memory: 100Mi
           requests:
-            cpu: 1m
-            memory: 5Mi
+            cpu: 2m
+            memory: 3Mi
         volumeMounts:
         - mountPath: /www/assets/config.yml
           name: config

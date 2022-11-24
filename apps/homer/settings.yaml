@@ -4,3 +4,10 @@ image: "b4bz/homer:v22.08.1"  # application-image-from-github: bastienwirtz/home
 namespace: "homer"
 replicas: 2
 domain: "ankhmorpork.thaum.xyz"
+resources:
+  requests:
+    cpu: 2m
+    memory: 3Mi
+  limits:
+    memory: 100Mi
+    cpu: 10m
