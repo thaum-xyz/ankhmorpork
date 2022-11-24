@@ -17,7 +17,7 @@ parca:
   version: "0.12.1"  # application-version-from-github: parca-dev/parca
   image: "ghcr.io/parca-dev/parca:v0.12.1"  # application-image-from-github: parca-dev/parca
   namespace: *namespace
-  replicas: 1
+  replicas: 0
   serviceMonitor: true
   logLevel: "debug"
   resources:
