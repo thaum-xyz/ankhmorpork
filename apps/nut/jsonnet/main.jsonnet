@@ -94,7 +94,7 @@ local all = exporter(config) + {
             alert: 'UPSOnBattery',
             annotations: {
               description: 'UPS {{ $labels.instance }} is now supplying power to the system from the battery.',
-              summary: "UPS has gone on battery power",
+              summary: 'UPS has gone on battery power',
             },
             expr: 'network_ups_tools_ups_status{flag="OL"} == 0',
             labels: {

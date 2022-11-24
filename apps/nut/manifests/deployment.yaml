@@ -38,5 +38,11 @@ spec:
           tcpSocket:
             port: http
           timeoutSeconds: 10
-        resources: {}
+        resources:
+          limits:
+            cpu: 10m
+            memory: 100Mi
+          requests:
+            cpu: 2m
+            memory: 17Mi
       serviceAccountName: exporter
