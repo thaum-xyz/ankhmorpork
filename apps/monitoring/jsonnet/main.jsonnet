@@ -210,6 +210,19 @@ local kp =
     },
 
     blackboxExporter+: {
+      serviceMonitor+: {
+        spec+: {
+          endpoints: std.map(
+            function(e) if e.port == 'https' then
+              e {
+                interval: '120s',
+                scrapeTimeout: '120s',
+              }
+            else e,
+            super.endpoints
+          ),
+        },
+      },
       deployment+: {
         spec+: {
           template+: {
