@@ -231,8 +231,8 @@ local kp =
           endpoints: std.map(
             function(e) if e.port == 'https' then
               e {
-                interval: '90s',
-                scrapeTimeout: '90s',
+                interval: '120s',
+                scrapeTimeout: '120s',
               }
             else e,
             super.endpoints
