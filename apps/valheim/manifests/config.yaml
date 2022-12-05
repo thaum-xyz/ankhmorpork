@@ -9,8 +9,9 @@ metadata:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/part-of: valheim
 data:
-  SERVER_NAME: "KitKat"
-  WORLD_NAME: "KitKat"
+  SERVER_NAME: "MISTery"
+  WORLD_NAME: "MISTery"
   SERVER_PORT: "2456"
   SERVER_PUBLIC: "false"
-  SERVER_PASS: "berliner"
+  SERVER_PASS: "babeczka"
+  STEAMCMD_ARGS: "-beta public-test -betapassword yesimadebackups"
