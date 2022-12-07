@@ -23,7 +23,10 @@ spec:
         app.kubernetes.io/part-of: valheim
     spec:
       containers:
-      - envFrom:
+      - env:
+        - name: SUPERVISOR_HTTP
+          value: "true"
+        envFrom:
         #- secretRef:
         #    name: valheim-pass
         - configMapRef:
@@ -49,6 +52,22 @@ spec:
         - mountPath: /opt/valheim
           name: data
           subPath: serverfiles
+      - args:
+        - --collector.disable-defaults
+        - --collector.supervisord
+        image: quay.io/prometheus/node-exporter:v1.5.0
+        name: node-exporter
+        ports:
+        - containerPort: 9100
+          name: metrics
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 250m
+            memory: 180Mi
+          requests:
+            cpu: 102m
+            memory: 180Mi
       restartPolicy: Always
       serviceAccountName: valheim
       nodeSelector:
