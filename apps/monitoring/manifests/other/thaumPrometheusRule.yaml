@@ -91,31 +91,6 @@ spec:
         node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)",mountpoint!~"/mnt/snapshot.*"} != 0
       labels:
         severity: critical
-  - name: thaum-xyz-alerts
-    rules:
-    - alert: TouchscreenNotAvailable
-      annotations:
-        description: Powercycle device {{ $labels.instance }}
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/TouchscreenNotAvailable
-        summary: Touchscreen not available and automatic remediation failed to restore
-          it
-      expr: |
-        devices_input_touchscreen_up{environment="lancre.thaum.xyz"} == 0 or absent(devices_input_touchscreen_up{environment="lancre.thaum.xyz"})
-      for: 30m
-      labels:
-        severity: critical
-    - alert: TemperaturesNotAvailable
-      annotations:
-        description: Temperature data is gone. Immediatelly switch off all relays
-          and check OW bus.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/TemperaturesNotAvailable
-        summary: Cannot obtain temperature data
-      expr: |
-        absent(evok_temperature_celsius{environment="lancre.thaum.xyz"})
-      for: 15m
-      labels:
-        env: lancre
-        severity: critical
   - name: openshift.rules
     rules:
     - alert: HighlyAvailableWorkloadIncorrectlySpread
