@@ -132,7 +132,16 @@ local all = {
   },
 };
 
-local slos = {
+local mixin = (import 'github.com/thanos-io/thanos/mixin/mixin.libsonnet') + {
+  _config+:: {
+  },
+  compact:: null,
+  sidecar:: null,
+  rule:: null,
+  bucketReplicate:: null,
+};
+
+local monitoring = {
   _metadata:: {
     labels: {
       prometheus: 'k8s',
@@ -140,6 +149,19 @@ local slos = {
     },
     namespace: settings.namespace,
   },
+  prometheusRule: {
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'PrometheusRule',
+    metadata: $._metadata {
+      name: 'thanos-rules',
+    },
+    spec: {
+      local r = if std.objectHasAll(mixin, 'prometheusRules') then mixin.prometheusRules.groups else [],
+      local a = if std.objectHasAll(mixin, 'prometheusAlerts') then mixin.prometheusAlerts.groups else [],
+      groups: a + r,
+    },
+  },
+
   thanosReceiveRequestsErrors: {
     apiVersion: 'pyrra.dev/v1alpha1',
     kind: 'ServiceLevelObjective',
@@ -192,6 +214,6 @@ local slos = {
   for component in std.objectFields(all)
   for resource in std.objectFields(all[component])
 } + {
-  ['slos/' + resource + '.yaml']: std.manifestYamlDoc(slos[resource])
-  for resource in std.objectFields(slos)
+  ['monitoring/' + resource + '.yaml']: std.manifestYamlDoc(monitoring[resource])
+  for resource in std.objectFields(monitoring)
 }

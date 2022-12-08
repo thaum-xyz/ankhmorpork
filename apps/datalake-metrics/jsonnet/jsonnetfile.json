@@ -13,6 +13,15 @@
     {
       "source": {
         "git": {
+          "remote": "https://github.com/thanos-io/thanos.git",
+          "subdir": "mixin"
+        }
+      },
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
           "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "utils"
         }
