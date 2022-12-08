@@ -31,7 +31,6 @@ local q = t.query(settings + settings.query + {
 local all = {
   query: q,
   store: s,
-  receiveRouter: r,
   receiveIngestor: {
     [resource]: i[resource]
     for resource in std.objectFields(i)
@@ -41,6 +40,21 @@ local all = {
     for hashring in std.objectFields(i.ingestors)
     for resource in std.objectFields(i.ingestors[hashring])
     if i.ingestors[hashring][resource] != null
+  },
+  receiveRouter: r {
+    serviceMonitor: $.receiveIngestor.serviceMonitor {
+      metadata+: {
+        labels+: r.service.metadata.labels,
+      },
+      spec+: {
+        selector+: {
+          matchLabels: {
+            'app.kubernetes.io/component': r.service.metadata.labels['app.kubernetes.io/component'],
+            'app.kubernetes.io/name': r.service.metadata.labels['app.kubernetes.io/name'],
+          },
+        },
+      },
+    },
   },
   custom: {
     bucketConfig: sealedsecret(
