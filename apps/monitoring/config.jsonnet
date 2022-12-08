@@ -143,8 +143,8 @@
     //image: "",
     //namespace: "monitoring",
     resources: {
-      requests: { cpu: '100m', memory: '20Mi' },
-      limits: { cpu: '100m', memory: '30Mi' },
+      requests: { cpu: '100m', memory: '30Mi' },
+      //limits: { cpu: '100m', memory: '30Mi' },
     },
   },
   grafana+: {

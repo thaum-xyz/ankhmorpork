@@ -37,12 +37,9 @@ spec:
         ports:
         - containerPort: 9099
         resources:
-          limits:
-            cpu: 100m
-            memory: 30Mi
           requests:
             cpu: 100m
-            memory: 20Mi
+            memory: 30Mi
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
