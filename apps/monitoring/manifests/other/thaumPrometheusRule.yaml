@@ -51,7 +51,8 @@ spec:
           }}) reported its target being down. This results in lack of ability to scrape
           metrics from the main service.
         summary: Service monitored by exporter is Down
-      expr: '{__name__=~".*_up",__name__!="node_network_up"} == 0'
+      expr: '{__name__=~".*_up",__name__!="node_network_up",__name__!="node_supervisord_up"}
+        == 0'
       for: 5m
       labels:
         severity: warning
