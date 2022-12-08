@@ -43,9 +43,7 @@ local all = {
   },
   receiveRouter: r {
     serviceMonitor: $.receiveIngestor.serviceMonitor {
-      metadata+: {
-        labels+: r.service.metadata.labels,
-      },
+      metadata: r.service.metadata,
       spec+: {
         selector+: {
           matchLabels: {
