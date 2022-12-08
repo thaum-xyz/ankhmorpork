@@ -468,7 +468,7 @@ local kp =
           target: '99.9',
         },
       },
-    },
+    } + (import 'lib/slo-apiserver.libsonnet'),
 
     grafana+: {
       config+:: {},
