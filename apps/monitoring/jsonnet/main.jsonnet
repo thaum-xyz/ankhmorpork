@@ -436,7 +436,7 @@ local kp =
                 'resources',
                 $.values.pyrra.resources,
                 'pyrra',
-                super.containers
+                addArgs(['--prometheus-external-url=https://prometheus.ankhmorpork.thaum.xyz'], 'pyrra', super.containers)
               ),
               nodeSelector+: {
                 'kubernetes.io/arch': 'amd64',
