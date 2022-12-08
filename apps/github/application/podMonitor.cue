@@ -1,0 +1,23 @@
+package github
+
+apiVersion: "monitoring.coreos.com/v1"
+kind:       "PodMonitor"
+metadata: {
+	labels: {
+		"app.kubernetes.io/component": "exporter"
+		"app.kubernetes.io/name":      "github"
+	}
+	name:      "exporter"
+	namespace: "github"
+}
+spec: {
+	podMetricsEndpoints: [{
+		interval:      "270s"
+		scrapeTimeout: "90s"
+		port:          "metrics"
+	}]
+	selector: matchLabels: {
+		"app.kubernetes.io/component": "exporter"
+		"app.kubernetes.io/name":      "github"
+	}
+}

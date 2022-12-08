@@ -1,0 +1,13 @@
+package github
+
+apiVersion:                   "v1"
+kind:                         "ServiceAccount"
+automountServiceAccountToken: false
+metadata: {
+	labels: {
+		"app.kubernetes.io/component": "exporter"
+		"app.kubernetes.io/name":      "github"
+	}
+	name:      "exporter"
+	namespace: "github"
+}

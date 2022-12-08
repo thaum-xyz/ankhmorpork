@@ -1,0 +1,18 @@
+package github
+
+apiVersion: "bitnami.com/v1alpha1"
+kind:       "SealedSecret"
+metadata: {
+	creationTimestamp: null
+	name:              "credentials"
+	namespace:         "github"
+}
+spec: {
+	encryptedData: token: "AgBspjA6liupmdtzNrfvE7Ut1O14qD8uGdwQgYaoW7e2zn4nGIANqKHi/9rycb5Uw2iD37pqeE/1M1bPhqcqNY8PNJpFl3j6cOzjykzGOh+xrMtUbBYlENYXs0vJKvOaU7m1PGixqzxNA6Xfb7mQI60G3oH95DtNyrhbhGNiYxhRQ8+RwdoZKOcmDPyOdW3KxWXq4gEy4zx0wH5KLPGorY83FEHWCKClfbjwVQ8LXXk9T9O4mri0FTyk1j/4wDQmXedgKtyvhsofpjQeb7pVkU/+oIs9WdSa//9XGZkLjBVk8YHm+XmCC0zZwagEIh474eqq6NCUD0m37/yl07bwNLGAbJsnN2xccqgGlOrKxvaYUao6F3hZ5ZvLGm8Ifv+/oFkY+oecff1QnhLF7Rd3Iac79oIYf4XeohzB3tYzElasP959eJKQZQA2d+MWRuhGKRjet+rXpb0cdb/IPOUVPgv0QIsiuslVa0kYZ/qEH8DSBxB2zp/Aje5xIFNFIP5k/sdB3UsnmRWuPUK0RBUejReAwHlgrX8sNOfPjDV2jcs3YVGrX2BNp0suNhWQ5TCuEsGcxy982zmBJJPwI+IRcW2jws68/Ewcnc/a4cg6dS5UWZeiMo9xO+1or2aClfMp/MFsBqL/FbUsOKliKFdWN59auEVczXzzF72Ala3byCHlHx7wcYENMSSjhkmawWK1U08XwVHyWaD/QxScyntjQE5IoylkcgAGYdXhwWPL+Y/GSjUO125KJ2wo"
+	template: metadata: {
+		annotations: "sealedsecrets.bitnami.com/managed": "true"
+		creationTimestamp: null
+		name:              "credentials"
+		namespace:         "github"
+	}
+}
