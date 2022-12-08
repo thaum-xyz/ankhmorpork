@@ -1,0 +1,18 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: thanos-receive-requests-errors
+  namespace: datalake-metrics
+spec:
+  description: ""
+  indicator:
+    ratio:
+      errors:
+        metric: http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}
+      total:
+        metric: http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}
+  target: "99"
+  window: 2w

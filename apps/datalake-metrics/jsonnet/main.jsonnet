@@ -132,9 +132,66 @@ local all = {
   },
 };
 
+local slos = {
+  _metadata:: {
+    labels: {
+      prometheus: 'k8s',
+      role: 'alert-rules',
+    },
+    namespace: settings.namespace,
+  },
+  thanosReceiveRequestsErrors: {
+    apiVersion: 'pyrra.dev/v1alpha1',
+    kind: 'ServiceLevelObjective',
+    metadata: $._metadata {
+      name: 'thanos-receive-requests-errors',
+    },
+    spec: {
+      description: '',
+      indicator: {
+        ratio: {
+          errors: {
+            metric: 'http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}',
+          },
+          total: {
+            metric: 'http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}',
+          },
+        },
+      },
+      target: '99',
+      window: '2w',
+    },
+  },
+  thanosReceiveRequestsLatency: {
+    apiVersion: 'pyrra.dev/v1alpha1',
+    kind: 'ServiceLevelObjective',
+    metadata: $._metadata {
+      name: 'thanos-receive-requests-latency',
+    },
+    spec: {
+      description: '',
+      indicator: {
+        latency: {
+          success: {
+            metric: 'http_request_duration_seconds_bucket{job=~".*thanos-receive.*", handler="receive"}',
+          },
+          total: {
+            metric: 'http_request_duration_seconds_count{job=~".*thanos-receive.*", handler="receive"}',
+          },
+        },
+      },
+      target: '99',
+      window: '2w',
+    },
+  },
+};
+
 // Manifestation
 {
   [component + '/' + resource + '.yaml']: std.manifestYamlDoc(all[component][resource])
   for component in std.objectFields(all)
   for resource in std.objectFields(all[component])
+} + {
+  ['slos/' + resource + '.yaml']: std.manifestYamlDoc(slos[resource])
+  for resource in std.objectFields(slos)
 }

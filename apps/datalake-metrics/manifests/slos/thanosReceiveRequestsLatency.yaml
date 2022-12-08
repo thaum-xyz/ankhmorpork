@@ -1,0 +1,18 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: thanos-receive-requests-latency
+  namespace: datalake-metrics
+spec:
+  description: ""
+  indicator:
+    latency:
+      success:
+        metric: http_request_duration_seconds_bucket{job=~".*thanos-receive.*", handler="receive"}
+      total:
+        metric: http_request_duration_seconds_count{job=~".*thanos-receive.*", handler="receive"}
+  target: "99"
+  window: 2w
