@@ -5,6 +5,7 @@ homeassistant:
   elevation: !secret home_elevation
   unit_system: metric
   time_zone: Europe/Berlin
+  country: DE
   customize: !include customize.yaml
   #auth_providers:
   #  - type: homeassistant

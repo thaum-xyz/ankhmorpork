@@ -83,6 +83,7 @@ local all = {
         },
       },
       spec+: {
+        // Needed because HomeAssistant is on host network
         loadBalancerIP: '192.168.2.93',
         type: 'LoadBalancer',
         clusterIP:: null,
