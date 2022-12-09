@@ -29,10 +29,18 @@ spec:
           value: homeassistant
         - name: TIMESCALEDB_TELEMETRY
           value: basic
-        - name: TS_TUNE_MEMORY
-          value: 300MB
         - name: TS_TUNE_NUM_CPUS
-          value: "1"
+          valueFrom:
+            resourceFieldRef:
+              containerName: timescaledb
+              resource: limits.cpu
+              divisor: "1"
+        - name: TS_TUNE_MEMORY
+          valueFrom:
+            resourceFieldRef:
+              containerName: timescaledb
+              resource: limits.memory
+              divisor: 1Mi
         envFrom:
         - secretRef:
             name: timescaledb
