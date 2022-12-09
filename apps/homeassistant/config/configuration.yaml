@@ -267,10 +267,10 @@ plant:
     max_brightness: 12000
   svetlana:
     sensors:
-      moisture: sensor.svetlana_moisture
-      temperature: sensor.svetlana_temperature
-      conductivity: sensor.svetlana_soil_conductivity
-      brightness: sensor.svetlana_illuminance
+      moisture: sensor.svetlana_plant_moisture
+      temperature: sensor.svetlana_plant_temperature
+      conductivity: sensor.svetlana_plant_conductivity
+      brightness: sensor.svetlana_plant_illuminance
     min_moisture: 15
     max_moisture: 60
     min_conductivity: 350
