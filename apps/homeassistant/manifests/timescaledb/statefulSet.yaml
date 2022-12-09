@@ -33,14 +33,14 @@ spec:
           valueFrom:
             resourceFieldRef:
               containerName: timescaledb
-              resource: limits.cpu
               divisor: "1"
+              resource: limits.cpu
         - name: TS_TUNE_MEMORY
           valueFrom:
             resourceFieldRef:
               containerName: timescaledb
-              resource: limits.memory
               divisor: 1Mi
+              resource: limits.memory
         envFrom:
         - secretRef:
             name: timescaledb
