@@ -176,7 +176,7 @@ local monitoring = {
             metric: 'http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}',
           },
           total: {
-            metric: 'http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}',
+            metric: 'http_requests_total{job=~".*thanos-receive.*", handler="receive"}',
           },
         },
       },
@@ -195,7 +195,7 @@ local monitoring = {
       indicator: {
         latency: {
           success: {
-            metric: 'http_request_duration_seconds_bucket{job=~".*thanos-receive.*", handler="receive"}',
+            metric: 'http_request_duration_seconds_bucket{job=~".*thanos-receive.*", handler="receive", le="5.0"}',
           },
           total: {
             metric: 'http_request_duration_seconds_count{job=~".*thanos-receive.*", handler="receive"}',

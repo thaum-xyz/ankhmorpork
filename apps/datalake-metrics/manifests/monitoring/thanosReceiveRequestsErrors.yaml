@@ -13,6 +13,6 @@ spec:
       errors:
         metric: http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}
       total:
-        metric: http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}
+        metric: http_requests_total{job=~".*thanos-receive.*", handler="receive"}
   target: "99"
   window: 2w

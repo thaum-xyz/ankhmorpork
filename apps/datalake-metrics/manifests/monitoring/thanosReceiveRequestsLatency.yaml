@@ -11,7 +11,8 @@ spec:
   indicator:
     latency:
       success:
-        metric: http_request_duration_seconds_bucket{job=~".*thanos-receive.*", handler="receive"}
+        metric: http_request_duration_seconds_bucket{job=~".*thanos-receive.*", handler="receive",
+          le="5.0"}
       total:
         metric: http_request_duration_seconds_count{job=~".*thanos-receive.*", handler="receive"}
   target: "99"
