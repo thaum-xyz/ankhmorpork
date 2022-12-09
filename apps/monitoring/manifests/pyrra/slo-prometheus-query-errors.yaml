@@ -16,5 +16,5 @@ spec:
       - handler
       total:
         metric: prometheus_http_requests_total{job="prometheus-k8s",handler=~"/api/v1/query.*"}
-  target: "99"
-  window: 2w
+  target: "95.0"
+  window: 4w

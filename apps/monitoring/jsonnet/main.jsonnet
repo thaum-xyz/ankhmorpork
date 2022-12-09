@@ -468,6 +468,12 @@ local kp =
           target: '99.9',
         },
       },
+      'slo-prometheus-query-errors'+: {
+        spec+: {
+          target: '95.0',
+          window: '4w',
+        },
+      },
     } + (import 'lib/slo-apiserver.libsonnet'),
 
     grafana+: {
