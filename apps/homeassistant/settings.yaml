@@ -2,8 +2,8 @@
 common:
   namespace: &namespace "homeassistant"
 homeassistant:
-  version: "2022.11.4"  # application-version-from-github: home-assistant/core
-  image: "homeassistant/aarch64-homeassistant:2022.11.4"  # application-image-from-github: home-assistant/core
+  version: "2022.12.1"  # application-version-from-github: home-assistant/core
+  image: "homeassistant/aarch64-homeassistant:2022.12.1"  # application-image-from-github: home-assistant/core
   namespace: *namespace
   domain: "home.ankhmorpork.thaum.xyz"
   hostNetwork: true  # Needed to enable WOL
@@ -50,8 +50,8 @@ timescaledb:
     encryptedPass: "AgCgQU36N4VN261JWmbJyNkmIDbbWWcgt8zS6+6lo20CMrodztxcZk50Jid6RATcpn2FKcd/DZWavadqJbvgK+/shkzo0+LjFRUMvhGPKvyRCEAV+1dxs1Mo2TuqA57SuR3rg1BlfHQaXSUgQJHbbi1y0dV7k9kXnHSsrkJkZx011rhUeC/U4Z8EC7NEqP1SlV+LBw5SWl5nnZk1XYHFVhu1SQ4gIxaWVe5Kr7EX4VzZh+9bVPPqGzGvnL6XvuvvsNmL+m59G/vOSr+JKsS89Rx3+IzZC+XWtPqgNYcQYzeYLxX2K2oKEstw6dYSP1+7F3q+kfQYMvPkFlP6CTFqQ2uDkh+3Pijv2nvgzF6qQA5r4B9P6JA8C4bQtfgljE7jx2p77REvF8O+vnh63huvr6Vdf47BHoBgWoaOmbx2MAWyzhXR8stuzaZ1KbI7oPe9DsIhG/TGvujrlybboSC4WwGWmz7Xei9Z634ahumu6rTYZMmpAKmXAr4uL7PUaOLPgwsknSODDDXlUtFt7509rkNf7MJd1SXl78c0EH8e3oc5SViCOXV22nqzRgrmcBJ8SpOkatQRxvl1T3cqK4ZX8AvNSe6ZWihiYcmHtEpiM46grKydlisDuUYKFdEAK5IKXY7pnGibIZ+NPANQ/38+nUEp5uLJaWvQqUQ95zzoLrPRzjayTPdneZfJzKS6m9LXY/oH24y8YJaoBg71wcW5zODRNBs6Uy5UEhBnMzn/nyDS"
     name: "homeassistant"
 esphome:
-  version: "2022.11.2"  # application-version-from-github: esphome/esphome
-  image: "esphome/esphome:2022.11.2"  # application-image-from-github: esphome/esphome
+  version: "2022.11.5"  # application-version-from-github: esphome/esphome
+  image: "esphome/esphome:2022.11.5"  # application-image-from-github: esphome/esphome
   namespace: *namespace
   resources:
     requests:
