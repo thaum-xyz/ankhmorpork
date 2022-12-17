@@ -17,6 +17,8 @@ spec:
   serviceName: valheim
   template:
     metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: valheim
       labels:
         app.kubernetes.io/component: game-server
         app.kubernetes.io/name: valheim
