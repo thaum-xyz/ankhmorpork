@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        template.checksum.md5/body: 9fae334bacd5c29541609db23dd2be6d
+        template.checksum.md5/body: 5c66a3b1d9e277b54e141670df62d17b
         template.checksum.md5/title: e0e001470816a17057e5ee7afe721561
       labels:
         app.kubernetes.io/component: alertmanager-webhook-receiver

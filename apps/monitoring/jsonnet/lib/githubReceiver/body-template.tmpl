@@ -25,11 +25,11 @@ Issue was last updated at {{timeNow}}.
 {{range $k, $v := $payload.CommonAnnotations}}
 <tr>
     <th>{{$k}}</th>
-    {{if or (eq $k "runbook_url") (eq $k "dashboard_url") }}
+    {{-if or (eq $k "runbook_url") (eq $k "dashboard_url") }}
     <td><a href="{{$v}}">{{$v}}</a></td>
-    {{else}}
+    {{-else}}
     <td>{{$v}}</td>
-    {{end}}
+    {{-end}}
 </tr>
 {{end}}
 </table>
