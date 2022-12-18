@@ -1,0 +1,77 @@
+apiVersion: v1
+data:
+  body-template.txt: |
+    {{- $payload := .Payload -}}
+
+    # Alert {{ $payload.GroupLabels.alertname }} firing in {{ $payload.GroupLabels.namespace }} namespace
+
+    This is an automated issue created by the monitoring system. Please do not edit this message.
+
+    Alertmanager URL: {{$payload.ExternalURL}}
+
+    Issue was last updated at {{timeNow}}.
+
+    ## Common Labels
+
+    <table>
+    {{range $k, $v := $payload.CommonLabels}}
+    <tr>
+        <th>{{$k}}</th>
+        <td>{{$v}}</td>
+    </tr>
+    {{end}}
+    </table>
+
+    ## Common Annotations
+
+    <table>
+    {{range $k, $v := $payload.CommonAnnotations}}
+    <tr>
+        <th>{{$k}}</th>
+        {{if or (eq $k "runbook_url") (eq $k "dashboard_url") }}
+        <td><a href="{{$v}}">{{$v}}</a></td>
+        {{else}}
+        <td>{{$v}}</td>
+        {{end}}
+    </tr>
+    {{end}}
+    </table>
+
+    ## Alerts
+
+    <table>
+    <tr>
+        {{range $payload.LabelKeysExceptCommon -}}
+        <th>{{.}}</th>
+        {{end -}}
+        {{range $payload.AnnotationKeysExceptCommon -}}
+        <th>{{.}}</th>
+        {{end -}}
+        <th>StartsAt</th>
+        <th>Links</th>
+    </tr>
+    {{range $alert := $payload.Alerts -}}
+        <tr>
+            {{range $key := $payload.LabelKeysExceptCommon -}}
+                <td>{{index $alert.Labels $key}}</td>
+            {{end -}}
+            {{range $key := $payload.AnnotationKeysExceptCommon -}}
+                <td>{{index $alert.Labels $key}}</td>
+            {{end -}}
+            <td>{{$alert.StartsAt}}</td>
+            <td><a href="{{$alert.GeneratorURL}}">GeneratorURL</a></td>
+        </tr>
+    {{end -}}
+    </table>
+
+    <!-- alert data: {{json $payload}} -->
+  title-template.txt: |
+    Alert: {{ .Payload.GroupLabels.alertname }} in {{ .Payload.GroupLabels.namespace }}
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: alertmanager-webhook-receiver
+    app.kubernetes.io/name: github-receiver
+    app.kubernetes.io/version: 0.1.0
+  name: github-receiver-config
+  namespace: monitoring

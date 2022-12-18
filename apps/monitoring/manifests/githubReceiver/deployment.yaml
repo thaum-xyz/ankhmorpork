@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: alertmanager-webhook-receiver
+    app.kubernetes.io/name: github-receiver
+    app.kubernetes.io/version: 0.1.0
+  name: github-receiver
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: alertmanager-webhook-receiver
+      app.kubernetes.io/name: github-receiver
+  template:
+    metadata:
+      annotations:
+        template.checksum.md5/body: 9fae334bacd5c29541609db23dd2be6d
+        template.checksum.md5/title: e0e001470816a17057e5ee7afe721561
+      labels:
+        app.kubernetes.io/component: alertmanager-webhook-receiver
+        app.kubernetes.io/name: github-receiver
+        app.kubernetes.io/version: 0.1.0
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - args:
+        - start
+        - --labels=alert/new
+        - --auto-close-resolved-issues=false
+        - --title-template-file=/etc/github-receiver/title-template.txt
+        - --body-template-file=/etc/github-receiver/body-template.txt
+        envFrom:
+        - secretRef:
+            name: github-receiver-credentials
+        image: ghcr.io/pfnet-research/alertmanager-to-github:v0.1.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
+        name: github-receiver
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 10m
+            memory: 50Mi
+          requests:
+            cpu: 2m
+            memory: 10Mi
+        volumeMounts:
+        - mountPath: /etc/github-receiver
+          name: config
+          readOnly: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      serviceAccountName: github-receiver
+      volumes:
+      - configMap:
+          name: github-receiver-config
+        name: config

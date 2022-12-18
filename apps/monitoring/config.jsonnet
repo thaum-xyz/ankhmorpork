@@ -179,6 +179,13 @@
     ],
   },
   // Following are not in kube-prometheus
+  githubReceiver: {
+    namespace: 'monitoring',
+    version: '0.1.0',  // application-version-from-github: pfnet-research/alertmanager-to-github
+    image: 'ghcr.io/pfnet-research/alertmanager-to-github:v0.1.0',  // application-image-from-github: pfnet-research/alertmanager-to-github
+    githubTokenSecretName: 'github-receiver-credentials',
+    githubTokenEncrypted: 'AgB1S5pLwshknGqtdeP3yrPyvBaZiiKdltO+1CrX7FL7Bf+xBJnxdPf1GQI4oFulBFGtmdH5L3VSOzlw0U0dqKemfdRsDeBfZkx4Ct8rnBRVMw+y3O5tAkXVeVbAkY6h5S/OJ1m3XaOC/tnNQoERbt5GN0+t4NBVlllATPNKjfKSz8RUWrkcwM0PbRszVry9Tlgk+0cVi/c8T4J87A3lTo9MvLPwBC30LoiJt2u542ecTr6aDJjJQyz0LE2l0S5kkHfnx966L9NxSTnBd8Q3f3/K20wlZjwY7kiRof6q31vkPf8bsgFog55oxfkWKfXX7OnqTWSKQ/Lo4wKO9JT1FA3tNFxfc/1mCyRymbYinFZjBSVda0U+g+T5Exkbbh8h8Y/E02DwUgfMoms6Nlsi5LltkF/BGNSylamL8KoI84gwhm76nPj3zBm0lnIn2MmWME1LF3JFxKpOHPyiPu6o1cfvyQozMeib+mvaVpyWx7CZOa4Zjta2KyURyCh+1Tm5WfjMkGsXXfu2kIoYd5LfhyPh1bjFs3UQzX+A/gb/jKvEf0FZ8gJheypM8vhI5i7L+oMDS99uNeg2nZxQ8k6jlgxNP8WcaoGkQQ+LC5X0UqPIJ6RxatyNc1e8yYNfLM43X5eIMnjiVXGmZ2PUbj2OaAS5Md/3Dtjz+mTQBkJ44P6zpw8pyxMNEG7jTwKvIh6iHaw5KRBZWN0lKVuomoyLDJVkVO7uZMD2xSpcHxVZUhMgBHNk+7FYB+yb',
+  },
   pushgateway: {
     namespace: 'monitoring',
     version: '1.4.3',  // application-version-from-github: prometheus/pushgateway

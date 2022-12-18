@@ -134,6 +134,8 @@ local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/
 local windows = (import 'lib/windows-exporter.libsonnet');
 local jsonExporter = (import 'lib/json-exporter.libsonnet');
 
+local githubReceiver = (import 'lib/github-receiver.libsonnet');
+
 local mixin = (import 'kube-prometheus/lib/mixin.libsonnet');
 
 local kp =
@@ -640,6 +642,14 @@ local kp =
           }],
         }],
       },
+    },
+
+    githubReceiver: githubReceiver($.values.githubReceiver) + {
+      credentials: sealedsecret($.githubReceiver.deployment.metadata {
+        name: $.values.githubReceiver.githubTokenSecretName,
+      }, {
+        ATG_GITHUB_TOKEN: $.values.githubReceiver.githubTokenEncrypted,
+      }),
     },
 
     windowsExporter: windows($.values.windowsExporter),

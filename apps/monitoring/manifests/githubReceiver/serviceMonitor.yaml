@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: alertmanager-webhook-receiver
+    app.kubernetes.io/name: github-receiver
+    app.kubernetes.io/version: 0.1.0
+  name: github-receiver
+  namespace: monitoring
+spec:
+  endpoints:
+  - interval: 30s
+    port: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: alertmanager-webhook-receiver
+      app.kubernetes.io/name: github-receiver
