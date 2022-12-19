@@ -16,7 +16,7 @@ local all = {
       mixin: {
         _config: {
           // TODO: Figure out how to auto-configure this in coredns.libsonnet
-          corednsSelector: 'job=~"kube-dns|coredns"',
+          corednsSelector: 'job=~"dns/coredns"',
           dashboardTags: ['coredns', 'mixin'],
         },
         ruleLabels: {
