@@ -312,6 +312,8 @@ local kp =
           //   url: "http://mimir.mimir.svc:9009/prometheus/api/v1/read",
           // }],
 
+          enforcedNamespaceLabel: 'namespace',
+
           storage: {
             volumeClaimTemplate: {
               metadata: {
