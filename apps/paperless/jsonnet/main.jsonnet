@@ -25,9 +25,9 @@ local all = {
             PAPERLESS_DBNAME: config.paperless.database.name,
             PAPERLESS_DBPORT: '5432',
             PAPERLESS_DBSSLMODE: 'prefer',
-          }
-        }
-      }
+          },
+        },
+      },
     },
     secrets+:: {},
     secretsEnc: sealedsecret(
