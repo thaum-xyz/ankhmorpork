@@ -22,18 +22,7 @@ spec:
         sourceLabels:
         - instance
         targetLabel: instance
-      - regex: $1/-/healthy
-        sourceLabels:
-        - instance
-        targetLabel: instance
-      - regex: $1/api/health
-        sourceLabels:
-        - instance
-        targetLabel: instance
       static:
       - https://192.168.2.29/redirect.html
-      - https://prometheus.ankhmorpork.thaum.xyz/-/healthy
-      - https://alertmanager.ankhmorpork.thaum.xyz/-/healthy
-      - https://grafana.ankhmorpork.thaum.xyz/api/health
   tlsConfig:
     insecureSkipVerify: true

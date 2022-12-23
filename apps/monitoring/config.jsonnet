@@ -96,9 +96,9 @@
         staticConfig: {
           static: [
             'https://192.168.2.29/redirect.html',
-            'https://prometheus.ankhmorpork.thaum.xyz/-/healthy',
-            'https://alertmanager.ankhmorpork.thaum.xyz/-/healthy',
-            'https://grafana.ankhmorpork.thaum.xyz/api/health',
+            //'https://prometheus.ankhmorpork.thaum.xyz/-/healthy',
+            //'https://alertmanager.ankhmorpork.thaum.xyz/-/healthy',
+            //'https://grafana.ankhmorpork.thaum.xyz/api/health',
           ],
           labels: { environment: 'ankhmorpork' },
           relabelingConfigs: [
@@ -108,7 +108,7 @@
               regex: 'https://192.168.2.29/redirect.html',
               replacement: 'qnap.ankhmorpork.thaum.xyz',
             },
-            {
+            /*{
               sourceLabels: ['instance'],
               targetLabel: 'instance',
               regex: '$1/-/healthy',
@@ -117,7 +117,7 @@
               sourceLabels: ['instance'],
               targetLabel: 'instance',
               regex: '$1/api/health',
-            },
+            },*/
           ],
         },
       },
