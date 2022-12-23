@@ -25,7 +25,12 @@ local all = oauth(config) + {
           },
         },
         spec+: {
-          containers: addArgs(['--skip-auth-regex=^.*%2F-%2Fhealthy', '--skip-auth-regex=^.*%2Fapi%2Fhealth'], 'oauth2-proxy', super.containers),
+          containers: addArgs([
+            '--skip-auth-regex=.*%2F-%2Fhealthy',
+            '--skip-auth-regex=.*/-/healthy',
+            '--skip-auth-regex=^/-/healthy',
+            '--skip-auth-regex=^%2F-%2Fhealthy',
+          ], 'oauth2-proxy', super.containers),
           nodeSelector+: {
             'network.infra/type': 'fast',
           },
