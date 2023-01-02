@@ -37,6 +37,12 @@ spec:
   - name: kube-state-metrics
     namespace: monitoring
     resource: ServiceMonitor
+  - name: kubelet
+    namespace: monitoring
+    resource: ServiceMonitor
+  - name: coredns
+    namespace: monitoring
+    resource: ServiceMonitor
   externalLabels:
     cluster: ankhmorpork
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz

@@ -320,11 +320,23 @@ local kp =
           // }],
 
           enforcedNamespaceLabel: 'namespace',
-          excludedFromEnforcement: [{
-            resource: 'ServiceMonitor',
-            namespace: $.kubeStateMetrics.serviceMonitor.metadata.namespace,
-            name: $.kubeStateMetrics.serviceMonitor.metadata.name,
-          }],
+          excludedFromEnforcement: [
+            {
+              resource: 'ServiceMonitor',
+              namespace: $.kubeStateMetrics.serviceMonitor.metadata.namespace,
+              name: $.kubeStateMetrics.serviceMonitor.metadata.name,
+            },
+            {
+              resource: 'ServiceMonitor',
+              namespace: $.kubernetesControlPlane.serviceMonitorKubelet.metadata.namespace,
+              name: $.kubernetesControlPlane.serviceMonitorKubelet.metadata.name,
+            },
+            {
+              resource: 'ServiceMonitor',
+              namespace: $.kubernetesControlPlane.serviceMonitorCoreDNS.metadata.namespace,
+              name: $.kubernetesControlPlane.serviceMonitorCoreDNS.metadata.name,
+            },
+          ],
           storage: {
             volumeClaimTemplate: {
               metadata: {
