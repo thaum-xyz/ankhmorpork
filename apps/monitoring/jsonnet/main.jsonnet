@@ -323,18 +323,11 @@ local kp =
           excludedFromEnforcement: [
             {
               resource: 'servicemonitors',
-              namespace: $.kubeStateMetrics.serviceMonitor.metadata.namespace,
-              name: $.kubeStateMetrics.serviceMonitor.metadata.name,
+              namespace: $.values.common.namespace,
             },
             {
-              resource: 'servicemonitors',
-              namespace: $.kubernetesControlPlane.serviceMonitorKubelet.metadata.namespace,
-              name: $.kubernetesControlPlane.serviceMonitorKubelet.metadata.name,
-            },
-            {
-              resource: 'servicemonitors',
-              namespace: $.kubernetesControlPlane.serviceMonitorCoreDNS.metadata.namespace,
-              name: $.kubernetesControlPlane.serviceMonitorCoreDNS.metadata.name,
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
             },
           ],
           storage: {
