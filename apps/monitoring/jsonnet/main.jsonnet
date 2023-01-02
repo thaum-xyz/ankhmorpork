@@ -320,7 +320,11 @@ local kp =
           // }],
 
           enforcedNamespaceLabel: 'namespace',
-
+          excludedFromEnforcement: [{
+            resource: 'ServiceMonitor',
+            namespace: $.kubeStateMetrics.serviceMonitor.metadata.namespace,
+            name: $.kubeStateMetrics.serviceMonitor.metadata.name,
+          }],
           storage: {
             volumeClaimTemplate: {
               metadata: {

@@ -33,6 +33,10 @@ spec:
   enableFeatures:
   - memory-snapshot-on-shutdown
   enforcedNamespaceLabel: namespace
+  excludedFromEnforcement:
+  - name: kube-state-metrics
+    namespace: monitoring
+    resource: ServiceMonitor
   externalLabels:
     cluster: ankhmorpork
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
