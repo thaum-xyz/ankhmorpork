@@ -322,17 +322,17 @@ local kp =
           enforcedNamespaceLabel: 'namespace',
           excludedFromEnforcement: [
             {
-              resource: 'ServiceMonitor',
+              resource: 'servicemonitors',
               namespace: $.kubeStateMetrics.serviceMonitor.metadata.namespace,
               name: $.kubeStateMetrics.serviceMonitor.metadata.name,
             },
             {
-              resource: 'ServiceMonitor',
+              resource: 'servicemonitors',
               namespace: $.kubernetesControlPlane.serviceMonitorKubelet.metadata.namespace,
               name: $.kubernetesControlPlane.serviceMonitorKubelet.metadata.name,
             },
             {
-              resource: 'ServiceMonitor',
+              resource: 'servicemonitors',
               namespace: $.kubernetesControlPlane.serviceMonitorCoreDNS.metadata.namespace,
               name: $.kubernetesControlPlane.serviceMonitorCoreDNS.metadata.name,
             },

@@ -36,13 +36,13 @@ spec:
   excludedFromEnforcement:
   - name: kube-state-metrics
     namespace: monitoring
-    resource: ServiceMonitor
+    resource: servicemonitors
   - name: kubelet
     namespace: monitoring
-    resource: ServiceMonitor
+    resource: servicemonitors
   - name: coredns
     namespace: monitoring
-    resource: ServiceMonitor
+    resource: servicemonitors
   externalLabels:
     cluster: ankhmorpork
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
