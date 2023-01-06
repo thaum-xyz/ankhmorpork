@@ -55,7 +55,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Container-orchestration system, the backbone of this project</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://github.com/weaveworks/kured/raw/main/img/logo.png"></td>
+    <td><img width="32" src="https://kured.dev/img/kured.png"></td>
     <td><a href="https://github.com/weaveworks/kured">kured</a></td>
     <td>Kubernetes Reboot Daemon</td>
   </tr>
@@ -100,6 +100,11 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Systems monitoring and alerting toolkit</td>
   </tr>
   <tr>
+    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/thanos/icon/color/thanos-icon-color.svg"></td>
+    <td><a href="https://thanos.io">Thanos</a></td>
+    <td>Metrics datalake</td>
+  </tr>
+  <tr>
     <td><img width="32" src="https://grafana.com/static/img/menu/grafana2.svg"></td>
     <td><a href="https://grafana.com">Grafana</a></td>
     <td>Operational dashboards</td>
@@ -109,11 +114,11 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td><a href="https://parca.dev">Parca</a></td>
     <td>Continuous profiling</td>
   </tr>
-  <tr>
+  <!-- <tr>
     <td><img width="32" src="https://github.com/grafana/loki/blob/main/docs/sources/logo.png?raw=true"></td>
     <td><a href="https://grafana.com/oss/loki">Loki</a></td>
     <td>Log aggregation system</td>
-  </tr>
+  </tr> -->
   <tr>
     <td><img width="32" src="https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png"></td>
     <td><a href="https://github.com/bastienwirtz/homer">Homer</a></td>
