@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static
+  namespace: tandoor
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: static
+  template:
+    metadata:
+      labels:
+        app: static
+    spec:
+      restartPolicy: Always
+      serviceAccountName: static
+      containers:
+      - name: nginx
+        image: nginx:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 80
+            protocol: TCP
+            name: http
+        resources: {}
+        volumeMounts:
+          - mountPath: /media
+            name: media
+            # mount as subPath due to lost+found on ext4 pvc
+            subPath: files
+          - mountPath: /static
+            name: static
+            # mount as subPath due to lost+found on ext4 pvc
+            subPath: files
+          - name: nginx-config
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx-config
+            readOnly: true
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: media
+        - name: static
+          persistentVolumeClaim:
+            claimName: static
+        - name: nginx-config
+          configMap:
+            name: nginx-config

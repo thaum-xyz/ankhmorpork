@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: recipes
+  namespace: tandoor
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: recipes-next.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          service:
+            name: recipes
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: static
+            port:
+              name: http
+        path: /media
+        pathType: Prefix
+      - backend:
+          service:
+            name: static
+            port:
+              name: http
+        path: /static
+        pathType: Prefix
+  tls:
+  - hosts:
+    - recipes-next.ankhmorpork.thaum.xyz
+    secretName: recipes-next-ankhmorpork-thaum-xyz-tls
