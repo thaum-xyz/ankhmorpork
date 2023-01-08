@@ -3,6 +3,8 @@ kind: StatefulSet
 metadata:
   name: recipes
   namespace: tandoor
+  labels:
+    app: recipes
 spec:
   replicas: 1
   serviceName: recipes
@@ -18,34 +20,17 @@ spec:
     spec:
       restartPolicy: Always
       initContainers:
-      - name: init-chmod-data
-        env:
-          - name: SECRET_KEY
-            valueFrom:
-              secretKeyRef:
-                name: recipes
-                key: secret-key
-          - name: DB_ENGINE
-            value: django.db.backends.postgresql_psycopg2
-          - name: POSTGRES_HOST
-            value: recipes-postgresql
-          - name: POSTGRES_PORT
-            value: "5432"
-          - name: POSTGRES_USER
-            value: postgres
-          - name: POSTGRES_DB
-            value: recipes
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: recipes
-                key: postgresql-postgres-password
-        image: vabene1111/recipes:1.0.1
+      - name: initialize
+        envFrom:
+        - secretRef:
+            name: timescaledb
+        - secretRef:
+            name: django
+        - configMapRef:
+            name: config-envs
+        image: vabene1111/recipes:1.4.5
         imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: 250m
-            memory: 64Mi
+        resources: {}
         command:
         - sh
         - -c
@@ -74,8 +59,15 @@ spec:
           subPath: files
       containers:
       - name: recipes
-        image: vabene1111/recipes:1.0.1
+        image: vabene1111/recipes:1.4.5
         imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: timescaledb
+        - secretRef:
+            name: django
+        - configMapRef:
+            name: config-envs
         command:
           - /opt/recipes/venv/bin/gunicorn
           - -b
@@ -93,10 +85,10 @@ spec:
             port: 8080
             scheme: HTTP
           periodSeconds: 30
-        resources:
-          requests:
-            cpu: 250m
-            memory: 64Mi
+        ports:
+        - containerPort: 8080
+          name: gunicorn
+        resources: {}
         volumeMounts:
           - mountPath: /opt/recipes/mediafiles
             name: media
@@ -106,37 +98,12 @@ spec:
             name: static
             # mount as subPath due to lost+found on ext4 pvc
             subPath: files
-        env:
-          - name: DEBUG
-            value: "0"
-          - name: ALLOWED_HOSTS
-            value: '*'
-          - name: SECRET_KEY
-            valueFrom:
-              secretKeyRef:
-                name: recipes
-                key: secret-key
-          - name: DB_ENGINE
-            value: django.db.backends.postgresql_psycopg2
-          - name: POSTGRES_HOST
-            value: recipes-postgresql
-          - name: POSTGRES_PORT
-            value: "5432"
-          - name: POSTGRES_USER
-            value: postgres
-          - name: POSTGRES_DB
-            value: recipes
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: recipes
-                key: postgresql-postgres-password
         securityContext:
           runAsUser: 65534
       volumes:
         - name: media
           persistentVolumeClaim:
-            claimName: recipes-media
+            claimName: media
         - name: static
           persistentVolumeClaim:
-            claimName: recipes-static
+            claimName: static

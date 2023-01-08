@@ -135,8 +135,8 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Microcontrollers Management</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://cdn.statically.io/gh/KakersUK/docker-templates/master/KakersUK/images/Mealie.png"></td>
-    <td><a href="https://hay-kot.github.io/mealie/">Mealie</a></td>
+    <td><img width="32" src="https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/logo_color.svg"></td>
+    <td><a href="https://tandoor.dev/">Tandoor</a></td>
     <td>Cookbook</td>
   </tr>
   <tr>

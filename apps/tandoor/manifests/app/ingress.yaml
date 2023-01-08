@@ -3,19 +3,20 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: 50M
   name: recipes
   namespace: tandoor
 spec:
   ingressClassName: nginx
   rules:
-  - host: recipes-next.ankhmorpork.thaum.xyz
+  - host: recipes.krupa.net.pl
     http:
       paths:
       - backend:
           service:
             name: recipes
             port:
-              number: 8080
+              name: gunicorn
         path: /
         pathType: Prefix
       - backend:
@@ -34,5 +35,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - recipes-next.ankhmorpork.thaum.xyz
-    secretName: recipes-next-ankhmorpork-thaum-xyz-tls
+    - recipes.krupa.net.pl
+    secretName: recipes-tls
