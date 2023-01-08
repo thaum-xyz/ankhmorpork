@@ -78,8 +78,8 @@ services:
       #  url: "https://cloud.krupa.net.pl"
       - name: Cookbook
         subtitle: "Our recipes"
-        logo: "https://github.com/hay-kot/mealie/raw/dev/frontend/public/img/icons/android-chrome-512x512.png"
-        url: "https://recipe.krupa.net.pl"
+        logo: "https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg"
+        url: "https://recipes.krupa.net.pl"
       - name: HomeAssistant
         subtitle: "Home automation system"
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png"

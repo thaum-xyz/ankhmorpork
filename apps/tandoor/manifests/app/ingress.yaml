@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: 50M
+  name: recipes
+  namespace: tandoor
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: recipes.krupa.net.pl
+    http:
+      paths:
+      - backend:
+          service:
+            name: recipes
+            port:
+              name: gunicorn
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: static
+            port:
+              name: http
+        path: /media
+        pathType: Prefix
+      - backend:
+          service:
+            name: static
+            port:
+              name: http
+        path: /static
+        pathType: Prefix
+  tls:
+  - hosts:
+    - recipes.krupa.net.pl
+    secretName: recipes-tls
