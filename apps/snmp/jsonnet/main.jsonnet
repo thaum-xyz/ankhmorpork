@@ -41,7 +41,7 @@ local all = snmp(config) + {
       template+: {
         metadata+: {
           annotations+: {
-            'parca.dev/scrape': "true",
+            'parca.dev/scrape': 'true',
           },
         },
       },
@@ -64,8 +64,8 @@ local all = snmp(config) + {
     config.targets[1].interval
   ),
   prometheusRule: {
-    apiVersion: "monitoring.coreos.com/v1",
-    kind: "PrometheusRule",
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'PrometheusRule',
     metadata: {
       name: config.name,
       namespace: config.namespace,
@@ -73,94 +73,94 @@ local all = snmp(config) + {
     },
     spec: {
       groups: [{
-        name: "qnap",
+        name: 'qnap',
         rules: [
           {
-            alert: "QNAPDiskFailure",
-            expr: "diskSmartInfo != 0",
-            "for": "15m",
+            alert: 'QNAPDiskFailure',
+            expr: 'diskSmartInfo != 0',
+            'for': '15m',
             labels: {
-              severity: "critical",
+              severity: 'critical',
             },
             annotations: {
-              summary: "QNAP hard drive is faulty",
-              description: "SMART data for hard drives number {{ $labels.diskIndex }} on QNAP NAS {{ $labels.instance }} reports disk failure. Disk most probably needs to be replaced as soon as possible.",
+              summary: 'QNAP hard drive is faulty',
+              description: 'SMART data for hard drives number {{ $labels.diskIndex }} on QNAP NAS {{ $labels.instance }} reports disk failure. Disk most probably needs to be replaced as soon as possible.',
               //runbook_url: ""
             },
           },
           {
-            alert: "QNAPFirmwareAvailable",
-            expr: "firmwareUpgradeAvailable != 0",
-            "for": "24h",
+            alert: 'QNAPFirmwareAvailable',
+            expr: 'firmwareUpgradeAvailable != 0',
+            'for': '24h',
             labels: {
-              severity: "info",
+              severity: 'info',
             },
             annotations: {
-              summary: "QNAP NAS firmware upgrade available",
-              description: "QNAP NAS {{ $labels.instance }} has pending firmware upgrade.",
+              summary: 'QNAP NAS firmware upgrade available',
+              description: 'QNAP NAS {{ $labels.instance }} has pending firmware upgrade.',
               //runbook_url: ""
             },
           },
           {
-            alert: "QNAPVolumeNotReady",
-            expr: "volumeStatus != 0",
-            "for": "2h",
+            alert: 'QNAPVolumeNotReady',
+            expr: 'volumeStatus != 0',
+            'for': '2h',
             labels: {
-              severity: "warning",
+              severity: 'warning',
             },
             annotations: {
-              summary: "QNAP volume is not ready",
-              description: "Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance }} is not ready for last 2h.",
+              summary: 'QNAP volume is not ready',
+              description: 'Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance }} is not ready for last 2h.',
               //runbook_url: ""
             },
           },
           {
-            alert: "QNAPVolumeNotReady",
-            expr: "volumeStatus < 0",
-            "for": "10m",
+            alert: 'QNAPVolumeNotReady',
+            expr: 'volumeStatus < 0',
+            'for': '10m',
             labels: {
-              severity: "critical",
+              severity: 'critical',
             },
             annotations: {
-              summary: "QNAP volume is in critical state",
-              description: "Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance }} is in critical state and needs immediate attention.",
+              summary: 'QNAP volume is in critical state',
+              description: 'Data Volume number {{ $labels.volumeIndex }} on QNAP {{ $labels.instance }} is in critical state and needs immediate attention.',
               //runbook_url: ""
             },
           },
           {
-            alert: "QNAPRAIDProblem",
-            expr: "raidStatus < 0",
-            "for": "20m",
+            alert: 'QNAPRAIDProblem',
+            expr: 'raidStatus < 0',
+            'for': '20m',
             labels: {
-              severity: "critical",
+              severity: 'critical',
             },
             annotations: {
-              summary: "QNAP RAID is in error state",
-              description: "RAID array number {{ $labels.raidIndex }} on QNAP {{ $labels.instance }} is in critical state and needs immediate attention.",
+              summary: 'QNAP RAID is in error state',
+              description: 'RAID array number {{ $labels.raidIndex }} on QNAP {{ $labels.instance }} is in critical state and needs immediate attention.',
               //runbook_url: ""
             },
           },
           {
-            alert: "QNAPRAIDProblem",
-            expr: "raidStatus != 0",
-            "for": "12h",
+            alert: 'QNAPRAIDProblem',
+            expr: 'raidStatus != 0',
+            'for': '12h',
             labels: {
-              severity: "warning",
+              severity: 'warning',
             },
             annotations: {
-              summary: "QNAP RAID is in warning state",
-              description: "RAID array number {{ $labels.raidIndex }} on QNAP {{ $labels.instance }} is in warning state for last 12h.",
+              summary: 'QNAP RAID is in warning state',
+              description: 'RAID array number {{ $labels.raidIndex }} on QNAP {{ $labels.instance }} is in warning state for last 12h.',
               //runbook_url: ""
             },
           },
           {
-            alert: "QNAPWriteCacheUnused",
-            expr: "max_over_time(cacheWriteHitRate[24h]) == 0 AND cacheAccelerationServiceEnabled == 1",
+            alert: 'QNAPWriteCacheUnused',
+            expr: 'max_over_time(cacheWriteHitRate[24h]) == 0 AND cacheAccelerationServiceEnabled == 1',
             labels: {
-              severity: "warning",
+              severity: 'warning',
             },
             annotations: {
-              summary: "QNAP Write Cache has 0% hit rate.",
+              summary: 'QNAP Write Cache has 0% hit rate.',
               description: "Write cache on QNAP {{ $labels.instance }} has 0% hit rate and is most likely unusued. Consider checking if cache setup didn't switch to read-only mode.",
               //runbook_url: ""
             },

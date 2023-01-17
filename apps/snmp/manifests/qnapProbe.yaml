@@ -8,12 +8,12 @@ metadata:
   name: qnap
   namespace: snmp
 spec:
-  interval: 1m
+  interval: 2m
   module: qnap
   prober:
     path: /snmp
     url: snmp-exporter.snmp.svc:9116
-  scrapeTimeout: 1m
+  scrapeTimeout: 2m
   targets:
     staticConfig:
       labels:

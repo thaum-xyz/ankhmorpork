@@ -14,7 +14,7 @@ resources:
 targets:
   - module: qnap
     hosts: [192.168.2.29]
-    interval: 1m
+    interval: 2m
   - module: qnaplong
     hosts: [192.168.2.29]
-    interval: 4m
+    interval: 5m
