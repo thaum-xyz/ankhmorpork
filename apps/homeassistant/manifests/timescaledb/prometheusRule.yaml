@@ -107,27 +107,3 @@ spec:
       for: 5m
       labels:
         severity: warning
-    - alert: PostgreSQLCacheHitRatio
-      annotations:
-        description: PostgreSQL low on cache hit rate on {{ $labels.cluster }} for
-          database {{ $labels.datname }} with a value of {{ $value }}
-        runbook_url: https://runbooks.thaum.xyz/runbooks/postgresql/postgresqlcachehitratio
-        summary: PostgreSQL low cache hit rate on {{ $labels.cluster }} for database
-          {{ $labels.datname }}
-      expr: |
-        avg by (datname) (
-          rate(pg_stat_database_blks_hit{datname!~"template.*",job="timescaledb", namespace="homeassistant"}[5m])
-          /
-          (
-            rate(
-              pg_stat_database_blks_hit{datname!~"template.*",job="timescaledb", namespace="homeassistant"}[5m]
-            )
-            +
-            rate(
-              pg_stat_database_blks_read{datname!~"template.*",job="timescaledb", namespace="homeassistant"}[5m]
-            )
-          )
-        ) < 0.98
-      for: 5m
-      labels:
-        severity: warning

@@ -4,6 +4,15 @@ local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassista
 local timescaledb = import 'github.com/thaum-xyz/jsonnet-libs/apps/timescaledb/timescaledb.libsonnet';
 local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
 
+local removeAlert(groups, name, alert) = std.map(
+  function(g) if g.name == name then
+    g {
+      rules: std.filter(function(rule) rule.alert != alert, g.rules),
+    }
+  else g,
+  groups,
+);
+
 local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
@@ -87,6 +96,15 @@ local all = {
         loadBalancerIP: '192.168.2.93',
         type: 'LoadBalancer',
         clusterIP:: null,
+      },
+    },
+    prometheusRule+: {
+      spec+: {
+        groups: removeAlert(
+          super.groups,
+          'PostgreSQL',
+          'PostgreSQLCacheHitRatio'
+        ),
       },
     },
   },
