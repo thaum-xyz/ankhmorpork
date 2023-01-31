@@ -37,18 +37,22 @@ data:
     # Redefine configuration options from default_config for more control
     # Current list can be found in https://www.home-assistant.io/integrations/default_config/
     automation: !include automations.yaml
+    backup:
+    #bluetooth:
     #cloud:
     config:
     counter:
     dhcp:
     energy:
     frontend:
+    #hardware:
     history:
+    homeassistant_alerts:
     image_upload:
     #input_boolean: # configured in lower part of the file
     input_datetime: # configured in lower part of the file
     input_number:
-    #input_select:
+    #input_select:  # configured in lower part of the file
     input_text:
     logbook:
     map:
@@ -65,7 +69,7 @@ data:
     system_health:
     #tag:
     timer:
-    #updater:
+    #usb:
     webhook:
     #zeroconf:
     zone:
