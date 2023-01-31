@@ -41,6 +41,7 @@ dhcp:
 energy:
 frontend:
 history:
+image_upload:
 #input_boolean: # configured in lower part of the file
 input_datetime: # configured in lower part of the file
 input_number:
