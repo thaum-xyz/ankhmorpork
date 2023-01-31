@@ -156,10 +156,6 @@ template:
             state_attr('calendar.pawel_krupa_net_pl','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
             as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int
           ),(
-            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int | timestamp_custom("%H:%M"),
-            state_attr('calendar.pawel_timescale_com','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
-            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int
-          ),(
             as_timestamp(state_attr('calendar.paulfantom','start_time')) | int | timestamp_custom("%H:%M"),
             state_attr('calendar.paulfantom','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
             as_timestamp(state_attr('calendar.paulfantom','start_time')) | int
@@ -180,10 +176,6 @@ template:
             as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int | timestamp_custom("%H:%M"),
             state_attr('calendar.pawel_krupa_net_pl','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
             as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int
-          ),(
-            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int | timestamp_custom("%H:%M"),
-            state_attr('calendar.pawel_timescale_com','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
-            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int
           ),(
             as_timestamp(state_attr('calendar.paulfantom','start_time')) | int | timestamp_custom("%H:%M"),
             state_attr('calendar.paulfantom','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
@@ -209,10 +201,6 @@ template:
             as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int | timestamp_custom("%H:%M"),
             state_attr('calendar.pawel_krupa_net_pl','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
             as_timestamp(state_attr('calendar.pawel_krupa_net_pl','start_time')) | int
-          ),(
-            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int | timestamp_custom("%H:%M"),
-            state_attr('calendar.pawel_timescale_com','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
-            as_timestamp(state_attr('calendar.pawel_timescale_com','start_time')) | int
           ),(
             as_timestamp(state_attr('calendar.paulfantom','start_time')) | int | timestamp_custom("%H:%M"),
             state_attr('calendar.paulfantom','message') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) | trim,
