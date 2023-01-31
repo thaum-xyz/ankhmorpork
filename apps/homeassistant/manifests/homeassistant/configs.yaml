@@ -44,7 +44,6 @@ data:
     energy:
     frontend:
     history:
-    image:
     #input_boolean: # configured in lower part of the file
     input_datetime: # configured in lower part of the file
     input_number:
@@ -124,21 +123,17 @@ data:
           - 'time'
           - 'date'
       - platform: rest
-        name: mealie
+        name: recipes
         scan_interval: 3600
         headers:
           content-type: application/json
-          authorization: !secret mealie_token
-        resource: https://recipe.krupa.net.pl/api/meal-plans/today
+          # authorization: !secret recipes_token
+        resource: https://recipes.krupa.net.pl/api/meal-plan
         value_template: >
           {% if value_json is none %}
             No meal plan
-          {% elif value_json.name %}
-          {{   value_json.name }}
-          {% elif value_json.detail %}
-          {{   value_json.detail }}
-          {% else %}
-            unknown
+          {% elif value_json[0] %}
+          {{ value_json[0].recipe.name }}
           {% endif %}
 
     template:
@@ -147,7 +142,7 @@ data:
         state: "{{ states('switch.espdisplay_backlight') }}"
         attributes:
           # First 6 characters of each line are considered a static prefix
-          line1: "LUNCH {{ states('sensor.mealie') }}"
+          line1: "LUNCH {{ states('sensor.recipes') }}"
           line2: >
             {%
               set calendars = [(
