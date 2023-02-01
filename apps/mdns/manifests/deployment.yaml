@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-mdns
+  namespace: mdns
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: external-mdns
+  template:
+    metadata:
+      labels:
+        app: external-mdns
+    spec:
+      hostNetwork: true
+      serviceAccountName: external-mdns
+      containers:
+      - name: external-mdns
+        image: blakec/external-mdns:latest
+        args:
+        - -source=ingress
+        - -source=service
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
