@@ -147,7 +147,7 @@ data:
         state: "{{ states('switch.espdisplay_backlight') }}"
         attributes:
           # First 6 characters of each line are considered a static prefix
-          line1: "LUNCH {{ states('sensor.recipes') }}"
+          line1: "LUNCH {{ states('sensor.recipes') | replace('ą','a') | replace('ć','c') | replace('ę','e') | replace('ł','l') | replace('ó','o') | replace('ś','s') | replace('ż','z') | replace('ź','z') | regex_replace(find='[^\x00-\x7F]+', replace='', ignorecase=False) }}"
           line2: >
             {%
               set calendars = [(
