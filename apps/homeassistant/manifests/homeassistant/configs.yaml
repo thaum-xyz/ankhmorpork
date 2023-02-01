@@ -132,7 +132,7 @@ data:
         scan_interval: 3600
         headers:
           content-type: application/json
-          # authorization: !secret recipes_token
+          authorization: !secret recipes_token
         resource: https://recipes.krupa.net.pl/api/meal-plan
         value_template: >
           {% if value_json is none %}
