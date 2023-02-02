@@ -1,3 +1,56 @@
+
+projector_on:
+  sequence:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.projector_socket
+  - service: remote.send_command
+    data:
+      device: nebula
+      command: toggle
+      num_repeats: 2
+      delay_secs: 0.5
+      hold_secs: 0
+    target:
+      entity_id: remote.broadlink
+  mode: single
+  icon: mdi:projector
+  alias: Projector ON
+
+projector_off:
+  sequence:
+  - service: remote.send_command
+    data:
+      device: nebula
+      command: toggle
+      num_repeats: 2
+      delay_secs: 0.5
+      hold_secs: 0
+    target:
+      entity_id: remote.broadlink
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.projector_socket
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.projector_socket
+  mode: single
+  icon: mdi:projector-off
+  alias: Projector OFF
+
 projector_toggle:
   sequence:
   - service: remote.send_command
@@ -26,7 +79,7 @@ speakers_line1:
       device: speakers
       command: "line1/2"
   mode: single
-  icon: mdi:cast-audio 
+  icon: mdi:cast-audio
 alarm_picture_notification:
   alias: Alarm Picture Notification
   sequence:

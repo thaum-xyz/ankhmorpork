@@ -246,6 +246,31 @@ cover:
             device: RFBridge433
             command: Stop
 
+switch:
+  - platform: template
+    switches:
+      projector:
+        friendly_name: "Projector"
+        unique_id: projector_anker_nebula
+        turn_on:
+          service: script.projector_on
+        turn_off:
+          service: script.projector_off
+        icon_template: >
+          {% if is_state('switch.projector', 'on') %}
+            mdi:projector
+          {% else %}
+            mdi:projector-off
+          {% endif %}
+  - platform: wake_on_lan
+    name: pawel-pc
+    host: "192.168.2.51"
+    mac: !secret pawel_pc_mac
+  - platform: wake_on_lan
+    name: adus-pc
+    host: "192.168.2.50"
+    mac: !secret adus_pc_mac
+
 input_boolean:
   projector:
     name: Projector State
@@ -342,16 +367,6 @@ plant:
 #    api_key: !secret slack_api_key
 #    default_channel: '#home'
 #    username: "home-assistant"
-
-switch:
-  - platform: wake_on_lan
-    name: pawel-pc
-    host: "192.168.2.51"
-    mac: !secret pawel_pc_mac
-  - platform: wake_on_lan
-    name: adus-pc
-    host: "192.168.2.50"
-    mac: !secret adus_pc_mac
 
 google_assistant:
   project_id: ankhhomeassistant
