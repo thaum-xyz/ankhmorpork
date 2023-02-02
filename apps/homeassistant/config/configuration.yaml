@@ -250,9 +250,6 @@ input_boolean:
   projector:
     name: Projector State
     icon: mdi:projector
-  projector_screen:
-    name: Projector Screen State
-    icon: mdi:projector-screen-variant-outline
   movie_time:
     name: Movie Time
     icon: mdi:movie-open
