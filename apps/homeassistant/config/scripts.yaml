@@ -1,13 +1,3 @@
-projector_toggle:
-  sequence:
-  - service: remote.send_command
-    data:
-      entity_id: remote.broadlink
-      device: nebula
-      command: toggle
-      num_repeats: 2
-  mode: single
-  icon: mdi:projector
 speakers_line1:
   sequence:
   - service: remote.send_command

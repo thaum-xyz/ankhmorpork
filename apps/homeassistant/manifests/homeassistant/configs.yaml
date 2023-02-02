@@ -257,7 +257,6 @@ data:
             unique_id: projector_anker_nebula
             turn_on:
             - service: switch.turn_on
-              data: {}
               target:
                 entity_id: switch.projector_socket
             - service: remote.send_command
@@ -290,7 +289,6 @@ data:
                 seconds: 5
                 milliseconds: 0
             - service: switch.turn_off
-              data: {}
               target:
                 entity_id: switch.projector_socket
             - delay:
@@ -299,7 +297,6 @@ data:
                 seconds: 5
                 milliseconds: 0
             - service: switch.turn_on
-              data: {}
               target:
                 entity_id: switch.projector_socket
             icon_template: >
@@ -441,16 +438,6 @@ data:
     sensor.mealie:
       icon: 'mdi:food'
   scripts.yaml: |
-    projector_toggle:
-      sequence:
-      - service: remote.send_command
-        data:
-          entity_id: remote.broadlink
-          device: nebula
-          command: toggle
-          num_repeats: 2
-      mode: single
-      icon: mdi:projector
     speakers_line1:
       sequence:
       - service: remote.send_command

@@ -254,7 +254,6 @@ switch:
         unique_id: projector_anker_nebula
         turn_on:
         - service: switch.turn_on
-          data: {}
           target:
             entity_id: switch.projector_socket
         - service: remote.send_command
@@ -287,7 +286,6 @@ switch:
             seconds: 5
             milliseconds: 0
         - service: switch.turn_off
-          data: {}
           target:
             entity_id: switch.projector_socket
         - delay:
@@ -296,7 +294,6 @@ switch:
             seconds: 5
             milliseconds: 0
         - service: switch.turn_on
-          data: {}
           target:
             entity_id: switch.projector_socket
         icon_template: >
