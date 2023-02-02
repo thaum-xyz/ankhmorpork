@@ -217,6 +217,35 @@ template:
 
         {% endif %}
 
+cover:
+  - platform: template
+    covers:
+      projector_screen:
+        device_class: blind
+        friendly_name: "Projector Screen"
+        value_template: "{{ not (states('binary_sensor.sonoff_a480039c4c') | bool) }}"
+        open_cover:
+          service: remote.send_command
+          target:
+            entity_id: remote.sonoff_10011faac6
+          data:
+            device: RFBridge433
+            command: Down
+        close_cover:        
+          service: remote.send_command
+          target:
+            entity_id: remote.sonoff_10011faac6
+          data:
+            device: RFBridge433
+            command: Up
+        stop_cover:
+          service: remote.send_command
+          target:
+            entity_id: remote.sonoff_10011faac6
+          data:
+            device: RFBridge433
+            command: Down
+
 input_boolean:
   projector:
     name: Projector State
