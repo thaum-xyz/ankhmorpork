@@ -223,7 +223,7 @@ cover:
       projector_screen:
         device_class: blind
         friendly_name: "Projector Screen"
-        value_template: "{{ not (states('binary_sensor.sonoff_a480039c4c') | bool) }}"
+        value_template: "{{ states('binary_sensor.sonoff_a480039c4c') | bool }}"
         open_cover:
           service: remote.send_command
           target:

@@ -91,10 +91,10 @@ data:
     {{ calendars[2][1] }}\n        {% else %}\n\n        {% endif %}\n\ncover:\n  -
     platform: template\n    covers:\n      projector_screen:\n        device_class:
     blind\n        friendly_name: \"Projector Screen\"\n        value_template: \"{{
-    not (states('binary_sensor.sonoff_a480039c4c') | bool) }}\"\n        open_cover:\n
-    \         service: remote.send_command\n          target:\n            entity_id:
-    remote.sonoff_10011faac6\n          data:\n            device: RFBridge433\n            command:
-    Down\n        close_cover:        \n          service: remote.send_command\n          target:\n
+    states('binary_sensor.sonoff_a480039c4c') | bool }}\"\n        open_cover:\n          service:
+    remote.send_command\n          target:\n            entity_id: remote.sonoff_10011faac6\n
+    \         data:\n            device: RFBridge433\n            command: Down\n
+    \       close_cover:        \n          service: remote.send_command\n          target:\n
     \           entity_id: remote.sonoff_10011faac6\n          data:\n            device:
     RFBridge433\n            command: Up\n        stop_cover:\n          service:
     remote.send_command\n          target:\n            entity_id: remote.sonoff_10011faac6\n
