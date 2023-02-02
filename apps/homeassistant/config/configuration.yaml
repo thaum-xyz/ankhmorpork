@@ -300,7 +300,7 @@ switch:
           target:
             entity_id: switch.projector_socket
         icon_template: >
-          {% if is_state(this, 'on') %}
+          {% if this.state == 'on' %}
             mdi:projector
           {% else %}
             mdi:projector-off
@@ -315,9 +315,6 @@ switch:
     mac: !secret adus_pc_mac
 
 input_boolean:
-  projector:
-    name: Projector State
-    icon: mdi:projector
   movie_time:
     name: Movie Time
     icon: mdi:movie-open
@@ -325,7 +322,7 @@ input_boolean:
 input_select:
   speakers:
     name: Speakers Input
-    icon: mdi:speakers
+    icon: mdi:speaker-multiple
     options:
     - opt/coax
     - line1/2
