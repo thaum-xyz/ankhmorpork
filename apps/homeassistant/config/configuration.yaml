@@ -253,11 +253,54 @@ switch:
         friendly_name: "Projector"
         unique_id: projector_anker_nebula
         turn_on:
-          service: script.projector_on
+        - service: switch.turn_on
+          data: {}
+          target:
+            entity_id: switch.projector_socket
+        - service: remote.send_command
+          data:
+            device: nebula
+            command: toggle
+            num_repeats: 2
+            delay_secs: 0.5
+            hold_secs: 0
+          target:
+            entity_id: remote.broadlink
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 20
+            milliseconds: 0
         turn_off:
-          service: script.projector_off
+        - service: remote.send_command
+          data:
+            device: nebula
+            command: toggle
+            num_repeats: 2
+            delay_secs: 0.5
+            hold_secs: 0
+          target:
+            entity_id: remote.broadlink
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 5
+            milliseconds: 0
+        - service: switch.turn_off
+          data: {}
+          target:
+            entity_id: switch.projector_socket
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 5
+            milliseconds: 0
+        - service: switch.turn_on
+          data: {}
+          target:
+            entity_id: switch.projector_socket
         icon_template: >
-          {% if is_state('switch.projector', 'on') %}
+          {% if is_state(this, 'on') %}
             mdi:projector
           {% else %}
             mdi:projector-off
