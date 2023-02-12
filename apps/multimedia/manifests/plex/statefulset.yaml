@@ -33,8 +33,8 @@ spec:
           value: 192.168.2.0/24,10.42.0.0/16
         - name: ADVERTISE_IP
           value: http://192.168.2.98:32400/
-        - name: NVIDIA_DRIVER_CAPABILITIES
-          value: all
+        #- name: NVIDIA_DRIVER_CAPABILITIES
+        #  value: all
         envFrom:
         - secretRef:
             name: plex-claim
@@ -50,8 +50,8 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5
         resources:
-          limits:
-            nvidia.com/gpu: 1
+        #  limits:
+        #    nvidia.com/gpu: 1
           requests:
             cpu: 2
             memory: 2500Mi
@@ -89,7 +89,7 @@ spec:
         kubernetes.io/arch: amd64
         storage.infra/main: "true"
       restartPolicy: Always
-      runtimeClassName: nvidia
+      #runtimeClassName: nvidia
       tolerations: []
       volumes:
       - name: movies
