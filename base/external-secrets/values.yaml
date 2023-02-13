@@ -1,0 +1,9 @@
+# Config reference: https://github.com/external-secrets/external-secrets/blob/main/deploy/charts/external-secrets/values.yaml
+
+serviceMonitor:
+  enabled: true
+  honorLabels: true
+
+certController:
+  serviceMonitor:
+    enabled: true
