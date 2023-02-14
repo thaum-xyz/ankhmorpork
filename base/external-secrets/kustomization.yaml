@@ -5,6 +5,7 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
+  - clusterSecretStoreDoppler.yaml
 configMapGenerator:
   - name: values
     files:
