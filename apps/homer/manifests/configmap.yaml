@@ -169,6 +169,9 @@ data:
           - name: UptimeRobot
             logo: "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"
             url: "https://uptimerobot.com/dashboard"
+          - name: Doppler
+            logo: "https://dashboard.doppler.com/imgs/logo.png"
+            url: "https://dashboard.doppler.com/"
           - name: NextDNS
             logo: "https://appteka.store/api/1/icon/get?hash=AfxOnnAVC55q9P8wC41q8i3I9N%2FfQVVHjM4e2r8kVhJuU5GYQJSe3msYMbOpyZDC"
             url: "https://my.nextdns.io/"
