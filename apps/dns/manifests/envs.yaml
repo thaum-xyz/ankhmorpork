@@ -10,7 +10,7 @@ metadata:
   namespace: dns
 spec:
   data:
-    remoteRef:
+  - remoteRef:
       key: DNS_NEXTDNS_ID
     secretKey: NEXTDNS_ID
   refreshInterval: 1h
