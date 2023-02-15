@@ -1,26 +1,31 @@
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
 metadata:
   creationTimestamp: null
   name: thanos-objectstorage
   namespace: datalake-metrics
 spec:
-  encryptedData:
-    ACCESS_KEY: AgAnW6Ar9rMIXJAb2H2uaJkYppB9h4NG/slkshNwRy+s2KTQuxjic5SdinzLatFWIgETHVhUbiV1mvgCZbrtc5Wc36q+TDBD5D+GmcdDLwC+1X2NQf+5fYEc5aJVjG/RlNhb4AWDzh3QPN8xjrad+Wbar0ixrePvWJLYxuQcxH+PBgaW80HGhCzeMoZVTTVyl8QADU5+C2Awc3zDFJ7MZbM1qitsBnJ9Zjo5ZYHCsdMM7JJXnYyA4dCkCj9nflVuBB1/Iljdjipb9oq7xn6P7RIgB9krULU8IzkSNgZVjQtImBOIKLCGyhPSbUlUtj5HPMqdyOVUx+US46tSTRU8M3TrGI+M81BYMAPtUPWqgafY4spfpKIo+D+L7sLzD2aOU00pbwZvffcazSZ8HOKZEjZjgKcIN0N03eVxHX8Q4QxjuJZR0lxQbrofzfKL3l6FticNUIdicRDlRCQOv6PY3B/OPTRMHBIxzfXM3ivmIYGAZTh3W0Ciao+2NIQp0c4ar/GIRn7ycniY88X1nWDmG+tm3ppHZp3YBvs6QDAOCLs5B/kzmljdscrbvtQ2yuSJJ+AQXyDiUjEAKzTdIqMZjdJeDgjH8tksE+C+5J9sxhYPZQc38Ji//aZpO942XXPg5MuxZ9fqCnG9LYKn0Go930fyiFc9V383Pn98KLfk0j4SpSEPAhs6vg5bKxc0/gkHDxohL9BmyHL97gJRA92JRVZj38I/4A==
-    SECRET_KEY: AgCVZxRNqAgFNUiRIYy1+peRnoCKtBeGVinslBRJkjlJtyKr6yjvSLR//k+Ov/cKagpNBOdi3isIWrz7/AKYjvCeuEHkQepe+AT1/B0XJkXDvNN0su7GM0Ieja8T36NO0WmL8PsxgHgmZCbJfeI6NlHcmUs78/krHMooDZXdFY/f1fjrIS5geqJdE6n28pYil14Z467Qz25+isgOEnXKeDX9w/hk3UlZWygqaDvXi1/DZUKHi4c3Gj2frSKyLQwVJlKm/XYrBRzjZdGsu4Oas5wTSs8UVhaSndlqOyKvUzLWB4VGm9G1O3i/tAVuHmdCiR5FEksUh2dBEPuBh+EmtzN0rz/DI2QuKQsFkDUR/njDGs3ri/XdPruvFCoSh+L2Bo2/6c0Ppl8NR4jCbxMZguTB7YLYOUhGTs8Wsb86dwGwJnpvZm2c6fmJlugYMzCS/5If3R6Y9DfmUe5SJ5sru55sirhcWU3V4trs8tfNViOC5H/rTR+yy4EoZ9o26QWWCMiZchEqpQ3Z4i1HGve8KuiBIeUxA/6cXha6Dd5GCVRe2+2bU3XDcI35OS/XVMbe1PprTyG8z8304TdlgS+PPbHZbnBC8pjdSCD2zKlF+thwqQBQ3SytKiv1iExqG5CFIvuiHEYkY4qrTAeISnX5WZ6VEqLHi6zfYmIRGttZqdd6LWc9WvuAwx4U8Ajg5523ZaaOWoaL8sI703DrEG6w98ypkvzIhKVRbbAD2q5DwNn5PV69dn6Yh4fZMVOH
-  template:
-    data:
-      thanos.yaml: |
-        type: S3
-        config:
-          bucket: thaum-datalake-metrics
-          endpoint: fra1.digitaloceanspaces.com
-          access_key: {{ index . "ACCESS_KEY" }}
-          secret_key: {{ index . "SECRET_KEY" }}
-        prefix: thanos
-    metadata:
-      annotations:
-        sealedsecrets.bitnami.com/managed: "true"
-      creationTimestamp: null
-      name: thanos-objectstorage
-      namespace: datalake-metrics
+  data:
+  - remoteRef:
+      key: THANOS_S3_ACCESS_KEY
+    secretKey: access_key
+  - remoteRef:
+      key: THANOS_S3_SECRET_KEY
+    secretKey: secret_key
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    name: thanos-objectstorage
+    template:
+      data:
+        thanos.yaml: |
+          type: S3
+          config:
+            bucket: thaum-datalake-metrics
+            endpoint: fra1.digitaloceanspaces.com
+            access_key: {{ .access_key }}
+            secret_key: {{ .secret_key }}
+          prefix: thanos
+      engineVersion: v2

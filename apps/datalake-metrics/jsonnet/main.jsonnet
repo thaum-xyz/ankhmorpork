@@ -1,5 +1,5 @@
 local t = import 'kube-thanos/thanos.libsonnet';
-local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 local settings = std.parseYaml(importstr '../settings.yaml')[0];
 
 local i = t.receiveIngestor(settings + settings.receiveIngestor + {
@@ -55,42 +55,35 @@ local all = {
     },
   },
   custom: {
-    bucketConfig: sealedsecret(
+    bucketConfig: externalsecret(
       {
         name: settings.objectStorageConfig.name,
         namespace: settings.namespace,
-      }, {
-        ACCESS_KEY: settings.objectStorageConfig.encryptedData.ACCESS_KEY,
-        SECRET_KEY: settings.objectStorageConfig.encryptedData.SECRET_KEY,
-      }
+      },
+      'doppler-auth-api',
+      settings.objectStorageConfig.credentialsRefs,
     ) + {
       spec+: {
-        template+: {
-          data: {
-            [settings.objectStorageConfig.key]: settings.objectStorageConfig.content,
+        target+: {
+          template+: {
+            engineVersion: 'v2',
+            data: {
+              [settings.objectStorageConfig.key]: settings.objectStorageConfig.content,
+            },
           },
         },
       },
     },
-    thanosReceiveIngressAuth: {
-      kind: 'SealedSecret',
-      apiVersion: 'bitnami.com/v1alpha1',
-      metadata: {
+    thanosReceiveIngressAuth: externalsecret(
+      {
         name: 'thanos-receive-ingress-auth',
-        namespace: 'datalake-metrics',
+        namespace: settings.namespace,
       },
-      spec: {
-        template: {
-          metadata: {
-            name: 'thanos-receive-ingress-auth',
-            namespace: 'datalake-metrics',
-          },
-        },
-        encryptedData: {
-          auth: settings.ingressAuth,
-        },
-      },
-    },
+      'doppler-auth-api',
+      {
+        auth: settings.ingressAuthHTPasswdRef,
+      }
+    ),
     ingress: {
       apiVersion: 'networking.k8s.io/v1',
       kind: 'Ingress',
