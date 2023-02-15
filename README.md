@@ -65,8 +65,8 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>GitOps tool built to deploy applications to Kubernetes</td>
   </tr>
   <tr>
-    <td></td>
-    <td><a href="https://github.com/bitnami-labs/sealed-secrets">SealedSecrets</a></td>
+    <td><img width="32" src="https://raw.githubusercontent.com/external-secrets/external-secrets/main/assets/eso-logo-medium.png"></td>
+    <td><a href="https://external-secrets.io/">ExternalSecrets</a></td>
     <td>Secrets and encryption management system</td>
   </tr>
   <tr>
