@@ -1,18 +1,16 @@
 local photoprism = import 'photoprism.libsonnet';
-local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 
 local config = std.parseYaml(importstr '../settings.yaml')[0];
 
 local all = photoprism(config.photoprism) + {
-  credentials: sealedsecret(
+  credentials: externalsecret(
     {
       name: 'credentials',
       namespace: config.photoprism.namespace,
     },
-    {
-      PHOTOPRISM_ADMIN_PASSWORD: config.photoprism.credentials.admin,
-      PHOTOPRISM_DATABASE_PASSWORD: config.photoprism.credentials.database,
-    }
+    'doppler-auth-api',
+    config.photoprism.credentialsRefs,
   ),
   ingress+: {
     metadata+: {
