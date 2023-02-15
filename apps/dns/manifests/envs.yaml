@@ -1,5 +1,5 @@
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
 metadata:
   creationTimestamp: null
   labels:
@@ -9,16 +9,13 @@ metadata:
   name: coredns-envs
   namespace: dns
 spec:
-  encryptedData:
-    NEXTDNS_ID: AgC2RbNHH/UVsTrkxBOd6iWGyGNJJoJIDBGYLg+u9ItNx5Jo6LA5yMoEQFq76h9d+tP6c3iX71YVNKP4IcEj4RgEb8ftg4ltUSaPDKRovprfKo13HgxAnq4bZ062b9uVvz5lZwyv1+IIX5/ngx+V8ldLC2NWUe2OQOjpf4811r/hKBcA8TJJfEWWA05GogEsLvFb8PNWQ2I6MZQW14noz2ZUCkj3sQ2hMv0/w24VfjkFHDGGBGxACM2Wk3qNAIOeGQQU0g4ZUz8iTJX00sMk32AcSCJiZ7gepJ63LTKQJGXwZaMXrCe8pwNLiPI88IF+eHwtOJ4yoc9B5FvnjcAkOD0ynu+tv1S6iRT4jPSnx4byVtvxccnizBvKdEG0wKVrqLL4bzrxc3xGb9RQbKYl1Fm4pnnkGKmujSAZ3sDlBQJX7JZ321iCA79WvQhaw5ASlr2JkqiTRHsfC6t/SWqzhjj0w6Cpbaoxr499uosRydtihQ84Wuoz5oyRrqSpqC1hzcffH5jGoQBqGpzc7A3cTCh4C18kdlCQCvjQe8lUQhVQOFIbRfbr2QRIwFeJ2QfgafzxLA9v+ex2cNI2C3jVSKsboCcvdZCCR27GIZIbxNXX2DjUQEnC7PM1Qjag4fDUqnjZ++yC07Xbi0QbSViYj0cayXElbTM+lCxvosKC/BW/2OmkJ23HNa2iIBSNXtPMwCaYGEkL5aQ=
-  template:
-    metadata:
-      annotations:
-        sealedsecrets.bitnami.com/managed: "true"
-      creationTimestamp: null
-      labels:
-        app.kubernetes.io/component: dns-server
-        app.kubernetes.io/name: coredns
-        app.kubernetes.io/version: 1.10.1
-      name: coredns-envs
-      namespace: dns
+  data:
+    remoteRef:
+      key: DNS_NEXTDNS_ID
+    secretKey: NEXTDNS_ID
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    name: coredns-envs

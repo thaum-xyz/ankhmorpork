@@ -1,4 +1,4 @@
-local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local externalsecret = (import 'externalsecrets.libsonnet').externalsecret;
 local coredns = import 'github.com/thaum-xyz/jsonnet-libs/apps/coredns/coredns.libsonnet';
 
 local corefile = importstr '../Corefile';
@@ -25,10 +25,14 @@ local all = {
     },
   },
   coredns: coredns($.config.coredns) + {
-    envs: sealedsecret(
+    envs: externalsecret(
       $.coredns.serviceAccount.metadata { name: $.config.coredns.secretName },
+      'doppler-auth-api',
       {
-        NEXTDNS_ID: $.config.coredns.nextDNSID,
+        secretKey: 'NEXTDNS_ID',
+        remoteRef: {
+          key: $.config.coredns.nextdnsIDRef,
+        },
       }
     ),
     local metallbMetadata = {
