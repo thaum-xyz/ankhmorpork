@@ -1,19 +1,23 @@
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
 metadata:
   creationTimestamp: null
   name: oauth-creds
   namespace: auth
 spec:
-  encryptedData:
-    OAUTH2_PROXY_CLIENT_ID: AgAKFQTTFhk2Qs6RDGYmJ6wChBe+e9QRQjU4MfXuyOz45+F9cStwUOgCClbMgkxz0JEh38tRNoCFaTI7mlfZhQD2PY41bijA1cTnuSFfzX9t+USOWVxtmUxhY6EUQxQ49fPWf5ulEAGp4PmpDV68Dbsp027PPnAxAL2UvyHX0KNJibV17mAwKFpU1C8nUCB1FYkbrv7cfzhZdGOYQCwBi5Ji/gH7r5N56UC6ofZTbWHTdA0cSH24xzXKrYcdOgCPBbaA9wTAs+D0huch0TcGgWZMe5dLOowUTuSZoedpuZbog1BxO6f4pxFbaz+3s1vBQHXHg6QWRUCkdlanLtsG07M4XENzSmiAZ3hFdTalc5eBC4dm/wwmcVGiLyRPM4KXMbFooiItkjACtJrH8en5rclYWAaB34Z4atB46DHBBy37zHw4gXIq4x9A9gGQL6Z6yQCeMrqh1juPzZf+PxJW7ix27vwCfhiMCpNobJJkHlgcUhdir3N2Xtga6n1xVejksMStq5MOsXALvCpuPjwnpuJUvq/qeoPzHbkfVX+0tAVAhGzw20dsh7tk8bqN6jSNiZxYnTiVCisxe4DBpvZfzSKg8mVAVjxd8nYYVmTODbeFXr3VLO1TMxI5IjBMJjVCwklf1mKsYU4XtD1PUAJ/js3TD9xdscQnmdi5HqxgRwp8U6NsUi5yFTl0WP+ImRP6noWRjxcXCpATvmaxij8STuK91jF+l09/hTksu4k6+93uh9Xjs4BX10w/P6hiaIHkGVS2hBgTJJJ4/O+SzI3RcoQ/clogIfXMixM=
-    OAUTH2_PROXY_CLIENT_SECRET: AgC5m0z71h8lzujIyra6P1tGaMLOOfpMTRodw9dyM1aWqbvnD/gIiXcxqnTDxZxbkYdn4QkQ5vH5EVh5XRN7YFGWKxkhKRrW8UX/QSVLpraH1to7B8ZRctoSRXxCnq4V8L0XnnfLqyWKPtGCAcJwFXsXbT1bkv1tig7k9XTG37KCeTCUsGmZMlB01funha4uF1QkGz5lSGl/snSaly99WdJBfPKZaiFZD698htMgo5N9XDYrQYS4LRvyT4jCgH7R5IN4adXnJIijt+i6KhszUUv4g6N7hkGMne7kSjBDU7eAYRAbXhv4z/nIZorm0sfF5AYPvRgLtwkEhzwdNUSQi6P9vCKHuIaPSDhe8JJgsh/CPzMtxaI8hs6I4qc3QQ2hHswKr7Y8agr6ctUGPN7KDEDehdz0OZjwK/K/7IsrwG9N236u4GQ0QxZAhOYCa8tmzT2DCw7/dHBdpAxzlbLKUxAgNkNlWHzHN294BIQZYGIHKzsmNL7XN+Xz+tYRZ41eQrBea6rO26cXvOlTAB6oDlLR167DGED+ev2q3Do40PUN9aUdbe9l0sxsP9sHBQ2gqyiN0zI1HNkkqTtdXU57gsAZDmbbDrsty2DbM4TQ+o1Pp8F6zhHDzoqp1c8cGapuxPc4dPYEAcDSWr0Um5Kn1PkYe1o/o7VI2Dp1Bznr4i2hH8FRsH4AbsRt10Qc+zunvrQN4u8jtm6e21AXJ6T5duR3SHNWVlA2fmHWXqujQiUU1bEoXQ==
-    OAUTH2_PROXY_COOKIE_SECRET: AgBGAKd9O3e0Bpo55iqCfwcn3hGWbjy7u751hGVocy+/vu0L8LTdWdiR7L36gluCMThhcWMkFWeLyGE+GrU7ssO75YOrZJFga268yTEcWQhFbp93O/+bdI3wlkhAeyL5ZsVSgxyx7r3x9GAIRZVxLosX3/hgYOocNJIHGl3S2WAPro9BPA2+GhyGNW0pXpALZOxFz3aefKChzc5lBUoVLZkxnKQ29ebvejZQgDwna4TchScl5LxHYGonb8suc4xiH5QoYIyLYSFXKyEahsMgj//xix/zIRdMSy8HhEEV9NuDKBYhA9RD4hqDqDAjurqh18KQnhN0EY0+XUF+QUsT0sW8u3ILGkKHBG04su8w0vBCduKC9JFODzOZGpXF2aQHTDUGyzhCBU2ScusqpmEMTmo4+qAQ4iAMPe6BAwGZ/BM4lRdGg5yHM5mbtWivyTmX94QDb+TXaMTK/nGyJ6TtLt6F3DBFUbVso4G0ZGyb5AZehjN7p47cf1PeoHG9b0xW9Zf6ZII7AGDeTI3InGp0MkZXOpUBa40c3eoZFRBL/vaOr5e1ggYqh0jcaJLuqJOiEM+sj/YCYkohNh45PTJM/sV2h6qMOphhG3Id0olwx2eMUxdbb7l/cQQm7ts8y0GznqjfvPk8G1Nq32TJjFTIoYJ+x1juLWWMPql2JYoKGy/lMBEeyTFfYw5Osb4K74fHHTEie+LQKko+AAFC0ehvrq7YdQOFiCdlDG0=
-  template:
-    data: null
-    metadata:
-      annotations:
-        sealedsecrets.bitnami.com/managed: "true"
-      creationTimestamp: null
-      name: oauth-creds
-      namespace: auth
+  data:
+  - remoteRef:
+      key: AUTH_CLIENT_ID
+    secretKey: OAUTH2_PROXY_CLIENT_ID
+  - remoteRef:
+      key: AUTH_CLIENT_SECRET
+    secretKey: OAUTH2_PROXY_CLIENT_SECRET
+  - remoteRef:
+      key: AUTH_COOKIE
+    secretKey: OAUTH2_PROXY_COOKIE_SECRET
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    name: oauth-creds

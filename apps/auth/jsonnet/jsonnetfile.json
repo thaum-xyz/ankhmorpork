@@ -18,8 +18,15 @@
           }
         },
         "version": "main"
+      },
+      {
+        "source": {
+          "local": {
+            "directory": "../../../lib/jsonnet/utils"
+          }
+        },
+        "version": ""
       }
     ],
     "legacyImports": true
   }
-  

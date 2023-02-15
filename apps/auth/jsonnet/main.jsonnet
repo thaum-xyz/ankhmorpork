@@ -1,5 +1,5 @@
-local encryptedSecretsData = import './creds.json';
 local oauth = import 'github.com/thaum-xyz/jsonnet-libs/apps/oauth2-proxy/oauth2-proxy.libsonnet';
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 
 local addArgs(args, name, containers) = std.map(
   function(c) if c.name == name then
@@ -10,9 +10,19 @@ local addArgs(args, name, containers) = std.map(
   containers,
 );
 
-local configYAML = (importstr '../settings.yaml');
-local config = std.parseYaml(configYAML)[0] {
-  encryptedSecretsData: encryptedSecretsData,
+local settings = std.parseYaml(importstr '../settings.yaml')[0];
+
+local creds = externalsecret(
+  {
+    name: 'oauth-creds',
+    namespace: settings.namespace,
+  },
+  'doppler-auth-api',
+  settings.credentialsRefs,
+);
+
+local config = settings {
+  encryptedSecretsData: creds,
 };
 
 local all = oauth(config) + {

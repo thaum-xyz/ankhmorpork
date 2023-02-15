@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: f71e524e8e7b3d273e9278ca9f171cf9
+        checksum.config/md5: 5031c0548201ac486e6363c74da926f2
       labels:
         app.kubernetes.io/component: proxy
         app.kubernetes.io/name: oauth2-proxy
