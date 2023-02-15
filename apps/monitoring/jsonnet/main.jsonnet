@@ -376,6 +376,8 @@ local kp =
     },
 
     kubernetesControlPlane+: {
+      // TODO: remove KubeCPUOvercommit and KubeMemoryOvercommit alerts
+
       // k3s exposes all this data under single endpoint and those can be obtained via "kubelet" Service
       serviceMonitorApiserver:: null,
       serviceMonitorKubeControllerManager:: null,
