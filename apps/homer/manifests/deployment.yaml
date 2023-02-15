@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homer
     app.kubernetes.io/part-of: homer
-    app.kubernetes.io/version: 22.11.2
+    app.kubernetes.io/version: 22.08.1
   name: homer
   namespace: homer
 spec:
@@ -18,12 +18,12 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: d243b57b4a8125e24f7ae621d023c9ee
+        checksum.config/md5: 0a2788cd686f1f691019d6c432d8e441
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homer
         app.kubernetes.io/part-of: homer
-        app.kubernetes.io/version: 22.11.2
+        app.kubernetes.io/version: 22.08.1
     spec:
       affinity:
         podAntiAffinity:
@@ -38,7 +38,7 @@ spec:
               topologyKey: kubernetes.io/hostname
             weight: 100
       containers:
-      - image: b4bz/homer:v22.11.2
+      - image: b4bz/homer:v22.08.1
         imagePullPolicy: IfNotPresent
         name: homer
         ports:
