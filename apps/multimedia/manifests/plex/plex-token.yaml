@@ -1,29 +1,30 @@
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
 metadata:
-  creationTimestamp: null
   name: plex-token
   namespace: multimedia
 spec:
-  encryptedData:
-    TOKEN: AgAO2fvReM3UiOpyqFck03Tq+oD+vtRrO0dlEibX9VAcrLPoZzCQY4HOPsnEcUHCsYLDl2U6qGq03jzsy5RaO6vx+lvpOhCM8GbBMEO70TFvtjdWfdR/OpdaziU2+DvOweBv28h65RicQNiYffCQRdfhlRSk0glm3UfzVKGQhi/Tei6rjjMmqJerBAA4shfktec9aZXzRsTD3GZ8G7ruefn7+NuPwQhYGyR4SttOTO0rOBs7RYsBNA/1b+mRrsXtL7Pudape1z0N2lfT3lBiQtAOtWijEG2b/ddP4pRONPIqvb3ovE3zEjq7Ma1yrp2dGQWvuyeNBG647RI0LsRueNuOLK8Qq86cSai44O1F1eoC1ZjYEohAqeYGdJKYN6WuFipQ4oBmPHs5Kdu9QYRLdWdooImK+NAesXoSrm6QtE+f0OYM1iO5qOH/xHJVkneMnrgprl4ptc9hjqDsCI6tsw789tdy/IoJievjKhpe4rkpNpNcmxGyTnDhtEui2mIRsQoUPRk9CvNshBMI4ewmNnDX1RqC2CP3AhTMm3U6hMlLAhU1a/d46HLQFkfFwMsLY5UH9SlS4KbAOrYyI6sVIgu4m/X6tTlzYF0cVWV6PyKG35InLSL3FHOo+lRFN8nC72ybY59pXa9dZjb7sSqQgVAx91OnzbrAbtYz6s5Jpjr/BQNVLvjso3i0XpjG5uSTgvWPNT04fhVYa8/LTRFU/HTUBIFxoQ==
-  template:
-    data:
-      config.json: |
-        {
-          "exporter": {
-            "port": 9594
-          },
-          "server": {
-            "address": "127.0.0.1",
-            "port": 32400,
-            "token": "{{ index . "TOKEN" }}"
+  data:
+  - remoteRef:
+      key: MULTIMEDIA_PLEX_TOKEN
+    secretKey: token
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    name: plex-token
+    template:
+      engineVersion: v2
+      data:
+        config.json: |
+          {
+            "exporter": {
+              "port": 9594
+            },
+            "server": {
+              "address": "127.0.0.1",
+              "port": 32400,
+              "token": "{{ .token }}"
+            }
           }
-        }
-    metadata:
-      annotations:
-        sealedsecrets.bitnami.com/managed: "true"
-      creationTimestamp: null
-      name: plex-token
-      namespace: multimedia
-    type: Opaque
