@@ -20,12 +20,17 @@ local all = {
       }
     ) + {
       spec+: {
-        template+: {
-          data+: {
-            PAPERLESS_DBHOST: 'db.paperless.svc',
-            PAPERLESS_DBNAME: config.paperless.database.name,
-            PAPERLESS_DBPORT: '5432',
-            PAPERLESS_DBSSLMODE: 'prefer',
+        target+: {
+          template+: {
+            engineVersion: 'v2',
+            data+: {
+              PAPERLESS_DBUSER: '{{ .PAPERLESS_DBUSER }}',
+              PAPERLESS_DBPASS: '{{ .PAPERLESS_DBPASS }}',
+              PAPERLESS_DBHOST: 'db.paperless.svc',
+              PAPERLESS_DBNAME: config.paperless.database.name,
+              PAPERLESS_DBPORT: '5432',
+              PAPERLESS_DBSSLMODE: 'prefer',
+            },
           },
         },
       },
