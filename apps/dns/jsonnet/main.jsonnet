@@ -49,6 +49,7 @@ local all = {
           metadata+: {
             annotations+: {
               'parca.dev/scrape': 'true',
+              'checksum.config/md5': std.md5(corefile),
             },
           },
           spec+: {

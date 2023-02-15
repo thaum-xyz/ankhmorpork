@@ -25,6 +25,7 @@ data:
         192.168.2.91 prometheus.ankhmorpork.thaum.xyz
         192.168.2.91 alertmanager.ankhmorpork.thaum.xyz
         192.168.2.91 home.ankhmorpork.thaum.xyz
+        192.168.2.91 seek.ankhmorpork.thaum.xyz
         192.168.2.91 push.ankhmopork.thaum.xyz
         192.168.2.91 portal.krupa.net.pl
         192.168.2.91 papers.krupa.net.pl
