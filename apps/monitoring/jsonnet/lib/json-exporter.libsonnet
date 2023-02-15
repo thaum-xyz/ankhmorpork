@@ -54,7 +54,7 @@ function(params) exporter(params) {
           volumes: [{
             name: $._metadata.name,
             secret: {
-              secretName: $.configuration.spec.template.metadata.name,
+              secretName: $.configuration.metadata.name,
             },
           }],
         },

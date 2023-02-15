@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 9482c4e4a8cda7a10d594f51119c2087
+        checksum.config/md5: 22b746e69c2800824d56006ef5578c46
         parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: exporter

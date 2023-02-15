@@ -18,7 +18,6 @@
 //       - prometheus
 //       - node-exporter
 //       - coredns
-//       - sealed-secrets
 //       - go runtime metrics (https://github.com/grafana/jsonnet-libs/tree/master/go-runtime-mixin)
 //     from json:
 //       - blackbox-exporter
@@ -127,7 +126,7 @@ local probe(name, namespace, labels, module, targets) = {
 };
 
 local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
-local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
@@ -665,11 +664,15 @@ local kp =
     },
 
     githubReceiver: githubReceiver($.values.githubReceiver) + {
-      credentials: sealedsecret($.githubReceiver.deployment.metadata {
-        name: $.values.githubReceiver.githubTokenSecretName,
-      }, {
-        ATG_GITHUB_TOKEN: $.values.githubReceiver.githubTokenEncrypted,
-      }),
+      credentials: externalsecret(
+        $.githubReceiver.deployment.metadata {
+          name: $.values.githubReceiver.githubTokenSecretName,
+        },
+        'doppler-auth-api',
+        {
+          ATG_GITHUB_TOKEN: $.values.githubReceiver.githubTokenRef,
+        }
+      ),
     },
 
     windowsExporter: windows($.values.windowsExporter),
@@ -703,11 +706,18 @@ local kp =
           },
         },
       },
-      configuration: sealedsecret($.uptimerobot.deployment.metadata, $.values.uptimerobot.credentials) + {
+      configuration: externalsecret(
+        $.uptimerobot.deployment.metadata,
+        'doppler-auth-api',
+        $.values.uptimerobot.credentials
+      ) + {
         spec+: {
-          template+: {
-            data: {
-              'config.yml': $.values.uptimerobot.config,
+          target+: {
+            template+: {
+              engineVersion: 'v2',
+              data: {
+                'config.yml': $.values.uptimerobot.config,
+              },
             },
           },
         },

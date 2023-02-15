@@ -213,7 +213,7 @@
     version: '0.1.0',  // application-version-from-github: pfnet-research/alertmanager-to-github
     image: 'ghcr.io/pfnet-research/alertmanager-to-github:v0.1.0',  // application-image-from-github: pfnet-research/alertmanager-to-github
     githubTokenSecretName: 'github-receiver-credentials',
-    githubTokenEncrypted: 'AgB1S5pLwshknGqtdeP3yrPyvBaZiiKdltO+1CrX7FL7Bf+xBJnxdPf1GQI4oFulBFGtmdH5L3VSOzlw0U0dqKemfdRsDeBfZkx4Ct8rnBRVMw+y3O5tAkXVeVbAkY6h5S/OJ1m3XaOC/tnNQoERbt5GN0+t4NBVlllATPNKjfKSz8RUWrkcwM0PbRszVry9Tlgk+0cVi/c8T4J87A3lTo9MvLPwBC30LoiJt2u542ecTr6aDJjJQyz0LE2l0S5kkHfnx966L9NxSTnBd8Q3f3/K20wlZjwY7kiRof6q31vkPf8bsgFog55oxfkWKfXX7OnqTWSKQ/Lo4wKO9JT1FA3tNFxfc/1mCyRymbYinFZjBSVda0U+g+T5Exkbbh8h8Y/E02DwUgfMoms6Nlsi5LltkF/BGNSylamL8KoI84gwhm76nPj3zBm0lnIn2MmWME1LF3JFxKpOHPyiPu6o1cfvyQozMeib+mvaVpyWx7CZOa4Zjta2KyURyCh+1Tm5WfjMkGsXXfu2kIoYd5LfhyPh1bjFs3UQzX+A/gb/jKvEf0FZ8gJheypM8vhI5i7L+oMDS99uNeg2nZxQ8k6jlgxNP8WcaoGkQQ+LC5X0UqPIJ6RxatyNc1e8yYNfLM43X5eIMnjiVXGmZ2PUbj2OaAS5Md/3Dtjz+mTQBkJ44P6zpw8pyxMNEG7jTwKvIh6iHaw5KRBZWN0lKVuomoyLDJVkVO7uZMD2xSpcHxVZUhMgBHNk+7FYB+yb',
+    githubTokenRef: 'MONITORING_ALERT_RECEIVER_GITHUB_TOKEN',
   },
   pushgateway: {
     namespace: 'monitoring',
@@ -255,14 +255,14 @@
     },
     targets: ['https://api.uptimerobot.com/v2/getMonitors'],
     credentials: {
-      API_KEY: 'AgDBgACduTClD7MpWPxletQQpxZRPDNrEHjtH5Ssn4IYh/ZVkFaNDcAjcISKRwgvwGZ8zkVsBGo3jfeGo47Tu+6uiHaWTtCKHn4wKmWDykaEHN/rGo+uP9qzbppoyosiAsalitdHzPacZ/IqgEiVLLJLf9S/Y4FcTcgOeeB1WUBQ8PyS5UhbNRyVkt3i9CG5u6WMKh+q8pioULec0C3KIkhSDorKRzcwr1Y446h9RCU57jVCbBr2hqQ68NNFqX37r2lnX+T6fNbkLploG2tkpg1CCYLzHJLGvYSHyP6EGjVBux/t4bOSP4bn8v+vNByBkhxxdiiyKTlmZq5E98bVIWaBMbis1i01u9/0snsTxAr3cXoRjCL/s+Kq6Mf+Fax9BZh+7okhJ8/Uz+1ReNsolV4u/xJnOeVxf4PUiL/1eLkNfxqUQbD8xsz9QR41N+hvpu4QkuaRv0BbEIt794X/nGpb+AJgFs8Xh+R+SNbqcqpLXg6yokETvZLszXZiRaheyhqPZB8j89p8QOiQYVeKQFhNjtknSXihdUXHs1z441ysDvjeap1DrXEHYUDgHFhQPF8sziyrVODwaQR65Iym0BC9cvfDM44q/cxGt2JtGeMp+6Oqw5ikGZOqVw9NmK1/GRMuTfAsHUrGZ0g2vyPYJUEo0qc5Ig28MfGPUi1q/bBgRc73ALIxNWGcN1137eTh5yQbA1/GlFaWYdT2eIJ+aPpxg6bbIsG+B2bxE1qiD5cRoTc1',
+      apiKey: 'MONITORING_UPTIMEROBOT_API_KEY',
     },
     config: |||
       headers:
         Content-Type: "application/x-www-form-urlencoded"
         Cache-Control: "no-cache"
       body:
-        content: 'api_key={{ index . "API_KEY" }}&format=json&response_times=1'
+        content: 'api_key={{ .apiKey }}&format=json&response_times=1'
       metrics:
       - name: "uptimerobot_monitor"
         type: "object"
