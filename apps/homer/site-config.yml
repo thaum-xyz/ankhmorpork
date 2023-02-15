@@ -1,7 +1,7 @@
 title: "Ankhmorpork portal"
 subtitle: "thaum"
-logo: "logo.png"
-# icon: "fas fa-skull-crossbones" # Optional icon
+#logo: "assets/logo.png"
+icon: "fas fa-sitemap"
 
 header: true
 footer: false
