@@ -1,4 +1,4 @@
-local externalsecret = (import 'externalsecrets.libsonnet').externalsecret;
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 local coredns = import 'github.com/thaum-xyz/jsonnet-libs/apps/coredns/coredns.libsonnet';
 
 local corefile = importstr '../Corefile';
@@ -48,7 +48,8 @@ local all = {
           metadata+: {
             annotations+: {
               'parca.dev/scrape': 'true',
-              'checksum.config/md5': std.md5(corefile),
+              'checksum.corefile/md5': std.md5(corefile),
+              'checksum.envs/md5': std.md5(std.toString($.coredns.envs)),
             },
           },
           spec+: {

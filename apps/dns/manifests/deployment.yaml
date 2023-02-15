@@ -20,7 +20,8 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 0ceb1f272fbfff5b4a5e26fdb1fda1a7
+        checksum.corefile/md5: 0ceb1f272fbfff5b4a5e26fdb1fda1a7
+        checksum.envs/md5: bfa03ec9140928607060454ff0a78850
         parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: dns-server

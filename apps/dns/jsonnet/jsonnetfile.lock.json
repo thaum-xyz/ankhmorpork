@@ -18,8 +18,8 @@
           "subdir": "grafana-builder"
         }
       },
-      "version": "a2ba95acc8b7653d33bd57075678d8de2a64e5b3",
-      "sum": "1Ge62JmmPDq7fWyDAt3uCTobGEj4sJdbkqxRGWK22p0="
+      "version": "10f4670bd5bc6bdcb3e91ba6a397e37610f2ee94",
+      "sum": "tDR6yT2GVfw0wTU12iZH+m01HrbIr6g/xN+/8nzNkU0="
     },
     {
       "source": {
@@ -28,8 +28,8 @@
           "subdir": ""
         }
       },
-      "version": "b8f44bb7be728423836bef0e904ec7166895a34b",
-      "sum": "LCgSosxceeYuoau5fYSPtE5eXOFe46DxexfkrctUv7c="
+      "version": "07ee0700006ecbc8704ff0b2790fccac18c36c6d",
+      "sum": "lKvjoL0XAZa7+qswrvdV4TzoTiE2KRB73GNyduq/Ygg="
     },
     {
       "source": {
@@ -48,7 +48,7 @@
           "subdir": "apps/coredns"
         }
       },
-      "version": "82f8ef50974d5dad69c243b6cba3a51b4645ff0b",
+      "version": "134fd2d5664f72b3b4d2d89c964c1b48740a3705",
       "sum": "W0UwCzrPHr4ZYQoJWYuCGUXC6gcxiaS1QnVTgC7S0MY="
     },
     {
@@ -58,8 +58,16 @@
           "subdir": "utils"
         }
       },
-      "version": "82f8ef50974d5dad69c243b6cba3a51b4645ff0b",
+      "version": "134fd2d5664f72b3b4d2d89c964c1b48740a3705",
       "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
+    },
+    {
+      "source": {
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
+        }
+      },
+      "version": ""
     }
   ],
   "legacyImports": false
