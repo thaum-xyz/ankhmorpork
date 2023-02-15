@@ -1,7 +1,7 @@
 local timescaledb = import 'github.com/thaum-xyz/jsonnet-libs/apps/timescaledb/timescaledb.libsonnet';
 local paperless = import 'paperless.libsonnet';
 local redis = import 'redis.libsonnet';
-local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 
 local configYAML = (importstr '../settings.yaml');
 
@@ -11,11 +11,12 @@ local config = std.parseYaml(configYAML)[0];
 local all = {
   web: paperless(config.paperless) + {
     database+:: {},
-    databaseEnc: sealedsecret(
+    databaseSecret: externalsecret(
       $.web.database.metadata,
+      'doppler-auth-api',
       {
-        PAPERLESS_DBUSER: config.paperless.database.encryptedUser,
-        PAPERLESS_DBPASS: config.paperless.database.encryptedPass,
+        PAPERLESS_DBUSER: config.paperless.database.userRef,
+        PAPERLESS_DBPASS: config.paperless.database.passRef,
       }
     ) + {
       spec+: {
@@ -30,13 +31,14 @@ local all = {
       },
     },
     secrets+:: {},
-    secretsEnc: sealedsecret(
+    secretsExternal: externalsecret(
       $.web.secrets.metadata,
+      'doppler-auth-api',
       {
-        PAPERLESS_ADMIN_USER: config.paperless.secrets.user,
-        PAPERLESS_ADMIN_PASSWORD: config.paperless.secrets.pass,
-        PAPERLESS_ADMIN_MAIL: config.paperless.secrets.email,
-        PAPERLESS_SECRET_KEY: config.paperless.secrets.key,
+        PAPERLESS_ADMIN_USER: config.paperless.secretsRefs.user,
+        PAPERLESS_ADMIN_PASSWORD: config.paperless.secretsRefs.pass,
+        PAPERLESS_ADMIN_MAIL: config.paperless.secretsRefs.email,
+        PAPERLESS_SECRET_KEY: config.paperless.secretsRefs.key,
       }
     ),
 
@@ -80,14 +82,15 @@ local all = {
     },
   },
   db: timescaledb(config.db) + {
-    credentials: sealedsecret(
+    credentials: externalsecret(
       {
         name: 'db',
         namespace: config.db.namespace,
       },
+      'doppler-auth-api',
       {
-        POSTGRES_USER: config.db.database.encryptedUser,
-        POSTGRES_PASSWORD: config.db.database.encryptedPass,
+        POSTGRES_USER: config.db.database.userRef,
+        POSTGRES_PASSWORD: config.db.database.passRef,
       }
     ),
   },
