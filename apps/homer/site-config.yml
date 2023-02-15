@@ -59,6 +59,9 @@ tags:
   Testing: &Testing
     - tag: testing
       tagstyle: "is-danger"
+  External: &External
+    - tag: 3rd party
+      tagstyle: "is-info"
 
 # Services
 # First level array represent a group.
@@ -72,10 +75,6 @@ services:
         logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Internet-icon.svg"
         <<: *Testing
         url: "https://portal.krupa.net.pl"
-      #- name: Nextcloud
-      #  subtitle: "Everything and more"
-      #  logo: "https://avatars0.githubusercontent.com/u/19211038?s=200&v=4"
-      #  url: "https://cloud.krupa.net.pl"
       - name: Cookbook
         subtitle: "Our recipes"
         logo: "https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg"
@@ -87,6 +86,7 @@ services:
       - name: Image Compressor
         subtitle: "Compress images online"
         logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
+        <<: *External
         url: "https://compressor.io/"
       - name: Storage Unit
         subtitle: Tracking content stored remotely
@@ -112,8 +112,6 @@ services:
       - name: Plex
         subtitle: "Video on demand"
         logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
-        # <<: *Local
-        # url: "http://192.168.2.98:32400/web/index.html#"
         url: "https://app.plex.tv/"
       - name: Seeker
         subtitle: "Media requests"
@@ -165,12 +163,15 @@ services:
         url: "https://parca.ankhmorpork.thaum.xyz/"
       - name: UptimeRobot
         logo: "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"
+        <<: *External
         url: "https://uptimerobot.com/dashboard"
       - name: Doppler
         logo: "https://dashboard.doppler.com/imgs/logo.png"
+        <<: *External
         url: "https://dashboard.doppler.com/"
       - name: NextDNS
         logo: "https://appteka.store/api/1/icon/get?hash=AfxOnnAVC55q9P8wC41q8i3I9N%2FfQVVHjM4e2r8kVhJuU5GYQJSe3msYMbOpyZDC"
+        <<: *External
         url: "https://my.nextdns.io/"
       - name: Unifi
         logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
