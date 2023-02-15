@@ -28,12 +28,9 @@ local all = {
     envs: externalsecret(
       $.coredns.serviceAccount.metadata { name: $.config.coredns.secretName },
       'doppler-auth-api',
-      [{
-        secretKey: 'NEXTDNS_ID',
-        remoteRef: {
-          key: $.config.coredns.nextdnsIDRef,
-        },
-      }],
+      {
+        NEXTDNS_ID: $.config.coredns.nextdnsIDRef,
+      },
     ),
     local metallbMetadata = {
       metadata+: {
