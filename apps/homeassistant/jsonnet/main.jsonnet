@@ -2,7 +2,7 @@ local externalTargets = import 'externalTargets.libsonnet';
 local esphome = import 'github.com/thaum-xyz/jsonnet-libs/apps/esphome/esphome.libsonnet';
 local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassistant/homeassistant.libsonnet';
 local timescaledb = import 'github.com/thaum-xyz/jsonnet-libs/apps/timescaledb/timescaledb.libsonnet';
-local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 
 local removeAlert(groups, name, alert) = std.map(
   function(g) if g.name == name then
@@ -16,14 +16,7 @@ local removeAlert(groups, name, alert) = std.map(
 local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
-local config = std.parseYaml(configYAML)[0] {
-  homeassistant+: {
-    apiTokenSecretKeySelector: {
-      name: 'credentials',
-      key: 'token',
-    },
-  },
-};
+local config = std.parseYaml(configYAML)[0];
 
 local all = {
   esphomedevices: externalTargets(config.espdevices) {
@@ -75,14 +68,15 @@ local all = {
     },
   },
   timescaledb: timescaledb(config.timescaledb) + {
-    credentials: sealedsecret(
+    credentials: externalsecret(
       {
         name: 'timescaledb',
         namespace: config.timescaledb.namespace,
       },
+      'doppler-auth-api',
       {
-        POSTGRES_USER: config.timescaledb.database.encryptedUser,
-        POSTGRES_PASSWORD: config.timescaledb.database.encryptedPass,
+        POSTGRES_USER: config.timescaledb.database.userRef,
+        POSTGRES_PASSWORD: config.timescaledb.database.passRef,
       }
     ),
     service+: {
@@ -109,12 +103,13 @@ local all = {
     },
   },
   homeassistant: homeassistant(config.homeassistant) + {
-    credentials: sealedsecret(
+    credentials: externalsecret(
       {
         name: config.homeassistant.apiTokenSecretKeySelector.name,
         namespace: config.homeassistant.namespace,
       },
-      { [config.homeassistant.apiTokenSecretKeySelector.key]: config.homeassistant.encryptedAPIToken }
+      'doppler-auth-api',
+      { [config.homeassistant.apiTokenSecretKeySelector.key]: config.homeassistant.apiTokenRef }
     ),
     configs: {
       apiVersion: 'v1',
