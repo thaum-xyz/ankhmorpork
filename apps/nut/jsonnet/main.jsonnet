@@ -1,5 +1,5 @@
 local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
-local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 
 local configYAML = (importstr '../settings.yaml');
 
@@ -7,10 +7,12 @@ local configYAML = (importstr '../settings.yaml');
 local config = std.parseYaml(configYAML)[0];
 
 local all = exporter(config) + {
-  nutConfig: sealedsecret({
-    name: config.name,
-    namespace: config.namespace,
-  }, config.encryptedCredentials),
+  nutConfig: externalsecret({
+                              name: config.name,
+                              namespace: config.namespace,
+                            },
+                            'doppler-auth-api',
+                            config.credentialsRefs),
   deployment+: {
     spec+: {
       template+: {
