@@ -1,4 +1,4 @@
-local sealedsecret = (import 'github.com/thaum-xyz/jsonnet-libs/utils/sealedsecret.libsonnet').sealedsecret;
+local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 
 local configYAML = (importstr '../settings.yaml');
 
@@ -16,12 +16,18 @@ local all = {
         'app.kubernetes.io/component': 'exporter',
       },
     },
-    configuration: sealedsecret($.poller._metadata, config.poller.credentials) + {
+    configuration: externalsecret(
+      $.poller._metadata,
+      'doppler-auth-api',
+      config.poller.credentialsRefs
+    ) + {
       spec+: {
-        metadata+: $.poller._metadata,
-        template+: {
-          data: {
-            'unifi-poller.conf': config.poller.config,
+        target+: {
+          template+: {
+            engineVersion: 'v2',
+            data: {
+              'unifi-poller.conf': config.poller.config,
+            },
           },
         },
       },
@@ -62,7 +68,7 @@ local all = {
         template: {
           metadata: $.poller._metadata {
             annotations: {
-              'checksum.config/md5': std.md5(std.toString(config.poller.credentials)),
+              'checksum.config/md5': std.md5(std.toString(config.poller.credentialsRefs)),
             },
           },
           spec: {
@@ -96,102 +102,6 @@ local all = {
       },
     },
   },
-  backup:: {
-    _metadata:: {
-      name: 'backup',
-      namespace: config.namespace,
-      labels: {
-        'app.kubernetes.io/name': 'backup',
-      },
-    },
-    sshprivkey: sealedsecret(
-      $.backup._metadata { name: 'sshprivkey' },
-      { id_rsa: config.backup.encryptedSSHKey }
-    ),
-
-    local c = {
-      name: 'copier',
-      image: config.backup.image,
-      command: [
-        'rsync',
-        '-av',
-        '--delete',
-        '-e',
-        'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null',
-        'root@' + config.backup.host + ':/data/autobackup/',
-        '/backup/',
-      ],
-      resources: {
-        requests: {
-          cpu: '520m',
-          memory: '20Mi',
-        },
-        limits: {
-          cpu: '800m',
-          memory: '100Mi',
-        },
-      },
-      volumeMounts: [
-        {
-          name: 'backups',
-          mountPath: '/backups',
-        },
-        {
-          name: 'ssh',
-          mountPath: '/root/.ssh',
-          readOnly: true,
-        },
-      ],
-    },
-    cronjob: {
-      apiVersion: 'batch/v1',
-      kind: 'CronJob',
-      metadata: $.backup._metadata,
-      spec: {
-        successfulJobsHistoryLimit: 1,
-        failedJobsHistoryLimit: 3,
-        concurrencyPolicy: 'Forbid',
-        schedule: '6 6 * * sun',  // At 06:06 on Sunday
-        jobTemplate: {
-          spec: {
-            template: {
-              spec: {
-                containers: [c],
-                volumes: [
-                  {
-                    name: 'backups',
-                    persistentVolumeClaim: { claimName: $.backup.pvc.metadata.name },
-                  },
-                  {
-                    name: 'ssh',
-                    secret: {
-                      secretName: $.backup.sshprivkey.metadata.name,
-                      defaultMode: 384,  // Same as 0600
-                    },
-                  },
-                ],
-                restartPolicy: 'OnFailure',
-              },
-            },
-          },
-        },
-      },
-    },
-    pvc: {
-      apiVersion: 'v1',
-      kind: 'PersistentVolumeClaim',
-      metadata: $.backup._metadata,
-      spec: {
-        storageClassName: 'managed-nfs-storage',
-        accessModes: ['ReadWriteOnce'],
-        resources: {
-          requests: {
-            storage: '100Mi',
-          },
-        },
-      },
-    },
-  },
   restarter: {
     _metadata:: {
       name: 'restarter',
@@ -210,13 +120,13 @@ local all = {
             {
               alert: 'NodeDown',
               expr: 'count by (node) (up{job="node-exporter"} == 0) > 0 AND count by (node) (up{job="kubelet", metrics_path="/metrics"} == 0) > 0',
-              "for": "15m",
+              'for': '15m',
               annotations: {
                 description: 'Metrics from node_exporter and kubelet cannot be gathered for node {{ $labels.node }} suggesting node is down. Alert should be automatically remediated by attempting node power cycle',
                 summary: 'Node is down for extended period of time',
               },
               labels: {
-                severity: 'warning', //TODO: change to `info` when automated restarter is finished and deployed
+                severity: 'warning',  //TODO: change to `info` when automated restarter is finished and deployed
               },
             },
           ],

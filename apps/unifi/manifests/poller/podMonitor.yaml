@@ -8,8 +8,7 @@ metadata:
   namespace: unifi
 spec:
   podMetricsEndpoints:
-  - interval: 90s
-    scrapeTimeout: 90s
+  - interval: 30s
     port: metrics
   selector:
     matchLabels:

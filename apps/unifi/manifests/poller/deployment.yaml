@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: d3c60b57c413107cc7a142621f65399a
+        checksum.config/md5: 985702d46b91fbbe23caedf6f32467cc
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: unifi-poller
@@ -23,7 +23,7 @@ spec:
       namespace: unifi
     spec:
       containers:
-      - image: golift/unifi-poller:2.1.3
+      - image: golift/unifi-poller:2.7.11
         name: unifi-poller
         ports:
         - containerPort: 9130
