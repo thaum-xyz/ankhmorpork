@@ -7,11 +7,11 @@ port: 9199
 replicas: 1
 resources:
   requests:
-    cpu: 4m
+    cpu: 10m
     memory: 17Mi
   limits:
     memory: 100Mi
-    cpu: 20m
+    cpu: 30m
 upses: ["192.168.2.29"]
 credentialsRefs:
   NUT_EXPORTER_PASSWORD: 'NUT_EXPORTER_PASSWORD'
