@@ -180,12 +180,12 @@ local kp =
           name: 'alertmanager-config-template',
         },
         data: {
-          'alertmanager.yaml': (importstr '../raw/alertmanager-config.tmpl.yaml'),
+          'alertmanager.yaml': (importstr '../raw/alertmanager-config.yaml.gtpl'),
         },
       },
-      secretTest: externalsecret(
+      secret: externalsecret(
         $.alertmanager.alertmanager.metadata {
-          name: 'alertmanager-main-test',
+          name: 'alertmanager-main',
         },
         'doppler-auth-api',
         $.values.alertmanager.credentialsRefs,

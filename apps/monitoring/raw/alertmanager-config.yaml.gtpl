@@ -1,6 +1,8 @@
+{{/*
 # NOTE: This file is first processed by the Go template engine in external-secrets-operator
 # as such all the {{ SOME_TEMPLTE }} references that need to be passed to alertmanager need to be first escaped
 # with {{ `{{ SOME_TEMPLTE }}` }}
+*/}}
 
 global:
   resolve_timeout: 5m
