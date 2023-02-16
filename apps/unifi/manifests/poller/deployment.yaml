@@ -15,7 +15,8 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 985702d46b91fbbe23caedf6f32467cc
+        checksum.config/md5: 55923d20e1fadcf735c826cce4cb847f
+        checksum.credentials/md5: 985702d46b91fbbe23caedf6f32467cc
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: unifi-poller
@@ -36,9 +37,9 @@ spec:
             cpu: 5m
             memory: 20Mi
         volumeMounts:
-        - mountPath: /config/unifi-poller.conf
+        - mountPath: /etc/unpoller/up.conf
           name: config
-          subPath: unifi-poller.conf
+          subPath: up.conf
       restartPolicy: Always
       volumes:
       - name: config

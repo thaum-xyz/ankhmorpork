@@ -26,7 +26,7 @@ local all = {
           template+: {
             engineVersion: 'v2',
             data: {
-              'unifi-poller.conf': config.poller.config,
+              'up.conf': config.poller.config,
             },
           },
         },
@@ -48,9 +48,9 @@ local all = {
       }],
       resources: config.poller.resources,
       volumeMounts: [{
-        mountPath: '/config/unifi-poller.conf',
+        mountPath: '/etc/unpoller/up.conf',
         name: 'config',
-        subPath: 'unifi-poller.conf',
+        subPath: 'up.conf',
       }],
     },
     deployment: {
@@ -68,7 +68,8 @@ local all = {
         template: {
           metadata: $.poller._metadata {
             annotations: {
-              'checksum.config/md5': std.md5(std.toString(config.poller.credentialsRefs)),
+              'checksum.credentials/md5': std.md5(std.toString(config.poller.credentialsRefs)),
+              'checksum.config/md5': std.md5(std.toString(config.poller.config)),
             },
           },
           spec: {

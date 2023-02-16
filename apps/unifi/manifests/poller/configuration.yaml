@@ -23,7 +23,7 @@ spec:
     name: poller
     template:
       data:
-        unifi-poller.conf: |
+        up.conf: |
           [poller]
               debug = false
               quiet = false
@@ -36,12 +36,13 @@ spec:
               disable = true
           [webserver]
               enable = false
-          [unifi]
+          [unifi.defaults]
               url = "https://192.168.2.1"
               user = "{{ .user }}"
               pass = "{{ .pass }}"
-              sites = ["default"]
+              sites = ["all"]
               save_sites = true
+              hash_pii = false
               save_ids = false
               save_events = false
               save_alarms = false
