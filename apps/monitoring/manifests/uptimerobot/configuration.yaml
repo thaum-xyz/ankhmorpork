@@ -5,14 +5,14 @@ metadata:
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: uptimerobot
-    app.kubernetes.io/version: master
+    app.kubernetes.io/version: 0.5.0
   name: uptimerobot
   namespace: monitoring
 spec:
   data:
   - remoteRef:
       key: MONITORING_UPTIMEROBOT_API_KEY
-    secretKey: apiKey
+    secretKey: apiKeyRef
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore
@@ -22,21 +22,23 @@ spec:
     template:
       data:
         config.yml: |
-          headers:
-            Content-Type: "application/x-www-form-urlencoded"
-            Cache-Control: "no-cache"
-          body:
-            content: 'api_key={{ .apiKey }}&format=json&response_times=1'
-          metrics:
-          - name: "uptimerobot_monitor"
-            type: "object"
-            # Filter out components without a name
-            path: '{.monitors[?(@.friendly_name != "")]}'
-            help: "Information about uptimerobot monitor"
-            labels:
-              monitor: '{.friendly_name}'
-              url: '{.url}'
-            values:
-              status: '{.status}'
-              response_time_miliseconds: '{.average_response_time}'
+          modules:
+            default:
+              headers:
+                Content-Type: "application/x-www-form-urlencoded"
+                Cache-Control: "no-cache"
+              body:
+                content: 'api_key={{ .apiKeyRef }}&format=json&response_times=1'
+              metrics:
+              - name: "uptimerobot_monitor"
+                type: "object"
+                # Filter out components without a name
+                path: '{.monitors[?(@.friendly_name != "")]}'
+                help: "Information about uptimerobot monitor"
+                labels:
+                  monitor: '{.friendly_name}'
+                  url: '{.url}'
+                values:
+                  status: '{.status}'
+                  response_time_miliseconds: '{.average_response_time}'
       engineVersion: v2

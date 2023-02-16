@@ -9,9 +9,9 @@ data:
 
     global:
       resolve_timeout: 5m
-      slack_api_url: {{ .slack_api_url }}  # This is a reference to a secret stored in doppler
+      slack_api_url: {{ .slack_api_url }}  {{/* This is a reference to a secret stored in doppler */}}
       opsgenie_api_url: 'https://api.eu.opsgenie.com'
-      opsgenie_api_key: {{ .opsgenie_api_key }}  # This is a reference to a secret stored in doppler
+      opsgenie_api_key: {{ .opsgenie_api_key }}  {{/* This is a reference to a secret stored in doppler */}}
     receivers:
     - name: 'slack'
       slack_configs:
@@ -95,7 +95,7 @@ data:
     - name: 'healthchecks.io'
       webhook_configs:
         - send_resolved: false
-          url: {{ .healthchecks_url }}  # This is a reference to a secret stored in doppler
+          url: {{ .healthchecks_url }}  {{/* This is a reference to a secret stored in doppler */}}
     - name: 'github'
       webhook_configs:
         - send_resolved: true

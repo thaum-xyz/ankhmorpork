@@ -251,8 +251,8 @@
   uptimerobot: {
     name: 'uptimerobot',
     namespace: 'monitoring',
-    version: 'master',
-    image: 'quay.io/prometheuscommunity/json-exporter:master',
+    version: '0.5.0',
+    image: 'quay.io/prometheuscommunity/json-exporter:v0.5.0',
     port: 7979,
     resources: {
       requests: { cpu: '3m', memory: '16Mi' },
@@ -260,26 +260,28 @@
     },
     targets: ['https://api.uptimerobot.com/v2/getMonitors'],
     credentials: {
-      apiKey: 'MONITORING_UPTIMEROBOT_API_KEY',
+      apiKeyRef: 'MONITORING_UPTIMEROBOT_API_KEY',
     },
     config: |||
-      headers:
-        Content-Type: "application/x-www-form-urlencoded"
-        Cache-Control: "no-cache"
-      body:
-        content: 'api_key={{ .apiKey }}&format=json&response_times=1'
-      metrics:
-      - name: "uptimerobot_monitor"
-        type: "object"
-        # Filter out components without a name
-        path: '{.monitors[?(@.friendly_name != "")]}'
-        help: "Information about uptimerobot monitor"
-        labels:
-          monitor: '{.friendly_name}'
-          url: '{.url}'
-        values:
-          status: '{.status}'
-          response_time_miliseconds: '{.average_response_time}'
+      modules:
+        default:
+          headers:
+            Content-Type: "application/x-www-form-urlencoded"
+            Cache-Control: "no-cache"
+          body:
+            content: 'api_key={{ .apiKeyRef }}&format=json&response_times=1'
+          metrics:
+          - name: "uptimerobot_monitor"
+            type: "object"
+            # Filter out components without a name
+            path: '{.monitors[?(@.friendly_name != "")]}'
+            help: "Information about uptimerobot monitor"
+            labels:
+              monitor: '{.friendly_name}'
+              url: '{.url}'
+            values:
+              status: '{.status}'
+              response_time_miliseconds: '{.average_response_time}'
     |||,
   },
 
