@@ -173,8 +173,38 @@ local kp =
     },
 
     alertmanager+: {
-      // alertmanager secret is stored as ConfigMapSecret in plain yaml file
-      secret:: null,
+      configTemplate: {
+        apiVersion: 'v1',
+        kind: 'ConfigMap',
+        metadata: $.alertmanager.alertmanager.metadata {
+          name: 'alertmanager-config-template',
+        },
+        data: {
+          'alertmanager.yaml': (importstr '../raw/alertmanager-config.tmpl.yaml'),
+        },
+      },
+      secretTest: externalsecret(
+        $.alertmanager.alertmanager.metadata {
+          name: 'alertmanager-main-test',
+        },
+        'doppler-auth-api',
+        $.values.alertmanager.credentialsRefs,
+      ) + {
+        spec+: {
+          target+: {
+            template+: {
+              templateFrom: [{
+                configMap: {
+                  name: $.alertmanager.configTemplate.metadata.name,
+                  items: [{
+                    key: std.objectFields($.alertmanager.configTemplate.data)[0],
+                  }],
+                },
+              }],
+            },
+          },
+        },
+      },
       // TODO: move ingress and externalURL to an addon in kube-prometheus
       alertmanager+: {
         spec+: {

@@ -24,6 +24,11 @@
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/alertmanager/%s',
       },
     },
+    credentialsRefs: {
+      healthchecks_url: 'MONITORING_AM_HEALTHCHECKS_URL',
+      opsgenie_api_key: 'MONITORING_AM_OPSGENIE_API_KEY',
+      slack_api_url: 'MONITORING_AM_SLACK_API_URL',
+    },
   },
   prometheus+: {
     version: '2.42.0',  // application-version-from-github: prometheus/prometheus
