@@ -9,13 +9,16 @@ metadata:
   name: prometheus-demo
   namespace: monitoring
 spec:
+  interval: 30s
   module: http_2xx
   prober:
     url: blackbox-exporter.monitoring.svc:19115
+  scrapeTimeout: 30s
   targets:
     staticConfig:
       labels:
         environment: prometheus.io
+        module: http_2xx
       static:
       - https://demo.do.prometheus.io/
       - https://prometheus.demo.do.prometheus.io/-/healthy

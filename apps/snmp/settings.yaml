@@ -13,8 +13,12 @@ resources:
     memory: 50Mi
 targets:
   - module: qnap
-    hosts: [192.168.2.29]
+    config:
+      staticConfig:
+        static:  [192.168.2.29]
     interval: 2m
   - module: qnaplong
-    hosts: [192.168.2.29]
+    config:
+      staticConfig:
+        static: [192.168.2.29]
     interval: 5m

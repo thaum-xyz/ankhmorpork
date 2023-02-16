@@ -2,15 +2,7 @@ local agent = import 'github.com/parca-dev/parca-agent/deploy/lib/parca-agent/pa
 // local ui = import 'github.com/parca-dev/parca/deploy/lib/parca/parca-ui.libsonnet';
 local parca = import 'github.com/parca-dev/parca/deploy/lib/parca/parca.libsonnet';
 
-// TODO: move this to thaum-xyz/jsonnet-libs
-local addArgs(args, name, containers) = std.map(
-  function(c) if c.name == name then
-    c {
-      args+: args,
-    }
-  else c,
-  containers,
-);
+local addArgs = (import '../../../lib/jsonnet/utils/container.libsonnet').addArgs;
 
 
 local configYAML = (importstr '../settings.yaml');
@@ -24,7 +16,7 @@ local all = {
         template+: {
           metadata+: {
             annotations: {
-              "parca.dev/scrape": "true",
+              'parca.dev/scrape': 'true',
             },
           },
         },
@@ -39,26 +31,26 @@ local all = {
           metadata+: {
             annotations: {
               'checksum.config/md5': std.md5(std.toString(config.parca.config)),
-              "parca.dev/scrape": "true",
+              'parca.dev/scrape': 'true',
             },
           },
           spec+: {
             containers: std.map(
-              function(c) if c.name == "parca" then
-              c {
-                readinessProbe: {
-                  grpc: {
-                    port: 7070
+              function(c) if c.name == 'parca' then
+                c {
+                  readinessProbe: {
+                    grpc: {
+                      port: 7070,
+                    },
+                    initialDelaySeconds: 10,
                   },
-                  initialDelaySeconds: 10,
-                },
-                livenessProbe: {
-                  grpc: {
-                    port: 7070
+                  livenessProbe: {
+                    grpc: {
+                      port: 7070,
+                    },
+                    initialDelaySeconds: 5,
                   },
-                  initialDelaySeconds: 5,
-                },
-              }
+                }
               else c,
               super.containers
             ),
@@ -67,32 +59,33 @@ local all = {
       },
     },
     clusterRole: {
-      apiVersion: "rbac.authorization.k8s.io/v1",
-      kind: "ClusterRole",
-      metadata: all.parca.serviceAccount.metadata + { namespace:: "" },
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'ClusterRole',
+      metadata: all.parca.serviceAccount.metadata { namespace:: '' },
       rules: [
         {
-          apiGroups: [""],
-          resources: ["pods"],
-          verbs: ["list", "watch"],
-        },{
-          apiGroups: [""],
-          resources: ["nodes"],
-          verbs: ["get"],
-        }
-      ]
+          apiGroups: [''],
+          resources: ['pods'],
+          verbs: ['list', 'watch'],
+        },
+        {
+          apiGroups: [''],
+          resources: ['nodes'],
+          verbs: ['get'],
+        },
+      ],
     },
     clusterRoleBinding: {
-      apiVersion: "rbac.authorization.k8s.io/v1",
-      kind: "ClusterRoleBinding",
-      metadata: all.parca.serviceAccount.metadata + { namespace:: "" },
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'ClusterRoleBinding',
+      metadata: all.parca.serviceAccount.metadata { namespace:: '' },
       roleRef: {
-        apiGroup: "rbac.authorization.k8s.io",
-        kind: "ClusterRole",
+        apiGroup: 'rbac.authorization.k8s.io',
+        kind: 'ClusterRole',
         name: all.parca.clusterRole.metadata.name,
       },
       subjects: [{
-        kind: "ServiceAccount",
+        kind: 'ServiceAccount',
         name: all.parca.serviceAccount.metadata.name,
         namespace: all.parca.serviceAccount.metadata.namespace,
       }],

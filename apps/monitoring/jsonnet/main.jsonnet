@@ -66,24 +66,6 @@ local ingress(metadata, domain, service) = {
   },
 };
 
-local addArgs(args, name, containers) = std.map(
-  function(c) if c.name == name then
-    c {
-      args+: args,
-    }
-  else c,
-  containers,
-);
-
-local addContainerParameter(parameter, value, name, containers) = std.map(
-  function(c) if c.name == name then
-    c {
-      [parameter]+: value,
-    }
-  else c,
-  containers,
-);
-
 // FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
 local allowIngressNetworkPolicy(port) = {
   spec+: {
@@ -108,25 +90,11 @@ local allowIngressNetworkPolicy(port) = {
   },
 };
 
-local probe(name, namespace, labels, module, targets) = {
-  apiVersion: 'monitoring.coreos.com/v1',
-  kind: 'Probe',
-  metadata: {
-    name: name,
-    namespace: namespace,
-    labels: labels,
-  },
-  spec: {
-    prober: {
-      url: 'blackbox-exporter.monitoring.svc:19115',
-    },
-    module: module,
-    targets: targets,
-  },
-};
-
 local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
 local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
+local addArgs = (import '../../../lib/jsonnet/utils/container.libsonnet').addArgs;
+local addContainerParameter = (import '../../../lib/jsonnet/utils/container.libsonnet').addContainerParameter;
+local probe = (import '../../../lib/jsonnet/utils/prometheus-crs.libsonnet').probe;
 local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
@@ -264,10 +232,37 @@ local kp =
           },
         },
       },
-      promDemoProbe: probe('prometheus-demo', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.promDemo),
-      thaumProbe: probe('thaum-sites', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.thaumSites),
-      ingressProbe: probe('ingress', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ingress),
-      ankhmorporkProbe: probe('ankhmorpork', $.blackboxExporter.deployment.metadata.namespace, $.blackboxExporter._config.commonLabels, 'http_2xx', $.values.blackboxExporter.probes.ankhmorpork) + {
+      local probeMetadata = {
+        namespace: $.blackboxExporter.deployment.metadata.namespace,
+        labels: $.blackboxExporter._config.commonLabels,
+      },
+      local prober = {
+        url: 'blackbox-exporter.' + $.values.common.namespace + '.svc:19115',
+      },
+      promDemoProbe: probe(
+        probeMetadata { name: 'prometheus-demo' },
+        prober,
+        'http_2xx',
+        $.values.blackboxExporter.probes.promDemo
+      ),
+      thaumProbe: probe(
+        probeMetadata { name: 'thaum-sites' },
+        prober,
+        'http_2xx',
+        $.values.blackboxExporter.probes.thaumSites
+      ),
+      ingressProbe: probe(
+        probeMetadata { name: 'ingress' },
+        prober,
+        'http_2xx',
+        $.values.blackboxExporter.probes.ingress
+      ),
+      ankhmorporkProbe: probe(
+        probeMetadata { name: 'ankhmorpork' },
+        prober,
+        'http_2xx',
+        $.values.blackboxExporter.probes.ankhmorpork
+      ) + {
         spec+: {
           tlsConfig: {
             insecureSkipVerify: true,

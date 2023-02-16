@@ -9,13 +9,16 @@ metadata:
   name: thaum-sites
   namespace: monitoring
 spec:
+  interval: 30s
   module: http_2xx
   prober:
     url: blackbox-exporter.monitoring.svc:19115
+  scrapeTimeout: 30s
   targets:
     staticConfig:
       labels:
         environment: krupa.net.pl
+        module: http_2xx
       static:
       - https://zmc.krupa.net.pl/
       - https://recipe.krupa.net.pl/api/debug/version

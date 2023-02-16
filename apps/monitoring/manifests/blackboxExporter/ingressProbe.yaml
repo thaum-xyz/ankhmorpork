@@ -9,9 +9,11 @@ metadata:
   name: ingress
   namespace: monitoring
 spec:
+  interval: 30s
   module: http_2xx
   prober:
     url: blackbox-exporter.monitoring.svc:19115
+  scrapeTimeout: 30s
   targets:
     ingress:
       namespaceSelector:

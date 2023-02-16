@@ -1,14 +1,6 @@
 local oauth = import 'github.com/thaum-xyz/jsonnet-libs/apps/oauth2-proxy/oauth2-proxy.libsonnet';
 local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
-
-local addArgs(args, name, containers) = std.map(
-  function(c) if c.name == name then
-    c {
-      args+: args,
-    }
-  else c,
-  containers,
-);
+local addArgs = (import '../../../lib/jsonnet/utils/container.libsonnet').addArgs;
 
 local settings = std.parseYaml(importstr '../settings.yaml')[0];
 

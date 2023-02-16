@@ -3,15 +3,7 @@ local esphome = import 'github.com/thaum-xyz/jsonnet-libs/apps/esphome/esphome.l
 local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassistant/homeassistant.libsonnet';
 local timescaledb = import 'github.com/thaum-xyz/jsonnet-libs/apps/timescaledb/timescaledb.libsonnet';
 local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
-
-local removeAlert(groups, name, alert) = std.map(
-  function(g) if g.name == name then
-    g {
-      rules: std.filter(function(rule) rule.alert != alert, g.rules),
-    }
-  else g,
-  groups,
-);
+local removeAlerts = (import '../../../lib/jsonnet/utils/mixins.libsonnet').removeAlerts;
 
 local configYAML = (importstr '../settings.yaml');
 
@@ -94,10 +86,10 @@ local all = {
     },
     prometheusRule+: {
       spec+: {
-        groups: removeAlert(
-          super.groups,
+        groups: removeAlerts(
+          ['PostgreSQLCacheHitRatio'],
           'PostgreSQL',
-          'PostgreSQLCacheHitRatio'
+          super.groups,
         ),
       },
     },
