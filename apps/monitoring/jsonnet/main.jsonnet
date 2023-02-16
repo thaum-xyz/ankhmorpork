@@ -94,6 +94,8 @@ local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-expo
 local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 local addArgs = (import '../../../lib/jsonnet/utils/container.libsonnet').addArgs;
 local addContainerParameter = (import '../../../lib/jsonnet/utils/container.libsonnet').addContainerParameter;
+local removeAlert = (import '../../../lib/jsonnet/utils/mixins.libsonnet').removeAlert;
+local removeAlerts = (import '../../../lib/jsonnet/utils/mixins.libsonnet').removeAlerts;
 local probe = (import '../../../lib/jsonnet/utils/prometheus-crs.libsonnet').probe;
 local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
@@ -285,6 +287,18 @@ local kp =
           ),
         },
       },
+      prometheusRule+: {
+        spec+: {
+          groups: std.map(function(ruleGroup) ruleGroup {
+            rules: std.map(
+              function(rule) if 'alert' in rule && rule.alert == 'NodeClockNotSynchronising' then
+                rule { expr: 'min_over_time(node_timex_sync_status{job="node-exporter",instance!="qnap"}[5m]) == 0 and node_timex_maxerror_seconds{job="node-exporter",instance!="qnap"} >= 16' }
+              else rule,
+              ruleGroup.rules,
+            ),
+          }, super.groups),
+        },
+      },
       daemonset+: {
         spec+: {
           template+: {
@@ -400,8 +414,6 @@ local kp =
     },
 
     kubernetesControlPlane+: {
-      // TODO: remove KubeCPUOvercommit and KubeMemoryOvercommit alerts
-
       // k3s exposes all this data under single endpoint and those can be obtained via "kubelet" Service
       serviceMonitorApiserver:: null,
       serviceMonitorKubeControllerManager:: null,
@@ -440,6 +452,16 @@ local kp =
           //    },
           //  },
           //],
+        },
+      },
+
+      prometheusRule+: {
+        spec+: {
+          groups: removeAlerts(
+            ['KubeMemoryOvercommit', 'KubeCPUOvercommit'],
+            'kubernetes-resources',
+            super.groups,
+          ),
         },
       },
     },
