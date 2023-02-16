@@ -24,8 +24,8 @@ jobs:
           kubeconform
           -schema-location 'https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}.json'
           #-schema-location '.crdschemas/{{ .ResourceKind }}.json'
-          #-skip CustomResourceDefinition,SealedSecret,ConfigMapSecret
-          -skip CustomResourceDefinition,SealedSecret,ConfigMapSecret,ServiceMonitor,PodMonitor,Probe,Prometheus,Alertmanager
+          #-skip CustomResourceDefinition
+          -skip CustomResourceDefinition,ServiceMonitor,PodMonitor,Probe,Prometheus,Alertmanager
           -ignore-filename-pattern vendor/*
           -ignore-filename-pattern jsonnet/*
           -summary
@@ -43,10 +43,9 @@ jobs:
           kubeconform
           -schema-location 'https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}.json'
           #-schema-location '.crdschemas/{{ .ResourceKind }}.json'
-          #-skip CustomResourceDefinition,SealedSecret,ConfigMapSecret,Plan,Application,AppProject,ClusterIssuer
-          -skip CustomResourceDefinition,SealedSecret,ConfigMapSecret,Plan,Application,AppProject,ClusterIssues,ServiceMonitor,PodMonitor
+          #-skip CustomResourceDefinition,Plan,Application,AppProject,ClusterIssuer
+          -skip CustomResourceDefinition,Plan,Application,AppProject,ClusterIssues,ServiceMonitor,PodMonitor
           -ignore-filename-pattern vendor/*
           -ignore-filename-pattern jsonnet/*
           -summary
           base/
-

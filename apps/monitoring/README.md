@@ -13,8 +13,7 @@ Customized kube-prometheus stack for [@paulfantom](https://github.com/paulfantom
 ### Long version
 
 `kube-prometheus` is used as a library and installed with `jb`. Next customization stored in `jsonnet/main.jsonnet` is
-applied. After this `jsonnet` is used to generate `manifests/` directory and ConfigMapSecrets are copied into `manifests/`
-from `configmapsecrets/` directory.
+applied. Configuration for alertmanager is stored in `raw/` directory and is picked up by jsonnet.
 
 ## Dependencies
 
