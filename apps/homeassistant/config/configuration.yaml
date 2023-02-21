@@ -81,6 +81,11 @@ group:
     entities:
     - person.pawel
     - person.adrianna
+  garmin:
+    name: Garmin
+    entities:
+    - lock.12
+    - input_boolean.movie_time
 
 prometheus:
   namespace: hass
