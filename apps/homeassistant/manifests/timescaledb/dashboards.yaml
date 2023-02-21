@@ -1596,7 +1596,7 @@ items:
     labels:
       app.kubernetes.io/component: database
       app.kubernetes.io/name: timescaledb
-      app.kubernetes.io/version: 2.9.2
+      app.kubernetes.io/version: 2.9.3
       dashboard.grafana.com/load: "true"
     name: grafana-dashboard-postgres-overview
     namespace: homeassistant
