@@ -263,7 +263,7 @@ data:
             turn_on:
             - service: switch.turn_on
               target:
-                entity_id: switch.projector_socket
+                entity_id: switch.projector_switch
             - service: remote.send_command
               data:
                 device: nebula
@@ -295,7 +295,7 @@ data:
                 milliseconds: 0
             - service: switch.turn_off
               target:
-                entity_id: switch.projector_socket
+                entity_id: switch.projector_switch
             - delay:
                 hours: 0
                 minutes: 0
@@ -303,7 +303,7 @@ data:
                 milliseconds: 0
             - service: switch.turn_on
               target:
-                entity_id: switch.projector_socket
+                entity_id: switch.projector_switch
             icon_template: >
               {% if this.state == 'on' %}
                 mdi:projector
