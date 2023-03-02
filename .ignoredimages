@@ -18,3 +18,5 @@ lscr.io/linuxserver/sonarr
 lscr.io/linuxserver/radarr
 ghcr.io/pyrra-dev/pyrra
 infinityworks/github-exporter
+ghcr.io/druggeri/nut_exporter
+timescale/timescaledb
