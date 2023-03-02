@@ -27,13 +27,13 @@ jobs:
       run: go install github.com/devopyio/yamlfmt@latest
     - name: Upgrade
       run: |
-        export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        export GITHUB_TOKEN=${{ secrets.PAT_SECRET }}
         make upgrade
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
       with:
         commit-message: "[bot] Automated version update"
-        title: "[bot] Automated version update"
+        title: "Automated version update"
         body: |
           This is an automated version update performed from CI on behalf of @paulfantom.
 

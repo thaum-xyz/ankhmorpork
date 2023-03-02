@@ -5,15 +5,12 @@ DIRS=\
 	base/ingress-nginx \
 	base/flux-system \
 	apps/auth \
+	apps/datalake-metrics \
 	apps/dns \
 	apps/homeassistant \
 	apps/homer \
 	apps/monitoring \
-	apps/parca \
 	apps/portal \
-	apps/recipe \
-	apps/snmp \
-	apps/system-update \
 	apps/unifi
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
