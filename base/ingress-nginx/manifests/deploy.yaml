@@ -464,6 +464,9 @@ spec:
         - containerPort: 8443
           name: webhook
           protocol: TCP
+        - containerPort: 10254
+          name: metrics
+          protocol: TCP
         readinessProbe:
           failureThreshold: 3
           httpGet:
@@ -477,7 +480,7 @@ spec:
         resources:
           requests:
             cpu: 100m
-            memory: 90Mi
+            memory: 300Mi
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
