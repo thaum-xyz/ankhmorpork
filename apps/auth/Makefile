@@ -5,4 +5,5 @@ LATEST=$(shell curl https://raw.githubusercontent.com/paulfantom/dockerfiles/mas
 CURRENT=$(shell grep version settings.yaml | cut -d':' -f2 | xargs)
 version-update:
 	sed -i "s/$(CURRENT)/$(LATEST)/g" settings.yaml
+	@echo "oauth2-proxy/oauth2-proxy from $(CURRENT) to $(LATEST)" >> "$(shell git rev-parse --show-toplevel)/.version-changelog"
 	if ! git diff-index --quiet HEAD .; then $(MAKE) generate; fi

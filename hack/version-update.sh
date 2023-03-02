@@ -7,6 +7,7 @@ get_latest_version() {
     curl --retry 5 --silent --fail -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${1}/releases/latest" 2>/dev/null | jq '.tag_name' | tr -d '"v'
 }
 
+CHANGELOG="$(git rev-parse --show-toplevel)/.version-changelog"
 DIRECTORY="${1}"
 
 # Scan for files with `application-version-from-github:` comment
@@ -39,6 +40,9 @@ for f in $FILES; do
         # Change only lines with correct metadata
         sed -Ei "s|^(.*)${CURRENT}(.*application-version-from-github:.*${r}.*)$|\1${LATEST}\2|g" "$f"
         sed -Ei "s|^(.*)${CURRENT}(.*application-image-from-github:.*${r}.*)$|\1${LATEST}\2|g" "$f" || echo "No image update for $r due to incorrect or lack of metadata"
+
+        # Add to changelog
+        echo "$r from $CURRENT to $LATEST" >> "${CHANGELOG}"
     done
 done
 

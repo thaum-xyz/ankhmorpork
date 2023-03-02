@@ -29,7 +29,13 @@ jobs:
     - name: Upgrade
       run: |
         export GITHUB_TOKEN=${{ secrets.PAT_SECRET }}
+        touch .version-changelog
         make upgrade
+    - name: Read changes
+      id: version-changelog
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./.version-changelog
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
       with:
@@ -39,6 +45,11 @@ jobs:
           This is an automated version update performed from CI on behalf of @paulfantom.
 
           Configuration of the workflow is located in `.github/workflows/versions.yaml`
+
+          Changed components:
+          ```
+          ${{ steps.version-changelog.outputs.content }}
+          ```
         assignees: paulfantom
         labels: enhancement
         branch: automated-updates
