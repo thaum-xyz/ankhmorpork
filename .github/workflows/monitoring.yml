@@ -22,11 +22,11 @@ jobs:
       - run: go install github.com/brancz/gojsontoyaml@latest
       - run: go install -a github.com/prometheus/alertmanager/cmd/amtool@latest
       - name: Unpack config
-        run: gojsontoyaml -yamltojson <apps/monitoring/manifests/alertmanager/secret.yaml | jq -rc '.spec.template.data["alertmanager.yaml"]' > alertmanager.yaml
+        run: gojsontoyaml -yamltojson <apps/monitoring/manifests/alertmanager/configTemplate.yaml | jq -rc '.data["alertmanager.yaml"]' > alertmanager.yaml
       - name: Replace secrets
         run: |
-          sed -i 's|$(SLACK_API_URL)|https://example.org|g' alertmanager.yaml
-          sed -i 's|$(HEALTHCHECKS_URL)|https://example.org|g' alertmanager.yaml
-          sed -i 's|$(OPSGENIE_API_KEY)|example|g' alertmanager.yaml
+          sed -i 's|{{ .slack_api_url }}|https://example.org|g' alertmanager.yaml
+          sed -i 's|{{ .healthchecks_url }}|https://example.org|g' alertmanager.yaml
+          sed -i 's|{{ .opsgenie_api_key }}|example|g' alertmanager.yaml
       - name: Check config
         run: amtool check-config alertmanager.yaml
