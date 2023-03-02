@@ -1,6 +1,6 @@
 ---
-version: '7.3.0'
-image: 'quay.io/paulfantom/oauth2-proxy:7.3.0'
+version: '7.4.0'
+image: 'quay.io/paulfantom/oauth2-proxy:7.4.0'
 namespace: 'auth'
 replicas: 2
 ingressDomain: 'auth.ankhmorpork.thaum.xyz'
