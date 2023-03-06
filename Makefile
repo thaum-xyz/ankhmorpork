@@ -38,6 +38,11 @@ secrets:  ## Check if secrets are not leaked
 validate:  ## Validate kubernetes manifests
 	for d in $(DIRS); do $(MAKE) -C $$d validate || exit 1; done
 
+.PHONY: prometheusrules
+prometheusrules:  ## Validate prometheus rules
+	./hack/unpack-prometheus-rules.sh
+	pint lint tmp/rules
+
 .PHONY: bootstrap
 bootstrap:  ## Bootstrap development environment
 	ggshield install -m local
