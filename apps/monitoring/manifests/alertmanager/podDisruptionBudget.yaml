@@ -17,3 +17,4 @@ spec:
       app.kubernetes.io/instance: main
       app.kubernetes.io/name: alertmanager
       app.kubernetes.io/part-of: kube-prometheus
+  unhealthyPodEvictionPolicy: AlwaysAllow
