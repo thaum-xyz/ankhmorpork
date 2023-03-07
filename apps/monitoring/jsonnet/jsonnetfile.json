@@ -66,21 +66,12 @@
     },
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "utils"
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
         }
       },
-      "version": "main"
-    },
-      {
-        "source": {
-          "local": {
-            "directory": "../../../lib/jsonnet/utils"
-          }
-        },
-        "version": ""
-      }
+      "version": ""
+    }
   ],
   "legacyImports": true
 }

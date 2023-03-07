@@ -97,7 +97,7 @@ local addContainerParameter = (import '../../../lib/jsonnet/utils/container.libs
 local removeAlert = (import '../../../lib/jsonnet/utils/mixins.libsonnet').removeAlert;
 local removeAlerts = (import '../../../lib/jsonnet/utils/mixins.libsonnet').removeAlerts;
 local probe = (import '../../../lib/jsonnet/utils/prometheus-crs.libsonnet').probe;
-local antiaffinity = (import 'github.com/thaum-xyz/jsonnet-libs/utils/podantiaffinity.libsonnet');
+local pod = (import '../../../lib/jsonnet/utils/pod.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
 local windows = (import 'lib/windows-exporter.libsonnet');
@@ -233,7 +233,7 @@ local kp =
           template+: {
             metadata+: parcaEnable,
             spec+: {
-              affinity: antiaffinity.podantiaffinity('blackbox-exporter'),
+              affinity: pod.antiaffinity('blackbox-exporter'),
             },
           },
         },
@@ -735,7 +735,7 @@ local kp =
           template+: {
             metadata+: parcaEnable,
             spec+: {
-              affinity: antiaffinity.podantiaffinity('smokeping'),
+              affinity: pod.antiaffinity('smokeping'),
               containers: std.map(function(c) c {
                 securityContext: { capabilities: { add: ['NET_RAW'] } },
               }, super.containers),
