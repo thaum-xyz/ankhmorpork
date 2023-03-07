@@ -19,24 +19,6 @@
       },
       {
         "source": {
-          "git": {
-            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
-            "subdir": "apps/coredns"
-          }
-        },
-        "version": "main"
-      },
-      {
-        "source": {
-          "git": {
-            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
-            "subdir": "utils"
-          }
-        },
-        "version": "main"
-      },
-      {
-        "source": {
           "local": {
             "directory": "../../../lib/jsonnet/utils"
           }

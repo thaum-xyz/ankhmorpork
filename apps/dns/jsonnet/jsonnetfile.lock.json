@@ -18,7 +18,7 @@
           "subdir": "grafana-builder"
         }
       },
-      "version": "10f4670bd5bc6bdcb3e91ba6a397e37610f2ee94",
+      "version": "aaa78e30125378f2aae68fcd29678ea28530e2e1",
       "sum": "tDR6yT2GVfw0wTU12iZH+m01HrbIr6g/xN+/8nzNkU0="
     },
     {
@@ -40,26 +40,6 @@
       },
       "version": "8b121c41b6c0741f1603b2d75ccd324050c4bd03",
       "sum": "4CxwtfVX/OIS5w5+FkExG5evxiatOEMhaWChWaFc9S4="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/coredns"
-        }
-      },
-      "version": "134fd2d5664f72b3b4d2d89c964c1b48740a3705",
-      "sum": "W0UwCzrPHr4ZYQoJWYuCGUXC6gcxiaS1QnVTgC7S0MY="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "utils"
-        }
-      },
-      "version": "134fd2d5664f72b3b4d2d89c964c1b48740a3705",
-      "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
     },
     {
       "source": {

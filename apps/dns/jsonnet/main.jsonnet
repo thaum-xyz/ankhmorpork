@@ -1,5 +1,5 @@
 local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
-local coredns = import 'github.com/thaum-xyz/jsonnet-libs/apps/coredns/coredns.libsonnet';
+local coredns = import 'coredns.libsonnet';
 
 local corefile = importstr '../Corefile';
 
