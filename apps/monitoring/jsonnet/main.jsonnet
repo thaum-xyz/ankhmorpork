@@ -98,7 +98,7 @@ local removeAlert = (import 'utils/mixins.libsonnet').removeAlert;
 local removeAlerts = (import 'utils/mixins.libsonnet').removeAlerts;
 local probe = (import 'utils/prometheus-crs.libsonnet').probe;
 local pod = (import 'utils/pod.libsonnet');
-local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
+local pushgateway = (import 'lib/pushgateway.libsonnet');
 
 local windows = (import 'lib/windows-exporter.libsonnet');
 local jsonExporter = (import 'lib/json-exporter.libsonnet');

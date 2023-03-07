@@ -56,15 +56,6 @@
     },
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/pushgateway"
-        }
-      },
-      "version": "main"
-    },
-    {
-      "source": {
         "local": {
           "directory": "../../../lib/jsonnet/utils"
         }
