@@ -3,15 +3,6 @@
     "dependencies": [
       {
         "source": {
-          "git": {
-            "remote": "https://github.com/thaum-xyz/jsonnet-libs",
-            "subdir": "apps/snmp-exporter"
-          }
-        },
-        "version": "main"
-      },
-      {
-        "source": {
           "local": {
             "directory": "../../../lib/jsonnet/utils"
           }

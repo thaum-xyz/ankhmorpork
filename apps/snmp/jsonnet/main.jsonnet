@@ -1,5 +1,5 @@
-local snmp = import 'github.com/thaum-xyz/jsonnet-libs/apps/snmp-exporter/snmp-exporter.libsonnet';
-local probe = (import '../../../lib/jsonnet/utils/prometheus-crs.libsonnet').probe;
+local snmp = import 'snmp-exporter.libsonnet';
+local probe = (import 'utils/prometheus-crs.libsonnet').probe;
 local snmpConfig = importstr '../snmp.yml';
 
 local configYAML = (importstr '../settings.yaml');
