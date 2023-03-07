@@ -478,7 +478,7 @@ local kp =
             rules: std.map(
               function(rule) if 'alert' in rule && rule.alert == 'TargetDown' then
                 // FIXME: possibly port to kube-prometheus
-                rule { expr: '100 * (count(up{job!="windows-exporter"} == 0) BY (job, namespace) / count(up{job!="windows-exporter"}) BY (job, namespace)) > 10' }
+                rule { expr: '100 * (count(up{job!="windows-exporter"} == 0) BY (job, namespace) / count(up{job!="windows-exporter"}) BY (job, namespace)) > 50' }
               else rule,
               ruleGroup.rules,
             ),
