@@ -185,8 +185,11 @@ local kp =
       serviceAccount+: {
         automountServiceAccountToken: false,  // TODO: move into kube-prometheus
       },
-      // Disable PDB to allow node upgrades. Without this exclusion cluster is too small to upgrade.
-      podDisruptionBudget:: {},
+      /*podDisruptionBudget+: {
+        spec+: {
+          // unhealthyPodEvictionPolicy: "AlwaysAllow", //TODO: enable this once https://kubernetes.io/docs/tasks/run-application/configure-pdb/#unhealthy-pod-eviction-policy is available in cluster
+        },
+      },*/
 
       // FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
       networkPolicy+:: allowIngressNetworkPolicy($.alertmanager.service.spec.ports[0].port),
