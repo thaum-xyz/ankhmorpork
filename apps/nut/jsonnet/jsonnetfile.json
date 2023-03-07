@@ -3,12 +3,11 @@
     "dependencies": [
       {
         "source": {
-          "git": {
-            "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-            "subdir": "apps/prometheus-exporter"
+          "local": {
+            "directory": "../../../lib/jsonnet/apps"
           }
         },
-        "version": "main"
+        "version": ""
       },
       {
         "source": {

@@ -3,6 +3,14 @@
   "dependencies": [
     {
       "source": {
+        "local": {
+          "directory": "../../../lib/jsonnet/apps"
+        }
+      },
+      "version": ""
+    },
+    {
+      "source": {
         "git": {
           "remote": "https://github.com/brancz/kubernetes-grafana.git",
           "subdir": "grafana"
@@ -192,18 +200,8 @@
           "subdir": "apps/pagespeed"
         }
       },
-      "version": "134fd2d5664f72b3b4d2d89c964c1b48740a3705",
+      "version": "d132eb935ddeac4d3636031be8d0314217100887",
       "sum": "+IWkEROpKK8nHRdc7wifMoxEijKf42k6bx8nia5MrYI="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/prometheus-exporter"
-        }
-      },
-      "version": "134fd2d5664f72b3b4d2d89c964c1b48740a3705",
-      "sum": "BNQjeu+DRzFCRGIaWnxSfJgsH4UhNkuTB/sWexDYqco="
     },
     {
       "source": {
@@ -212,7 +210,7 @@
           "subdir": "apps/pushgateway"
         }
       },
-      "version": "134fd2d5664f72b3b4d2d89c964c1b48740a3705",
+      "version": "d132eb935ddeac4d3636031be8d0314217100887",
       "sum": "LX92wD2SVhLG4ezLa/vNpO34kcd6/s2YCYXZBNfl7pE="
     },
     {

@@ -3,23 +3,19 @@
   "dependencies": [
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/prometheus-exporter"
+        "local": {
+          "directory": "../../../lib/jsonnet/apps"
         }
       },
-      "version": "1cc085ee92a3c0488086352c32e9163c20201882",
-      "sum": "BNQjeu+DRzFCRGIaWnxSfJgsH4UhNkuTB/sWexDYqco="
+      "version": ""
     },
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "utils"
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
         }
       },
-      "version": "1cc085ee92a3c0488086352c32e9163c20201882",
-      "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
+      "version": ""
     }
   ],
   "legacyImports": false

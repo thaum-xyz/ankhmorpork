@@ -1,5 +1,5 @@
-local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
-local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
+local exporter = (import 'apps/prometheus-exporter.libsonnet');
+local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
 
 local configYAML = (importstr '../settings.yaml');
 

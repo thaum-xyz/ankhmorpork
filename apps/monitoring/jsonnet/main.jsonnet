@@ -90,14 +90,14 @@ local allowIngressNetworkPolicy(port) = {
   },
 };
 
-local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
-local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
-local addArgs = (import '../../../lib/jsonnet/utils/container.libsonnet').addArgs;
-local addContainerParameter = (import '../../../lib/jsonnet/utils/container.libsonnet').addContainerParameter;
-local removeAlert = (import '../../../lib/jsonnet/utils/mixins.libsonnet').removeAlert;
-local removeAlerts = (import '../../../lib/jsonnet/utils/mixins.libsonnet').removeAlerts;
-local probe = (import '../../../lib/jsonnet/utils/prometheus-crs.libsonnet').probe;
-local pod = (import '../../../lib/jsonnet/utils/pod.libsonnet');
+local exporter = (import 'apps/prometheus-exporter.libsonnet');
+local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
+local addArgs = (import 'utils/container.libsonnet').addArgs;
+local addContainerParameter = (import 'utils/container.libsonnet').addContainerParameter;
+local removeAlert = (import 'utils/mixins.libsonnet').removeAlert;
+local removeAlerts = (import 'utils/mixins.libsonnet').removeAlerts;
+local probe = (import 'utils/prometheus-crs.libsonnet').probe;
+local pod = (import 'utils/pod.libsonnet');
 local pushgateway = (import 'github.com/thaum-xyz/jsonnet-libs/apps/pushgateway/pushgateway.libsonnet');
 
 local windows = (import 'lib/windows-exporter.libsonnet');

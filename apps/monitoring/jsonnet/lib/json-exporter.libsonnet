@@ -1,4 +1,4 @@
-local exporter = (import 'github.com/thaum-xyz/jsonnet-libs/apps/prometheus-exporter/exporter.libsonnet');
+local exporter = (import 'apps/prometheus-exporter.libsonnet');
 
 local defaults = {
   name: 'json-exporter',
