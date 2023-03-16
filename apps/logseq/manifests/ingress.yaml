@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app.kubernetes.io/component: webapp
+    app.kubernetes.io/name: logseq
+  name: logseq
+  namespace: logseq
+spec:
+  rules:
+  - host: notes.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          service:
+            name: logseq
+            port:
+              name: http
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - notes.ankhmorpork.thaum.xyz
+    secretName: logseq-tls
