@@ -3,26 +3,6 @@
   "dependencies": [
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/oauth2-proxy"
-        }
-      },
-      "version": "d07a829724ccc732bb15f8e2559bda95c800cca5",
-      "sum": "mpWZtnLw3RSDe0pUKtWyseozUpjRtO4dwZk9rWO2M40="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "utils"
-        }
-      },
-      "version": "d07a829724ccc732bb15f8e2559bda95c800cca5",
-      "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
-    },
-    {
-      "source": {
         "local": {
           "directory": "../../../lib/jsonnet/utils"
         }
