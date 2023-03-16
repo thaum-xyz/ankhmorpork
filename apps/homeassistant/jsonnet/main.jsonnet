@@ -1,9 +1,9 @@
+local timescaledb = import 'apps/timescaledb.libsonnet';
 local externalTargets = import 'externalTargets.libsonnet';
 local esphome = import 'github.com/thaum-xyz/jsonnet-libs/apps/esphome/esphome.libsonnet';
 local homeassistant = import 'github.com/thaum-xyz/jsonnet-libs/apps/homeassistant/homeassistant.libsonnet';
-local timescaledb = import 'github.com/thaum-xyz/jsonnet-libs/apps/timescaledb/timescaledb.libsonnet';
-local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
-local removeAlerts = (import '../../../lib/jsonnet/utils/mixins.libsonnet').removeAlerts;
+local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
+local removeAlerts = (import 'utils/mixins.libsonnet').removeAlerts;
 
 local configYAML = (importstr '../settings.yaml');
 

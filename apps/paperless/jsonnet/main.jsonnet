@@ -1,7 +1,7 @@
-local timescaledb = import 'github.com/thaum-xyz/jsonnet-libs/apps/timescaledb/timescaledb.libsonnet';
+local timescaledb = import 'apps/timescaledb.libsonnet';
 local paperless = import 'paperless.libsonnet';
 local redis = import 'redis.libsonnet';
-local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
+local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
 
 local configYAML = (importstr '../settings.yaml');
 

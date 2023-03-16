@@ -21,21 +21,20 @@
     },
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/timescaledb"
+        "local": {
+          "directory": "../../../lib/jsonnet/apps"
         }
       },
-      "version": "main"
+      "version": ""
     },
-      {
-        "source": {
-          "local": {
-            "directory": "../../../lib/jsonnet/utils"
-          }
-        },
-        "version": ""
-      }
+    {
+      "source": {
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
+        }
+      },
+      "version": ""
+    }
   ],
-  "legacyImports": false
+  "legacyImports": true
 }

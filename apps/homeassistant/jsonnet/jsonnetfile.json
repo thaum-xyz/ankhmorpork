@@ -23,15 +23,6 @@
       "source": {
         "git": {
           "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/timescaledb"
-        }
-      },
-      "version": "main"
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
           "subdir": "apps/esphome"
         }
       },
@@ -46,14 +37,22 @@
       },
       "version": "main"
     },
-      {
-        "source": {
-          "local": {
-            "directory": "../../../lib/jsonnet/utils"
-          }
-        },
-        "version": ""
-      }
+    {
+      "source": {
+        "local": {
+          "directory": "../../../lib/jsonnet/apps"
+        }
+      },
+      "version": ""
+    },
+    {
+      "source": {
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
+        }
+      },
+      "version": ""
+    }
   ],
-  "legacyImports": false
+  "legacyImports": true
 }

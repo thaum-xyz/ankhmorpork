@@ -3,6 +3,14 @@
   "dependencies": [
     {
       "source": {
+        "local": {
+          "directory": "../../../lib/jsonnet/apps"
+        }
+      },
+      "version": ""
+    },
+    {
+      "source": {
         "git": {
           "remote": "https://github.com/grafana/grafonnet-lib.git",
           "subdir": "grafonnet"
@@ -43,23 +51,11 @@
     },
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/timescaledb"
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
         }
       },
-      "version": "1cc085ee92a3c0488086352c32e9163c20201882",
-      "sum": "0v6CoIFrK98Ww+Q3idArcpDBz3MLoeSySFd583gqa94="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "utils"
-        }
-      },
-      "version": "1cc085ee92a3c0488086352c32e9163c20201882",
-      "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
+      "version": ""
     }
   ],
   "legacyImports": false
