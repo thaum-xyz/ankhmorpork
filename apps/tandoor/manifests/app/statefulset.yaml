@@ -28,7 +28,7 @@ spec:
             name: django
         - configMapRef:
             name: config-envs
-        image: vabene1111/recipes:1.4.5
+        image: vabene1111/recipes:1.4.8
         imagePullPolicy: Always
         resources: {}
         command:
@@ -59,7 +59,7 @@ spec:
           subPath: files
       containers:
       - name: recipes
-        image: vabene1111/recipes:1.4.5
+        image: vabene1111/recipes:1.4.8
         imagePullPolicy: IfNotPresent
         envFrom:
         - secretRef:
