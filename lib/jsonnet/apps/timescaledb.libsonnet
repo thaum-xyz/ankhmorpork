@@ -1,3 +1,6 @@
+local addRunbookLink = import 'github.com/kubernetes-monitoring/kubernetes-mixin/lib/add-runbook-links.libsonnet';
+local postgresMixin = import 'github.com/prometheus-community/postgres_exporter/postgres_mixin/mixin.libsonnet';
+
 local defaults = {
   local defaults = self,
   name: 'timescaledb',
@@ -57,8 +60,8 @@ function(params) {
   // Safety check
   assert std.isObject($._config.resources),
 
-  mixin:: (import 'github.com/prometheus-community/postgres_exporter/postgres_mixin/mixin.libsonnet') +
-          (import 'github.com/kubernetes-monitoring/kubernetes-mixin/lib/add-runbook-links.libsonnet') +
+  mixin:: postgresMixin +
+          addRunbookLink +
           {
             _config+:: $._config.mixin._config,
           },

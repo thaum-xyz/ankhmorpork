@@ -3,42 +3,6 @@
   "dependencies": [
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/kubernetes-monitoring/kubernetes-mixin.git",
-          "subdir": ""
-        }
-      },
-      "version": "master"
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/prometheus-community/postgres_exporter.git",
-          "subdir": "postgres_mixin"
-        }
-      },
-      "version": "master"
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/esphome"
-        }
-      },
-      "version": "main"
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/homeassistant"
-        }
-      },
-      "version": "main"
-    },
-    {
-      "source": {
         "local": {
           "directory": "../../../lib/jsonnet/apps"
         }
