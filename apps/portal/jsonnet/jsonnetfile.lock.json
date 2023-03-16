@@ -3,23 +3,19 @@
   "dependencies": [
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "apps/homer"
+        "local": {
+          "directory": "../../../lib/jsonnet/apps"
         }
       },
-      "version": "c1fff9d206be27725a8149cff99b8e3bf01d5c06",
-      "sum": "AnUjEj2T1Je4V9OuSj/SNBSdKVOGeVxMYHGsOoX/vuk="
+      "version": ""
     },
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/thaum-xyz/jsonnet-libs.git",
-          "subdir": "utils"
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
         }
       },
-      "version": "c1fff9d206be27725a8149cff99b8e3bf01d5c06",
-      "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
+      "version": ""
     }
   ],
   "legacyImports": false
