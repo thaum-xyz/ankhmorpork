@@ -14,14 +14,14 @@ paperless:
     #  memory: 800Mi
   storage:
     data:
-      storageClassName: "qnap-nfs-storage"
+      storageClassName: "qnap-nfs"
       accessModes:
         - ReadWriteOnce
       resources:
         requests:
           storage: 1Gi
     media:
-      storageClassName: "qnap-nfs-storage"
+      storageClassName: "qnap-nfs"
       accessModes:
         - ReadWriteOnce
       resources:
@@ -69,7 +69,7 @@ db:
   storage:
     name: "db-data"
     pvcSpec:
-      storageClassName: "qnap-nfs-storage"
+      storageClassName: "qnap-nfs"
       accessModes:
         - ReadWriteOnce
       resources:
@@ -87,7 +87,7 @@ broker:
   storage:
     name: "broker-data"
     pvcSpec:
-      storageClassName: "qnap-nfs-storage"
+      storageClassName: "qnap-nfs"
       accessModes:
         - ReadWriteOnce
       resources:

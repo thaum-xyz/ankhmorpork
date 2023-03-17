@@ -13,4 +13,4 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: qnap-nfs-storage
+  storageClassName: qnap-nfs
