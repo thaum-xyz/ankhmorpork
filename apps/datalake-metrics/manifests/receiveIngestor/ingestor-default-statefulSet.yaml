@@ -155,3 +155,4 @@ spec:
       resources:
         requests:
           storage: 30Gi
+      storageClassName: qnap-nfs

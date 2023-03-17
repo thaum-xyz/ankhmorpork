@@ -7,6 +7,7 @@ hashringConfigMapName: 'hashring-config'
 volumeClaimTemplate:
   spec:
     accessModes: ['ReadWriteOnce']
+    storageClassName: 'qnap-nfs'
     resources:
       requests:
         storage: '30Gi'
