@@ -10,8 +10,8 @@ prowlarr:
 
 radarr:
   name: radarr
-  version: "4.1.0"
-  image: "lscr.io/linuxserver/radarr:4.1.0"
+  version: "4.3.2.6857-ls164"  # application-version-from-github: linuxserver/docker-radarr
+  image: "lscr.io/linuxserver/radarr:4.3.2.6857-ls164"  # application-image-from-github: linuxserver/docker-radarr
   namespace: *namespace
   port: 7878
   multimediaPVCName: "movies"
@@ -27,8 +27,8 @@ radarr:
           storage: 300Mi
 sonarr:
   name: sonarr
-  version: "3.0.8"
-  image: "lscr.io/linuxserver/sonarr:3.0.8"
+  version: "3.0.10.1567-ls183"  # application-version-from-github: linuxserver/docker-sonarr
+  image: "lscr.io/linuxserver/sonarr:3.0.10.1567-ls183"  # application-image-from-github: linuxserver/docker-sonarr
   namespace: *namespace
   port: 8989
   multimediaPVCName: "tv"

@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: radarr
     app.kubernetes.io/part-of: radarr
-    app.kubernetes.io/version: 4.1.0
+    app.kubernetes.io/version: 4.3.2.6857-ls164
   name: radarr
   namespace: multimedia
 spec:
