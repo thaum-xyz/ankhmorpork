@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: photoprism
-    app.kubernetes.io/version: "220730"
+    app.kubernetes.io/version: "221118"
   name: photoprism
   namespace: photoprism
 spec:
@@ -19,7 +19,7 @@ spec:
         kubectl.kubernetes.io/default-container: photoprism
       labels:
         app.kubernetes.io/name: photoprism
-        app.kubernetes.io/version: "220730"
+        app.kubernetes.io/version: "221118"
     spec:
       containers:
       - envFrom:
@@ -27,7 +27,7 @@ spec:
             name: credentials
         - configMapRef:
             name: config
-        image: photoprism/photoprism:220730-jammy
+        image: photoprism/photoprism:221118-jammy
         imagePullPolicy: IfNotPresent
         name: photoprism
         ports:

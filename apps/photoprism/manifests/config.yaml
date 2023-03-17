@@ -11,6 +11,6 @@ kind: ConfigMap
 metadata:
   labels:
     app.kubernetes.io/name: photoprism
-    app.kubernetes.io/version: "220730"
+    app.kubernetes.io/version: "221118"
   name: config
   namespace: photoprism

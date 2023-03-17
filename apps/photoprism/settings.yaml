@@ -2,8 +2,8 @@
 common:
   namespace: &namespace "photoprism"
 photoprism:
-  version: "220730"  # application-version-from-github: photoprism/photoprism
-  image: "photoprism/photoprism:220730-jammy"  # application-image-from-github: photoprism/photoprism
+  version: "221118"  # application-version-from-github: photoprism/photoprism
+  image: "photoprism/photoprism:221118-jammy"  # application-image-from-github: photoprism/photoprism
   namespace: *namespace
   domain: "photo.ankhmorpork.thaum.xyz"
   timezone: "Europe/Berlin"
