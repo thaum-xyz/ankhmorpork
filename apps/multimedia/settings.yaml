@@ -19,7 +19,7 @@ radarr:
   storage:
     name: radarr-config-backup
     pvcSpec:
-      storageClassName: qnap-nfs-storage
+      storageClassName: qnap-nfs
       accessModes:
       - ReadWriteOnce
       resources:
@@ -38,7 +38,7 @@ sonarr:
   storage:
     name: sonarr-config-backup
     pvcSpec:
-      storageClassName: qnap-nfs-storage
+      storageClassName: qnap-nfs
       accessModes:
       - ReadWriteOnce
       resources:

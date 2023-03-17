@@ -15,7 +15,6 @@ spec:
   target:
     name: plex-token
     template:
-      engineVersion: v2
       data:
         config.json: |
           {
@@ -28,3 +27,4 @@ spec:
               "token": "{{ .token }}"
             }
           }
+      engineVersion: v2
