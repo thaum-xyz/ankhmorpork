@@ -94,4 +94,4 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: qnap-nfs-storage
+      storageClassName: qnap-nfs

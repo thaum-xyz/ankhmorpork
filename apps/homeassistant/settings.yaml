@@ -22,7 +22,7 @@ homeassistant:
   storage:
     name: "homeassistant-config"
     pvcSpec:
-      storageClassName: "qnap-nfs-storage"
+      storageClassName: "qnap-nfs"
       accessModes:
         - ReadWriteOnce
       resources:
@@ -43,7 +43,7 @@ timescaledb:
   storage:
     name: "timescaledb-data"
     pvcSpec:
-      storageClassName: "qnap-nfs-storage"
+      storageClassName: "qnap-nfs"
       accessModes:
         - ReadWriteOnce
       resources:
@@ -67,7 +67,7 @@ esphome:
   storage:
     name: "esphome-data"
     pvcSpec:
-      storageClassName: "qnap-nfs-storage"
+      storageClassName: "qnap-nfs"
       accessModes:
         - ReadWriteOnce
       resources:
