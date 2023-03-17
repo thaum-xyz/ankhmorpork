@@ -116,10 +116,6 @@ data:
             subtitle: "Video on demand"
             logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
             url: "https://app.plex.tv/"
-          - name: Seeker
-            subtitle: "Media requests"
-            logo: "https://overseerr.dev/_next/image?url=%2Fos_logo_filled.svg&w=48&q=75"
-            url: "https://seek.ankhmorpork.thaum.xyz/"
           - name: Radarr
             subtitle: "Movie collection manager"
             logo: "https://avatars1.githubusercontent.com/u/25025331?s=200&v=4"

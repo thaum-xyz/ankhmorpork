@@ -1,4 +1,4 @@
-local affinity = (import 'pod.libsonnet').antiaffinity;
+local affinity = (import 'utils/pod.libsonnet').antiaffinity;
 
 local defaults = {
   local defaults = self,
