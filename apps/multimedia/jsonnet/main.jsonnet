@@ -1,5 +1,4 @@
 local arr = import 'arr.libsonnet';
-local overseer = import 'overseer.libsonnet';
 local prowlarr = import 'prowlarr.libsonnet';
 local utils = import 'utils.libsonnet';
 
@@ -57,15 +56,6 @@ local all = {
   },
   prowlarr: prowlarr(config.prowlarr) + {
     service+: lbService,
-  },
-  overseer: overseer(config.overseer) + {
-    ingress+: {
-      metadata+: {
-        labels+: {
-          probe: 'enabled',
-        },
-      },
-    },
   },
 
   shared:
