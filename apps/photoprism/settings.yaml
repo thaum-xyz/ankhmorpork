@@ -29,7 +29,7 @@ photoprism:
     #  cpu: 500m
     #  memory: 800Mi
   storageSpec:
-    storageClassName: "qnap-nfs-storage"
+    storageClassName: "qnap-nfs"
     accessModes:
       - ReadWriteOnce
     resources:
