@@ -612,7 +612,7 @@ local kp =
           namespace: $.grafana.deployment.metadata.namespace,
         },
         spec: {
-          storageClassName: 'qnap-nfs-storage',
+          storageClassName: 'qnap-nfs',
           accessModes: ['ReadWriteOnce'],
           resources: {
             requests: {

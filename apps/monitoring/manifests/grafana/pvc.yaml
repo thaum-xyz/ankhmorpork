@@ -9,4 +9,4 @@ spec:
   resources:
     requests:
       storage: 60Mi
-  storageClassName: qnap-nfs-storage
+  storageClassName: qnap-nfs
