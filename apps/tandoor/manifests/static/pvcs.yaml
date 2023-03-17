@@ -4,6 +4,7 @@ metadata:
   name: media
   namespace: tandoor
 spec:
+  storageClassName: qnap-nfs
   accessModes:
     - ReadWriteOnce
   resources:
@@ -16,6 +17,7 @@ metadata:
   name: static
   namespace: tandoor
 spec:
+  storageClassName: qnap-nfs
   accessModes:
     - ReadWriteOnce
   resources:
