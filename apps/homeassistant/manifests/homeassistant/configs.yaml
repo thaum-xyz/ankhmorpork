@@ -332,7 +332,7 @@ data:
         - opt/coax
         - line1/2
         - bt
-        initial: line1/2
+        initial: opt/coax
 
     plant:
       jovita:
@@ -440,8 +440,6 @@ data:
       icon: 'mdi:desktop-classic'
     switch.pawel_pc:
       icon: 'mdi:desktop-classic'
-    sensor.mealie:
-      icon: 'mdi:food'
   scripts.yaml: |
     speakers_line1:
       sequence:
@@ -517,6 +515,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2023.3.4
+    app.kubernetes.io/version: 2023.3.5
   name: homeassistant-configs
   namespace: homeassistant

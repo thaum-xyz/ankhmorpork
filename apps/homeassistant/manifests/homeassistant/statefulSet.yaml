@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2023.3.4
+    app.kubernetes.io/version: 2023.3.5
   name: homeassistant
   namespace: homeassistant
 spec:
@@ -19,18 +19,18 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: cb83854a208ec6b5f509636aab4ff983
+        checksum.config/md5: 5e11319c1398e9d30972df4879f4c2ff
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
         app.kubernetes.io/part-of: homeassistant
-        app.kubernetes.io/version: 2023.3.4
+        app.kubernetes.io/version: 2023.3.5
     spec:
       containers:
       - env:
         - name: TZ
           value: Europe/Berlin
-        image: homeassistant/aarch64-homeassistant:2023.3.4
+        image: homeassistant/aarch64-homeassistant:2023.3.5
         imagePullPolicy: IfNotPresent
         name: homeassistant
         ports:

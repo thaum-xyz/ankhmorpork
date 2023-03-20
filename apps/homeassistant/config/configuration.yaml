@@ -329,7 +329,7 @@ input_select:
     - opt/coax
     - line1/2
     - bt
-    initial: line1/2
+    initial: opt/coax
 
 plant:
   jovita:
