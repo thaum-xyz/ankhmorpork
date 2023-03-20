@@ -410,10 +410,10 @@ plant:
 #    default_channel: '#home'
 #    username: "home-assistant"
 
-google_assistant:
-  project_id: ankhhomeassistant
-  service_account: !include google_service_account.json
-  report_state: true
+#google_assistant:
+#  project_id: ankhhomeassistant
+#  service_account: !include google_service_account.json
+#  report_state: true
 
 #google:
 #  client_id: !secret google_client_id
