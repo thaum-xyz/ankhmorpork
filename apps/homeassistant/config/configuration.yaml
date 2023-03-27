@@ -142,6 +142,63 @@ sensor:
       {% elif value_json[0].recipe_name %}
       {{ value_json[0].recipe_name }}
       {% endif %}
+  - name: we_wash_t1
+    platform: imap_email_content
+    server: imap.gmail.com
+    port: 993
+    username: !secret gmail_imap_username
+    password: !secret gmail_imap_password
+    folder: we-wash
+    senders:
+      - noreply@we-wash.com
+    value_template: >-
+      {% if 'T1' in subject %}
+        {% if 'ready for pickup' in subject %}
+          Ready
+        {% elif 'started' in subject %}
+          In progress
+        {% elif 'waiting for you' in subject %}
+          Waiting
+        {% endif %}
+      {% endif %}
+  - name: we_wash_w1
+    platform: imap_email_content
+    server: imap.gmail.com
+    port: 993
+    username: !secret gmail_imap_username
+    password: !secret gmail_imap_password
+    folder: we-wash
+    senders:
+      - noreply@we-wash.com
+    value_template: >-
+      {% if 'W1' in subject %}
+        {% if 'ready for pickup' in subject %}
+          Ready
+        {% elif 'started' in subject %}
+          In progress
+        {% elif 'waiting for you' in subject %}
+          Waiting
+        {% endif %}
+      {% endif %}
+  - name: we_wash_w2
+    platform: imap_email_content
+    server: imap.gmail.com
+    port: 993
+    username: !secret gmail_imap_username
+    password: !secret gmail_imap_password
+    folder: we-wash
+    senders:
+      - noreply@we-wash.com
+    value_template: >-
+      {% if 'W2' in subject %}
+        {% if 'ready for pickup' in subject %}
+          Ready
+        {% elif 'started' in subject %}
+          In progress
+        {% elif 'waiting for you' in subject %}
+          Waiting
+        {% endif %}
+      {% endif %}
 
 template:
 - sensor:
