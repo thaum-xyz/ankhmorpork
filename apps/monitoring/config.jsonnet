@@ -92,7 +92,6 @@
         staticConfig: {
           static: [
             'https://zmc.krupa.net.pl/',
-            'https://recipe.krupa.net.pl/api/debug/version',
           ],
           labels: { environment: 'krupa.net.pl' },
         },

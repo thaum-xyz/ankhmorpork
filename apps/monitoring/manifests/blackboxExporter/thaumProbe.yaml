@@ -21,4 +21,3 @@ spec:
         module: http_2xx
       static:
       - https://zmc.krupa.net.pl/
-      - https://recipe.krupa.net.pl/api/debug/version
