@@ -151,18 +151,18 @@ data:
         port: 993
         username: !secret gmail_imap_username
         password: !secret gmail_imap_password
-        folder: we-wash
+        folder: we-wash/T1
         senders:
           - noreply@we-wash.com
         value_template: >-
-          {% if 'T1' in subject %}
-            {% if 'ready for pickup' in subject %}
-              Ready
-            {% elif 'started' in subject %}
-              In progress
-            {% elif 'waiting for you' in subject %}
-              Waiting
-            {% endif %}
+          {% if 'ready for pickup' in subject %}
+            Ready
+          {% elif 'started' in subject %}
+            In progress
+          {% elif 'waiting for you' in subject %}
+            Waiting
+          {% else %}
+            Unknown
           {% endif %}
       - name: we_wash_w1
         platform: imap_email_content
@@ -170,18 +170,18 @@ data:
         port: 993
         username: !secret gmail_imap_username
         password: !secret gmail_imap_password
-        folder: we-wash
+        folder: we-wash/W1
         senders:
           - noreply@we-wash.com
         value_template: >-
-          {% if 'W1' in subject %}
-            {% if 'ready for pickup' in subject %}
-              Ready
-            {% elif 'started' in subject %}
-              In progress
-            {% elif 'waiting for you' in subject %}
-              Waiting
-            {% endif %}
+          {% if 'ready for pickup' in subject %}
+            Ready
+          {% elif 'started' in subject %}
+            In progress
+          {% elif 'waiting for you' in subject %}
+            Waiting
+          {% else %}
+            Unknown
           {% endif %}
       - name: we_wash_w2
         platform: imap_email_content
@@ -189,18 +189,18 @@ data:
         port: 993
         username: !secret gmail_imap_username
         password: !secret gmail_imap_password
-        folder: we-wash
+        folder: we-wash/W2
         senders:
           - noreply@we-wash.com
         value_template: >-
-          {% if 'W2' in subject %}
-            {% if 'ready for pickup' in subject %}
-              Ready
-            {% elif 'started' in subject %}
-              In progress
-            {% elif 'waiting for you' in subject %}
-              Waiting
-            {% endif %}
+          {% if 'ready for pickup' in subject %}
+            Ready
+          {% elif 'started' in subject %}
+            In progress
+          {% elif 'waiting for you' in subject %}
+            Waiting
+          {% else %}
+            Unknown
           {% endif %}
 
     template:
