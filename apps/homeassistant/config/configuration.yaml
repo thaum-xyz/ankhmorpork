@@ -460,23 +460,6 @@ plant:
     min_brightness: 2500
     max_brightness: 60000
 
-#notify:
-#  - platform: slack
-#    name: slack
-#    api_key: !secret slack_api_key
-#    default_channel: '#home'
-#    username: "home-assistant"
-
-#google_assistant:
-#  project_id: ankhhomeassistant
-#  service_account: !include google_service_account.json
-#  report_state: true
-
-#google:
-#  client_id: !secret google_client_id
-#  client_secret: !secret google_client_secret
-#  calendar_access: "read_only"
-
 sonoff:
   username: !secret sonoff_username
   password: !secret sonoff_password
