@@ -4,6 +4,8 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-body-size: 50M
+  labels:
+    probe: enabled
   name: recipes
   namespace: tandoor
 spec:
