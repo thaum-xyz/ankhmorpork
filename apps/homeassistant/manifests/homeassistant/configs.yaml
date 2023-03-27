@@ -113,7 +113,7 @@ data:
     - platform: generic_thermostat
       name: Fridge
       heater: light.on_off_plug_1
-      target_sensor: sensor.fridge_temperature
+      target_sensor: sensor.ruuvitag_fridge_temperature
       ac_mode: true
       min_temp: 4
       max_temp: 10
