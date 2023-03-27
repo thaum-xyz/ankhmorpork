@@ -467,15 +467,11 @@ plant:
 #    default_channel: '#home'
 #    username: "home-assistant"
 
-#google_assistant:
-#  project_id: ankhhomeassistant
-#  service_account: !include google_service_account.json
-#  report_state: true
-
-#google:
-#  client_id: !secret google_client_id
-#  client_secret: !secret google_client_secret
-#  calendar_access: "read_only"
+# Calendar access
+google:
+  client_id: !secret google_client_id
+  client_secret: !secret google_client_secret
+  calendar_access: "read_only"
 
 sonoff:
   username: !secret sonoff_username
