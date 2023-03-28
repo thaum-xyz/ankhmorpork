@@ -380,6 +380,9 @@ function(params) {
         'nginx.ingress.kubernetes.io/proxy-body-size': '10m',
         'kubernetes.io/ingress.class': 'nginx',
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
+        'nginx.ingress.kubernetes.io/limit-connections': "5",
+        'nginx.ingress.kubernetes.io/limit-rpm': "100",
+        'nginx.ingress.kubernetes.io/limit-rps': "5"
       },
     },
     spec: {

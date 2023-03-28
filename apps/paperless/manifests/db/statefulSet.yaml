@@ -29,8 +29,8 @@ spec:
           value: paperless
         - name: TIMESCALEDB_TELEMETRY
           value: basic
-        - name: TS_TUNE_MEMORY
-          value: 300MB
+        - name: TS_TUNE_MAX_CONNS
+          value: "100"
         - name: TS_TUNE_NUM_CPUS
           value: "1"
         envFrom:
@@ -54,7 +54,9 @@ spec:
         - mountPath: /docker-entrypoint-initdb.d/alter-extension.sql
           name: alter-extension
           subPath: alter-extension.sql
-      - env:
+      - args:
+        - --no-collector.database
+        env:
         - name: DATA_SOURCE_URI
           value: 127.0.0.1?sslmode=disable
         - name: DATA_SOURCE_USER

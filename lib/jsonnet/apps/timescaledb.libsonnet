@@ -181,6 +181,10 @@ function(params) {
           value: 'basic',
         },
         {
+          name: 'TS_TUNE_MAX_CONNS',
+          value: '100',
+        },
+        {
           name: "TS_TUNE_NUM_CPUS",
           valueFrom: {
             resourceFieldRef: {
