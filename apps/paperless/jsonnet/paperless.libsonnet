@@ -33,6 +33,7 @@ local defaults = {
     PAPERLESS_CONSUMER_POLLING: '30',  // This is required for NFS storage types
     PAPERLESS_TASK_WORKERS: '1',  // Related to https://github.com/paperless-ngx/paperless-ngx/issues/1098
     PAPERLESS_WEBSERVER_WORKERS: '1',  // Related to https://github.com/paperless-ngx/paperless-ngx/issues/1098
+    PAPERLESS_ENABLE_FLOWER: 'true',  // Enable celery monitoring
   },
   secrets: {
     user: '',
@@ -191,10 +192,16 @@ function(params) {
     local c = {
       name: $._config.name,
       image: $._config.image,
-      ports: [{
-        containerPort: 8000,
-        name: 'http',
-      }],
+      ports: [
+        {
+          containerPort: 8000,
+          name: 'http',
+        },
+        {
+          containerPort: 5555,
+          name: 'metrics',
+        },
+      ],
       envFrom: [
         { configMapRef: { name: $.config.metadata.name } },
         { secretRef: { name: $.secrets.metadata.name } },
@@ -279,6 +286,89 @@ function(params) {
           ],
         },
       },
+    },
+  },
+
+  podMonitor: {
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'PodMonitor',
+    metadata: $._metadata,
+    spec: {
+      selector: {
+        matchLabels: $._config.selectorLabels,
+      },
+      podMetricsEndpoints: [{
+        port: 'metrics',
+        interval: '30s',
+        path: '/metrics',
+        scheme: 'http',
+      }],
+    },
+  },
+
+  prometheusRules: {
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'PrometheusRule',
+    metadata: $._metadata,
+    spec: {
+      groups: [
+        {
+          name: 'paperless.rules',
+          rules: [
+            {
+              alert: 'PaperlessUnhealthy',
+              expr: 'up{job="paperless"} == 0',
+              'for': '5m',
+              labels: {
+                severity: 'critical',
+              },
+              annotations: {
+                summary: 'Paperless is unhealthy',
+                description: 'Paperless has been unhealthy for more than 5 minutes.',
+              },
+            },
+            {
+              alert: 'CeleryWorkerOffline',
+              expr: 'flower_worker_online == 0',
+              'for': '2m',
+              labels: {
+                context: 'celery-worker',
+                severity: 'warning',
+              },
+              annotations: {
+                description: 'Celery worker {{ $labels.worker }} has been offline for more than 2 minutes.',
+                summary: 'Celery worker offline',
+              },
+            },
+            {
+              alert: 'TaskFailureRatioTooHigh',
+              expr: '(sum(avg_over_time(flower_events_total{type="task-failed"}[15m])) by (task) / sum(avg_over_time(flower_events_total{type=~"task-failed|task-succeeded"}[15m])) by (task)) * 100 > 1',
+              'for': '5m',
+              labels: {
+                context: 'celery-task',
+                severity: 'warning',
+              },
+              annotations: {
+                description: 'Average task failure ratio for task {{ $labels.task }} is {{ $value }}.',
+                summary: 'Task Failure Ratio Too High.',
+              },
+            },
+            {
+              alert: 'TaskPrefetchTimeTooHigh',
+              expr: 'sum(avg_over_time(flower_task_prefetch_time_seconds[15m])) by (task, worker) > 1',
+              'for': '5m',
+              labels: {
+                context: 'celery-task',
+                severity: 'warning',
+              },
+              annotations: {
+                description: 'Average task prefetch time at worker for task {{ $labels.task }} and worker {{ $labels.worker }} is {{ $value }}.',
+                summary: 'Average Task Prefetch Time Too High.',
+              },
+            },
+          ],
+        },
+      ],
     },
   },
 
