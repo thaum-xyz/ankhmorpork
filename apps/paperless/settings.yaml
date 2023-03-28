@@ -2,8 +2,8 @@
 common:
   namespace: &namespace "paperless"
 paperless:
-  version: "1.10.2"  # application-version-from-github: paperless-ngx/paperless-ngx
-  image: "ghcr.io/paperless-ngx/paperless-ngx:1.10.2"  # application-image-from-github: paperless-ngx/paperless-ngx
+  version: "1.13.0"  # application-version-from-github: paperless-ngx/paperless-ngx
+  image: "ghcr.io/paperless-ngx/paperless-ngx:1.13.0"  # application-image-from-github: paperless-ngx/paperless-ngx
   namespace: *namespace
   resources:
     requests:
