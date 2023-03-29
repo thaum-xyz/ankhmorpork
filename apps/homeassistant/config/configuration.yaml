@@ -135,7 +135,7 @@ sensor:
       from_date: '{{ now().strftime("%Y-%m-%d") }}'
       to_date: '{{ now().strftime("%Y-%m-%d") }}'
     value_template: >
-      {% if value_json is none %}
+      {% if value_json is none or value_json == [] %}
         No meal plan
       {% elif value_json[0].title %}
       {{ value_json[0].title }}
