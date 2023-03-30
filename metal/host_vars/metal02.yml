@@ -1,0 +1,17 @@
+---
+# 8GB and 2 cores are dedicated to ZFS storage
+# 40GB and 8 cores are dedicated to VMs
+# kubelet_system_resources: "cpu=10000m,memory=48Gi"  # This leaves 2 cores and ~14G
+# node_taints:
+#   - "node.infra/hypervisor=true:NoSchedule"
+
+node_labels:
+  - "storage.infra/main=true"
+
+system_mountpoints:
+  - description: k3s data
+    before: "k3s.service"
+    device: "/dev/disk/by-label/rancher"
+    mountpoint: "/var/lib/rancher"
+    type: "ext4"
+

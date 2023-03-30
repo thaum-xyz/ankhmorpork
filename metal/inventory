@@ -9,6 +9,7 @@ node02   ansible_user=ubuntu ansible_host=192.168.2.32 network=fast enable_smart
 #node03   ansible_user=ubuntu ansible_host=192.168.2.33
 #node04   ansible_user=ubuntu ansible_host=192.168.2.34
 metal01  ansible_user=ubuntu ansible_host=192.168.2.40 network=fast enable_smartmon=true
+metal02  ansible_user=ubuntu ansible_host=192.168.2.41 network=fast enable_smartmon=true
 
 [raspberry]
 master01
@@ -22,7 +23,7 @@ master01
 
 [k3s_nodes]
 node0[1:2]
-metal01
+metal0[1:2]
 
 [k3s:children]
 k3s_control_plane
