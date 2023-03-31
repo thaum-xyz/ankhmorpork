@@ -8,7 +8,7 @@
   - { role: oefenweb.locales, when: (ansible_os_family == "Debian") }
   - { role: jnv.unattended-upgrades, when: (ansible_os_family == "Debian") }
   - devsec.hardening.ssh_hardening
-  - cloudalchemy.systemd_exporter
+  - prometheus.prometheus.systemd_exporter
 
 - hosts: all
   become: true
