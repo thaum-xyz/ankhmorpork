@@ -15,6 +15,11 @@
   serial: 1
   roles:
   - paulfantom.system
+  handlers:
+  - name: restart systemd-logind
+    systemd:
+      name: systemd-logind
+      state: restarted
   tasks:
   - name: Install dependencies
     package:
@@ -43,6 +48,14 @@
       name: ubuntu-restricted-addons
       state: present
     when: '"GenuineIntel" in ansible_processor'
+  - name: Disable handling of lid switch by systemd-logind
+    lineinfile:
+      path: /etc/systemd/logind.conf
+      regexp: '^#?HandleLidSwitch='
+      line: 'HandleLidSwitch=ignore'
+      state: present
+      backup: yes
+    notify: restart systemd-logind
 
 # TODO: fix handling /var/log in the role
 #- hosts: raspberry
@@ -78,4 +91,3 @@
         minute: "*/10"
         job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
     when: enable_smartmon is defined
-
