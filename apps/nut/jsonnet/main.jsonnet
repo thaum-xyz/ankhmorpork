@@ -93,6 +93,18 @@ local all = exporter(config) + {
         name: 'nut.alerts',
         rules: [
           {
+            alert: 'NUTExporterDown',
+            annotations: {
+              description: 'NUT exporter {{ $labels.instance }} is down or cannot contact UPS. Check logs for more information.',
+              summary: 'NUT exporter is down or cannot contact UPS.',
+            },
+            expr: 'absent(network_ups_tools_ups_status)',
+            'for': '5m',
+            labels: {
+              severity: 'critical',
+            },
+          },
+          {
             alert: 'UPSOnBattery',
             annotations: {
               description: 'UPS {{ $labels.instance }} is now supplying power to the system from the battery.',
