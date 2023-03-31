@@ -60,6 +60,11 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Kubernetes Reboot Daemon</td>
   </tr>
   <tr>
+    <td><img width="32" src="https://raw.githubusercontent.com/kubernetes-sigs/descheduler/master/assets/logo/descheduler-stacked-color.png"></td>
+    <td><a href="https://sigs.k8s.io/descheduler">descheduler</a></td>
+    <td>Kubernetes Descheduler</td>
+  </tr>
+  <tr>
     <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/flux/icon/color/flux-icon-color.svg"></td>
     <td><a href="https://fluxcd.io/">Flux</a></td>
     <td>GitOps tool built to deploy applications to Kubernetes</td>
