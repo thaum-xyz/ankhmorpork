@@ -18,6 +18,7 @@ data:
         192.168.2.33 node03.ankhmorpork.thaum.xyz
         192.168.2.34 node04.ankhmorpork.thaum.xyz
         192.168.2.40 metal01.ankhmorpork.thaum.xyz
+        192.168.2.41 metal02.ankhmorpork.thaum.xyz
         ### local ingress START ###
         192.168.2.91 ankhmorpork.thaum.xyz
         192.168.2.91 auth.ankhmorpork.thaum.xyz
