@@ -30,7 +30,33 @@ local q = t.query(settings + settings.query + {
 
 local all = {
   query: q,
-  store: s,
+  store: s {
+    statefulSet+: {
+      spec+: {
+        template+: {
+          spec+: {
+            affinity: {
+              podAntiAffinity: {
+                requiredDuringSchedulingIgnoredDuringExecution: [{
+                  labelSelector: {
+                    matchExpressions: [{
+                      key: 'app.kubernetes.io/name',
+                      operator: 'In',
+                      values: ['thanos-receive'],
+                    }],
+                  },
+                  topologyKey: 'kubernetes.io/hostname',
+                }],
+              },
+            },
+            nodeSelector+: {
+              'kubernetes.io/arch': 'amd64',
+            },
+          },
+        },
+      },
+    },
+  },
   receiveIngestor: {
     [resource]: i[resource]
     for resource in std.objectFields(i)
