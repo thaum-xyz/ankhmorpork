@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v4
         with:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/yannh/kubeconform/cmd/kubeconform@latest
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v4
         with:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/yannh/kubeconform/cmd/kubeconform@latest
