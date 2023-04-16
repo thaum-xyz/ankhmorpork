@@ -154,16 +154,16 @@ data:
         folder: we-wash/T1
         senders:
           - noreply@we-wash.com
-        value_template: >-
-          {% if 'ready for pickup' in subject %}
-            Ready
-          {% elif 'started' in subject %}
-            In progress
-          {% elif 'waiting for you' in subject %}
-            Waiting
-          {% else %}
-            Unknown
-          {% endif %}
+        #value_template: >-
+        #  {% if 'ready for pickup' in subject %}
+        #    Ready
+        #  {% elif 'started' in subject %}
+        #    In progress
+        #  {% elif 'waiting for you' in subject %}
+        #    Waiting
+        #  {% else %}
+        #    Unknown
+        #  {% endif %}
       - name: we_wash_w1
         platform: imap_email_content
         server: imap.gmail.com
@@ -173,16 +173,16 @@ data:
         folder: we-wash/W1
         senders:
           - noreply@we-wash.com
-        value_template: >-
-          {% if 'ready for pickup' in subject %}
-            Ready
-          {% elif 'started' in subject %}
-            In progress
-          {% elif 'waiting for you' in subject %}
-            Waiting
-          {% else %}
-            Unknown
-          {% endif %}
+        #value_template: >-
+        #  {% if 'ready for pickup' in subject %}
+        #    Ready
+        #  {% elif 'started' in subject %}
+        #    In progress
+        #  {% elif 'waiting for you' in subject %}
+        #    Waiting
+        #  {% else %}
+        #    Unknown
+        #  {% endif %}
       - name: we_wash_w2
         platform: imap_email_content
         server: imap.gmail.com
@@ -192,16 +192,16 @@ data:
         folder: we-wash/W2
         senders:
           - noreply@we-wash.com
-        value_template: >-
-          {% if 'ready for pickup' in subject %}
-            Ready
-          {% elif 'started' in subject %}
-            In progress
-          {% elif 'waiting for you' in subject %}
-            Waiting
-          {% else %}
-            Unknown
-          {% endif %}
+        #value_template: >-
+        #  {% if 'ready for pickup' in subject %}
+        #    Ready
+        #  {% elif 'started' in subject %}
+        #    In progress
+        #  {% elif 'waiting for you' in subject %}
+        #    Waiting
+        #  {% else %}
+        #    Unknown
+        #  {% endif %}
 
     template:
     - sensor:
