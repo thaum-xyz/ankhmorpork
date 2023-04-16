@@ -29,6 +29,8 @@ spec:
           value: homeassistant
         - name: TIMESCALEDB_TELEMETRY
           value: basic
+        - name: TS_TUNE_MAX_CONNS
+          value: "100"
         - name: TS_TUNE_NUM_CPUS
           valueFrom:
             resourceFieldRef:
