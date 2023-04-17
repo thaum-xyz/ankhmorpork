@@ -38,8 +38,10 @@ spec:
             path: /api/v1/status
             port: http
         resources:
-          requests:
+          limits:
             cpu: 2500m
+          requests:
+            cpu: 500m
             memory: 4Gi
         securityContext:
           privileged: false

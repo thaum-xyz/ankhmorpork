@@ -88,9 +88,10 @@ spec:
         resources:
           limits:
             cpu: 3
+            memory: 10Gi
           requests:
-            cpu: 2
-            memory: 8Gi
+            cpu: 500m
+            memory: 1Gi
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /var/thanos/store

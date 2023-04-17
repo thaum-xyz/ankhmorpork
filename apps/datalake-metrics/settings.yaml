@@ -48,10 +48,11 @@ receiveRouter:
 store:
   resources:
     requests:
-      cpu: 2
-      memory: 8Gi
+      cpu: 500m
+      memory: 1Gi
     limits:
       cpu: 3
+      memory: 10Gi
 query:
   resources:
     requests:

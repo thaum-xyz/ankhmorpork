@@ -23,10 +23,10 @@ photoprism:
   resources:
     requests:
     #  cpu: 4500m
-      cpu: 2500m
+      cpu: 500m
       memory: 4Gi
-    #limits:
-    #  cpu: 500m
+    limits:
+      cpu: 2500m
     #  memory: 800Mi
   storageSpec:
     storageClassName: "qnap-nfs"
