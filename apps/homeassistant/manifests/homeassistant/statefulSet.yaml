@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2023.4.3
+    app.kubernetes.io/version: 2023.4.4
   name: homeassistant
   namespace: homeassistant
 spec:
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
         app.kubernetes.io/part-of: homeassistant
-        app.kubernetes.io/version: 2023.4.3
+        app.kubernetes.io/version: 2023.4.4
     spec:
       containers:
       - env:
@@ -45,9 +45,6 @@ spec:
           initialDelaySeconds: 5
           timeoutSeconds: 10
         resources:
-          limits:
-            cpu: 2
-            memory: 1300Mi
           requests:
             cpu: 700m
             memory: 500Mi

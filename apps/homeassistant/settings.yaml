@@ -2,7 +2,7 @@
 common:
   namespace: &namespace "homeassistant"
 homeassistant:
-  version: "2023.4.3"  # application-version-from-github: home-assistant/core
+  version: "2023.4.4"  # application-version-from-github: home-assistant/core
   image: "homeassistant/aarch64-homeassistant:2023.4.3"  # application-image-from-github: home-assistant/core
   namespace: *namespace
   domain: "home.ankhmorpork.thaum.xyz"
@@ -15,9 +15,9 @@ homeassistant:
     requests:
       cpu: 700m
       memory: 500Mi
-    limits:
-      cpu: 2
-      memory: 1300Mi
+    # limits:
+    #   cpu: 2
+    #   memory: 1300Mi
   apiTokenRef: "HOMEASSISTANT_PROMETHEUS_TOKEN"
   apiTokenSecretKeySelector:
     name: 'credentials'
