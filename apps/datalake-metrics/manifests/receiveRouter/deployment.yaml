@@ -74,12 +74,9 @@ spec:
             scheme: HTTP
           periodSeconds: 5
         resources:
-          limits:
-            cpu: 300m
-            memory: 70Mi
           requests:
             cpu: 200m
-            memory: 40Mi
+            memory: 50Mi
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /var/lib/thanos-receive

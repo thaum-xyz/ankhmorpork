@@ -41,10 +41,10 @@ receiveRouter:
   resources:
     requests:
       cpu: 200m
-      memory: 40Mi
-    limits:
-      cpu: 300m
-      memory: 70Mi
+      memory: 50Mi
+#    limits:
+#      cpu: 300m
+#      memory: 200Mi
 store:
   resources:
     requests:
