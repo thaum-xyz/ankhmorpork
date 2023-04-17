@@ -45,15 +45,16 @@
     },
     affinity: {
       nodeAffinity: {
-        prefferedDuringSchedulingIgnoredDuringExecution: {
-          nodeSelectorTerms: [{
+        preferredDuringSchedulingIgnoredDuringExecution: [{
+          weight: 1,
+          preference: {
             matchExpressions: [{
               key: 'kubernetes.io/arch',
               operator: 'In',
               values: ['amd64'],
             }],
-          }],
-        },
+          },
+        }],
       },
     },
     mixin+: {

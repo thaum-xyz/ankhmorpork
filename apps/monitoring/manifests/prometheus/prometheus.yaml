@@ -12,13 +12,14 @@ metadata:
 spec:
   affinity:
     nodeAffinity:
-      prefferedDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - preference:
+          matchExpressions:
           - key: kubernetes.io/arch
             operator: In
             values:
             - amd64
+        weight: 1
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
       - podAffinityTerm:
