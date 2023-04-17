@@ -5,8 +5,8 @@ namespace: 'auth'
 replicas: 2
 ingressDomain: 'auth.ankhmorpork.thaum.xyz'
 resources:
-  requests: { cpu: '10m', memory: '13Mi' }
-  limits: { cpu: '30m', memory: '30Mi' }
+  requests: { cpu: '10m', memory: '21Mi' }
+  limits: { cpu: '30m', memory: '32Mi' }
 credentialsRefs:
   OAUTH2_PROXY_CLIENT_ID: AUTH_CLIENT_ID
   OAUTH2_PROXY_CLIENT_SECRET: AUTH_CLIENT_SECRET
