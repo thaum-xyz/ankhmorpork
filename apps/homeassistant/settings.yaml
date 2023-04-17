@@ -2,19 +2,22 @@
 common:
   namespace: &namespace "homeassistant"
 homeassistant:
-  version: "2023.4.4"  # application-version-from-github: home-assistant/core
-  image: "homeassistant/aarch64-homeassistant:2023.4.4"  # application-image-from-github: home-assistant/core
+  version: "2023.4.3"  # application-version-from-github: home-assistant/core
+  image: "homeassistant/aarch64-homeassistant:2023.4.3"  # application-image-from-github: home-assistant/core
   namespace: *namespace
   domain: "home.ankhmorpork.thaum.xyz"
   hostNetwork: true  # Needed to enable WOL
   timezone: "Europe/Berlin"
   resources:
+    # DO NOT DECREASE IT
+    # HomeAssistant image has built-in memory management which doesn't propagate to kubernetes
+    # this in turn requires to add more resources than it is actually needed
     requests:
-      cpu: 300m
-      memory: 400Mi
+      cpu: 500m
+      memory: 500Mi
     limits:
-      cpu: 600m
-      memory: 800Mi
+      cpu: 1
+      memory: 1300Mi
   apiTokenRef: "HOMEASSISTANT_PROMETHEUS_TOKEN"
   apiTokenSecretKeySelector:
     name: 'credentials'
