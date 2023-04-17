@@ -62,9 +62,9 @@ sonarr:
     requests:
       cpu: 20m
       memory: 1130Mi
-    limits:
-      cpu: 100m
-      memory: 4Gi
+#    limits:
+#      cpu: 100m
+#      memory: 4Gi
   storage:
     name: sonarr-config-backup
     pvcSpec:

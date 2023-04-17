@@ -47,9 +47,6 @@ spec:
             port: http
           timeoutSeconds: 10
         resources:
-          limits:
-            cpu: 100m
-            memory: 4Gi
           requests:
             cpu: 20m
             memory: 1130Mi
