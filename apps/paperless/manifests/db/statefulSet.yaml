@@ -45,7 +45,7 @@ spec:
         resources:
           requests:
             cpu: 70m
-            memory: 190Mi
+            memory: 70Mi
         securityContext:
           privileged: false
         volumeMounts:

@@ -30,7 +30,10 @@ spec:
             name: config-envs
         image: vabene1111/recipes:1.4.8
         imagePullPolicy: Always
-        resources: {}
+        resources:
+          requests:
+            cpu: 20m
+            memory: 120Mi
         command:
         - sh
         - -c

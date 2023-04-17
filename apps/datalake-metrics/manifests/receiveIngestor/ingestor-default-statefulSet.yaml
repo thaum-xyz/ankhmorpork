@@ -120,9 +120,12 @@ spec:
             scheme: HTTP
           periodSeconds: 5
         resources:
+          limits:
+            cpu: 400m
+            memory: 2Gi
           requests:
-            cpu: 900m
-            memory: 1Gi
+            cpu: 250m
+            memory: 1500Mi
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /var/thanos/receive

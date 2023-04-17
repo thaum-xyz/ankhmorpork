@@ -30,9 +30,12 @@ spec:
         - containerPort: 6379
           name: redis
         resources:
-          requests:
+          limits:
             cpu: 50m
-            memory: 70Mi
+            memory: 100Mi
+          requests:
+            cpu: 30m
+            memory: 100Mi
         securityContext:
           privileged: false
         volumeMounts:

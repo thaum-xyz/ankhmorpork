@@ -52,6 +52,13 @@ spec:
         - name: "pod-gpu-resources"
           readOnly: true
           mountPath: "/var/lib/kubelet/pod-resources"
+        resources:
+          requests:
+            cpu: 2m
+            memory: 250Mi
+          limits:
+            memory: 250Mi
+            cpu: 4m
       runtimeClassName: nvidia
       # TODO: switch nodeSelector to use GPU labels after
       # nvidia/gpu-feature-discovery is installed alongside NFD

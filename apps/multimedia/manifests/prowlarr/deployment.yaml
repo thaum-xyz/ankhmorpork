@@ -42,7 +42,13 @@ spec:
           tcpSocket:
             port: 9696
           timeoutSeconds: 1
-        resources: {}
+        resources:
+          limits:
+            cpu: 50m
+            memory: 250Mi
+          requests:
+            cpu: 20m
+            memory: 150Mi
         startupProbe:
           failureThreshold: 30
           initialDelaySeconds: 0

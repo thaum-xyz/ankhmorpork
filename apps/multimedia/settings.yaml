@@ -7,6 +7,13 @@ prowlarr:
   version: "v0.4.0.1802"
   image: "ghcr.io/k8s-at-home/prowlarr:v0.4.0.1802"
   namespace: *namespace
+  resources:
+    requests:
+      cpu: 20m
+      memory: 150Mi
+    limits:
+      cpu: 50m
+      memory: 250Mi
   storage:
     name: prowlarr-config
     pvcSpec:
@@ -25,6 +32,13 @@ radarr:
   port: 7878
   multimediaPVCName: "movies"
   downloadsPVCName: "downloaded"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 250Mi
+    limits:
+      cpu: 100m
+      memory: 400Mi
   storage:
     name: radarr-config-backup
     pvcSpec:
@@ -44,6 +58,13 @@ sonarr:
   downloadsPVCName: "downloaded"
   exporter:
     port: 9707
+  resources:
+    requests:
+      cpu: 20m
+      memory: 1130Mi
+    limits:
+      cpu: 100m
+      memory: 4Gi
   storage:
     name: sonarr-config-backup
     pvcSpec:

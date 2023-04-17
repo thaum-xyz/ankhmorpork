@@ -38,10 +38,10 @@ spec:
         ports:
         - containerPort: 5432
           name: psql
-        #resources:
-        #  limits:
-        #    cpu: 220m
-        #    memory: 320Mi
+        resources:
+          limits:
+            cpu: 4m
+            memory: 85Mi
         #  requests:
         #    cpu: 30m
         #    memory: 160Mi

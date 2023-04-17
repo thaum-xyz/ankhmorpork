@@ -78,9 +78,11 @@ spec:
             scheme: HTTP
           periodSeconds: 5
         resources:
+          limits:
+            cpu: 3
           requests:
-            cpu: 15m
-            memory: 45Mi
+            cpu: 2
+            memory: 8Gi
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /var/thanos/store

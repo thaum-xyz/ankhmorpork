@@ -49,9 +49,12 @@ spec:
         - containerPort: 5555
           name: metrics
         resources:
-          requests:
+          limits:
             cpu: 500m
-            memory: 800Mi
+            memory: 3Gi
+          requests:
+            cpu: 350m
+            memory: 1400Mi
         securityContext:
           privileged: false
         volumeMounts:

@@ -7,11 +7,11 @@ paperless:
   namespace: *namespace
   resources:
     requests:
+      cpu: 350m
+      memory: 1400Mi
+    limits:
       cpu: 500m
-      memory: 800Mi
-    #limits:
-    #  cpu: 500m
-    #  memory: 800Mi
+      memory: 3Gi
   storage:
     data:
       storageClassName: "qnap-nfs"
@@ -62,10 +62,7 @@ db:
   resources:
     requests:
       cpu: 70m
-      memory: 190Mi
-    #limits:
-    #  cpu: 200m
-    #  memory: 320Mi
+      memory: 70Mi
   storage:
     name: "db-data"
     pvcSpec:
@@ -84,6 +81,13 @@ broker:
   version: "6.0"  # application-version-from-github: redis/redis
   image: "redis:6.0"  # application-version-from-github: redis/redis
   namespace: *namespace
+  resources:
+    requests:
+      cpu: 30m
+      memory: 100Mi
+    limits:
+      cpu: 50m
+      memory: 100Mi
   storage:
     name: "broker-data"
     pvcSpec:

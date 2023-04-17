@@ -78,7 +78,7 @@ spec:
           periodSeconds: 5
         resources:
           requests:
-            cpu: 10m
+            cpu: 15m
             memory: 40Mi
         terminationMessagePolicy: FallbackToLogsOnError
       nodeSelector:

@@ -10,10 +10,10 @@ homeassistant:
   timezone: "Europe/Berlin"
   resources:
     requests:
-      cpu: 200m
-      memory: 350Mi
+      cpu: 300m
+      memory: 400Mi
     limits:
-      cpu: 500m
+      cpu: 600m
       memory: 800Mi
   apiTokenRef: "HOMEASSISTANT_PROMETHEUS_TOKEN"
   apiTokenSecretKeySelector:
@@ -35,11 +35,11 @@ timescaledb:
   namespace: *namespace
   resources:
     requests:
-      cpu: 30m
-      memory: 160Mi
+      cpu: 130m
+      memory: 300Mi
     limits:
-      cpu: 220m
-      memory: 320Mi
+      cpu: 250m
+      memory: 420Mi
   storage:
     name: "timescaledb-data"
     pvcSpec:

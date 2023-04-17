@@ -40,8 +40,8 @@
       'memory-snapshot-on-shutdown',
     ],
     resources: {
-      requests: { cpu: '140m', memory: '1900Mi' },
-      limits: { cpu: '1' },
+      requests: { cpu: '800m', memory: '2000Mi' },
+      limits: { cpu: '1500m', memory: '2500Mi' },
     },
     mixin+: {
       _config: {
@@ -254,7 +254,7 @@
     image: 'quay.io/prometheuscommunity/json-exporter:v0.5.0',
     port: 7979,
     resources: {
-      requests: { cpu: '3m', memory: '16Mi' },
+      requests: { cpu: '5m', memory: '21Mi' },
       limits: { cpu: '20m', memory: '50Mi' },
     },
     targets: ['https://api.uptimerobot.com/v2/getMonitors'],

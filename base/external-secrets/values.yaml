@@ -7,3 +7,11 @@ serviceMonitor:
 certController:
   serviceMonitor:
     enabled: true
+
+resources:
+  resuests:
+    cpu: 4m
+    memory: 43Mi
+  limits:
+    cpu: 20m
+    memory: 70Mi

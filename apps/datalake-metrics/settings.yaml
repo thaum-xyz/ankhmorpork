@@ -32,20 +32,28 @@ ingressAuthHTPasswdRef: THANOS_INGRESS_HTPASSWD
 receiveIngestor:
   resources:
     requests:
-      cpu: 900m
-      memory: 1Gi
+      cpu: 250m
+      memory: 1500Mi
+    limits:
+      cpu: 400m
+      memory: 2Gi
 receiveRouter:
   resources:
     requests:
-      cpu: 500m
-      memory: 100Mi
+      cpu: 200m
+      memory: 40Mi
+    limits:
+      cpu: 300m
+      memory: 70Mi
 store:
   resources:
     requests:
-      cpu: 15m
-      memory: 45Mi
+      cpu: 2
+      memory: 8Gi
+    limits:
+      cpu: 3
 query:
   resources:
     requests:
-      cpu: 10m
+      cpu: 15m
       memory: 40Mi

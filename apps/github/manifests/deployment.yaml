@@ -37,11 +37,11 @@ spec:
           protocol: TCP
         resources:
           requests:
-            cpu: 13m
-            memory: 20Mi
-          limits:
-            memory: 100Mi
             cpu: 20m
+            memory: 100Mi
+          limits:
+            memory: 150Mi
+            cpu: 30m
       restartPolicy: Always
       nodeSelector:
         kubernetes.io/arch: amd64
