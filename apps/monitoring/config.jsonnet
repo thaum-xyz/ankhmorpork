@@ -43,6 +43,19 @@
       requests: { cpu: '800m', memory: '2000Mi' },
       limits: { cpu: '1500m', memory: '2500Mi' },
     },
+    affinity: {
+      nodeAffinity: {
+        prefferedDuringSchedulingIgnoredDuringExecution: {
+          nodeSelectorTerms: [{
+            matchExpressions: [{
+              key: 'kubernetes.io/arch',
+              operator: 'In',
+              values: ['amd64'],
+            }],
+          }],
+        },
+      },
+    },
     mixin+: {
       _config: {
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/prometheus/%s',

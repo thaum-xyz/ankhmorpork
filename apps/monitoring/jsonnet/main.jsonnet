@@ -347,6 +347,7 @@ local kp =
           nodeSelector+: {
             'storage.infra/local': 'true',
           },
+          affinity+: $.values.prometheus.affinity,
 
           podMetadata+: parcaEnable,
           // FIXME: reenable

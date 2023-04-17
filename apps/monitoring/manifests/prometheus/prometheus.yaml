@@ -11,6 +11,14 @@ metadata:
   namespace: monitoring
 spec:
   affinity:
+    nodeAffinity:
+      prefferedDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/arch
+            operator: In
+            values:
+            - amd64
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
       - podAffinityTerm:
