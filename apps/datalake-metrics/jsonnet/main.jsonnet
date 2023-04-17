@@ -35,7 +35,7 @@ local all = {
       spec+: {
         template+: {
           spec+: {
-            affinity: {
+            /*affinity: {
               podAntiAffinity: {
                 requiredDuringSchedulingIgnoredDuringExecution: [{
                   labelSelector: {
@@ -48,7 +48,7 @@ local all = {
                   topologyKey: 'kubernetes.io/hostname',
                 }],
               },
-            },
+            },*/
             nodeSelector+: {
               'kubernetes.io/arch': 'amd64',
             },

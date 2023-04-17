@@ -26,14 +26,22 @@ spec:
     spec:
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app.kubernetes.io/name
-                operator: In
-                values:
-                - thanos-receive
-            topologyKey: kubernetes.io/hostname
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - thanos-store
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - thanos-store
+              namespaces:
+              - datalake-metrics
+              topologyKey: kubernetes.io/hostname
+            weight: 100
       containers:
       - args:
         - store
