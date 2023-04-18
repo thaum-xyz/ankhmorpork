@@ -66,6 +66,18 @@ local all = {
     for hashring in std.objectFields(i.ingestors)
     for resource in std.objectFields(i.ingestors[hashring])
     if i.ingestors[hashring][resource] != null
+  } + {
+    'ingestor-default-statefulSet'+: {
+      spec+: {
+        template+: {
+          spec+: {
+            nodeSelector+: {
+              'kubernetes.io/arch': 'amd64',
+            },
+          },
+        },
+      },
+    },
   },
   receiveRouter: r {
     serviceMonitor: $.receiveIngestor.serviceMonitor {
