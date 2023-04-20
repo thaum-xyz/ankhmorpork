@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 3b261200f958f4843fb2575a10269a86
+        checksum.config/md5: 007ff63e879594d08ce5cc308a2ed137
       labels:
         app.kubernetes.io/component: proxy
         app.kubernetes.io/name: oauth2-proxy
@@ -64,8 +64,8 @@ spec:
             cpu: 30m
             memory: 32Mi
           requests:
-            cpu: 10m
-            memory: 21Mi
+            cpu: 2m
+            memory: 17Mi
       nodeSelector:
         network.infra/type: fast
       restartPolicy: Always
