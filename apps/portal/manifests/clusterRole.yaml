@@ -1,0 +1,35 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/part-of: homepage
+    app.kubernetes.io/version: 0.6.16
+  name: homepage
+  namespace: portal
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - pods
+  - nodes
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - nodes
+  - pods
+  verbs:
+  - get
+  - list

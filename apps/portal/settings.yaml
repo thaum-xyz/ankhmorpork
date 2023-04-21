@@ -1,6 +1,10 @@
 ---
-version: "23.02.2"  # application-version-from-github: bastienwirtz/homer
-image: "b4bz/homer:v23.02.2"  # application-image-from-github: bastienwirtz/homer
+version: "0.6.16"  # application-version-from-github: benphelps/homepage
+image: "ghcr.io/benphelps/homepage:v0.6.16"  # application-image-from-github: benphelps/homepage
 namespace: "portal"
 replicas: 1
-domain: "portal.krupa.net.pl"
+ingress:
+  domain: "portal.krupa.net.pl"
+  className: 'nginx'
+  annotations:
+    'cert-manager.io/cluster-issuer': 'letsencrypt-prod'

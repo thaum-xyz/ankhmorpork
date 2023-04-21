@@ -1,21 +1,23 @@
-local homer = (import 'apps/homer.libsonnet');
-local siteConfig = importstr './homer-configuration.yml';
+local homepage = (import 'apps/homepage.libsonnet');
+
 
 local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0] {
-  configData: siteConfig,
+  configData: {
+    // Reading as YAML to validate yaml syntax
+    // Converting to string as content is passed to a ConfigMap
+    'bookmarks.yaml': std.toString(std.parseYaml(importstr '../configs.yaml')[0]),
+    'docker.yaml': std.toString(std.parseYaml(importstr '../configs.yaml')[1]),
+    'kubernetes.yaml': std.toString(std.parseYaml(importstr '../configs.yaml')[2]),
+    'services.yaml': std.toString(std.parseYaml(importstr '../configs.yaml')[3]),
+    'settings.yaml': std.toString(std.parseYaml(importstr '../configs.yaml')[4]),
+    'widgets.yaml': std.toString(std.parseYaml(importstr '../configs.yaml')[5]),
+  },
 };
 
-local all = homer(config) + {
-  ingress+: {
-    metadata+: {
-      labels+: {
-        probe: 'enabled',
-      },
-    },
-  },
+local all = homepage(config) + {
 };
 
 { [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }

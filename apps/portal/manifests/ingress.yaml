@@ -3,23 +3,22 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/ingress.class: nginx
   labels:
     app.kubernetes.io/component: server
-    app.kubernetes.io/name: homer
-    app.kubernetes.io/part-of: homer
-    app.kubernetes.io/version: 23.02.2
-    probe: enabled
-  name: homer
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/part-of: homepage
+    app.kubernetes.io/version: 0.6.16
+  name: homepage
   namespace: portal
 spec:
+  ingressClassName: nginx
   rules:
   - host: portal.krupa.net.pl
     http:
       paths:
       - backend:
           service:
-            name: homer
+            name: homepage
             port:
               name: http
         path: /
@@ -27,4 +26,4 @@ spec:
   tls:
   - hosts:
     - portal.krupa.net.pl
-    secretName: homer-tls
+    secretName: homepage-tls

@@ -3,27 +3,27 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/component: server
-    app.kubernetes.io/name: homer
-    app.kubernetes.io/part-of: homer
-    app.kubernetes.io/version: 23.02.2
-  name: homer
+    app.kubernetes.io/name: homepage
+    app.kubernetes.io/part-of: homepage
+    app.kubernetes.io/version: 0.6.16
+  name: homepage
   namespace: portal
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: server
-      app.kubernetes.io/name: homer
-      app.kubernetes.io/part-of: homer
+      app.kubernetes.io/name: homepage
+      app.kubernetes.io/part-of: homepage
   template:
     metadata:
       annotations:
-        checksum.config/md5: f27c89437d1df2c58372f451061e2682
+        checksum.config/md5: 722c7ff78b27795771f37b7b54ed4b3e
       labels:
         app.kubernetes.io/component: server
-        app.kubernetes.io/name: homer
-        app.kubernetes.io/part-of: homer
-        app.kubernetes.io/version: 23.02.2
+        app.kubernetes.io/name: homepage
+        app.kubernetes.io/part-of: homepage
+        app.kubernetes.io/version: 0.6.16
     spec:
       affinity:
         podAntiAffinity:
@@ -34,30 +34,32 @@ spec:
                 - key: app.kubernetes.io/name
                   operator: In
                   values:
-                  - homer
+                  - homepage
               topologyKey: kubernetes.io/hostname
             weight: 100
+      automountServiceAccountToken: true
       containers:
-      - image: b4bz/homer:v23.02.2
+      - image: ghcr.io/benphelps/homepage:v0.6.16
         imagePullPolicy: IfNotPresent
-        name: homer
+        name: homepage
         ports:
-        - containerPort: 8080
+        - containerPort: 3000
           name: http
         resources:
-          limits:
-            cpu: 10m
-            memory: 10Mi
           requests:
             cpu: 1m
             memory: 5Mi
         volumeMounts:
-        - mountPath: /www/assets/config.yml
+        - mountPath: /app/config
           name: config
-          subPath: config.yml
+        - mountPath: /app/config/logs
+          name: logs
+      enableServiceLinks: true
       restartPolicy: Always
-      serviceAccountName: homer
+      serviceAccountName: homepage
       volumes:
       - configMap:
-          name: homer-config
+          name: homepage-config
         name: config
+      - emptyDir: {}
+        name: logs

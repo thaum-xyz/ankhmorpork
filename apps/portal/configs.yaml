@@ -1,0 +1,23 @@
+---
+# bookmarks.yaml
+- Important:
+    - Bitwarden:
+        - abbr: BW
+          href: https://vault.bitwarden.com/
+---
+# docker.yaml
+""
+---
+# kubernetes.yaml
+mode: cluster
+---
+# services.yaml
+""
+---
+# settings.yaml
+""
+---
+# widgets.yaml
+- search:
+    provider: duckduckgo
+    target: _blank
