@@ -10,26 +10,9 @@ metadata:
   namespace: portal
 rules:
 - apiGroups:
-  - ""
-  resources:
-  - namespaces
-  - pods
-  - nodes
-  verbs:
-  - get
-  - list
-- apiGroups:
   - networking.k8s.io
   resources:
   - ingresses
-  verbs:
-  - get
-  - list
-- apiGroups:
-  - metrics.k8s.io
-  resources:
-  - nodes
-  - pods
   verbs:
   - get
   - list

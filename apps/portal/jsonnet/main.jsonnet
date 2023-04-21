@@ -18,6 +18,13 @@ local config = std.parseYaml(configYAML)[0] {
 };
 
 local all = homepage(config) + {
+  clusterRole+: {
+    rules: [{
+      apiGroups: ['networking.k8s.io'],
+      resources: ['ingresses'],
+      verbs: ['get', 'list'],
+    }],
+  },
 };
 
 { [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }
