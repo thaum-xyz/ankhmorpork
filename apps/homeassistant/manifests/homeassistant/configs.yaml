@@ -193,7 +193,7 @@ data:
         senders:
           - noreply@we-wash.com
         value_template: >-
-          {% if 'ready for pickup' in subject %}
+          {% if 'ready for pick up' in subject %}
             Ready
           {% elif 'started' in subject %}
             In progress
