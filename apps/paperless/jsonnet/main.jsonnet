@@ -1,5 +1,5 @@
+local paperless = import 'apps/paperless.libsonnet';
 local timescaledb = import 'apps/timescaledb.libsonnet';
-local paperless = import 'paperless.libsonnet';
 local redis = import 'redis.libsonnet';
 local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
 

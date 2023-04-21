@@ -1,6 +1,8 @@
 apiVersion: v1
 data:
-  alter-extension.sql: ALTER EXTENSION timescaledb UPDATE;
+  alter-extension.sql: |
+    CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
+    ALTER EXTENSION timescaledb UPDATE;
 kind: ConfigMap
 metadata:
   labels:

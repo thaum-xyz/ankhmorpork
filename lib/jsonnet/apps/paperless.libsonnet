@@ -17,7 +17,11 @@ local defaults = {
     for labelName in std.objectFields(defaults.commonLabels)
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
-  domain: '',
+  ingress: {
+    domain: '',
+    className: 'nginx',
+    annotations: {},
+  },
   timezone: 'Europe/Berlin',
   database: {
     port: '5432',
@@ -77,6 +81,7 @@ function(params) {
       name: params.name,
       host: 'db.%s.svc' % params.namespace,
     } + params.database,
+    domain: defaults.ingress.domain + params.ingress.domain,
   },
 
   _metadata:: {
@@ -119,7 +124,7 @@ function(params) {
       name: $._config.name + '-config',
     },
     data: $._config.config {
-      PAPERLESS_URL: 'https://' + $._config.domain,
+      PAPERLESS_URL: 'https://' + $._config.ingress.domain,
       PAPERLESS_REDIS: $._config.broker.address,
       PAPERLESS_TIME_ZONE: $._config.timezone,
       PAPERLESS_CORS_ALLOWED_HOSTS: 'http://%(name)s.%(namespace)s.svc,https://%(domain)s' % $._config,
@@ -372,26 +377,20 @@ function(params) {
     },
   },
 
-  [if std.objectHas(params, 'domain') && std.length(params.domain) > 0 then 'ingress']: {
+  [if std.objectHas(params, 'ingress') && std.objectHas(params.ingress, 'domain') && std.length(params.ingress.domain) > 0 then 'ingress']: {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: $._metadata {
-      annotations: {
-        'nginx.ingress.kubernetes.io/proxy-body-size': '10m',
-        'kubernetes.io/ingress.class': 'nginx',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
-        'nginx.ingress.kubernetes.io/limit-rpm': '100',
-        'nginx.ingress.kubernetes.io/limit-rps': '10',
-        'nginx.ingress.kubernetes.io/limit-req-status-code': '429',
-      },
+      annotations: $._config.ingress.annotations,
     },
     spec: {
+      ingressClassName: $._config.ingress.className,
       tls: [{
         secretName: $._config.name + '-tls',
-        hosts: [$._config.domain],
+        hosts: [$._config.ingress.domain],
       }],
       rules: [{
-        host: $._config.domain,
+        host: $._config.ingress.domain,
         http: {
           paths: [{
             path: '/',

@@ -32,7 +32,17 @@ spec:
         - name: TS_TUNE_MAX_CONNS
           value: "100"
         - name: TS_TUNE_NUM_CPUS
-          value: "1"
+          valueFrom:
+            resourceFieldRef:
+              containerName: db
+              divisor: "1"
+              resource: limits.cpu
+        - name: TS_TUNE_MEMORY
+          valueFrom:
+            resourceFieldRef:
+              containerName: db
+              divisor: 1Mi
+              resource: limits.memory
         envFrom:
         - secretRef:
             name: db
