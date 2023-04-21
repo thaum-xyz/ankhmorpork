@@ -3,6 +3,11 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    gethomepage.dev/description: Home automation system
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Ankh Cloud
+    gethomepage.dev/icon: https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png
+    gethomepage.dev/name: HomeAssistant
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
   labels:

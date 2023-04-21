@@ -9,7 +9,12 @@ homeassistant:
     domain: "home.ankhmorpork.thaum.xyz"
     className: 'nginx'
     annotations:
-      'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
+      cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+      gethomepage.dev/enabled: "true"
+      gethomepage.dev/group: Ankh Cloud
+      gethomepage.dev/icon: https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png
+      gethomepage.dev/name: HomeAssistant
+      gethomepage.dev/description: Home automation system
   hostNetwork: true  # Needed to enable WOL
   timezone: "Europe/Berlin"
   resources:
