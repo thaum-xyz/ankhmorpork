@@ -5,7 +5,11 @@ homeassistant:
   version: "2023.4.4"  # application-version-from-github: home-assistant/core
   image: "homeassistant/aarch64-homeassistant:2023.4.3"  # application-image-from-github: home-assistant/core
   namespace: *namespace
-  domain: "home.ankhmorpork.thaum.xyz"
+  ingress:
+    domain: "home.ankhmorpork.thaum.xyz"
+    className: 'nginx'
+    annotations:
+      'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
   hostNetwork: true  # Needed to enable WOL
   timezone: "Europe/Berlin"
   resources:

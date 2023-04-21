@@ -20,7 +20,13 @@ local defaults = {
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
   timezone: 'UTC',
-  domain: '',
+  ingress: {
+    domain: '',
+    className: 'nginx',
+    annotations: {
+      'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+    },
+  },
   zwaveSupport: false,
   hostNetwork: false,
   storage: {
@@ -40,46 +46,45 @@ local defaults = {
 };
 
 function(params) {
-  local h = self,
   _config:: defaults + params,
   _metadata:: {
-    name: h._config.name,
-    namespace: h._config.namespace,
-    labels: h._config.commonLabels,
+    name: $._config.name,
+    namespace: $._config.namespace,
+    labels: $._config.commonLabels,
   },
   // Safety check
-  assert std.isObject(h._config.resources),
+  assert std.isObject($._config.resources),
 
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
     automountServiceAccountToken: false,
-    metadata: h._metadata,
+    metadata: $._metadata,
   },
 
   service: {
     apiVersion: 'v1',
     kind: 'Service',
-    metadata: h._metadata,
+    metadata: $._metadata,
     spec: {
       ports: [{
         name: 'http',
-        targetPort: h.statefulSet.spec.template.spec.containers[0].ports[0].name,
+        targetPort: $.statefulSet.spec.template.spec.containers[0].ports[0].name,
         port: 8123,
       }],
-      selector: h._config.selectorLabels,
+      selector: $._config.selectorLabels,
       clusterIP: 'None',
     },
   },
 
   statefulSet: {
     local c = {
-      name: h._config.name,
-      image: h._config.image,
+      name: $._config.name,
+      image: $._config.image,
       imagePullPolicy: 'IfNotPresent',
       env: [{
         name: 'TZ',
-        value: h._config.timezone,
+        value: $._config.timezone,
       }],
       ports: [{
         containerPort: 8123,
@@ -105,63 +110,63 @@ function(params) {
         timeoutSeconds: 10,
       },
       securityContext: {
-        privileged: h._config.zwaveSupport,
+        privileged: $._config.zwaveSupport,
       },
       volumeMounts: [{
         mountPath: '/config',
-        name: h._config.storage.name,
+        name: $._config.storage.name,
       }],
-      resources: h._config.resources,
+      resources: $._config.resources,
     },
 
     apiVersion: 'apps/v1',
     kind: 'StatefulSet',
-    metadata: h._metadata,
+    metadata: $._metadata,
     spec: {
-      serviceName: h.service.metadata.name,
+      serviceName: $.service.metadata.name,
       replicas: 1,
-      selector: { matchLabels: h._config.selectorLabels },
+      selector: { matchLabels: $._config.selectorLabels },
       template: {
         metadata: {
-          labels: h._config.commonLabels,
+          labels: $._config.commonLabels,
         },
         spec: {
           containers: [c],
           restartPolicy: 'Always',
-          serviceAccountName: h.serviceAccount.metadata.name,
-          hostNetwork: h._config.hostNetwork,
+          serviceAccountName: $.serviceAccount.metadata.name,
+          hostNetwork: $._config.hostNetwork,
         },
       },
       volumeClaimTemplates: [{
         metadata: {
-          name: h._config.storage.name,
+          name: $._config.storage.name,
         },
-        spec: h._config.storage.pvcSpec,
+        spec: $._config.storage.pvcSpec,
       }],
     },
   },
 
-  [if std.objectHas(params, 'apiTokenSecretKeySelector') && std.length(params.domain) > 0 then 'serviceMonitor']: {
+  [if std.objectHas(params, 'apiTokenSecretKeySelector') && std.length(params.ingress.domain) > 0 then 'serviceMonitor']: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'ServiceMonitor',
-    metadata: h._metadata,
+    metadata: $._metadata,
     spec: {
       endpoints: [{
         interval: '90s',
-        port: h.service.spec.ports[0].name,
+        port: $.service.spec.ports[0].name,
         path: '/api/prometheus',
-        bearerTokenSecret: h._config.apiTokenSecretKeySelector,
+        bearerTokenSecret: $._config.apiTokenSecretKeySelector,
       }],
       selector: {
-        matchLabels: h._config.selectorLabels,
+        matchLabels: $._config.selectorLabels,
       },
     },
   },
 
-  [if std.objectHas(params, 'apiTokenSecretKeySelector') && std.length(params.domain) > 0 then 'prometheusRule']: {
+  [if std.objectHas(params, 'apiTokenSecretKeySelector') && std.length(params.ingress.domain) > 0 then 'prometheusRule']: {
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PrometheusRule',
-    metadata: h._metadata,
+    metadata: $._metadata,
     // TODO: Create HomeAssistant monitoring mixin
     // FIXME: Create SLO?
     spec: {
@@ -184,31 +189,29 @@ function(params) {
     },
   },
 
-  [if std.objectHas(params, 'domain') && std.length(params.domain) > 0 then 'ingress']: {
+  [if std.objectHas(params, 'ingress') && std.objectHas(params.ingress, 'domain') && std.length(params.ingress.domain) > 0 then 'ingress']: {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
-    metadata: h._metadata {
-      annotations: {
-        'kubernetes.io/ingress.class': 'nginx',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
-      },
+    metadata: $._metadata {
+      annotations: $._config.ingress.annotations,
     },
     spec: {
+      ingressClassName: $._config.ingress.className,
       tls: [{
-        secretName: h._config.name + '-tls',
-        hosts: [h._config.domain],
+        secretName: $._config.name + '-tls',
+        hosts: [$._config.ingress.domain],
       }],
       rules: [{
-        host: h._config.domain,
+        host: $._config.ingress.domain,
         http: {
           paths: [{
             path: '/',
             pathType: 'Prefix',
             backend: {
               service: {
-                name: h._config.name,
+                name: $._config.name,
                 port: {
-                  name: h.service.spec.ports[0].name,
+                  name: $.service.spec.ports[0].name,
                 },
               },
             },

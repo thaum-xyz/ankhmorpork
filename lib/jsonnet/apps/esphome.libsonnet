@@ -17,7 +17,13 @@ local defaults = {
     for labelName in std.objectFields(defaults.commonLabels)
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
-  domain: '',
+  ingress: {
+    domain: '',
+    className: 'nginx',
+    annotations: {
+      'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+    },
+  },
   hostNetwork: true,
   storage: {
     name: 'esphome-data',
@@ -34,42 +40,41 @@ local defaults = {
 };
 
 function(params) {
-  local e = self,
   _config:: defaults + params,
   _metadata:: {
-    name: e._config.name,
-    namespace: e._config.namespace,
-    labels: e._config.commonLabels,
+    name: $._config.name,
+    namespace: $._config.namespace,
+    labels: $._config.commonLabels,
   },
   // Safety check
-  assert std.isObject(e._config.resources),
+  assert std.isObject($._config.resources),
 
   serviceAccount: {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
     automountServiceAccountToken: false,
-    metadata: e._metadata,
+    metadata: $._metadata,
   },
 
   service: {
     apiVersion: 'v1',
     kind: 'Service',
-    metadata: e._metadata,
+    metadata: $._metadata,
     spec: {
       ports: [{
         name: 'http',
-        targetPort: e.statefulset.spec.template.spec.containers[0].ports[0].name,
+        targetPort: $.statefulset.spec.template.spec.containers[0].ports[0].name,
         port: 6052,
       }],
-      selector: e._config.selectorLabels,
+      selector: $._config.selectorLabels,
       clusterIP: 'None',
     },
   },
 
   statefulset: {
     local c = {
-      name: e._config.name,
-      image: e._config.image,
+      name: $._config.name,
+      image: $._config.image,
       imagePullPolicy: 'IfNotPresent',
       env: [{
         name: 'ESPHOME_DASHBOARD_USE_PING',
@@ -81,66 +86,61 @@ function(params) {
       }],
       volumeMounts: [{
         mountPath: '/config',
-        name: e._config.storage.name,
+        name: $._config.storage.name,
       }],
-      resources: e._config.resources,
+      resources: $._config.resources,
     },
 
     apiVersion: 'apps/v1',
     kind: 'StatefulSet',
-    metadata: e._metadata,
+    metadata: $._metadata,
     spec: {
-      serviceName: e.service.metadata.name,
+      serviceName: $.service.metadata.name,
       replicas: 1,
-      selector: { matchLabels: e._config.selectorLabels },
+      selector: { matchLabels: $._config.selectorLabels },
       template: {
         metadata: {
-          labels: e._config.commonLabels,
+          labels: $._config.commonLabels,
         },
         spec: {
           containers: [c],
           restartPolicy: 'Always',
-          serviceAccountName: e.serviceAccount.metadata.name,
-          hostNetwork: e._config.hostNetwork,
+          serviceAccountName: $.serviceAccount.metadata.name,
+          hostNetwork: $._config.hostNetwork,
         },
       },
       volumeClaimTemplates: [{
         metadata: {
-          name: e._config.storage.name,
+          name: $._config.storage.name,
         },
-        spec: e._config.storage.pvcSpec,
+        spec: $._config.storage.pvcSpec,
       }],
     },
   },
 
-  [if std.objectHas(params, 'domain') && std.length(params.domain) > 0 then 'ingress']: {
+  [if std.objectHas(params, 'ingress') && std.objectHas(params.ingress, 'domain') && std.length(params.ingress.domain) > 0 then 'ingress']: {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
-    metadata: {
-      name: e._config.name,
-      namespace: e._config.namespace,
-      labels: e._config.commonLabels,  // + { probe: "enabled" }
-      annotations: {
-        'kubernetes.io/ingress.class': 'nginx',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
-      },
+    metadata: $._metadata {
+      annotations: $._config.ingress.annotations,
     },
     spec: {
+      ingressClassName: $._config.ingress.className,
       tls: [{
-        secretName: e._config.name + '-tls',
-        hosts: [e._config.domain],
+        secretName: $._config.name + '-tls',
+        hosts: [$._config.ingress.domain],
       }],
       rules: [{
-        host: e._config.domain,
+        host: $._config.ingress.domain,
         http: {
           paths: [{
             path: '/',
             pathType: 'Prefix',
             backend: {
               service: {
-                name: e._config.name,
+                name: $._config.name,
                 port: {
-                  name: e.service.spec.ports[0].name,
+                  name: $.service.spec.ports[0].name,
                 },
               },
             },
