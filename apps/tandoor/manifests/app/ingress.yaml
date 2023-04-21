@@ -4,6 +4,11 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-body-size: 50M
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Ankh Cloud
+    gethomepage.dev/icon: https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg
+    gethomepage.dev/name: Cookbook
+    gethomepage.dev/description: Our recipes
   labels:
     probe: enabled
   name: recipes
