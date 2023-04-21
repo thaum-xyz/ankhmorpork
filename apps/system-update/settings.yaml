@@ -1,11 +1,13 @@
 ---
 kured:
-  version: "1.10.1"  # application-version-from-github: weaveworks/kured
-  image: "weaveworks/kured:1.10.1"  # application-image-from-github: weaveworks/kured
+  version: "1.12.2"  # application-version-from-github: weaveworks/kured
+  image: "ghcr.io/kubereboot/kured:002f331"  # application-image-from-github: weaveworks/kured
   namespace: "system-update"
   args:
-    - "--reboot-days=sun,fri,sat"
-    - "--period=2m"
+    - "--reboot-days=fri,sat"
+    - "--period=2h"
+    - "--start-time=07:00:00"
+    - "--end-time=12:00:00"
   resources:
     requests:
       cpu: 14m

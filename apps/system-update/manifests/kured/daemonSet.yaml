@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kured
     app.kubernetes.io/part-of: kured
-    app.kubernetes.io/version: 1.10.1
+    app.kubernetes.io/version: 1.12.2
   name: kured
   namespace: system-update
 spec:
@@ -20,7 +20,7 @@ spec:
       labels:
         app.kubernetes.io/name: kured
         app.kubernetes.io/part-of: kured
-        app.kubernetes.io/version: 1.10.1
+        app.kubernetes.io/version: 1.12.2
       name: kured
       namespace: system-update
     spec:
@@ -28,8 +28,10 @@ spec:
       - args:
         - --ds-name=kured
         - --ds-namespace=system-update
-        - --reboot-days=sun,fri,sat
-        - --period=2m
+        - --reboot-days=fri,sat
+        - --period=2h
+        - --start-time=07:00:00
+        - --end-time=12:00:00
         command:
         - /usr/bin/kured
         env:
@@ -37,7 +39,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: weaveworks/kured:1.10.1
+        image: ghcr.io/kubereboot/kured:002f331
         imagePullPolicy: IfNotPresent
         name: kured
         ports:
