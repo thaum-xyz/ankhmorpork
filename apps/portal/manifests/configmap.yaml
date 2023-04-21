@@ -1,11 +1,29 @@
 apiVersion: v1
 data:
-  bookmarks.yaml: '[{"Important": [{"Bitwarden": [{"abbr": "BW", "href": "https://vault.bitwarden.com/"}]}]}]'
+  bookmarks.yaml: '[{"Others": [{"Bitwarden": [{"abbr": "BW", "href": "https://vault.bitwarden.com/"}]}]}]'
   docker.yaml: ""
   kubernetes.yaml: '{"mode": "cluster"}'
-  services.yaml: ""
-  settings.yaml: ""
-  widgets.yaml: '[{"search": {"provider": "duckduckgo", "target": "_blank"}}]'
+  services.yaml: '[{"Ankh Cloud": [{"Storage Unit": {"description": "Tracking content
+    stored remotely", "href": "https://docs.google.com/spreadsheets/d/1-aFb40yjIjdcJNJ3Ngvbw9HWo5r1eGugZBWqSPcU-HU",
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"}}]},
+    {"Multimedia": [{"Qnap": {"href": "https://192.168.2.29", "icon": "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"}},
+    {"Plex": {"description": "Video on demand", "href": "https://app.plex.tv/", "icon":
+    "plex.png"}}, {"Radarr": {"description": "Movie collection manager", "href": "http://192.168.2.95:7878",
+    "icon": "radarr.png"}}, {"Sonarr": {"description": "TV series collection manager",
+    "href": "http://192.168.2.95:8989", "icon": "sonarr.png"}}, {"Prowlarr": {"description":
+    "Indexer manager/proxy", "href": "http://192.168.2.95:9696", "icon": "prowlarr.png"}},
+    {"Transmission": {"description": "Downloader", "href": "http://192.168.2.95:9091/transmission/web/",
+    "icon": "transmission.png"}}]}, {"Administration": [{"UptimeRobot": {"href": "https://uptimerobot.com/dashboard",
+    "icon": "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"}},
+    {"Doppler": {"href": "https://dashboard.doppler.com/", "icon": "https://dashboard.doppler.com/imgs/logo.png"}},
+    {"NextDNS": {"href": "https://my.nextdns.io/", "icon": "https://appteka.store/api/1/icon/get?hash=AfxOnnAVC55q9P8wC41q8i3I9N%2FfQVVHjM4e2r8kVhJuU5GYQJSe3msYMbOpyZDC"}},
+    {"Unifi": {"href": "https://192.168.2.1/", "icon": "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"}},
+    {"ESPHome": {"href": "http://192.168.2.94:6052/", "icon": "https://esphome.io/_static/favicon-512x512.png"}}]}]'
+  settings.yaml: '{"title": "Krupa web portal"}'
+  widgets.yaml: '[{"logo": {"icon": "https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png"}},
+    {"greeting": {"text": "Oh, hi!", "text_size": "xl"}}, {"search": {"provider":
+    "duckduckgo", "target": "_blank"}}, {"datetime": {"format": {"timeStyle": "short"},
+    "text_size": "xl"}}]'
 kind: ConfigMap
 metadata:
   labels:
