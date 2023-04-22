@@ -1516,6 +1516,10 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
         name: controller
+        resources:
+          requests:
+            cpu: 8m
+            memory: 32Mi
         ports:
         - containerPort: 7472
           name: monitoring
@@ -1613,6 +1617,10 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
         name: speaker
+        resources:
+          requests:
+            cpu: 20m
+            memory: 28Mi
         ports:
         - containerPort: 7472
           name: monitoring
