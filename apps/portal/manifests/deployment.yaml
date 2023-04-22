@@ -47,8 +47,8 @@ spec:
           name: http
         resources:
           requests:
-            cpu: 1m
-            memory: 5Mi
+            cpu: 10m
+            memory: 92Mi
         volumeMounts:
         - mountPath: /app/config
           name: config

@@ -3,6 +3,10 @@ version: "0.6.16"  # application-version-from-github: benphelps/homepage
 image: "ghcr.io/benphelps/homepage:v0.6.16"  # application-image-from-github: benphelps/homepage
 namespace: "portal"
 replicas: 1
+resources:
+  requests:
+    cpu: 10m
+    memory: 92Mi
 ingress:
   domain: "portal.krupa.net.pl"
   className: 'nginx'
