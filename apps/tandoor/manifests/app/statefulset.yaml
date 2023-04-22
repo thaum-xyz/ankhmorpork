@@ -91,7 +91,10 @@ spec:
         ports:
         - containerPort: 8080
           name: gunicorn
-        resources: {}
+        resources:
+          requests:
+            cpu: 20m
+            memory: 112Mi
         volumeMounts:
           - mountPath: /opt/recipes/mediafiles
             name: media
