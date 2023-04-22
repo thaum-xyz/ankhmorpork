@@ -1,5 +1,5 @@
-local photoprism = import 'photoprism.libsonnet';
-local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
+local photoprism = import 'apps/photoprism.libsonnet';
+local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
 
 local config = std.parseYaml(importstr '../settings.yaml')[0];
 
@@ -17,14 +17,11 @@ local all = photoprism(config.photoprism) + {
       labels+: {
         probe: 'enabled',
       },
-      annotations+: {
-        // Default is very low so most photo uploads will fail
-        'nginx.ingress.kubernetes.io/proxy-body-size': '512M',
-      },
     },
   },
   statefulSet+: {
     spec+: {
+      replicas: 0,
       template+: {
         spec+: {
           nodeSelector: {

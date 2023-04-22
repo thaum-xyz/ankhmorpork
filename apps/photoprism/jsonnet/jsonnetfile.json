@@ -1,6 +1,14 @@
 {
-  "version": 1,
-  "dependencies": [
+    "version": 1,
+    "dependencies": [
+      {
+        "source": {
+          "local": {
+            "directory": "../../../lib/jsonnet/apps"
+          }
+        },
+        "version": ""
+      },
       {
         "source": {
           "local": {
@@ -9,6 +17,6 @@
         },
         "version": ""
       }
-  ],
-  "legacyImports": false
-}
+    ],
+    "legacyImports": true
+  }

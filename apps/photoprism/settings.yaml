@@ -5,7 +5,12 @@ photoprism:
   version: "221118"  # application-version-from-github: photoprism/photoprism
   image: "photoprism/photoprism:221118-jammy"  # application-image-from-github: photoprism/photoprism
   namespace: *namespace
-  domain: "photo.ankhmorpork.thaum.xyz"
+  ingress:
+    domain: "photo.ankhmorpork.thaum.xyz"
+    className: 'nginx'
+    annotations:
+      'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
+      'nginx.ingress.kubernetes.io/proxy-body-size': '512M'
   timezone: "Europe/Berlin"
   envs:
     TZ: "Europe/Berlin"

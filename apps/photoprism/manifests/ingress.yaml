@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: 512M
   labels:
     app.kubernetes.io/name: photoprism
@@ -12,6 +11,7 @@ metadata:
   name: photoprism
   namespace: photoprism
 spec:
+  ingressClassName: nginx
   rules:
   - host: photo.ankhmorpork.thaum.xyz
     http:

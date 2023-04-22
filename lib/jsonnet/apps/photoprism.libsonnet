@@ -16,7 +16,6 @@ local defaults = {
     for labelName in std.objectFields(defaults.commonLabels)
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
-  domain: '',
   envs: {
     TZ: 'UTC',
     PHOTOPRISM_PUBLIC: 'false',
@@ -41,6 +40,11 @@ local defaults = {
   //   exports: {},
   //   cache: {},
   // },
+  ingress: {
+    domain: '',
+    className: 'nginx',
+    annotations: {},
+  },
 };
 
 function(params) {
@@ -201,22 +205,20 @@ function(params) {
     ],
   },
 
-  [if std.objectHas(params, 'domain') && std.length(params.domain) > 0 then 'ingress']: {
+  [if std.objectHas(params, 'ingress') && std.objectHas(params.ingress, 'domain') && std.length(params.ingress.domain) > 0 then 'ingress']: {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: $._metadata {
-      annotations: {
-        'kubernetes.io/ingress.class': 'nginx',
-        'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
-      },
+      annotations: $._config.ingress.annotations,
     },
     spec: {
+      ingressClassName: $._config.ingress.className,
       tls: [{
         secretName: $._config.name + '-tls',
-        hosts: [$._config.domain],
+        hosts: [$._config.ingress.domain],
       }],
       rules: [{
-        host: $._config.domain,
+        host: $._config.ingress.domain,
         http: {
           paths: [{
             path: '/',
