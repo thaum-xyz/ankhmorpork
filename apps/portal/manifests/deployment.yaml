@@ -9,7 +9,7 @@ metadata:
   name: homepage
   namespace: portal
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/component: server
