@@ -47,8 +47,8 @@ spec:
             cpu: 50m
             memory: 250Mi
           requests:
-            cpu: 20m
-            memory: 150Mi
+            cpu: 5m
+            memory: 137Mi
         startupProbe:
           failureThreshold: 30
           initialDelaySeconds: 0

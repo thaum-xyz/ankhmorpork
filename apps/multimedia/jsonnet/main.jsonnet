@@ -59,7 +59,7 @@ local all = {
   },
 
   shared:
-    utils.persistentVolume({ name: 'downloaded', namespace: config.common.namespace }, '100Gi', 'qnap-nfs-storage') +
+    utils.persistentVolume({ name: 'downloaded', namespace: config.common.namespace }, '100Gi', 'qnap-nfs') +
     utils.persistentVolume({ name: 'tv', namespace: config.common.namespace }, '4000Gi', 'manual', '192.168.2.29') +
     utils.persistentVolume({ name: 'movies', namespace: config.common.namespace }, '4000Gi', 'manual', '192.168.2.29') +
     {

@@ -51,9 +51,9 @@ spec:
           timeoutSeconds: 5
         resources:
           limits:
-            nvidia.com/gpu: 1
             cpu: 2
             memory: 8Gi
+            nvidia.com/gpu: 1
           requests:
             cpu: 500m
             memory: 2500Mi
@@ -70,7 +70,6 @@ spec:
           name: tv
       - args:
         - --config=/config.json
-        # TODO: use "official" image
         image: quay.io/paulfantom/plex_exporter:1.0.0
         imagePullPolicy: Always
         name: exporter

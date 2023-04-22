@@ -9,8 +9,8 @@ prowlarr:
   namespace: *namespace
   resources:
     requests:
-      cpu: 20m
-      memory: 150Mi
+      cpu: 5m
+      memory: 137Mi
     limits:
       cpu: 50m
       memory: 250Mi
@@ -34,8 +34,8 @@ radarr:
   downloadsPVCName: "downloaded"
   resources:
     requests:
-      cpu: 100m
-      memory: 250Mi
+      cpu: 35m
+      memory: 215Mi
     limits:
       cpu: 100m
       memory: 400Mi
@@ -61,7 +61,7 @@ sonarr:
   resources:
     requests:
       cpu: 20m
-      memory: 1130Mi
+      memory: 760Mi
 #    limits:
 #      cpu: 100m
 #      memory: 4Gi
