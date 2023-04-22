@@ -9,9 +9,9 @@ certController:
     enabled: true
 
 resources:
-  resuests:
-    cpu: 4m
-    memory: 43Mi
+  requests:
+    cpu: 1m
+    memory: 49Mi
   limits:
     cpu: 20m
     memory: 70Mi
