@@ -8,10 +8,10 @@ replicas: 1
 resources:
   requests:
     cpu: 10m
-    memory: 17Mi
+    memory: 11Mi
   limits:
-    memory: 100Mi
-    cpu: 30m
+    memory: 80Mi
+    cpu: 50m
 upses: ["192.168.2.29"]
 credentialsRefs:
   NUT_EXPORTER_PASSWORD: 'NUT_EXPORTER_PASSWORD'
