@@ -45,8 +45,8 @@ spec:
           protocol: UDP
         resources:
           requests:
-            cpu: 2
-            memory: 8Gi
+            cpu: 200m
+            memory: 2300Mi
         volumeMounts:
         - mountPath: /config
           name: data
@@ -68,8 +68,8 @@ spec:
             cpu: 250m
             memory: 180Mi
           requests:
-            cpu: 102m
-            memory: 180Mi
+            cpu: 2m
+            memory: 11Mi
       restartPolicy: Always
       serviceAccountName: valheim
       nodeSelector:

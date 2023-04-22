@@ -1,0 +1,36 @@
+---
+# Service account the client will use to reset the deployment,
+# by default the pods running inside the cluster can do no such things.
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: podrestarter
+  namespace: valheim
+---
+# allow getting status and patching only the one deployment you want
+# to restart
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: podrestarter
+  namespace: valheim
+rules:
+  - apiGroups: ["apps"]
+    resources: ["statefulsets"]
+    resourceNames: ["valheim"]
+    verbs: ["get", "patch"]
+---
+# bind the role to the service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: podrestarter
+  namespace: valheim
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: podrestarter
+subjects:
+  - kind: ServiceAccount
+    name: podrestarter
+    namespace: valheim

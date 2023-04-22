@@ -1,0 +1,25 @@
+# Using pod restarter as valheim container image tends to have memory leaks.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: podrestarter
+  namespace: valheim
+spec:
+  concurrencyPolicy: Forbid
+  schedule: '0 4 * * *' # cron spec of time, here, 4 o'clock
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        spec:
+          serviceAccountName: podrestarter
+          restartPolicy: Never
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl
+              command:
+                - 'kubectl'
+                - 'rollout'
+                - 'restart'
+                - 'statefulset/valheim'
