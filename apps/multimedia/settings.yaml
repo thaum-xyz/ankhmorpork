@@ -9,11 +9,11 @@ prowlarr:
   namespace: *namespace
   resources:
     requests:
-      cpu: 5m
-      memory: 137Mi
-    limits:
-      cpu: 50m
-      memory: 250Mi
+      cpu: 160m
+      memory: 37Mi
+    #limits:
+    #  cpu: 250m
+    #  memory: 250Mi
   storage:
     name: prowlarr-config
     pvcSpec:
@@ -36,9 +36,9 @@ radarr:
     requests:
       cpu: 35m
       memory: 215Mi
-    limits:
-      cpu: 100m
-      memory: 400Mi
+    #limits:
+    #  cpu: 100m
+    #  memory: 400Mi
   storage:
     name: radarr-config-backup
     pvcSpec:
@@ -61,7 +61,7 @@ sonarr:
   resources:
     requests:
       cpu: 20m
-      memory: 760Mi
+      memory: 460Mi
 #    limits:
 #      cpu: 100m
 #      memory: 4Gi
