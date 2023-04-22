@@ -3,13 +3,13 @@ local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libso
 local settings = std.parseYaml(importstr '../settings.yaml')[0];
 
 local i = t.receiveIngestor(settings + settings.receiveIngestor + {
-  replicaLabels: ['receive_replica'],
+  replicaLabels: ['replica', 'receive_replica'],
   replicationFactor: 1,
   serviceMonitor: true,
 });
 
 local r = t.receiveRouter(settings + settings.receiveRouter + {
-  replicaLabels: ['receive_replica'],
+  replicaLabels: ['replica', 'receive_replica'],
   replicationFactor: 1,
   endpoints: i.endpoints,
 });
@@ -19,7 +19,7 @@ local s = t.store(settings + settings.store + {
 });
 
 local q = t.query(settings + settings.query + {
-  replicaLabels: ['prometheus_replica', 'rule_replica'],
+  replicaLabels: ['replica', 'prometheus_replica', 'rule_replica'],
   serviceMonitor: true,
   stores: [s.storeEndpoint] + i.storeEndpoints,
 });
