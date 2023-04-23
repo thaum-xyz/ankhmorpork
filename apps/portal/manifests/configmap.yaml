@@ -21,9 +21,7 @@ data:
     {"ESPHome": {"href": "http://192.168.2.94:6052/", "icon": "https://esphome.io/_static/favicon-512x512.png"}}]}]'
   settings.yaml: '{"title": "Krupa web portal"}'
   widgets.yaml: '[{"logo": {"icon": "https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png"}},
-    {"greeting": {"text": "Oh, hi!", "text_size": "xl"}}, {"search": {"provider":
-    "duckduckgo", "target": "_blank"}}, {"datetime": {"format": {"timeStyle": "short"},
-    "text_size": "xl"}}]'
+    {"search": {"provider": "duckduckgo", "target": "_blank"}}]'
 kind: ConfigMap
 metadata:
   labels:

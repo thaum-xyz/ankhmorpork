@@ -64,13 +64,13 @@ title: Krupa web portal
 # widgets.yaml
 - logo:
     icon: https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png
-- greeting:
-    text_size: xl
-    text: Oh, hi!
+#- greeting:
+#    text_size: xl
+#    text: Oh, hi!
 - search:
     provider: duckduckgo
     target: _blank
-- datetime:
-    text_size: xl
-    format:
-      timeStyle: short
+#- datetime:
+#    text_size: xl
+#    format:
+#      timeStyle: short
