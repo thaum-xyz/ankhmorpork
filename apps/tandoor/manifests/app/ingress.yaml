@@ -9,8 +9,8 @@ metadata:
     gethomepage.dev/icon: https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg
     gethomepage.dev/name: Cookbook
     gethomepage.dev/description: Our recipes
-  labels:
-    probe: enabled
+#  labels:
+#    probe: enabled
   name: recipes
   namespace: tandoor
 spec:
