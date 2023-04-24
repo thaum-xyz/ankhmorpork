@@ -198,6 +198,22 @@
     },
   },
   kubeStateMetrics+: {
+    resources:: {
+      requests: { cpu: '2m', memory: '34Mi' },
+      limits: { cpu: '200m', memory: '180Mi' },
+    },
+    kubeRbacProxyMain+:: {
+      resources+: {
+        requests: { cpu: '2m', memory: '14Mi' },
+        limits+: { cpu: '40m' },
+      },
+    },
+    kubeRbacProxySelf+:: {
+      resources+: {
+        requests: { cpu: '1m', memory: '14Mi' },
+        limits+: { cpu: '40m' },
+      },
+    },
     mixin+: {
       _config: {
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/kube-state-metrics/%s',
