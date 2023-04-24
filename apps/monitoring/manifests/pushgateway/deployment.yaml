@@ -28,11 +28,11 @@ spec:
           name: http-push
         resources:
           limits:
-            cpu: 7m
-            memory: 30Mi
+            cpu: 10m
+            memory: 40Mi
           requests:
             cpu: 3m
-            memory: 14Mi
+            memory: 25Mi
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534

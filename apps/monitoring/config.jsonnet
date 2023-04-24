@@ -184,6 +184,11 @@
     resources+: {
       requests+: { memory: '20Mi' },
     },
+    kubeRbacProxy:: {
+      resources+: {
+        requests: { cpu: '1m', memory: '16Mi' },
+      },
+    },
     mixin+: {
       _config+: {
         diskDeviceSelector: 'device!="md9",device!="md13"',
@@ -194,7 +199,6 @@
   kubeStateMetrics+: {
     mixin+: {
       _config: {
-
         runbookURLPattern: 'https://runbooks.thaum.xyz/runbooks/kube-state-metrics/%s',
       },
     },

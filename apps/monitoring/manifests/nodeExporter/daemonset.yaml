@@ -34,6 +34,7 @@ spec:
         - --path.udev.data=/host/root/run/udev/data
         - --no-collector.wifi
         - --no-collector.hwmon
+        - --no-collector.btrfs
         - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)
         - --collector.netclass.ignored-devices=^(veth.*|[a-f0-9]{15})$
         - --collector.netdev.device-exclude=^(veth.*|[a-f0-9]{15})$
@@ -78,7 +79,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        image: quay.io/brancz/kube-rbac-proxy:v0.14.0
+        image: quay.io/brancz/kube-rbac-proxy:v0.14.1
         name: kube-rbac-proxy
         ports:
         - containerPort: 9100
@@ -89,8 +90,8 @@ spec:
             cpu: 20m
             memory: 40Mi
           requests:
-            cpu: 10m
-            memory: 20Mi
+            cpu: 1m
+            memory: 16Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
