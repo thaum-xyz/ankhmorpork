@@ -2,8 +2,8 @@
 common:
   namespace: &namespace "homeassistant"
 homeassistant:
-  version: "2023.4.4"  # application-version-from-github: home-assistant/core
-  image: "homeassistant/aarch64-homeassistant:2023.4.3"  # application-image-from-github: home-assistant/core
+  version: "2023.4.6"  # application-version-from-github: home-assistant/core
+  image: "homeassistant/aarch64-homeassistant:2023.4.6"  # application-image-from-github: home-assistant/core
   namespace: *namespace
   ingress:
     domain: "home.ankhmorpork.thaum.xyz"
@@ -23,7 +23,7 @@ homeassistant:
     # this in turn requires to add more resources than it is actually needed
     requests:
       cpu: 700m
-      memory: 500Mi
+      memory: 600Mi
     # limits:
     #   cpu: 2
     #   memory: 1300Mi
