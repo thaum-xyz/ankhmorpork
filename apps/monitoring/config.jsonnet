@@ -181,8 +181,9 @@
     version: '1.4.0',
     image: 'quay.io/prometheus/node-exporter:v1.4.0',
     filesystemMountPointsExclude:: '^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)',
-    resources+: {
-      requests+: { memory: '20Mi' },
+    resources:: {
+      requests: { cpu: '2m', memory: '20Mi' },
+      limits: { cpu: '150m', memory: '180Mi' },
     },
     kubeRbacProxy:: {
       resources+: {
