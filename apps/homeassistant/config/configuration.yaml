@@ -112,9 +112,9 @@ climate:
   heater: light.on_off_plug_1
   target_sensor: sensor.ruuvitag_fridge_temperature
   ac_mode: true
-  min_temp: 4
-  max_temp: 10
-  target_temp: 6
+  min_temp: 1
+  max_temp: 8
+  target_temp: 4
   cold_tolerance: 1
   hot_tolerance: 1
 
