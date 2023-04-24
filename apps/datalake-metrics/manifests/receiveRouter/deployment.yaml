@@ -76,7 +76,7 @@ spec:
         resources:
           requests:
             cpu: 200m
-            memory: 50Mi
+            memory: 98Mi
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /var/lib/thanos-receive

@@ -11,7 +11,7 @@ metadata:
   name: thanos-receive-ingestor-default
   namespace: datalake-metrics
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: database-write-hashring
@@ -124,8 +124,8 @@ spec:
             cpu: 700m
             memory: 2Gi
           requests:
-            cpu: 350m
-            memory: 500Mi
+            cpu: 150m
+            memory: 1100Mi
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /var/thanos/receive

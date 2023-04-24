@@ -30,11 +30,11 @@ objectStorageConfig:
 ingressAuthHTPasswdRef: THANOS_INGRESS_HTPASSWD
 
 receiveIngestor:
-  replicas: 2
+  replicas: 1
   resources:
     requests:
-      cpu: 350m
-      memory: 500Mi
+      cpu: 150m
+      memory: 1100Mi
     limits:
       cpu: 700m
       memory: 2Gi
@@ -43,7 +43,7 @@ receiveRouter:
   resources:
     requests:
       cpu: 200m
-      memory: 50Mi
+      memory: 98Mi
 #    limits:
 #      cpu: 300m
 #      memory: 200Mi
