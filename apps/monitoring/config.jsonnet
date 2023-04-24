@@ -67,6 +67,11 @@
     // version: '0.52.0',
     // image: 'quay.io/prometheus-operator/prometheus-operator:v0.52.0',
     // configReloaderImage: 'quay.io/prometheus-operator/prometheus-config-reloader:v0.52.0',
+    extraArgs:: [
+      '--log-level=debug',
+      '--config-reloader-cpu-request=2m',
+      '--config-reloader-memory-request="17Mi"',
+    ],
     mixin+: {
       _config: {
         prometheusOperatorSelector: 'job="prometheus-operator"',

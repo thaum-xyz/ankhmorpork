@@ -135,7 +135,7 @@ local kp =
           template+: {
             metadata+: parcaEnable,
             spec+: {
-              containers: addArgs(['--log-level=debug'], 'prometheus-operator', super.containers),
+              containers: addArgs($.values.prometheusOperator.extraArgs, 'prometheus-operator', super.containers),
             },
           },
         },
