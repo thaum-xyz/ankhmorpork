@@ -21,7 +21,7 @@ local all = {
         metadata: $._metadata {
           name: dashboardName,
           labels+: {
-            'grafana_dashboard': 'true',
+            grafana_dashboard: 'true',
             'dashboard.grafana.com/load': 'true',
           },
         },
@@ -42,7 +42,34 @@ local all = {
     spec: {
       local r = if std.objectHasAll($.mixin, 'prometheusRules') then $.mixin.prometheusRules.groups else [],
       local a = if std.objectHasAll($.mixin, 'prometheusAlerts') then $.mixin.prometheusAlerts.groups else [],
-      groups: a + r,
+      groups: std.map(function(ruleGroup) ruleGroup {
+        rules: std.map(
+          function(rule) if 'alert' in rule && rule.alert == 'NGINXTooMany400s' then
+            rule {
+              'for': '5m',
+              expr: |||
+                100 * (
+                  sum(rate(nginx_ingress_controller_requests{status=~"4.+"}[5m]))
+                /
+                  sum(rate(nginx_ingress_controller_requests[5m]))
+                ) > 5
+              |||,
+            }
+          else if 'alert' in rule && rule.alert == 'NGINXTooMany500s' then
+            rule {
+              'for': '5m',
+              expr: |||
+                100 * (
+                  sum(rate(nginx_ingress_controller_requests{status=~"5.+"}[5m]))
+                /
+                  sum(rate(nginx_ingress_controller_requests[5m]))
+                ) > 5
+              |||,
+            }
+          else rule,
+          ruleGroup.rules,
+        ),
+      }, a + r),
     },
   },
   service: {

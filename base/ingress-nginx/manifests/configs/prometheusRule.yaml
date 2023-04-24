@@ -26,9 +26,13 @@ spec:
         message: More than 5% of all requests returned 5XX, this requires your attention.
         runbook_url: https://github.com/nlamirault/monitoring-mixin/tree/master/runbook.md#alert-name-nginxtoomany500s
         summary: Too many 5XXs.
-      expr: 100 * ( sum( nginx_ingress_controller_requests{status=~"5.+"} ) / sum(nginx_ingress_controller_requests)
+      expr: |
+        100 * (
+          sum(rate(nginx_ingress_controller_requests{status=~"5.+"}[5m]))
+        /
+          sum(rate(nginx_ingress_controller_requests[5m]))
         ) > 5
-      for: 10m
+      for: 5m
       labels:
         severity: warning
     - alert: NGINXTooMany400s
@@ -36,8 +40,12 @@ spec:
         message: More than 5% of all requests returned 4XX, this requires your attention.
         runbook_url: https://github.com/nlamirault/monitoring-mixin/tree/master/runbook.md#alert-name-nginxtoomany400s
         summary: Too many 4XXs.
-      expr: 100 * ( sum( nginx_ingress_controller_requests{status=~"4.+"} ) / sum(nginx_ingress_controller_requests)
+      expr: |
+        100 * (
+          sum(rate(nginx_ingress_controller_requests{status=~"4.+"}[5m]))
+        /
+          sum(rate(nginx_ingress_controller_requests[5m]))
         ) > 5
-      for: 10m
+      for: 5m
       labels:
         severity: warning
