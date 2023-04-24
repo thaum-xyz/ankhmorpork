@@ -17,7 +17,10 @@
   },
   alertmanager+: {
     resources+: {
-      requests: { memory: '30Mi' },
+      requests: {
+        cpu: '3m',
+        memory: '30Mi',
+      },
     },
     mixin+: {
       _config+: {
@@ -40,8 +43,8 @@
       'memory-snapshot-on-shutdown',
     ],
     resources: {
-      requests: { cpu: '800m', memory: '2000Mi' },
-      limits: { cpu: '1500m', memory: '2500Mi' },
+      requests: { cpu: '500m', memory: '1800Mi' },
+      limits: { cpu: '1500m', memory: '4Gi' },
     },
     affinity: {
       nodeAffinity: {
@@ -70,8 +73,11 @@
     extraArgs:: [
       '--log-level=debug',
       '--config-reloader-cpu-request=2m',
-      '--config-reloader-memory-request="17Mi"',
+      '--config-reloader-memory-request=17Mi',
     ],
+    resources: {
+      requests: { cpu: '5m', memory: '34Mi' },
+    },
     mixin+: {
       _config: {
         prometheusOperatorSelector: 'job="prometheus-operator"',
@@ -90,8 +96,8 @@
       },
     },
     resources: {
-      requests: { cpu: '30m', memory: '16Mi' },
-      limits: { cpu: '64m', memory: '42Mi' },
+      requests: { cpu: '30m', memory: '20Mi' },
+      limits: { cpu: '200m', memory: '42Mi' },
     },
     replicas: 2,
     probes: {
@@ -175,6 +181,9 @@
     version: '1.4.0',
     image: 'quay.io/prometheus/node-exporter:v1.4.0',
     filesystemMountPointsExclude:: '^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)',
+    resources+: {
+      requests+: { memory: '20Mi' },
+    },
     mixin+: {
       _config+: {
         diskDeviceSelector: 'device!="md9",device!="md13"',
@@ -211,6 +220,9 @@
       url: 'http://prometheus-k8s.monitoring.svc:9090',
     }],
     resources+: {
+      requests+: {
+        memory: '59Mi',
+      },
       limits+: {
         cpu: '400m',
       },
@@ -237,14 +249,17 @@
     image: 'ghcr.io/pfnet-research/alertmanager-to-github:v0.1.0',  // application-image-from-github: pfnet-research/alertmanager-to-github
     githubTokenSecretName: 'github-receiver-credentials',
     githubTokenRef: 'MONITORING_ALERT_RECEIVER_GITHUB_TOKEN',
+    resources+: {
+      requests: { cpu: '2m', memory: '23Mi' },
+    },
   },
   pushgateway: {
     namespace: 'monitoring',
     version: '1.5.1',  // application-version-from-github: prometheus/pushgateway
     image: 'quay.io/prometheus/pushgateway:v1.5.1',  // application-image-from-github: prometheus/pushgateway
     resources: {
-      requests: { cpu: '3m', memory: '14Mi' },
-      limits: { cpu: '7m', memory: '30Mi' },
+      requests: { cpu: '3m', memory: '25Mi' },
+      limits: { cpu: '10m', memory: '40Mi' },
     },
   },
   smokeping: {
@@ -273,7 +288,7 @@
     image: 'quay.io/prometheuscommunity/json-exporter:v0.5.0',
     port: 7979,
     resources: {
-      requests: { cpu: '5m', memory: '21Mi' },
+      requests: { cpu: '5m', memory: '18Mi' },
       limits: { cpu: '20m', memory: '50Mi' },
     },
     targets: ['https://api.uptimerobot.com/v2/getMonitors'],

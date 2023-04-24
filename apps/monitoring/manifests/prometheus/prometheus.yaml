@@ -73,10 +73,10 @@ spec:
   resources:
     limits:
       cpu: 1500m
-      memory: 2500Mi
+      memory: 4Gi
     requests:
-      cpu: 800m
-      memory: 2000Mi
+      cpu: 500m
+      memory: 1800Mi
   retention: 7d
   retentionSize: 40GB
   ruleNamespaceSelector: {}

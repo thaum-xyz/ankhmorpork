@@ -50,7 +50,7 @@ spec:
             memory: 50Mi
           requests:
             cpu: 2m
-            memory: 10Mi
+            memory: 23Mi
         volumeMounts:
         - mountPath: /etc/github-receiver
           name: config

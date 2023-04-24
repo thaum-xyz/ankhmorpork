@@ -44,7 +44,7 @@ spec:
             memory: 50Mi
           requests:
             cpu: 5m
-            memory: 21Mi
+            memory: 18Mi
         volumeMounts:
         - mountPath: /etc/json_exporter/
           name: uptimerobot

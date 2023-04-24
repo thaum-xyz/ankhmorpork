@@ -50,11 +50,11 @@ spec:
           name: http
         resources:
           limits:
-            cpu: 64m
+            cpu: 200m
             memory: 42Mi
           requests:
             cpu: 30m
-            memory: 16Mi
+            memory: 20Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -74,11 +74,11 @@ spec:
         name: module-configmap-reloader
         resources:
           limits:
-            cpu: 64m
+            cpu: 200m
             memory: 42Mi
           requests:
             cpu: 30m
-            memory: 16Mi
+            memory: 20Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -105,11 +105,11 @@ spec:
           name: https
         resources:
           limits:
-            cpu: 64m
+            cpu: 200m
             memory: 42Mi
           requests:
             cpu: 30m
-            memory: 16Mi
+            memory: 20Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

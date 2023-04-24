@@ -33,19 +33,16 @@ spec:
         - --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.63.0
         - --log-level=debug
         - --config-reloader-cpu-request=2m
-        - --config-reloader-memory-request="17Mi"
+        - --config-reloader-memory-request=17Mi
         image: quay.io/prometheus-operator/prometheus-operator:v0.63.0
         name: prometheus-operator
         ports:
         - containerPort: 8080
           name: http
         resources:
-          limits:
-            cpu: 200m
-            memory: 200Mi
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: 5m
+            memory: 34Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
