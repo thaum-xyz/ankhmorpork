@@ -44,9 +44,12 @@ spec:
           name: queryport
           protocol: UDP
         resources:
+          limits:
+            cpu: 2
+            memory: 8Gi
           requests:
             cpu: 200m
-            memory: 2300Mi
+            memory: 4Gi
         volumeMounts:
         - mountPath: /config
           name: data
@@ -66,7 +69,7 @@ spec:
         resources:
           limits:
             cpu: 250m
-            memory: 180Mi
+            memory: 80Mi
           requests:
             cpu: 2m
             memory: 11Mi
