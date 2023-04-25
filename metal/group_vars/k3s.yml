@@ -11,7 +11,7 @@ k3s_server_config:
   kubelet-arg:
   - "system-reserved=cpu=100m,memory=230Mi"
   - "kube-reserved=cpu=200m,memory=100Mi"
-  - "feature-gates=PodAndContainerStatsFromCRI=true"
+  - "feature-gates=PodAndContainerStatsFromCRI=true,ComponentSLIs=true" # Remove ComponentSLIs when k3s 1.27 is released
   kube-controller-manager-arg:
   - "bind-address={{ k3s_master_ip }}"
   kube-scheduler-arg:
@@ -30,6 +30,7 @@ k3s_agent_config:
   - "system-reserved=cpu=250m,memory=300Mi"
   - "kube-reserved=cpu=200m,memory=150Mi"
   - "allowed-unsafe-sysctls=net.ipv4.tcp_adv_win_scale"
+  - "feature-gates=PodAndContainerStatsFromCRI=true,ComponentSLIs=true" # Remove ComponentSLIs when k3s 1.27 is released
   node-label:
   - "network.infra/type={{ network | default('slow') }}"
   - "storage.infra/local={{ 'false' if k3s_no_local_storage is defined else 'true' }}"

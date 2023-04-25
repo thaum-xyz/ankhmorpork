@@ -426,19 +426,25 @@ local kp =
       podMonitorKubeProxy:: null,
       serviceMonitorKubelet+: {
         spec+: {
-          endpoints: std.map(
-            function(e)
-              if !std.objectHas(e, 'path') then
-                e {
-                  metricRelabelings+: [{
-                    sourceLabels: ['url'],
-                    targetLabel: 'url',
-                    regex: '(.*)\\?.*',
-                  }],
-                }
-              else e,
-            super.endpoints,
-          ),
+          endpoints+: [
+            // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
+            {
+              bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+              honorLabels: true,
+              interval: '5s',
+              scrapeTimeout: '5s',
+              path: '/metrics/slis',
+              port: 'https-metrics',
+              relabelings: [{
+                sourceLabels: ['__metrics_path__'],
+                targetLabel: 'metrics_path',
+              }],
+              scheme: 'https',
+              tlsConfig: {
+                insecureSkipVerify: true,
+              },
+            },
+          ],
           //+ [
           //  // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
           //  {
