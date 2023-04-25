@@ -20,6 +20,7 @@ k3s_server_config:
   - "metrics-bind-address=0.0.0.0"
   kube-apiserver-arg:
   - "feature-gates=PDBUnhealthyPodEvictionPolicy=true"
+  - "enable-admission-plugins=NamespaceAutoProvision"
 
 k3s_token: "{{ hostvars[groups['k3s_control_plane'][0]]['token'] }}"
 
