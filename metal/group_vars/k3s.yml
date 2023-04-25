@@ -11,6 +11,7 @@ k3s_server_config:
   kubelet-arg:
   - "system-reserved=cpu=100m,memory=230Mi"
   - "kube-reserved=cpu=200m,memory=100Mi"
+  - "feature-gates=PodAndContainerStatsFromCRI=true"
   kube-controller-manager-arg:
   - "bind-address={{ k3s_master_ip }}"
   kube-scheduler-arg:
