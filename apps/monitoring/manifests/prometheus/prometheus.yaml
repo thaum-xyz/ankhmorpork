@@ -43,9 +43,50 @@ spec:
   - memory-snapshot-on-shutdown
   enforcedNamespaceLabel: namespace
   excludedFromEnforcement:
-  - namespace: monitoring
+  - name: kube-state-metrics
+    namespace: monitoring
     resource: servicemonitors
-  - namespace: monitoring
+  - name: kubelet
+    namespace: monitoring
+    resource: servicemonitors
+  - name: node-exporter
+    namespace: monitoring
+    resource: servicemonitors
+  - name: node-exporter-qnap
+    namespace: monitoring
+    resource: servicemonitors
+  - name: blackbox-exporter
+    namespace: monitoring
+    resource: servicemonitors
+  - name: kube-state-metrics-rules
+    namespace: monitoring
+    resource: prometheusrules
+  - name: node-exporter-rules
+    namespace: monitoring
+    resource: prometheusrules
+  - name: kubernetes-monitoring-rules
+    namespace: monitoring
+    resource: prometheusrules
+  - name: apiserver-read-resource-latency
+    namespace: monitoring
+    resource: prometheusrules
+  - name: apiserver-write-response-errors
+    namespace: monitoring
+    resource: prometheusrules
+  - name: apiserver-read-cluster-latency
+    namespace: monitoring
+    resource: prometheusrules
+  - name: apiserver-read-response-errors
+    namespace: monitoring
+    resource: prometheusrules
+  - name: apiserver-read-namespace-latency
+    namespace: monitoring
+    resource: prometheusrules
+  - name: kubelet-runtime-errors
+    namespace: monitoring
+    resource: prometheusrules
+  - name: kubelet-request-errors
+    namespace: monitoring
     resource: prometheusrules
   externalLabels:
     cluster: ankhmorpork

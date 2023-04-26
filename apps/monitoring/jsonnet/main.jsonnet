@@ -367,10 +367,77 @@ local kp =
             {
               resource: 'servicemonitors',
               namespace: $.values.common.namespace,
+              name: 'kube-state-metrics',
+            },
+            {
+              resource: 'servicemonitors',
+              namespace: $.values.common.namespace,
+              name: 'kubelet',
+            },
+            {
+              resource: 'servicemonitors',
+              namespace: $.values.common.namespace,
+              name: 'node-exporter',
+            },
+            {
+              resource: 'servicemonitors',
+              namespace: $.values.common.namespace,
+              name: 'node-exporter-qnap',
+            },
+            {
+              resource: 'servicemonitors',
+              namespace: $.values.common.namespace,
+              name: 'blackbox-exporter',
             },
             {
               resource: 'prometheusrules',
               namespace: $.values.common.namespace,
+              name: 'kube-state-metrics-rules',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'node-exporter-rules',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'kubernetes-monitoring-rules',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'apiserver-read-resource-latency',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'apiserver-write-response-errors',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'apiserver-read-cluster-latency',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'apiserver-read-response-errors',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'apiserver-read-namespace-latency',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'kubelet-runtime-errors',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
+              name: 'kubelet-request-errors',
             },
           ],
           storage: {
