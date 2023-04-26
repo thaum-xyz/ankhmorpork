@@ -1,0 +1,41 @@
+# Config reference: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
+
+# Create a default IngressClass for Traefik
+ingressClass:
+  enabled: true
+  isDefaultClass: false
+
+ingressRoute:
+  dashboard:
+    enabled: false
+
+deployment:
+  replicas: 1
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "50Mi"
+  limits:
+    cpu: "300m"
+    memory: "150Mi"
+
+service:
+  annotations:
+    metallb.universe.tf/address-pool: default
+  spec:
+    loadBalancerIP: "192.168.2.92"
+
+metrics:
+  prometheus:
+    serviceMonitor:
+      honorLabels: true
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
+        topologyKey: kubernetes.io/hostname
