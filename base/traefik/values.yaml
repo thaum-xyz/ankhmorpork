@@ -28,6 +28,8 @@ service:
 
 metrics:
   prometheus:
+    service:
+      enabled: true
     serviceMonitor:
       honorLabels: true
 
