@@ -26,7 +26,7 @@ local all = {
             data+: {
               PAPERLESS_DBUSER: '{{ .PAPERLESS_DBUSER }}',
               PAPERLESS_DBPASS: '{{ .PAPERLESS_DBPASS }}',
-              PAPERLESS_DBHOST: 'db.paperless.svc',
+              PAPERLESS_DBHOST: 'postgres-rw.paperless.svc',
               PAPERLESS_DBNAME: config.paperless.database.name,
               PAPERLESS_DBPORT: '5432',
               PAPERLESS_DBSSLMODE: 'prefer',
@@ -86,18 +86,7 @@ local all = {
       },
     },
   },
-  db: timescaledb(config.db) + {
-    credentials: externalsecret(
-      {
-        name: 'db',
-        namespace: config.db.namespace,
-      },
-      'doppler-auth-api',
-      {
-        POSTGRES_USER: config.db.database.userRef,
-        POSTGRES_PASSWORD: config.db.database.passRef,
-      }
-    ),
+  db: {
     credentialsUser: externalsecret(
       {
         name: 'pg-user',
@@ -140,7 +129,6 @@ local all = {
       },
     },
     cluster: {
-
       apiVersion: 'postgresql.cnpg.io/v1',
       kind: 'Cluster',
       metadata: {
