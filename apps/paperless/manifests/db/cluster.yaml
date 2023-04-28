@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: paperless
+spec:
+  bootstrap:
+    initdb:
+      database: paperless
+      owner: paperless
+      secret:
+        name: pg-user
+  instances: 1
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    requests:
+      cpu: 70m
+      memory: 70Mi
+  storage:
+    size: 300Mi
+    storageClass: qnap-nfs
+  superuserSecret:
+    name: pg-admin

@@ -86,7 +86,8 @@ db:
         requests:
           storage: 300Mi
   database:
-    userRef: PAPERLESS_DB_USER
+    user: paperless
+    userRef: PAPERLESS_DB_USER  # TODO: Remove this
     passRef: PAPERLESS_DB_PASS
     adminPassRef: PAPERLESS_DB_ADMIN_PASS
     name: *dbname

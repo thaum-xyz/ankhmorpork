@@ -139,6 +139,38 @@ local all = {
         },
       },
     },
+    cluster: {
+
+      apiVersion: 'postgresql.cnpg.io/v1',
+      kind: 'Cluster',
+      metadata: {
+        name: 'postgres',
+        namespace: config.db.namespace,
+      },
+      spec: {
+        instances: 1,
+        monitoring: {
+          enablePodMonitor: true,
+        },
+        superuserSecret: {
+          name: $.db.credentialsAdmin.metadata.name,
+        },
+        bootstrap: {
+          initdb: {
+            database: config.db.database.name,
+            owner: config.db.database.user,
+            secret: {
+              name: $.db.credentialsUser.metadata.name,
+            },
+          },
+        },
+        resources: config.db.resources,
+        storage: {
+          storageClass: config.db.storage.pvcSpec.storageClassName,
+          size: config.db.storage.pvcSpec.resources.requests.storage,
+        },
+      },
+    },
   },
   broker: redis(config.broker {
     commonLabels+:: {
