@@ -1,0 +1,27 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: homeassistant
+spec:
+  bootstrap:
+    initdb:
+      database: homeassistant
+      owner: homeassistant
+      secret:
+        name: pg-user
+  instances: 1
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    limits:
+      cpu: 250m
+      memory: 420Mi
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  storage:
+    size: 1Gi
+    storageClass: qnap-nfs
+  superuserSecret:
+    name: pg-admin

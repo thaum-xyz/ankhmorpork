@@ -59,6 +59,80 @@ local all = {
       },
     },
   },
+  postgres: {
+    credentialsUser: externalsecret(
+      {
+        name: 'pg-user',
+        namespace: config.postgres.namespace,
+      },
+      'doppler-auth-api',
+      {
+        password: config.postgres.db.userPassRef,
+      }
+    ) + {
+      spec+: {
+        target+: {
+          template+: {
+            type: 'kubernetes.io/basic-auth',
+            data: {
+              username: config.postgres.db.user,
+              password: '{{ .password }}',
+            },
+          },
+        },
+      },
+    },
+    credentialsAdmin: externalsecret(
+      {
+        name: 'pg-admin',
+        namespace: config.postgres.namespace,
+      },
+      'doppler-auth-api',
+      {
+        password: config.postgres.db.adminPassRef,
+      }
+    ) + {
+      spec+: {
+        target+: {
+          template+: {
+            type: 'kubernetes.io/basic-auth',
+            data: {
+              username: 'postgres',
+              password: '{{ .password }}',
+            },
+          },
+        },
+      },
+    },
+    cluster: {
+      apiVersion: 'postgresql.cnpg.io/v1',
+      kind: 'Cluster',
+      metadata: {
+        name: config.postgres.name,
+        namespace: config.postgres.namespace,
+      },
+      spec: {
+        instances: 1,
+        monitoring: {
+          enablePodMonitor: true,
+        },
+        superuserSecret: {
+          name: $.postgres.credentialsAdmin.metadata.name,
+        },
+        bootstrap: {
+          initdb: {
+            database: config.postgres.db.name,
+            owner: config.postgres.db.user,
+            secret: {
+              name: $.postgres.credentialsUser.metadata.name,
+            },
+          },
+        },
+        resources: config.postgres.resources,
+        storage: config.postgres.storage,
+      },
+    },
+  },
   timescaledb: timescaledb(config.timescaledb) + {
     credentials: externalsecret(
       {

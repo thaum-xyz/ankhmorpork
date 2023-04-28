@@ -67,6 +67,7 @@ paperless:
     # PAPERLESS_TIKA_ENDPOINT=http://tika.paperless.svc:9998
     # PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://gotenberg.paperless.svc:3000
 
+# TODO: FIX THIS AFTER MAKING SURE NEW DB IS WORKING FINE
 db:
   version: "2.7.0"  # application-version-from-github: timescale/timescaledb
   image: "timescale/timescaledb:2.7.0-pg14"  # application-version-from-github: timescale/timescaledb
