@@ -1,4 +1,4 @@
-# Config reference: https://github.com/external-secrets/external-secrets/blob/main/deploy/charts/external-secrets/values.yaml
+# Config reference: https://github.com/cloudnative-pg/charts/tree/main
 
 additionalArgs:
 - "--metrics-bind-address=127.0.0.1:8080"
