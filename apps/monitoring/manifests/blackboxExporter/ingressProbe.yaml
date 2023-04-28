@@ -23,10 +23,10 @@ spec:
         regex: (.+);(.+)
         replacement: ${1}://${2}/
         separator: ;
-        source_labels:
+        sourceLabels:
         - __meta_kubernetes_ingress_scheme
         - __meta_kubernetes_ingress_host
-        target_label: __param_target
+        targetLabel: __param_target
       selector:
         matchLabels:
           probe: enabled

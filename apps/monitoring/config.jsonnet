@@ -159,10 +159,10 @@
           },
           namespaceSelector: { any: true },
           relabelingConfigs: [{
-            source_labels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host'],
+            sourceLabels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host'],
             separator: ';',
             regex: '(.+);(.+)',
-            target_label: '__param_target',
+            targetLabel: '__param_target',
             replacement: '${1}://${2}/',
             action: 'replace',
           }],
