@@ -18,7 +18,7 @@ spec:
     ingress:
       namespaceSelector:
         any: true
-      relabelConfigs:
+      relabelingConfigs:
       - action: replace
         regex: (.+);(.+)
         replacement: ${1}://${2}/

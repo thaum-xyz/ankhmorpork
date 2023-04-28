@@ -158,7 +158,7 @@
             },
           },
           namespaceSelector: { any: true },
-          relabelConfigs: [{
+          relabelingConfigs: [{
             source_labels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host'],
             separator: ';',
             regex: '(.+);(.+)',
