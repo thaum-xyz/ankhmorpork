@@ -1,7 +1,7 @@
 # Config reference: https://github.com/cloudnative-pg/charts/tree/main
 
 additionalArgs:
-- "--metrics-bind-address=127.0.0.1:8080"
+- "--metrics-bind-address=0.0.0.0:8080"
 
 resources:
   requests:
