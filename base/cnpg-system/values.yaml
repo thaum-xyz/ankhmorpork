@@ -1,0 +1,14 @@
+# Config reference: https://github.com/external-secrets/external-secrets/blob/main/deploy/charts/external-secrets/values.yaml
+
+additionalArgs:
+- "--metrics-bind-address=127.0.0.1:8080"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 100Mi
+#  limits:
+#    cpu: 20m
+#    memory: 70Mi
+
+nodeSelector: {}
