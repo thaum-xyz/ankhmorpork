@@ -98,6 +98,47 @@ local all = {
         POSTGRES_PASSWORD: config.db.database.passRef,
       }
     ),
+    credentialsUser: externalsecret(
+      {
+        name: 'pg-user',
+        namespace: config.db.namespace,
+      },
+      'doppler-auth-api',
+      {
+        username: config.db.database.userRef,
+        password: config.db.database.passRef,
+      }
+    ) + {
+      spec+: {
+        target+: {
+          template+: {
+            type: 'kubernetes.io/basic-auth',
+          },
+        },
+      },
+    },
+    credentialsAdmin: externalsecret(
+      {
+        name: 'pg-admin',
+        namespace: config.db.namespace,
+      },
+      'doppler-auth-api',
+      {
+        password: config.db.database.adminPassRef,
+      }
+    ) + {
+      spec+: {
+        target+: {
+          template+: {
+            type: 'kubernetes.io/basic-auth',
+            data: {
+              username: 'postgres',
+              password: '{{ .password }}',
+            },
+          },
+        },
+      },
+    },
   },
   broker: redis(config.broker {
     commonLabels+:: {

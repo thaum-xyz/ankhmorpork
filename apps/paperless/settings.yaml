@@ -88,6 +88,7 @@ db:
   database:
     userRef: PAPERLESS_DB_USER
     passRef: PAPERLESS_DB_PASS
+    adminPassRef: PAPERLESS_DB_ADMIN_PASS
     name: *dbname
 
 broker:
