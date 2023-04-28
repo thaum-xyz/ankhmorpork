@@ -7,7 +7,7 @@ data:
   DEBUG: "0"
   ALLOWED_HOSTS: '*'
   DB_ENGINE: django.db.backends.postgresql_psycopg2
-  POSTGRES_HOST: timescaledb.tandoor.svc
+  POSTGRES_HOST: postgres-rw.tandoor.svc
   POSTGRES_PORT: "5432"
   POSTGRES_DB: recipes
   GUNICORN_MEDIA: "0"

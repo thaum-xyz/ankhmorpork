@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: tandoor
+spec:
+  instances: 1
+  monitoring:
+    enablePodMonitor: true
+  superuserSecret:
+    name: pg-admin-secret
+  bootstrap:
+    initdb:
+      database: recipes
+      owner: recipes
+      secret:
+        name: pg-app-secret
+  resources:
+    requests:
+      cpu: 4m
+      memory: 85Mi
+  storage:
+    storageClass: qnap-nfs
+    size: 1Gi
