@@ -17,6 +17,6 @@ metadata:
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 1.13.0
+    app.kubernetes.io/version: 1.14.2
   name: paperless-config
   namespace: paperless

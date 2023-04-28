@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 1.13.0
+    app.kubernetes.io/version: 1.14.2
   name: paperless
   namespace: paperless
 spec:
@@ -24,7 +24,7 @@ spec:
       labels:
         app.kubernetes.io/component: webservice
         app.kubernetes.io/name: paperless
-        app.kubernetes.io/version: 1.13.0
+        app.kubernetes.io/version: 1.14.2
     spec:
       containers:
       - env:
@@ -41,7 +41,7 @@ spec:
             name: paperless-secrets
         - secretRef:
             name: paperless-db
-        image: ghcr.io/paperless-ngx/paperless-ngx:1.13.0
+        image: ghcr.io/paperless-ngx/paperless-ngx:1.14.2
         name: paperless
         ports:
         - containerPort: 8000
@@ -50,7 +50,7 @@ spec:
           name: metrics
         resources:
           limits:
-            cpu: 500m
+            cpu: 2
             memory: 3Gi
           requests:
             cpu: 350m
