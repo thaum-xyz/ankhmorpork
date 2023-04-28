@@ -6,6 +6,8 @@ resources:
   - namespace.yaml
   - release.yaml
   - podmonitor.yaml
+  - configmap-dashboard.yaml
+  - prometheusrule.yaml
 configMapGenerator:
   - name: values
     files:
