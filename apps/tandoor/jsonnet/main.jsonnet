@@ -11,7 +11,20 @@ local all = {
   postgres: postgres(config.postgres),
 
   local t = tandoor(config.tandoor),
-  common: t.common,
+  common: t.common {
+    // Add override for PVCs to be ReadWriteOnce due to misconfiguration on initial setup.
+    // FIXME: Remove this once the PVCs are migrated.
+    pvcStatic+: {
+      spec+: {
+        accessModes: ['ReadWriteOnce'],
+      },
+    },
+    pvcMedia+: {
+      spec+: {
+        accessModes: ['ReadWriteOnce'],
+      },
+    },
+  },
   app: t.app,
   static: t.static,
 };

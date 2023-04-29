@@ -8,20 +8,12 @@ tandoor:
   namespace: *namespace
   resources: {}
   storage:
-    data:
+    static:
       storageClassName: "qnap-nfs"
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
+      size: 1Gi
     media:
       storageClassName: "qnap-nfs"
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 10Gi
+      size: 1Gi
   ingress:
     domain: "recipes.krupa.net.pl"
     className: nginx

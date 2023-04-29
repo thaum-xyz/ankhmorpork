@@ -22,6 +22,19 @@ local defaults = {
     className: 'nginx',
     metadata: {},
   },
+  storage: {
+    media: {
+      storageClassName: 'qnap-nfs',
+      size: '10Gi',
+    },
+    static: {},
+    // storageClassName: "qnap-nfs"
+    // accessModes:
+    //  - ReadWriteMany
+    // resources:
+    //   requests:
+    //     storage: 10Gi
+  },
 };
 
 function(params) {
@@ -33,8 +46,38 @@ function(params) {
   },
 
   common: {
-    pvcMedia:: {},
-    pvcStatic:: {},
+    pvcMedia: {
+      apiVersion: 'v1',
+      kind: 'PersistentVolumeClaim',
+      metadata: $._metadata {
+        name: 'media',
+      },
+      spec: {
+        storageClassName: $._config.storage.media.storageClassName,
+        accessModes: ['ReadWriteMany'],
+        resources: {
+          requests: {
+            storage: $._config.storage.media.size,
+          },
+        },
+      },
+    },
+    pvcStatic: {
+      apiVersion: 'v1',
+      kind: 'PersistentVolumeClaim',
+      metadata: $._metadata {
+        name: 'static',
+      },
+      spec: {
+        storageClassName: $._config.storage.static.storageClassName,
+        accessModes: ['ReadWriteMany'],
+        resources: {
+          requests: {
+            storage: $._config.storage.static.size,
+          },
+        },
+      },
+    },
     ingress: {
       apiVersion: 'networking.k8s.io/v1',
       kind: 'Ingress',
