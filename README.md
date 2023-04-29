@@ -59,11 +59,11 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td><a href="https://github.com/weaveworks/kured">kured</a></td>
     <td>Kubernetes Reboot Daemon</td>
   </tr>
-  <tr>
+  <!--<tr>
     <td><img width="32" src="https://raw.githubusercontent.com/kubernetes-sigs/descheduler/master/assets/logo/descheduler-stacked-color.png"></td>
     <td><a href="https://sigs.k8s.io/descheduler">descheduler</a></td>
     <td>Kubernetes Descheduler</td>
-  </tr>
+  </tr>-->
   <tr>
     <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/flux/icon/color/flux-icon-color.svg"></td>
     <td><a href="https://fluxcd.io/">Flux</a></td>
@@ -114,16 +114,21 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td><a href="https://grafana.com">Grafana</a></td>
     <td>Operational dashboards</td>
   </tr>
-  <tr>
+  <!--<tr>
     <td><img width="32" src="https://avatars.githubusercontent.com/u/86306284?s=200&v=4"></td>
     <td><a href="https://parca.dev">Parca</a></td>
     <td>Continuous profiling</td>
-  </tr>
+  </tr>-->
   <!-- <tr>
     <td><img width="32" src="https://github.com/grafana/loki/blob/main/docs/sources/logo.png?raw=true"></td>
     <td><a href="https://grafana.com/oss/loki">Loki</a></td>
     <td>Log aggregation system</td>
   </tr> -->
+  <tr>
+    <td><img width="32" src="https://cloudnative-pg.io/images/hero_image.svg"></td>
+    <td><a href="https://cloudnative-pg.io/">Cloudnative-pg</a></td>
+    <td>Postgres Controller</td>
+  </tr>
   <tr>
     <td><img width="32" src="https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png"></td>
     <td><a href="https://github.com/bastienwirtz/homer">Homer</a></td>
@@ -169,7 +174,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
 
 ### Ingress Controller
 
-Over WAN, I have port forwarded ports `80` and `443` to the load balancer IP of my ingress controller that's running in my Kubernetes cluster.
+Over WAN, I have port-forwarded ports `80` and `443` to the load balancer IP of my ingress controller that's running in my Kubernetes cluster.
 
 ### Internal DNS
 
@@ -185,14 +190,14 @@ QNAP NAS TS-431DeU is used to manage NFS shares and backup them to B2 cloud usin
 
 ## 🔧 Hardware
 
-| Device                  | Count | RAM   | Storage                       | Connectivity       | Purpose        |
-|-------------------------|-------|-------|-------------------------------|--------------------|----------------|
-| Unifi Dream Machine Pro | 1     | N/A   | N/A                           | 8x GbE + 2xSFP+    | Router/NVR     |
-| Unifi US-16-PoE switch  | 1     | N/A   | N/A                           | 16x GbE + 2xSFP    | Main Switch    |
-| QNAP TS-431DeU          | 1     | 16GB  | 2x240NVMe RAID1 + 4x3TB RAID5 | 2x 2.5GbE LACP     | NAS            |
-| Raspberry Pi 4B         | 3     | 4GB   | 64GB SSD + 32GB SD Card       | 1x GbE             | K8S Node       |
-| Raspberry Pi 3B+        | 2     | 1GB   | 16GB SD Card                  | 1x GbE             | K8S Node       |
-| Custom-built Server     | 1     | 64GB  | 240NVMe + 1TB SSD             | 2x GbE LACP + 1GbE | K8S Node w/GPU |
+| Device                  | Count | RAM   | Storage                          | Connectivity       | Purpose        |
+|-------------------------|-------|-------|----------------------------------|--------------------|----------------|
+| Unifi Dream Machine Pro | 1     | N/A   | N/A                              | 8x GbE + 2xSFP+    | Router         |
+| Unifi US-16-PoE switch  | 1     | N/A   | N/A                              | 16x GbE + 2xSFP    | Main Switch    |
+| QNAP TS-431DeU          | 1     | 16GB  | 2x240GB NVMe RAID1 + 4x3TB RAID5 | 2x 2.5GbE LACP     | NAS            |
+| Raspberry Pi 4B         | 3     | 4GB   | 64GB SSD + 32GB SD Card          | 1x GbE             | K3S Node       |
+| DELL E5440 Laptop       | 1     | 12GB  | 240 SSD                          | 1x GbE             | K3S Node       |
+| Custom-built Server     | 1     | 64GB  | 240GB NVMe + 1TB SSD             | 2x GbE LACP + 1GbE | K3S Node w/GPU |
 
 ## ✨ Features
 
@@ -209,7 +214,7 @@ Project status: **Alpha**
 - [ ] Distributed storage 🚧
 - [ ] Automated bare metal provisioning with PXE boot 🚧
 - [ ] Support multiple environments (dev, stag, prod) 🚧
-- [ ] Automated offsite backups 🚧
+- [ ] Automated in-cluster offsite backups 🚧
 - [ ] Single sign-on 🚧
 
 ## 🤝 Contributing
