@@ -1,5 +1,5 @@
+local postgres = import 'apps/cloudnative-pg-cluster.libsonnet';
 local paperless = import 'apps/paperless.libsonnet';
-local timescaledb = import 'apps/timescaledb.libsonnet';
 local redis = import 'redis.libsonnet';
 local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
 
@@ -13,7 +13,7 @@ local all = {
     database+:: {},
     databaseSecret: externalsecret(
       $.web.database.metadata,
-      'doppler-auth-api',
+      config.common.externalSecretStoreName,
       {
         PAPERLESS_DBUSER: config.paperless.database.userRef,
         PAPERLESS_DBPASS: config.paperless.database.passRef,
@@ -38,7 +38,7 @@ local all = {
     secrets+:: {},
     secretsExternal: externalsecret(
       $.web.secrets.metadata,
-      'doppler-auth-api',
+      config.common.externalSecretStoreName,
       {
         PAPERLESS_ADMIN_USER: config.paperless.secretsRefs.user,
         PAPERLESS_ADMIN_PASSWORD: config.paperless.secretsRefs.pass,
@@ -86,80 +86,7 @@ local all = {
       },
     },
   },
-  db: {
-    credentialsUser: externalsecret(
-      {
-        name: 'pg-user',
-        namespace: config.db.namespace,
-      },
-      'doppler-auth-api',
-      {
-        username: config.db.database.userRef,
-        password: config.db.database.passRef,
-      }
-    ) + {
-      spec+: {
-        target+: {
-          template+: {
-            type: 'kubernetes.io/basic-auth',
-          },
-        },
-      },
-    },
-    credentialsAdmin: externalsecret(
-      {
-        name: 'pg-admin',
-        namespace: config.db.namespace,
-      },
-      'doppler-auth-api',
-      {
-        password: config.db.database.adminPassRef,
-      }
-    ) + {
-      spec+: {
-        target+: {
-          template+: {
-            type: 'kubernetes.io/basic-auth',
-            data: {
-              username: 'postgres',
-              password: '{{ .password }}',
-            },
-          },
-        },
-      },
-    },
-    cluster: {
-      apiVersion: 'postgresql.cnpg.io/v1',
-      kind: 'Cluster',
-      metadata: {
-        name: 'postgres',
-        namespace: config.db.namespace,
-      },
-      spec: {
-        instances: 1,
-        monitoring: {
-          enablePodMonitor: true,
-        },
-        superuserSecret: {
-          name: $.db.credentialsAdmin.metadata.name,
-        },
-        bootstrap: {
-          initdb: {
-            database: config.db.database.name,
-            owner: config.db.database.user,
-            secret: {
-              name: $.db.credentialsUser.metadata.name,
-            },
-          },
-        },
-        resources: config.db.resources,
-        storage: {
-          storageClass: config.db.storage.pvcSpec.storageClassName,
-          size: config.db.storage.pvcSpec.resources.requests.storage,
-        },
-      },
-    },
-  },
+  postgres: postgres(config.postgres),
   broker: redis(config.broker {
     commonLabels+:: {
       'app.kubernetes.io/component': 'broker',

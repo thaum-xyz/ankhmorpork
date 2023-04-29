@@ -1,6 +1,7 @@
 ---
 common:
   namespace: &namespace "paperless"
+  externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
 paperless:
   version: "1.14.2"  # application-version-from-github: paperless-ngx/paperless-ngx
   image: "ghcr.io/paperless-ngx/paperless-ngx:1.14.2"  # application-image-from-github: paperless-ngx/paperless-ngx
@@ -67,31 +68,22 @@ paperless:
     # PAPERLESS_TIKA_ENDPOINT=http://tika.paperless.svc:9998
     # PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://gotenberg.paperless.svc:3000
 
-# TODO: FIX THIS AFTER MAKING SURE NEW DB IS WORKING FINE
-db:
-  version: "2.7.0"  # application-version-from-github: timescale/timescaledb
-  image: "timescale/timescaledb:2.7.0-pg14"  # application-version-from-github: timescale/timescaledb
-  name: db
+postgres:
+  name: postgres
   namespace: *namespace
+  db:
+    name: *dbname
+    user: paperless
+    userPassRef: PAPERLESS_DB_PASS
+    adminPassRef: PAPERLESS_DB_ADMIN_PASS
+  externalSecretStoreName: *externalSecretStoreName
   resources:
     requests:
       cpu: 70m
       memory: 70Mi
   storage:
-    name: "db-data"
-    pvcSpec:
-      storageClassName: "qnap-nfs"
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 300Mi
-  database:
-    user: paperless
-    userRef: PAPERLESS_DB_USER  # TODO: Remove this
-    passRef: PAPERLESS_DB_PASS
-    adminPassRef: PAPERLESS_DB_ADMIN_PASS
-    name: *dbname
+    size: 300Mi
+    storageClass: "qnap-nfs"
 
 broker:
   version: "6.0"  # application-version-from-github: redis/redis

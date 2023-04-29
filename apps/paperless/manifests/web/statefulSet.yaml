@@ -18,7 +18,7 @@ spec:
     metadata:
       annotations:
         checksum.config/md5: 4bc1ceaf6553f3083620ccefe4650ab7
-        checksum.database/md5: bd2b1d4eadd842a6417a41e6f1d6f5a0
+        checksum.database/md5: 6db6072c8167197e4ce44b52219e684f
         checksum.secrets/md5: 8dea432d03fb648cef21e26577cc0ffb
         kubectl.kubernetes.io/default-container: paperless
       labels:
