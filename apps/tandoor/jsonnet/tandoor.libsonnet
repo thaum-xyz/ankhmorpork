@@ -22,6 +22,7 @@ local defaults = {
     name: 'recipes',
     host: 'db.default.svc.cluster.local',
     port: 5432,
+    credentialsSecretRef: '',
   },
   ingress: {
     domain: '',
@@ -201,7 +202,142 @@ function(params) {
         selector: $.app._metadata.selectorLabels,
       },
     },
-    statefulSet:: {},
+    local tandoor = {
+      command: [
+        '/opt/recipes/venv/bin/gunicorn',
+        '-b',
+        ':8080',
+        '--access-logfile',
+        '-',
+        '--error-logfile',
+        '-',
+        '--log-level',
+        'INFO',
+        'recipes.wsgi',
+      ],
+      env: [
+        {
+          name: 'POSTGRES_USER',
+          valueFrom: {
+            secretKeyRef: {
+              key: 'username',
+              name: $._config.database.credentialsSecretRef,
+            },
+          },
+        },
+        {
+          name: 'POSTGRES_PASSWORD',
+          valueFrom: {
+            secretKeyRef: {
+              key: 'password',
+              name: $._config.database.credentialsSecretRef,
+            },
+          },
+        },
+      ],
+      envFrom: [
+        { secretRef: { name: $.app.secretKey.metadata.name } },
+        { configMapRef: { name: $.app.config.metadata.name } },
+      ],
+      image: $._config.image,
+      imagePullPolicy: 'IfNotPresent',
+      name: 'recipes',
+      ports: [{
+        containerPort: 8080,
+        name: 'gunicorn',
+      }],
+      readinessProbe: {
+        httpGet: {
+          path: '/',
+          port: 8080,
+          scheme: 'HTTP',
+        },
+        periodSeconds: 30,
+      },
+      resources: $._config.resources,
+      securityContext: {
+        runAsUser: 65534,
+      },
+      volumeMounts: [
+        {
+          mountPath: '/opt/recipes/mediafiles',
+          name: 'media',
+          subPath: 'files',
+        },
+        {
+          mountPath: '/opt/recipes/staticfiles',
+          name: 'static',
+          subPath: 'files',
+        },
+      ],
+    },
+
+    local init = tandoor {
+      command: [
+        'sh',
+        '-c',
+        |||
+          set -e
+          source venv/bin/activate
+          echo "Updating database"
+          python manage.py migrate
+          python manage.py collectstatic_js_reverse
+          python manage.py collectstatic --noinput
+          echo "Setting media file attributes"
+          chown -R 65534:65534 /opt/recipes/mediafiles
+          find /opt/recipes/mediafiles -type d | xargs -r chmod 755
+          find /opt/recipes/mediafiles -type f | xargs -r chmod 644
+          echo "Done"
+        |||,
+      ],
+      name: 'initialize',
+      readinessProbe:: {},
+      ports:: [],
+      securityContext: {
+        runAsUser: 0,
+      },
+    },
+
+    statefulSet: {
+      apiVersion: 'apps/v1',
+      kind: 'StatefulSet',
+      metadata: $.app._metadata,
+      spec: {
+        replicas: 1,
+        selector: {
+          matchLabels: $.app._metadata.selectorLabels,
+        },
+        serviceName: $.app.service.metadata.name,
+        updateStrategy: {
+          type: 'RollingUpdate',
+        },
+        template: {
+          metadata: {
+            labels: $.app._metadata.selectorLabels,
+          },
+          spec: {
+            containers: [tandoor],
+            initContainers: [init],
+            restartPolicy: 'Always',
+            serviceAccountName: $.app.serviceAccount.metadata.name,
+            volumes: [
+              {
+                name: 'media',
+                persistentVolumeClaim: {
+                  claimName: 'media',
+                },
+              },
+              {
+                name: 'static',
+                persistentVolumeClaim: {
+                  claimName: 'static',
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
   },
 
   static: {

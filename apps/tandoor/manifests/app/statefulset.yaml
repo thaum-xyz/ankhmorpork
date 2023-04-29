@@ -2,22 +2,23 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    app: recipes
     app.kubernetes.io/component: webapp
     app.kubernetes.io/name: tandoor
     app.kubernetes.io/part-of: tandoor
-  name: recipes
+    app.kubernetes.io/version: 1.4.9
+  name: tandoor
   namespace: tandoor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: recipes
+      app.kubernetes.io/component: webapp
+      app.kubernetes.io/name: tandoor
+      app.kubernetes.io/part-of: tandoor
   serviceName: tandoor
   template:
     metadata:
       labels:
-        app: recipes
         app.kubernetes.io/component: webapp
         app.kubernetes.io/name: tandoor
         app.kubernetes.io/part-of: tandoor
@@ -65,7 +66,7 @@ spec:
         resources:
           requests:
             cpu: 20m
-            memory: 112Mi
+            memory: 120Mi
         securityContext:
           runAsUser: 65534
         volumeMounts:
@@ -108,7 +109,7 @@ spec:
         - configMapRef:
             name: tandoor-config-envs
         image: vabene1111/recipes:1.4.9
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: initialize
         resources:
           requests:
