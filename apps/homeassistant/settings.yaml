@@ -1,6 +1,7 @@
 ---
 common:
   namespace: &namespace "homeassistant"
+  externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
 homeassistant:
   version: "2023.4.6"  # application-version-from-github: home-assistant/core
   image: "homeassistant/aarch64-homeassistant:2023.4.6"  # application-image-from-github: home-assistant/core
@@ -31,6 +32,7 @@ homeassistant:
   apiTokenSecretKeySelector:
     name: 'credentials'
     key: 'token'
+  externalSecretStoreName: *externalSecretStoreName
   storage:
     name: "homeassistant-config"
     pvcSpec:
@@ -48,6 +50,7 @@ postgres:
     user: homeassistant
     userPassRef: HOMEASSISTANT_DB_PASS
     adminPassRef: HOMEASSISTANT_DB_ADMIN_PASS
+  externalSecretStoreName: *externalSecretStoreName
   resources:
     requests:
       cpu: 130m

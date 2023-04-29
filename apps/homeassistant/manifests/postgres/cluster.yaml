@@ -1,6 +1,8 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
+  labels:
+    app.kubernetes.io/name: postgres
   name: postgres
   namespace: homeassistant
 spec:
@@ -9,7 +11,7 @@ spec:
       database: homeassistant
       owner: homeassistant
       secret:
-        name: pg-user
+        name: postgres-user
   instances: 1
   monitoring:
     enablePodMonitor: true
@@ -24,4 +26,4 @@ spec:
     size: 1Gi
     storageClass: qnap-nfs
   superuserSecret:
-    name: pg-admin
+    name: postgres-admin

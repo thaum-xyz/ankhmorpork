@@ -1,6 +1,6 @@
+local postgres = import 'apps/cloudnative-pg-cluster.libsonnet';
 local esphome = import 'apps/esphome.libsonnet';
 local homeassistant = import 'apps/homeassistant.libsonnet';
-local timescaledb = import 'apps/timescaledb.libsonnet';
 local externalTargets = import 'externalTargets.libsonnet';
 local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
 local removeAlerts = (import 'utils/mixins.libsonnet').removeAlerts;
@@ -9,29 +9,6 @@ local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];
-
-local externalSecretBasicAuth(name, namespace, username, passRef) = externalsecret(
-  {
-    name: name,
-    namespace: namespace,
-  },
-  'doppler-auth-api',
-  {
-    password: passRef,
-  }
-) + {
-  spec+: {
-    target+: {
-      template+: {
-        type: 'kubernetes.io/basic-auth',
-        data: {
-          username: username,
-          password: '{{ .password }}',
-        },
-      },
-    },
-  },
-};
 
 local all = {
   esphomedevices: externalTargets(config.espdevices) {
@@ -82,47 +59,7 @@ local all = {
       },
     },
   },
-  postgres: {
-    credentialsUser: externalSecretBasicAuth(
-      'pg-user',
-      config.postgres.namespace,
-      config.postgres.db.user,
-      config.postgres.db.userPassRef
-    ),
-    credentialsAdmin: externalSecretBasicAuth(
-      'pg-admin',
-      config.postgres.namespace,
-      'postgres',
-      config.postgres.db.adminPassRef
-    ),
-    cluster: {
-      apiVersion: 'postgresql.cnpg.io/v1',
-      kind: 'Cluster',
-      metadata: {
-        name: config.postgres.name,
-        namespace: config.postgres.namespace,
-      },
-      spec: {
-        instances: 1,
-        monitoring: {
-          enablePodMonitor: true,
-        },
-        superuserSecret: {
-          name: $.postgres.credentialsAdmin.metadata.name,
-        },
-        bootstrap: {
-          initdb: {
-            database: config.postgres.db.name,
-            owner: config.postgres.db.user,
-            secret: {
-              name: $.postgres.credentialsUser.metadata.name,
-            },
-          },
-        },
-        resources: config.postgres.resources,
-        storage: config.postgres.storage,
-      },
-    },
+  postgres: postgres(config.postgres) + {
     svc: {
       apiVersion: 'v1',
       kind: 'Service',
@@ -157,7 +94,7 @@ local all = {
         name: config.homeassistant.apiTokenSecretKeySelector.name,
         namespace: config.homeassistant.namespace,
       },
-      'doppler-auth-api',
+      config.homeassistant.externalSecretStoreName,
       { [config.homeassistant.apiTokenSecretKeySelector.key]: config.homeassistant.apiTokenRef }
     ),
     configs: {
