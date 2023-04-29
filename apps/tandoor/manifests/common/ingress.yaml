@@ -11,7 +11,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: 50M
   labels:
     probe: enabled
-  name: recipes
+  name: tandoor
   namespace: tandoor
 spec:
   ingressClassName: nginx
@@ -43,4 +43,4 @@ spec:
   tls:
   - hosts:
     - recipes.krupa.net.pl
-    secretName: recipes-tls
+    secretName: tandoor-tls
