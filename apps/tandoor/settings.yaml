@@ -1,0 +1,64 @@
+---
+common:
+  namespace: &namespace "tandoor"
+  externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
+tandoor:
+  version: "1.4.9"  # application-version-from-github: TandoorRecipes/recipes
+  image: vabene1111/recipes:1.4.9"  # application-image-from-github: TandoorRecipes/recipes
+  namespace: *namespace
+  resources: {}
+  storage:
+    data:
+      storageClassName: "qnap-nfs"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+    media:
+      storageClassName: "qnap-nfs"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+  ingress:
+    domain: "recipes.krupa.net.pl"
+    className: nginx
+    metadata:
+      labels:
+        probe: enabled
+      annotations: 
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/proxy-body-size: 50M
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/group: Ankh Cloud
+        gethomepage.dev/icon: https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg
+        gethomepage.dev/name: Cookbook
+        gethomepage.dev/description: Our recipes
+  database:
+    name: &dbname recipes
+    userRef: 
+    passRef: 
+  secretsRefs:
+    user: 
+    pass: 
+    email: 
+    key: 
+
+postgres:
+  name: postgres
+  namespace: *namespace
+  db:
+    name: *dbname
+    user: recipes
+    userPassRef: TANDOOR_POSTGRES_PASS
+    adminPassRef: TANDOOR_POSTGRES_ADMIN_PASS
+  externalSecretStoreName: *externalSecretStoreName
+  resources:
+    requests:
+      cpu: 4m
+      memory: 85Mi
+  storage:
+    size: 1Gi
+    storageClass: "qnap-nfs"
