@@ -5,50 +5,48 @@ metadata:
   namespace: tandoor
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: static
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: static
     spec:
-      restartPolicy: Always
-      serviceAccountName: static
       containers:
-      - name: nginx
-        image: nginx:latest
+      - image: nginx:latest
         imagePullPolicy: IfNotPresent
+        name: nginx
         ports:
-          - containerPort: 80
-            protocol: TCP
-            name: http
+        - containerPort: 80
+          name: http
+          protocol: TCP
         resources:
           requests:
             cpu: 2m
             memory: 5Mi
         volumeMounts:
-          - mountPath: /media
-            name: media
-            # mount as subPath due to lost+found on ext4 pvc
-            subPath: files
-          - mountPath: /static
-            name: static
-            # mount as subPath due to lost+found on ext4 pvc
-            subPath: files
-          - name: nginx-config
-            mountPath: /etc/nginx/nginx.conf
-            subPath: nginx-config
-            readOnly: true
+        - mountPath: /media
+          name: media
+          subPath: files
+        - mountPath: /static
+          name: static
+          subPath: files
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-config
+          readOnly: true
+          subPath: nginx-config
+      restartPolicy: Always
+      serviceAccountName: static
       volumes:
-        - name: media
-          persistentVolumeClaim:
-            claimName: media
-        - name: static
-          persistentVolumeClaim:
-            claimName: static
-        - name: nginx-config
-          configMap:
-            name: nginx-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: media
+      - name: static
+        persistentVolumeClaim:
+          claimName: static
+      - configMap:
+          name: nginx-config
+        name: nginx-config

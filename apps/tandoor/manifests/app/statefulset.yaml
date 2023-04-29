@@ -1,49 +1,76 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: recipes
-  namespace: tandoor
   labels:
     app: recipes
+  name: recipes
+  namespace: tandoor
 spec:
   replicas: 1
-  serviceName: recipes
   selector:
     matchLabels:
       app: recipes
-  updateStrategy:
-    type: RollingUpdate
+  serviceName: recipes
   template:
     metadata:
       labels:
         app: recipes
     spec:
-      restartPolicy: Always
-      initContainers:
-      - name: initialize
+      containers:
+      - command:
+        - /opt/recipes/venv/bin/gunicorn
+        - -b
+        - :8080
+        - --access-logfile
+        - '-'
+        - --error-logfile
+        - '-'
+        - --log-level
+        - INFO
+        - recipes.wsgi
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: pg-app-secret
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: pg-app-secret
         envFrom:
         - secretRef:
             name: django
         - configMapRef:
             name: config-envs
-        env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: pg-app-secret
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: pg-app-secret
-              key: password
         image: vabene1111/recipes:1.4.9
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
+        name: recipes
+        ports:
+        - containerPort: 8080
+          name: gunicorn
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 30
         resources:
           requests:
             cpu: 20m
-            memory: 120Mi
-        command:
+            memory: 112Mi
+        securityContext:
+          runAsUser: 65534
+        volumeMounts:
+        - mountPath: /opt/recipes/mediafiles
+          name: media
+          subPath: files
+        - mountPath: /opt/recipes/staticfiles
+          name: static
+          subPath: files
+      initContainers:
+      - command:
         - sh
         - -c
         - |
@@ -58,76 +85,45 @@ spec:
           find /opt/recipes/mediafiles -type d | xargs -r chmod 755
           find /opt/recipes/mediafiles -type f | xargs -r chmod 644
           echo "Done"
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-        - mountPath: /opt/recipes/mediafiles
-          name: media
-          # mount as subPath due to lost+found on ext4 pvc
-          subPath: files
-        - mountPath: /opt/recipes/staticfiles
-          name: static
-          # mount as subPath due to lost+found on ext4 pvc
-          subPath: files
-      containers:
-      - name: recipes
-        image: vabene1111/recipes:1.4.9
-        imagePullPolicy: IfNotPresent
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: pg-app-secret
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: pg-app-secret
         envFrom:
         - secretRef:
             name: django
         - configMapRef:
             name: config-envs
-        env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: pg-app-secret
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: pg-app-secret
-              key: password
-        command:
-          - /opt/recipes/venv/bin/gunicorn
-          - -b
-          - :8080
-          - --access-logfile
-          - "-"
-          - --error-logfile
-          - "-"
-          - --log-level
-          - INFO
-          - recipes.wsgi
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8080
-            scheme: HTTP
-          periodSeconds: 30
-        ports:
-        - containerPort: 8080
-          name: gunicorn
+        image: vabene1111/recipes:1.4.9
+        imagePullPolicy: Always
+        name: initialize
         resources:
           requests:
             cpu: 20m
-            memory: 112Mi
-        volumeMounts:
-          - mountPath: /opt/recipes/mediafiles
-            name: media
-            # mount as subPath due to lost+found on ext4 pvc
-            subPath: files
-          - mountPath: /opt/recipes/staticfiles
-            name: static
-            # mount as subPath due to lost+found on ext4 pvc
-            subPath: files
+            memory: 120Mi
         securityContext:
-          runAsUser: 65534
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /opt/recipes/mediafiles
+          name: media
+          subPath: files
+        - mountPath: /opt/recipes/staticfiles
+          name: static
+          subPath: files
+      restartPolicy: Always
       volumes:
-        - name: media
-          persistentVolumeClaim:
-            claimName: media
-        - name: static
-          persistentVolumeClaim:
-            claimName: static
+      - name: media
+        persistentVolumeClaim:
+          claimName: media
+      - name: static
+        persistentVolumeClaim:
+          claimName: static
+  updateStrategy:
+    type: RollingUpdate

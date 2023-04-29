@@ -1,13 +1,13 @@
-kind: ConfigMap
 apiVersion: v1
+data:
+  ALLOWED_HOSTS: '*'
+  DB_ENGINE: django.db.backends.postgresql_psycopg2
+  DEBUG: "0"
+  GUNICORN_MEDIA: "0"
+  POSTGRES_DB: recipes
+  POSTGRES_HOST: postgres-rw.tandoor.svc
+  POSTGRES_PORT: "5432"
+kind: ConfigMap
 metadata:
   name: config-envs
   namespace: tandoor
-data:
-  DEBUG: "0"
-  ALLOWED_HOSTS: '*'
-  DB_ENGINE: django.db.backends.postgresql_psycopg2
-  POSTGRES_HOST: postgres-rw.tandoor.svc
-  POSTGRES_PORT: "5432"
-  POSTGRES_DB: recipes
-  GUNICORN_MEDIA: "0"

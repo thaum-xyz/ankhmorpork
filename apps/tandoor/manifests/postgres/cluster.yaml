@@ -4,21 +4,21 @@ metadata:
   name: postgres
   namespace: tandoor
 spec:
-  instances: 1
-  monitoring:
-    enablePodMonitor: true
-  superuserSecret:
-    name: pg-admin-secret
   bootstrap:
     initdb:
       database: recipes
       owner: recipes
       secret:
         name: pg-app-secret
+  instances: 1
+  monitoring:
+    enablePodMonitor: true
   resources:
     requests:
       cpu: 4m
       memory: 85Mi
   storage:
-    storageClass: qnap-nfs
     size: 1Gi
+    storageClass: qnap-nfs
+  superuserSecret:
+    name: pg-admin-secret
