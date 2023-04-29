@@ -10,6 +10,29 @@ local configYAML = (importstr '../settings.yaml');
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];
 
+local externalSecretBasicAuth(name, namespace, username, passRef) = externalsecret(
+  {
+    name: name,
+    namespace: namespace,
+  },
+  'doppler-auth-api',
+  {
+    password: passRef,
+  }
+) + {
+  spec+: {
+    target+: {
+      template+: {
+        type: 'kubernetes.io/basic-auth',
+        data: {
+          username: username,
+          password: '{{ .password }}',
+        },
+      },
+    },
+  },
+};
+
 local all = {
   esphomedevices: externalTargets(config.espdevices) {
     _metadata+:: {
@@ -60,50 +83,18 @@ local all = {
     },
   },
   postgres: {
-    credentialsUser: externalsecret(
-      {
-        name: 'pg-user',
-        namespace: config.postgres.namespace,
-      },
-      'doppler-auth-api',
-      {
-        password: config.postgres.db.userPassRef,
-      }
-    ) + {
-      spec+: {
-        target+: {
-          template+: {
-            type: 'kubernetes.io/basic-auth',
-            data: {
-              username: config.postgres.db.user,
-              password: '{{ .password }}',
-            },
-          },
-        },
-      },
-    },
-    credentialsAdmin: externalsecret(
-      {
-        name: 'pg-admin',
-        namespace: config.postgres.namespace,
-      },
-      'doppler-auth-api',
-      {
-        password: config.postgres.db.adminPassRef,
-      }
-    ) + {
-      spec+: {
-        target+: {
-          template+: {
-            type: 'kubernetes.io/basic-auth',
-            data: {
-              username: 'postgres',
-              password: '{{ .password }}',
-            },
-          },
-        },
-      },
-    },
+    credentialsUser: externalSecretBasicAuth(
+      'pg-user',
+      config.postgres.namespace,
+      config.postgres.db.user,
+      config.postgres.db.userPassRef
+    ),
+    credentialsAdmin: externalSecretBasicAuth(
+      'pg-admin',
+      config.postgres.namespace,
+      'postgres',
+      config.postgres.db.adminPassRef
+    ),
     cluster: {
       apiVersion: 'postgresql.cnpg.io/v1',
       kind: 'Cluster',
@@ -140,7 +131,7 @@ local all = {
           'metallb.universe.tf/address-pool': 'default',
         },
         name: 'postgres-lb',
-        namespace: config.timescaledb.namespace,
+        namespace: config.postgres.namespace,
       },
       spec: {
         // Needed because HomeAssistant is on host network
@@ -158,43 +149,8 @@ local all = {
         },
       },
     },
+  },
 
-  },
-  timescaledb: timescaledb(config.timescaledb) + {
-    credentials: externalsecret(
-      {
-        name: 'timescaledb',
-        namespace: config.timescaledb.namespace,
-      },
-      'doppler-auth-api',
-      {
-        POSTGRES_USER: config.timescaledb.database.userRef,
-        POSTGRES_PASSWORD: config.timescaledb.database.passRef,
-      }
-    ),
-    service+:: {
-      metadata+: {
-        annotations: {
-          'metallb.universe.tf/address-pool': 'default',
-        },
-      },
-      spec+: {
-        // Needed because HomeAssistant is on host network
-        loadBalancerIP: '192.168.2.93',
-        type: 'LoadBalancer',
-        clusterIP:: null,
-      },
-    },
-    prometheusRule+: {
-      spec+: {
-        groups: removeAlerts(
-          ['PostgreSQLCacheHitRatio'],
-          'PostgreSQL',
-          super.groups,
-        ),
-      },
-    },
-  },
   homeassistant: homeassistant(config.homeassistant) + {
     credentials: externalsecret(
       {
