@@ -47,7 +47,7 @@ spec:
               name: postgres-user
         envFrom:
         - secretRef:
-            name: django
+            name: tandoor-django
         - configMapRef:
             name: tandoor-config-envs
         image: vabene1111/recipes:1.4.9
@@ -104,7 +104,7 @@ spec:
               name: postgres-user
         envFrom:
         - secretRef:
-            name: django
+            name: tandoor-django
         - configMapRef:
             name: tandoor-config-envs
         image: vabene1111/recipes:1.4.9

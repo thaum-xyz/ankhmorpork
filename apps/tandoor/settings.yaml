@@ -33,11 +33,8 @@ tandoor:
     host: postgres-rw.tandoor.svc
     # Credentials should be stored in a Secret of type basic-auth
     credentialsSecretRef: postgres-user
-  secretsRefs:
-    user: 
-    pass: 
-    email: 
-    key: 
+  # How secret key is called in External Secret Store
+  secretKeyRef: TANDOOR_SECRET_KEY
 
 postgres:
   name: postgres

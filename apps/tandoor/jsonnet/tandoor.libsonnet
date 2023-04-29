@@ -177,7 +177,16 @@ function(params) {
         POSTGRES_PORT: std.toString($._config.database.port),
       },
     },
-    secretKey:: {},
+    secretKey: {
+      apiVersion: 'v1',
+      kind: 'Secret',
+      metadata: $.app._metadata {
+        name+: '-django',
+      },
+      stringData: {
+        SECRET_KEY: 'changeMe',
+      },
+    },
     service: {
       apiVersion: 'v1',
       kind: 'Service',

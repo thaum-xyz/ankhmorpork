@@ -25,7 +25,16 @@ local all = {
       },
     },
   },
-  app: t.app,
+  app: t.app {
+    secretKey+:: {},
+    secretDjango: externalsecret(
+      $.app.secretKey.metadata,
+      config.common.externalSecretStoreName,
+      {
+        SECRET_KEY: config.tandoor.secretKeyRef,
+      }
+    ),
+  },
   static: t.static,
 };
 
