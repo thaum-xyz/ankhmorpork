@@ -21,21 +21,21 @@ spec:
       paths:
       - backend:
           service:
-            name: recipes
+            name: tandoor
             port:
               name: gunicorn
         path: /
         pathType: Prefix
       - backend:
           service:
-            name: static
+            name: tandoor-static
             port:
               name: http
         path: /media
         pathType: Prefix
       - backend:
           service:
-            name: static
+            name: tandoor-static
             port:
               name: http
         path: /static

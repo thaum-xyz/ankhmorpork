@@ -2,8 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: recipes
-  name: recipes
+    app.kubernetes.io/name: tandoor
+    app.kubernetes.io/version: 1.4.9
+  name: tandoor
   namespace: tandoor
 spec:
   ports:
