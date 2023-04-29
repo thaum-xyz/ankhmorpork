@@ -37,7 +37,7 @@ spec:
         - mountPath: /etc/nginx/nginx.conf
           name: nginx-config
           readOnly: true
-          subPath: nginx-config
+          subPath: nginx.conf
       restartPolicy: Always
       serviceAccountName: static
       volumes:
@@ -48,5 +48,5 @@ spec:
         persistentVolumeClaim:
           claimName: static
       - configMap:
-          name: nginx-config
+          name: tandoor-config-nginx
         name: nginx-config

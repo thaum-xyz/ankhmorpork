@@ -30,8 +30,9 @@ tandoor:
         gethomepage.dev/description: Our recipes
   database:
     name: &dbname recipes
-    userRef: 
-    passRef: 
+    host: postgres-rw.tandoor.svc
+    # Credentials should be stored in a Secret of type basic-auth
+    credentialsSecretRef: postgres-user
   secretsRefs:
     user: 
     pass: 

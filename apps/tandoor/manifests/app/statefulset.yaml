@@ -43,7 +43,7 @@ spec:
         - secretRef:
             name: django
         - configMapRef:
-            name: config-envs
+            name: tandoor-config-envs
         image: vabene1111/recipes:1.4.9
         imagePullPolicy: IfNotPresent
         name: recipes
@@ -100,7 +100,7 @@ spec:
         - secretRef:
             name: django
         - configMapRef:
-            name: config-envs
+            name: tandoor-config-envs
         image: vabene1111/recipes:1.4.9
         imagePullPolicy: Always
         name: initialize

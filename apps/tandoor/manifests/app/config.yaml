@@ -9,5 +9,8 @@ data:
   POSTGRES_PORT: "5432"
 kind: ConfigMap
 metadata:
-  name: config-envs
+  labels:
+    app.kubernetes.io/name: tandoor
+    app.kubernetes.io/version: 1.4.9
+  name: tandoor-config-envs
   namespace: tandoor

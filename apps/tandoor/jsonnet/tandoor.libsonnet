@@ -17,6 +17,11 @@ local defaults = {
     for labelName in std.objectFields(defaults.commonLabels)
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
+  database: {
+    name: 'recipes',
+    host: 'db.default.svc.cluster.local',
+    port: 5432,
+  },
   ingress: {
     domain: '',
     className: 'nginx',
@@ -38,7 +43,11 @@ local defaults = {
 };
 
 function(params) {
-  _config:: defaults + params,
+  _config:: defaults + params + {
+    database: defaults.database + params.database,
+    ingress: defaults.ingress + params.ingress,
+    storage: defaults.storage + params.storage,
+  },
   _metadata:: {
     name: $._config.name,
     namespace: $._config.namespace,
@@ -137,7 +146,22 @@ function(params) {
 
   app: {
     serviceAccount:: {},
-    config:: {},
+    config: {
+      apiVersion: 'v1',
+      kind: 'ConfigMap',
+      metadata: $._metadata {
+        name+: '-config-envs',
+      },
+      data: {
+        ALLOWED_HOSTS: '*',
+        DB_ENGINE: 'django.db.backends.postgresql_psycopg2',
+        DEBUG: '0',
+        GUNICORN_MEDIA: '0',
+        POSTGRES_DB: $._config.database.name,
+        POSTGRES_HOST: $._config.database.host,
+        POSTGRES_PORT: std.toString($._config.database.port),
+      },
+    },
     secretKey:: {},
     service: {
       apiVersion: 'v1',
@@ -161,7 +185,36 @@ function(params) {
 
   static: {
     serviceAccount:: {},
-    config:: {},
+    config: {
+      apiVersion: 'v1',
+      kind: 'ConfigMap',
+      metadata: $._metadata {
+        name+: '-config-nginx',
+      },
+      data: {
+        'nginx.conf': |||
+          events {
+            worker_connections 1024;
+          }
+          http {
+            include mime.types;
+            server {
+              listen 80;
+              server_name _;
+              client_max_body_size 16M;
+              # serve static files
+              location /static/ {
+                alias /static/;
+              }
+              # serve media files
+              location /media/ {
+                alias /media/;
+              }
+            }
+          }
+        |||,
+      },
+    },
     service: {
       apiVersion: 'v1',
       kind: 'Service',
