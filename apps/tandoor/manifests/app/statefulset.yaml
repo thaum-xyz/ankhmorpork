@@ -37,7 +37,7 @@ spec:
             secretKeyRef:
               name: pg-app-secret
               key: password
-        image: vabene1111/recipes:1.4.8
+        image: vabene1111/recipes:1.4.9
         imagePullPolicy: Always
         resources:
           requests:
@@ -71,7 +71,7 @@ spec:
           subPath: files
       containers:
       - name: recipes
-        image: vabene1111/recipes:1.4.8
+        image: vabene1111/recipes:1.4.9
         imagePullPolicy: IfNotPresent
         envFrom:
         - secretRef:
