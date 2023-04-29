@@ -23,7 +23,9 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    app.kubernetes.io/name: tandoor
+    app.kubernetes.io/component: static-files-webserver
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/part-of: tandoor
     app.kubernetes.io/version: 1.4.9
-  name: tandoor-config-nginx
+  name: tandoor-static
   namespace: tandoor

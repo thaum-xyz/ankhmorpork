@@ -1,6 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: static
+    app.kubernetes.io/component: static-files-webserver
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/part-of: tandoor
+    app.kubernetes.io/version: 1.4.9
   name: static
   namespace: tandoor
 spec:
@@ -14,6 +20,9 @@ spec:
     metadata:
       labels:
         app: static
+        app.kubernetes.io/component: static-files-webserver
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/part-of: tandoor
     spec:
       containers:
       - image: nginx:latest
@@ -48,5 +57,5 @@ spec:
         persistentVolumeClaim:
           claimName: static
       - configMap:
-          name: tandoor-config-nginx
+          name: tandoor-static
         name: nginx-config

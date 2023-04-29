@@ -10,6 +10,9 @@ metadata:
     gethomepage.dev/name: Cookbook
     nginx.ingress.kubernetes.io/proxy-body-size: 50M
   labels:
+    app.kubernetes.io/name: tandoor
+    app.kubernetes.io/part-of: tandoor
+    app.kubernetes.io/version: 1.4.9
     probe: enabled
   name: tandoor
   namespace: tandoor

@@ -11,6 +11,7 @@ local defaults = {
   commonLabels:: {
     'app.kubernetes.io/name': 'tandoor',
     'app.kubernetes.io/version': defaults.version,
+    'app.kubernetes.io/part-of': 'tandoor',
   },
   selectorLabels:: {
     [labelName]: defaults.commonLabels[labelName]
@@ -25,7 +26,10 @@ local defaults = {
   ingress: {
     domain: '',
     className: 'nginx',
-    metadata: {},
+    metadata: {
+      annotations: {},
+      labels: {},
+    },
   },
   storage: {
     media: {
@@ -90,7 +94,10 @@ function(params) {
     ingress: {
       apiVersion: 'networking.k8s.io/v1',
       kind: 'Ingress',
-      metadata: $._metadata + $._config.ingress.metadata,
+      metadata: $._metadata + $._config.ingress.metadata + {
+        labels: $._metadata.labels + $._config.ingress.metadata.labels,
+        annotations: $._config.ingress.metadata.annotations,
+      },
       spec: {
         ingressClassName: $._config.ingress.className,
         rules: [{
@@ -145,11 +152,18 @@ function(params) {
   },
 
   app: {
+    _metadata:: $._metadata {
+      _addedLabels:: {
+        'app.kubernetes.io/component': 'webapp',
+      },
+      selectorLabels:: $._config.selectorLabels + $.app._metadata._addedLabels,
+      labels+: $.app._metadata._addedLabels,
+    },
     serviceAccount:: {},
     config: {
       apiVersion: 'v1',
       kind: 'ConfigMap',
-      metadata: $._metadata {
+      metadata: $.app._metadata {
         name+: '-config-envs',
       },
       data: {
@@ -166,7 +180,7 @@ function(params) {
     service: {
       apiVersion: 'v1',
       kind: 'Service',
-      metadata: $._metadata,
+      metadata: $.app._metadata,
       spec: {
         ports: [{
           name: 'gunicorn',
@@ -174,23 +188,27 @@ function(params) {
           protocol: 'TCP',
           targetPort: 'gunicorn',
         }],
-        //selector: $._config.selectorLabels.
-        selector: {  // TODO: remove
-          app: 'recipes',
-        },
+        selector: $.app._metadata.selectorLabels,
       },
     },
     statefulSet:: {},
   },
 
   static: {
+    _metadata:: $._metadata {
+      name+: '-static',
+      _addedLabels:: {
+        'app.kubernetes.io/name': 'nginx',
+        'app.kubernetes.io/component': 'static-files-webserver',
+      },
+      selectorLabels:: $._config.selectorLabels + $.static._metadata._addedLabels,
+      labels+: $.static._metadata._addedLabels,
+    },
     serviceAccount:: {},
     config: {
       apiVersion: 'v1',
       kind: 'ConfigMap',
-      metadata: $._metadata {
-        name+: '-config-nginx',
-      },
+      metadata: $.static._metadata,
       data: {
         'nginx.conf': |||
           events {
@@ -218,7 +236,7 @@ function(params) {
     service: {
       apiVersion: 'v1',
       kind: 'Service',
-      metadata: $._metadata { name+: '-static' },
+      metadata: $.static._metadata,
       spec: {
         ports: [{
           name: 'http',
@@ -226,9 +244,7 @@ function(params) {
           protocol: 'TCP',
           targetPort: 'http',
         }],
-        selector: {  // TODO: fix this
-          app: 'static',
-        },
+        selector: $.static._metadata.selectorLabels,
       },
     },
     deployment:: {},
