@@ -33,12 +33,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: username
-              name: pg-app-secret
+              name: postgres-user
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
-              name: pg-app-secret
+              name: postgres-user
         envFrom:
         - secretRef:
             name: django
@@ -90,12 +90,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: username
-              name: pg-app-secret
+              name: postgres-user
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
-              name: pg-app-secret
+              name: postgres-user
         envFrom:
         - secretRef:
             name: django
