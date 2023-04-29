@@ -13,7 +13,7 @@ spec:
   selector:
     matchLabels:
       app: recipes
-  serviceName: recipes
+  serviceName: tandoor
   template:
     metadata:
       labels:
@@ -124,6 +124,7 @@ spec:
           name: static
           subPath: files
       restartPolicy: Always
+      serviceAccountName: tandoor
       volumes:
       - name: media
         persistentVolumeClaim:

@@ -48,7 +48,7 @@ spec:
           readOnly: true
           subPath: nginx.conf
       restartPolicy: Always
-      serviceAccountName: static
+      serviceAccountName: tandoor-static
       volumes:
       - name: media
         persistentVolumeClaim:

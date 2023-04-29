@@ -159,7 +159,11 @@ function(params) {
       selectorLabels:: $._config.selectorLabels + $.app._metadata._addedLabels,
       labels+: $.app._metadata._addedLabels,
     },
-    serviceAccount:: {},
+    serviceAccount: {
+      apiVersion: 'v1',
+      kind: 'ServiceAccount',
+      metadata: $.app._metadata,
+    },
     config: {
       apiVersion: 'v1',
       kind: 'ConfigMap',
@@ -204,7 +208,11 @@ function(params) {
       selectorLabels:: $._config.selectorLabels + $.static._metadata._addedLabels,
       labels+: $.static._metadata._addedLabels,
     },
-    serviceAccount:: {},
+    serviceAccount: {
+      apiVersion: 'v1',
+      kind: 'ServiceAccount',
+      metadata: $.static._metadata,
+    },
     config: {
       apiVersion: 'v1',
       kind: 'ConfigMap',
