@@ -132,6 +132,33 @@ local all = {
         storage: config.postgres.storage,
       },
     },
+    svc: {
+      apiVersion: 'v1',
+      kind: 'Service',
+      metadata: {
+        annotations: {
+          'metallb.universe.tf/address-pool': 'default',
+        },
+        name: 'postgres-lb',
+        namespace: config.timescaledb.namespace,
+      },
+      spec: {
+        // Needed because HomeAssistant is on host network
+        loadBalancerIP: '192.168.2.93',
+        type: 'LoadBalancer',
+        ports: [{
+          name: 'postgres',
+          port: 5432,
+          protocol: 'TCP',
+          targetPort: 5432,
+        }],
+        selector: {
+          'cnpg.io/cluster': 'postgres',
+          role: 'primary',
+        },
+      },
+    },
+
   },
   timescaledb: timescaledb(config.timescaledb) + {
     credentials: externalsecret(
@@ -145,7 +172,7 @@ local all = {
         POSTGRES_PASSWORD: config.timescaledb.database.passRef,
       }
     ),
-    service+: {
+    service+:: {
       metadata+: {
         annotations: {
           'metallb.universe.tf/address-pool': 'default',
