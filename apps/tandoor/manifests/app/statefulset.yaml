@@ -23,11 +23,20 @@ spec:
       - name: initialize
         envFrom:
         - secretRef:
-            name: timescaledb
-        - secretRef:
             name: django
         - configMapRef:
             name: config-envs
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-app-secret
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pg-app-secret
+              key: password
         image: vabene1111/recipes:1.4.8
         imagePullPolicy: Always
         resources:
@@ -66,11 +75,20 @@ spec:
         imagePullPolicy: IfNotPresent
         envFrom:
         - secretRef:
-            name: timescaledb
-        - secretRef:
             name: django
         - configMapRef:
             name: config-envs
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: pg-app-secret
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pg-app-secret
+              key: password
         command:
           - /opt/recipes/venv/bin/gunicorn
           - -b
