@@ -33,16 +33,13 @@ local defaults = {
   },
   storage: {
     media: {
-      storageClassName: 'qnap-nfs',
-      size: '10Gi',
+      storageClassName: '',
+      size: '1Gi',
     },
-    static: {},
-    // storageClassName: "qnap-nfs"
-    // accessModes:
-    //  - ReadWriteMany
-    // resources:
-    //   requests:
-    //     storage: 10Gi
+    static: {
+      storageClassName: '',
+      size: '1Gi',
+    },
   },
 };
 
@@ -66,7 +63,7 @@ function(params) {
         name: 'media',
       },
       spec: {
-        storageClassName: $._config.storage.media.storageClassName,
+        [if std.length($._config.storage.media.storageClassName) > 0 then 'storageClassName']: $._config.storage.media.storageClassName,
         accessModes: ['ReadWriteMany'],
         resources: {
           requests: {
@@ -82,7 +79,7 @@ function(params) {
         name: 'static',
       },
       spec: {
-        storageClassName: $._config.storage.static.storageClassName,
+        [if std.length($._config.storage.static.storageClassName) > 0 then 'storageClassName']: $._config.storage.static.storageClassName,
         accessModes: ['ReadWriteMany'],
         resources: {
           requests: {
