@@ -2,31 +2,30 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: static
     app.kubernetes.io/component: static-files-webserver
     app.kubernetes.io/name: nginx
     app.kubernetes.io/part-of: tandoor
     app.kubernetes.io/version: 1.4.9
-  name: static
+  name: tandoor-static
   namespace: tandoor
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: static
+      app.kubernetes.io/component: static-files-webserver
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/part-of: tandoor
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: static
         app.kubernetes.io/component: static-files-webserver
         app.kubernetes.io/name: nginx
         app.kubernetes.io/part-of: tandoor
     spec:
       containers:
       - image: nginx:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: nginx
         ports:
         - containerPort: 80
@@ -37,16 +36,16 @@ spec:
             cpu: 2m
             memory: 5Mi
         volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-config
+          readOnly: true
+          subPath: nginx.conf
         - mountPath: /media
           name: media
           subPath: files
         - mountPath: /static
           name: static
           subPath: files
-        - mountPath: /etc/nginx/nginx.conf
-          name: nginx-config
-          readOnly: true
-          subPath: nginx.conf
       restartPolicy: Always
       serviceAccountName: tandoor-static
       volumes:

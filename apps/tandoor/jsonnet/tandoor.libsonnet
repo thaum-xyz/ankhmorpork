@@ -261,6 +261,82 @@ function(params) {
         selector: $.static._metadata.selectorLabels,
       },
     },
-    deployment:: {},
+    local nginx = {
+      image: 'nginx:latest',
+      imagePullPolicy: 'Always',
+      name: 'nginx',
+      ports: [{
+        containerPort: 80,
+        name: 'http',
+        protocol: 'TCP',
+      }],
+      resources: {
+        requests: {
+          cpu: '2m',
+          memory: '5Mi',
+        },
+      },
+      volumeMounts: [
+        {
+          mountPath: '/etc/nginx/nginx.conf',
+          name: 'nginx-config',
+          readOnly: true,
+          subPath: std.objectFields($.static.config.data)[0],
+        },
+        {
+          mountPath: '/media',
+          name: 'media',
+          subPath: 'files',
+        },
+        {
+          mountPath: '/static',
+          name: 'static',
+          subPath: 'files',
+        },
+      ],
+    },
+    deployment: {
+      apiVersion: 'apps/v1',
+      kind: 'Deployment',
+      metadata: $.static._metadata,
+      spec: {
+        selector: {
+          matchLabels: $.static._metadata.selectorLabels,
+        },
+        strategy: {
+          type: 'Recreate',
+        },
+        template: {
+          metadata: {
+            labels: $.static._metadata.selectorLabels,
+          },
+          spec: {
+            containers: [nginx],
+            restartPolicy: 'Always',
+            serviceAccountName: $.static.serviceAccount.metadata.name,
+            volumes: [
+              {
+                name: 'media',
+                persistentVolumeClaim: {
+                  claimName: $.common.pvcMedia.metadata.name,
+                },
+              },
+              {
+                name: 'static',
+                persistentVolumeClaim: {
+                  claimName: $.common.pvcStatic.metadata.name,
+                },
+              },
+              {
+                configMap: {
+                  name: $.static.config.metadata.name,
+                },
+                name: 'nginx-config',
+              },
+            ],
+          },
+        },
+      },
+    },
   },
 }
