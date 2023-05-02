@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - release.yaml
   - servicemonitor.yaml
+  - prometheusrule.yaml
 configMapGenerator:
   - name: values
     files:
