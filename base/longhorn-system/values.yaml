@@ -1,0 +1,22 @@
+# Config reference: https://github.com/longhorn/longhorn/tree/master/chart
+
+persistence:
+  defaultClass: false
+
+defaultSettings:
+  defaultDataPath: "/var/lib/rancher/longhorn"
+
+longhornUI:
+  replicas: 1
+
+longhornConversionWebhook:
+  replicas: 1
+
+longhornAdmissionWebhook:
+  replicas: 1
+
+longhornRecoveryBackend:
+  replicas: 1
+
+ingress:
+  enabled: false
