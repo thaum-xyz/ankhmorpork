@@ -6,6 +6,7 @@ persistence:
 defaultSettings:
   defaultDataPath: "/var/lib/rancher/longhorn"
   snapshotDataIntegrity: "fast-check"
+  backupTarget: "nfs://192.168.2.29/nfsshare/backups-longhorn"
 
 longhornUI:
   replicas: 1
