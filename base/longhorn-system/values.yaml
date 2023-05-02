@@ -5,6 +5,7 @@ persistence:
 
 defaultSettings:
   defaultDataPath: "/var/lib/rancher/longhorn"
+  snapshotDataIntegrity: "fast-check"
 
 longhornUI:
   replicas: 1
