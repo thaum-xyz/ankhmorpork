@@ -23,7 +23,7 @@ spec:
       cpu: 130m
       memory: 300Mi
   storage:
-    size: 1Gi
-    storageClass: qnap-nfs
+    size: 2Gi
+    storageClass: longhorn
   superuserSecret:
     name: postgres-admin

@@ -59,8 +59,8 @@ postgres:
       cpu: 250m
       memory: 420Mi
   storage:
-    size: 1Gi
-    storageClass: "qnap-nfs"
+    size: 2Gi
+    storageClass: longhorn
 esphome:
   version: "2023.3.2"  # application-version-from-github: esphome/esphome
   image: "esphome/esphome:2023.3.2"  # application-image-from-github: esphome/esphome
