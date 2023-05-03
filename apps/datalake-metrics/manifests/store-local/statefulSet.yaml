@@ -6,7 +6,8 @@ metadata:
     app.kubernetes.io/instance: thanos-store
     app.kubernetes.io/name: thanos-store
     app.kubernetes.io/version: v0.30.2
-  name: thanos-store
+    store: local
+  name: thanos-store-local
   namespace: datalake-metrics
 spec:
   replicas: 1
@@ -15,6 +16,7 @@ spec:
       app.kubernetes.io/component: object-store-gateway
       app.kubernetes.io/instance: thanos-store
       app.kubernetes.io/name: thanos-store
+      store: local
   serviceName: thanos-store
   template:
     metadata:
@@ -23,6 +25,7 @@ spec:
         app.kubernetes.io/instance: thanos-store
         app.kubernetes.io/name: thanos-store
         app.kubernetes.io/version: v0.30.2
+        store: local
     spec:
       affinity:
         podAntiAffinity:
@@ -57,7 +60,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: thanos.yaml
-              name: thanos-objectstorage
+              name: thanos-objectstorage-local
         - name: HOST_IP_ADDRESS
           valueFrom:
             fieldRef:
@@ -116,6 +119,7 @@ spec:
         app.kubernetes.io/component: object-store-gateway
         app.kubernetes.io/instance: thanos-store
         app.kubernetes.io/name: thanos-store
+        store: local
       name: data
     spec:
       accessModes:
