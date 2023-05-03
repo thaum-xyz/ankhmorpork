@@ -21,7 +21,7 @@ longhornRecoveryBackend:
   replicas: 1
 
 ingress:
-  enabled: false
+  enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/auth-signin: https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri
