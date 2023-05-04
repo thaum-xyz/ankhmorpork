@@ -51,8 +51,8 @@ spec:
         - --objstore.config=$(OBJSTORE_CONFIG)
         - --data-dir=/var/thanos/compact
         - --debug.accept-malformed-index
-        - --retention.resolution-raw=7d
-        - --retention.resolution-5m=30d
+        - --retention.resolution-raw=14d
+        - --retention.resolution-5m=60d
         - --retention.resolution-1h=0
         - --delete-delay=48h
         - --compact.concurrency=1
