@@ -27,5 +27,6 @@ spec:
             endpoint: 192.168.2.29:8010
             access_key: {{ .access_key }}
             secret_key: {{ .secret_key }}
+            insecure: true
           prefix: thanos
       engineVersion: v2

@@ -24,6 +24,7 @@ objectStorageConfig:
       endpoint: 192.168.2.29:8010
       access_key: {{ .access_key }}
       secret_key: {{ .secret_key }}
+      insecure: true
     prefix: thanos
 
 # reference to htpasswd file storred in doppler. Content later available in Secret 'thanos-receive-ingress-auth'.
