@@ -78,5 +78,6 @@ query:
       memory: 40Mi
 compact:
   replicas: 1
-  retentionResolution5m: '2d'
-  retentionResolution1h: '60d'
+  retentionResolutionRaw: '7d'
+  retentionResolution5m: '30d'
+  retentionResolution1h: '0'
