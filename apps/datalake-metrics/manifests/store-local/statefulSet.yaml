@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: object-store-gateway
     app.kubernetes.io/instance: thanos-store
     app.kubernetes.io/name: thanos-store
-    app.kubernetes.io/version: v0.30.2
+    app.kubernetes.io/version: v0.31.0
     store: local
   name: thanos-store-local
   namespace: datalake-metrics
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/component: object-store-gateway
         app.kubernetes.io/instance: thanos-store
         app.kubernetes.io/name: thanos-store
-        app.kubernetes.io/version: v0.30.2
+        app.kubernetes.io/version: v0.31.0
         store: local
     spec:
       affinity:
@@ -69,7 +69,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        image: quay.io/thanos/thanos:v0.30.2
+        image: quay.io/thanos/thanos:v0.31.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 8

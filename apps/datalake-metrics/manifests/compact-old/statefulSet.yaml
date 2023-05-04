@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: database-compactor
     app.kubernetes.io/instance: thanos-compact
     app.kubernetes.io/name: thanos-compact
-    app.kubernetes.io/version: v0.30.2
+    app.kubernetes.io/version: v0.31.0
     data: old
   name: thanos-compact-old
   namespace: datalake-metrics
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/component: database-compactor
         app.kubernetes.io/instance: thanos-compact
         app.kubernetes.io/name: thanos-compact
-        app.kubernetes.io/version: v0.30.2
+        app.kubernetes.io/version: v0.31.0
         data: old
     spec:
       affinity:
@@ -70,7 +70,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
-        image: quay.io/thanos/thanos:v0.30.2
+        image: quay.io/thanos/thanos:v0.31.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 4
