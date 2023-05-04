@@ -55,6 +55,7 @@ spec:
         - --http-address=0.0.0.0:10902
         - --objstore.config=$(OBJSTORE_CONFIG)
         - --ignore-deletion-marks-delay=24h
+        - --min-time=2023-05-04T16:48:00Z
         env:
         - name: OBJSTORE_CONFIG
           valueFrom:
