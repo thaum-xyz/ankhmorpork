@@ -59,7 +59,7 @@ postgres:
       cpu: 250m
       memory: 420Mi
   storage:
-    size: 2Gi
+    size: 10Gi
     storageClass: longhorn
 esphome:
   version: "2023.3.2"  # application-version-from-github: esphome/esphome
