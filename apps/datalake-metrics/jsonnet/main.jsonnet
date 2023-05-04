@@ -24,6 +24,10 @@ local q = t.query(settings + settings.query + {
   stores: [s.storeEndpoint] + i.storeEndpoints,
 });
 
+local c = t.compact(settings + settings.compact + {
+  serviceMonitor: true,
+});
+
 local all = {
   query: q,
   store: s {
@@ -88,6 +92,7 @@ local all = {
       },
     },
   },
+  compact: c,
   custom: {
     bucketConfig: externalsecret(
       {

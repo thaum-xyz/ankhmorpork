@@ -76,3 +76,7 @@ query:
     requests:
       cpu: 15m
       memory: 40Mi
+compact:
+  replicas: 1
+  retentionResolution5m: '2d'
+  retentionResolution1h: '60d'
