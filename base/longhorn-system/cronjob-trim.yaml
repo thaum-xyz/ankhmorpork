@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: longhorn-auto-trim
+  namespace: longhorn-system
+spec:
+  schedule: "0 0 * * *"
+  successfulJobsHistoryLimit: 3
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: longhorn-system
+            image: docker pull ghcr.io/lp0101/longhorn-auto-trim:latest
+            imagePullPolicy: IfNotPresent
+          nodeSelector:
+            kubernetes.io/arch: arm64
+          restartPolicy: Never
