@@ -15,13 +15,13 @@ objectStorageConfig:
   name: 'thanos-objectstorage'
   key: 'thanos.yaml'
   credentialsRefs:
-    access_key: 'THANOS_S3_ACCESS_KEY'
-    secret_key: 'THANOS_S3_SECRET_KEY'
+    access_key: 'THANOS_LOCAL_S3_ACCESS_KEY'
+    secret_key: 'THANOS_LOCAL_S3_SECRET_KEY'
   content: |
     type: S3
     config:
-      bucket: thaum-datalake-metrics
-      endpoint: fra1.digitaloceanspaces.com
+      bucket: metrics
+      endpoint: 192.168.2.29:8010
       access_key: {{ .access_key }}
       secret_key: {{ .secret_key }}
     prefix: thanos
@@ -56,6 +56,20 @@ store:
     limits:
       cpu: 3
       memory: 10Gi
+#  bucketCache:
+#    type: GROUPCACHE
+#    config:
+#      self_url: http://$(POD_IP):10902
+#      peers:
+#        - dnssrv+_http._tcp.thanos-store.datalake-metrics.svc.cluster.local:10902
+#      groupcache_group: cachegroup
+#      dns_interval: 1s
+#      timeout: 2s
+  extraEnv:
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
 query:
   replicas: 1
   resources:
