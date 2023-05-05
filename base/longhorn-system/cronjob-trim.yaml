@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
           - name: longhorn-system
-            image: docker pull ghcr.io/lp0101/longhorn-auto-trim:latest
+            image: ghcr.io/lp0101/longhorn-auto-trim:latest
             imagePullPolicy: IfNotPresent
           nodeSelector:
             kubernetes.io/arch: arm64
