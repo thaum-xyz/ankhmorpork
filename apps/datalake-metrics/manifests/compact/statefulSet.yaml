@@ -9,7 +9,7 @@ metadata:
   name: thanos-compact
   namespace: datalake-metrics
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/component: database-compactor
