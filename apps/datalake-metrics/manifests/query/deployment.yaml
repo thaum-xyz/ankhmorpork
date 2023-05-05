@@ -47,8 +47,8 @@ spec:
         - --query.replica-label=replica
         - --query.replica-label=prometheus_replica
         - --query.replica-label=rule_replica
-        - --store=dnssrv+_grpc._tcp.thanos-store.datalake-metrics.svc.cluster.local:10901
-        - --store=dnssrv+_grpc._tcp.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901
+        - --endpoint=dnssrv+_grpc._tcp.thanos-store.datalake-metrics.svc.cluster.local:10901
+        - --endpoint=dnssrv+_grpc._tcp.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901
         - --query.auto-downsampling
         env:
         - name: HOST_IP_ADDRESS
