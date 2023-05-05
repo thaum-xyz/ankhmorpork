@@ -32,6 +32,7 @@ ingressAuthHTPasswdRef: THANOS_INGRESS_HTPASSWD
 
 receiveIngestor:
   replicas: 1
+  retention: 2d
   resources:
     requests:
       cpu: 150m
