@@ -167,7 +167,6 @@ local all = {
 local mixin = (import 'github.com/thanos-io/thanos/mixin/mixin.libsonnet') + {
   _config+:: {
   },
-  compact:: null,
   sidecar:: null,
   rule:: null,
   bucketReplicate:: null,
