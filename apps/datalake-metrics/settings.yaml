@@ -37,9 +37,9 @@ receiveIngestor:
     requests:
       cpu: 150m
       memory: 1100Mi
-    limits:
-      cpu: 700m
-      memory: 2Gi
+#    limits:
+#      cpu: 700m
+#      memory: 2Gi
 receiveRouter:
   replicas: 1
   resources:

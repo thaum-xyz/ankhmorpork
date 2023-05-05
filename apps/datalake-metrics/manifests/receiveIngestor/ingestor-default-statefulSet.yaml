@@ -121,9 +121,6 @@ spec:
             scheme: HTTP
           periodSeconds: 5
         resources:
-          limits:
-            cpu: 700m
-            memory: 2Gi
           requests:
             cpu: 150m
             memory: 1100Mi
