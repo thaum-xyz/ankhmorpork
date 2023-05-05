@@ -1,6 +1,8 @@
 ---
-k3s_version: v1.26.4+k3s1
+k3s_version: v1.27.1+k3s1
 k3s_master_ip: "{{ hostvars[groups['k3s_control_plane'][0]]['ansible_default_ipv4']['address'] }}"
+
+k3s_token: "{{ hostvars[groups['k3s_control_plane'][0]]['token'] }}"
 
 k3s_server_config:
   disable:
@@ -23,8 +25,6 @@ k3s_server_config:
   kube-apiserver-arg:
   - "feature-gates=PDBUnhealthyPodEvictionPolicy=true"
   - "enable-admission-plugins=NamespaceAutoProvision"
-
-k3s_token: "{{ hostvars[groups['k3s_control_plane'][0]]['token'] }}"
 
 k3s_agent_config:
   kubelet-arg:
