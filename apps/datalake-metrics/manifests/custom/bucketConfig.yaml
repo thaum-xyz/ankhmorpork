@@ -2,7 +2,7 @@ apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   creationTimestamp: null
-  name: thanos-objectstorage-local
+  name: thanos-objectstorage
   namespace: datalake-metrics
 spec:
   data:
@@ -17,7 +17,7 @@ spec:
     kind: ClusterSecretStore
     name: doppler-auth-api
   target:
-    name: thanos-objectstorage-local
+    name: thanos-objectstorage
     template:
       data:
         thanos.yaml: |

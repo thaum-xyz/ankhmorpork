@@ -94,7 +94,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: thanos.yaml
-              name: thanos-objectstorage-local
+              name: thanos-objectstorage
         image: quay.io/thanos/thanos:v0.31.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -120,9 +120,9 @@ spec:
             scheme: HTTP
           periodSeconds: 5
         resources:
-          #limits:
-          #  cpu: 700m
-          #  memory: 2Gi
+          limits:
+            cpu: 700m
+            memory: 2Gi
           requests:
             cpu: 150m
             memory: 1100Mi
