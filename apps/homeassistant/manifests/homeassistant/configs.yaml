@@ -128,19 +128,42 @@ data:
         id: "custom_event"
         event_data:
           sender: noreply@we-wash.com
-          folder: we-wash/T1
+          folder: we-wash
       sensor:
         - name: we_wash_t1
           state: >-
-            {% if 'ready for pick up' in trigger.event.data["subject"] %}
+            {% if 'T1 is ready for pick up' in trigger.event.data["subject"] %}
               Ready
-            {% elif 'started' in trigger.event.data["subject"] %}
+            {% elif 'T1 started' in trigger.event.data["subject"] %}
               In progress
-            {% elif 'waiting for you' in trigger.event.data["subject"] %}
+            {% elif 'T1 is waiting for you' in trigger.event.data["subject"] %}
               Waiting
             {% else %}
               Unknown
             {% endif %}
+        - name: we_wash_w1
+          state: >-
+            {% if 'W1 is ready for pick up' in trigger.event.data["subject"] %}
+              Ready
+            {% elif 'W1 started' in trigger.event.data["subject"] %}
+              In progress
+            {% elif 'W1 is waiting for you' in trigger.event.data["subject"] %}
+              Waiting
+            {% else %}
+              Unknown
+            {% endif %}
+        - name: we_wash_w2
+          state: >-
+            {% if 'W2 is ready for pick up' in trigger.event.data["subject"] %}
+              Ready
+            {% elif 'W2 started' in trigger.event.data["subject"] %}
+              In progress
+            {% elif 'W2 is waiting for you' in trigger.event.data["subject"] %}
+              Waiting
+            {% else %}
+              Unknown
+            {% endif %}
+
 
     # Sensors
     sensor:
