@@ -16,5 +16,5 @@ spec:
             image: ghcr.io/lp0101/longhorn-auto-trim:latest
             imagePullPolicy: IfNotPresent
           nodeSelector:
-            kubernetes.io/arch: arm64
+            kubernetes.io/arch: amd64
           restartPolicy: Never
