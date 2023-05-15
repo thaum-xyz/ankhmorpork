@@ -18,7 +18,7 @@ spec:
       serviceAccountName: cats
       containers:
         - name: cats
-          image: ghcr.io/paulfantom/cats:latest
+          image: ghcr.io/paulfantom/cats:0.0.3
           ports:
             - containerPort: 8080
               name: http
