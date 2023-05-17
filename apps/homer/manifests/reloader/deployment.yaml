@@ -22,7 +22,7 @@ spec:
           args:
           - --homer-namespace=$(NAMESPACE)
           - --homer-deployment=homer
-          - --homer-configmap=homer-config-test
+          - --homer-configmap=homer-config
           - --template-configmap=homer-template
           env:
             - name: NAMESPACE
