@@ -5,10 +5,8 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     reloader.homer/group: Ankh Cloud
     reloader.homer/logo: https://publicdomainvectors.org/photos/cat_line_art_pitr_Kitty_icon.png
-    reloader.homer/name: Cats
-    reloader.homer/prio: "1"
-    reloader.homer/subtitle: Random Cats on demand
-    reloader.homer/tag: external
+    reloader.homer/name: Random Cat
+    reloader.homer/subtitle: Cat as a Service
   labels:
     app.kubernetes.io/name: cats
     probe: enabled

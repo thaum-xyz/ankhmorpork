@@ -40,15 +40,16 @@ paperless:
     className: nginx
     annotations: 
       cert-manager.io/cluster-issuer: 'letsencrypt-prod'
-      gethomepage.dev/enabled: "true"
-      gethomepage.dev/group: Ankh Cloud
-      gethomepage.dev/icon: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png
-      gethomepage.dev/name: Paperless
-      gethomepage.dev/description: Document management system
+      reloader.homer/group: Ankh Cloud
+      reloader.homer/name: Paperless
+      reloader.homer/subtitle: "Document management system"
+      reloader.homer/logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png"
       nginx.ingress.kubernetes.io/proxy-body-size: 10m
       nginx.ingress.kubernetes.io/limit-rpm: '100'
       nginx.ingress.kubernetes.io/limit-rps: '10'
       nginx.ingress.kubernetes.io/limit-req-status-code: '429'
+    labels:
+      reloader.homer/enabled: "true"
   timezone: "Europe/Berlin"
   database:
     name: &dbname paperless

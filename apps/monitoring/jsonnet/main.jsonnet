@@ -43,6 +43,12 @@ local ingress(metadata, domain, service) = {
       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
       'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
       'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
+      'reloader.homer/group': 'Administration',
+      'reloader.homer/logo': 'https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.png',  // Default to prometheus logo
+      'reloader.homer/name': $.metadata.name,
+    },
+    labels+: {
+      'reloader.homer/enabled': 'true',
     },
   },
   spec: {
@@ -571,7 +577,14 @@ local kp =
             name: $.pyrra.apiService.spec.ports[0].name,
           },
         },
-      ),
+      ) + {
+        metadata+: {
+          annotations+: {
+            'reloader.homer/logo': 'https://avatars.githubusercontent.com/u/87393422?s=200&v=4',
+            'reloader.homer/name': 'pyrra',
+          },
+        },
+      },
       // TODO: Remove this when https://github.com/prometheus-operator/kube-prometheus/issues/1718 is finished
       apiDeployment+: {
         spec+: {
@@ -711,7 +724,13 @@ local kp =
             name: $.grafana.service.spec.ports[0].name,
           },
         },
-      ),
+      ) + {
+        metadata+: {
+          annotations+: {
+            'reloader.homer/logo': 'https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg',
+          },
+        },
+      },
     },
 
     //

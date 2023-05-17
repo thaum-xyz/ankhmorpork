@@ -3,20 +3,20 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    gethomepage.dev/description: Document management system
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/group: Ankh Cloud
-    gethomepage.dev/icon: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png
-    gethomepage.dev/name: Paperless
     nginx.ingress.kubernetes.io/limit-req-status-code: "429"
     nginx.ingress.kubernetes.io/limit-rpm: "100"
     nginx.ingress.kubernetes.io/limit-rps: "10"
     nginx.ingress.kubernetes.io/proxy-body-size: 10m
+    reloader.homer/group: Ankh Cloud
+    reloader.homer/logo: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png
+    reloader.homer/name: Paperless
+    reloader.homer/subtitle: Document management system
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
     app.kubernetes.io/version: 1.14.2
     probe: enabled
+    reloader.homer/enabled: "true"
   name: paperless
   namespace: paperless
 spec:

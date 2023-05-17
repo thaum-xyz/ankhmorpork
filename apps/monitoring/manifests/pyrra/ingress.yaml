@@ -5,11 +5,15 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/auth-signin: https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri
     nginx.ingress.kubernetes.io/auth-url: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
+    reloader.homer/group: Administration
+    reloader.homer/logo: https://avatars.githubusercontent.com/u/87393422?s=200&v=4
+    reloader.homer/name: pyrra
   labels:
     app.kubernetes.io/component: api
     app.kubernetes.io/name: pyrra
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 0.6.1
+    reloader.homer/enabled: "true"
   name: pyrra-api
   namespace: monitoring
 spec:

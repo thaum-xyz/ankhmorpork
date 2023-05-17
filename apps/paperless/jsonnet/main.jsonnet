@@ -70,7 +70,7 @@ local all = {
       metadata+: {
         labels+: {
           probe: 'enabled',
-        },
+        } + config.paperless.ingress.labels,
       },
     },
 

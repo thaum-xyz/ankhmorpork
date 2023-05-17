@@ -11,11 +11,12 @@ homeassistant:
     className: 'nginx'
     annotations:
       cert-manager.io/cluster-issuer: 'letsencrypt-prod'
-      gethomepage.dev/enabled: "true"
-      gethomepage.dev/group: Ankh Cloud
-      gethomepage.dev/icon: https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png
-      gethomepage.dev/name: HomeAssistant
-      gethomepage.dev/description: Home automation system
+      reloader.homer/group: Ankh Cloud
+      reloader.homer/name: HomeAssistant
+      reloader.homer/subtitle: "Home automation system"
+      reloader.homer/logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png"
+    labels:
+      reloader.homer/enabled: "true"
   hostNetwork: true  # Needed to enable WOL
   timezone: "Europe/Berlin"
   resources:

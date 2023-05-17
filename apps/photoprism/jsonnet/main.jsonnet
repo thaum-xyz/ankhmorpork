@@ -16,7 +16,7 @@ local all = photoprism(config.photoprism) + {
     metadata+: {
       labels+: {
         probe: 'enabled',
-      },
+      } + config.photoprism.ingress.labels,
     },
   },
   statefulSet+: {

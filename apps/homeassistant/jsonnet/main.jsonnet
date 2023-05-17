@@ -113,7 +113,7 @@ local all = {
       metadata+: {
         labels+: {
           probe: 'enabled',
-        },
+        } + config.homeassistant.ingress.labels,
         annotations+: {
           'nginx.ingress.kubernetes.io/proxy-send-timeout': '3600',
           'nginx.ingress.kubernetes.io/proxy-read-timeout': '3600',

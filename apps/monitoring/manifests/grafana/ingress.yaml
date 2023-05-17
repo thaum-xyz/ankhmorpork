@@ -6,11 +6,15 @@ metadata:
     nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Email
     nginx.ingress.kubernetes.io/auth-signin: https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri
     nginx.ingress.kubernetes.io/auth-url: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
+    reloader.homer/group: Administration
+    reloader.homer/logo: https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg
+    reloader.homer/name: grafana
   labels:
     app.kubernetes.io/component: grafana
     app.kubernetes.io/name: grafana
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 9.1.7
+    reloader.homer/enabled: "true"
   name: grafana
   namespace: monitoring
 spec:

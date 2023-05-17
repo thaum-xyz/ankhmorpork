@@ -8,9 +8,16 @@ photoprism:
   ingress:
     domain: "photo.ankhmorpork.thaum.xyz"
     className: 'nginx'
+    labels:
+      reloader.homer/enabled: "true"
     annotations:
       'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
       'nginx.ingress.kubernetes.io/proxy-body-size': '512M'
+      reloader.homer/group: Multimedia
+      reloader.homer/logo: "https://avatars.githubusercontent.com/u/32436079?s=400&v=4"
+      reloader.homer/name: Photoprism
+      reloader.homer/subtitle: "Photo management system"
+      reloader.homer/tag: "testing"
   timezone: "Europe/Berlin"
   envs:
     TZ: "Europe/Berlin"
