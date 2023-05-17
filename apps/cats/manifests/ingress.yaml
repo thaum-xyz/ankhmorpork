@@ -4,9 +4,10 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://publicdomainvectors.org/photos/cat_line_art_pitr_Kitty_icon.png
+    reloader.homer/logo: https://media.istockphoto.com/id/662195090/de/vektor/minimale-cat-logo.jpg?s=612x612&w=0&k=20&c=tx_rWZx2Uzxh-HOHlgFBnyQnm4CzrXO3fAhcW1Mp1i8=
     reloader.homer/name: Random Cat
     reloader.homer/subtitle: Cat as a Service
+    nginx.ingress.kubernetes.io/app-root: /random
   labels:
     app.kubernetes.io/name: cats
     probe: enabled
