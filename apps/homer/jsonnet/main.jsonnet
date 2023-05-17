@@ -8,14 +8,21 @@ local config = std.parseYaml(configYAML)[0] {
   configData: siteConfig,
 };
 
-local all = homer(config) + {
-  ingress+: {
-    metadata+: {
-      labels+: {
-        probe: 'enabled',
+local all = {
+ homer: homer(config) + {
+    ingress+: {
+      metadata+: {
+        labels+: {
+          probe: 'enabled',
+        },
       },
     },
   },
+  reloader: {}  # TBD
 };
 
-{ [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }
+{
+  [component + '/' + resource + '.yaml']: std.manifestYamlDoc(all[component][resource])
+  for component in std.objectFields(all)
+  for resource in std.objectFields(all[component])
+}

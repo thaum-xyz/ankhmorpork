@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: homer-reloader
+  namespace: homer
+  labels:
+    app.kubernetes.io/name: reloader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: homer-reloader
+subjects:
+- kind: ServiceAccount
+  name: reloader
+  namespace: homer
