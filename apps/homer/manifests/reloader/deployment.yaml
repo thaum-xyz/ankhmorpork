@@ -18,7 +18,7 @@ spec:
       serviceAccountName: reloader
       containers:
         - name: reloader
-          image: ghcr.io/paulfantom/homer-reloader:0.0.4
+          image: ghcr.io/paulfantom/homer-reloader:0.0.5
           args:
           - --homer-namespace=$(NAMESPACE)
           - --homer-deployment=homer
