@@ -4,10 +4,10 @@ metadata:
   name: homer-reloader
 rules:
 - apiGroups:
-    - networking.k8s.io
+  - networking.k8s.io
   resources:
-    - ingresses
+  - ingresses
   verbs:
-    - get
-    - list
-    - watch
+  - get
+  - list
+  - watch

@@ -1,10 +1,6 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: homer-template
-  namespace: homer
 data:
-  config.yml.tpl: |
+  config.yml.tpl: |-
     # This file is read by homer reloader which uses golang templates to generate the final config.yml file.
 
     title: "Ankhmorpork portal"
@@ -186,3 +182,7 @@ data:
             logo: "https://esphome.io/_static/favicon-512x512.png"
             <<: *local
             url: "http://192.168.2.94:6052/"
+kind: ConfigMap
+metadata:
+  name: homer-template
+  namespace: homer
