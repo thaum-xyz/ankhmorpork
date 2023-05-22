@@ -21,11 +21,14 @@ spec:
     template:
       data:
         thanos.yaml: |
-          type: SWIFT
+          type: S3
           config:
-            auth_url: http://192.168.2.29:8010/auth/v1.0
-            username: {{ .access_key }}
-            password: {{ .secret_key }}
-            container_name: metrics
+            bucket: metrics
+            endpoint: 192.168.2.29:8010
+            access_key: {{ .access_key }}
+            secret_key: {{ .secret_key }}
+            http_config:
+              tls_config:
+                insecure_skip_verify: true
           prefix: thanos
       engineVersion: v2

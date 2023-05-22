@@ -18,12 +18,15 @@ objectStorageConfig:
     access_key: 'THANOS_LOCAL_S3_ACCESS_KEY'
     secret_key: 'THANOS_LOCAL_S3_SECRET_KEY'
   content: |
-    type: SWIFT
+    type: S3
     config:
-      auth_url: http://192.168.2.29:8010/auth/v1.0
-      username: {{ .access_key }}
-      password: {{ .secret_key }}
-      container_name: metrics
+      bucket: metrics
+      endpoint: 192.168.2.29:8010
+      access_key: {{ .access_key }}
+      secret_key: {{ .secret_key }}
+      http_config:
+        tls_config:
+          insecure_skip_verify: true
     prefix: thanos
 
 # reference to htpasswd file storred in doppler. Content later available in Secret 'thanos-receive-ingress-auth'.
@@ -31,7 +34,7 @@ ingressAuthHTPasswdRef: THANOS_INGRESS_HTPASSWD
 
 receiveIngestor:
   replicas: 1
-  #retention: 2d
+  retention: 2d
   resources:
     requests:
       cpu: 150m
