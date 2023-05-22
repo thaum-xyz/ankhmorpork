@@ -18,7 +18,7 @@ spec:
       serviceAccountName: cats
       containers:
         - name: cats
-          image: ghcr.io/paulfantom/cats:0.0.9  # {"$imagepolicy": "cats:cats"}
+          image: ghcr.io/paulfantom/cats:0.0.10  # {"$imagepolicy": "cats:cats"}
           ports:
             - containerPort: 8080
               name: http
