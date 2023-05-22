@@ -1,0 +1,8 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: cats
+  namespace: cats
+spec:
+  image: ghcr.io/paulfantom/cats
+  interval: 10m0s

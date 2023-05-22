@@ -1,0 +1,13 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: cats
+  namespace: cats
+spec:
+  imageRepositoryRef:
+    name: cats
+  filterTags:
+    pattern: '^[0-9]+.[0-9]+.[0-9]+'
+  policy:
+    semver:
+      range: '>=0.0.0'
