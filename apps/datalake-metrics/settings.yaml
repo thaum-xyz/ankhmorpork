@@ -25,6 +25,7 @@ objectStorageConfig:
       access_key: {{ .access_key }}
       secret_key: {{ .secret_key }}
       http_config:
+        insecure_skip_verify: true
         tls_config:
           insecure_skip_verify: true
     prefix: thanos
