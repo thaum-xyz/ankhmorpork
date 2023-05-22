@@ -1,15 +1,18 @@
 local homer = (import 'apps/homer.libsonnet');
-local siteConfig = importstr '../site-config.yml';
+//local reloader = (import 'apps/homer-reloader.libsonnet');
 
 local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0] {
-  configData: siteConfig,
+  homer+: {
+    configData: '',
+  },
 };
 
 local all = {
- homer: homer(config) + {
+  homer: homer(config.homer) + {
+    configmap+:: {},  // This is provided dynamically by homer-reloader
     ingress+: {
       metadata+: {
         labels+: {
@@ -18,7 +21,7 @@ local all = {
       },
     },
   },
-  reloader: {}  # TBD
+  reloader: {},  // TBD
 };
 
 {

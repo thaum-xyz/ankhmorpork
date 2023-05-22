@@ -41,16 +41,6 @@
     },
     {
       "source": {
-        "git": {
-          "remote": "https://github.com/prometheus-community/postgres_exporter.git",
-          "subdir": "postgres_mixin"
-        }
-      },
-      "version": "d273f97b729614b93267cc7ebf7cd4646aebe1d4",
-      "sum": "zZwB0tKv706MyYchrDRgdIrZNb6V41ZdKiWCDjWJU5s="
-    },
-    {
-      "source": {
         "local": {
           "directory": "../../../lib/jsonnet/utils"
         }
