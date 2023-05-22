@@ -74,16 +74,16 @@ data:
         items:
     {{- range . }}
     {{- if eq .Group "Ankh Cloud" }}
-          - name: {{ .Name | trim | title }}
-            url: "{{ .Url | trim }}"
+          - name: {{ .Name }}
+            url: "{{ .Url }}"
             {{- if .Subtitle }}
-            subtitle: "{{ .Subtitle | trim }}"
+            subtitle: "{{ .Subtitle }}"
             {{- end }}
             {{- if .Logo }}
-            logo: "{{ .Logo | trim }}"
+            logo: "{{ .Logo }}"
             {{- end }}
             {{- if .Tag }}
-            <<: *{{ .Tag | trim }}
+            <<: *{{ .Tag }}
             {{- end }}
     {{- end }}
     {{- end }}
@@ -130,16 +130,16 @@ data:
             url: "http://192.168.2.95:9091/transmission/web/"
     {{- range . }}
     {{- if eq .Group "Multimedia" }}
-          - name: {{ .Name | trim | title }}
-            url: "{{ .Url | trim }}"
+          - name: {{ .Name }}
+            url: "{{ .Url }}"
             {{- if .Subtitle }}
-            subtitle: "{{ .Subtitle | trim }}"
+            subtitle: "{{ .Subtitle }}"
             {{- end }}
             {{- if .Logo }}
-            logo: "{{ .Logo | trim }}"
+            logo: "{{ .Logo }}"
             {{- end }}
             {{- if .Tag }}
-            <<: *{{ .Tag | trim }}
+            <<: *{{ .Tag }}
             {{- end }}
     {{- end }}
     {{- end }}
@@ -149,16 +149,16 @@ data:
         items:
     {{- range . }}
     {{- if eq .Group "Administration" }}
-          - name: {{ .Name | trim | title }}
-            url: "{{ .Url | trim }}"
+          - name: {{ .Name }}
+            url: "{{ .Url }}"
             {{- if .Subtitle }}
-            subtitle: "{{ .Subtitle | trim }}"
+            subtitle: "{{ .Subtitle }}"
             {{- end }}
             {{- if .Logo }}
-            logo: "{{ .Logo | trim }}"
+            logo: "{{ .Logo }}"
             {{- end }}
             {{- if .Tag }}
-            <<: *{{ .Tag | trim }}
+            <<: *{{ .Tag }}
             {{- end }}
     {{- end }}
     {{- end }}
