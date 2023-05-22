@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/app-root: /random
   labels:
     app.kubernetes.io/name: cats
-    probe: enabled
+    # probe: enabled
     reloader.homer/enabled: "true"
   name: cats
   namespace: cats
