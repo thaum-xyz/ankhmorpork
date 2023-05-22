@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: reloader
+  namespace: homer
+spec:
+  imageRepositoryRef:
+    name: reloader
+  policy:
+    numerical:
+      order: asc
