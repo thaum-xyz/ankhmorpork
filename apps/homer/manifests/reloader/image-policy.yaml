@@ -6,6 +6,8 @@ metadata:
 spec:
   imageRepositoryRef:
     name: reloader
+  filterTags:
+    pattern: '^[0-9]+.[0-9]+.[0-9]+'
   policy:
     numerical:
       order: asc
