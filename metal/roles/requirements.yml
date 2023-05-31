@@ -10,6 +10,6 @@ roles:
 
 collections:
 - name: devsec.hardening
-  version: 8.6.0
+  version: 8.7.0
 - name: prometheus.prometheus
   version: 0.3.1

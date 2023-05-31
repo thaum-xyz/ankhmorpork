@@ -21,33 +21,12 @@
       name: systemd-logind
       state: restarted
   tasks:
-  - name: Install dependencies
-    package:
-      name: moreutils
-      state: present
-  - name: Download apt_info textfile collector script
-    get_url:
-      url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/apt_info.py"
-      dest: "/usr/local/bin/apt_info.py"
-      mode: 0755
-  - name: Set cronjob for package manager (/etc/crontab)
-    cron:
-      cron_file: "/etc/cron.d/metrics"
-      user: root
-      name: "apt"
-      minute: "13"
-      job: "/usr/local/bin/apt_info.py | sponge /var/lib/node_exporter/apt.prom"
   - name: Ensure snapd is removed
     apt:
       name: snapd
       state: absent
       purge: true
     when: ansible_os_family == "Debian"
-  - name: Install ubuntu addons when necessary
-    package:
-      name: ubuntu-restricted-addons
-      state: present
-    when: '"GenuineIntel" in ansible_processor'
   - name: Disable handling of lid switch by systemd-logind
     lineinfile:
       path: /etc/systemd/logind.conf
@@ -64,7 +43,8 @@
 #  roles:
 #  - paulfantom.raspberry
 
-- hosts: all
+- name: Kubernetes host-level requirements
+  hosts: all
   become: true
   tasks:
   - name: Install nfs mount client software
@@ -73,11 +53,41 @@
       state: present
     with_items:
     - "{{ 'nfs-common' if (ansible_os_family | lower == 'debian') else 'nfs-utils' }}"
-  - block:
-    - name: Install dependencies
-      package:
-        name: moreutils
-        state: present
+  - name: Install VXLAN dependencies
+    package:
+      name: linux-modules-extra-raspi
+      state: present
+    when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version is version('21.10', '>=')
+  - name: Install ubuntu addons when necessary
+    package:
+      name: ubuntu-restricted-addons
+      state: present
+    when: '"GenuineIntel" in ansible_processor'
+
+- name: Install metrics collectors
+  hosts: all
+  become: true
+  tasks:
+  - name: Install dependencies
+    package:
+      name: moreutils
+      state: present
+  - name: Download apt_info textfile collector script
+    get_url:
+      url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/apt_info.py"
+      dest: "/usr/local/bin/apt_info.py"
+      mode: 0755
+  - name: Set cronjob for package manager (/etc/crontab)
+    cron:
+      cron_file: "/etc/cron.d/metrics"
+      user: root
+      name: "apt"
+      minute: "13"
+      job: "/usr/local/bin/apt_info.py | sponge /var/lib/node_exporter/apt.prom"
+  - when: enable_smartmon is defined
+    block:
     - name: Download smartmon textfile collector script
       get_url:
         url: "https://github.com/prometheus-community/node-exporter-textfile-collector-scripts/blob/master/smartmon.sh"
@@ -90,4 +100,3 @@
         name: "smartmon"
         minute: "*/10"
         job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
-    when: enable_smartmon is defined

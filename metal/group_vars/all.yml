@@ -4,6 +4,13 @@ locales_present:
   - en_GB.UTF-8
 unattended_automatic_reboot: false
 
+# Mitigate ubuntu 20.04 -> 22.04 upgrade issue by specifying common KEX algorithms across both ubuntu versions.
+# Without this change, ubuntu 22.04 will fail to start sshd daemon due to unsupported sntrup4591761x25519-sha512@tinyssh.org
+# KEX algorithm which was replaced by sntrup761x25519-sha512@openssh.com in ubuntu 22.
+ssh_kex:
+- curve25519-sha256@libssh.org
+- diffie-hellman-group-exchange-sha256
+
 systemd_exporter_enable_ip_accounting: true
 systemd_exporter_enable_restart_count: true
 systemd_exporter_unit_blacklist: '.*.mount|user-runtime-dir@0.service'
