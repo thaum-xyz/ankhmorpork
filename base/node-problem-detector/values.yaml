@@ -1,0 +1,8 @@
+# Config reference: https://github.com/deliveryhero/helm-charts/blob/master/stable/node-problem-detector/values.yaml
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
