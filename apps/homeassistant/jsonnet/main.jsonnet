@@ -148,9 +148,6 @@ local all = {
                 readOnly: true,
               }],
             }, super.containers),
-            nodeSelector: {
-              'kubernetes.io/arch': 'arm64',
-            },
             volumes+: [{
               configMap: {
                 name: $.homeassistant.configs.metadata.name,
