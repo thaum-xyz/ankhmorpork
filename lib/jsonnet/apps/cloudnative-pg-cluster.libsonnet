@@ -13,7 +13,7 @@ local defaults = {
   commonLabels:: {
     'app.kubernetes.io/name': 'postgres',
   },
-  instances: 1,
+  instances: 2,
   db: {
     name: 'postgres',
     user: '',

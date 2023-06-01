@@ -12,7 +12,7 @@ spec:
       owner: paperless
       secret:
         name: postgres-user
-  instances: 1
+  instances: 2
   monitoring:
     enablePodMonitor: true
   resources:
