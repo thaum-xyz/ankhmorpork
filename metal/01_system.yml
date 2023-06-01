@@ -58,6 +58,12 @@
       name: ubuntu-restricted-addons
       state: present
     when: '"GenuineIntel" in ansible_processor'
+  - name: Increase max_user_instances to prevent running out of inotify watches
+    sysctl:
+      name: fs.inotify.max_user_instances
+      value: 512
+      state: present
+      reload: yes
 
 - name: Install metrics collectors
   hosts: all

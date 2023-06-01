@@ -6,6 +6,10 @@
     - k3s-prereq
     - k3s-download
   tasks:
+    - name: Install legacy iptables
+      package:
+        name: iptables
+        state: present
     - name: Use legacy iptables on debian systems
       alternatives:
         name: iptables
