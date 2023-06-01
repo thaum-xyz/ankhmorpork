@@ -58,6 +58,7 @@
       name: linux-modules-extra-raspi
       state: present
     when:
+    - ansible_machine == "aarch64"
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('21.10', '>=')
   - name: Install ubuntu addons when necessary
@@ -72,21 +73,23 @@
   tasks:
   - name: Install dependencies
     package:
-      name: moreutils
+      name:
+      - moreutils
+      - cron
       state: present
   - name: Download apt_info textfile collector script
     get_url:
       url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/apt_info.py"
       dest: "/usr/local/bin/apt_info.py"
       mode: 0755
-  - name: Set cronjob for package manager (/etc/crontab)
+  - name: Set cronjob for package manager
     cron:
       cron_file: "/etc/cron.d/metrics"
       user: root
       name: "apt"
       minute: "13"
       job: "/usr/local/bin/apt_info.py | sponge /var/lib/node_exporter/apt.prom"
-  - when: enable_smartmon is defined
+  - when: enable_smartmon
     block:
     - name: Download smartmon textfile collector script
       get_url:
