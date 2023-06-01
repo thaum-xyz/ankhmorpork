@@ -53,14 +53,6 @@
       state: present
     with_items:
     - "{{ 'nfs-common' if (ansible_os_family | lower == 'debian') else 'nfs-utils' }}"
-  - name: Install VXLAN dependencies
-    package:
-      name: linux-modules-extra-raspi
-      state: present
-    when:
-    - ansible_machine == "aarch64"
-    - ansible_distribution == "Ubuntu"
-    - ansible_distribution_version is version('21.10', '>=')
   - name: Install ubuntu addons when necessary
     package:
       name: ubuntu-restricted-addons

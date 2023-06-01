@@ -113,9 +113,6 @@ spec:
         - mountPath: /backup
           name: backup
           readOnly: true
-      nodeSelector:
-        kubernetes.io/arch: amd64
-        storage.infra/main: "true"
       restartPolicy: Always
       serviceAccountName: sonarr
       volumes:

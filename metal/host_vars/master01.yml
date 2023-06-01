@@ -1,6 +1,0 @@
-system_mountpoints:
-  - description: k3s data
-    before: "k3s.service"
-    device: "/dev/disk/by-label/rancher"
-    mountpoint: "/var/lib/rancher"
-    type: "ext4"

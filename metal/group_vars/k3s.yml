@@ -33,22 +33,15 @@ k3s_agent_config:
   - "allowed-unsafe-sysctls=net.ipv4.tcp_adv_win_scale"
   - "feature-gates=ComponentSLIs=true" # Remove ComponentSLIs when k3s 1.27 is released
   node-label:
-  - "network.infra/type={{ network | default('slow') }}"
+  - "network.infra/type={{ network | default('fast') }}"
   - "storage.infra/local={{ 'false' if k3s_no_local_storage is defined else 'true' }}"
   kube-proxy-arg:
   - "metrics-bind-address=0.0.0.0"
   resolv-conf: "/run/systemd/resolve/resolv.conf"
-
-system_earlyoom_params: "-r 60 -m 4"
 
 system_mountpoints:
   - description: k3s data
     before: "k3s.service"
     device: "/dev/disk/by-label/rancher"
     mountpoint: "/var/lib/rancher"
-    type: "ext4"
-  - description: logs
-    before: "local-fs.target"
-    device: "/dev/disk/by-label/logs"
-    mountpoint: "/var/log"
     type: "ext4"

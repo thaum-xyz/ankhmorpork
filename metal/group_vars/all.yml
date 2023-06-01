@@ -13,6 +13,8 @@ ssh_kex:
 - curve25519-sha256@libssh.org
 - diffie-hellman-group-exchange-sha256
 
+system_earlyoom_params: "-r 60 -m 4"
+
 systemd_exporter_enable_ip_accounting: true
 systemd_exporter_enable_restart_count: true
 systemd_exporter_unit_blacklist: '.*.mount|user-runtime-dir@0.service'

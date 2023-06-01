@@ -89,7 +89,6 @@ spec:
       hostname: nas
       nodeSelector:
         kubernetes.io/arch: amd64
-        storage.infra/main: "true"
       restartPolicy: Always
       runtimeClassName: nvidia
       tolerations: []

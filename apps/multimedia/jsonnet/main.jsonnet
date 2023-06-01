@@ -7,12 +7,6 @@ local configYAML = (importstr '../settings.yaml');
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];
 
-local nodeSelector = {
-  'kubernetes.io/arch': 'amd64',
-  'storage.infra/main': 'true',
-};
-
-
 local lbService = {
   metadata+: {
     annotations+: {
@@ -32,27 +26,9 @@ local lbService = {
 local all = {
   sonarr: arr(config.sonarr) + {
     service+: lbService,
-    statefulset+: {
-      spec+: {
-        template+: {
-          spec+: {
-            nodeSelector: nodeSelector,
-          },
-        },
-      },
-    },
   },
   radarr: arr(config.radarr) + {
     service+: lbService,
-    statefulset+: {
-      spec+: {
-        template+: {
-          spec+: {
-            nodeSelector: nodeSelector,
-          },
-        },
-      },
-    },
   },
   prowlarr: prowlarr(config.prowlarr) + {
     service+: lbService,

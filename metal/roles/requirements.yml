@@ -4,9 +4,7 @@ roles:
   version: v1.0.52
 - name: jnv.unattended-upgrades
   version: v1.12.2
-- name: paulfantom.raspberry
 - name: paulfantom.system
-#- name: xanmanning.k3s
 
 collections:
 - name: devsec.hardening
