@@ -1,0 +1,56 @@
+# Config reference: https://github.com/minio/minio/tree/master/helm/minio
+
+## .data.rootUser and .data.rootPassword are mandatory,
+existingSecret: root-credentials
+
+drivesPerNode: 2
+replicas: 3
+
+persistence:
+  enabled: true
+  storageClass: local-path
+  accessMode: ReadWriteOnce
+  size: 200Gi
+
+ingress:
+  enabled: false
+
+consoleIngress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  path: /
+  hosts:
+    - minio.ankhmorpork.thaum.xyz
+  tls:
+    - secretName: minio-ankhmorpork-tls
+      hosts:
+        - minio.ankhmorpork.thaum.xyz
+
+resources:
+  requests:
+    memory: 2Gi
+
+environment:
+  MINIO_PROMETHEUS_URL: "http://prometheus-k8s.monitoring.svc:9090"
+  MINIO_PROMETHEUS_JOB_ID: "main-minio"
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    includeNode: true
+
+podDisruptionBudget:
+  enabled: true
+
+svcaccts:
+  - accessKey: thanos
+    existingSecret: thanos-sa-credentials
+    existingSecretKey: secretKey
+    user: minio
+
+buckets:
+  - name: thanos
+    policy: none
+    purge: false
