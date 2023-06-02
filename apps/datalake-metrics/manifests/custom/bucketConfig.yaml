@@ -7,10 +7,10 @@ metadata:
 spec:
   data:
   - remoteRef:
-      key: THANOS_LOCAL_S3_ACCESS_KEY
+      key: THANOS_MINIO_ACCESS_KEY
     secretKey: access_key
   - remoteRef:
-      key: THANOS_LOCAL_S3_SECRET_KEY
+      key: THANOS_MINIO_SECRET_KEY
     secretKey: secret_key
   refreshInterval: 1h
   secretStoreRef:
