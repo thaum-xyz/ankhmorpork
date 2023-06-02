@@ -110,6 +110,11 @@ spec:
   probeSelector: {}
   remoteWrite:
   - url: http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive
+    writeRelabelConfigs:
+    - action: drop
+      regex: ^apiserver_.*
+      sourceLabels:
+      - __name__
   replicas: 2
   resources:
     limits:
