@@ -51,6 +51,6 @@ svcaccts:
     user: minio
 
 buckets:
-  - name: thanos
+  - name: metrics
     policy: none
     purge: false
