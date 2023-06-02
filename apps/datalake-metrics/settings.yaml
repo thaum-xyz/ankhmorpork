@@ -21,13 +21,10 @@ objectStorageConfig:
     type: S3
     config:
       bucket: metrics
-      endpoint: 192.168.2.29:8010
+      endpoint: main-minio.minio-main.svc:9000
       access_key: {{ .access_key }}
       secret_key: {{ .secret_key }}
-      http_config:
-        insecure_skip_verify: true
-        tls_config:
-          insecure_skip_verify: true
+      insecure: true
     prefix: thanos
 
 # reference to htpasswd file storred in doppler. Content later available in Secret 'thanos-receive-ingress-auth'.
