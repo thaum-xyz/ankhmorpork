@@ -4,8 +4,6 @@ locales_present:
   - en_GB.UTF-8
 unattended_automatic_reboot: false
 
-enable_smartmon: true
-
 # Mitigate ubuntu 20.04 -> 22.04 upgrade issue by specifying common KEX algorithms across both ubuntu versions.
 # Without this change, ubuntu 22.04 will fail to start sshd daemon due to unsupported sntrup4591761x25519-sha512@tinyssh.org
 # KEX algorithm which was replaced by sntrup761x25519-sha512@openssh.com in ubuntu 22.

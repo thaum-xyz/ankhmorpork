@@ -45,3 +45,9 @@ system_mountpoints:
     device: "/dev/disk/by-label/rancher"
     mountpoint: "/var/lib/rancher"
     type: "ext4"
+  - description: k3s local storage
+    after: "var-lib-rancher.mount"
+    before: "k3s.service"
+    device: "/dev/disk/by-label/local-storage"
+    mountpoint: "/var/lib/rancher/k3s/storage"
+    type: "ext4"
