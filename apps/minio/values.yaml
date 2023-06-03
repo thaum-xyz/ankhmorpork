@@ -49,8 +49,21 @@ svcaccts:
     existingSecret: thanos-sa-credentials
     existingSecretKey: secretKey
     user: minio
+  - accessKey: k3s-db
+    existingSecret: k3s-db-sa-credentials
+    existingSecretKey: secretKey
+    user: minio
 
 buckets:
   - name: metrics
-    policy: none
     purge: false
+    policy: none
+    
+  - name: k3s-db
+    purge: false
+    policy: none
+    #  statements:
+    #    - resources:
+    #        - 'arn:aws:s3:::k3s-db/*'
+    #      actions:
+    #        - "s3:*"

@@ -22,7 +22,7 @@ spec:
             - $(S3_SECRET_KEY)
             env:
             - name: S3_ADDRESS
-              value: "http://192.168.2.29:8010"
+              value: "minio-main.minio-main.svc:9000"
             envFrom:
             - secretRef:
                 name: s3-credentials
@@ -59,7 +59,7 @@ spec:
             - OBJSTORE/$(S3_BUCKET)/$(S3_PREFIX)
             env:
             - name: S3_BUCKET
-              value: etcd
+              value: k3s-db
             - name: S3_PREFIX
               value: ankhmorpork
             volumeMounts:

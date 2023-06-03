@@ -6,6 +6,7 @@ resources:
   - release.yaml
   - secret-root-creds.yaml
   - secret-thanos-sa-creds.yaml
+  - secret-k3s-db-sa-creds.yaml
 configMapGenerator:
   - name: values
     files:
