@@ -22,7 +22,7 @@ spec:
             - $(S3_SECRET_KEY)
             env:
             - name: S3_ADDRESS
-              value: "minio-main.minio-main.svc:9000"
+              value: "http://main-minio.minio-main.svc:9000"
             envFrom:
             - secretRef:
                 name: s3-credentials
