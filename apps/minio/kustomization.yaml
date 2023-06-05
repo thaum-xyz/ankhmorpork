@@ -1,12 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: minio-main
+namespace: minio
 resources:
   - repository.yaml
   - release.yaml
   - secret-root-creds.yaml
   - secret-thanos-sa-creds.yaml
   - secret-k3s-db-sa-creds.yaml
+  - prometheus-rules.yaml
 configMapGenerator:
   - name: values
     files:

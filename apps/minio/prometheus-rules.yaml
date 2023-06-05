@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  groups:
+  - name: minio-alerts
+    rules:
+    - alert: NodesOffline
+      expr: avg_over_time(minio_cluster_nodes_offline_total{namespace="minio"}[5m]) > 0
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Node down in MinIO deployment"
+        description: "Node(s) in cluster {{ $labels.instance }} offline for more than 5 minutes"
+
+    - alert: DisksOffline
+      expr: avg_over_time(minio_cluster_disk_offline_total{namespace="minio"}[5m]) > 0
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Disks down in MinIO deployment"
+        description: "Disks(s) in cluster {{ $labels.instance }} offline for more than 5 minutes"
