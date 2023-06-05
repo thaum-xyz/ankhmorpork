@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: topolvm
-      version: "0.7.2"
+      version: "11.2.1"
       sourceRef:
         kind: HelmRepository
         name: topolvm
