@@ -12,7 +12,7 @@ metadata:
   labels:
     app.kubernetes.io/name: photoprism
     app.kubernetes.io/version: "221118"
-    probe: enabled
+    #probe: enabled
     reloader.homer/enabled: "true"
   name: photoprism
   namespace: photoprism
