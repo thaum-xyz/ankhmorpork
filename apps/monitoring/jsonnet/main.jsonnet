@@ -252,12 +252,6 @@ local kp =
       local prober = {
         url: 'blackbox-exporter.' + $.values.common.namespace + '.svc:19115',
       },
-      promDemoProbe: probe(
-        probeMetadata { name: 'prometheus-demo' },
-        prober,
-        'http_2xx',
-        $.values.blackboxExporter.probes.promDemo
-      ),
       thaumProbe: probe(
         probeMetadata { name: 'thaum-sites' },
         prober,

@@ -101,24 +101,12 @@
     },
     replicas: 2,
     probes: {
-      promDemo: {
-        staticConfig: {
-          static: [
-            'https://demo.do.prometheus.io/',
-            'https://prometheus.demo.do.prometheus.io/-/healthy',
-            'https://alertmanager.demo.do.prometheus.io/-/healthy',
-            'https://node.demo.do.prometheus.io/',
-            'https://grafana.demo.do.prometheus.io/api/health',
-          ],
-          labels: { environment: 'prometheus.io' },
-        },
-      },
       thaumSites: {
         staticConfig: {
           static: [
             'https://zmc.krupa.net.pl/',
           ],
-          labels: { environment: 'krupa.net.pl' },
+          labels: { environment: 'lancre' },
         },
       },
       ingress: {

@@ -17,7 +17,7 @@ spec:
   targets:
     staticConfig:
       labels:
-        environment: krupa.net.pl
+        environment: lancre
         module: http_2xx
       static:
       - https://zmc.krupa.net.pl/
