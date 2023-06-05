@@ -13,10 +13,7 @@ data:
         192.168.2.29 qnap.ankhmorpork.thaum.xyz
         192.168.2.30 k8sapi.ankhmorpork.thaum.xyz
         192.168.2.30 master01.ankhmorpork.thaum.xyz
-        192.168.2.31 node01.ankhmorpork.thaum.xyz
-        192.168.2.32 node02.ankhmorpork.thaum.xyz
-        192.168.2.33 node03.ankhmorpork.thaum.xyz
-        192.168.2.34 node04.ankhmorpork.thaum.xyz
+        192.168.2.32 master02.ankhmorpork.thaum.xyz
         192.168.2.40 metal01.ankhmorpork.thaum.xyz
         192.168.2.41 metal02.ankhmorpork.thaum.xyz
         ### local ingress START ###
