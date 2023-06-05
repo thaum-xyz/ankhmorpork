@@ -5,9 +5,9 @@
 
 master01 ansible_host=192.168.2.30
 master02 ansible_host=192.168.2.32
+master03  ansible_host=192.168.2.33
 
 metal01  ansible_host=192.168.2.40
-metal02  ansible_host=192.168.2.41
 
 [nvidia]
 metal01
@@ -17,8 +17,8 @@ master01
 
 [k3s_nodes]
 #node0[1:2]
-master02  # For now run this as a worker node
-metal0[1:2]
+master0[2:3]  # For now run this as worker nodes
+metal01
 
 [k3s:children]
 k3s_control_plane

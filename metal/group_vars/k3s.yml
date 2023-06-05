@@ -42,12 +42,12 @@ k3s_agent_config:
 system_mountpoints:
   - description: k3s data
     before: "k3s.service"
-    device: "/dev/disk/by-label/rancher"
+    device: "/dev/ubuntu-vg/rancher"
     mountpoint: "/var/lib/rancher"
     type: "ext4"
   - description: k3s local storage
     after: "var-lib-rancher.mount"
     before: "k3s.service"
-    device: "/dev/disk/by-label/local-storage"
+    device: "/dev/secondary-vg/local-storage"
     mountpoint: "/var/lib/rancher/k3s/storage"
-    type: "ext4"
+    type: "xfs"
