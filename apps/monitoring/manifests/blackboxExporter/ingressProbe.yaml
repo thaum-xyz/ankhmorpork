@@ -20,6 +20,14 @@ spec:
         any: true
       relabelingConfigs:
       - action: replace
+        regex: (.+);(.+)
+        replacement: ${1}://${2}
+        separator: ;
+        sourceLabels:
+        - __meta_kubernetes_ingress_scheme
+        - __meta_kubernetes_ingress_host
+        targetLabel: __param_target
+      - action: replace
         regex: (.+);(.+);(.+)
         replacement: ${1}://${2}/${3}
         separator: ;
