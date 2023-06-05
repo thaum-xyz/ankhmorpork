@@ -899,7 +899,7 @@ local kp =
           indicator: {
             bool_gauge: {
               metric: 'probe_success',
-              grouping: ['target'],
+              grouping: ['instance'],
             },
           },
         },

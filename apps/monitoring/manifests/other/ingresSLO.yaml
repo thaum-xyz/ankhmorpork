@@ -7,7 +7,7 @@ spec:
   indicator:
     bool_gauge:
       grouping:
-      - target
+      - instance
       metric: probe_success
   target: "99.0"
   window: 7d
