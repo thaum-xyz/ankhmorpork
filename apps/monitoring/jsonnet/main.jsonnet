@@ -362,11 +362,13 @@ local kp =
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
           remoteWrite: [{
             url: 'http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive',
-            writeRelabelConfigs: [{
-              sourceLabels: ['__name__'],
-              regex: '^apiserver_.*',
-              action: 'drop',
-            }],
+            writeRelabelConfigs: [
+              {
+                sourceLabels: ['__name__'],
+                regex: '^apiserver_.*|longhorn_.*|workqueue_.*|etcd_.*|nginx_.*|storage_operation_.*|rest_client_.*|cnpg_pg_settings_setting|container_memory_failures_total',
+                action: 'drop',
+              },
+            ],
           }],
 
           // remoteRead: [{

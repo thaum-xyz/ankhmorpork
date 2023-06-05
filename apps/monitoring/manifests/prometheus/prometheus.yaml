@@ -112,7 +112,7 @@ spec:
   - url: http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive
     writeRelabelConfigs:
     - action: drop
-      regex: ^apiserver_.*
+      regex: ^apiserver_.*|longhorn_.*|workqueue_.*|etcd_.*|nginx_.*|storage_operation_.*|rest_client_.*|cnpg_pg_settings_setting|container_memory_failures_total
       sourceLabels:
       - __name__
   replicas: 2
