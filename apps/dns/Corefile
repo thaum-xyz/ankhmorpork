@@ -11,6 +11,7 @@
     192.168.2.30 k8sapi.ankhmorpork.thaum.xyz
     192.168.2.30 master01.ankhmorpork.thaum.xyz
     192.168.2.32 master02.ankhmorpork.thaum.xyz
+    192.168.2.33 master03.ankhmorpork.thaum.xyz
     192.168.2.40 metal01.ankhmorpork.thaum.xyz
     192.168.2.41 metal02.ankhmorpork.thaum.xyz
     ### local ingress START ###
@@ -19,9 +20,15 @@
     192.168.2.91 grafana.ankhmorpork.thaum.xyz
     192.168.2.91 prometheus.ankhmorpork.thaum.xyz
     192.168.2.91 alertmanager.ankhmorpork.thaum.xyz
+    192.168.2.91 pyrra.ankhmorpork.thaum.xyz
     192.168.2.91 home.ankhmorpork.thaum.xyz
-    192.168.2.91 seek.ankhmorpork.thaum.xyz
-    192.168.2.91 push.ankhmopork.thaum.xyz
+    192.168.2.91 metrics.datalake.ankhmorpork.thaum.xyz
+    192.168.2.91 flux.ankhmorpork.thaum.xyz
+    192.168.2.91 photo.ankhmorpork.thaum.xyz
+    192.168.2.91 longhorn.ankhmorpork.thaum.xyz
+    192.168.2.91 cats.ankhmorpork.thaum.xyz
+    192.168.2.91 minio.ankhmorpork.thaum.xyz
+    192.168.2.91 longhorn.ankhmorpork.thaum.xyz
     192.168.2.91 portal.krupa.net.pl
     192.168.2.91 papers.krupa.net.pl
     192.168.2.91 recipes.krupa.net.pl
