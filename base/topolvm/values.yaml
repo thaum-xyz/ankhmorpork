@@ -21,7 +21,7 @@ node:
   prometheus:
     podMonitor:
       enabled: true
-  priorityClassName: node-critical
+  priorityClassName: system-node-critical
 
 controller:
   storageCapacityTracking:
@@ -61,4 +61,7 @@ podSecurityPolicy:
   create: false
 
 cert-manager:
+  enabled: false
+
+priorityClass:
   enabled: false
