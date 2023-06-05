@@ -9,6 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-url: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
     nginx.ingress.kubernetes.io/session-cookie-hash: sha1
     nginx.ingress.kubernetes.io/session-cookie-name: routing-cookie
+    probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.png
     reloader.homer/name: alertmanager
@@ -18,7 +19,6 @@ metadata:
     app.kubernetes.io/name: alertmanager
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 0.25.0
-    probe-uri: /-/healthy
     reloader.homer/enabled: "true"
   name: alertmanager
   namespace: monitoring

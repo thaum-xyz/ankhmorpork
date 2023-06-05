@@ -26,7 +26,7 @@ spec:
         sourceLabels:
         - __meta_kubernetes_ingress_scheme
         - __meta_kubernetes_ingress_host
-        - __meta_kubernetes_ingress_label_probe_uri
+        - __meta_kubernetes_ingress_annotation_probe_uri
         targetLabel: __param_target
       selector:
         matchLabels:

@@ -7,6 +7,7 @@ metadata:
       CRDs
     nginx.ingress.kubernetes.io/auth-signin: https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri
     nginx.ingress.kubernetes.io/auth-url: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
+    probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.png
     reloader.homer/name: prometheus
@@ -16,7 +17,6 @@ metadata:
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 2.42.0
-    probe-uri: /-/healthy
     reloader.homer/enabled: "true"
   name: prometheus
   namespace: monitoring

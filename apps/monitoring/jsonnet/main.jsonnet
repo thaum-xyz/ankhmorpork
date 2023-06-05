@@ -46,10 +46,10 @@ local ingress(metadata, domain, service) = {
       'reloader.homer/group': 'Administration',
       'reloader.homer/logo': 'https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.png',  // Default to prometheus logo
       'reloader.homer/name': $.metadata.name,
+      'probe-uri': '/-/healthy',
     },
     labels+: {
       'reloader.homer/enabled': 'true',
-      'probe-uri': '/-/healthy',
     },
   },
   spec: {

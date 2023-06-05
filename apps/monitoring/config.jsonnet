@@ -130,7 +130,7 @@
           },
           namespaceSelector: { any: true },
           relabelingConfigs: [{
-            sourceLabels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host', '__meta_kubernetes_ingress_label_probe_uri'],
+            sourceLabels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host', '__meta_kubernetes_ingress_annotation_probe_uri'],
             separator: ';',
             regex: '(.+);(.+);(.+)',
             targetLabel: '__param_target',
