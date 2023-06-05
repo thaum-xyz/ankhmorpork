@@ -14,7 +14,7 @@ metadata:
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
     app.kubernetes.io/version: 2023.5.4
-    probe: enabled
+    #probe: enabled
     reloader.homer/enabled: "true"
   name: homeassistant
   namespace: homeassistant
