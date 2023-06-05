@@ -1,0 +1,63 @@
+# Config reference: https://github.com/topolvm/topolvm/blob/main/charts/topolvm/values.yaml
+
+scheduler:
+  enabled: false
+
+lvmd:
+  # lvmd.managed -- If true, set up lvmd service with DaemonSet.
+  managed: true
+  deviceClasses:
+    - name: main
+      volume-group: ubuntu-vg
+      spare-gb: 20
+    - name: secondary
+      volume-group: secondary-vg
+      default: true
+      spare-gb: 5
+
+node:
+  metrics:
+    enabled: true
+  prometheus:
+    podMonitor:
+      enabled: true
+  nodeSelector:
+    kubernetes.io/hostname: master02  # For testing only
+  priorityClassName: node-critical
+
+controller:
+  storageCapacityTracking:
+    enabled: true
+  prometheus:
+    podMonitor:
+      enabled: true
+  priorityClassName: system-cluster-critical
+
+storageClasses:
+  - name: lvm-main
+    storageClass:
+      fsType: xfs
+      reclaimPolicy: Delete
+      annotations: {}
+      isDefaultClass: false
+      volumeBindingMode: WaitForFirstConsumer
+      allowVolumeExpansion: true
+      additionalParameters:
+        "topolvm.io/device-class": "main"
+  - name: lvm-secondary
+    storageClass:
+      fsType: xfs
+      reclaimPolicy: Delete
+      annotations: {}
+      isDefaultClass: false
+      volumeBindingMode: WaitForFirstConsumer
+      allowVolumeExpansion: true
+      additionalParameters:
+        "topolvm.io/device-class": "secondary"
+
+webhook:
+  podMutatingWebhook:
+    enabled: false
+
+cert-manager:
+  enabled: false
