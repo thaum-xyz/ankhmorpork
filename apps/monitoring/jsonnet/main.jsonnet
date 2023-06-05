@@ -372,6 +372,11 @@ local kp =
 
           enforcedNamespaceLabel: 'namespace',
           excludedFromEnforcement: [
+            //{
+            //  resource: 'probes',
+            //  namespace: $.values.common.namespace,
+            //  name: 'ingress',
+            //},
             {
               resource: 'servicemonitors',
               namespace: $.values.common.namespace,
@@ -881,6 +886,24 @@ local kp =
         },
         mixin: thaumMixin,
       }).prometheusRules,
+      ingresSLO: {
+        apiVersion: 'pyrra.dev/v1alpha1',
+        kind: 'ServiceLevelObjective',
+        metadata: {
+          name: 'blackbox-probe-success',
+          namespace: 'monitoring',
+        },
+        spec: {
+          target: '99.0',
+          window: '7d',
+          indicator: {
+            bool_gauge: {
+              metric: 'probe_success',
+              grouping: ['target'],
+            },
+          },
+        },
+      },
     },
   } +
   // kube-linter annotations need to be added after all objects are created

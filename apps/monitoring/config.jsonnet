@@ -200,8 +200,8 @@
     },
   },
   pyrra+: {
-    version: '0.6.2',
-    image: 'ghcr.io/pyrra-dev/pyrra:v0.6.2',
+    version: '0.6.3',
+    image: 'ghcr.io/pyrra-dev/pyrra:v0.6.3',
     namespace: 'monitoring',
     resources: {
       requests: { cpu: '100m', memory: '30Mi' },

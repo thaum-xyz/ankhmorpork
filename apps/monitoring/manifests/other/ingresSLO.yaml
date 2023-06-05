@@ -1,0 +1,13 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  name: blackbox-probe-success
+  namespace: monitoring
+spec:
+  indicator:
+    bool_gauge:
+      grouping:
+      - target
+      metric: probe_success
+  target: "99.0"
+  window: 7d
