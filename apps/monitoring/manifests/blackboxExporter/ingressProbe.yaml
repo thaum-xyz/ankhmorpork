@@ -20,13 +20,16 @@ spec:
         any: true
       relabelingConfigs:
       - action: replace
-        regex: (.+);(.+)
-        replacement: ${1}://${2}/
+        regex: (.+);(.+);(.+)
+        replacement: ${1}://${2}/${3}
         separator: ;
         sourceLabels:
         - __meta_kubernetes_ingress_scheme
         - __meta_kubernetes_ingress_host
+        - __meta_kubernetes_ingress_label_probe_uri
         targetLabel: __param_target
       selector:
         matchLabels:
           probe: enabled
+  tlsConfig:
+    insecureSkipVerify: true

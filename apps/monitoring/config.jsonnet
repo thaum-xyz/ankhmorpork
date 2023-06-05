@@ -121,35 +121,6 @@
           labels: { environment: 'krupa.net.pl' },
         },
       },
-      ankhmorpork: {
-        staticConfig: {
-          static: [
-            'https://192.168.2.29/redirect.html',
-            //'https://prometheus.ankhmorpork.thaum.xyz/-/healthy',
-            //'https://alertmanager.ankhmorpork.thaum.xyz/-/healthy',
-            //'https://grafana.ankhmorpork.thaum.xyz/api/health',
-          ],
-          labels: { environment: 'ankhmorpork' },
-          relabelingConfigs: [
-            {
-              sourceLabels: ['instance'],
-              targetLabel: 'instance',
-              regex: 'https://192.168.2.29/redirect.html',
-              replacement: 'qnap.ankhmorpork.thaum.xyz',
-            },
-            /*{
-              sourceLabels: ['instance'],
-              targetLabel: 'instance',
-              regex: '$1/-/healthy',
-            },
-            {
-              sourceLabels: ['instance'],
-              targetLabel: 'instance',
-              regex: '$1/api/health',
-            },*/
-          ],
-        },
-      },
       ingress: {
         ingress: {
           selector: {
@@ -159,11 +130,11 @@
           },
           namespaceSelector: { any: true },
           relabelingConfigs: [{
-            sourceLabels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host'],
+            sourceLabels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host', '__meta_kubernetes_ingress_label_probe_uri'],
             separator: ';',
-            regex: '(.+);(.+)',
+            regex: '(.+);(.+);(.+)',
             targetLabel: '__param_target',
-            replacement: '${1}://${2}/',
+            replacement: '${1}://${2}/${3}',
             action: 'replace',
           }],
         },

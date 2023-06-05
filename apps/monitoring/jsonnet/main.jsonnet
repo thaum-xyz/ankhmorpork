@@ -49,6 +49,7 @@ local ingress(metadata, domain, service) = {
     },
     labels+: {
       'reloader.homer/enabled': 'true',
+      'probe-uri': '/-/healthy',
     },
   },
   spec: {
@@ -268,12 +269,6 @@ local kp =
         prober,
         'http_2xx',
         $.values.blackboxExporter.probes.ingress
-      ),
-      ankhmorporkProbe: probe(
-        probeMetadata { name: 'ankhmorpork' },
-        prober,
-        'http_2xx',
-        $.values.blackboxExporter.probes.ankhmorpork
       ) + {
         spec+: {
           tlsConfig: {
