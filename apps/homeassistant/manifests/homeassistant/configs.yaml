@@ -234,7 +234,7 @@ data:
           projector_screen:
             device_class: blind
             friendly_name: "Projector Screen"
-            value_template: "{{ not (states('binary_sensor.sonoff_a48004cd69') | bool) }}"
+            value_template: "{{ not (states('binary_sensor.projector_screen_sensor') | bool) }}"
             open_cover:
               service: remote.send_command
               target:
