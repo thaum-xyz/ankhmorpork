@@ -59,7 +59,7 @@ spec:
             memory: 3Gi
         volumeMounts:
         - mountPath: /config
-          name: plex-db
+          name: library
         - mountPath: /transcode
           name: transcode
         - mountPath: /backup
@@ -99,9 +99,6 @@ spec:
       - name: tv
         persistentVolumeClaim:
           claimName: tv
-      - name: plex-db
-        persistentVolumeClaim:
-          claimName: plex-db
       - name: backup
         persistentVolumeClaim:
           claimName: plex-backup
@@ -111,3 +108,13 @@ spec:
         secret:
           optional: true
           secretName: plex-token
+  volumeClaimTemplates:
+  - metadata:
+      name: library
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 45Gi
+      storageClassName: lvm-secondary
