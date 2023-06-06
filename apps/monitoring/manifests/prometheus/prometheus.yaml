@@ -94,7 +94,6 @@ spec:
   image: quay.io/prometheus/prometheus:v2.42.0
   nodeSelector:
     kubernetes.io/os: linux
-    storage.infra/local: "true"
   podMetadata:
     annotations:
       parca.dev/scrape: "true"
@@ -124,7 +123,7 @@ spec:
       cpu: 500m
       memory: 1800Mi
   retention: 31d
-  retentionSize: 40GB
+  retentionSize: 35GB
   ruleNamespaceSelector: {}
   ruleSelector: {}
   serviceAccountName: prometheus-k8s
@@ -133,12 +132,12 @@ spec:
   storage:
     volumeClaimTemplate:
       metadata:
-        name: promdata
+        name: prometheus
       spec:
         accessModes:
         - ReadWriteOnce
         resources:
           requests:
             storage: 40Gi
-        storageClassName: local-path
+        storageClassName: lvm-secondary
   version: 2.42.0

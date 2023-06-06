@@ -338,10 +338,7 @@ local kp =
           // TODO: move ingress and externalURL to an addon
           externalUrl: 'https://prometheus.' + $.values.common.baseDomain,
           retention: '31d',
-          retentionSize: '40GB',
-          nodeSelector+: {
-            'storage.infra/local': 'true',
-          },
+          retentionSize: '35GB',
           affinity+: $.values.prometheus.affinity,
 
           podMetadata+: parcaEnable,
@@ -450,10 +447,10 @@ local kp =
           storage: {
             volumeClaimTemplate: {
               metadata: {
-                name: 'promdata',
+                name: 'prometheus',
               },
               spec: {
-                storageClassName: 'local-path',  // For performance reasons use local disk
+                storageClassName: 'lvm-secondary',  // For performance reasons use local disk
                 accessModes: ['ReadWriteOnce'],
                 resources: {
                   requests: { storage: '40Gi' },

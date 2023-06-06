@@ -119,20 +119,11 @@
           namespaceSelector: { any: true },
           relabelingConfigs: [
             {
-              sourceLabels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host'],
-              separator: ';',
-              regex: '(.+);(.+)',
-              targetLabel: '__param_target',
-              replacement: '${1}://${2}',
-              action: 'replace',
-            },
-            {
-              sourceLabels: ['__meta_kubernetes_ingress_scheme', '__meta_kubernetes_ingress_host', '__meta_kubernetes_ingress_annotation_probe_uri'],
-              separator: ';',
-              regex: '(.+);(.+);(.+)',
-              targetLabel: '__param_target',
-              replacement: '${1}://${2}/${3}',
-              action: 'replace',
+              // Care only about / path exposed by ingress
+              // FIXME: this should be changed to care either about / or path specified in probe-uri annotation
+              sourceLabels: ['__meta_kubernetes_ingress_path'],
+              regex: '/',
+              action: 'keep',
             },
           ],
         },
