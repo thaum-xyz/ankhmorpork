@@ -98,21 +98,6 @@ spec:
         - mountPath: /app
           name: config
           readOnly: true
-      initContainers:
-      - args:
-        - -c
-        - cd /config && unzip $(find /backup -type f -exec stat -c '%Y :%y %n' {}
-          + | sort -nr | head -n1 | cut -d' ' -f4) && chown 1000:1000 /config/*
-        command:
-        - /bin/sh
-        image: quay.io/paulfantom/rsync
-        name: restore
-        volumeMounts:
-        - mountPath: /config
-          name: config
-        - mountPath: /backup
-          name: backup
-          readOnly: true
       restartPolicy: Always
       serviceAccountName: radarr
       volumes:

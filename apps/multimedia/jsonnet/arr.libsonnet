@@ -37,13 +37,24 @@ local defaults = {
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
   storage: {
-    name: defaults.name + '-backup',
-    pvcSpec: {
-      accessModes: ['ReadWriteMany'],
-      resources: {
-        requests: {
-          storage: '1Gi',
+    config: {
+      pvcSpec: {
+        accessModes: ['ReadWriteOnce'],
+        resources: {
+          requests: {
+            storage: '1Gi',
+          },
         },
+      },
+    },
+    backups: {
+      pvcSpec: {
+        //  accessModes: ['ReadWriteMany'],
+        //  resources: {
+        //    requests: {
+        //      storage: '1Gi',
+        //    },
+        //  },
       },
     },
   },
@@ -112,13 +123,14 @@ function(params) {
     },
   },
 
-  pvc: {
+  [if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then 'backupsPVC']: {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',
     metadata: $._metadata {
-      name: $._config.storage.name,
+      //name: 'backups',
+      name: $._metadata.name + '-config-backup',
     },
-    spec: $._config.storage.pvcSpec,
+    spec: $._config.storage.backups.pvcSpec,
   },
 
   statefulset: {
@@ -216,7 +228,7 @@ function(params) {
       }],
     },
 
-    local init = {
+    /*local init = {
       command: ['/bin/sh'],
       args: ['-c', "cd /config && unzip $(find /backup -type f -exec stat -c '%Y :%y %n' {} + | sort -nr | head -n1 | cut -d' ' -f4) && chown 1000:1000 /config/*"],
       image: 'quay.io/paulfantom/rsync',
@@ -232,7 +244,7 @@ function(params) {
           readOnly: true,
         },
       ],
-    },
+    },*/
 
     apiVersion: 'apps/v1',
     kind: 'StatefulSet',
@@ -249,21 +261,11 @@ function(params) {
           labels: $._config.commonLabels,
         },
         spec: {
-          initContainers: [init],
+          //[if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then 'initContainers']: [init],
           containers: [c, e],
           restartPolicy: 'Always',
           serviceAccountName: $.serviceAccount.metadata.name,
           volumes: [
-            {
-              name: 'config',
-              emptyDir: {},  // TODO: This could be a volume temlate so restoring from backup on start wouldn't be needed
-            },
-            {
-              name: 'backup',
-              persistentVolumeClaim: {
-                claimName: $.pvc.metadata.name,
-              },
-            },
             {
               name: 'multimedia',
               persistentVolumeClaim: {
@@ -276,9 +278,28 @@ function(params) {
                 claimName: $._config.downloadsPVCName,
               },
             },
+          ] + [
+            if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then
+              {
+                name: 'backup',
+                persistentVolumeClaim: {
+                  claimName: $.backupsPVC.metadata.name,
+                },
+              }
+            else
+              {
+                name: 'backup',
+                emptyDir: {},
+              },
           ],
         },
       },
+      volumeClaimTemplates: [{
+        metadata: {
+          name: 'config',
+        },
+        spec: $._config.storage.config.pvcSpec,
+      }],
     },
   },
 }

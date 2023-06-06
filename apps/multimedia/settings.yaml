@@ -32,6 +32,7 @@ radarr:
   port: 7878
   multimediaPVCName: "movies"
   downloadsPVCName: "downloaded"
+  backupPVCName: "radarr-config-backup"
   resources:
     requests:
       cpu: 35m
@@ -40,14 +41,23 @@ radarr:
     #  cpu: 100m
     #  memory: 400Mi
   storage:
-    name: radarr-config-backup
-    pvcSpec:
-      storageClassName: qnap-nfs
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 300Mi
+    config:
+      pvcSpec:
+        storageClassName: longhorn
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+    backups:
+      pvcSpec:
+        storageClassName: qnap-nfs
+        accessModes:
+        #- ReadWriteMany
+        - ReadWriteOnce  # FIXME
+        resources:
+          requests:
+            storage: 300Mi
 sonarr:
   name: sonarr
   version: "3.0.10.1567-ls183"  # application-version-from-github: linuxserver/docker-sonarr
@@ -56,6 +66,7 @@ sonarr:
   port: 8989
   multimediaPVCName: "tv"
   downloadsPVCName: "downloaded"
+  backupPVCName: "sonarr-config-backup"
   exporter:
     port: 9707
   resources:
@@ -66,11 +77,20 @@ sonarr:
 #      cpu: 100m
 #      memory: 4Gi
   storage:
-    name: sonarr-config-backup
-    pvcSpec:
-      storageClassName: qnap-nfs
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 300Mi
+    config:
+      pvcSpec:
+        storageClassName: longhorn
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 3Gi
+    backups:
+      pvcSpec:
+        storageClassName: qnap-nfs
+        accessModes:
+        #- ReadWriteMany
+        - ReadWriteOnce  # FIXME
+        resources:
+          requests:
+            storage: 300Mi
