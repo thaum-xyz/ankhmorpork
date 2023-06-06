@@ -57,6 +57,8 @@ spec:
         - mountPath: /opt/valheim
           name: data
           subPath: serverfiles
+        - mountPath: /config/backups
+          name: backups
       - args:
         - --collector.disable-defaults
         - --collector.supervisord
@@ -77,7 +79,10 @@ spec:
       serviceAccountName: valheim
       nodeSelector:
         kubernetes.io/arch: amd64
-        storage.infra/local: "true"
+      volumes:
+      - name: backups
+        persistentVolumeClaim:
+          claimName: backups
   volumeClaimTemplates:
   - metadata:
       name: data
@@ -87,4 +92,4 @@ spec:
       resources:
         requests:
           storage: 7Gi
-      storageClassName: local-path
+      storageClassName: lvm-secondary
