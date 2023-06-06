@@ -5,13 +5,13 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: prowlarr
     app.kubernetes.io/part-of: prowlarr
-    app.kubernetes.io/version: v0.4.0.1802
-  name: prowlarr-config
+    app.kubernetes.io/version: v1.5.2.3484
+  name: prowlarr-backup
   namespace: multimedia
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
-      storage: 200Mi
+      storage: 300Mi
   storageClassName: qnap-nfs

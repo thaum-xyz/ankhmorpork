@@ -1,11 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: prowlarr
     app.kubernetes.io/part-of: prowlarr
-    app.kubernetes.io/version: v0.4.0.1802
+    app.kubernetes.io/version: v1.5.2.3484
   name: prowlarr
   namespace: multimedia
 spec:
@@ -15,21 +15,22 @@ spec:
       app.kubernetes.io/component: server
       app.kubernetes.io/name: prowlarr
       app.kubernetes.io/part-of: prowlarr
-  strategy:
-    type: Recreate
+  serviceName: prowlarr
   template:
     metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: prowlarr
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: prowlarr
         app.kubernetes.io/part-of: prowlarr
-        app.kubernetes.io/version: v0.4.0.1802
+        app.kubernetes.io/version: v1.5.2.3484
     spec:
       containers:
       - env:
         - name: TZ
           value: UTC
-        image: ghcr.io/k8s-at-home/prowlarr:v0.4.0.1802
+        image: ghcr.io/onedr0p/prowlarr:1.5.2.3484
         imagePullPolicy: IfNotPresent
         name: prowlarr
         ports:
@@ -56,9 +57,21 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: config
+        - mountPath: /config/Backups
+          name: backup
       restartPolicy: Always
       serviceAccountName: prowlarr
       volumes:
-      - name: config
+      - name: backup
         persistentVolumeClaim:
-          claimName: prowlarr-config
+          claimName: prowlarr-backup
+  volumeClaimTemplates:
+  - metadata:
+      name: config
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: longhorn

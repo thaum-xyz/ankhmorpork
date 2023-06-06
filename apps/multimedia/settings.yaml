@@ -4,8 +4,9 @@ common:
   namespace: &namespace "multimedia"
 
 prowlarr:
-  version: "v0.4.0.1802"
-  image: "ghcr.io/k8s-at-home/prowlarr:v0.4.0.1802"
+  version: "v1.5.2.3484"
+  #image: "ghcr.io/k8s-at-home/prowlarr:v0.4.0.1802"
+  image: "ghcr.io/onedr0p/prowlarr:1.5.2.3484"
   namespace: *namespace
   resources:
     requests:
@@ -15,24 +16,31 @@ prowlarr:
     #  cpu: 250m
     #  memory: 250Mi
   storage:
-    name: prowlarr-config
-    pvcSpec:
-      storageClassName: qnap-nfs
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 200Mi
+    config:
+      pvcSpec:
+        storageClassName: longhorn
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+    backups:
+      pvcSpec:
+        storageClassName: qnap-nfs
+        accessModes:
+        - ReadWriteMany
+        resources:
+          requests:
+            storage: 300Mi
 
 radarr:
   name: radarr
-  version: "4.3.2.6857-ls164"  # application-version-from-github: linuxserver/docker-radarr
-  image: "lscr.io/linuxserver/radarr:4.3.2.6857-ls164"  # application-image-from-github: linuxserver/docker-radarr
+  version: "4.5.2.7388-ls174"  # application-version-from-github: linuxserver/docker-radarr
+  image: "lscr.io/linuxserver/radarr:4.5.2.7388-ls174"  # application-image-from-github: linuxserver/docker-radarr
   namespace: *namespace
   port: 7878
   multimediaPVCName: "movies"
   downloadsPVCName: "downloaded"
-  backupPVCName: "radarr-config-backup"
   resources:
     requests:
       cpu: 35m
@@ -60,13 +68,12 @@ radarr:
             storage: 300Mi
 sonarr:
   name: sonarr
-  version: "3.0.10.1567-ls183"  # application-version-from-github: linuxserver/docker-sonarr
-  image: "lscr.io/linuxserver/sonarr:3.0.10.1567-ls183"  # application-image-from-github: linuxserver/docker-sonarr
+  version: "3.0.10.1567-ls194"  # application-version-from-github: linuxserver/docker-sonarr
+  image: "lscr.io/linuxserver/sonarr:3.0.10.1567-ls194"  # application-image-from-github: linuxserver/docker-sonarr
   namespace: *namespace
   port: 8989
   multimediaPVCName: "tv"
   downloadsPVCName: "downloaded"
-  backupPVCName: "sonarr-config-backup"
   exporter:
     port: 9707
   resources:

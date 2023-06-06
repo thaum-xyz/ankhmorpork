@@ -17,13 +17,24 @@ local defaults = {
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
   storage: {
-    name: 'prowlarr-config',
-    pvcSpec: {
-      accessModes: ['ReadWriteOnce'],
-      resources: {
-        requests: {
-          storage: '1Gi',
+    config: {
+      pvcSpec: {
+        accessModes: ['ReadWriteOnce'],
+        resources: {
+          requests: {
+            storage: '1Gi',
+          },
         },
+      },
+    },
+    backups: {
+      pvcSpec: {
+        //  accessModes: ['ReadWriteMany'],
+        //  resources: {
+        //    requests: {
+        //      storage: '1Gi',
+        //    },
+        //  },
       },
     },
   },
@@ -54,25 +65,25 @@ function(params) {
     metadata: $._metadata,
     spec: {
       ports: [{
-        name: $.deployment.spec.template.spec.containers[0].ports[0].name,
-        targetPort: $.deployment.spec.template.spec.containers[0].ports[0].name,
-        port: $.deployment.spec.template.spec.containers[0].ports[0].containerPort,
+        name: $.statefulset.spec.template.spec.containers[0].ports[0].name,
+        targetPort: $.statefulset.spec.template.spec.containers[0].ports[0].name,
+        port: $.statefulset.spec.template.spec.containers[0].ports[0].containerPort,
       }],
       selector: $._config.selectorLabels,
       clusterIP: 'None',
     },
   },
 
-  pvc: {
+  [if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then 'backupsPVC']: {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',
     metadata: $._metadata {
-      name: $._config.storage.name,
+      name: $._metadata.name + '-backup',
     },
-    spec: $._config.storage.pvcSpec,
+    spec: $._config.storage.backups.pvcSpec,
   },
 
-  deployment: {
+  statefulset: {
     local c = {
       name: $._config.name,
       image: $._config.image,
@@ -104,35 +115,55 @@ function(params) {
           mountPath: '/config',
           name: 'config',
         },
+        {
+          mountPath: '/config/Backups',
+          name: 'backup',
+        },
       ],
       resources: $._config.resources,
     },
 
     apiVersion: 'apps/v1',
-    kind: 'Deployment',
+    kind: 'StatefulSet',
     metadata: $._metadata,
     spec: {
       replicas: 1,
-      strategy: { type: 'Recreate' },
       selector: { matchLabels: $._config.selectorLabels },
+      serviceName: $.service.metadata.name,
       template: {
         metadata: {
+          annotations: {
+            'kubectl.kubernetes.io/default-container': c.name,
+          },
           labels: $._config.commonLabels,
         },
         spec: {
           containers: [c],
           restartPolicy: 'Always',
           serviceAccountName: $.serviceAccount.metadata.name,
+
           volumes: [
-            {
-              name: 'config',
-              persistentVolumeClaim: {
-                claimName: $.pvc.metadata.name,
+            if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then
+              {
+                name: 'backup',
+                persistentVolumeClaim: {
+                  claimName: $.backupsPVC.metadata.name,
+                },
+              }
+            else
+              {
+                name: 'backup',
+                emptyDir: {},
               },
-            },
           ],
         },
       },
+      volumeClaimTemplates: [{
+        metadata: {
+          name: 'config',
+        },
+        spec: $._config.storage.config.pvcSpec,
+      }],
     },
   },
 }
