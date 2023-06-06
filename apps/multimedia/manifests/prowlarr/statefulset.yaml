@@ -29,7 +29,11 @@ spec:
       containers:
       - env:
         - name: TZ
-          value: UTC
+          value: Etc/UTC
+        - name: PUID
+          value: "568"
+        - name: GUID
+          value: "568"
         image: linuxserver/prowlarr:1.5.2.3484-ls19
         imagePullPolicy: IfNotPresent
         name: prowlarr

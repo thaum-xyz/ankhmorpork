@@ -88,10 +88,20 @@ function(params) {
       name: $._config.name,
       image: $._config.image,
       imagePullPolicy: 'IfNotPresent',
-      env: [{
-        name: 'TZ',
-        value: 'UTC',
-      }],
+      env: [
+        {
+          name: 'TZ',
+          value: 'Etc/UTC',
+        },
+        {
+          name: 'PUID',
+          value: '568',
+        },
+        {
+          name: 'GUID',
+          value: '568',
+        },
+      ],
       ports: [{
         containerPort: 9696,
         name: 'http',
