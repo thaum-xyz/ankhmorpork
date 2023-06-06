@@ -116,14 +116,22 @@ spec:
       restartPolicy: Always
       serviceAccountName: sonarr
       volumes:
-      - emptyDir: {}
-        name: config
-      - name: backup
-        persistentVolumeClaim:
-          claimName: sonarr-config-backup
       - name: multimedia
         persistentVolumeClaim:
           claimName: tv
       - name: downloads
         persistentVolumeClaim:
           claimName: downloaded
+      - name: backup
+        persistentVolumeClaim:
+          claimName: sonarr-config-backup
+  volumeClaimTemplates:
+  - metadata:
+      name: config
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 3Gi
+      storageClassName: longhorn
