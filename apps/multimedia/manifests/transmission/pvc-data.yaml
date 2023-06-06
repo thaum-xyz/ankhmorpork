@@ -9,4 +9,4 @@ spec:
   resources:
     requests:
       storage: 50Mi
-  storageClassName: qnap-nfs
+  storageClassName: qnap-nfs  # FIXME: migrate to longhorn

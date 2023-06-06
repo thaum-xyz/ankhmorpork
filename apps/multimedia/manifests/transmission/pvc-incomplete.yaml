@@ -9,4 +9,6 @@ spec:
   resources:
     requests:
       storage: 70Gi
-  storageClassName: local-path
+  # Ideally this should be on a remote storage. However since NFS doesn't offer an easy way
+  # to limit the size of the storage, I use local LVM storage instead.
+  storageClassName: lvm-secondary
