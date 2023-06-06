@@ -72,6 +72,18 @@ spec:
       for: 15m
       labels:
         severity: warning
+    - alert: KubeDeploymentRolloutStuck
+      annotations:
+        description: Rollout of deployment {{ $labels.namespace }}/{{ $labels.deployment
+          }} is not progressing for longer than 15 minutes.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubedeploymentrolloutstuck
+        summary: Deployment rollout is not progressing.
+      expr: |
+        kube_deployment_status_condition{condition="Progressing", status="false",job="kube-state-metrics"}
+        != 0
+      for: 15m
+      labels:
+        severity: warning
     - alert: KubeStatefulSetReplicasMismatch
       annotations:
         description: StatefulSet {{ $labels.namespace }}/{{ $labels.statefulset }}
@@ -264,26 +276,28 @@ spec:
     rules:
     - alert: KubeCPUQuotaOvercommit
       annotations:
-        description: Cluster has overcommitted CPU resource requests for Namespaces.
+        description: Cluster {{ $labels.cluster }}  has overcommitted CPU resource
+          requests for Namespaces.
         runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubecpuquotaovercommit
         summary: Cluster has overcommitted CPU resource requests.
       expr: |
-        sum(min without(resource) (kube_resourcequota{job="kube-state-metrics", type="hard", resource=~"(cpu|requests.cpu)"}))
+        sum(min without(resource) (kube_resourcequota{job="kube-state-metrics", type="hard", resource=~"(cpu|requests.cpu)"})) by (cluster)
           /
-        sum(kube_node_status_allocatable{resource="cpu", job="kube-state-metrics"})
+        sum(kube_node_status_allocatable{resource="cpu", job="kube-state-metrics"}) by (cluster)
           > 1.5
       for: 5m
       labels:
         severity: warning
     - alert: KubeMemoryQuotaOvercommit
       annotations:
-        description: Cluster has overcommitted memory resource requests for Namespaces.
+        description: Cluster {{ $labels.cluster }}  has overcommitted memory resource
+          requests for Namespaces.
         runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubememoryquotaovercommit
         summary: Cluster has overcommitted memory resource requests.
       expr: |
-        sum(min without(resource) (kube_resourcequota{job="kube-state-metrics", type="hard", resource=~"(memory|requests.memory)"}))
+        sum(min without(resource) (kube_resourcequota{job="kube-state-metrics", type="hard", resource=~"(memory|requests.memory)"})) by (cluster)
           /
-        sum(kube_node_status_allocatable{resource="memory", job="kube-state-metrics"})
+        sum(kube_node_status_allocatable{resource="memory", job="kube-state-metrics"}) by (cluster)
           > 1.5
       for: 5m
       labels:
