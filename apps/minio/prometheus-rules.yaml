@@ -7,7 +7,7 @@ spec:
   groups:
   - name: minio-alerts
     rules:
-    - alert: NodesOffline
+    - alert: MinioNodesOffline
       expr: avg_over_time(minio_cluster_nodes_offline_total{namespace="minio"}[5m]) > 0
       for: 10m
       labels:
@@ -16,7 +16,7 @@ spec:
         summary: "Node down in MinIO deployment"
         description: "Node(s) in cluster {{ $labels.instance }} offline for more than 5 minutes"
 
-    - alert: DisksOffline
+    - alert: MinioDisksOffline
       expr: avg_over_time(minio_cluster_disk_offline_total{namespace="minio"}[5m]) > 0
       for: 10m
       labels:
@@ -24,3 +24,51 @@ spec:
       annotations:
         summary: "Disks down in MinIO deployment"
         description: "Disks(s) in cluster {{ $labels.instance }} offline for more than 5 minutes"
+
+    - alert: MinioClusterAlmostOutOfSpace
+      expr:  (minio_cluster_capacity_usable_free_bytes / minio_cluster_capacity_usable_total_bytes * 100 < 3)
+      for: 30m
+      labels:
+        severity: critical
+      annotations:
+        summary: "MinIO cluster has less than 3% space left."
+        description: 'MinIO cluster {{ $labels.cluster }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.'
+    - alert: MinioClusterAlmostOutOfSpace
+      expr:  (minio_cluster_capacity_usable_free_bytes / minio_cluster_capacity_usable_total_bytes * 100 < 5)
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        summary: "MinIO cluster has less than 5% space left."
+        description: 'MinIO cluster {{ $labels.cluster }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.'
+    
+    - alert: MinioClusterSpaceFillingUp
+      expr: |
+        minio_cluster_capacity_usable_free_bytes
+        /
+        minio_cluster_capacity_usable_total_bytes * 100 < 10
+        and
+        predict_linear(
+          minio_cluster_capacity_usable_free_bytes[6h],
+          4 * 60 * 60
+        ) < 0
+      labels:
+        severity: critical
+      annotations:
+        summary: "MinIO cluster is predicted to run out of space within the next 4 hours."
+        description: 'MinIO cluster {{ $labels.cluster }} at {{ $labels.instance }} is filling up. Only {{ printf "%.2f" $value }}% available space left and is filling up.'
+    - alert: MinioClusterSpaceFillingUp
+      expr: |
+        minio_cluster_capacity_usable_free_bytes
+        /
+        minio_cluster_capacity_usable_total_bytes * 100 < 15
+        and
+        predict_linear(
+          minio_cluster_capacity_usable_free_bytes[6h],
+          24 * 60 * 60
+        ) < 0
+      labels:
+        severity: warning
+      annotations:
+        summary: "MinIO cluster is predicted to run out of space within the next 24 hours."
+        description: 'MinIO cluster {{ $labels.cluster }} at {{ $labels.instance }} is filling up. Only {{ printf "%.2f" $value }}% available space left and is filling up.'

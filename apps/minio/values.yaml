@@ -40,26 +40,26 @@ metrics:
   serviceMonitor:
     enabled: true
     includeNode: true
-  relabelConfigs:
-    metricRelabelings:
-    # Drop all metrics that are duplicated when scraped from all nodes
-    - sourceLabels: [__name__]
-      regex: 'minio_cluster_.*'
-      action: drop
-  relabelConfigsCluster:
-    metricRelabelings:
-    # Drop all metrics that should come directly from nodes
-    - sourceLabels: [__name__]
-      regex: 'minio_audit_.*|minio_inter_node_traffic_.*|minio_notify_current_send_in_progress|minio_s3_requests_.*|minio_software_.*'
-      action: drop
-    # Remove server label as it unnecesarily differentiates metrics
-    - action: labeldrop
-      regex: 'server'
-    # Add cluster label to all metrics
-    - sourceLabels: [__name__]
-      action: replace
-      replacement: 'main'
-      targetLabel: cluster
+    relabelConfigs:
+      metricRelabelings:
+      # Drop all metrics that are duplicated when scraped from all nodes
+      - sourceLabels: [__name__]
+        regex: 'minio_cluster_.*'
+        action: drop
+    relabelConfigsCluster:
+      metricRelabelings:
+      # Drop all metrics that should come directly from nodes
+      - sourceLabels: [__name__]
+        regex: 'minio_audit_.*|minio_inter_node_traffic_.*|minio_notify_current_send_in_progress|minio_s3_requests_.*|minio_software_.*'
+        action: drop
+      # Remove server label as it unnecesarily differentiates metrics
+      - action: labeldrop
+        regex: 'server'
+      # Add cluster label to all metrics
+      - sourceLabels: [__name__]
+        action: replace
+        replacement: 'main'
+        targetLabel: cluster
 
 
 podDisruptionBudget:
