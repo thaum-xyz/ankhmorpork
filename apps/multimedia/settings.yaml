@@ -4,9 +4,8 @@ common:
   namespace: &namespace "multimedia"
 
 prowlarr:
-  version: "v1.5.2.3484"
-  #image: "ghcr.io/k8s-at-home/prowlarr:v0.4.0.1802"
-  image: "ghcr.io/onedr0p/prowlarr:1.5.2.3484"
+  version: "v1.5.2.3484-ls19"
+  image: "linuxserver/prowlarr:1.5.2.3484-ls19"
   namespace: *namespace
   resources:
     requests:

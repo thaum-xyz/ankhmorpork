@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: prowlarr
     app.kubernetes.io/part-of: prowlarr
-    app.kubernetes.io/version: v1.5.2.3484
+    app.kubernetes.io/version: v1.5.2.3484-ls19
   name: prowlarr
   namespace: multimedia
 spec:
@@ -24,13 +24,13 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: prowlarr
         app.kubernetes.io/part-of: prowlarr
-        app.kubernetes.io/version: v1.5.2.3484
+        app.kubernetes.io/version: v1.5.2.3484-ls19
     spec:
       containers:
       - env:
         - name: TZ
           value: UTC
-        image: ghcr.io/onedr0p/prowlarr:1.5.2.3484
+        image: linuxserver/prowlarr:1.5.2.3484-ls19
         imagePullPolicy: IfNotPresent
         name: prowlarr
         ports:

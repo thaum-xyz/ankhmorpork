@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: prowlarr
     app.kubernetes.io/part-of: prowlarr
-    app.kubernetes.io/version: v1.5.2.3484
+    app.kubernetes.io/version: v1.5.2.3484-ls19
   name: prowlarr
   namespace: multimedia
 spec:
