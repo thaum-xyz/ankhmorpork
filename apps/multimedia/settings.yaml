@@ -4,8 +4,8 @@ common:
   namespace: &namespace "multimedia"
 
 prowlarr:
-  version: "v1.5.2.3484-ls19"
-  image: "linuxserver/prowlarr:1.5.2.3484-ls19"
+  version: "v1.5.2.3484-ls19"  # application-version-from-github: linuxserver/docker-prowlarr
+  image: "linuxserver/prowlarr:1.5.2.3484-ls19"  # application-image-from-github: linuxserver/docker-prowlarr
   namespace: *namespace
   resources:
     requests:
