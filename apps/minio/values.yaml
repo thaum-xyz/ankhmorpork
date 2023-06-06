@@ -10,7 +10,7 @@ persistence:
   enabled: true
   storageClass: local-path
   accessMode: ReadWriteOnce
-  size: 100Gi
+  size: 120Gi
 
 ingress:
   enabled: false
@@ -52,12 +52,11 @@ metrics:
       - sourceLabels: [__name__]
         regex: 'minio_audit_.*|minio_inter_node_traffic_.*|minio_notify_current_send_in_progress|minio_s3_requests_.*|minio_software_.*'
         action: drop
-      # Add cluster label to all metrics
-      - sourceLabels: [__name__]
+      # Replace server label as it unnecesarily differentiates metrics
+      - sourceLabels: [server]
         action: replace
         replacement: 'main'
-        targetLabel: cluster
-
+        targetLabel: server
 
 podDisruptionBudget:
   enabled: true
