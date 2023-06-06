@@ -885,7 +885,7 @@ local kp =
           namespace: 'monitoring',
         },
         spec: {
-          target: '99.0',
+          target: '95.0',
           window: '7d',
           indicator: {
             bool_gauge: {
