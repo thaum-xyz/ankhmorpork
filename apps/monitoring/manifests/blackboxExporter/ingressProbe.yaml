@@ -18,24 +18,6 @@ spec:
     ingress:
       namespaceSelector:
         any: true
-      relabelingConfigs:
-      - action: replace
-        regex: (.+);(.+)
-        replacement: ${1}://${2}
-        separator: ;
-        sourceLabels:
-        - __meta_kubernetes_ingress_scheme
-        - __meta_kubernetes_ingress_host
-        targetLabel: __param_target
-      - action: replace
-        regex: (.+);(.+);(.+)
-        replacement: ${1}://${2}/${3}
-        separator: ;
-        sourceLabels:
-        - __meta_kubernetes_ingress_scheme
-        - __meta_kubernetes_ingress_host
-        - __meta_kubernetes_ingress_annotation_probe_uri
-        targetLabel: __param_target
       selector:
         matchLabels:
           probe: enabled
