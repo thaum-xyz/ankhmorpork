@@ -66,21 +66,63 @@ svcaccts:
     existingSecret: thanos-sa-credentials
     existingSecretKey: secretKey
     user: minio
+    policy:
+      statements:
+        - resources:
+          - "arn:aws:s3:::*"
+          actions:
+          - "s3:GetBucketLocation"
+          - "s3:ListAllMyBuckets"
+        - resources:
+            - 'arn:aws:s3:::metrics'
+            - 'arn:aws:s3:::metrics/*'
+          actions:
+            - "s3:*"
   - accessKey: k3s-db
     existingSecret: k3s-db-sa-credentials
     existingSecretKey: secretKey
     user: minio
+    policy:
+      statements:
+        - resources:
+          - "arn:aws:s3:::*"
+          actions:
+          - "s3:GetBucketLocation"
+          - "s3:ListAllMyBuckets"
+        - resources:
+          - 'arn:aws:s3:::k3s-db'
+          - 'arn:aws:s3:::k3s-db/*'
+          actions:
+          - "s3:*"
+  - accessKey: postgres
+    existingSecret: postgres-sa-credentials
+    existingSecretKey: secretKey
+    user: minio
+    policy:
+      statements:
+        - resources:
+          - "arn:aws:s3:::*"
+          actions:
+          - "s3:GetBucketLocation"
+          - "s3:ListAllMyBuckets"
+        - resources:
+          - 'arn:aws:s3:::postgres'
+          - 'arn:aws:s3:::postgres/*'
+          actions:
+          - "s3:*"
 
 buckets:
   - name: metrics
     purge: false
+    versioning: true
     policy: none
     
   - name: k3s-db
     purge: false
+    versioning: true
     policy: none
-    #  statements:
-    #    - resources:
-    #        - 'arn:aws:s3:::k3s-db/*'
-    #      actions:
-    #        - "s3:*"
+
+  - name: postgres
+    purge: false
+    versioning: true
+    policy: none
