@@ -8,6 +8,7 @@ resources:
   - secret-thanos-sa-creds.yaml
   - secret-k3s-db-sa-creds.yaml
   - prometheus-rules.yaml
+  - minio-s3-requests-slo.yaml
 configMapGenerator:
   - name: values
     files:

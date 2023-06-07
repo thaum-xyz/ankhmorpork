@@ -1,0 +1,18 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  alerting:
+    disabled: true
+  indicator:
+    ratio:
+      errors:
+        metric: minio_s3_requests_5xx_errors_total{api=~"getobject|headobject|listobjectsv2|putobject|putobjectpart|newmultipartupload"}
+      total:
+        metric: minio_s3_requests_total{api=~"getobject|headobject|listobjectsv2|putobject|putobjectpart|newmultipartupload"}
+      grouping:
+        - api
+  target: "99"
+  window: 2w
