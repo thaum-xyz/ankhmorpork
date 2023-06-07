@@ -14,7 +14,7 @@ metadata:
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 1.14.2
+    app.kubernetes.io/version: 1.15.1
     probe: enabled
     reloader.homer/enabled: "true"
   name: paperless
