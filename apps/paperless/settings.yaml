@@ -78,6 +78,13 @@ postgres:
     userPassRef: PAPERLESS_DB_PASS
     adminPassRef: PAPERLESS_DB_ADMIN_PASS
   externalSecretStoreName: *externalSecretStoreName
+  backup:
+    schedule: "0 36 22 */2 * *"
+    suspend: false
+    destinationPath: "s3://postgres/paperless"
+    endpointURL:  http://main-minio.minio.svc:9000
+    accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
+    secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
   resources:
     requests:
       cpu: 70m

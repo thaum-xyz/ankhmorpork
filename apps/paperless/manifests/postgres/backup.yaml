@@ -1,0 +1,13 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres
+  namespace: paperless
+spec:
+  backupOwnerReference: self
+  cluster:
+    name: postgres
+  schedule: 0 36 22 */2 * *
+  suspend: false
