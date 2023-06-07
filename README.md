@@ -65,6 +65,21 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
     <td>Kubernetes Descheduler</td>
   </tr>-->
   <tr>
+    <td><img width="32" src="https://github.com/topolvm/topolvm/raw/main/docs/img/TopoLVM_logo.svg"></td>
+    <td><a href="https://github.com/topolvm/topolvm">TopoLVM</a></td>
+    <td>Local storage based on LVM</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://github.com/longhorn/website/raw/master/static/img/icon-longhorn.svg"></td>
+    <td><a href="https://longhorn.io/"></a>Longhorn</td>
+    <td>Distributed PV storage</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://min.io/resources/img/logo/MINIO_Bird.png"></td>
+    <td><a href="https://min.io">Minio</a></td>
+    <td>S3 storage</td>
+  </tr>
+  <tr>
     <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/flux/icon/color/flux-icon-color.svg"></td>
     <td><a href="https://fluxcd.io/">Flux</a></td>
     <td>GitOps tool built to deploy applications to Kubernetes</td>
@@ -190,14 +205,14 @@ QNAP NAS TS-431DeU is used to manage NFS shares and backup them to B2 cloud usin
 
 ## 🔧 Hardware
 
-| Device                  | Count | RAM   | Storage                          | Connectivity       | Purpose        |
-|-------------------------|-------|-------|----------------------------------|--------------------|----------------|
-| Unifi Dream Machine Pro | 1     | N/A   | N/A                              | 8x GbE + 2xSFP+    | Router         |
-| Unifi US-16-PoE switch  | 1     | N/A   | N/A                              | 16x GbE + 2xSFP    | Main Switch    |
-| QNAP TS-431DeU          | 1     | 16GB  | 2x240GB NVMe RAID1 + 4x3TB RAID5 | 2x 2.5GbE LACP     | NAS            |
-| Raspberry Pi 4B         | 3     | 4GB   | 64GB SSD + 32GB SD Card          | 1x GbE             | K3S Node       |
-| DELL E5440 Laptop       | 1     | 12GB  | 240 SSD                          | 1x GbE             | K3S Node       |
-| Custom-built Server     | 1     | 64GB  | 240GB NVMe + 1TB SSD             | 2x GbE LACP + 1GbE | K3S Node w/GPU |
+| Device                   | Count | RAM   | Storage                          | Connectivity       | Purpose        |
+|--------------------------|-------|-------|----------------------------------|--------------------|----------------|
+| Unifi Dream Machine Pro  | 1     | N/A   | N/A                              | 8x GbE + 2xSFP+    | Router         |
+| Unifi US-16-PoE switch   | 1     | N/A   | N/A                              | 16x GbE + 2xSFP    | Main Switch    |
+| QNAP TS-431DeU           | 1     | 16GB  | 2x240GB NVMe RAID1 + 4x3TB RAID5 | 2x 2.5GbE LACP     | NAS            |
+| HP EliteDesk G2 800 mini | 2     | 32GB  | 240GB M2 SSD + 500GB SSD         | 1x GbE             | K3S Node       |
+| DELL E5440 Laptop        | 1     | 12GB  | 240 SSD + 2x 120GB SSD           | 1x GbE             | K3S Node       |
+| Custom-built Server      | 1     | 64GB  | 240GB NVMe + 1TB SSD             | 2x GbE LACP + 1GbE | K3S Node w/GPU |
 
 ## ✨ Features
 
@@ -210,8 +225,8 @@ Project status: **Alpha**
 - [x] Automated certificate management
 - [x] Installing and managing applications using GitOps
 - [x] CI/CD platform
+- [x] Distributed storage
 - [ ] Automatically update DNS records for exposed services 🚧
-- [ ] Distributed storage 🚧
 - [ ] Automated bare metal provisioning with PXE boot 🚧
 - [ ] Support multiple environments (dev, stag, prod) 🚧
 - [ ] Automated in-cluster offsite backups 🚧
