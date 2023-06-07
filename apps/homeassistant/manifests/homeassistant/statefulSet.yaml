@@ -60,6 +60,8 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: homeassistant-config
+        - mountPath: /config/backups
+          name: backups
         - mountPath: /config/configuration.yaml
           name: configs
           readOnly: true
@@ -77,6 +79,9 @@ spec:
       restartPolicy: Always
       serviceAccountName: homeassistant
       volumes:
+      - name: backups
+        persistentVolumeClaim:
+          claimName: homeassistant-backups
       - configMap:
           name: homeassistant-configs
         name: configs

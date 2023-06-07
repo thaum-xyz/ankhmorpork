@@ -30,14 +30,25 @@ local defaults = {
   zwaveSupport: false,
   hostNetwork: false,
   storage: {
-    name: 'homeassistant-data',
-    pvcSpec: {
-      // storageClassName: 'local-path',
-      accessModes: ['ReadWriteOnce'],
-      resources: {
-        requests: {
-          storage: '2Gi',
+    data: {
+      pvcSpec: {
+        // storageClassName: 'local-path',
+        accessModes: ['ReadWriteOnce'],
+        resources: {
+          requests: {
+            storage: '2Gi',
+          },
         },
+      },
+    },
+    backups: {
+      pvcSpec: {
+        //  accessModes: ['ReadWriteMany'],
+        //  resources: {
+        //    requests: {
+        //      storage: '1Gi',
+        //    },
+        //  },
       },
     },
   },
@@ -77,6 +88,15 @@ function(params) {
     },
   },
 
+  [if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then 'backupsPVC']: {
+    apiVersion: 'v1',
+    kind: 'PersistentVolumeClaim',
+    metadata: $._metadata {
+      name: $._metadata.name + '-backups',
+    },
+    spec: $._config.storage.backups.pvcSpec,
+  },
+
   statefulSet: {
     local c = {
       name: $._config.name,
@@ -112,10 +132,15 @@ function(params) {
       securityContext: {
         privileged: $._config.zwaveSupport,
       },
-      volumeMounts: [{
-        mountPath: '/config',
-        name: $._config.storage.name,
-      }],
+      volumeMounts: [
+        {
+          mountPath: '/config',
+          name: $._metadata.name + '-config',
+        },{
+          mountPath: '/config/backups',
+          name: 'backups',
+        }
+      ],
       resources: $._config.resources,
     },
 
@@ -135,13 +160,27 @@ function(params) {
           restartPolicy: 'Always',
           serviceAccountName: $.serviceAccount.metadata.name,
           hostNetwork: $._config.hostNetwork,
+          volumes: [
+            if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then
+              {
+                name: 'backups',
+                persistentVolumeClaim: {
+                  claimName: $.backupsPVC.metadata.name,
+                },
+              }
+            else
+              {
+                name: 'backups',
+                emptyDir: {},
+              },
+          ],
         },
       },
       volumeClaimTemplates: [{
         metadata: {
-          name: $._config.storage.name,
+          name: $._metadata.name + '-config',
         },
-        spec: $._config.storage.pvcSpec,
+        spec: $._config.storage.data.pvcSpec,
       }],
     },
   },
