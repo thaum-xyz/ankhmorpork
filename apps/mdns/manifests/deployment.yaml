@@ -4,6 +4,7 @@ metadata:
   name: external-mdns
   namespace: mdns
 spec:
+  replicas: 0
   strategy:
     type: Recreate
   selector:
