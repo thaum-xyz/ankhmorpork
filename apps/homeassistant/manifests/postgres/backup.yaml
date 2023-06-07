@@ -1,0 +1,11 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: postgres
+  namespace: homeassistant
+spec:
+  backupOwnerReference: self
+  cluster:
+    name: postgres
+  schedule: 0 17 23 */2 * *
+  suspend: false

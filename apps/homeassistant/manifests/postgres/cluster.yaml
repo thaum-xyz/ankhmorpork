@@ -12,6 +12,22 @@ spec:
       owner: homeassistant
       secret:
         name: postgres-user
+  backup:
+    barmanObjectStore:
+      destinationPath: "s3://postgres/homeassistant"
+      endpointURL: http://main-minio.minio.svc:9000
+      s3Credentials:
+        accessKeyId:
+          name: postgres-backup
+          key: S3_ACCESS_KEY
+        secretAccessKey:
+          name: postgres-backup
+          key: S3_SECRET_KEY
+    retentionPolicy: "30d"
+#  serviceAccountTemplate:
+#    metadata:
+#      annotations:
+#        kubernetes.io/service-account.name: postgres
   instances: 2
   monitoring:
     enablePodMonitor: true
