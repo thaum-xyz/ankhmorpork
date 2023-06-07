@@ -79,7 +79,7 @@ query:
       cpu: 15m
       memory: 40Mi
 compact:
-  replicas: 0
+  replicas: 1
   retentionResolutionRaw: '0'
   retentionResolution5m: '120d'
   retentionResolution1h: '365d'
