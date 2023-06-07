@@ -61,6 +61,13 @@ postgres:
     userPassRef: HOMEASSISTANT_DB_PASS
     adminPassRef: HOMEASSISTANT_DB_ADMIN_PASS
   externalSecretStoreName: *externalSecretStoreName
+  backup:
+    schedule: "0 17 23 */2 * *"
+    suspend: false
+    destinationPath: "s3://postgres/homeassistant"
+    endpointURL:  http://main-minio.minio.svc:9000
+    accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
+    secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
   resources:
     requests:
       cpu: 130m

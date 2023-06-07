@@ -1,6 +1,8 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
+  labels:
+    app.kubernetes.io/name: postgres
   name: postgres
   namespace: homeassistant
 spec:

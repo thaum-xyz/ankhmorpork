@@ -20,6 +20,14 @@ local defaults = {
     passRef: '',
     adminPassRef: '',
   },
+  backup: {
+    schedule: '0 17 23 */2 * *',
+    retentionPolicy: '30d',
+    destinationPath: '',
+    endpointURL: '',
+    accessKeyRef: '',
+    secretKeyRef: '',
+  },
   externalSecretStoreName: '',
   storage: {
     size: '100Mi',
@@ -44,7 +52,12 @@ local externalSecretBasicAuth(metadata, secretStore, username, passRef) = extern
 };
 
 function(params) {
-  _config:: defaults + params,
+  _config:: defaults + params + {
+    db: defaults.db + params.db,
+    backup: defaults.backup + params.backup,
+    storage: defaults.storage + params.storage,
+  },
+
   _metadata:: {
     name: $._config.name,
     namespace: $._config.namespace,
@@ -59,12 +72,37 @@ function(params) {
     $._config.db.user,
     $._config.db.userPassRef
   ),
+
   credentialsAdmin: externalSecretBasicAuth(
     $._metadata + {name: $._config.name + '-admin'},
     $._config.externalSecretStoreName,
     'postgres',
     $._config.db.adminPassRef
   ),
+
+  [if std.objectHas(params, 'backup') && std.objectHas(params.backup, 'secretKeyRef') && std.length(params.backup.secretKeyRef) > 0 then 'credentialsBackup']: externalsecret(
+    $._metadata + {name: $._config.name + '-backup'},
+    $._config.externalSecretStoreName,
+    {
+      S3_ACCESS_KEY: $._config.backup.accessKeyRef,
+      S3_SECRET_KEY: $._config.backup.secretKeyRef,
+    },
+  ),
+
+  [if std.objectHas(params, 'backup') && std.objectHas(params.backup, 'schedule') && std.length(params.backup.schedule) > 0 then 'backup']: {
+    apiVersion: 'postgresql.cnpg.io/v1',
+    kind: 'ScheduledBackup',
+    metadata: $._metadata,
+    spec: {
+      backupOwnerReference: 'self',
+      cluster: {
+        name: $.cluster.metadata.name,
+      },
+      schedule: $._config.backup.schedule,
+      suspend: false,
+    },
+  },
+
   cluster: {
     apiVersion: 'postgresql.cnpg.io/v1',
     kind: 'Cluster',
@@ -78,6 +116,27 @@ function(params) {
       superuserSecret: {
         name: $.credentialsAdmin.metadata.name,
       },
+      backup:
+        if std.objectHas(params, 'backup') && std.objectHas(params.backup, 'destinationPath') && std.length(params.backup.destinationPath) > 0 then
+        {
+          barmanObjectStore: {
+            destinationPath: $._config.backup.destinationPath,
+            endpointURL: $._config.backup.endpointURL,
+            s3Credentials: {
+              accessKeyId: {
+                name: $.credentialsBackup.metadata.name,
+                key: 'S3_ACCESS_KEY',
+              },
+              secretAccessKey: {
+                name: $.credentialsBackup.metadata.name,
+                key: 'S3_SECRET_KEY',
+              },
+            },
+          },
+          retentionPolicy: $._config.backup.retentionPolicy,
+        }
+        else
+        {},
       bootstrap: {
         initdb: {
           database: $._config.db.name,
