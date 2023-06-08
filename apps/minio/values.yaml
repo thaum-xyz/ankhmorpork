@@ -52,8 +52,10 @@ metrics:
       - sourceLabels: [__name__]
         regex: 'minio_audit_.*|minio_inter_node_traffic_.*|minio_notify_current_send_in_progress|minio_s3_requests_.*|minio_software_.*'
         action: drop
-      # Replace server label as it unnecesarily differentiates metrics
-      - sourceLabels: [server]
+      # Replace server label as it unnecesarily differentiates cluster-level metrics
+      - sourceLabels: [server, __name__]
+        regex: '(.*);(minio_cluster_.*|minio_bucket_.*|minio_s3_.*)'
+        separator: ';'
         action: replace
         replacement: 'main'
         targetLabel: server
