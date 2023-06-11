@@ -172,6 +172,7 @@ data:
 
     # Sensors
     sensor:
+      - platform: websocket_api
       - platform: time_date
         display_options:
           - 'time'
