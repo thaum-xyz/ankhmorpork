@@ -33,45 +33,50 @@ data:
 
 
     # No-config integrations
-    default_config:
+    #default_config:
     # Redefine configuration options from default_config for more control
     # Current list can be found in https://www.home-assistant.io/integrations/default_config/
     automation: !include automations.yaml
+    assist_pipeline:
     backup:
     #bluetooth:
     #cloud:
     config:
+    conversation:
     counter:
     dhcp:
     energy:
     frontend:
-    hardware:
+    #hardware:
     history:
     homeassistant_alerts:
     image_upload:
     #input_boolean: # configured in lower part of the file
-    input_datetime: # configured in lower part of the file
+    input_button:
+    input_datetime:
     input_number:
     #input_select:  # configured in lower part of the file
     input_text:
     logbook:
+    logger: # CHECK
     map:
     #media_source:
     mobile_app:
     my:
+    network:
     person:
-    scene: !include scenes.yaml
     schedule:
+    scene: !include scenes.yaml
     script: !include scripts.yaml
     ssdp:
     stream:
     sun:
     system_health:
-    #tag:
+    tag:
     timer:
     #usb:
     webhook:
-    #zeroconf:
+    zeroconf:
     zone:
     # END OF default_config
 

@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 6042d95d05695d3dd1e76b1dcfcda96f
+        checksum.config/md5: ba8219044eab3d899877a5906e4c4ea4
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
@@ -60,6 +60,8 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: homeassistant-config
+        - mountPath: /config/backups
+          name: backups
         - mountPath: /config/configuration.yaml
           name: configs
           readOnly: true
@@ -77,6 +79,9 @@ spec:
       restartPolicy: Always
       serviceAccountName: homeassistant
       volumes:
+      - name: backups
+        persistentVolumeClaim:
+          claimName: homeassistant-backups
       - configMap:
           name: homeassistant-configs
         name: configs
