@@ -43,14 +43,6 @@ homeassistant:
         resources:
           requests:
             storage: 1Gi
-    backups:
-      pvcSpec:
-        storageClassName: "qnap-nfs"
-        accessModes:
-          - ReadWriteMany
-        resources:
-          requests:
-            storage: 20Gi
 
 postgres:
   name: postgres
