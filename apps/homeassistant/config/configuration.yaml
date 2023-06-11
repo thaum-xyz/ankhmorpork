@@ -30,7 +30,7 @@ http:
 
 
 # No-config integrations
-#default_config:
+default_config:
 # Redefine configuration options from default_config for more control
 # Current list can be found in https://www.home-assistant.io/integrations/default_config/
 automation: !include automations.yaml
@@ -42,7 +42,7 @@ counter:
 dhcp:
 energy:
 frontend:
-#hardware:
+hardware:
 history:
 homeassistant_alerts:
 image_upload:
