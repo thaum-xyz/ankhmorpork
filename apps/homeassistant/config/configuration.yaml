@@ -79,7 +79,6 @@ zeroconf:
 zone:
 # END OF default_config
 
-workday:
 wake_on_lan:
 media_extractor:
 
