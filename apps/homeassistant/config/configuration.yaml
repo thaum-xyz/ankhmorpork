@@ -21,6 +21,8 @@ http:
   use_x_forwarded_for: true
   trusted_proxies: !secret trusted_proxies
 
+websocket_api:
+
 #panel_iframe:
 #  esphome:
 #    title: "ESPHome"
@@ -77,6 +79,7 @@ zeroconf:
 zone:
 # END OF default_config
 
+workday:
 wake_on_lan:
 media_extractor:
 
