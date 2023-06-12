@@ -9,5 +9,5 @@ spec:
   backupOwnerReference: self
   cluster:
     name: postgres
-  schedule: 0 36 22 */2 * *
+  schedule: 0 36 22 * * *
   suspend: false

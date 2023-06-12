@@ -72,14 +72,16 @@ paperless:
 postgres:
   name: postgres
   namespace: *namespace
+  instances: 3
   db:
+    #backupRef: postgres-1686350160
     name: *dbname
     user: paperless
     userPassRef: PAPERLESS_DB_PASS
     adminPassRef: PAPERLESS_DB_ADMIN_PASS
   externalSecretStoreName: *externalSecretStoreName
   backup:
-    schedule: "0 36 22 */2 * *"  # SEC MIN HOUR DAY MONTH DAYOFWEEK
+    schedule: "0 36 22 * * *"  # SEC MIN HOUR DAY MONTH DAYOFWEEK
     suspend: false
     destinationPath: "s3://postgres/paperless"
     endpointURL:  http://main-minio.minio.svc:9000
@@ -90,8 +92,8 @@ postgres:
       cpu: 70m
       memory: 70Mi
   storage:
-    size: 300Mi
-    storageClass: "qnap-nfs"
+    size: 2Gi
+    storageClass: "lvm-secondary"
 
 broker:
   version: "6.0"  # application-version-from-github: redis/redis

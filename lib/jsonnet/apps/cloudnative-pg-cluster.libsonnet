@@ -120,6 +120,8 @@ function(params) {
       backup:
         if !std.objectHas(params.db, 'backupRef') && std.objectHas(params, 'backup') && std.objectHas(params.backup, 'destinationPath') && std.length(params.backup.destinationPath) > 0 then
         {
+          # target: 'primary',
+          retentionPolicy: $._config.backup.retentionPolicy,
           barmanObjectStore: {
             destinationPath: $._config.backup.destinationPath,
             endpointURL: $._config.backup.endpointURL,
@@ -134,7 +136,6 @@ function(params) {
               },
             },
           },
-          retentionPolicy: $._config.backup.retentionPolicy,
         }
         else
         {},
