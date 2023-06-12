@@ -55,6 +55,7 @@ homeassistant:
 postgres:
   name: postgres
   namespace: *namespace
+  instances: 3
   db:
     name: homeassistant
     user: homeassistant
@@ -77,8 +78,8 @@ postgres:
       cpu: 250m
       memory: 420Mi
   storage:
-    size: 10Gi
-    storageClass: longhorn
+    size: 5Gi
+    storageClass: lvm-secondary
 esphome:
   version: "2023.3.2"  # application-version-from-github: esphome/esphome
   image: "esphome/esphome:2023.3.2"  # application-image-from-github: esphome/esphome

@@ -24,7 +24,7 @@ spec:
       owner: homeassistant
       secret:
         name: postgres-user
-  instances: 2
+  instances: 3
   monitoring:
     enablePodMonitor: true
   resources:
@@ -35,7 +35,7 @@ spec:
       cpu: 130m
       memory: 300Mi
   storage:
-    size: 10Gi
-    storageClass: longhorn
+    size: 5Gi
+    storageClass: lvm-secondary
   superuserSecret:
     name: postgres-admin

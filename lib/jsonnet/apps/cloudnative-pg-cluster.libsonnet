@@ -17,6 +17,7 @@ local defaults = {
   db: {
     name: 'postgres',
     user: '',
+    backupRef: '',
     passRef: '',
     adminPassRef: '',
   },
@@ -117,7 +118,7 @@ function(params) {
         name: $.credentialsAdmin.metadata.name,
       },
       backup:
-        if std.objectHas(params, 'backup') && std.objectHas(params.backup, 'destinationPath') && std.length(params.backup.destinationPath) > 0 then
+        if !std.objectHas(params.db, 'backupRef') && std.objectHas(params, 'backup') && std.objectHas(params.backup, 'destinationPath') && std.length(params.backup.destinationPath) > 0 then
         {
           barmanObjectStore: {
             destinationPath: $._config.backup.destinationPath,
@@ -137,15 +138,23 @@ function(params) {
         }
         else
         {},
-      bootstrap: {
-        initdb: {
+      bootstrap: 
+        local dbBootstrap = {
           database: $._config.db.name,
-          owner: $._config.db.user,
-          secret: {
-            name: $.credentialsUser.metadata.name,
-          },
+            owner: $._config.db.user,
+            secret: {
+              name: $.credentialsUser.metadata.name,
+            },
+        };
+        if std.objectHas(params.db, 'backupRef') && std.length(params.db.backupRef) > 0 then {
+          recovery: {
+            backup: {
+              name: $._config.db.backupRef,
+            },
+          } + dbBootstrap,
+        } else {
+          initdb: dbBootstrap,
         },
-      },
       resources: $._config.resources,
       storage: $._config.storage,
     },
