@@ -43,7 +43,9 @@ tandoor:
 postgres:
   name: postgres
   namespace: *namespace
+  instances: 3
   db:
+    #backupRef: postgres-1686527520
     name: *dbname
     user: recipes
     userPassRef: TANDOOR_POSTGRES_PASS
@@ -52,7 +54,7 @@ postgres:
   backup:
     schedule: "0 52 23 */2 * *"  # SEC MIN HOUR DAY MONTH DAYOFWEEK
     suspend: false
-    destinationPath: "s3://postgres/tandoor"
+    destinationPath: s3://postgres/tandoor
     endpointURL:  http://main-minio.minio.svc:9000
     accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
     secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
@@ -61,5 +63,5 @@ postgres:
       cpu: 4m
       memory: 85Mi
   storage:
-    size: 1Gi
-    storageClass: "qnap-nfs"
+    size: 2Gi
+    storageClass: "lvm-secondary"
