@@ -13,11 +13,9 @@ metal01  ansible_host=192.168.2.40
 metal01
 
 [k3s_control_plane]
-master01
+master0[1:3]
 
 [k3s_nodes]
-#node0[1:2]
-master0[2:3]  # For now run this as worker nodes
 metal01
 
 [k3s:children]

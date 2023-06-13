@@ -16,9 +16,9 @@ k3s_server_config:
   #- "feature-gates=PodAndContainerStatsFromCRI=true,ComponentSLIs=true" # Remove ComponentSLIs when k3s 1.27 is released
   - "feature-gates=ComponentSLIs=true" # Remove ComponentSLIs when k3s 1.27 is released
   kube-controller-manager-arg:
-  - "bind-address={{ k3s_master_ip }}"
+  - "bind-address=0.0.0.0"
   kube-scheduler-arg:
-  - "bind-address={{ k3s_master_ip }}"
+  - "bind-address=0.0.0.0"
   etcd-expose-metrics: "true"
   kube-proxy-arg:
   - "metrics-bind-address=0.0.0.0"
