@@ -38,11 +38,11 @@
       delegate_to: localhost
       run_once: true
 
-    - name: Import manifests bound to infrastructure
-      template:
-        src: "{{ item }}"
-        dest: "/var/lib/rancher/k3s/server/manifests/{{ item | basename | regex_replace('\\.j2$', '') }}"
-      with_fileglob: "templates/manifests/*.yaml.j2"
+    #- name: Import manifests bound to infrastructure
+    #  template:
+    #   src: "{{ item }}"
+    #   dest: "/var/lib/rancher/k3s/server/manifests/{{ item | basename | regex_replace('\\.j2$', '') }}"
+    #  with_fileglob: "templates/manifests/*.yaml.j2"
 
 - hosts: k3s_nodes
   become: true
