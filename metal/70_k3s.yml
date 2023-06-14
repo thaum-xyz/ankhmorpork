@@ -27,6 +27,7 @@
         src: "/etc/rancher/k3s/k3s.yaml"
         dest: "{{ playbook_dir }}/kubeconfig"
         flat: true
+      run_once: true
 
     - name: Replace localhost with master IP
       become: false
@@ -35,12 +36,13 @@
         regexp: "127.0.0.1"
         replace: "{{ k3s_master_ip }}"
       delegate_to: localhost
+      run_once: true
 
     - name: Import manifests bound to infrastructure
       template:
         src: "{{ item }}"
-        dest: "/var/lib/rancher/k3s/server/manifests/{{ item | basename }}"
-      with_fileglob: "templates/manifests/*.yaml"
+        dest: "/var/lib/rancher/k3s/server/manifests/{{ item | basename | regex_replace('\\.j2$', '') }}"
+      with_fileglob: "templates/manifests/*.yaml.j2"
 
 - hosts: k3s_nodes
   become: true
