@@ -3,10 +3,13 @@ kube_vip_image: ghcr.io/kube-vip/kube-vip:v0.6.0
 kube_vip_ip: "192.168.2.39"  # VIP IP managed by kube-vip
 
 k3s_version: v1.27.2+k3s1
-k3s_master_ip: "{{ hostvars[groups['k3s_control_plane'][0]]['ansible_default_ipv4']['address'] }}"
-#k3s_master_ip: "{{ kube_vip_ip }}"
+#k3s_master_ip: "{{ hostvars[groups['k3s_control_plane'][0]]['ansible_default_ipv4']['address'] }}"
+k3s_master_ip: "{{ kube_vip_ip }}"
 
 k3s_token: "{{ hostvars[groups['k3s_control_plane'][0]]['token'] }}"
+
+k3s_etcd_s3_access_key: "{{ lookup('env', 'S3_ACCESS_KEY') }}"
+k3s_etcd_s3_secret_key: "{{ lookup('env', 'S3_SECRET_KEY') }}"
 
 k3s_server_config:
   disable:
@@ -24,12 +27,21 @@ k3s_server_config:
   kube-scheduler-arg:
   - "bind-address=0.0.0.0"
   etcd-expose-metrics: "true"
+
+  etcd-s3: "true"
+  etcd-s3-access-key: "{{ k3s_etcd_s3_access_key }}"
+  etcd-s3-secret-key: "{{ k3s_etcd_s3_secret_key }}"
+  etcd-s3-endpoint: fra1.digitaloceanspaces.com
+  etcd-s3-bucket: etcd-thaum-xyz
+  etcd-s3-folder: ankhmorpork
+
   kube-proxy-arg:
   - "metrics-bind-address=0.0.0.0"
   kube-apiserver-arg:
   - "feature-gates=PDBUnhealthyPodEvictionPolicy=true"
   - "enable-admission-plugins=NamespaceAutoProvision"
   resolv-conf: "/run/systemd/resolve/resolv.conf"
+
 
 k3s_agent_config:
   kubelet-arg:

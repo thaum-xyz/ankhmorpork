@@ -1,5 +1,6 @@
 ---
 - name: restart k3s
+  throttle: 1
   systemd:
     name: k3s
     daemon_reload: yes
