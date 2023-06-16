@@ -84,7 +84,7 @@ spec:
         - name: vip_retryperiod
           value: "1"
         - name: address
-          value: "{{ k3s_master_ip }}"
+          value: "{{ kube_vip_ip }}"
         image: "{{ kube_vip_image }}"
         imagePullPolicy: Always
         name: kube-vip
