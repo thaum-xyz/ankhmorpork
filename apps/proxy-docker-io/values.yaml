@@ -5,10 +5,6 @@ proxy:
   remoteurl: "https://registry-1.docker.io"
   #secretRef:
 
-extraEnvVars:
-  - name: REGISTRY_LOG_LEVEL
-    value: "debug"
-
 persistence:
   enabled: false
 
