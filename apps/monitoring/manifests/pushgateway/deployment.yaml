@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: pushgateway
-    app.kubernetes.io/version: 1.5.1
+    app.kubernetes.io/version: 1.6.0
   name: pushgateway
   namespace: monitoring
 spec:
@@ -18,10 +18,10 @@ spec:
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: pushgateway
-        app.kubernetes.io/version: 1.5.1
+        app.kubernetes.io/version: 1.6.0
     spec:
       containers:
-      - image: quay.io/prometheus/pushgateway:v1.5.1
+      - image: quay.io/prometheus/pushgateway:v1.6.0
         name: pushgateway
         ports:
         - containerPort: 9091

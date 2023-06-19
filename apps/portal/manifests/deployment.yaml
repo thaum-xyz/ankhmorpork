@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homepage
     app.kubernetes.io/part-of: homepage
-    app.kubernetes.io/version: 0.6.16
+    app.kubernetes.io/version: 0.6.21
   name: homepage
   namespace: portal
 spec:
@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homepage
         app.kubernetes.io/part-of: homepage
-        app.kubernetes.io/version: 0.6.16
+        app.kubernetes.io/version: 0.6.21
     spec:
       affinity:
         podAntiAffinity:
@@ -39,7 +39,7 @@ spec:
             weight: 100
       automountServiceAccountToken: true
       containers:
-      - image: ghcr.io/benphelps/homepage:v0.6.16
+      - image: ghcr.io/benphelps/homepage:v0.6.21
         imagePullPolicy: IfNotPresent
         name: homepage
         ports:
