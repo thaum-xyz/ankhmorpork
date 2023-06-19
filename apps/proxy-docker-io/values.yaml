@@ -14,6 +14,10 @@ serviceAccount:
 service:
   type: LoadBalancer
   loadBalancerIP: "192.168.2.96"
+  port: 5000
+  annotations:
+    metallb.universe.tf/address-pool: "default"
+    metallb.universe.tf/allow-shared-ip: docker-proxy-svc-key
 
 ingress:
   enabled: false
@@ -31,6 +35,7 @@ ingress:
 
 metrics:
   enabled: true
+  port: 6000
   serviceMonitor:
     enable: true
   prometheusRule:
