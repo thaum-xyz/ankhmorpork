@@ -135,6 +135,9 @@ function(params) {
                 key: 'S3_SECRET_KEY',
               },
             },
+            wal: {
+              compression: 'gzip',
+            },
           },
         }
         else

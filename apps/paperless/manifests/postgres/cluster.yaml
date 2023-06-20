@@ -17,6 +17,8 @@ spec:
         secretAccessKey:
           key: S3_SECRET_KEY
           name: postgres-backup
+      wal:
+        compression: gzip
     retentionPolicy: 14d
   bootstrap:
     initdb:
