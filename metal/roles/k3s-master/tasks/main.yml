@@ -16,6 +16,16 @@
     mode: 0644
   notify: restart k3s
 
+- name: Ensure registries configuration file is present
+  template:
+    src: "registries.yaml.j2"
+    dest: "/etc/rancher/k3s/registries.yaml"
+    owner: root
+    group: root
+    mode: 0644
+  when: k3s_registries
+  notify: restart k3s
+
 - name: Copy K3s service file
   template:
     src: "k3s.service.j2"

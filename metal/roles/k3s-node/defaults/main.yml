@@ -5,3 +5,5 @@ k3s_master_ip: "{{ hostvars[groups['master'][0]]['ansible_host'] | default(group
 k3s_agent_config: {}
 
 k3s_token: "{{ hostvars[groups['master'][0]]['token'] }}"
+
+k3s_registries: {}

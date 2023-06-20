@@ -11,6 +11,15 @@ k3s_token: "{{ hostvars[groups['k3s_control_plane'][0]]['token'] }}"
 k3s_etcd_s3_access_key: "{{ lookup('env', 'S3_ACCESS_KEY') }}"
 k3s_etcd_s3_secret_key: "{{ lookup('env', 'S3_SECRET_KEY') }}"
 
+k3s_registries:
+  mirrors:
+    docker.io:
+      endpoint:
+        - "http://192.168.2.96:5000"
+    ghcr.io:
+      endpoint:
+        - "http://192.168.2.96:5001"
+
 k3s_server_config:
   disable:
   - servicelb
