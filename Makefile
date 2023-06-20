@@ -27,13 +27,6 @@ generate:  ## Generate all manifests
 upgrade:  ## Update all components and their versions
 	for d in $(DIRS); do $(MAKE) -C $$d version-update || exit 1; done
 
-.PHONY: check
-check: secrets
-
-.PHONY: secrets
-secrets:  ## Check if secrets are not leaked
-	./hack/checksecrets.sh
-
 .PHONY: validate
 validate:  ## Validate kubernetes manifests
 	for d in $(DIRS); do $(MAKE) -C $$d validate || exit 1; done

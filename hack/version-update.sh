@@ -38,8 +38,9 @@ for f in $FILES; do
         fi
 
         # Change only lines with correct metadata
-        sed -Ei "s|^(.*)${CURRENT}(.*application-version-from-github:.*${r}.*)$|\1${LATEST}\2|g" "$f"
-        sed -Ei "s|^(.*)${CURRENT}(.*application-image-from-github:.*${r}.*)$|\1${LATEST}\2|g" "$f" || echo "No image update for $r due to incorrect or lack of metadata"
+        sed -Ei.bak "s|^(.*)${CURRENT}(.*application-version-from-github:.*${r}.*)$|\1${LATEST}\2|g" "$f"
+        sed -Ei.bak "s|^(.*)${CURRENT}(.*application-image-from-github:.*${r}.*)$|\1${LATEST}\2|g" "$f" || echo "No image update for $r due to incorrect or lack of metadata"
+        rm *.bak
 
         # Add to changelog
         echo "$r from $CURRENT to $LATEST" >> "${CHANGELOG}"

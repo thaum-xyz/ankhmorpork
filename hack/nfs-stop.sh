@@ -15,7 +15,7 @@ kubectl scale deploy -n flux-system --replicas=0 --all
 for ns in $(kubectl get ns -o=jsonpath='{.items[*].metadata.name}'); do
 
 	# Find PVCs
-	pvcs=$(kubectl get pvc --namespace $ns -o=jsonpath='{range .items[?(@.spec.storageClassName=="qnap-nfs-storage")]}{.metadata.name}{"\n"}{end}')
+	pvcs=$(kubectl get pvc --namespace $ns -o=jsonpath='{range .items[?(@.spec.storageClassName=="qnap-nfs")]}{.metadata.name}{"\n"}{end}')
 	if [ "$pvcs" == "" ]; then
 		continue
 	fi
