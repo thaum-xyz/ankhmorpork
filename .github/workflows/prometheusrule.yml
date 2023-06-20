@@ -22,7 +22,7 @@ jobs:
         with:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/brancz/gojsontoyaml@latest
-      - run: PATH="${PATH}:${GITHUB_WORKSPACE}" ./hack/hack/unpack-prometheus-rules.sh
+      - run: PATH="${PATH}:${GITHUB_WORKSPACE}" ./hack/unpack-prometheus-rules.sh
       - name: Run pint
         uses: prymitive/pint-action@v1
         with:
