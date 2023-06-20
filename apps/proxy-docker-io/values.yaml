@@ -1,5 +1,7 @@
 # Config reference: https://artifacthub.io/packages/helm/twuni/docker-registry
 
+# TODO: bump version and enable TTL when https://github.com/distribution/distribution/pull/3880 is merged
+
 proxy:
   enabled: true
   remoteurl: "https://registry-1.docker.io"
