@@ -52,7 +52,8 @@ postgres:
     adminPassRef: TANDOOR_POSTGRES_ADMIN_PASS
   externalSecretStoreName: *externalSecretStoreName
   backup:
-    schedule: "0 52 23 */2 * *"  # SEC MIN HOUR DAY MONTH DAYOFWEEK
+    schedule: "0 52 23 * * *"  # SEC MIN HOUR DAY MONTH DAYOFWEEK
+    retentionPolicy: 7d
     suspend: false
     destinationPath: s3://postgres/tandoor
     endpointURL:  http://main-minio.minio.svc:9000

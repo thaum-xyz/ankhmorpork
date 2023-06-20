@@ -17,7 +17,7 @@ spec:
         secretAccessKey:
           key: S3_SECRET_KEY
           name: postgres-backup
-    retentionPolicy: 30d
+    retentionPolicy: 7d
   bootstrap:
     initdb:
       database: recipes
