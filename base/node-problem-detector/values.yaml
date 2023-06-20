@@ -6,3 +6,11 @@ metrics:
     enabled: true
   prometheusRule:
     enabled: true
+
+resources:
+  limits:
+    cpu: 20m
+    memory: 60Mi
+  requests:
+    cpu: 3m
+    memory: 18Mi
