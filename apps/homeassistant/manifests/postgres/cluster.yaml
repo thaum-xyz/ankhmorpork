@@ -31,7 +31,7 @@ spec:
     enablePodMonitor: true
   resources:
     limits:
-      cpu: 250m
+      cpu: 400m
       memory: 420Mi
     requests:
       cpu: 130m

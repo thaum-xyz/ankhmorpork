@@ -24,7 +24,7 @@ homeassistant:
     # HomeAssistant image has built-in memory management which doesn't propagate to kubernetes
     # this in turn requires to add more resources than it is actually needed
     requests:
-      cpu: 700m
+      cpu: 500m
       memory: 600Mi
     # limits:
     #   cpu: 2
@@ -75,7 +75,7 @@ postgres:
       cpu: 130m
       memory: 300Mi
     limits:
-      cpu: 250m
+      cpu: 400m
       memory: 420Mi
   storage:
     size: 5Gi
@@ -86,8 +86,8 @@ esphome:
   namespace: *namespace
   resources:
     requests:
-      cpu: 1
-      memory: 500Mi
+      cpu: 100m
+      memory: 300Mi
     limits:
       cpu: 1400m
       memory: 1400Mi
