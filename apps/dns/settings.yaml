@@ -5,3 +5,11 @@ name: 'coredns'
 namespace: 'dns'
 loadBalancerIP: '192.168.2.99'
 nextdnsIDRef: 'DNS_NEXTDNS_ID'
+
+resources:
+  limits:
+    cpu: 20m
+    memory: 170Mi
+  requests:
+    cpu: 3m
+    memory: 38Mi
