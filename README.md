@@ -71,7 +71,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
   </tr>
   <tr>
     <td><img width="32" src="https://github.com/longhorn/website/raw/master/static/img/icon-longhorn.svg"></td>
-    <td><a href="https://longhorn.io/"></a>Longhorn</td>
+    <td><a href="https://longhorn.io/">Longhorn</a></td>
     <td>Distributed PV storage</td>
   </tr>
   <tr>
