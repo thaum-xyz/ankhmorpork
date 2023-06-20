@@ -5,10 +5,10 @@ additionalArgs:
 
 resources:
   requests:
-    cpu: 100m
-    memory: 100Mi
-#  limits:
-#    cpu: 20m
-#    memory: 70Mi
+    cpu: 7m
+    memory: 58Mi
+  limits:
+    cpu: 28m
+    memory: 120Mi
 
 nodeSelector: {}
