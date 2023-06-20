@@ -31,6 +31,10 @@ upgrade:  ## Update all components and their versions
 validate:  ## Validate kubernetes manifests
 	for d in $(DIRS); do $(MAKE) -C $$d validate || exit 1; done
 
+.PHONY: kubescape
+kubescape:  ## Validate kubernetes manifests
+	kubescape scan --compliance-threshold 70 --exceptions './kubescape-exceptions.json' $$(find apps base -name "*.yaml" -not -path "*/jsonnet/*" -not -path "*/vendor/*" -not -name "settings.yaml")
+
 .PHONY: prometheusrules
 prometheusrules:  ## Validate prometheus rules
 	./hack/unpack-prometheus-rules.sh
