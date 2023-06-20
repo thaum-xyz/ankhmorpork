@@ -58,7 +58,7 @@ spec:
             memory: 250Mi
           limits:
             memory: 250Mi
-            cpu: 4m
+            cpu: 6m
       runtimeClassName: nvidia
       # TODO: switch nodeSelector to use GPU labels after
       # nvidia/gpu-feature-discovery is installed alongside NFD
