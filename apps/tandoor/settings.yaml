@@ -8,8 +8,11 @@ tandoor:
   namespace: *namespace
   resources:
     requests:
-      cpu: 20m
+      cpu: 10m
       memory: 120Mi
+    limits:
+      cpu: 50m
+      memory: 250Mi
   storage:
     static:
       storageClassName: "qnap-nfs"
@@ -61,8 +64,8 @@ postgres:
     secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
   resources:
     requests:
-      cpu: 4m
-      memory: 85Mi
+      cpu: 50m
+      memory: 120Mi
   storage:
     size: 2Gi
     storageClass: "lvm-secondary"

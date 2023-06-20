@@ -31,8 +31,8 @@ spec:
     enablePodMonitor: true
   resources:
     requests:
-      cpu: 4m
-      memory: 85Mi
+      cpu: 50m
+      memory: 120Mi
   storage:
     size: 2Gi
     storageClass: lvm-secondary

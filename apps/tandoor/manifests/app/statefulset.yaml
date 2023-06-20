@@ -64,8 +64,11 @@ spec:
             scheme: HTTP
           periodSeconds: 30
         resources:
+          limits:
+            cpu: 50m
+            memory: 250Mi
           requests:
-            cpu: 20m
+            cpu: 10m
             memory: 120Mi
         securityContext:
           runAsUser: 65534
@@ -112,8 +115,11 @@ spec:
         imagePullPolicy: IfNotPresent
         name: initialize
         resources:
+          limits:
+            cpu: 50m
+            memory: 250Mi
           requests:
-            cpu: 20m
+            cpu: 10m
             memory: 120Mi
         securityContext:
           runAsUser: 0
