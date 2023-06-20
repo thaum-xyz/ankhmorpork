@@ -82,6 +82,7 @@ postgres:
   externalSecretStoreName: *externalSecretStoreName
   backup:
     schedule: "0 36 22 * * *"  # SEC MIN HOUR DAY MONTH DAYOFWEEK
+    retentionPolicy: 14d
     suspend: false
     destinationPath: "s3://postgres/paperless"
     endpointURL:  http://main-minio.minio.svc:9000
