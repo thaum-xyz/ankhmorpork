@@ -47,7 +47,7 @@ metrics:
   serviceMonitor:
     enabled: true
   prometheusRule:
-    enabled: true
+    enabled: false
 
 garbageCollect:
   enabled: true
