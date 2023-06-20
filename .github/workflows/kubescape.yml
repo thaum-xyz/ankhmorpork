@@ -15,4 +15,4 @@ jobs:
       - uses: actions/checkout@v3
       - name: Download latest kubescape
         run: curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash
-      - run: kubescape scan -t 36 --exceptions 'kubescape-exceptions.json' $(find apps base -name "*.yaml" -not -path "*/jsonnet/*" -not -path "*/vendor/*" -not -name "settings.yaml")
+      - run: /home/runner/.kubescape/bin/kubescape scan -t 36 --exceptions 'kubescape-exceptions.json' $(find apps base -name "*.yaml" -not -path "*/jsonnet/*" -not -path "*/vendor/*" -not -name "settings.yaml")
