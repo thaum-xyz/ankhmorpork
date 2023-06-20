@@ -25,7 +25,6 @@ local q = t.query(settings + settings.query + {
 });
 
 local c = t.compact(settings + settings.compact + {
-  image: 'quay.io/thanos/thanos:v0.31.0',  // TODO: use compactor in newer version to prevent issues with incorrect block sizes
   serviceMonitor: true,
 });
 
