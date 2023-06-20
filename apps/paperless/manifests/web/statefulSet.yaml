@@ -50,11 +50,11 @@ spec:
           name: metrics
         resources:
           limits:
-            cpu: 2
-            memory: 3Gi
+            cpu: 1
+            memory: 2Gi
           requests:
-            cpu: 350m
-            memory: 1400Mi
+            cpu: 150m
+            memory: 1100Mi
         securityContext:
           privileged: false
         volumeMounts:

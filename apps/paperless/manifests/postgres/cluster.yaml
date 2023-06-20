@@ -30,9 +30,12 @@ spec:
   monitoring:
     enablePodMonitor: true
   resources:
+    limits:
+      cpu: 200m
+      memory: 800Mi
     requests:
-      cpu: 70m
-      memory: 70Mi
+      cpu: 50m
+      memory: 200Mi
   storage:
     size: 2Gi
     storageClass: lvm-secondary

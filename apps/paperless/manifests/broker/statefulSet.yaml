@@ -31,11 +31,11 @@ spec:
           name: redis
         resources:
           limits:
-            cpu: 50m
-            memory: 100Mi
+            cpu: 20m
+            memory: 30Mi
           requests:
-            cpu: 30m
-            memory: 100Mi
+            cpu: 4m
+            memory: 7Mi
         securityContext:
           privileged: false
         volumeMounts:
