@@ -34,7 +34,7 @@ consoleIngress:
 resources:
   requests:
     cpu: 620m
-    memory: 560Gi
+    memory: 560Mi
   limits:
     cpu: 2
     memory: 2Gi
