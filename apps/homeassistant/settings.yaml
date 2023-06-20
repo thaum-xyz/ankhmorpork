@@ -63,8 +63,8 @@ postgres:
     adminPassRef: HOMEASSISTANT_DB_ADMIN_PASS
   externalSecretStoreName: *externalSecretStoreName
   backup:
-    schedule: "0 17 23 */2 * *"
-    retentionPolicy: 7d
+    schedule: "0 17 23 * * *"
+    retentionPolicy: 3d
     suspend: false
     destinationPath: "s3://postgres/homeassistant"
     endpointURL:  http://main-minio.minio.svc:9000

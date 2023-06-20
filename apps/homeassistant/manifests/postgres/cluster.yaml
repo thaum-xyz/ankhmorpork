@@ -17,7 +17,7 @@ spec:
         secretAccessKey:
           key: S3_SECRET_KEY
           name: postgres-backup
-    retentionPolicy: 7d
+    retentionPolicy: 3d
   bootstrap:
     initdb:
       database: homeassistant
