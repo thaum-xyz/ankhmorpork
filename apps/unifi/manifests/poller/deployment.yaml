@@ -32,10 +32,11 @@ spec:
           protocol: TCP
         resources:
           limits:
+            cpu: 20m
             memory: 100Mi
           requests:
             cpu: 5m
-            memory: 20Mi
+            memory: 12Mi
         volumeMounts:
         - mountPath: /etc/unpoller/up.conf
           name: config

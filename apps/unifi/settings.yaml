@@ -10,10 +10,11 @@ poller:
   image: ghcr.io/unpoller/unpoller:v2.7.13  # application-image-from-github: unpoller/unpoller
   resources:
     limits:
+      cpu: 20m
       memory: 100Mi
     requests:
       cpu: 5m
-      memory: 20Mi
+      memory: 12Mi
   credentialsRefs:
     user: UNIFI_USER
     pass: UNIFI_PASS
