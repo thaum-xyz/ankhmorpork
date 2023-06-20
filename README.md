@@ -13,7 +13,7 @@ Project utilizes [Infrastructure as Code](https://en.wikipedia.org/wiki/Infrastr
 
 ### Installation
 
-Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a modified version of [Ansible](https://www.ansible.com/) role [provided by k3s project](https://github.com/k3s-io/k3s-ansible).
+Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LTS Ubuntu OS using a modified version of [Ansible](https://www.ansible.com/) role [provided by k3s project](https://github.com/k3s-io/k3s-ansible).
 
 🔸 _[Click here](./metal/) to see my Ansible playbooks and roles._
 
@@ -73,7 +73,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal Ubuntu 20.04 using a
   <tr>
     <td><img width="32" src="https://github.com/longhorn/website/raw/master/static/img/icon-longhorn.svg"></td>
     <td><a href="https://longhorn.io/">Longhorn</a></td>
-    <td>Distributed PV storage</td>
+    <td>Distributed block storage</td>
   </tr>
   <tr>
     <td><img width="32" src="https://min.io/resources/img/logo/MINIO_Bird.png"></td>
