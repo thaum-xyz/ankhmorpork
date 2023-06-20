@@ -40,6 +40,78 @@ spec:
             description: ScrapeConfigSpec is a specification of the desired configuration
               for a scrape configuration.
             properties:
+              authorization:
+                description: Authorization header to use on every scrape request.
+                properties:
+                  credentials:
+                    description: Selects a key of a Secret in the namespace that contains
+                      the credentials for authentication.
+                    properties:
+                      key:
+                        description: The key of the secret to select from.  Must be
+                          a valid secret key.
+                        type: string
+                      name:
+                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Add other useful fields. apiVersion, kind, uid?'
+                        type: string
+                      optional:
+                        description: Specify whether the Secret or its key must be
+                          defined
+                        type: boolean
+                    required:
+                    - key
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  type:
+                    description: "Defines the authentication type. The value is case-insensitive.
+                      \n \"Basic\" is not a supported value. \n Default: \"Bearer\""
+                    type: string
+                type: object
+              basicAuth:
+                description: BasicAuth information to use on every scrape request.
+                properties:
+                  password:
+                    description: The secret in the service monitor namespace that
+                      contains the password for authentication.
+                    properties:
+                      key:
+                        description: The key of the secret to select from.  Must be
+                          a valid secret key.
+                        type: string
+                      name:
+                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Add other useful fields. apiVersion, kind, uid?'
+                        type: string
+                      optional:
+                        description: Specify whether the Secret or its key must be
+                          defined
+                        type: boolean
+                    required:
+                    - key
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  username:
+                    description: The secret in the service monitor namespace that
+                      contains the username for authentication.
+                    properties:
+                      key:
+                        description: The key of the secret to select from.  Must be
+                          a valid secret key.
+                        type: string
+                      name:
+                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Add other useful fields. apiVersion, kind, uid?'
+                        type: string
+                      optional:
+                        description: Specify whether the Secret or its key must be
+                          defined
+                        type: boolean
+                    required:
+                    - key
+                    type: object
+                    x-kubernetes-map-type: atomic
+                type: object
               fileSDConfigs:
                 description: FileSDConfigs defines a list of file service discovery
                   configurations.
@@ -83,6 +155,81 @@ spec:
                   description: HTTPSDConfig defines a prometheus HTTP service discovery
                     configuration See https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_sd_config
                   properties:
+                    authorization:
+                      description: Authorization header configuration to authenticate
+                        against the target HTTP endpoint.
+                      properties:
+                        credentials:
+                          description: Selects a key of a Secret in the namespace
+                            that contains the credentials for authentication.
+                          properties:
+                            key:
+                              description: The key of the secret to select from.  Must
+                                be a valid secret key.
+                              type: string
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                            optional:
+                              description: Specify whether the Secret or its key must
+                                be defined
+                              type: boolean
+                          required:
+                          - key
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        type:
+                          description: "Defines the authentication type. The value
+                            is case-insensitive. \n \"Basic\" is not a supported value.
+                            \n Default: \"Bearer\""
+                          type: string
+                      type: object
+                    basicAuth:
+                      description: 'BasicAuth information to authenticate against
+                        the target HTTP endpoint. More info: https://prometheus.io/docs/operating/configuration/#endpoints'
+                      properties:
+                        password:
+                          description: The secret in the service monitor namespace
+                            that contains the password for authentication.
+                          properties:
+                            key:
+                              description: The key of the secret to select from.  Must
+                                be a valid secret key.
+                              type: string
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                            optional:
+                              description: Specify whether the Secret or its key must
+                                be defined
+                              type: boolean
+                          required:
+                          - key
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        username:
+                          description: The secret in the service monitor namespace
+                            that contains the username for authentication.
+                          properties:
+                            key:
+                              description: The key of the secret to select from.  Must
+                                be a valid secret key.
+                              type: string
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                            optional:
+                              description: Specify whether the Secret or its key must
+                                be defined
+                              type: boolean
+                          required:
+                          - key
+                          type: object
+                          x-kubernetes-map-type: atomic
+                      type: object
                     refreshInterval:
                       description: RefreshInterval configures the refresh interval
                         at which Prometheus will re-query the endpoint to update the
@@ -109,15 +256,16 @@ spec:
                   name is available via the `__tmp_prometheus_job_name` label. More
                   info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config'
                 items:
-                  description: 'RelabelConfig allows dynamic rewriting of the label
-                    set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section
-                    of Prometheus configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs'
+                  description: "RelabelConfig allows dynamic rewriting of the label
+                    set for targets, alerts, scraped samples and remote write samples.
+                    \n More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config"
                   properties:
                     action:
                       default: replace
-                      description: Action to perform based on regex matching. Default
-                        is 'replace'. uppercase and lowercase actions require Prometheus
-                        >= 2.36.
+                      description: "Action to perform based on the regex matching.
+                        \n `Uppercase` and `Lowercase` actions require Prometheus
+                        >= v2.36.0. `DropEqual` and `KeepEqual` actions require Prometheus
+                        >= v2.41.0. \n Default: \"Replace\""
                       enum:
                       - replace
                       - Replace
@@ -143,28 +291,26 @@ spec:
                       - DropEqual
                       type: string
                     modulus:
-                      description: Modulus to take of the hash of the source label
-                        values.
+                      description: "Modulus to take of the hash of the source label
+                        values. \n Only applicable when the action is `HashMod`."
                       format: int64
                       type: integer
                     regex:
                       description: Regular expression against which the extracted
-                        value is matched. Default is '(.*)'
+                        value is matched.
                       type: string
                     replacement:
-                      description: Replacement value against which a regex replace
-                        is performed if the regular expression matches. Regex capture
-                        groups are available. Default is '$1'
+                      description: "Replacement value against which a Replace action
+                        is performed if the regular expression matches. \n Regex capture
+                        groups are available."
                       type: string
                     separator:
-                      description: Separator placed between concatenated source label
-                        values. default is ';'.
+                      description: Separator is the string between concatenated SourceLabels.
                       type: string
                     sourceLabels:
                       description: The source labels select values from existing labels.
-                        Their content is concatenated using the configured separator
-                        and matched against the configured regular expression for
-                        the replace, keep, and drop actions.
+                        Their content is concatenated using the configured Separator
+                        and matched against the configured regular expression.
                       items:
                         description: LabelName is a valid Prometheus label name which
                           may only contain ASCII letters, numbers, as well as underscores.
@@ -172,12 +318,20 @@ spec:
                         type: string
                       type: array
                     targetLabel:
-                      description: Label to which the resulting value is written in
-                        a replace action. It is mandatory for replace actions. Regex
-                        capture groups are available.
+                      description: "Label to which the resulting string is written
+                        in a replacement. \n It is mandatory for `Replace`, `HashMod`,
+                        `Lowercase`, `Uppercase`, `KeepEqual` and `DropEqual` actions.
+                        \n Regex capture groups are available."
                       type: string
                   type: object
                 type: array
+              scheme:
+                description: Configures the protocol scheme used for requests. If
+                  empty, Prometheus uses HTTP by default.
+                enum:
+                - HTTP
+                - HTTPS
+                type: string
               staticConfigs:
                 description: StaticConfigs defines a list of static targets with a
                   common label set.
