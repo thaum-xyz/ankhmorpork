@@ -8,8 +8,8 @@ on:
   #  branch: main
 
 env:
-  golang-version: 1.19.4
-  jsonnet-version: v0.19.1
+  golang-version: 1.20.5
+  jsonnet-version: v0.20.0
   jb-version: 3aec759b6a423f5b50751443ccc81e91a0887c02  # Commit from mid February 2022
 
 jobs:
