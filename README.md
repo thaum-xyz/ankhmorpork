@@ -2,6 +2,7 @@
 
 <!-- [![document](https://img.shields.io/website?label=document&logo=gitbook&logoColor=white&style=flat-square&url=https%3A%2F%2Fdocs.thaum.xyz)](https://docs.thaum.xyz) -->
 [![license](https://img.shields.io/github/license/thaum-xyz/ankhmorpork?style=flat-square&logo=mit&logoColor=white)](https://github.com/thaum-xyz/ankhmorpork/blob/master/LICENSE)
+[![kubescape](https://github.com/thaum-xyz/ankhmorpork/actions/workflows/kubescape.yml/badge.svg)](https://github.com/thaum-xyz/ankhmorpork/actions/workflows/kubescape.yml)
 
 ## 📖 Overview
 
