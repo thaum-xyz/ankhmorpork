@@ -33,14 +33,20 @@ ingress:
 #  secure: false
 #  
 
+resources:
+  #limits:
+  requests:
+    cpu: 10m
+    memory: 10Mi
+
 metrics:
   enabled: true
   port: 6001
   serviceMonitor:
-    enable: true
+    enabled: true
   prometheusRule:
-    enable: true
+    enabled: true
 
 garbageCollect:
-  enable: true
+  enabled: true
   schedule: "48 2 * * *"
