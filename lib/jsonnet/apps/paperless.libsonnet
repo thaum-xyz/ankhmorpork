@@ -347,15 +347,14 @@ function(params) {
             },
             {
               alert: 'TaskFailureRatioTooHigh',
-              expr: '(sum(avg_over_time(flower_events_total{type="task-failed"}[15m])) by (task) / sum(avg_over_time(flower_events_total{type=~"task-failed|task-succeeded"}[15m])) by (task)) * 100 > 1',
-              'for': '5m',
+              expr: 'sum(rate(flower_events_total{namespace="paperless",type="task-failed"}[15m])) > 0',
               labels: {
                 context: 'celery-task',
                 severity: 'warning',
               },
               annotations: {
                 description: 'Average task failure ratio for task {{ $labels.task }} is {{ $value }}.',
-                summary: 'Task Failure Ratio Too High.',
+                summary: 'Task Failure Ratio High.',
               },
             },
             {
