@@ -5,6 +5,7 @@ proxy:
   remoteurl: "https://ghcr.io"
   #secretRef:
 
+storage: s3
 persistence:
   enabled: false
 
@@ -22,16 +23,16 @@ service:
 ingress:
   enabled: false
 
-#secrets:
-#  hsSharedSecret: ???
-#  s3:
-#    secretRef: ???
+secrets:
+  s3:
+    secretRef: s3-credentials
 
-#s3:
-#  bucket: ???
-#  regionEndpoint: ???
-#  secure: false
-#  
+s3:
+  bucket: docker-cache
+  regionEndpoint: http://main-minio.minio.svc:9000
+  rootdirectory: /ghcr
+  secure: false
+  encrypt: false
 
 resources:
   #limits:
