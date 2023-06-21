@@ -8,10 +8,10 @@ tandoor:
   namespace: *namespace
   resources:
     requests:
-      cpu: 10m
+      cpu: 50m
       memory: 120Mi
     limits:
-      cpu: 50m
+      cpu: 250m
       memory: 250Mi
   storage:
     static:

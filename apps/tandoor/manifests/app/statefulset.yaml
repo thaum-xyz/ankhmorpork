@@ -65,10 +65,10 @@ spec:
           periodSeconds: 30
         resources:
           limits:
-            cpu: 50m
+            cpu: 250m
             memory: 250Mi
           requests:
-            cpu: 10m
+            cpu: 50m
             memory: 120Mi
         securityContext:
           runAsUser: 65534
@@ -116,10 +116,10 @@ spec:
         name: initialize
         resources:
           limits:
-            cpu: 50m
+            cpu: 250m
             memory: 250Mi
           requests:
-            cpu: 10m
+            cpu: 50m
             memory: 120Mi
         securityContext:
           runAsUser: 0
