@@ -39,6 +39,12 @@ resources:
     cpu: 10m
     memory: 10Mi
 
+configData:
+  http:
+    debug:
+      prometheus:
+        enabled: true
+
 metrics:
   enabled: true
   serviceMonitor:
