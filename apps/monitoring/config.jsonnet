@@ -34,8 +34,8 @@
     },
   },
   prometheus+: {
-    version: '2.42.0',  // application-version-from-github: prometheus/prometheus
-    image: 'quay.io/prometheus/prometheus:v2.42.0',  // application-image-from-github: prometheus/prometheus
+    version: '2.44.0',  // application-version-from-github: prometheus/prometheus
+    image: 'quay.io/prometheus/prometheus:v2.44.0',  // application-image-from-github: prometheus/prometheus
     externalLabels: {
       cluster: 'ankhmorpork',
     },
@@ -244,8 +244,8 @@
   },
   pushgateway: {
     namespace: 'monitoring',
-    version: '1.5.1',  // application-version-from-github: prometheus/pushgateway
-    image: 'quay.io/prometheus/pushgateway:v1.5.1',  // application-image-from-github: prometheus/pushgateway
+    version: '1.6.0',  // application-version-from-github: prometheus/pushgateway
+    image: 'quay.io/prometheus/pushgateway:v1.6.0',  // application-image-from-github: prometheus/pushgateway
     resources: {
       requests: { cpu: '3m', memory: '25Mi' },
       limits: { cpu: '10m', memory: '40Mi' },
