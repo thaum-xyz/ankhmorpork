@@ -8,9 +8,7 @@
   externalsecret(metadata, store, data): {
     apiVersion: 'external-secrets.io/v1beta1',
     kind: 'ExternalSecret',
-    metadata: metadata {
-      creationTimestamp: null,
-    },
+    metadata: metadata,
     spec: {
       refreshInterval: '1h',
       secretStoreRef: {
