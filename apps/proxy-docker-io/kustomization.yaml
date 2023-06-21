@@ -5,6 +5,7 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
+  - podmonitor.yaml
 configMapGenerator:
   - name: values
     files:

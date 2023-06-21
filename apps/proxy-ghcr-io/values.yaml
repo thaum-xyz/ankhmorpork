@@ -41,10 +41,8 @@ resources:
 
 metrics:
   enabled: true
-  port: 6001
   serviceMonitor:
-    enabled: true
-  prometheusRule:
+    # Since everything is exposed in one SVC of type LB, we are using PodMonitor instead of ServiceMonitor
     enabled: false
 
 garbageCollect:
