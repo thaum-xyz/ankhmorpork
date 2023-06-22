@@ -31,7 +31,7 @@ secrets:
 s3:
   bucket: docker-cache
   regionEndpoint: http://main-minio.minio.svc:9000
-  rootdirectory: /ghcr
+  rootdirectory: /ghcr-io
   region: internal
   secure: false
   encrypt: false
@@ -47,6 +47,9 @@ configData:
     debug:
       prometheus:
         enabled: true
+  storage:
+    cache:
+      blobdescriptor: disabled
 
 metrics:
   enabled: true
