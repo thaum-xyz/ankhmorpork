@@ -8,10 +8,10 @@ paperless:
   namespace: *namespace
   resources:
     requests:
-      cpu: 150m
+      cpu: 1
       memory: 2Gi
     limits:
-      cpu: 1
+      cpu: 2
       memory: 4Gi
   storage:
     data:
