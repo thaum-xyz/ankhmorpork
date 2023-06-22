@@ -7,7 +7,9 @@ proxy:
   remoteurl: "https://registry-1.docker.io"
   #secretRef:
 
+storage: s3
 persistence:
+  # This is relevant only when using PVCs and filesystem type of storage
   enabled: false
 
 serviceAccount:

@@ -8,6 +8,7 @@ proxy:
 
 storage: s3
 persistence:
+  # This is relevant only when using PVCs and filesystem type of storage
   enabled: false
 
 serviceAccount:
