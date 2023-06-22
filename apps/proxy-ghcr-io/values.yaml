@@ -1,4 +1,5 @@
 # Config reference: https://artifacthub.io/packages/helm/twuni/docker-registry
+# Chart repository: https://github.com/twuni/docker-registry.helm
 
 proxy:
   enabled: true
