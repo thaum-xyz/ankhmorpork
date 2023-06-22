@@ -31,6 +31,7 @@ s3:
   bucket: docker-cache
   regionEndpoint: http://main-minio.minio.svc:9000
   rootdirectory: /ghcr
+  region: internal
   secure: false
   encrypt: false
 
