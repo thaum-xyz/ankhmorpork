@@ -49,6 +49,7 @@ configData:
 
 metrics:
   enabled: true
+  port: 6000
   serviceMonitor:
     # Since everything is exposed in one SVC of type LB, we are using PodMonitor instead of ServiceMonitor
     enabled: false
