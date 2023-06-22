@@ -50,6 +50,8 @@ configData:
   storage:
     cache:
       blobdescriptor: disabled
+    redirect:
+      disable: true
 
 metrics:
   enabled: true
