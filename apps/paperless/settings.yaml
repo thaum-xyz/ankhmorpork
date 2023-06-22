@@ -9,10 +9,10 @@ paperless:
   resources:
     requests:
       cpu: 150m
-      memory: 1100Mi
+      memory: 2Gi
     limits:
       cpu: 1
-      memory: 2Gi
+      memory: 4Gi
   storage:
     data:
       storageClassName: "qnap-nfs"

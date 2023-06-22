@@ -51,10 +51,10 @@ spec:
         resources:
           limits:
             cpu: 1
-            memory: 2Gi
+            memory: 4Gi
           requests:
             cpu: 150m
-            memory: 1100Mi
+            memory: 2Gi
         securityContext:
           privileged: false
         volumeMounts:
