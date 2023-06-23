@@ -4,6 +4,8 @@ metadata:
   name: cats-http-errors
   namespace: cats
 spec:
+  alerting:
+    name: CatsErrorBudgetBurn
   description: ""
   indicator:
     ratio:
