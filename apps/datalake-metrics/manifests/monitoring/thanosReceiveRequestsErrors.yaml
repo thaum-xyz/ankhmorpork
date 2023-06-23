@@ -7,6 +7,8 @@ metadata:
   name: thanos-receive-requests-errors
   namespace: datalake-metrics
 spec:
+  alerting:
+    name: ThanosErrorBudgetBurn
   description: ""
   indicator:
     ratio:

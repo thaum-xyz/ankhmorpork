@@ -200,6 +200,9 @@ local monitoring = {
       name: 'thanos-receive-requests-errors',
     },
     spec: {
+      alerting: {
+        name: 'ThanosErrorBudgetBurn',
+      },
       description: '',
       indicator: {
         ratio: {
@@ -222,6 +225,9 @@ local monitoring = {
       name: 'thanos-receive-requests-latency',
     },
     spec: {
+      alerting: {
+        name: 'ThanosErrorBudgetBurn',
+      },
       description: '',
       indicator: {
         latency: {

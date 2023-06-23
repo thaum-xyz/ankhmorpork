@@ -69,6 +69,13 @@ spec:
               fieldPath: status.hostIP
         image: quay.io/thanos/thanos:v0.30.2
         imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 4
+          httpGet:
+            path: /-/healthy
+            port: 10902
+            scheme: HTTP
+          periodSeconds: 30
         name: thanos-compact
         ports:
         - containerPort: 10902

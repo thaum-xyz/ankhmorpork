@@ -7,6 +7,8 @@ metadata:
   name: thanos-receive-requests-latency
   namespace: datalake-metrics
 spec:
+  alerting:
+    name: ThanosErrorBudgetBurn
   description: ""
   indicator:
     latency:
