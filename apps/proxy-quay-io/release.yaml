@@ -1,0 +1,31 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: registry
+spec:
+  chart:
+    spec:
+      chart: docker-registry
+      version: "2.2.2"
+      sourceRef:
+        kind: HelmRepository
+        name: twuni
+      interval: 5m
+      valuesFile: values.yaml
+  interval: 5m
+  timeout: 20m
+  install:
+    timeout: 20m
+    disableWait: false
+    crds: CreateReplace
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 20m
+    disableWait: false
+    crds: CreateReplace
+  valuesFrom:
+  - kind: ConfigMap
+    name: values

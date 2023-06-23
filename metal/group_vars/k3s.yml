@@ -19,6 +19,9 @@ k3s_registries:
     ghcr.io:
       endpoint:
         - "http://192.168.2.96:5001"
+    quay.io:
+      endpoint:
+        - "http://192.168.2.96:5002"
 
 k3s_server_config:
   disable:
