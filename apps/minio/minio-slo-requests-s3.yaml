@@ -6,6 +6,7 @@ metadata:
 spec:
   alerting:
     disabled: true
+    name: MinioErrorBudgetBurn
   indicator:
     ratio:
       errors:

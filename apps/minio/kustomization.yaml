@@ -9,7 +9,7 @@ resources:
   - secret-k3s-db-sa-creds.yaml
   - secret-postgres-sa-creds.yaml
   - prometheus-rules.yaml
-  - minio-s3-requests-slo.yaml
+  - minio-slo-requests-s3.yaml
 configMapGenerator:
   - name: values
     files:
