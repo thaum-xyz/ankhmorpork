@@ -1,0 +1,24 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: authentik-custom-envs
+spec:
+  data:
+  - remoteRef:
+      key: AUTHENTIK_SECRET_KEY
+    secretKey: AUTHENTIK_SECRET_KEY
+  #- remoteRef:
+  #    key: AUTHENTIK_EMAIL_USER
+  #  secretKey: AUTHENTIK_EMAIL__USERNAME
+  #- remoteRef:
+  #    key: AUTHENTIK_EMAIL_PASS
+  #  secretKey: AUTHENTIK_EMAIL__PASSWORD
+  - remoteRef:
+      key: AUTHENTIK_POSTGRES_PASS
+    secretKey: AUTHENTIK_POSTGRESQL__PASSWORD
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    name: authentik-custom-envs
