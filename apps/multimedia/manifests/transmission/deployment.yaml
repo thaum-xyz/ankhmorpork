@@ -40,7 +40,10 @@ spec:
         - configMapRef:
             name: transmission-config
             optional: false
-        image: haugene/transmission-openvpn:3.7
+        - secretRef:
+            name: transmission-vpn-creds
+            optional: false
+        image: haugene/transmission-openvpn:5.0.2
         name: transmission
         ports:
         - containerPort: 9091
@@ -67,9 +70,6 @@ spec:
           name: incomplete
         - mountPath: /download/completed
           name: completed
-        - mountPath: /config/openvpn-credentials.txt
-          name: vpncreds
-          subPath: openvpn-credentials.txt
       dnsConfig:
         nameservers:
         - 1.1.1.1
@@ -82,9 +82,6 @@ spec:
           value: "4"
       tolerations: []
       volumes:
-      - name: vpncreds
-        secret:
-          secretName: transmission-vpn-creds
       - name: data
         persistentVolumeClaim:
           claimName: transmission-appdata
