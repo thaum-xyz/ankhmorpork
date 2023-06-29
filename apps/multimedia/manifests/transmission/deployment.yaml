@@ -64,8 +64,8 @@ spec:
             add:
             - NET_ADMIN
         volumeMounts:
-        - mountPath: /data
-          name: data
+        - mountPath: /config
+          name: config
         - mountPath: /download/incomplete
           name: incomplete
         - mountPath: /download/completed
@@ -82,7 +82,7 @@ spec:
           value: "4"
       tolerations: []
       volumes:
-      - name: data
+      - name: config
         persistentVolumeClaim:
           claimName: transmission-appdata
       - name: incomplete
