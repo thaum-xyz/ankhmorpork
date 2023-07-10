@@ -34,8 +34,8 @@
     },
   },
   prometheus+: {
-    version: '2.44.0',  // application-version-from-github: prometheus/prometheus
-    image: 'quay.io/prometheus/prometheus:v2.44.0',  // application-image-from-github: prometheus/prometheus
+    version: '2.45.0',  // application-version-from-github: prometheus/prometheus
+    image: 'quay.io/prometheus/prometheus:v2.45.0',  // application-image-from-github: prometheus/prometheus
     externalLabels: {
       cluster: 'ankhmorpork',
     },
@@ -234,8 +234,8 @@
   // Following are not in kube-prometheus
   githubReceiver: {
     namespace: 'monitoring',
-    version: '0.1.0',  // application-version-from-github: pfnet-research/alertmanager-to-github
-    image: 'ghcr.io/pfnet-research/alertmanager-to-github:v0.1.0',  // application-image-from-github: pfnet-research/alertmanager-to-github
+    version: '0.1.1',  // application-version-from-github: pfnet-research/alertmanager-to-github
+    image: 'ghcr.io/pfnet-research/alertmanager-to-github:v0.1.1',  // application-image-from-github: pfnet-research/alertmanager-to-github
     githubTokenSecretName: 'github-receiver-credentials',
     githubTokenRef: 'MONITORING_ALERT_RECEIVER_GITHUB_TOKEN',
     resources+: {
@@ -254,8 +254,8 @@
   smokeping: {
     name: 'smokeping',
     namespace: 'monitoring',
-    version: '0.6.1',  // application-version-from-github: SuperQ/smokeping_prober
-    image: 'quay.io/superq/smokeping-prober:v0.6.1',  // application-image-from-github: SuperQ/smokeping_prober
+    version: '0.7.0',  // application-version-from-github: SuperQ/smokeping_prober
+    image: 'quay.io/superq/smokeping-prober:v0.7.0',  // application-image-from-github: SuperQ/smokeping_prober
     port: 9374,
     resources: {
       requests: { cpu: '40m', memory: '30Mi' },

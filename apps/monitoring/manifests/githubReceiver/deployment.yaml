@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: alertmanager-webhook-receiver
     app.kubernetes.io/name: github-receiver
-    app.kubernetes.io/version: 0.1.0
+    app.kubernetes.io/version: 0.1.1
   name: github-receiver
   namespace: monitoring
 spec:
@@ -21,7 +21,7 @@ spec:
       labels:
         app.kubernetes.io/component: alertmanager-webhook-receiver
         app.kubernetes.io/name: github-receiver
-        app.kubernetes.io/version: 0.1.0
+        app.kubernetes.io/version: 0.1.1
     spec:
       automountServiceAccountToken: false
       containers:
@@ -34,7 +34,7 @@ spec:
         envFrom:
         - secretRef:
             name: github-receiver-credentials
-        image: ghcr.io/pfnet-research/alertmanager-to-github:v0.1.0
+        image: ghcr.io/pfnet-research/alertmanager-to-github:v0.1.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
