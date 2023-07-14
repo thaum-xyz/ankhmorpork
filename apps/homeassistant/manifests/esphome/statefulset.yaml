@@ -30,11 +30,11 @@ spec:
           name: http
         resources:
           limits:
-            cpu: 1400m
-            memory: 1400Mi
+            cpu: 1800m
+            memory: 1000Mi
           requests:
-            cpu: 100m
-            memory: 300Mi
+            cpu: 400m
+            memory: 320Mi
         volumeMounts:
         - mountPath: /config
           name: esphome-data
