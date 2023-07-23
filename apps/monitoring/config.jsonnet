@@ -254,8 +254,8 @@
   smokeping: {
     name: 'smokeping',
     namespace: 'monitoring',
-    version: '0.7.0',  // application-version-from-github: SuperQ/smokeping_prober
-    image: 'quay.io/superq/smokeping-prober:v0.7.0',  // application-image-from-github: SuperQ/smokeping_prober
+    version: '0.7.1',  // application-version-from-github: SuperQ/smokeping_prober
+    image: 'quay.io/superq/smokeping-prober:v0.7.1',  // application-image-from-github: SuperQ/smokeping_prober
     port: 9374,
     resources: {
       requests: { cpu: '40m', memory: '30Mi' },
