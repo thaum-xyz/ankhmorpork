@@ -24,7 +24,7 @@ spec:
       namespace: unifi
     spec:
       containers:
-      - image: ghcr.io/unpoller/unpoller:v2.7.13
+      - image: ghcr.io/unpoller/unpoller:v2.7.20
         name: unifi-poller
         ports:
         - containerPort: 9130
