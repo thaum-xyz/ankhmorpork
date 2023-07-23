@@ -10,7 +10,6 @@ DIRS=\
 	apps/homeassistant \
 	apps/homer \
 	apps/monitoring \
-	apps/portal \
 	apps/unifi
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
