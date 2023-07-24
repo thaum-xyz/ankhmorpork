@@ -7,7 +7,7 @@ spec:
   interval: 15m0s
   path: ./base/node-feature-discovery
   prune: true
-  suspend: true
+  suspend: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
