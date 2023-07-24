@@ -1,7 +1,6 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  creationTimestamp: null
   labels:
     app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns

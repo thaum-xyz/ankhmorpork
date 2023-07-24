@@ -8,7 +8,7 @@
           "subdir": "grafonnet"
         }
       },
-      "version": "30280196507e0fe6fa978a3e0eaca3a62844f817",
+      "version": "a1d61cce1da59c71409b99b5c7568511fec661ea",
       "sum": "342u++/7rViR/zj2jeJOjshzglkZ1SY+hFNuyCBFMdc="
     },
     {
@@ -18,8 +18,8 @@
           "subdir": "grafana-builder"
         }
       },
-      "version": "aaa78e30125378f2aae68fcd29678ea28530e2e1",
-      "sum": "tDR6yT2GVfw0wTU12iZH+m01HrbIr6g/xN+/8nzNkU0="
+      "version": "50a2cc5b8b3ea03f7b6fe7e824cc9a85ac031d19",
+      "sum": "xEFMv4+ObwP5L1Wu0XK5agWci4AJzNApys6iKAQxLlQ="
     },
     {
       "source": {
@@ -28,8 +28,8 @@
           "subdir": ""
         }
       },
-      "version": "07ee0700006ecbc8704ff0b2790fccac18c36c6d",
-      "sum": "lKvjoL0XAZa7+qswrvdV4TzoTiE2KRB73GNyduq/Ygg="
+      "version": "46fc905d5b2981642043088ac7902ea50db2903e",
+      "sum": "8FAie1MXww5Ip9F8hQWkU9Fio1Af+hO4weQuuexioIQ="
     },
     {
       "source": {
@@ -38,8 +38,8 @@
           "subdir": ""
         }
       },
-      "version": "8b121c41b6c0741f1603b2d75ccd324050c4bd03",
-      "sum": "4CxwtfVX/OIS5w5+FkExG5evxiatOEMhaWChWaFc9S4="
+      "version": "eb356cfbdcb901fa1a3c3d008faa2a5773a917a1",
+      "sum": "comlHN6rZrsUBBvduaeLh8HKlWNQhZbeecpY8wrSdIY="
     },
     {
       "source": {
