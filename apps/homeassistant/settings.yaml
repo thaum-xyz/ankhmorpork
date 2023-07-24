@@ -37,7 +37,7 @@ homeassistant:
   storage:
     data:
       pvcSpec:
-        storageClassName: "qnap-nfs"
+        storageClassName: "longhorn"
         accessModes:
           - ReadWriteOnce
         resources:
