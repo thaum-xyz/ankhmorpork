@@ -2,8 +2,8 @@ apiVersion: v1
 data:
   LOCAL_NETWORK: 192.168.2.0/24
   LOG_TO_STDOUT: "true"
-  NORDVPN_COUNTRY: CH
   NORDVPN_CATEGORY: legacy_p2p
+  NORDVPN_COUNTRY: CH
   OPENVPN_OPTS: --inactive 3600 --ping 10 --ping-exit 60 --mssfix 1452
   OPENVPN_PROVIDER: NORDVPN
   PGID: "1000"

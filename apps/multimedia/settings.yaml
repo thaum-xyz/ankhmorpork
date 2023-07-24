@@ -55,7 +55,7 @@ radarr:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 2Gi
+            storage: 3Gi
     backups:
       pvcSpec:
         storageClassName: qnap-nfs
