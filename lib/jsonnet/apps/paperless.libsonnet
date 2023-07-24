@@ -11,6 +11,7 @@ local defaults = {
     'app.kubernetes.io/name': defaults.name,
     'app.kubernetes.io/version': defaults.version,
     'app.kubernetes.io/component': 'webservice',
+    #'app.kubernetes.io/part-of': 'paperless',
   },
   selectorLabels:: {
     [labelName]: defaults.commonLabels[labelName]
@@ -47,6 +48,7 @@ local defaults = {
     email: '',
     key: '',
   },
+  backupSchedule: '0 0 * * *',
   storage: {
     data: {
       accessModes: ['ReadWriteOnce'],
@@ -66,6 +68,14 @@ local defaults = {
     },
     consume: {
       storageClassName: 'manual',
+      accessModes: ['ReadWriteOnce'],
+      resources: {
+        requests: {
+          storage: '10Gi',
+        },
+      },
+    },
+    backups: {
       accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
@@ -194,62 +204,73 @@ function(params) {
     },
     spec: $._config.storage.consume,
   },
+  pvcBackups: {
+    apiVersion: 'v1',
+    kind: 'PersistentVolumeClaim',
+    metadata: $._metadata {
+      name: 'backups',
+      labels: $._config.commonLabels {
+        'app.kubernetes.io/component': 'backup',
+      },
+    },
+    spec: $._config.storage.backups,
+  },
 
-  statefulSet: {
-    local c = {
-      name: $._config.name,
-      image: $._config.image,
-      ports: [
-        {
-          containerPort: 8000,
-          name: 'http',
-        },
-        {
-          containerPort: 5555,
-          name: 'metrics',
-        },
-      ],
-      envFrom: [
-        { configMapRef: { name: $.config.metadata.name } },
-        { secretRef: { name: $.secrets.metadata.name } },
-        { secretRef: { name: $.database.metadata.name } },
-      ],
-      env: [
-        {
-          // Adding POD IP to Allowed hosts
-          // From https://github.com/korfuri/django-prometheus/issues/81#issuecomment-456210855
-          name: 'POD_IP',
-          valueFrom: {
-            fieldRef: {
-              fieldPath: 'status.podIP',
-            },
+  local c = {
+    name: $._config.name,
+    image: $._config.image,
+    ports: [
+      {
+        containerPort: 8000,
+        name: 'http',
+      },
+      {
+        containerPort: 5555,
+        name: 'metrics',
+      },
+    ],
+    envFrom: [
+      { configMapRef: { name: $.config.metadata.name } },
+      { secretRef: { name: $.secrets.metadata.name } },
+      { secretRef: { name: $.database.metadata.name } },
+    ],
+    env: [
+      {
+        // Adding POD IP to Allowed hosts
+        // From https://github.com/korfuri/django-prometheus/issues/81#issuecomment-456210855
+        name: 'POD_IP',
+        valueFrom: {
+          fieldRef: {
+            fieldPath: 'status.podIP',
           },
         },
-        {
-          name: 'PAPERLESS_ALLOWED_HOSTS',
-          value: $._config.name + '.' + $._config.namespace + '.svc,$(POD_IP)',
-        },
-      ],
-      securityContext: {
-        privileged: false,
       },
-      volumeMounts: [
-        {
-          mountPath: '/usr/src/paperless/data',
-          name: 'data',
-        },
-        {
-          mountPath: '/usr/src/paperless/media',
-          name: 'media',
-        },
-        {
-          mountPath: '/usr/src/paperless/consume',
-          name: 'consume',
-        },
-      ],
-      resources: $._config.resources,
+      {
+        name: 'PAPERLESS_ALLOWED_HOSTS',
+        value: $._config.name + '.' + $._config.namespace + '.svc,$(POD_IP)',
+      },
+    ],
+    securityContext: {
+      privileged: false,
     },
+    volumeMounts: [
+      {
+        mountPath: '/usr/src/paperless/data',
+        name: 'data',
+      },
+      {
+        mountPath: '/usr/src/paperless/media',
+        name: 'media',
+      },
+      {
+        mountPath: '/usr/src/paperless/consume',
+        name: 'consume',
+      },
+    ],
+    resources: $._config.resources,
+  },
 
+  statefulSet: {
     apiVersion: 'apps/v1',
     kind: 'StatefulSet',
     metadata: $._metadata,
@@ -291,6 +312,84 @@ function(params) {
               },
             },
           ],
+        },
+      },
+    },
+  },
+
+  cronjob: {
+    apiVersion: 'batch/v1',
+    kind: 'CronJob',
+    metadata: $._metadata {
+      name: $._metadata.name + '-backup',
+      labels+: {
+        'app.kubernetes.io/component': 'backup',
+      },
+    },
+    spec: {
+      concurrencyPolicy: 'Forbid',
+      failedJobsHistoryLimit: 2,
+      schedule: $._config.backupSchedule,
+      successfulJobsHistoryLimit: 1,
+      jobTemplate: {
+        spec: {
+          template: {
+            metadata: {
+              labels: $._config.commonLabels {
+                'app.kubernetes.io/component': 'backup',
+              },
+            },
+            spec: {
+              containers: [c {
+                env: [],
+                command: ["/usr/local/bin/document_exporter"],
+                args: [
+                  "--use-folder-prefix",
+                  "--zip",
+                  "--no-color",
+                  "--skip-checks",
+                  "/mnt/backups",
+                ],
+                name: "backup",
+                ports: [],
+                resources: {},
+                volumeMounts+: [
+                  {
+                    mountPath: '/mnt/backups',
+                    name: 'backups',
+                  },
+                ],
+              }],
+              restartPolicy: 'Never',
+              serviceAccountName: $.serviceAccount.metadata.name,
+              volumes: [
+                {
+                  name: 'data',
+                  persistentVolumeClaim: {
+                    claimName: 'data',
+                  },
+                },
+                {
+                  name: 'media',
+                  persistentVolumeClaim: {
+                    claimName: 'media',
+                  },
+                },
+                {
+                  name: 'consume',
+                  persistentVolumeClaim: {
+                    claimName: 'consume',
+                  },
+                },
+                {
+                  name: 'backups',
+                  persistentVolumeClaim: {
+                    claimName: 'backups',
+                  },
+                },
+              ],
+            },
+          },
         },
       },
     },

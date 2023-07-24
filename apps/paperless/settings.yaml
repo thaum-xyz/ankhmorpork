@@ -13,6 +13,7 @@ paperless:
     limits:
       cpu: 2
       memory: 4Gi
+  backupSchedule: '36 22 * * *'
   storage:
     data:
       storageClassName: "qnap-nfs"
@@ -35,10 +36,17 @@ paperless:
       resources:
         requests:
           storage: 1Gi
+    backups:
+      storageClassName: "qnap-nfs"
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
   ingress:
     domain: "papers.krupa.net.pl"
     className: nginx
-    annotations: 
+    annotations:
       cert-manager.io/cluster-issuer: 'letsencrypt-prod'
       reloader.homer/group: Ankh Cloud
       reloader.homer/name: Paperless

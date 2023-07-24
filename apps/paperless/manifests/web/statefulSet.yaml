@@ -64,8 +64,6 @@ spec:
           name: media
         - mountPath: /usr/src/paperless/consume
           name: consume
-      nodeSelector:
-        kubernetes.io/arch: amd64
       restartPolicy: Always
       serviceAccountName: paperless
       volumes:

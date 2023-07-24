@@ -73,18 +73,6 @@ local all = {
         } + config.paperless.ingress.labels,
       },
     },
-
-    statefulSet+: {
-      spec+: {
-        template+: {
-          spec+: {
-            nodeSelector: {
-              'kubernetes.io/arch': 'amd64',
-            },
-          },
-        },
-      },
-    },
   },
   postgres: postgres(config.postgres),
   broker: redis(config.broker {
