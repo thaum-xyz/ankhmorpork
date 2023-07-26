@@ -13,7 +13,7 @@ persistence:
   enabled: true
   storageClass: lvm-secondary
   accessMode: ReadWriteOnce
-  size: 150Gi
+  size: 200Gi
 
 ingress:
   enabled: false
