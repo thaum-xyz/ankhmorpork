@@ -11,6 +11,12 @@ defaultSettings:
 longhornUI:
   replicas: 1
 
+longhornManager:
+  priorityClass: "system-node-critical"
+
+longhornDriver:
+  priorityClass: "system-node-critical"
+
 longhornConversionWebhook:
   replicas: 1
 
@@ -30,4 +36,3 @@ ingress:
   tls: true
   tlsSecret: "longhorn-ui-tls"
   host: "longhorn.ankhmorpork.thaum.xyz"
-  
