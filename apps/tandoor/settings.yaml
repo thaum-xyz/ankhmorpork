@@ -22,14 +22,14 @@ tandoor:
       size: 1Gi
   ingress:
     domain: "recipes.krupa.net.pl"
-    className: nginx
+    className: traefik
     metadata:
       labels:
         probe: enabled
         reloader.homer/enabled: "true"
       annotations: 
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-        nginx.ingress.kubernetes.io/proxy-body-size: 50M
+        # cert-manager.io/cluster-issuer: letsencrypt-prod
+        # nginx.ingress.kubernetes.io/proxy-body-size: 50M
         reloader.homer/group: Ankh Cloud
         reloader.homer/name: Cookbook
         reloader.homer/subtitle: "Our recipes"

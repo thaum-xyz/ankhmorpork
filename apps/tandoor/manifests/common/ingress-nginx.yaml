@@ -2,20 +2,16 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg
-    reloader.homer/name: Cookbook
-    reloader.homer/subtitle: Our recipes
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: 50M
   labels:
     app.kubernetes.io/name: tandoor
     app.kubernetes.io/part-of: tandoor
     app.kubernetes.io/version: 1.4.12
-    probe: enabled
-    reloader.homer/enabled: "true"
-  name: tandoor
+  name: tandoor-nginx
   namespace: tandoor
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: recipes.krupa.net.pl
     http:
