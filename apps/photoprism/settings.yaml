@@ -7,12 +7,11 @@ photoprism:
   namespace: *namespace
   ingress:
     domain: "photo.ankhmorpork.thaum.xyz"
-    className: 'nginx'
+    className: traefik
     labels:
       reloader.homer/enabled: "true"
     annotations:
-      'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
-      'nginx.ingress.kubernetes.io/proxy-body-size': '512M'
+      cert-manager.io/cluster-issuer: 'letsencrypt-prod'
       reloader.homer/group: Multimedia
       reloader.homer/logo: "https://avatars.githubusercontent.com/u/32436079?s=400&v=4"
       reloader.homer/name: Photoprism

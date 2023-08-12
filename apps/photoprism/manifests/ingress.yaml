@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/proxy-body-size: 512M
     reloader.homer/group: Multimedia
     reloader.homer/logo: https://avatars.githubusercontent.com/u/32436079?s=400&v=4
     reloader.homer/name: Photoprism
@@ -12,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: photoprism
     app.kubernetes.io/version: "221118"
-    #probe: enabled
+    probe: enabled
     reloader.homer/enabled: "true"
   name: photoprism
   namespace: photoprism
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
   - host: photo.ankhmorpork.thaum.xyz
     http:
