@@ -3,11 +3,20 @@
 # Create a default IngressClass for Traefik
 ingressClass:
   enabled: true
+  name: traefik
   isDefaultClass: false
 
 ingressRoute:
   dashboard:
     enabled: false
+
+providers:
+  kubernetesCRD:
+    enabled: false
+  kubernetesIngress:
+    ingressClass: traefik
+    publishedService:
+      enabled: true
 
 deployment:
   replicas: 1
