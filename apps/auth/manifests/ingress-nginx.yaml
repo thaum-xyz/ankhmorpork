@@ -8,10 +8,10 @@ metadata:
     app.kubernetes.io/name: oauth2-proxy
     app.kubernetes.io/part-of: auth
     app.kubernetes.io/version: 7.4.0
-  name: oauth2-proxy
+  name: oauth2-proxy-nginx
   namespace: auth
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: auth.ankhmorpork.thaum.xyz
     http:

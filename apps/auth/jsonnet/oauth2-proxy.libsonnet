@@ -23,6 +23,7 @@ local defaults = {
   },
   replicas: 1,
   domain: '',
+  ingressClass: '',
   encryptedSecretsData: error 'must provide encryptedSecretsData',
 };
 
@@ -135,22 +136,22 @@ function(params) {
     },
   },
 
-  ingress: if $.config.ingressDomain != '' then {
+  ingress: if $.config.domain != '' then {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: $.metadata {
       annotations: {
-        'kubernetes.io/ingress.class': 'nginx',
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
       },
     },
     spec: {
+      ingressClassName: $.config.ingressClass,
       tls: [{
         secretName: $.config.name + '-tls',
-        hosts: [$.config.ingressDomain],
+        hosts: [$.config.domain],
       }],
       rules: [{
-        host: $.config.ingressDomain,
+        host: $.config.domain,
         http: {
           paths: [{
             path: '/',
