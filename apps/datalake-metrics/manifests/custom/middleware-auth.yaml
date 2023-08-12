@@ -1,0 +1,9 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: basicauth
+  namespace: datalake-metrics
+spec:
+  basicAuth:
+    removeHeader: true
+    secret: thanos-receive-ingress-auth

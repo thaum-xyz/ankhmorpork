@@ -3,11 +3,13 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: basicauth-datalake-metrics@kubernetescrd
-  name: thanos-receive
+    nginx.ingress.kubernetes.io/auth-realm: Authentication Required
+    nginx.ingress.kubernetes.io/auth-secret: thanos-receive-ingress-auth
+    nginx.ingress.kubernetes.io/auth-type: basic
+  name: thanos-receive-nginx
   namespace: datalake-metrics
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: metrics.datalake.ankhmorpork.thaum.xyz
     http:

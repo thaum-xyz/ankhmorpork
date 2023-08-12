@@ -123,6 +123,20 @@ local all = {
         auth: settings.ingressAuthHTPasswdRef,
       }
     ),
+    middlewareAuth: {
+      apiVersion: 'traefik.containo.us/v1alpha1',
+      kind: 'Middleware',
+      metadata: {
+        name: 'basicauth',
+        namespace: settings.namespace,
+      },
+      spec: {
+        basicAuth: {
+          removeHeader: true,
+          secret: $.custom.thanosReceiveIngressAuth.metadata.name,
+        },
+      },
+    },
     ingress: {
       apiVersion: 'networking.k8s.io/v1',
       kind: 'Ingress',
@@ -131,13 +145,11 @@ local all = {
         namespace: settings.namespace,
         annotations: {
           'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-          'nginx.ingress.kubernetes.io/auth-type': 'basic',
-          'nginx.ingress.kubernetes.io/auth-secret': $.custom.thanosReceiveIngressAuth.metadata.name,
-          'nginx.ingress.kubernetes.io/auth-realm': 'Authentication Required',
+          'traefik.ingress.kubernetes.io/router.middlewares': $.custom.middlewareAuth.metadata.name + '-' + $.custom.middlewareAuth.metadata.namespace + '@kubernetescrd',
         },
       },
       spec: {
-        ingressClassName: 'nginx',
+        ingressClassName: 'traefik',
         rules: [{
           host: 'metrics.datalake.ankhmorpork.thaum.xyz',
           http: {
