@@ -20,9 +20,9 @@ ingress:
 
 consoleIngress:
   enabled: true
-  ingressClassName: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+  ingressClassName: traefik
+  # annotations:
+  #  cert-manager.io/cluster-issuer: letsencrypt-prod
   path: /
   hosts:
     - minio.ankhmorpork.thaum.xyz

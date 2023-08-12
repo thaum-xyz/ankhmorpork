@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: main-minio-console-nginx
+  namespace: minio
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: minio.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          service:
+            name: main-minio-console
+            port:
+              number: 9001
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - minio.ankhmorpork.thaum.xyz
+    secretName: minio-ankhmorpork-tls
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.2.91
