@@ -4,6 +4,7 @@ metadata:
   annotations:
     ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator
       CRDs
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
   labels:
     app.kubernetes.io/component: alert-router
     app.kubernetes.io/instance: main

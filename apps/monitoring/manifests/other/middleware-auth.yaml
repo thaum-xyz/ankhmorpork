@@ -1,0 +1,9 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: auth
+  namespace: monitoring
+spec:
+  forwardAuth:
+    address: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
+    trustForwardHeader: true

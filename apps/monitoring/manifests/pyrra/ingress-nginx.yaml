@@ -3,7 +3,8 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: auth-monitoring@kubernetescrd
+    nginx.ingress.kubernetes.io/auth-signin: https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
     probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://avatars.githubusercontent.com/u/87393422?s=200&v=4
@@ -14,10 +15,10 @@ metadata:
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 0.6.3
     reloader.homer/enabled: "true"
-  name: pyrra-api
+  name: pyrra-api-nginx
   namespace: monitoring
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: pyrra.ankhmorpork.thaum.xyz
     http:

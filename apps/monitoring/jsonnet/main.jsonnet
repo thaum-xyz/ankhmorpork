@@ -41,10 +41,9 @@ local ingress(metadata, domain, service) = {
     annotations+: {
       // Add those annotations to every ingress so oauth-proxy is used.
       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-      'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
-      'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
+      'traefik.ingress.kubernetes.io/router.middlewares': 'auth-monitoring@kubernetescrd',
       'reloader.homer/group': 'Administration',
-      'reloader.homer/logo': 'https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.png',  // Default to prometheus logo
+      'reloader.homer/logo': 'https://github.com/cncf/artwork/blob/master/projects/prometheus/icon/color/prometheus-icon-color.png',  // Default to prometheus logo
       'reloader.homer/name': $.metadata.name,
       'probe-uri': '/-/healthy',
     },
@@ -57,7 +56,7 @@ local ingress(metadata, domain, service) = {
       hosts: [domain],
       secretName: metadata.name + '-tls',
     }],
-    ingressClassName: 'nginx',
+    ingressClassName: 'traefik',
     rules: [{
       host: domain,
       http: {
@@ -204,12 +203,6 @@ local kp =
       ingress: ingress(
         $.alertmanager.service.metadata {
           name: 'alertmanager',  // FIXME: that's an artifact from previous configuration, it should be removed.
-          annotations: {
-            'nginx.ingress.kubernetes.io/affinity': 'cookie',
-            'nginx.ingress.kubernetes.io/affinity-mode': 'persistent',
-            'nginx.ingress.kubernetes.io/session-cookie-hash': 'sha1',
-            'nginx.ingress.kubernetes.io/session-cookie-name': 'routing-cookie',
-          },
         },
         'alertmanager.' + $.values.common.baseDomain,
         {
