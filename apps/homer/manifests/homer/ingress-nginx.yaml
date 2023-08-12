@@ -9,10 +9,10 @@ metadata:
     app.kubernetes.io/part-of: homer
     app.kubernetes.io/version: 23.02.2
     probe: enabled
-  name: homer
+  name: homer-nginx
   namespace: homer
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: ankhmorpork.thaum.xyz
     http:
