@@ -5,21 +5,15 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png
-    reloader.homer/name: HomeAssistant
-    reloader.homer/subtitle: Home automation system
   labels:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
     app.kubernetes.io/version: 2023.7.3
-    probe: enabled
-    reloader.homer/enabled: "true"
-  name: homeassistant
+  name: homeassistant-nginx
   namespace: homeassistant
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: home.ankhmorpork.thaum.xyz
     http:

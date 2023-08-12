@@ -8,7 +8,7 @@ homeassistant:
   namespace: *namespace
   ingress:
     domain: "home.ankhmorpork.thaum.xyz"
-    className: 'nginx'
+    className: traefik
     annotations:
       cert-manager.io/cluster-issuer: 'letsencrypt-prod'
       reloader.homer/group: Ankh Cloud
