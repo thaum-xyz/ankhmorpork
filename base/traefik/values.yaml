@@ -12,7 +12,7 @@ ingressRoute:
 
 providers:
   kubernetesCRD:
-    enabled: false
+    enabled: true
   kubernetesIngress:
     ingressClass: traefik
     publishedService:
