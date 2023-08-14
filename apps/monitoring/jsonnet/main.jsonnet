@@ -41,7 +41,7 @@ local ingress(metadata, domain, service) = {
     annotations+: {
       // Add those annotations to every ingress so oauth-proxy is used.
       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-      'traefik.ingress.kubernetes.io/router.middlewares': 'auth@kubernetescrd',
+      'traefik.ingress.kubernetes.io/router.middlewares': metadata.namespace + '-auth@kubernetescrd',
       'reloader.homer/group': 'Administration',
       'reloader.homer/logo': 'https://github.com/cncf/artwork/blob/master/projects/prometheus/icon/color/prometheus-icon-color.png',  // Default to prometheus logo
       'reloader.homer/name': $.metadata.name,
