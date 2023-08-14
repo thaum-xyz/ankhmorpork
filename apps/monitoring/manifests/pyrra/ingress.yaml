@@ -7,7 +7,7 @@ metadata:
     reloader.homer/group: Administration
     reloader.homer/logo: https://avatars.githubusercontent.com/u/87393422?s=200&v=4
     reloader.homer/name: pyrra
-    traefik.ingress.kubernetes.io/router.middlewares: auth@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: monitoring-auth@kubernetescrd
   labels:
     app.kubernetes.io/component: api
     app.kubernetes.io/name: pyrra

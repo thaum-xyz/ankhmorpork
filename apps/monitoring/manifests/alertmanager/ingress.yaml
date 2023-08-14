@@ -9,7 +9,7 @@ metadata:
     reloader.homer/group: Administration
     reloader.homer/logo: https://github.com/cncf/artwork/blob/master/projects/prometheus/icon/color/prometheus-icon-color.png
     reloader.homer/name: alertmanager
-    traefik.ingress.kubernetes.io/router.middlewares: auth@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: monitoring-auth@kubernetes
   labels:
     app.kubernetes.io/component: alert-router
     app.kubernetes.io/instance: main
