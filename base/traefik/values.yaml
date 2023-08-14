@@ -15,7 +15,7 @@ providers:
     enabled: true
   kubernetesIngress:
     ingressClass: traefik
-    allowExternalNameServices: true  # Required by current oauth2-proxy setup
+    allowCrossNamespace: true  # Required by current oauth2-proxy setup
     publishedService:
       enabled: true
 
