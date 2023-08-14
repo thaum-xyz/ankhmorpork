@@ -3,11 +3,13 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: auth-monitoring@kubernetescrd
+    ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator
+      CRDs
     probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://github.com/cncf/artwork/blob/master/projects/prometheus/icon/color/prometheus-icon-color.png
     reloader.homer/name: alertmanager
+    traefik.ingress.kubernetes.io/router.middlewares: auth@kubernetescrd
   labels:
     app.kubernetes.io/component: alert-router
     app.kubernetes.io/instance: main

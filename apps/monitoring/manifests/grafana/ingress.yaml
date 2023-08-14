@@ -3,11 +3,11 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: auth-monitoring@kubernetescrd
     probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg
     reloader.homer/name: grafana
+    traefik.ingress.kubernetes.io/router.middlewares: auth@kubernetescrd
   labels:
     app.kubernetes.io/component: grafana
     app.kubernetes.io/name: grafana

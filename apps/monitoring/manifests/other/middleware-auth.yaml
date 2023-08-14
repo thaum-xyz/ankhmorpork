@@ -6,4 +6,7 @@ metadata:
 spec:
   forwardAuth:
     address: https://auth.ankhmorpork.thaum.xyz/oauth2/auth
+    authResponseHeaders:
+    - X-Auth-Request-User
+    - X-Auth-Request-Email
     trustForwardHeader: true
