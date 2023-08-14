@@ -8,7 +8,7 @@ ingressClass:
 
 ingressRoute:
   dashboard:
-    enabled: false
+    enabled: true
 
 providers:
   kubernetesCRD:
