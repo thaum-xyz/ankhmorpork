@@ -145,7 +145,7 @@ local all = {
         namespace: settings.namespace,
         annotations: {
           'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-          'traefik.ingress.kubernetes.io/router.middlewares': $.custom.middlewareAuth.metadata.name + '-' + $.custom.middlewareAuth.metadata.namespace + '@kubernetescrd',
+          'traefik.ingress.kubernetes.io/router.middlewares': $.custom.middlewareAuth.metadata.name + '@kubernetescrd',
         },
       },
       spec: {

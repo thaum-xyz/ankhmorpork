@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: basicauth-datalake-metrics@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: basicauth@kubernetescrd
   name: thanos-receive
   namespace: datalake-metrics
 spec:
