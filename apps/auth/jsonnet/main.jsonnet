@@ -36,4 +36,4 @@ local all = oauth(config) + {
   },
 };
 
-{ [name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }
+{ ['oauth2/' + name + '.yaml']: std.manifestYamlDoc(all[name]) for name in std.objectFields(all) }
