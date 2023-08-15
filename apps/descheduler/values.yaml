@@ -1,0 +1,8 @@
+# Config reference: https://github.com/kubernetes-sigs/descheduler/blob/master/charts/descheduler/values.yaml
+
+kind: Deployment
+
+resources:
+
+serviceMonitor:
+  enabled: true
