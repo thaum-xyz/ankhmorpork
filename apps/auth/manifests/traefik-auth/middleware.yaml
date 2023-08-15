@@ -8,5 +8,3 @@ spec:
     address: http://traefik-forward-auth.auth.svc:4181
     authResponseHeaders:
       - X-Forwarded-User
-      - X-Auth-Request-User
-      - X-Auth-Request-Email
