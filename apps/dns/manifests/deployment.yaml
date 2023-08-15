@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.corefile/md5: 5f0c0f05a1fa9518e076d3e1b682238f
+        checksum.corefile/md5: 07509b4387196674790389e54fa3bdb3
         checksum.envs/md5: 7b94015a8cc4f90d59a98d7e0a1ebe61
         parca.dev/scrape: "true"
       labels:
