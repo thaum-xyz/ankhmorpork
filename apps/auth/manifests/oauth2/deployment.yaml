@@ -9,7 +9,6 @@ metadata:
   name: oauth2-proxy
   namespace: auth
 spec:
-  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/component: proxy
@@ -48,6 +47,7 @@ spec:
         - --pass-basic-auth=false
         - --http-address=0.0.0.0:4180
         - --metrics-address=0.0.0.0:8080
+        - --silence-ping-logging
         envFrom:
         - secretRef:
             name: oauth-creds

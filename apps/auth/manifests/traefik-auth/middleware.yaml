@@ -1,0 +1,12 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-forward-auth
+  namespace: auth
+spec:
+  forwardAuth:
+    address: http://traefik-forward-auth.auth.svc:4181
+    authResponseHeaders:
+      - X-Forwarded-User
+      - X-Auth-Request-User
+      - X-Auth-Request-Email

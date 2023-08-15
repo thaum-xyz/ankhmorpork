@@ -3,7 +3,7 @@ version: '7.4.0'
 image: 'quay.io/paulfantom/oauth2-proxy:7.4.0'
 namespace: 'auth'
 replicas: 2
-ingressClass: traefik
+ingressClass: nginx
 domain: 'auth.ankhmorpork.thaum.xyz'
 resources:
   requests: { cpu: '2m', memory: '17Mi' }

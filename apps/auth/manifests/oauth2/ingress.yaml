@@ -11,11 +11,18 @@ metadata:
   name: oauth2-proxy
   namespace: auth
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
   - host: auth.ankhmorpork.thaum.xyz
     http:
       paths:
+      - backend:
+          service:
+            name: traefik-forward-auth
+            port:
+              name: auth-http
+        path: /_oauth
+        pathType: Prefix
       - backend:
           service:
             name: oauth2-proxy
