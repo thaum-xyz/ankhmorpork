@@ -4,5 +4,8 @@ kind: Deployment
 
 resources:
 
+service:
+  enabled: true
+
 serviceMonitor:
   enabled: true
