@@ -7,7 +7,7 @@ spec:
   data:
   - remoteRef:
       key: THANOS_INGRESS_HTPASSWD
-    secretKey: auth
+    secretKey: users
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore

@@ -120,7 +120,7 @@ local all = {
       },
       'doppler-auth-api',
       {
-        auth: settings.ingressAuthHTPasswdRef,
+        users: settings.ingressAuthHTPasswdRef,
       }
     ),
     middlewareAuth: {
