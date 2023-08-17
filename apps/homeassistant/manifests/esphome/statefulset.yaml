@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: esphome
-    app.kubernetes.io/version: 2023.7.0
+    app.kubernetes.io/version: 2023.8.0
   name: esphome
   namespace: homeassistant
 spec:
@@ -16,13 +16,13 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: esphome
-        app.kubernetes.io/version: 2023.7.0
+        app.kubernetes.io/version: 2023.8.0
     spec:
       containers:
       - env:
         - name: ESPHOME_DASHBOARD_USE_PING
           value: "true"
-        image: esphome/esphome:2023.7.0
+        image: esphome/esphome:2023.8.0
         imagePullPolicy: IfNotPresent
         name: esphome
         ports:

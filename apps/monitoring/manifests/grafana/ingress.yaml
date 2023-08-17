@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Email
     probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg

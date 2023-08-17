@@ -518,6 +518,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2023.7.3
+    app.kubernetes.io/version: 2023.8.2
   name: homeassistant-configs
   namespace: homeassistant

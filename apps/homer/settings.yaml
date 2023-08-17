@@ -1,7 +1,7 @@
 ---
 homer:
-  version: "23.02.2"  # application-version-from-github: bastienwirtz/homer
-  image: "b4bz/homer:v23.02.2"  # application-image-from-github: bastienwirtz/homer
+  version: "23.05.1"  # application-version-from-github: bastienwirtz/homer
+  image: "b4bz/homer:v23.05.1"  # application-image-from-github: bastienwirtz/homer
   namespace: "homer"
   replicas: 2
   domain: "ankhmorpork.thaum.xyz"

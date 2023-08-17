@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns
-    app.kubernetes.io/version: 1.10.1
+    app.kubernetes.io/version: 1.11.1
   name: coredns
   namespace: dns
 spec:
@@ -21,12 +21,12 @@ spec:
     metadata:
       annotations:
         checksum.corefile/md5: 07509b4387196674790389e54fa3bdb3
-        checksum.envs/md5: 7b94015a8cc4f90d59a98d7e0a1ebe61
+        checksum.envs/md5: e716aaef086fb3753e338b97d9e6cf86
         parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: dns-server
         app.kubernetes.io/name: coredns
-        app.kubernetes.io/version: 1.10.1
+        app.kubernetes.io/version: 1.11.1
     spec:
       affinity:
         podAntiAffinity:
@@ -47,7 +47,7 @@ spec:
         envFrom:
         - secretRef:
             name: coredns-envs
-        image: coredns/coredns:1.10.1
+        image: coredns/coredns:1.11.1
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 5

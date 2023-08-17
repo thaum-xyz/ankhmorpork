@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: traefik-forward-auth
-  namespace: auth
   labels:
     app: traefik-forward-auth
+  name: traefik-forward-auth
+  namespace: auth
 spec:
   replicas: 1
   selector:
@@ -15,34 +15,34 @@ spec:
       labels:
         app: traefik-forward-auth
     spec:
-      terminationGracePeriodSeconds: 60
       containers:
-      - image: thomseddon/traefik-forward-auth:latest
+      - env:
+        - name: DOMAIN
+          value: krupa.net.pl
+        - name: COOKIE_DOMAIN
+          value: ankhmorpork.thaum.xyz
+        - name: AUTH_HOST
+          value: auth.ankhmorpork.thaum.xyz
+        - name: LOG_LEVEL
+          value: debug
+        - name: PROVIDERS_GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: OAUTH2_PROXY_CLIENT_ID
+              name: oauth-creds
+        - name: PROVIDERS_GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: OAUTH2_PROXY_CLIENT_SECRET
+              name: oauth-creds
+        - name: SECRET
+          valueFrom:
+            secretKeyRef:
+              key: OAUTH2_PROXY_COOKIE_SECRET
+              name: oauth-creds
+        image: thomseddon/traefik-forward-auth:latest
         name: traefik-forward-auth
         ports:
         - containerPort: 4181
           protocol: TCP
-        env:
-        - name: DOMAIN
-          value: "krupa.net.pl"
-        - name: COOKIE_DOMAIN
-          value: "ankhmorpork.thaum.xyz"
-        - name: AUTH_HOST
-          value: "auth.ankhmorpork.thaum.xyz"
-        - name: LOG_LEVEL
-          value: "debug"
-        - name: PROVIDERS_GOOGLE_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: oauth-creds
-              key: OAUTH2_PROXY_CLIENT_ID
-        - name: PROVIDERS_GOOGLE_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: oauth-creds
-              key: OAUTH2_PROXY_CLIENT_SECRET
-        - name: SECRET
-          valueFrom:
-            secretKeyRef:
-              name: oauth-creds
-              key: OAUTH2_PROXY_COOKIE_SECRET
+      terminationGracePeriodSeconds: 60

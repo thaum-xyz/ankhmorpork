@@ -7,4 +7,4 @@ spec:
   forwardAuth:
     address: http://traefik-forward-auth.auth.svc:4181
     authResponseHeaders:
-      - X-Forwarded-User
+    - X-Forwarded-User

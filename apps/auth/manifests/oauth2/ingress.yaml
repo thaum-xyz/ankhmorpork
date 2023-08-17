@@ -18,13 +18,6 @@ spec:
       paths:
       - backend:
           service:
-            name: traefik-forward-auth
-            port:
-              name: auth-http
-        path: /_oauth
-        pathType: Prefix
-      - backend:
-          service:
             name: oauth2-proxy
             port:
               name: http
