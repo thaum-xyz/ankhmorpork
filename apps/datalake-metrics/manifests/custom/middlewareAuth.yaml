@@ -6,5 +6,4 @@ metadata:
 spec:
   basicAuth:
     removeHeader: true
-    headerFiels: X-Scope-OrgID
     secret: thanos-receive-ingress-auth
