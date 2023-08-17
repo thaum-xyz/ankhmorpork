@@ -2,7 +2,7 @@
 kube_vip_image: ghcr.io/kube-vip/kube-vip:v0.6.0
 kube_vip_ip: "192.168.2.39"  # VIP IP managed by kube-vip
 
-k3s_version: v1.27.3+k3s1
+k3s_version: v1.27.4+k3s1
 #k3s_master_ip: "{{ hostvars[groups['k3s_control_plane'][0]]['ansible_default_ipv4']['address'] }}"
 k3s_master_ip: "{{ kube_vip_ip }}"
 
@@ -24,6 +24,7 @@ k3s_registries:
         - "http://192.168.2.96:5002"
 
 k3s_server_config:
+  # flannel-backend: none
   disable:
   - servicelb
   - traefik
@@ -56,6 +57,7 @@ k3s_server_config:
 
 
 k3s_agent_config:
+  # flannel-backend: none
   kubelet-arg:
   - "system-reserved=cpu=250m,memory=300Mi"
   - "kube-reserved=cpu=200m,memory=150Mi"

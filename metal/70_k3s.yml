@@ -23,6 +23,7 @@
 
 - hosts: k3s_control_plane
   become: true
+  serial: 1
   any_errors_fatal: true
   roles:
     - k3s-master
