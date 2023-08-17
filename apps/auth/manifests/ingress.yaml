@@ -20,13 +20,6 @@ spec:
               name: auth-http
         path: /_oauth
         pathType: Prefix
-      - backend:
-          service:
-            name: oauth2-proxy
-            port:
-              name: http
-        path: /
-        pathType: Prefix
   tls:
   - hosts:
     - auth.ankhmorpork.thaum.xyz
