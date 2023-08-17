@@ -703,11 +703,7 @@ local kp =
       // FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
       networkPolicy+:: allowIngressNetworkPolicy($.grafana.service.spec.ports[0].port),
       ingress: ingress(
-        $.grafana.service.metadata {
-          annotations: {
-            'nginx.ingress.kubernetes.io/auth-response-headers': 'X-Auth-Request-Email',
-          },
-        },
+        $.grafana.service.metadata,
         'grafana.' + $.values.common.baseDomain,
         {
           name: $.grafana.service.metadata.name,
