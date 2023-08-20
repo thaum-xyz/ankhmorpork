@@ -20,7 +20,7 @@ providers:
       enabled: true
 
 deployment:
-  replicas: 1
+  replicas: 2
 
 resources:
   requests:
@@ -29,6 +29,15 @@ resources:
   limits:
     cpu: "300m"
     memory: "150Mi"
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
+        topologyKey: kubernetes.io/hostname
 
 service:
   annotations:

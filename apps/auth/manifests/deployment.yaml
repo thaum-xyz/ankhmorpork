@@ -6,6 +6,7 @@ metadata:
   labels:
     app: traefik-forward-auth
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: traefik-forward-auth
@@ -14,6 +15,16 @@ spec:
       labels:
         app: traefik-forward-auth
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - traefik-forward-auth
+            topologyKey: kubernetes.io/hostname
       terminationGracePeriodSeconds: 60
       containers:
       - image: thomseddon/traefik-forward-auth:latest
