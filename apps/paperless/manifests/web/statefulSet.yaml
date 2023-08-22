@@ -48,6 +48,12 @@ spec:
           name: http
         - containerPort: 5555
           name: metrics
+        readinessProbe:
+          httpGet:
+            path: /accounts/login/?next=/
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 5
         resources:
           limits:
             cpu: 2

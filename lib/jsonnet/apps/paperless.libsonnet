@@ -250,6 +250,14 @@ function(params) {
         value: $._config.name + '.' + $._config.namespace + '.svc,$(POD_IP)',
       },
     ],
+    readinessProbe: {
+      initialDelaySeconds: 15,
+      periodSeconds: 5,
+      httpGet: {
+        path: '/accounts/login/?next=/',
+        port: 'http',
+      },
+    },
     securityContext: {
       privileged: false,
     },
@@ -353,6 +361,7 @@ function(params) {
                 name: "backup",
                 ports: [],
                 resources: {},
+                readinessProbe: {},
                 volumeMounts+: [
                   {
                     mountPath: '/mnt/backups',
