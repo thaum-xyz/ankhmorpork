@@ -39,7 +39,6 @@ spec:
             image: ghcr.io/paperless-ngx/paperless-ngx:1.15.1
             name: backup
             ports: []
-            readinessProbe: {}
             resources: {}
             securityContext:
               privileged: false

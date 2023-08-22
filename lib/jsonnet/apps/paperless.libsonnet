@@ -361,7 +361,7 @@ function(params) {
                 name: "backup",
                 ports: [],
                 resources: {},
-                readinessProbe: {},
+                readinessProbe:: {},
                 volumeMounts+: [
                   {
                     mountPath: '/mnt/backups',
