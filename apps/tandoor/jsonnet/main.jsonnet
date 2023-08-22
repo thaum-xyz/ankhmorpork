@@ -1,5 +1,5 @@
 local postgres = import 'apps/cloudnative-pg-cluster.libsonnet';
-local tandoor = import 'tandoor.libsonnet';
+local tandoor = import 'apps/tandoor.libsonnet';
 local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
 
 local configYAML = (importstr '../settings.yaml');

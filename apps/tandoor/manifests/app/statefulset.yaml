@@ -59,9 +59,10 @@ spec:
           name: gunicorn
         readinessProbe:
           httpGet:
-            path: /
-            port: 8080
+            path: /accounts/login/?next=/search/
+            port: gunicorn
             scheme: HTTP
+          initialDelaySeconds: 15
           periodSeconds: 30
         resources:
           limits:

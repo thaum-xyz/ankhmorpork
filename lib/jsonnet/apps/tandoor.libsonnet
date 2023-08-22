@@ -248,11 +248,12 @@ function(params) {
       }],
       readinessProbe: {
         httpGet: {
-          path: '/',
-          port: 8080,
+          path: '/accounts/login/?next=/search/',
+          port: "gunicorn",
           scheme: 'HTTP',
         },
         periodSeconds: 30,
+        initialDelaySeconds: 15,
       },
       resources: $._config.resources,
       securityContext: {
