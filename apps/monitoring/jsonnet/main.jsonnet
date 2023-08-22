@@ -191,6 +191,13 @@ local kp =
       serviceAccount+: {
         automountServiceAccountToken: false,  // TODO: move into kube-prometheus
       },
+      service+: {
+        metadata+: {
+          annotations+: {
+            'traefik.ingress.kubernetes.io/service.sticky.cookie': 'true',
+          },
+        },
+      },
       podDisruptionBudget+: {
         spec+: {
           // Allow cluster drain even if alertmanager eviction cannot be completed
@@ -326,6 +333,13 @@ local kp =
     prometheusAdapter:: null,
 
     prometheus+: {
+      service+: {
+        metadata+: {
+          annotations+: {
+            'traefik.ingress.kubernetes.io/service.sticky.cookie': 'true',
+          },
+        },
+      },
       prometheus+: {
         spec+: {
           // TODO: move ingress and externalURL to an addon
