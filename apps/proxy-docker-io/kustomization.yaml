@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - release.yaml
   - podmonitor.yaml
+  - prometheusrules.yaml
   - s3credentials.yaml
 configMapGenerator:
   - name: values

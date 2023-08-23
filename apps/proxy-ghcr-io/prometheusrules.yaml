@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: alerts
+spec:
+  groups:
+  - name: registry-proxy.rules
+    rules:
+    - alert: RegistryProxyGCFailed
+      annotations:
+        summary: Registry garbage collection job failed
+        description: Registry garbage collection job failed to cleanup old blobs. Unfixed will cause registry to unnecessary use more disk space.
+      expr: kube_job_failed{job_name=~".*garbage-collector.*"} > 0
+      for: 30m
+      labels:
+        severity: warning
