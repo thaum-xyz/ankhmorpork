@@ -8,6 +8,7 @@ metadata:
     reloader.homer/name: Random Cat
     reloader.homer/subtitle: Cat as a Service
     nginx.ingress.kubernetes.io/app-root: /random
+    traefik.ingress.kubernetes.io/router.middlewares: cats-path-replace@kubernetescrd
   labels:
     app.kubernetes.io/name: cats
     # probe: enabled
