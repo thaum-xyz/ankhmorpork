@@ -38,7 +38,7 @@ ingress:
     secretName: ingress-logs-tls
 
 write:
-  replicas: 1
+  replicas: 2
   autoscaling:
     enabled: false
   extraArgs:
@@ -52,7 +52,7 @@ write:
     storageClass: qnap-nfs
 
 read:
-  replicas: 1
+  replicas: 2
   autoscaling:
     enabled: false
   extraArgs:
@@ -63,7 +63,7 @@ read:
       name: s3-credentials
 
 backend:
-  replicas: 1
+  replicas: 2
   autoscaling:
     enabled: false
   extraArgs:
