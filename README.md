@@ -106,8 +106,8 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>DNS</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/1412239?s=200&v=4"></td>
-    <td><a href="https://www.nginx.com">NGINX</a></td>
+    <td><img width="32" src="https://github.com/traefik/traefik/raw/master/docs/content/assets/img/traefik.logo.png"></td>
+    <td><a href="https://github.com/traefik/traefik">Traefik</a></td>
     <td>Kubernetes Ingress Controller</td>
   </tr>
   <tr>

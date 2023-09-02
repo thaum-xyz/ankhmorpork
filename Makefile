@@ -2,7 +2,6 @@ SHELL:=/bin/bash
 
 DIRS=\
 	base/cert-manager \
-	base/ingress-nginx \
 	base/flux-system \
 	apps/auth \
 	apps/datalake-metrics \
