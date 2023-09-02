@@ -37,11 +37,10 @@ local all = {
     metadata: $._metadata {
       annotations: {
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-        'kubernetes.io/ingress.class': 'nginx',
-        'nginx.ingress.kubernetes.io/limit-rps': '100',
       },
     },
     spec: {
+      ingressClassName: 'traefik',
       rules: [{
         host: 'flux.ankhmorpork.thaum.xyz',
         http: {

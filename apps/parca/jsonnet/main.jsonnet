@@ -96,9 +96,7 @@ local all = {
       metadata: all.parca.serviceAccount.metadata {
         annotations: {
           'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-          'kubernetes.io/ingress.class': 'nginx',
-          'nginx.ingress.kubernetes.io/auth-signin': 'https://auth.ankhmorpork.thaum.xyz/oauth2/start?rd=$scheme://$host$escaped_request_uri',
-          'nginx.ingress.kubernetes.io/auth-url': 'https://auth.ankhmorpork.thaum.xyz/oauth2/auth',
+          'traefik.ingress.kubernetes.io/router.middlewares': 'auth-traefik-forward-auth@kubernetescrd',
         },
       },
       spec: {

@@ -7,7 +7,6 @@ metadata:
     reloader.homer/logo: https://media.istockphoto.com/id/662195090/de/vektor/minimale-cat-logo.jpg?s=612x612&w=0&k=20&c=tx_rWZx2Uzxh-HOHlgFBnyQnm4CzrXO3fAhcW1Mp1i8=
     reloader.homer/name: Random Cat
     reloader.homer/subtitle: Cat as a Service
-    nginx.ingress.kubernetes.io/app-root: /random
     traefik.ingress.kubernetes.io/router.middlewares: cats-path-replace@kubernetescrd
   labels:
     app.kubernetes.io/name: cats
