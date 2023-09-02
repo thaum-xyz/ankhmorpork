@@ -1,0 +1,113 @@
+# helm chart values reference: https://github.com/grafana/loki/blob/main/production/helm/loki/values.yaml
+
+minio:
+  # We are using dedicated external Minio Cluster
+  enabled: false
+
+# TODO: Enable when we have tracing
+#tracing:
+#  jaegerAgentHost: ""
+
+# TODO: Enable when locking down cluster
+networkPolicy:
+  # -- Specifies whether Network Policies should be created
+  enabled: false
+
+# This is not a loki `index_gateway`!
+gateway:
+  # Disable gateway component as we are handling routing and auth on traefik level
+  enabled: false
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: datalake-logs-basicauth@kubernetescrd
+  paths:
+    write:
+      - /loki/api/v1/push
+    read: null
+    singleBinary: null
+  hosts:
+  - logs.datalake.ankhmorpork.thaum.xyz
+  tls:
+  - hosts:
+    - logs.datalake.ankhmorpork.thaum.xyz
+    secretName: ingress-logs-tls
+
+write:
+  replicas: 1
+  autoscaling:
+    enabled: false
+  extraArgs:
+  - -config.expand-env=true
+  #- -log.level=debug
+  extraEnvFrom:
+  - secretRef:
+      name: s3-credentials
+  persistence:
+    size: 50Gi
+    storageClass: qnap-nfs
+
+read:
+  replicas: 1
+  autoscaling:
+    enabled: false
+  extraArgs:
+  - -config.expand-env=true
+  #- -log.level=debug
+  extraEnvFrom:
+  - secretRef:
+      name: s3-credentials
+
+backend:
+  replicas: 1
+  autoscaling:
+    enabled: false
+  extraArgs:
+  - -config.expand-env=true
+  extraEnvFrom:
+  - secretRef:
+      name: s3-credentials
+  persistence:
+    size: 50Gi
+    storageClass: qnap-nfs
+
+tableManager:
+  enabled: false
+
+test:
+  enabled: false
+
+monitoring:
+  serviceMonitor:
+    enabled: true
+    metricsInstance:
+      enabled: false
+  rules:
+    enabled: true
+  dashboards:
+    enabled: true
+  selfMonitoring:
+    enabled: false
+    grafanaAgent:
+      installOperator: false
+  lokiCanary:
+    enabled: false  # It is using loki-gateway SVC which is disabled
+
+# configStorageType: ConfigMap
+loki:
+  auth_enabled: false  # Disable multi-tenancy
+  storage:
+    bucketNames:
+      chunks: logs-chunks
+      ruler: logs-ruler
+    type: s3
+    s3:
+      endpoint: http://main-minio.minio.svc:9000
+      insecure: true
+      s3ForcePathStyle: true
+      secretAccessKey: "${S3_SECRET_KEY}"
+      accessKeyId: "${S3_ACCESS_KEY}"

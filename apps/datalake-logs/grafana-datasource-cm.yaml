@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    grafana_datasource: "1"
+  name: grafana-datasource
+data:
+  loki-datasource.yaml: |
+    apiVersion: 1
+    datasources:
+    - name: Logs
+      type: loki
+      uid: datalake-logs
+      url: http://loki-read.datalake-logs.svc.cluster.local:3100
+      access: proxy
+      jsonData:
+        maxLines: 1000
