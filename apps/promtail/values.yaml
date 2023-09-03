@@ -25,3 +25,5 @@ config:
   clients:
     # No need for basic auth as this is internal to the cluster
     - url: http://loki-write.datalake-logs.svc:3100/loki/api/v1/push
+      external_labels:
+        cluster: ankhmorpork
