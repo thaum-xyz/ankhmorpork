@@ -2,6 +2,8 @@
 
 # TODO: Add systemd logs gathering. Starting point - https://community.grafana.com/t/promtail-never-scrapes-journal-logs-using-readme-suggestions-in-official-helm-chart/91436
 
+priorityClassName: "system-cluster-critical"
+
 serviceMonitor:
   enabled: true
 
