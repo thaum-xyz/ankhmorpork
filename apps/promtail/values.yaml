@@ -1,0 +1,25 @@
+# Config reference: https://github.com/grafana/helm-charts/blob/main/charts/promtail/values.yaml
+
+# TODO: Add systemd logs gathering. Starting point - https://community.grafana.com/t/promtail-never-scrapes-journal-logs-using-readme-suggestions-in-official-helm-chart/91436
+
+serviceMonitor:
+  enabled: true
+
+
+# Extra volumes to be added in addition to those specified under `defaultVolumes`.
+#extraVolumes:
+#  - name: var-log
+#    hostPath:
+#      path: /var/log
+
+# Extra volume mounts together. Corresponds to `extraVolumes`.
+#extraVolumeMounts:
+#  - name: var-log
+#    mountPath: /var/log
+#    readOnly: true
+
+config:
+  logFormat: json
+  clients:
+    # No need for basic auth as this is internal to the cluster
+    - url: http://loki-write.datalake-logs.svc:3100/loki/api/v1/push
