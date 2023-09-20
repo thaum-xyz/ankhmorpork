@@ -13,7 +13,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2023.7.3
+    app.kubernetes.io/version: 2023.9.2
     probe: enabled
     reloader.homer/enabled: "true"
   name: homeassistant

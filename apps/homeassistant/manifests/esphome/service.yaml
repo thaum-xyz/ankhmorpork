@@ -5,7 +5,7 @@ metadata:
     metallb.universe.tf/address-pool: default
   labels:
     app.kubernetes.io/name: esphome
-    app.kubernetes.io/version: 2023.7.0
+    app.kubernetes.io/version: 2023.8.3
   name: esphome
   namespace: homeassistant
 spec:
