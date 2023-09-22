@@ -25,7 +25,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: ghcr.io/paulfantom/homer-reloader:0.0.10  # {"$imagepolicy": "homer:reloader"}
+        image: ghcr.io/paulfantom/homer-reloader:0.0.11  # {"$imagepolicy": "homer:reloader"}
         name: reloader
         ports:
         - containerPort: 9333
