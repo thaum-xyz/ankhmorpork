@@ -10,6 +10,19 @@ local configYAML = (importstr '../settings.yaml');
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];
 
+local imagecache(metadata, images) = {
+  apiVersion: 'kubefledged.io/v1alpha2',
+  kind: 'ImageCache',
+  metadata: metadata,
+  spec: {
+    cacheSpec: [
+      {
+        images: images,
+      },
+    ],
+  },
+};
+
 local all = {
   esphomedevices: externalTargets(config.espdevices) {
     _metadata+:: {
@@ -89,6 +102,12 @@ local all = {
   },
 
   homeassistant: homeassistant(config.homeassistant) + {
+    imagecache: imagecache(
+      $.homeassistant.statefulSet.metadata,
+      [
+        config.homeassistant.image,
+      ]
+    ),
     credentials: externalsecret(
       {
         name: config.homeassistant.apiTokenSecretKeySelector.name,

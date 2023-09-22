@@ -1,0 +1,14 @@
+apiVersion: kubefledged.io/v1alpha2
+kind: ImageCache
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homeassistant
+    app.kubernetes.io/part-of: homeassistant
+    app.kubernetes.io/version: 2023.9.2
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  cacheSpec:
+  - images:
+    - homeassistant/home-assistant:2023.9.2
