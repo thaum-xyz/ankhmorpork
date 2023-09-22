@@ -3,25 +3,13 @@ local esphome = import 'apps/esphome.libsonnet';
 local homeassistant = import 'apps/homeassistant.libsonnet';
 local externalTargets = import 'externalTargets.libsonnet';
 local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
+local imagecache = (import 'utils/imagecache.libsonnet').imagecache;
 local removeAlerts = (import 'utils/mixins.libsonnet').removeAlerts;
 
 local configYAML = (importstr '../settings.yaml');
 
 // Join multiple configuration sources
 local config = std.parseYaml(configYAML)[0];
-
-local imagecache(metadata, images) = {
-  apiVersion: 'kubefledged.io/v1alpha2',
-  kind: 'ImageCache',
-  metadata: metadata,
-  spec: {
-    cacheSpec: [
-      {
-        images: images,
-      },
-    ],
-  },
-};
 
 local all = {
   esphomedevices: externalTargets(config.espdevices) {
