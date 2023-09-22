@@ -1,0 +1,12 @@
+---
+apiVersion: kubefledged.io/v1alpha2
+kind: ImageCache
+metadata:
+  name: kube-fledged
+  namespace: kube-fledged
+spec:
+  cacheSpec:
+  - images:
+    - senthilrch/busybox:1.35.0
+    - senthilrch/kubefledged-cri-client:v0.10.0
+    - senthilrch/kubefledged-controller:v0.10.0
