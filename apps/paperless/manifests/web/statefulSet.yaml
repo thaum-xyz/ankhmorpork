@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 1.15.1
+    app.kubernetes.io/version: 1.17.4
   name: paperless
   namespace: paperless
 spec:
@@ -24,7 +24,7 @@ spec:
       labels:
         app.kubernetes.io/component: webservice
         app.kubernetes.io/name: paperless
-        app.kubernetes.io/version: 1.15.1
+        app.kubernetes.io/version: 1.17.4
     spec:
       containers:
       - env:
@@ -41,7 +41,7 @@ spec:
             name: paperless-secrets
         - secretRef:
             name: paperless-db
-        image: ghcr.io/paperless-ngx/paperless-ngx:1.15.1
+        image: ghcr.io/paperless-ngx/paperless-ngx:1.17.4
         name: paperless
         ports:
         - containerPort: 8000

@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: backup
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 1.15.1
+    app.kubernetes.io/version: 1.17.4
   name: backups
   namespace: paperless
 spec:
