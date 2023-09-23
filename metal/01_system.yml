@@ -36,13 +36,6 @@
       backup: yes
     notify: restart systemd-logind
 
-# TODO: fix handling /var/log in the role
-#- hosts: raspberry
-#  become: true
-#  any_errors_fatal: true
-#  roles:
-#  - paulfantom.raspberry
-
 - name: Kubernetes host-level requirements
   hosts: all
   become: true
