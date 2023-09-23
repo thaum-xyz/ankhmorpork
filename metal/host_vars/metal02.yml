@@ -1,0 +1,4 @@
+---
+node_labels:
+  - "gpu.infra/nvidia=true"
+  - "node-role.kubernetes.io/spot=true"
