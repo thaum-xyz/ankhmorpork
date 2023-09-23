@@ -3,7 +3,7 @@
 
 # Assign enable_smartmon=true label to enable SMART monitoring of disks
 
-master01 ansible_host=192.168.2.30
+master01 ansible_host=192.168.2.31
 master02 ansible_host=192.168.2.32
 master03  ansible_host=192.168.2.33
 
