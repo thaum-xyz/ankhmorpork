@@ -367,7 +367,7 @@ local kp =
           // remoteRead: [{
           //   url: "http://mimir.mimir.svc:9009/prometheus/api/v1/read",
           // }],
-          # TODO: Move to kube-prometheus
+          // FIXME: Remove when https://github.com/prometheus-operator/kube-prometheus/pull/2232 is merged
           scrapeConfigNamespaceSelector: {},
           scrapeConfigSelector: {},
           enforcedNamespaceLabel: 'namespace',
