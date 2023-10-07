@@ -126,6 +126,8 @@ spec:
   retentionSize: 35GB
   ruleNamespaceSelector: {}
   ruleSelector: {}
+  scrapeConfigNamespaceSelector: {}
+  scrapeConfigSelector: {}
   serviceAccountName: prometheus-k8s
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}

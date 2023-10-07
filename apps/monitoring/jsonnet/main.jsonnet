@@ -367,7 +367,9 @@ local kp =
           // remoteRead: [{
           //   url: "http://mimir.mimir.svc:9009/prometheus/api/v1/read",
           // }],
-
+          # TODO: Move to kube-prometheus
+          scrapeConfigNamespaceSelector: {},
+          scrapeConfigSelector: {},
           enforcedNamespaceLabel: 'namespace',
           excludedFromEnforcement: [
             //{
@@ -502,7 +504,7 @@ local kp =
       serviceMonitorKubeControllerManager:: null,
       serviceMonitorKubeScheduler:: null,
       podMonitorKubeProxy:: null,
-      serviceMonitorKubelet+: {
+      serviceMonitorKubelet+:: {  // Migrating to ScrapeConfig
         spec+: {
           endpoints+: [
             // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
