@@ -14,7 +14,7 @@ spec:
     type: Bearer
   honorLabels: true
   kubernetesSDConfigs:
-  - role: Node
+  - Node
   metricRelabelings:
   - action: replace
     replacement: kube-system

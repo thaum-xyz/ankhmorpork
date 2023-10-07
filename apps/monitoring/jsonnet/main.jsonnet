@@ -528,44 +528,46 @@ local kp =
       serviceMonitorKubeScheduler:: null,
       podMonitorKubeProxy:: null,
       serviceMonitorKubelet+:: {  // Migrating to ScrapeConfig
-        spec+: {
-          endpoints+: [
-            // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
+      },
+      scrapeConfigKubeletSLIs: {
+        apiVersion: 'monitoring.coreos.com/v1alpha1',
+        kind: 'ScrapeConfig',
+        metadata: $.kubernetesControlPlane.serviceMonitorKubelet.metadata {
+          name: 'kubelet-slis',
+        },
+        spec: {
+          authorization: {
+            credentials: {
+              key: 'token',
+              name: 'prometheus-k8s-token',
+            },
+            type: 'Bearer',
+          },
+          honorLabels: true,
+          kubernetesSDConfigs: ['Node'],
+          metricRelabelings: [
             {
-              bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
-              honorLabels: true,
-              interval: '5s',
-              scrapeTimeout: '5s',
-              path: '/metrics/slis',
-              port: 'https-metrics',
-              relabelings: [{
-                sourceLabels: ['__metrics_path__'],
-                targetLabel: 'metrics_path',
-              }],
-              scheme: 'https',
-              tlsConfig: {
-                insecureSkipVerify: true,
-              },
+              action: 'replace',
+              replacement: 'kube-system',
+              targetLabel: 'namespace',
+            },
+            {
+              action: 'replace',
+              sourceLabels: ['instance'],
+              targetLabel: 'node',
             },
           ],
-          //+ [
-          //  // Scrape new /metrics/resource kubelet endpoint. TODO: move to kube-prometheus
-          //  {
-          //    bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
-          //    honorLabels: true,
-          //    interval: '30s',
-          //    path: '/metrics/resource',
-          //    port: 'https-metrics',
-          //    relabelings: [{
-          //      sourceLabels: ['__metrics_path__'],
-          //      targetLabel: 'metrics_path',
-          //    }],
-          //    scheme: 'https',
-          //    tlsConfig: {
-          //      insecureSkipVerify: true,
-          //    },
-          //  },
-          //],
+          metricsPath: '/metrics/slis',
+          relabelings: [{
+            sourceLabels: ['__metrics_path__'],
+            targetLabel: 'metrics_path',
+          }],
+          scheme: 'HTTPS',
+          scrapeInterval: '5s',
+          scrapeTimeout: '5s',
+          tlsConfig: {
+            insecureSkipVerify: true,
+          },
         },
       },
 
