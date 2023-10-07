@@ -344,7 +344,7 @@ local kp =
         spec+: {
           // TODO: move ingress and externalURL to an addon
           externalUrl: 'https://prometheus.' + $.values.common.baseDomain,
-          retention: '31d',
+          retention: '33d',
           retentionSize: '35GB',
           affinity+: $.values.prometheus.affinity,
 
