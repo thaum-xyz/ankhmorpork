@@ -34,8 +34,8 @@
     },
   },
   prometheus+: {
-    version: '2.46.0',  // application-version-from-github: prometheus/prometheus
-    image: 'quay.io/prometheus/prometheus:v2.46.0',  // application-image-from-github: prometheus/prometheus
+    version: '2.47.1',  // application-version-from-github: prometheus/prometheus
+    image: 'quay.io/prometheus/prometheus:v2.47.1',  // application-image-from-github: prometheus/prometheus
     externalLabels: {
       cluster: 'ankhmorpork',
     },
@@ -198,8 +198,8 @@
     },
   },
   grafana+: {
-    version: '9.1.7',
-    image: 'grafana/grafana:9.1.7',
+    version: '10.1.4',  // application-version-from-github: grafana/grafana
+    image: 'grafana/grafana:10.1.4',  // application-version-from-github: grafana/grafana
     datasources: [{
       name: 'Prometheus',
       type: 'prometheus',
@@ -237,8 +237,8 @@
   // Following are not in kube-prometheus
   githubReceiver: {
     namespace: 'monitoring',
-    version: '0.1.1',  // application-version-from-github: pfnet-research/alertmanager-to-github
-    image: 'ghcr.io/pfnet-research/alertmanager-to-github:v0.1.1',  // application-image-from-github: pfnet-research/alertmanager-to-github
+    version: '0.1.3',  // application-version-from-github: pfnet-research/alertmanager-to-github
+    image: 'ghcr.io/pfnet-research/alertmanager-to-github:v0.1.3',  // application-image-from-github: pfnet-research/alertmanager-to-github
     githubTokenSecretName: 'github-receiver-credentials',
     githubTokenRef: 'MONITORING_ALERT_RECEIVER_GITHUB_TOKEN',
     resources+: {
@@ -247,8 +247,8 @@
   },
   pushgateway: {
     namespace: 'monitoring',
-    version: '1.6.0',  // application-version-from-github: prometheus/pushgateway
-    image: 'quay.io/prometheus/pushgateway:v1.6.0',  // application-image-from-github: prometheus/pushgateway
+    version: '1.6.2',  // application-version-from-github: prometheus/pushgateway
+    image: 'quay.io/prometheus/pushgateway:v1.6.2',  // application-image-from-github: prometheus/pushgateway
     resources: {
       requests: { cpu: '3m', memory: '25Mi' },
       limits: { cpu: '10m', memory: '40Mi' },

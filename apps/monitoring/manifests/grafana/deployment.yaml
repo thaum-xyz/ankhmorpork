@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: grafana
     app.kubernetes.io/name: grafana
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 9.1.7
+    app.kubernetes.io/version: 10.1.4
   name: grafana
   namespace: monitoring
 spec:
@@ -18,15 +18,15 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/grafana-config: 0ef4c7db13c72102f31c8ad529156e4e
-        checksum/grafana-dashboardproviders: 2d7e919d4989f84795096640ec87a55e
-        checksum/grafana-datasources: 5a2b4b9dc83293c1727c73f13508e127
+        checksum/grafana-config: 6f658524d95b6d900a048eccac6c5d32
+        checksum/grafana-dashboardproviders: 7aa18f7ed8ccc056994e1d47f192bbaa
+        checksum/grafana-datasources: 722c821b94ea010afe7df739fc3e3583
         parca.dev/scrape: "true"
       labels:
         app.kubernetes.io/component: grafana
         app.kubernetes.io/name: grafana
         app.kubernetes.io/part-of: kube-prometheus
-        app.kubernetes.io/version: 9.1.7
+        app.kubernetes.io/version: 10.1.4
     spec:
       automountServiceAccountToken: false
       containers:
@@ -53,7 +53,7 @@ spec:
           value: Email:X-Forwarded-User
         - name: GF_SNAPSHOTS_EXTERNAL_ENABLED
           value: "false"
-        image: grafana/grafana:9.1.7
+        image: grafana/grafana:10.1.4
         name: grafana
         ports:
         - containerPort: 3000
