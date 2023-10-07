@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kubelet
     app.kubernetes.io/part-of: kube-prometheus
-  name: kubelet-slis
+  name: kubelet-cadvisor
   namespace: monitoring
 spec:
   authorization:
@@ -13,9 +13,26 @@ spec:
       name: prometheus-k8s-token
     type: Bearer
   honorLabels: true
+  honorTimestamps: false
   kubernetesSDConfigs:
   - role: Node
-  metricsPath: /metrics/slis
+  metricRelabelings:
+  - action: drop
+    regex: container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)
+    sourceLabels:
+    - __name__
+  - action: drop
+    regex: (container_spec_.*|container_file_descriptors|container_sockets|container_threads_max|container_threads|container_start_time_seconds|container_last_seen);;
+    sourceLabels:
+    - __name__
+    - pod
+    - namespace
+  - action: drop
+    regex: (container_blkio_device_usage_total);.+
+    sourceLabels:
+    - __name__
+    - container
+  metricsPath: /metrics/cadvisor
   relabelings:
   - sourceLabels:
     - __metrics_path__
@@ -28,7 +45,6 @@ spec:
     - __meta_kubernetes_node_name
     targetLabel: node
   scheme: HTTPS
-  scrapeInterval: 5s
-  scrapeTimeout: 5s
+  scrapeInterval: 30s
   tlsConfig:
     insecureSkipVerify: true

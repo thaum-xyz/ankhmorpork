@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kubelet
     app.kubernetes.io/part-of: kube-prometheus
-  name: kubelet-slis
+  name: kubelet-probes
   namespace: monitoring
 spec:
   authorization:
@@ -15,7 +15,7 @@ spec:
   honorLabels: true
   kubernetesSDConfigs:
   - role: Node
-  metricsPath: /metrics/slis
+  metricsPath: /metrics/probes
   relabelings:
   - sourceLabels:
     - __metrics_path__
@@ -28,7 +28,6 @@ spec:
     - __meta_kubernetes_node_name
     targetLabel: node
   scheme: HTTPS
-  scrapeInterval: 5s
-  scrapeTimeout: 5s
+  scrapeInterval: 30s
   tlsConfig:
     insecureSkipVerify: true

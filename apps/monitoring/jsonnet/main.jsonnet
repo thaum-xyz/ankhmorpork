@@ -527,8 +527,19 @@ local kp =
       serviceMonitorKubeControllerManager:: null,
       serviceMonitorKubeScheduler:: null,
       podMonitorKubeProxy:: null,
-      serviceMonitorKubelet+:: {  // Migrating to ScrapeConfig
-      },
+      serviceMonitorKubelet+:: {},  // Migrating to ScrapeConfig
+      local backwardsCompatibilityLabels = [
+        {
+          action: 'replace',
+          replacement: 'kube-system',
+          targetLabel: 'namespace',
+        },
+        {
+          action: 'replace',
+          sourceLabels: ['__meta_kubernetes_node_name'],
+          targetLabel: 'node',
+        },
+      ],
       scrapeConfigKubeletSLIs: {
         apiVersion: 'monitoring.coreos.com/v1alpha1',
         kind: 'ScrapeConfig',
@@ -544,27 +555,103 @@ local kp =
             type: 'Bearer',
           },
           honorLabels: true,
-          kubernetesSDConfigs: ['Node'],
-          metricRelabelings: [
-            {
-              action: 'replace',
-              replacement: 'kube-system',
-              targetLabel: 'namespace',
-            },
-            {
-              action: 'replace',
-              sourceLabels: ['instance'],
-              targetLabel: 'node',
-            },
-          ],
+          kubernetesSDConfigs: [{ role: 'Node' }],
+          //metricRelabelings: backwardsCompatibilityLabels,
           metricsPath: '/metrics/slis',
           relabelings: [{
             sourceLabels: ['__metrics_path__'],
             targetLabel: 'metrics_path',
-          }],
+          }] + backwardsCompatibilityLabels,
           scheme: 'HTTPS',
           scrapeInterval: '5s',
           scrapeTimeout: '5s',
+          tlsConfig: {
+            insecureSkipVerify: true,
+          },
+        },
+      },
+      scrapeConfigKubeletProbes: {
+        apiVersion: 'monitoring.coreos.com/v1alpha1',
+        kind: 'ScrapeConfig',
+        metadata: $.kubernetesControlPlane.serviceMonitorKubelet.metadata {
+          name: 'kubelet-probes',
+        },
+        spec: {
+          authorization: {
+            credentials: {
+              key: 'token',
+              name: 'prometheus-k8s-token',
+            },
+            type: 'Bearer',
+          },
+          honorLabels: true,
+          kubernetesSDConfigs: [{ role: 'Node' }],
+          metricsPath: '/metrics/probes',
+          relabelings: [{
+            sourceLabels: ['__metrics_path__'],
+            targetLabel: 'metrics_path',
+          }] + backwardsCompatibilityLabels,
+          scheme: 'HTTPS',
+          scrapeInterval: '30s',
+          tlsConfig: {
+            insecureSkipVerify: true,
+          },
+        },
+      },
+      scrapeConfigKubeletCadvisor: {
+        apiVersion: 'monitoring.coreos.com/v1alpha1',
+        kind: 'ScrapeConfig',
+        metadata: $.kubernetesControlPlane.serviceMonitorKubelet.metadata {
+          name: 'kubelet-cadvisor',
+        },
+        spec: {
+          authorization: {
+            credentials: {
+              key: 'token',
+              name: 'prometheus-k8s-token',
+            },
+            type: 'Bearer',
+          },
+          honorLabels: true,
+          honorTimestamps: false,
+          kubernetesSDConfigs: [{ role: 'Node' }],
+          metricRelabelings: $.kubernetesControlPlane.serviceMonitorKubelet.spec.endpoints[1].metricRelabelings,
+          metricsPath: '/metrics/cadvisor',
+          relabelings: [{
+            sourceLabels: ['__metrics_path__'],
+            targetLabel: 'metrics_path',
+          }] + backwardsCompatibilityLabels,
+          scheme: 'HTTPS',
+          scrapeInterval: '30s',
+          tlsConfig: {
+            insecureSkipVerify: true,
+          },
+        },
+      },
+      scrapeConfigKubelet: {
+        apiVersion: 'monitoring.coreos.com/v1alpha1',
+        kind: 'ScrapeConfig',
+        metadata: $.kubernetesControlPlane.serviceMonitorKubelet.metadata {
+          name: 'kubelet',
+        },
+        spec: {
+          authorization: {
+            credentials: {
+              key: 'token',
+              name: 'prometheus-k8s-token',
+            },
+            type: 'Bearer',
+          },
+          honorLabels: true,
+          kubernetesSDConfigs: [{ role: 'Node' }],
+          metricRelabelings: $.kubernetesControlPlane.serviceMonitorKubelet.spec.endpoints[0].metricRelabelings,
+          metricsPath: '/metrics',
+          relabelings: [{
+            sourceLabels: ['__metrics_path__'],
+            targetLabel: 'metrics_path',
+          }] + backwardsCompatibilityLabels,
+          scheme: 'HTTPS',
+          scrapeInterval: '30s',
           tlsConfig: {
             insecureSkipVerify: true,
           },
