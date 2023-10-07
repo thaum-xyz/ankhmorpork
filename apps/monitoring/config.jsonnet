@@ -67,9 +67,9 @@
     },
   },
   prometheusOperator+: {
-    # version: '0.68.0',
-    # image: 'quay.io/prometheus-operator/prometheus-operator:v0.68.0',
-    # configReloaderImage: 'quay.io/prometheus-operator/prometheus-config-reloader:v0.68.0',
+    // version: '0.68.0',
+    // image: 'quay.io/prometheus-operator/prometheus-operator:v0.68.0',
+    // configReloaderImage: 'quay.io/prometheus-operator/prometheus-config-reloader:v0.68.0',
     extraArgs:: [
       '--log-level=debug',
       '--config-reloader-cpu-request=2m',

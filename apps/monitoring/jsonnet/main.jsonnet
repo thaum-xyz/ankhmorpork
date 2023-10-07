@@ -388,7 +388,7 @@ local kp =
               name: 'kubelet',
             },
             {
-              resource: 'scraperconfigs',
+              resource: 'scrapeconfigs',
               namespace: $.values.common.namespace,
               name: 'kubelet-slis',
             },
@@ -473,6 +473,17 @@ local kp =
             },
           },
         },
+      },
+      serviceAccountToken: {
+        apiVersion: 'v1',
+        kind: 'Secret',
+        metadata: $.prometheus.serviceAccount.metadata {
+          name: $.prometheus.serviceAccount.metadata.name + '-token',
+          annotations: {
+            'kubernetes.io/service-account.name': $.prometheus.serviceAccount.metadata.name,
+          },
+        },
+        type: 'kubernetes.io/service-account-token',
       },
       clusterRole+: {
         rules+: [{
