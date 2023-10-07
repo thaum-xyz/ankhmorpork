@@ -17,6 +17,7 @@ TasksMax=infinity
 TimeoutStartSec=infinity
 Restart=always
 RestartSec=5s
+Environment="GOGC=25"
 
 [Install]
 WantedBy=multi-user.target
