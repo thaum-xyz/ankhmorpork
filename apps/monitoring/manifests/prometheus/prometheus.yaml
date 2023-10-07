@@ -49,6 +49,9 @@ spec:
   - name: kubelet
     namespace: monitoring
     resource: servicemonitors
+  - name: kubelet-slis
+    namespace: monitoring
+    resource: scraperconfigs
   - name: node-exporter
     namespace: monitoring
     resource: servicemonitors

@@ -388,6 +388,11 @@ local kp =
               name: 'kubelet',
             },
             {
+              resource: 'scraperconfigs',
+              namespace: $.values.common.namespace,
+              name: 'kubelet-slis',
+            },
+            {
               resource: 'servicemonitors',
               namespace: $.values.common.namespace,
               name: 'node-exporter',
@@ -468,6 +473,13 @@ local kp =
             },
           },
         },
+      },
+      clusterRole+: {
+        rules+: [{
+          apiGroups: [''],
+          resources: ['nodes'],
+          verbs: ['get', 'list', 'watch'],
+        }],
       },
       // FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
       networkPolicy+:: allowIngressNetworkPolicy($.prometheus.service.spec.ports[0].port),
