@@ -15,11 +15,9 @@ spec:
   honorLabels: true
   kubernetesSDConfigs:
   - role: Node
+  metricRelabelings: []
   metricsPath: /metrics/probes
   relabelings:
-  - sourceLabels:
-    - __metrics_path__
-    targetLabel: metrics_path
   - action: replace
     replacement: kube-system
     targetLabel: namespace
@@ -27,6 +25,11 @@ spec:
     sourceLabels:
     - __meta_kubernetes_node_name
     targetLabel: node
+  - sourceLabels:
+    - __metrics_path__
+    targetLabel: metrics_path
+  - replacement: kubelet
+    targetLabel: job
   scheme: HTTPS
   scrapeInterval: 30s
   tlsConfig:
