@@ -383,9 +383,19 @@ local kp =
               name: 'kube-state-metrics',
             },
             {
-              resource: 'servicemonitors',
+              resource: 'scrapeconfigs',
               namespace: $.values.common.namespace,
               name: 'kubelet',
+            },
+            {
+              resource: 'scrapeconfigs',
+              namespace: $.values.common.namespace,
+              name: 'kubelet-cadvisor',
+            },
+            {
+              resource: 'scrapeconfigs',
+              namespace: $.values.common.namespace,
+              name: 'kubelet-probes',
             },
             {
               resource: 'scrapeconfigs',

@@ -48,7 +48,13 @@ spec:
     resource: servicemonitors
   - name: kubelet
     namespace: monitoring
-    resource: servicemonitors
+    resource: scrapeconfigs
+  - name: kubelet-cadvisor
+    namespace: monitoring
+    resource: scrapeconfigs
+  - name: kubelet-probes
+    namespace: monitoring
+    resource: scrapeconfigs
   - name: kubelet-slis
     namespace: monitoring
     resource: scrapeconfigs
