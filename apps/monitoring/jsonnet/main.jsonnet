@@ -280,6 +280,13 @@ local kp =
               e {
                 interval: '120s',
                 scrapeTimeout: '120s',
+                relabelings+: [{
+                  action: 'replace',
+                  regex: '(.*)',
+                  replacement: '$1',
+                  sourceLabels: ['__meta_kubernetes_pod_node_name'],
+                  targetLabel: 'node',
+                }],
               }
             else e,
             super.endpoints
