@@ -2,9 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: metallb-system
 resources:
-  - custom/ipaddresspool.yaml
-  - custom/l2advert.yaml
-  - custom/prometheusrule.yaml
+  #- custom/ipaddresspool.yaml
+  #- custom/l2advert.yaml
+  #- custom/prometheusrule.yaml
   - repository.yaml
   - namespace.yaml
   - release.yaml
