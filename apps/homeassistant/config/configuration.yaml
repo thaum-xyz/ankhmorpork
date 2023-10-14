@@ -184,16 +184,22 @@ sensor:
       authorization: !secret recipes_token
     resource: https://recipes.krupa.net.pl/api/meal-plan
     params:
-      from_date: '{{ now().strftime("%Y-%m-%d") }}'
-      to_date: '{{ now().strftime("%Y-%m-%d") }}'
+      from_date: >
+        {{ now().strftime("%Y-%m-%d") }}
+      to_date: >
+        {{ (now().date() + timedelta(days=1)).strftime("%Y-%m-%d") }}
     value_template: >
       {% if value_json is none or value_json == [] %}
-        No meal plan
-      {% elif value_json[0].title %}
-      {{ value_json[0].title }}
-      {% elif value_json[0].recipe_name %}
-      {{ value_json[0].recipe_name }}
+        No meal plan found
+      {% else %}
+        {% for date, dish in value_json | groupby('date') -%}
+        {% for type in ['Breakfast', 'Lunch', 'Snack', 'Dinner'] %}
+        {% set curr = (dish|selectattr('meal_type_name', 'eq', type)|first) -%}
+        {{ date }}: {{ curr.meal_type_name | default('Meal') }}: {{ curr.title | default('') }}{{ curr.recipe_name | default('') -}}
+        {% endfor %}
+        {% endfor %}
       {% endif %}
+
   #- name: we_wash_w1
   #  platform: imap_email_content
   #  server: imap.gmail.com
