@@ -86,10 +86,18 @@ spec:
       labels:
         issue: Longhorn node {{$labels.node}} experiences high CPU pressure.
         severity: warning
-    - alert: LonghornVolumeBackupError
-      expr: count by (backup, volume) (longhorn_backup_state > 2)
+    - alert: LonghornVolumeBackupStuck
+      expr: count by (volume) (longhorn_backup_state < 2)
+      for: 8h
       labels:
         severity: warning
       annotations:
-        description: Longhorn backup {{$labels.backup}} of a volume {{$labels.volume}} failed.
+        description: There are {{$value}} longhorn backups of a volume {{$labels.volume}} stuck for at least 8h.
+        summary: Longhorn backups stuck.
+    - alert: LonghornVolumeBackupError
+      expr: count by (volume) (longhorn_backup_state > 3)
+      labels:
+        severity: warning
+      annotations:
+        description: There are {{$value}} longhorn backups of a volume {{$labels.volume}} which failed to complete.
         summary: Longhorn backups failed.
