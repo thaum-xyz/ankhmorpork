@@ -12,3 +12,7 @@ resources:
     memory: 120Mi
 
 nodeSelector: {}
+
+config:
+  data:
+    INHERITED_LABELS: "app.kubernetes.io/*"
