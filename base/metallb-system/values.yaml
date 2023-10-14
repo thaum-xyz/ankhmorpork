@@ -1,6 +1,7 @@
 # Config reference: https://github.com/metallb/metallb/blob/main/charts/metallb/values.yaml
 
 prometheus:
+  rbacPrometheus: false
   podMonitor:
     # enable support for Prometheus Operator
     enabled: false
