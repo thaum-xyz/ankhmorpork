@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: descheduler
-      version: "0.27.1"
+      version: "0.28.0"
       sourceRef:
         kind: HelmRepository
         name: descheduler
@@ -28,5 +28,5 @@ spec:
     disableWait: false
     crds: CreateReplace
   valuesFrom:
-  - kind: ConfigMap
-    name: values
+    - kind: ConfigMap
+      name: values

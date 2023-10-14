@@ -28,5 +28,5 @@ spec:
     disableWait: false
     crds: CreateReplace
   valuesFrom:
-  - kind: ConfigMap
-    name: values
+    - kind: ConfigMap
+      name: values
