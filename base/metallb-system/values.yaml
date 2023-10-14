@@ -18,7 +18,6 @@ prometheus:
 speaker:
   priorityClassName: system-node-critical
   nodeSelector:
-    kubernetes.io/os: linux
     network.infra/type: fast
 
 controller:
