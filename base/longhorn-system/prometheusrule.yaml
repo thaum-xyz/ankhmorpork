@@ -86,3 +86,10 @@ spec:
       labels:
         issue: Longhorn node {{$labels.node}} experiences high CPU pressure.
         severity: warning
+    - alert: LonghornVolumeBackupError
+      expr: count by (backup, volume) (longhorn_backup_state > 2)
+      labels:
+        severity: warning
+      annotations:
+        description: Longhorn backup {{$labels.backup}} of a volume {{$labels.volume}} failed.
+        summary: Longhorn backups failed.
