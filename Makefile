@@ -11,6 +11,24 @@ DIRS=\
 	apps/monitoring \
 	apps/unifi
 
+HELMDIRS=\
+	apps/authentik \
+	apps/datalake-logs \
+	apps/descheduler \
+	apps/minio \
+	apps/promtail \
+	apps/proxy-docker-io \
+	apps/proxy-ghcr-io \
+	apps/proxy-quay-io \
+	base/cnpg-system \
+	base/external-secrets \
+	base/longhorn-system \
+	base/metallb-system \
+	base/node-feature-discovery \
+	base/node-problem-detector \
+	base/topolvm \
+	base/traefik
+
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 
 .PHONY: help
@@ -23,7 +41,8 @@ generate:  ## Generate all manifests
 
 .PHONY: upgrade
 upgrade:  ## Update all components and their versions
-	for d in $(DIRS); do $(MAKE) -C $$d version-update || exit 1; done
+#	for d in $(DIRS); do $(MAKE) -C $$d version-update || exit 1; done
+	for d in $(HELMDIRS); do hack/helm-updater.sh "$$d" || exit 1; done
 
 .PHONY: validate
 validate:  ## Validate kubernetes manifests
