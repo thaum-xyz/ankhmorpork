@@ -40,3 +40,8 @@ checks {
     "promql/regexp"
   ]
 }
+
+ci {
+  include = [ "tmp/rules/(.*)" ]
+  baseBranch = "master"
+}
