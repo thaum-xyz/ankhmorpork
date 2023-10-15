@@ -203,6 +203,44 @@ data:
             {% endfor %}
           {% endif %}
 
+      - platform: rest
+        name: meals_today
+        scan_interval: 3600
+        headers:
+          content-type: application/json
+          authorization: !secret recipes_token
+        resource: https://recipes.krupa.net.pl/api/meal-plan
+        params:
+          from_date: >
+            {{ now().strftime("%Y-%m-%d") }}
+          to_date: >
+            {{ now().strftime("%Y-%m-%d") }}
+        json_attributes_path: "$.[0]"
+        json_attributes:
+          - date
+          - meal_type_name
+          - title
+          - recipe_name
+
+      - platform: rest
+        name: meals_tomorrow
+        scan_interval: 3600
+        headers:
+          content-type: application/json
+          authorization: !secret recipes_token
+        resource: https://recipes.krupa.net.pl/api/meal-plan
+        params:
+          from_date: >
+            {{ (now().date() + timedelta(days=1)).strftime("%Y-%m-%d") }}
+          to_date: >
+            {{ (now().date() + timedelta(days=1)).strftime("%Y-%m-%d") }}
+        json_attributes_path: "$.[0]"
+        json_attributes:
+          - date
+          - meal_type_name
+          - title
+          - recipe_name
+
       #- name: we_wash_w1
       #  platform: imap_email_content
       #  server: imap.gmail.com
