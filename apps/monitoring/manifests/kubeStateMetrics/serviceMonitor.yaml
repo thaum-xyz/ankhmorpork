@@ -18,6 +18,9 @@ spec:
       regex: kube_endpoint_address_not_ready|kube_endpoint_address_available
       sourceLabels:
       - __name__
+    - regex: kube_node_.*
+      replacement: kube-system
+      targetLabel: namespace
     port: https-main
     relabelings:
     - action: labeldrop

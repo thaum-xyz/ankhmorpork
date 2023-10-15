@@ -536,6 +536,26 @@ local kp =
           },
         },
       },
+      serviceMonitor+: {
+        spec+: {
+          endpoints: std.map(
+            function(e)
+              // Add `kube-system` as namespace label for `kube_node_*` metrics
+              // This is done to make sure all metrics have some sort of a namespace label
+              // so it won't be problematic in alerting stage
+              if e.port == 'https-main' then
+                e {
+                  metricRelabelings+: [{
+                    regex: 'kube_node_.*',
+                    replacement: 'kube-system',
+                    targetLabel: 'namespace',
+                  }],
+                }
+              else e,
+            super.endpoints,
+          ),
+        },
+      },
     },
 
     kubernetesControlPlane+: {
