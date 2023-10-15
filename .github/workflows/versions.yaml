@@ -8,7 +8,7 @@ on:
   #  branch: main
 
 env:
-  golang-version: 1.20.6
+  golang-version: 1.21.3
   jsonnet-version: v0.20.0
   jb-version: 3aec759b6a423f5b50751443ccc81e91a0887c02  # Commit from mid February 2022
 
@@ -16,7 +16,7 @@ jobs:
   versions:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+    - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
     - uses: actions/setup-go@v4
       with:
         go-version: '${{ env.golang-version }}'
