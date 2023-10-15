@@ -168,7 +168,6 @@ template:
           Unknown
         {% endif %}
 
-
 # Sensors
 sensor:
   - platform: websocket_api
@@ -198,56 +197,6 @@ sensor:
         {{ date }}: {{ curr.meal_type_name | default('Meal') }}: {{ curr.title | default('') }}{{ curr.recipe_name | default('') -}}
         {% endfor %}
         {% endfor %}
-      {% endif %}
-
-  - platform: rest
-    name: meals_today
-    scan_interval: 3600
-    headers:
-      content-type: application/json
-      authorization: !secret recipes_token
-    resource: https://recipes.krupa.net.pl/api/meal-plan
-    params:
-      from_date: >
-        {{ now().strftime("%Y-%m-%d") }}
-      to_date: >
-        {{ now().strftime("%Y-%m-%d") }}
-    json_attributes_path: "$.[0]"
-    json_attributes:
-      - date
-      - meal_type_name
-      - title
-      - recipe_name
-    value_template: >
-      {% if value_json is none or value_json == [] %}
-        No meal plan found
-      {% else %}
-        Meal plan found
-      {% endif %}
-
-  - platform: rest
-    name: meals_tomorrow
-    scan_interval: 3600
-    headers:
-      content-type: application/json
-      authorization: !secret recipes_token
-    resource: https://recipes.krupa.net.pl/api/meal-plan
-    params:
-      from_date: >
-        {{ (now().date() + timedelta(days=1)).strftime("%Y-%m-%d") }}
-      to_date: >
-        {{ (now().date() + timedelta(days=1)).strftime("%Y-%m-%d") }}
-    json_attributes_path: "$.[0]"
-    json_attributes:
-      - date
-      - meal_type_name
-      - title
-      - recipe_name
-    value_template: >
-      {% if value_json is none or value_json == [] %}
-        No meal plan found
-      {% else %}
-        Meal plan found
       {% endif %}
 
   #- name: we_wash_w1
