@@ -221,6 +221,12 @@ data:
           - meal_type_name
           - title
           - recipe_name
+        value_template: >
+          {% if value_json is none or value_json == [] %}
+            No meal plan found
+          {% else %}
+            Meal plan found
+          {% endif %}
 
       - platform: rest
         name: meals_tomorrow
@@ -240,6 +246,12 @@ data:
           - meal_type_name
           - title
           - recipe_name
+        value_template: >
+          {% if value_json is none or value_json == [] %}
+            No meal plan found
+          {% else %}
+            Meal plan found
+          {% endif %}
 
       #- name: we_wash_w1
       #  platform: imap_email_content
