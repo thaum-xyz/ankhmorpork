@@ -178,68 +178,44 @@ data:
         display_options:
           - 'time'
           - 'date'
-      - platform: rest
-        name: recipes
+
+    rest:
+      - resource: https://recipes.krupa.net.pl/api/meal-plan
         scan_interval: 3600
         headers:
           content-type: application/json
           authorization: !secret recipes_token
-        resource: https://recipes.krupa.net.pl/api/meal-plan
         params:
           from_date: >
             {{ now().strftime("%Y-%m-%d") }}
           to_date: >
             {{ now().strftime("%Y-%m-%d") }}
-    #        {{ (now().date() + timedelta(days=1)).strftime("%Y-%m-%d") }}
-        value_template: >
-          {% if value_json is none or value_json == [] %}
-            No meal plan found
-          {% else %}
-            {% for date, dish in value_json | groupby('date') -%}
-            {% for type in ['Breakfast', 'Lunch', 'Snack', 'Dinner'] %}
-            {% set curr = (dish|selectattr('meal_type_name', 'eq', type)|first) -%}
-            {{ date }}: {{ curr.meal_type_name | default('Meal') }}: {{ curr.title | default('') }}{{ curr.recipe_name | default('') -}}
-            {% endfor %}
-            {% endfor %}
-          {% endif %}
-
-    rest:
-    #  - resource: https://recipes.krupa.net.pl/api/meal-plan
-    #    scan_interval: 3600
-    #    headers:
-    #      content-type: application/json
-    #      authorization: !secret recipes_token
-    #    params:
-    #      from_date: >
-    #        {{ now().strftime("%Y-%m-%d") }}
-    #      to_date: >
-    #        {{ now().strftime("%Y-%m-%d") }}
-    #    sensor:
-    #      - name: "Today's Breakfast"
-    #        unique_id: "meal_today_breakfast"
-    #        value_template: >
-    #          {% set data = value_json | selectattr('meal_type_name', 'eq', 'Breakfast') | first -%}
-    #          {{ data.title if data.title else data.recipe_name | default() }}
-    #      - name: "Today's Lunch"
-    #        unique_id: "meal_today_lunch"
-    #        value_template: >
-    #          {% set data = value_json | selectattr('meal_type_name', 'eq', 'Lunch') | first -%}
-    #          {{ data.title if data.title else data.recipe_name | default() }}
-    #      - name: "Today's Snack"
-    #        unique_id: "meal_today_snack"
-    #        value_template: >
-    #          {% set data = value_json | selectattr('meal_type_name', 'eq', 'Snack') | first -%}
-    #          {{ data.title if data.title else data.recipe_name | default() }}
-    #      - name: "Today's Dinner"
-    #        unique_id: "meal_today_dinner"
-    #        value_template: >
-    #          {% set data = value_json | selectattr('meal_type_name', 'eq', 'Dinner') | first -%}
-    #          {{ data.title if data.title else data.recipe_name | default() }}
-    #        json_attributes_path: "$.[?(@.meal_type_name=='Dinnert')].recipe"
-    #        json_attributes:
-    #          - image
-    #          - id
-    #          - name
+        sensor:
+          - name: "Today's Breakfast"
+            unique_id: "meal_today_breakfast"
+            value_template: >
+              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Breakfast') | first -%}
+              {{ data.title if data.title else data.recipe_name | default() }}
+          - name: "Today's Lunch"
+            unique_id: "meal_today_lunch"
+            value_template: >
+              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Lunch') | first -%}
+              {{ data.title if data.title else data.recipe_name | default() }}
+          - name: "Today's Snack"
+            unique_id: "meal_today_snack"
+            value_template: >
+              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Snack') | first -%}
+              {{ data.title if data.title else data.recipe_name | default() }}
+          - name: "Today's Dinner"
+            unique_id: "meal_today_dinner"
+            value_template: >
+              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Dinner') | first -%}
+              {{ data.title if data.title else data.recipe_name | default() }}
+            json_attributes_path: "$.[?(@.meal_type_name=='Dinnert')].recipe"
+            json_attributes:
+              - image
+              - id
+              - name
       - resource: https://recipes.krupa.net.pl/api/meal-plan
         scan_interval: 3600
         headers:
