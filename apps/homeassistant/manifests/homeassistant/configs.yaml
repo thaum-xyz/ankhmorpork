@@ -202,6 +202,44 @@ data:
             {% endfor %}
           {% endif %}
 
+    rest:
+      - resource: https://recipes.krupa.net.pl/api/meal-plan
+        scan_interval: 3600
+        headers:
+          content-type: application/json
+          authorization: !secret recipes_token
+        params:
+          from_date: >
+            {{ now().strftime("%Y-%m-%d") }}
+          to_date: >
+            {{ now().strftime("%Y-%m-%d") }}
+        sensor:
+          - name: "Today's Breakfast"
+            unique_id: "meal_today_breakfast"
+            value_template: >
+              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Breakfast') | first -%}
+              {{ data.title if data.title else data.recipe_name | default() }}
+          - name: "Today's Lunch"
+            unique_id: "meal_today_lunch"
+            value_template: >
+              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Lunch') | first -%}
+              {{ data.title if data.title else data.recipe_name | default() }}
+          - name: "Today's Dinner"
+            unique_id: "meal_today_dinner"
+            value_template: >
+              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Dinner') | first -%}
+              {{ data.title if data.title else data.recipe_name | default() }}
+            json_attributes_path: "$.[?(@.meal_type_name=='Dinnert')].recipe"
+            json_attributes:
+              - image
+              - id
+              - name
+          - name: "Today's Snack"
+            unique_id: "meal_today_snack"
+            value_template: >
+              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Snack') | first -%}
+              {{ data.title if data.title else data.recipe_name | default() }}
+
       #- name: we_wash_w1
       #  platform: imap_email_content
       #  server: imap.gmail.com
