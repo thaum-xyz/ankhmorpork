@@ -9,7 +9,8 @@ DIRS=\
 	apps/homeassistant \
 	apps/homer \
 	apps/monitoring \
-	apps/unifi
+	apps/unifi \
+	apps/tandoor
 
 HELMDIRS=\
 	apps/authentik \
