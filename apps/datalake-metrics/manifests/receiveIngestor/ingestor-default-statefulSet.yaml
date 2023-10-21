@@ -156,5 +156,5 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 30Gi
-      storageClassName: qnap-nfs
+          storage: 7Gi
+      storageClassName: longhorn
