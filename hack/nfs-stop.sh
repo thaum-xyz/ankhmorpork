@@ -3,6 +3,8 @@
 # WARNING: THIS SCRIPT CAUSES OUTAGE!
 # Script is meant to be used when NFS server needs a reboot (usually for firmware update).
 
+# Script excludes PVs with `backup` in their PVC name
+
 # Script stops all resources which use NFS storage. It does it by:
 #   1. Scaling down fluxcd replication controllers to prevent automated recovery
 #   2. Looking for PVCs using particular storage class
@@ -19,6 +21,9 @@ for ns in $(kubectl get ns -o=jsonpath='{.items[*].metadata.name}'); do
 	if [ "$pvcs" == "" ]; then
 		continue
 	fi
+
+	# Exlude backup PVCs
+	pvcs=$(echo $pvcs | tr " " "\n" | grep -v "backup" | tr "\n" " ")
 
 	# Find Pods
 	pods=""
