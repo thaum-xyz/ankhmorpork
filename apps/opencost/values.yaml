@@ -42,13 +42,15 @@ opencost:
     createConfigmap: true
     # -- More information about these values here: https://www.opencost.io/docs/configuration/on-prem#custom-pricing-using-the-opencost-helm-chart
     costModel:
-      description: Modified prices based on the internal pricing
-      CPU: 1.25
+      description: Modified prices based on GCP us-central1
+      CPU: 0.031611
       spotCPU: 0.006655
-      RAM: 0.50
+      RAM: 0.004237
       spotRAM: 0.000892
       GPU: 0.95
-      storage: 0.25
+      storage: 0.00005479452
       zoneNetworkEgress: 0
       regionNetworkEgress: 0
       internetNetworkEgress: 0
+      defaultLBPrice: 0
+      LBIngressDataCost: 0
