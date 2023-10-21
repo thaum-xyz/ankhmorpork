@@ -48,8 +48,8 @@ write:
   - secretRef:
       name: s3-credentials
   persistence:
-    size: 50Gi
-    storageClass: qnap-nfs
+    size: 5Gi
+    storageClass: longhorn
 
 read:
   replicas: 2
@@ -72,8 +72,8 @@ backend:
   - secretRef:
       name: s3-credentials
   persistence:
-    size: 50Gi
-    storageClass: qnap-nfs
+    size: 5Gi
+    storageClass: longhorn
 
 tableManager:
   enabled: false
