@@ -25,6 +25,7 @@ opencost:
       internal:
         serviceName: thanos-query
         namespaceName: datalake-metrics
+        port: 9090
 
   ui:
     enabled: true
@@ -48,6 +49,6 @@ opencost:
       spotRAM: 0.000892
       GPU: 0.95
       storage: 0.25
-      zoneNetworkEgress: 0.01
-      regionNetworkEgress: 0.01
-      internetNetworkEgress: 0.12
+      zoneNetworkEgress: 0
+      regionNetworkEgress: 0
+      internetNetworkEgress: 0
