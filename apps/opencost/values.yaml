@@ -17,7 +17,9 @@ opencost:
       enabled: true
   prometheus:
     internal:
-      enabled: false
+      enabled: true
+      serviceName: prometheus-k8s
+      namespaceName: monitoring
     thanos:
       enabled: true
       internal:
