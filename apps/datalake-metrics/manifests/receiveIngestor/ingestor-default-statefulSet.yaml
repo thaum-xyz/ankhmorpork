@@ -12,7 +12,7 @@ metadata:
   namespace: datalake-metrics
 spec:
   minReadySeconds: 0
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/component: database-write-hashring

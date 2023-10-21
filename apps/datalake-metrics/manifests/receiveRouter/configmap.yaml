@@ -1,6 +1,7 @@
 apiVersion: v1
 data:
-  hashrings.json: '[{"endpoints": ["thanos-receive-ingestor-default-0.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901"],
+  hashrings.json: '[{"endpoints": ["thanos-receive-ingestor-default-0.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901",
+    "thanos-receive-ingestor-default-1.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901"],
     "hashring": "default", "tenants": [ ]}]'
 kind: ConfigMap
 metadata:

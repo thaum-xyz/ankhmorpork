@@ -31,7 +31,7 @@ objectStorageConfig:
 ingressAuthHTPasswdRef: THANOS_INGRESS_HTPASSWD
 
 receiveIngestor:
-  replicas: 1
+  replicas: 2
   retention: 2d
   resources:
     requests:
@@ -41,7 +41,7 @@ receiveIngestor:
 #      cpu: 700m
 #      memory: 2Gi
 receiveRouter:
-  replicas: 1
+  replicas: 3
   resources:
     requests:
       cpu: 200m
@@ -50,7 +50,7 @@ receiveRouter:
 #      cpu: 300m
 #      memory: 200Mi
 store:
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       cpu: 500m
@@ -73,7 +73,7 @@ store:
         fieldRef:
           fieldPath: status.podIP
 query:
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       cpu: 15m
