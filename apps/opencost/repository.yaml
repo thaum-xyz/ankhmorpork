@@ -1,0 +1,7 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: opencost
+spec:
+  interval: 5m
+  url: https://opencost.github.io/opencost-helm-chart

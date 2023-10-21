@@ -16,6 +16,7 @@ HELMDIRS=\
 	apps/authentik \
 	apps/datalake-logs \
 	apps/descheduler \
+	apps/opencost \
 	apps/minio \
 	apps/promtail \
 	apps/proxy-docker-io \
