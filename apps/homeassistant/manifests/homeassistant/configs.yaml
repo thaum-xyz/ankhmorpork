@@ -181,7 +181,7 @@ data:
 
     rest:
       - resource: https://recipes.krupa.net.pl/api/meal-plan
-        scan_interval: 3600
+        scan_interval: 1800
         headers:
           content-type: application/json
           authorization: !secret recipes_token
@@ -217,7 +217,7 @@ data:
               - id
               - name
       - resource: https://recipes.krupa.net.pl/api/meal-plan
-        scan_interval: 3600
+        scan_interval: 1800
         headers:
           content-type: application/json
           authorization: !secret recipes_token
