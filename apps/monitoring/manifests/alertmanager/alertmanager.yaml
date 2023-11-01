@@ -39,9 +39,6 @@ spec:
       app.kubernetes.io/version: 0.26.0
   replicas: 3
   resources:
-    limits:
-      cpu: 100m
-      memory: 100Mi
     requests:
       cpu: 3m
       memory: 30Mi

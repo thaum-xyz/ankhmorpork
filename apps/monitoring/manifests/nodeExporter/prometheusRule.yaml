@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/name: node-exporter
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 1.4.0
+    prometheus: k8s
     role: alert-rules
   name: node-exporter-rules
   namespace: monitoring
@@ -22,11 +23,11 @@ spec:
         summary: Filesystem is predicted to run out of space within the next 24 hours.
       expr: |
         (
-          node_filesystem_avail_bytes{job="node-exporter",fstype!="",mountpoint!=""} / node_filesystem_size_bytes{job="node-exporter",fstype!="",mountpoint!=""} * 100 < 15
+          node_filesystem_avail_bytes{job="node",fstype!="",mountpoint!=""} / node_filesystem_size_bytes{job="node",fstype!="",mountpoint!=""} * 100 < 40
         and
-          predict_linear(node_filesystem_avail_bytes{job="node-exporter",fstype!="",mountpoint!=""}[6h], 24*60*60) < 0
+          predict_linear(node_filesystem_avail_bytes{job="node",fstype!="",mountpoint!=""}[6h], 24*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!="",mountpoint!=""} == 0
+          node_filesystem_readonly{job="node",fstype!="",mountpoint!=""} == 0
         )
       for: 1h
       labels:
@@ -40,11 +41,11 @@ spec:
         summary: Filesystem is predicted to run out of space within the next 4 hours.
       expr: |
         (
-          node_filesystem_avail_bytes{job="node-exporter",fstype!="",mountpoint!=""} / node_filesystem_size_bytes{job="node-exporter",fstype!="",mountpoint!=""} * 100 < 10
+          node_filesystem_avail_bytes{job="node",fstype!="",mountpoint!=""} / node_filesystem_size_bytes{job="node",fstype!="",mountpoint!=""} * 100 < 20
         and
-          predict_linear(node_filesystem_avail_bytes{job="node-exporter",fstype!="",mountpoint!=""}[6h], 4*60*60) < 0
+          predict_linear(node_filesystem_avail_bytes{job="node",fstype!="",mountpoint!=""}[6h], 4*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!="",mountpoint!=""} == 0
+          node_filesystem_readonly{job="node",fstype!="",mountpoint!=""} == 0
         )
       for: 1h
       labels:
@@ -58,9 +59,9 @@ spec:
         summary: Filesystem has less than 5% space left.
       expr: |
         (
-          node_filesystem_avail_bytes{job="node-exporter",fstype!="",mountpoint!=""} / node_filesystem_size_bytes{job="node-exporter",fstype!="",mountpoint!=""} * 100 < 5
+          node_filesystem_avail_bytes{job="node",fstype!="",mountpoint!=""} / node_filesystem_size_bytes{job="node",fstype!="",mountpoint!=""} * 100 < 5
         and
-          node_filesystem_readonly{job="node-exporter",fstype!="",mountpoint!=""} == 0
+          node_filesystem_readonly{job="node",fstype!="",mountpoint!=""} == 0
         )
       for: 30m
       labels:
@@ -74,9 +75,9 @@ spec:
         summary: Filesystem has less than 3% space left.
       expr: |
         (
-          node_filesystem_avail_bytes{job="node-exporter",fstype!="",mountpoint!=""} / node_filesystem_size_bytes{job="node-exporter",fstype!="",mountpoint!=""} * 100 < 3
+          node_filesystem_avail_bytes{job="node",fstype!="",mountpoint!=""} / node_filesystem_size_bytes{job="node",fstype!="",mountpoint!=""} * 100 < 3
         and
-          node_filesystem_readonly{job="node-exporter",fstype!="",mountpoint!=""} == 0
+          node_filesystem_readonly{job="node",fstype!="",mountpoint!=""} == 0
         )
       for: 30m
       labels:
@@ -90,11 +91,11 @@ spec:
         summary: Filesystem is predicted to run out of inodes within the next 24 hours.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!="",mountpoint!=""} / node_filesystem_files{job="node-exporter",fstype!="",mountpoint!=""} * 100 < 40
+          node_filesystem_files_free{job="node",fstype!="",mountpoint!=""} / node_filesystem_files{job="node",fstype!="",mountpoint!=""} * 100 < 40
         and
-          predict_linear(node_filesystem_files_free{job="node-exporter",fstype!="",mountpoint!=""}[6h], 24*60*60) < 0
+          predict_linear(node_filesystem_files_free{job="node",fstype!="",mountpoint!=""}[6h], 24*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!="",mountpoint!=""} == 0
+          node_filesystem_readonly{job="node",fstype!="",mountpoint!=""} == 0
         )
       for: 1h
       labels:
@@ -108,11 +109,11 @@ spec:
         summary: Filesystem is predicted to run out of inodes within the next 4 hours.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!="",mountpoint!=""} / node_filesystem_files{job="node-exporter",fstype!="",mountpoint!=""} * 100 < 20
+          node_filesystem_files_free{job="node",fstype!="",mountpoint!=""} / node_filesystem_files{job="node",fstype!="",mountpoint!=""} * 100 < 20
         and
-          predict_linear(node_filesystem_files_free{job="node-exporter",fstype!="",mountpoint!=""}[6h], 4*60*60) < 0
+          predict_linear(node_filesystem_files_free{job="node",fstype!="",mountpoint!=""}[6h], 4*60*60) < 0
         and
-          node_filesystem_readonly{job="node-exporter",fstype!="",mountpoint!=""} == 0
+          node_filesystem_readonly{job="node",fstype!="",mountpoint!=""} == 0
         )
       for: 1h
       labels:
@@ -126,9 +127,9 @@ spec:
         summary: Filesystem has less than 5% inodes left.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!="",mountpoint!=""} / node_filesystem_files{job="node-exporter",fstype!="",mountpoint!=""} * 100 < 5
+          node_filesystem_files_free{job="node",fstype!="",mountpoint!=""} / node_filesystem_files{job="node",fstype!="",mountpoint!=""} * 100 < 5
         and
-          node_filesystem_readonly{job="node-exporter",fstype!="",mountpoint!=""} == 0
+          node_filesystem_readonly{job="node",fstype!="",mountpoint!=""} == 0
         )
       for: 1h
       labels:
@@ -142,9 +143,9 @@ spec:
         summary: Filesystem has less than 3% inodes left.
       expr: |
         (
-          node_filesystem_files_free{job="node-exporter",fstype!="",mountpoint!=""} / node_filesystem_files{job="node-exporter",fstype!="",mountpoint!=""} * 100 < 3
+          node_filesystem_files_free{job="node",fstype!="",mountpoint!=""} / node_filesystem_files{job="node",fstype!="",mountpoint!=""} * 100 < 3
         and
-          node_filesystem_readonly{job="node-exporter",fstype!="",mountpoint!=""} == 0
+          node_filesystem_readonly{job="node",fstype!="",mountpoint!=""} == 0
         )
       for: 1h
       labels:
@@ -156,7 +157,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodenetworkreceiveerrs
         summary: Network interface is reporting many receive errors.
       expr: |
-        rate(node_network_receive_errs_total{job="node-exporter"}[2m]) / rate(node_network_receive_packets_total{job="node-exporter"}[2m]) > 0.01
+        rate(node_network_receive_errs_total{job="node"}[2m]) / rate(node_network_receive_packets_total{job="node"}[2m]) > 0.01
       for: 1h
       labels:
         severity: warning
@@ -167,7 +168,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodenetworktransmiterrs
         summary: Network interface is reporting many transmit errors.
       expr: |
-        rate(node_network_transmit_errs_total{job="node-exporter"}[2m]) / rate(node_network_transmit_packets_total{job="node-exporter"}[2m]) > 0.01
+        rate(node_network_transmit_errs_total{job="node"}[2m]) / rate(node_network_transmit_packets_total{job="node"}[2m]) > 0.01
       for: 1h
       labels:
         severity: warning
@@ -177,7 +178,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodehighnumberconntrackentriesused
         summary: Number of conntrack are getting close to the limit.
       expr: |
-        (node_nf_conntrack_entries{job="node-exporter"} / node_nf_conntrack_entries_limit) > 0.75
+        (node_nf_conntrack_entries{job="node"} / node_nf_conntrack_entries_limit) > 0.75
       labels:
         severity: warning
     - alert: NodeTextFileCollectorScrapeError
@@ -187,7 +188,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodetextfilecollectorscrapeerror
         summary: Node Exporter text file collector failed to scrape.
       expr: |
-        node_textfile_scrape_error{job="node-exporter"} == 1
+        node_textfile_scrape_error{job="node"} == 1
       labels:
         severity: warning
     - alert: NodeClockSkewDetected
@@ -198,15 +199,15 @@ spec:
         summary: Clock skew detected.
       expr: |
         (
-          node_timex_offset_seconds{job="node-exporter"} > 0.05
+          node_timex_offset_seconds{job="node"} > 0.05
         and
-          deriv(node_timex_offset_seconds{job="node-exporter"}[5m]) >= 0
+          deriv(node_timex_offset_seconds{job="node"}[5m]) >= 0
         )
         or
         (
-          node_timex_offset_seconds{job="node-exporter"} < -0.05
+          node_timex_offset_seconds{job="node"} < -0.05
         and
-          deriv(node_timex_offset_seconds{job="node-exporter"}[5m]) <= 0
+          deriv(node_timex_offset_seconds{job="node"}[5m]) <= 0
         )
       for: 10m
       labels:
@@ -231,7 +232,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/noderaiddegraded
         summary: RAID Array is degraded.
       expr: |
-        node_md_disks_required{job="node-exporter",device!="md9",device!="md13"} - ignoring (state) (node_md_disks{state="active",job="node-exporter",device!="md9",device!="md13"}) > 0
+        node_md_disks_required{job="node",device!="md9",device!="md13"} - ignoring (state) (node_md_disks{state="active",job="node",device!="md9",device!="md13"}) > 0
       for: 15m
       labels:
         severity: critical
@@ -242,7 +243,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/noderaiddiskfailure
         summary: Failed device in RAID array.
       expr: |
-        node_md_disks{state="failed",job="node-exporter",device!="md9",device!="md13"} > 0
+        node_md_disks{state="failed",job="node",device!="md9",device!="md13"} > 0
       labels:
         severity: warning
     - alert: NodeFileDescriptorLimit
@@ -253,7 +254,7 @@ spec:
         summary: Kernel is predicted to exhaust file descriptors limit soon.
       expr: |
         (
-          node_filefd_allocated{job="node-exporter"} * 100 / node_filefd_maximum{job="node-exporter"} > 70
+          node_filefd_allocated{job="node"} * 100 / node_filefd_maximum{job="node"} > 70
         )
       for: 15m
       labels:
@@ -266,7 +267,7 @@ spec:
         summary: Kernel is predicted to exhaust file descriptors limit soon.
       expr: |
         (
-          node_filefd_allocated{job="node-exporter"} * 100 / node_filefd_maximum{job="node-exporter"} > 90
+          node_filefd_allocated{job="node"} * 100 / node_filefd_maximum{job="node"} > 90
         )
       for: 15m
       labels:
@@ -278,7 +279,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodecpuhighusage
         summary: High CPU usage.
       expr: |
-        sum without(mode) (avg without (cpu) (rate(node_cpu_seconds_total{job="node-exporter", mode!="idle"}[2m]))) * 100 > 90
+        sum without(mode) (avg without (cpu) (rate(node_cpu_seconds_total{job="node", mode!="idle"}[2m]))) * 100 > 90
       for: 15m
       labels:
         severity: info
@@ -290,8 +291,8 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodesystemsaturation
         summary: System saturated, load per core is very high.
       expr: |
-        node_load1{job="node-exporter"}
-        / count without (cpu, mode) (node_cpu_seconds_total{job="node-exporter", mode="idle"}) > 2
+        node_load1{job="node"}
+        / count without (cpu, mode) (node_cpu_seconds_total{job="node", mode="idle"}) > 2
       for: 15m
       labels:
         severity: warning
@@ -303,7 +304,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodememorymajorpagesfaults
         summary: Memory major page faults are occurring at very high rate.
       expr: |
-        rate(node_vmstat_pgmajfault{job="node-exporter"}[5m]) > 500
+        rate(node_vmstat_pgmajfault{job="node"}[5m]) > 500
       for: 15m
       labels:
         severity: warning
@@ -314,7 +315,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodememoryhighutilization
         summary: Host is running out of memory.
       expr: |
-        100 - (node_memory_MemAvailable_bytes{job="node-exporter"} / node_memory_MemTotal_bytes{job="node-exporter"} * 100) > 90
+        100 - (node_memory_MemAvailable_bytes{job="node"} / node_memory_MemTotal_bytes{job="node"} * 100) > 90
       for: 15m
       labels:
         severity: warning
@@ -326,7 +327,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodediskiosaturation
         summary: Disk IO queue is high.
       expr: |
-        rate(node_disk_io_time_weighted_seconds_total{job="node-exporter", device!="md9",device!="md13"}[5m]) > 10
+        rate(node_disk_io_time_weighted_seconds_total{job="node", device!="md9",device!="md13"}[5m]) > 10
       for: 30m
       labels:
         severity: warning
@@ -337,7 +338,7 @@ spec:
         runbook_url: https://runbooks.thaum.xyz/runbooks/node/nodesystemdservicefailed
         summary: Systemd service has entered failed state.
       expr: |
-        node_systemd_unit_state{job="node-exporter", state="failed"} == 1
+        node_systemd_unit_state{job="node", state="failed"} == 1
       for: 5m
       labels:
         severity: warning
@@ -345,66 +346,66 @@ spec:
     rules:
     - expr: |
         count without (cpu, mode) (
-          node_cpu_seconds_total{job="node-exporter",mode="idle"}
+          node_cpu_seconds_total{job="node",mode="idle"}
         )
       record: instance:node_num_cpu:sum
     - expr: |
         1 - avg without (cpu) (
-          sum without (mode) (rate(node_cpu_seconds_total{job="node-exporter", mode=~"idle|iowait|steal"}[5m]))
+          sum without (mode) (rate(node_cpu_seconds_total{job="node", mode=~"idle|iowait|steal"}[5m]))
         )
       record: instance:node_cpu_utilisation:rate5m
     - expr: |
         (
-          node_load1{job="node-exporter"}
+          node_load1{job="node"}
         /
-          instance:node_num_cpu:sum{job="node-exporter"}
+          instance:node_num_cpu:sum{job="node"}
         )
       record: instance:node_load1_per_cpu:ratio
     - expr: |
         1 - (
           (
-            node_memory_MemAvailable_bytes{job="node-exporter"}
+            node_memory_MemAvailable_bytes{job="node"}
             or
             (
-              node_memory_Buffers_bytes{job="node-exporter"}
+              node_memory_Buffers_bytes{job="node"}
               +
-              node_memory_Cached_bytes{job="node-exporter"}
+              node_memory_Cached_bytes{job="node"}
               +
-              node_memory_MemFree_bytes{job="node-exporter"}
+              node_memory_MemFree_bytes{job="node"}
               +
-              node_memory_Slab_bytes{job="node-exporter"}
+              node_memory_Slab_bytes{job="node"}
             )
           )
         /
-          node_memory_MemTotal_bytes{job="node-exporter"}
+          node_memory_MemTotal_bytes{job="node"}
         )
       record: instance:node_memory_utilisation:ratio
     - expr: |
-        rate(node_vmstat_pgmajfault{job="node-exporter"}[5m])
+        rate(node_vmstat_pgmajfault{job="node"}[5m])
       record: instance:node_vmstat_pgmajfault:rate5m
     - expr: |
-        rate(node_disk_io_time_seconds_total{job="node-exporter", device!="md9",device!="md13"}[5m])
+        rate(node_disk_io_time_seconds_total{job="node", device!="md9",device!="md13"}[5m])
       record: instance_device:node_disk_io_time_seconds:rate5m
     - expr: |
-        rate(node_disk_io_time_weighted_seconds_total{job="node-exporter", device!="md9",device!="md13"}[5m])
+        rate(node_disk_io_time_weighted_seconds_total{job="node", device!="md9",device!="md13"}[5m])
       record: instance_device:node_disk_io_time_weighted_seconds:rate5m
     - expr: |
         sum without (device) (
-          rate(node_network_receive_bytes_total{job="node-exporter", device!="lo"}[5m])
+          rate(node_network_receive_bytes_total{job="node", device!="lo"}[5m])
         )
       record: instance:node_network_receive_bytes_excluding_lo:rate5m
     - expr: |
         sum without (device) (
-          rate(node_network_transmit_bytes_total{job="node-exporter", device!="lo"}[5m])
+          rate(node_network_transmit_bytes_total{job="node", device!="lo"}[5m])
         )
       record: instance:node_network_transmit_bytes_excluding_lo:rate5m
     - expr: |
         sum without (device) (
-          rate(node_network_receive_drop_total{job="node-exporter", device!="lo"}[5m])
+          rate(node_network_receive_drop_total{job="node", device!="lo"}[5m])
         )
       record: instance:node_network_receive_drop_excluding_lo:rate5m
     - expr: |
         sum without (device) (
-          rate(node_network_transmit_drop_total{job="node-exporter", device!="lo"}[5m])
+          rate(node_network_transmit_drop_total{job="node", device!="lo"}[5m])
         )
       record: instance:node_network_transmit_drop_excluding_lo:rate5m

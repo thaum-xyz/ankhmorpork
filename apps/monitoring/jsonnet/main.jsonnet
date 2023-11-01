@@ -128,8 +128,11 @@ local kp =
     // Configuration
     //
 
-    // TODO: figure out how to make this a JSON/YAML file!
-    values+:: (import '../config.jsonnet'),
+    local config = std.parseYaml(importstr '../config.yaml'),
+    //values+:: (import '../config.jsonnet'),
+    //values:: std.mergePatch(super.values, config),
+    values+:: std.mergePatch(super.values, config),
+    //values+:: {},
 
     //
     // Objects customization

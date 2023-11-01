@@ -166,17 +166,17 @@
     },
   },
   kubeStateMetrics+: {
-    resources:: {
+    resources: {
       requests: { cpu: '2m', memory: '34Mi' },
       limits: { cpu: '200m', memory: '180Mi' },
     },
-    kubeRbacProxyMain+:: {
+    kubeRbacProxyMain+: {
       resources+: {
         requests: { cpu: '2m', memory: '14Mi' },
         limits+: { cpu: '40m' },
       },
     },
-    kubeRbacProxySelf+:: {
+    kubeRbacProxySelf+: {
       resources+: {
         requests: { cpu: '1m', memory: '14Mi' },
         limits+: { cpu: '40m' },

@@ -64,7 +64,6 @@ spec:
         resources:
           limits:
             cpu: 40m
-            memory: 40Mi
           requests:
             cpu: 2m
             memory: 14Mi
@@ -89,7 +88,6 @@ spec:
         resources:
           limits:
             cpu: 40m
-            memory: 40Mi
           requests:
             cpu: 1m
             memory: 14Mi

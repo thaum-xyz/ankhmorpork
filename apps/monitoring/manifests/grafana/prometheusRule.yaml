@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/name: grafana
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 10.1.4
+    prometheus: k8s
     role: alert-rules
   name: grafana-rules
   namespace: monitoring
@@ -17,7 +18,7 @@ spec:
       annotations:
         message: '{{ $labels.namespace }}/{{ $labels.job }}/{{ $labels.handler }}
           is experiencing {{ $value | humanize }}% errors'
-        runbook_url: https://runbooks.prometheus-operator.dev/runbooks/grafana/grafanarequestsfailing
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-grafanarequestsfailing
       expr: |
         100 * namespace_job_handler_statuscode:grafana_http_request_duration_seconds_count:rate5m{handler!~"/api/datasources/proxy/:id.*|/api/ds/query|/api/tsdb/query", status_code=~"5.."}
         / ignoring (status_code)
