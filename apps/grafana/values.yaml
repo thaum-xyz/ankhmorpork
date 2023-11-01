@@ -1,0 +1,76 @@
+# Helm chart values reference https://github.com/grafana/helm-charts/tree/main/charts/grafana
+
+replicas: 1
+headlessService: true
+
+podDisruptionBudget:
+  enabled: false
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    probe-uri: /-/healthy
+    reloader.homer/group: Administration
+    reloader.homer/logo: https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg
+    reloader.homer/name: Grafana
+    traefik.ingress.kubernetes.io/router.middlewares: auth-traefik-forward-auth@kubernetescrd
+  labels:
+    reloader.homer/enabled: "true"
+  hosts:
+    - "grafana.test.ankhmorpork.thaum.xyz"
+  tls:
+    - hosts:
+      - grafana.test.ankhmorpork.thaum.xyz
+      secretName: ingress-grafana-tls
+
+persistence:
+  enabled: false
+
+sidecar:
+  enableUniqueFilenames: true
+  alerts:
+    enabled: false
+  dashboards:
+    enabled: true
+    # TODO: Configure dashboard provisioning
+
+  datasources:
+    enabled: true
+    label: "grafana_datasource"
+    searchNamespace:
+    - "obs-central-grafana"
+    - "obs-central-metrics"
+    - "obs-central-logs"
+
+imageRenderer:
+  # Note: This will take considerable amount of memory. Do not enable in MVP.
+  enabled: false
+
+admin:
+  existingSecret: admin-creds
+
+serviceMonitor:
+  enabled: true
+
+testFramework:
+  enabled: false
+
+env:
+  GF_FEATURE_TOGGLES_ENABLE: "publicDashboards"
+
+grafana.ini:
+  paths:
+    data: /var/lib/grafana/
+    logs: /var/log/grafana
+    plugins: /var/lib/grafana/plugins
+    provisioning: /etc/grafana/provisioning
+  analytics:
+    check_for_updates: false
+  log:
+    mode: console
+  grafana_net:
+    url: https://grafana.net
+  server:
+    domain: grafana.test.ankhmorpork.thaum.xyz
+    root_url: "https://grafana.test.ankhmorpork.thaum.xyz"

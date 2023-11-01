@@ -1,0 +1,16 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: admin-creds
+spec:
+  data:
+  - remoteRef:
+      key: GRAFANA_ADMIN_USER
+    secretKey: admin-user
+  - remoteRef:
+      key: GRAFANA_ADMIN_PASS
+    secretKey: admin-password
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
