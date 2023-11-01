@@ -43,7 +43,7 @@ spec:
         - secretRef:
             name: transmission-vpn-creds
             optional: false
-        image: haugene/transmission-openvpn:5.0.2
+        image: haugene/transmission-openvpn:5.2.0
         name: transmission
         ports:
         - containerPort: 9091
