@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: plex
     app.kubernetes.io/part-of: plex
-    app.kubernetes.io/version: 1.32.6.7557-1cf77d501
+    app.kubernetes.io/version: 1.32.7.7621-871adbd44
   name: plex
   namespace: multimedia
 spec:
