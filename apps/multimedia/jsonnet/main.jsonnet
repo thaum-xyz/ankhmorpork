@@ -1,5 +1,4 @@
 local arr = import 'arr.libsonnet';
-local prowlarr = import 'prowlarr.libsonnet';
 local utils = import 'utils.libsonnet';
 
 local configYAML = (importstr '../settings.yaml');
@@ -30,7 +29,7 @@ local all = {
   radarr: arr(config.radarr) + {
     service+: lbService,
   },
-  prowlarr: prowlarr(config.prowlarr) + {
+  prowlarr: arr(config.prowlarr) + {
     service+: lbService,
   },
 

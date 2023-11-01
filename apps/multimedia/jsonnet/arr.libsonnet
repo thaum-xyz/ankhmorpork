@@ -58,8 +58,8 @@ local defaults = {
       },
     },
   },
-  multimediaPVCName: error 'must provide multimediaPVCName',
-  downloadsPVCName: 'downloads',
+  multimediaPVCName: '',
+  downloadsPVCName: '',
 };
 
 function(params) {
@@ -169,6 +169,14 @@ function(params) {
         failureThreshold: 60,
         timeoutSeconds: 1,
       },
+      local multimediaPVCmount = if std.objectHas(params, 'multimediaPVCName') && std.length(params.multimediaPVCName) > 0 then [{
+        mountPath: '/multimedia',
+        name: 'multimedia',
+      }] else [],
+      local downloadsPVCmount = if std.objectHas(params, 'downloadsPVCName') && std.length(params.downloadsPVCName) > 0 then [{
+        mountPath: '/download/completed',
+        name: 'downloads',
+      }] else [],
       volumeMounts: [
         {
           mountPath: '/config',
@@ -178,15 +186,7 @@ function(params) {
           mountPath: '/backup',
           name: 'backup',
         },
-        {
-          mountPath: '/multimedia',
-          name: 'multimedia',
-        },
-        {
-          mountPath: '/download/completed',
-          name: 'downloads',
-        },
-      ],
+      ] + multimediaPVCmount + downloadsPVCmount,
       resources: $._config.resources,
     },
 
@@ -265,33 +265,28 @@ function(params) {
           containers: [c, e],
           restartPolicy: 'Always',
           serviceAccountName: $.serviceAccount.metadata.name,
-          volumes: [
-            {
-              name: 'multimedia',
-              persistentVolumeClaim: {
-                claimName: $._config.multimediaPVCName,
-              },
+          local multimediaVolume = if std.objectHas(params, 'multimediaPVCName') && std.length(params.multimediaPVCName) > 0 then [{
+            name: 'multimedia',
+            persistentVolumeClaim: {
+              claimName: $._config.multimediaPVCName,
             },
-            {
-              name: 'downloads',
-              persistentVolumeClaim: {
-                claimName: $._config.downloadsPVCName,
-              },
+          }] else [],
+          local downloadsVolume = if std.objectHas(params, 'downloadsPVCName') && std.length(params.downloadsPVCName) > 0 then [{
+            name: 'downloads',
+            persistentVolumeClaim: {
+              claimName: $._config.downloadsPVCName,
             },
-          ] + [
-            if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then
-              {
-                name: 'backup',
-                persistentVolumeClaim: {
-                  claimName: $.backupsPVC.metadata.name,
-                },
-              }
-            else
-              {
-                name: 'backup',
-                emptyDir: {},
-              },
-          ],
+          }] else [],
+          local backupVolume = if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then [{
+            name: 'backup',
+            persistentVolumeClaim: {
+              claimName: $.backupsPVC.metadata.name,
+            },
+          }] else [{
+            name: 'backup',
+            emptyDir: {},
+          }],
+          volumes: multimediaVolume + downloadsVolume + backupVolume,
         },
       },
       volumeClaimTemplates: [{

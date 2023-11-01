@@ -17,7 +17,12 @@ spec:
   ports:
   - name: http
     port: 9696
+    protocol: TCP
     targetPort: http
+  - name: metrics
+    port: 9709
+    protocol: TCP
+    targetPort: metrics
   selector:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: prowlarr

@@ -29,11 +29,11 @@ spec:
       containers:
       - env:
         - name: TZ
-          value: Etc/UTC
+          value: Europe/Berlin
         - name: PUID
-          value: "568"
+          value: "1000"
         - name: GUID
-          value: "568"
+          value: "1000"
         image: linuxserver/prowlarr:1.5.2.3484-ls19
         imagePullPolicy: IfNotPresent
         name: prowlarr
@@ -41,28 +41,59 @@ spec:
         - containerPort: 9696
           name: http
         readinessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 0
-          periodSeconds: 60
+          failureThreshold: 5
+          initialDelaySeconds: 2
           tcpSocket:
-            port: 9696
-          timeoutSeconds: 1
+            port: http
+          timeoutSeconds: 10
         resources:
           requests:
             cpu: 160m
             memory: 37Mi
         startupProbe:
-          failureThreshold: 30
+          failureThreshold: 60
           initialDelaySeconds: 0
           periodSeconds: 5
           tcpSocket:
-            port: 9696
+            port: http
           timeoutSeconds: 1
         volumeMounts:
         - mountPath: /config
           name: config
-        - mountPath: /config/Backups
+        - mountPath: /backup
           name: backup
+      - args:
+        - exportarr
+        - prowlarr
+        env:
+        - name: CONFIG
+          value: /app/config.xml
+        - name: URL
+          value: http://localhost
+        - name: PORT
+          value: "9709"
+        image: ghcr.io/onedr0p/exportarr:v1.6.0
+        name: exportarr
+        ports:
+        - containerPort: 9709
+          name: metrics
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: metrics
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
+          requests:
+            cpu: 1m
+            memory: 11Mi
+        volumeMounts:
+        - mountPath: /app
+          name: config
+          readOnly: true
       restartPolicy: Always
       serviceAccountName: prowlarr
       volumes:
