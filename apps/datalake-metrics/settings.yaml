@@ -40,6 +40,17 @@ receiveIngestor:
 #    limits:
 #      cpu: 700m
 #      memory: 2Gi
+  replicaLabels: ['replica', 'receive_replica']
+  replicationFactor: 1
+  serviceMonitor: true
+  volumeClaimTemplate:
+    spec:
+      accessModes: ['ReadWriteOnce']
+      storageClassName: 'longhorn'
+      resources:
+        requests:
+          storage: '12Gi'
+
 receiveRouter:
   replicas: 3
   resources:
@@ -49,6 +60,9 @@ receiveRouter:
 #    limits:
 #      cpu: 300m
 #      memory: 200Mi
+  replicaLabels: ['replica', 'receive_replica']
+  replicationFactor: 1
+
 store:
   replicas: 2
   resources:
@@ -72,12 +86,17 @@ store:
       valueFrom:
         fieldRef:
           fieldPath: status.podIP
+  serviceMonitor: true
+
 query:
   replicas: 2
   resources:
     requests:
       cpu: 15m
       memory: 40Mi
+  replicaLabels: ['replica', 'prometheus_replica', 'rule_replica']
+  serviceMonitor: true
+
 compact:
   replicas: 1
   retentionResolutionRaw: '0'
@@ -90,3 +109,4 @@ compact:
       resources:
         requests:
           storage: '30Gi'
+  serviceMonitor: true

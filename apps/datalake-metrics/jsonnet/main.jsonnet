@@ -2,31 +2,19 @@ local t = import 'kube-thanos/thanos.libsonnet';
 local externalsecret = (import '../../../lib/jsonnet/utils/externalsecrets.libsonnet').externalsecret;
 local settings = std.parseYaml(importstr '../settings.yaml')[0];
 
-local i = t.receiveIngestor(settings + settings.receiveIngestor + {
-  replicaLabels: ['replica', 'receive_replica'],
-  replicationFactor: 1,
-  serviceMonitor: true,
-});
+local i = t.receiveIngestor(std.mergePatch(settings, settings.receiveIngestor));
 
-local r = t.receiveRouter(settings + settings.receiveRouter + {
-  replicaLabels: ['replica', 'receive_replica'],
-  replicationFactor: 1,
+local r = t.receiveRouter(std.mergePatch(settings, settings.receiveRouter) + {
   endpoints: i.endpoints,
 });
 
-local s = t.store(settings + settings.store + {
-  serviceMonitor: true,
-});
+local s = t.store(std.mergePatch(settings, settings.store));
 
 local q = t.query(settings + settings.query + {
-  replicaLabels: ['replica', 'prometheus_replica', 'rule_replica'],
-  serviceMonitor: true,
   stores: [s.storeEndpoint] + i.storeEndpoints,
 });
 
-local c = t.compact(settings + settings.compact + {
-  serviceMonitor: true,
-});
+local c = t.compact(std.mergePatch(settings, settings.compact));
 
 local all = {
   query: q,
