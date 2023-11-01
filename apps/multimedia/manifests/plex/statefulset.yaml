@@ -2,24 +2,29 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
+    app.kubernetes.io/component: server
     app.kubernetes.io/name: plex
-    app.kubernetes.io/version: 1.32.6
+    app.kubernetes.io/part-of: plex
+    app.kubernetes.io/version: 1.32.6.7557-1cf77d501
   name: plex
   namespace: multimedia
 spec:
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
+      app.kubernetes.io/component: server
       app.kubernetes.io/name: plex
+      app.kubernetes.io/part-of: plex
+  serviceAccountName: plex
   serviceName: plex
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: plex
       labels:
+        app.kubernetes.io/component: server
         app.kubernetes.io/name: plex
-        app.kubernetes.io/version: 1.32.6
+        app.kubernetes.io/part-of: plex
     spec:
       containers:
       - env:
@@ -27,14 +32,14 @@ spec:
           value: Europe/Berlin
         - name: PUID
           value: "1000"
-        - name: PGID
+        - name: GUID
           value: "1000"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: all
         - name: ALLOWED_NETWORKS
           value: 192.168.2.0/24,10.42.0.0/16
         - name: ADVERTISE_IP
           value: http://192.168.2.98:32400/
-        - name: NVIDIA_DRIVER_CAPABILITIES
-          value: all
         envFrom:
         - secretRef:
             name: plex-claim
@@ -43,11 +48,16 @@ spec:
         ports:
         - containerPort: 32400
           name: plex
+          protocol: TCP
         readinessProbe:
+          failureThreshold: 3
           httpGet:
             path: /identity
             port: 32400
-          initialDelaySeconds: 15
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
           timeoutSeconds: 5
         resources:
           limits:
@@ -71,11 +81,11 @@ spec:
       - args:
         - --config=/config.json
         image: quay.io/paulfantom/plex_exporter:1.0.0
-        imagePullPolicy: Always
         name: exporter
         ports:
         - containerPort: 9594
           name: metrics
+          protocol: TCP
         resources:
           limits:
             memory: 20Mi
@@ -89,32 +99,31 @@ spec:
       hostname: nas
       nodeSelector:
         kubernetes.io/arch: amd64
-      restartPolicy: Always
+        kubernetes.io/os: linux
       runtimeClassName: nvidia
-      tolerations: []
       volumes:
+      - emptyDir: {}
+        name: transcode
+      - name: backup
+        persistentVolumeClaim:
+          claimName: plex-backup
+      - name: exporter-config
+        secret:
+          optional: true
+          secretName: plex-token
       - name: movies
         persistentVolumeClaim:
           claimName: movies
       - name: tv
         persistentVolumeClaim:
           claimName: tv
-      - name: backup
-        persistentVolumeClaim:
-          claimName: plex-backup
-      - emptyDir: {}
-        name: transcode
-      - name: exporter-config
-        secret:
-          optional: true
-          secretName: plex-token
-  volumeClaimTemplates:
-  - metadata:
-      name: library
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 45Gi
-      storageClassName: lvm-secondary
+    volumeClaimTemplates:
+    - metadata:
+        name: library
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 45Gi
+        storageClassName: lvm-secondary

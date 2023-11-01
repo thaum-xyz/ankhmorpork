@@ -3,6 +3,52 @@ common:
   loadBalancerIP: "192.168.2.95"
   namespace: &namespace "multimedia"
 
+plex:
+  name: plex
+  version: "1.32.6.7557-1cf77d501"  # application-version-from-github: plexinc/pms-docker
+  image: "plexinc/pms-docker:1.32.6.7557-1cf77d501"  # application-image-from-github: plexinc/pms-docker
+  namespace: *namespace
+  loadBalancerIP: "192.168.2.98"
+  port: 32400
+  runtimeClassName: nvidia
+  hostname: nas
+  exporter:
+    config:
+      secretName: plex-token
+      remoteRef: MULTIMEDIA_PLEX_TOKEN
+  resources:
+    requests:
+      cpu: 500m
+      memory: 3Gi
+    limits:
+      cpu: 2
+      memory: 8Gi
+      nvidia.com/gpu: 1
+  externalSecretStoreName: doppler-auth-api
+  plexClaim:
+    secretName: plex-claim
+    remoteRef: MULTIMEDIA_PLEX_CLAIM
+  moviesPVCName: movies
+  tvshowsPVCName: tv
+  storage:
+    library:
+      pvcSpec:
+        storageClassName: lvm-secondary
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 45Gi
+    backups:
+      pvcSpec:
+        storageClassName: qnap-nfs
+        accessModes:
+        #- ReadWriteMany
+        - ReadWriteOnce  # FIXME
+        resources:
+          requests:
+            storage: 30Gi
+
 prowlarr:
   name: prowlarr
   version: "1.9.4.4039-ls37"  # application-version-from-github: linuxserver/docker-prowlarr

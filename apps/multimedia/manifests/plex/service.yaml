@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    metallb.universe.tf/address-pool: default
   labels:
+    app.kubernetes.io/component: server
     app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: plex
+    app.kubernetes.io/version: 1.32.6.7557-1cf77d501
   name: plex
   namespace: multimedia
 spec:
@@ -20,6 +21,7 @@ spec:
     protocol: TCP
     targetPort: metrics
   selector:
+    app.kubernetes.io/component: server
     app.kubernetes.io/name: plex
-  sessionAffinity: None
+    app.kubernetes.io/part-of: plex
   type: LoadBalancer

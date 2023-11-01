@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "legacyImports": false
+}
