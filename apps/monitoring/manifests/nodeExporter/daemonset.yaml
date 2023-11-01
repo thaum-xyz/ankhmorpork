@@ -78,7 +78,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        image: quay.io/brancz/kube-rbac-proxy:v0.14.3
+        image: quay.io/brancz/kube-rbac-proxy:v0.15.0
         name: kube-rbac-proxy
         ports:
         - containerPort: 9100
@@ -100,6 +100,8 @@ spec:
           runAsGroup: 65532
           runAsNonRoot: true
           runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
       hostNetwork: true
       hostPID: true
       nodeSelector:

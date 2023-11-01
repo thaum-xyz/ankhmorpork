@@ -8,7 +8,7 @@ metadata:
     probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://github.com/cncf/artwork/blob/master/projects/prometheus/icon/color/prometheus-icon-color.png
-    reloader.homer/name: prometheus
+    reloader.homer/name: prometheus-k8s
     traefik.ingress.kubernetes.io/router.middlewares: auth-traefik-forward-auth@kubernetescrd
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
   labels:
@@ -18,7 +18,7 @@ metadata:
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 2.47.1
     reloader.homer/enabled: "true"
-  name: prometheus
+  name: prometheus-k8s
   namespace: monitoring
 spec:
   ingressClassName: traefik
@@ -36,4 +36,4 @@ spec:
   tls:
   - hosts:
     - prometheus.ankhmorpork.thaum.xyz
-    secretName: prometheus-tls
+    secretName: prometheus-k8s-tls

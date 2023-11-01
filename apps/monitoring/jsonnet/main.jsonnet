@@ -188,9 +188,6 @@ local kp =
           externalUrl: 'https://alertmanager.' + $.values.common.baseDomain,
         },
       },
-      serviceAccount+: {
-        automountServiceAccountToken: false,  // TODO: move into kube-prometheus
-      },
       service+: {
         metadata+: {
           annotations+: {
@@ -374,9 +371,6 @@ local kp =
           // remoteRead: [{
           //   url: "http://mimir.mimir.svc:9009/prometheus/api/v1/read",
           // }],
-          // FIXME: Remove when https://github.com/prometheus-operator/kube-prometheus/pull/2232 is merged
-          scrapeConfigNamespaceSelector: {},
-          scrapeConfigSelector: {},
           enforcedNamespaceLabel: 'namespace',
           excludedFromEnforcement: [
             //{
@@ -512,9 +506,7 @@ local kp =
       // FIXME: solve in https://github.com/prometheus-operator/kube-prometheus/issues/1719
       networkPolicy+:: allowIngressNetworkPolicy($.prometheus.service.spec.ports[0].port),
       ingress: ingress(
-        $.prometheus.service.metadata {
-          name: 'prometheus',  // FIXME: that's an artifact from previous configuration, it should be removed.
-        },
+        $.prometheus.service.metadata,
         'prometheus.' + $.values.common.baseDomain,
         {
           name: $.prometheus.service.metadata.name,
@@ -703,9 +695,6 @@ local kp =
                 'pyrra',
                 addArgs(['--prometheus-external-url=https://prometheus.ankhmorpork.thaum.xyz'], 'pyrra', super.containers)
               ),
-              nodeSelector+: {
-                'kubernetes.io/arch': 'amd64',
-              },
             },
           },
         },
@@ -721,9 +710,6 @@ local kp =
                 'pyrra',
                 super.containers
               ),
-              nodeSelector+: {
-                'kubernetes.io/arch': 'amd64',
-              },
             },
           },
         },

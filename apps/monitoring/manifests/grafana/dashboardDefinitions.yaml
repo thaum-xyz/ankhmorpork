@@ -1194,7 +1194,7 @@ items:
                           "steppedLine": false,
                           "targets": [
                               {
-                                  "expr": "cluster_quantile:apiserver_request_slo_duration_seconds:histogram_quantile{verb=\"read\", cluster=\"$cluster\"}",
+                                  "expr": "cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{verb=\"read\", cluster=\"$cluster\"}",
                                   "format": "time_series",
                                   "intervalFactor": 2,
                                   "legendFormat": "{{ resource }}",
@@ -1597,7 +1597,7 @@ items:
                           "steppedLine": false,
                           "targets": [
                               {
-                                  "expr": "cluster_quantile:apiserver_request_slo_duration_seconds:histogram_quantile{verb=\"write\", cluster=\"$cluster\"}",
+                                  "expr": "cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{verb=\"write\", cluster=\"$cluster\"}",
                                   "format": "time_series",
                                   "intervalFactor": 2,
                                   "legendFormat": "{{ resource }}",
@@ -8744,7 +8744,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -8754,7 +8754,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "IOPS(Writes)",
@@ -8763,7 +8763,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -8773,7 +8773,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "IOPS(Reads + Writes)",
@@ -8782,7 +8782,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -8792,7 +8792,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "Throughput(Read)",
@@ -12827,7 +12827,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -12837,7 +12837,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "IOPS(Writes)",
@@ -12846,7 +12846,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -12856,7 +12856,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "IOPS(Reads + Writes)",
@@ -12865,7 +12865,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -12875,7 +12875,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "Throughput(Read)",
@@ -16218,7 +16218,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -16228,7 +16228,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "IOPS(Writes)",
@@ -16237,7 +16237,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -16247,7 +16247,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "IOPS(Reads + Writes)",
@@ -16256,7 +16256,7 @@ items:
 
                                   ],
                                   "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                                  "decimals": -1,
+                                  "decimals": 3,
                                   "link": false,
                                   "linkTargetBlank": false,
                                   "linkTooltip": "Drill down",
@@ -16266,7 +16266,7 @@ items:
 
                                   ],
                                   "type": "number",
-                                  "unit": "short"
+                                  "unit": "iops"
                               },
                               {
                                   "alias": "Throughput(Read)",

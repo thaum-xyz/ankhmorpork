@@ -45,7 +45,12 @@ spec:
             memory: 30Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
       nodeSelector:
-        kubernetes.io/arch: amd64
         kubernetes.io/os: linux
