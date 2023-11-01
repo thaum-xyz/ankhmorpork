@@ -289,7 +289,6 @@ function(params) {
       selector: {
         matchLabels: $._config.selectorLabels,
       },
-      serviceAccountName: $.serviceAccount.metadata.name,
       serviceName: $._metadata.name,
       template: {
         metadata: {
@@ -299,6 +298,7 @@ function(params) {
           labels: $._config.selectorLabels,
         },
         spec: {
+          serviceAccountName: $.serviceAccount.metadata.name,
           containers: [p, e],
           hostname: $._config.hostname,
           nodeSelector: {
@@ -338,13 +338,13 @@ function(params) {
             },
           ],
         },
-        volumeClaimTemplates: [{
-          metadata: {
-            name: 'library',
-          },
-          spec: $._config.storage.library.pvcSpec,
-        }],
       },
+      volumeClaimTemplates: [{
+        metadata: {
+          name: 'library',
+        },
+        spec: $._config.storage.library.pvcSpec,
+      }],
     },
   },
 }

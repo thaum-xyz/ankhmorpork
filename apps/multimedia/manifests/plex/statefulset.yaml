@@ -15,7 +15,6 @@ spec:
       app.kubernetes.io/component: server
       app.kubernetes.io/name: plex
       app.kubernetes.io/part-of: plex
-  serviceAccountName: plex
   serviceName: plex
   template:
     metadata:
@@ -101,6 +100,7 @@ spec:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
       runtimeClassName: nvidia
+      serviceAccountName: plex
       volumes:
       - emptyDir: {}
         name: transcode
@@ -117,13 +117,13 @@ spec:
       - name: tv
         persistentVolumeClaim:
           claimName: tv
-    volumeClaimTemplates:
-    - metadata:
-        name: library
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 45Gi
-        storageClassName: lvm-secondary
+  volumeClaimTemplates:
+  - metadata:
+      name: library
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 45Gi
+      storageClassName: lvm-secondary
