@@ -76,7 +76,7 @@ spec:
           value: http://localhost
         - name: PORT
           value: "9707"
-        image: ghcr.io/onedr0p/exportarr:v0.6.2
+        image: ghcr.io/onedr0p/exportarr:v1.6.0
         name: exportarr
         ports:
         - containerPort: 9707

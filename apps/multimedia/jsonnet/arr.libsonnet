@@ -6,7 +6,7 @@ local defaults = {
   image: error 'must provide image',
   port: error 'must provide port',
   exporter: {
-    image: 'ghcr.io/onedr0p/exportarr:v0.6.2',
+    image: 'ghcr.io/onedr0p/exportarr:v1.6.0',
     port: 9708,
     resources: {
       limits: {
