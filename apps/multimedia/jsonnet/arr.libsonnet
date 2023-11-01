@@ -191,7 +191,7 @@ function(params) {
     },
 
     local e = {
-      args: ['exportarr', $._config.name],
+      args: [$._config.name],
       env: [
         {
           name: 'CONFIG',

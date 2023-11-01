@@ -67,7 +67,6 @@ spec:
         - mountPath: /download/completed
           name: downloads
       - args:
-        - exportarr
         - radarr
         env:
         - name: CONFIG

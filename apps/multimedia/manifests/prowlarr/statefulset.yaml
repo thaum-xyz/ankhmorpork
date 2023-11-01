@@ -63,7 +63,6 @@ spec:
         - mountPath: /backup
           name: backup
       - args:
-        - exportarr
         - prowlarr
         env:
         - name: CONFIG
@@ -99,7 +98,7 @@ spec:
       volumes:
       - name: backup
         persistentVolumeClaim:
-          claimName: prowlarr-backup
+          claimName: prowlarr-config-backup
   volumeClaimTemplates:
   - metadata:
       name: config
