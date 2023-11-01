@@ -274,6 +274,33 @@ spec:
         severity: warning
   - name: kubernetes-resources
     rules:
+    - alert: KubeCPUOvercommit
+      annotations:
+        description: Cluster {{ $labels.cluster }} has overcommitted CPU resource
+          requests for Pods by {{ $value }} CPU shares and cannot tolerate node failure.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubecpuovercommit
+        summary: Cluster has overcommitted CPU resource requests.
+      expr: |
+        sum(namespace_cpu:kube_pod_container_resource_requests:sum{job="kube-state-metrics",}) by (cluster) - (sum(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster) - max(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster)) > 0
+        and
+        (sum(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster) - max(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster)) > 0
+      for: 10m
+      labels:
+        severity: warning
+    - alert: KubeMemoryOvercommit
+      annotations:
+        description: Cluster {{ $labels.cluster }} has overcommitted memory resource
+          requests for Pods by {{ $value | humanize }} bytes and cannot tolerate node
+          failure.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubememoryovercommit
+        summary: Cluster has overcommitted memory resource requests.
+      expr: |
+        sum(namespace_memory:kube_pod_container_resource_requests:sum{}) by (cluster) - (sum(kube_node_status_allocatable{resource="memory", job="kube-state-metrics"}) by (cluster) - max(kube_node_status_allocatable{resource="memory", job="kube-state-metrics"}) by (cluster)) > 0
+        and
+        (sum(kube_node_status_allocatable{resource="memory", job="kube-state-metrics"}) by (cluster) - max(kube_node_status_allocatable{resource="memory", job="kube-state-metrics"}) by (cluster)) > 0
+      for: 10m
+      labels:
+        severity: warning
     - alert: KubeCPUQuotaOvercommit
       annotations:
         description: Cluster {{ $labels.cluster }}  has overcommitted CPU resource

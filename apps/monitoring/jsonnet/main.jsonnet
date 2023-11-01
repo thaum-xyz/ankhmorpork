@@ -636,16 +636,6 @@ local kp =
           scrapeTimeout: '5s',
         },
       },
-
-      prometheusRule+: {
-        spec+: {
-          groups: removeAlerts(
-            ['KubeMemoryOvercommit', 'KubeCPUOvercommit'],
-            'kubernetes-resources',
-            super.groups,
-          ),
-        },
-      },
     },
 
     kubePrometheus+: {
