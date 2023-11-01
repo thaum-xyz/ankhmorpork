@@ -19,12 +19,12 @@ curl --retry 5 --silent --fail -H "Authorization: token $GITHUB_TOKEN" "https://
 
 # Iterate over each file searching for mark
 for f in $FILES; do
-    
+
     REPOS=$(grep application-version-from-github: "$f" | rev | cut -d: -f1 | xargs | rev)
 
     for r in $REPOS; do
         LATEST="$(get_latest_version "$r")"
-        CURRENT=$(grep "application-version-from-github:.*${r}$" "$f" | cut -d: -f2 | cut -d# -f1 | sed -e 's/[^0-9.]//g')
+        CURRENT=$(grep "application-version-from-github:.*${r}$" "$f" | cut -d: -f2 | cut -d# -f1 | sed -e 's/[^0-9a-z.-]//g')
 
         if [ "$LATEST" == "" ] || [ "$LATEST" == "null" ]; then
             echo "Latest version detection failed"
@@ -46,4 +46,3 @@ for f in $FILES; do
         echo "$r from $CURRENT to $LATEST" >> "${CHANGELOG}"
     done
 done
-
