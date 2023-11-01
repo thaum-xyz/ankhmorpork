@@ -1,6 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: plex
+    app.kubernetes.io/version: 1.32.6.7557-1cf77d501
   name: plex-backup
   namespace: multimedia
 spec:
