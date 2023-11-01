@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alert-relabelings-secret
+stringData:
+  relabel-configs.yaml: |
+    - action: replace
+      regex: (.*)
+      replacement: "$1"
+      source_labels: [cluster]
+      target_label: cluster
+    - replacement: "unknown"
+      target_label: __tmp_namespace
+    - action: replace
+      regex: ".*;([a-z0-9]+).*"
+      replacement: "$1"
+      source_labels: [__nonexistent,__tmp_namespace,namespace]
+      target_label: namespace
+    - replacement: ""
+      target_label: __tmp_namespace

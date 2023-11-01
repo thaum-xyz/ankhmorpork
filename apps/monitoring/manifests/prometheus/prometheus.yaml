@@ -10,6 +10,9 @@ metadata:
   name: k8s
   namespace: monitoring
 spec:
+  additionalAlertRelabelConfigs:
+    name: alert-relabelings-secret
+    key: relabel-configs.yaml
   affinity:
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
