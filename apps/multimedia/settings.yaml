@@ -4,7 +4,7 @@ common:
   namespace: &namespace "multimedia"
 
 prowlarr:
-  version: "v1.5.2.3484-ls19"  # application-version-from-github: linuxserver/docker-prowlarr
+  version: "1.9.4.4039-ls37"  # application-version-from-github: linuxserver/docker-prowlarr
   image: "linuxserver/prowlarr:1.5.2.3484-ls19"  # application-image-from-github: linuxserver/docker-prowlarr
   namespace: *namespace
   resources:
@@ -34,8 +34,8 @@ prowlarr:
 
 radarr:
   name: radarr
-  version: "4.5.2.7388-ls174"  # application-version-from-github: linuxserver/docker-radarr
-  image: "lscr.io/linuxserver/radarr:4.5.2.7388-ls174"  # application-image-from-github: linuxserver/docker-radarr
+  version: "5.0.3.8127-ls192"  # application-version-from-github: linuxserver/docker-radarr
+  image: "lscr.io/linuxserver/radarr:5.0.3.8127-ls192"  # application-image-from-github: linuxserver/docker-radarr
   namespace: *namespace
   port: 7878
   multimediaPVCName: "movies"
@@ -67,8 +67,8 @@ radarr:
             storage: 300Mi
 sonarr:
   name: sonarr
-  version: "3.0.10.1567-ls194"  # application-version-from-github: linuxserver/docker-sonarr
-  image: "lscr.io/linuxserver/sonarr:3.0.10.1567-ls194"  # application-image-from-github: linuxserver/docker-sonarr
+  version: "3.0.10.1567-ls210"  # application-version-from-github: linuxserver/docker-sonarr
+  image: "lscr.io/linuxserver/sonarr:3.0.10.1567-ls210"  # application-image-from-github: linuxserver/docker-sonarr
   namespace: *namespace
   port: 8989
   multimediaPVCName: "tv"
