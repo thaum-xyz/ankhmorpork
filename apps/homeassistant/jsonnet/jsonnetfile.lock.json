@@ -26,7 +26,7 @@
           "subdir": "grafana-builder"
         }
       },
-      "version": "40be8fb34963571d62cf991100ea3985116922e4",
+      "version": "356d4fb6ada32b9aedb2c2b230b616f2458c4b94",
       "sum": "xEFMv4+ObwP5L1Wu0XK5agWci4AJzNApys6iKAQxLlQ="
     },
     {
@@ -36,8 +36,8 @@
           "subdir": ""
         }
       },
-      "version": "63337d921db856bbcd2e91814a0ac90c250410d6",
-      "sum": "x8/bMVUaNMZEh6mcwhLmTlBJnaleRqhhV+w/+h0H0Pc="
+      "version": "d9a7f3a21d2b83198a3519eb4c0f9960b6b0a62f",
+      "sum": "PAdS42ZaVLJD8Pe5uZxOmyJHfwGIH49z0o2ucl4NK5g="
     },
     {
       "source": {

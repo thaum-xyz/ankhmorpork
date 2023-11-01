@@ -6,4 +6,4 @@ metadata:
 spec:
   cacheSpec:
   - images:
-    - homeassistant/home-assistant:2023.10.0
+    - homeassistant/home-assistant:2023.11.0
