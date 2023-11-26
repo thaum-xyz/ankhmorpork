@@ -47,7 +47,8 @@ service:
 
 ports:
   web:
-    redirectTo: websecure
+    redirectTo:
+      port: websecure
 
 metrics:
   prometheus:
