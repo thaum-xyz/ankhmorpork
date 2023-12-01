@@ -421,6 +421,11 @@ local kp =
             {
               resource: 'prometheusrules',
               namespace: $.values.common.namespace,
+              name: 'kube-prometheus-rules',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: $.values.common.namespace,
               name: 'kube-state-metrics-rules',
             },
             {

@@ -67,6 +67,9 @@ spec:
     - name: blackbox-exporter
       namespace: monitoring
       resource: servicemonitors
+    - name: kube-prometheus-rules
+      namespace: monitoring
+      resource: prometheusrules
     - name: kube-state-metrics-rules
       namespace: monitoring
       resource: prometheusrules
