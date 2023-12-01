@@ -31,7 +31,7 @@ $(JSONNET_VENDOR):
 
 .PHONY: beautify
 beautify:  ## Make yaml files readable
-	for i in $(shell find $(MANIFESTS_DIR)/ -name '*.yaml'); do mv "$$i" "$$i.bak"; yamlfmt < "$$i.bak" > "$$i"; rm "$$i.bak"; done
+	for i in $(shell find $(MANIFESTS_DIR)/ -name '*.yaml'); do yq --prettyPrint --no-colors --inplace "$$i"; done
 
 .PHONY: clean
 clean:  ## Clean vendored code

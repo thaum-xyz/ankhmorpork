@@ -24,8 +24,8 @@ jobs:
       run: go install github.com/google/go-jsonnet/cmd/jsonnet@${{ env.jsonnet-version }}
     - name: Get jsonnet-bundler
       run: go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@${{ env.jb-version }}
-    - name: Get yamlfmt
-      run: go install github.com/devopyio/yamlfmt@latest
+    - name: Get yq
+      run: go install github.com/mikefarah/yq/v4@latest
     - name: Upgrade
       run: |
         export GITHUB_TOKEN=${{ secrets.PAT_SECRET }}
