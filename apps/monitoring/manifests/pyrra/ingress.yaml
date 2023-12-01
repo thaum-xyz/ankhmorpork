@@ -19,17 +19,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: pyrra.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          service:
-            name: pyrra-api
-            port:
-              name: http
-        path: /
-        pathType: Prefix
+    - host: pyrra.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: pyrra-api
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
   tls:
-  - hosts:
-    - pyrra.ankhmorpork.thaum.xyz
-    secretName: pyrra-api-tls
+    - hosts:
+        - pyrra.ankhmorpork.thaum.xyz
+      secretName: pyrra-api-tls

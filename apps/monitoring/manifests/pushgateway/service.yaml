@@ -9,10 +9,10 @@ metadata:
   namespace: monitoring
 spec:
   ports:
-  - name: http-push
-    port: 9091
-    protocol: TCP
-    targetPort: http-push
+    - name: http-push
+      port: 9091
+      protocol: TCP
+      targetPort: http-push
   selector:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: pushgateway

@@ -7,8 +7,7 @@ metadata:
   name: prometheus-sd-kubernetes-errors
   namespace: monitoring
 spec:
-  description: If there are too many errors Prometheus is having a bad time discovering
-    new Kubernetes services.
+  description: If there are too many errors Prometheus is having a bad time discovering new Kubernetes services.
   indicator:
     ratio:
       errors:

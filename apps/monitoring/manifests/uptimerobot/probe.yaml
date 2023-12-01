@@ -9,17 +9,17 @@ metadata:
 spec:
   interval: 150s
   metricRelabelings:
-  - sourceLabels:
-    - url
-    targetLabel: instance
-  - regex: (https://[a-zA-Z0-9.-]+).*
-    replacement: $1/
-    sourceLabels:
-    - url
-    targetLabel: instance
+    - sourceLabels:
+        - url
+      targetLabel: instance
+    - regex: (https://[a-zA-Z0-9.-]+).*
+      replacement: $1/
+      sourceLabels:
+        - url
+      targetLabel: instance
   prober:
     url: uptimerobot.monitoring.svc:7979
   targets:
     staticConfig:
       static:
-      - https://api.uptimerobot.com/v2/getMonitors
+        - https://api.uptimerobot.com/v2/getMonitors

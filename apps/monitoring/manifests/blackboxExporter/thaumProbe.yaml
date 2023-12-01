@@ -20,4 +20,4 @@ spec:
         environment: lancre
         module: http_2xx
       static:
-      - https://zmc.krupa.net.pl/
+        - https://zmc.krupa.net.pl/

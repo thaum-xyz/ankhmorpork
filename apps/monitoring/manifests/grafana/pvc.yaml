@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 60Mi

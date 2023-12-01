@@ -7,9 +7,9 @@ metadata:
   name: windows-exporter
   namespace: monitoring
 subsets:
-- addresses:
-  - ip: 192.168.2.50
-  - ip: 192.168.2.51
-  ports:
-  - name: http
-    port: 9182
+  - addresses:
+      - ip: 192.168.2.50
+      - ip: 192.168.2.51
+    ports:
+      - name: http
+        port: 9182

@@ -27,85 +27,85 @@ spec:
     spec:
       automountServiceAccountToken: true
       containers:
-      - args:
-        - --host=127.0.0.1
-        - --port=8081
-        - --telemetry-host=127.0.0.1
-        - --telemetry-port=8082
-        - --metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]
-        image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.9.2
-        name: kube-state-metrics
-        resources:
-          limits:
-            cpu: 200m
-            memory: 180Mi
-          requests:
-            cpu: 2m
-            memory: 34Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
-          seccompProfile:
-            type: RuntimeDefault
-      - args:
-        - --secure-listen-address=:8443
-        - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
-        - --upstream=http://127.0.0.1:8081/
-        image: quay.io/brancz/kube-rbac-proxy:v0.15.0
-        name: kube-rbac-proxy-main
-        ports:
-        - containerPort: 8443
-          name: https-main
-        resources:
-          limits:
-            cpu: 40m
-            memory: 40Mi
-          requests:
-            cpu: 2m
-            memory: 14Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
-          seccompProfile:
-            type: RuntimeDefault
-      - args:
-        - --secure-listen-address=:9443
-        - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
-        - --upstream=http://127.0.0.1:8082/
-        image: quay.io/brancz/kube-rbac-proxy:v0.15.0
-        name: kube-rbac-proxy-self
-        ports:
-        - containerPort: 9443
-          name: https-self
-        resources:
-          limits:
-            cpu: 40m
-            memory: 40Mi
-          requests:
-            cpu: 1m
-            memory: 14Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
-          seccompProfile:
-            type: RuntimeDefault
+        - args:
+            - --host=127.0.0.1
+            - --port=8081
+            - --telemetry-host=127.0.0.1
+            - --telemetry-port=8082
+            - --metric-labels-allowlist=nodes=[kubernetes.io/arch,gpu.infra/intel,network.infra/type]
+          image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.9.2
+          name: kube-state-metrics
+          resources:
+            limits:
+              cpu: 200m
+              memory: 180Mi
+            requests:
+              cpu: 2m
+              memory: 34Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            seccompProfile:
+              type: RuntimeDefault
+        - args:
+            - --secure-listen-address=:8443
+            - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+            - --upstream=http://127.0.0.1:8081/
+          image: quay.io/brancz/kube-rbac-proxy:v0.15.0
+          name: kube-rbac-proxy-main
+          ports:
+            - containerPort: 8443
+              name: https-main
+          resources:
+            limits:
+              cpu: 40m
+              memory: 40Mi
+            requests:
+              cpu: 2m
+              memory: 14Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+        - args:
+            - --secure-listen-address=:9443
+            - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+            - --upstream=http://127.0.0.1:8082/
+          image: quay.io/brancz/kube-rbac-proxy:v0.15.0
+          name: kube-rbac-proxy-self
+          ports:
+            - containerPort: 9443
+              name: https-self
+          resources:
+            limits:
+              cpu: 40m
+              memory: 40Mi
+            requests:
+              cpu: 1m
+              memory: 14Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
       nodeSelector:
         kubernetes.io/os: linux
       serviceAccountName: kube-state-metrics

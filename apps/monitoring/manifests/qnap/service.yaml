@@ -10,5 +10,5 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - name: http
-    port: 9100
+    - name: http
+      port: 9100

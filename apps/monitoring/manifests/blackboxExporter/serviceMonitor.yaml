@@ -10,14 +10,14 @@ metadata:
   namespace: monitoring
 spec:
   endpoints:
-  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-    interval: 120s
-    path: /metrics
-    port: https
-    scheme: https
-    scrapeTimeout: 120s
-    tlsConfig:
-      insecureSkipVerify: true
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 120s
+      path: /metrics
+      port: https
+      scheme: https
+      scrapeTimeout: 120s
+      tlsConfig:
+        insecureSkipVerify: true
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter

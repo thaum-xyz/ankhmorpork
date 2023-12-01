@@ -25,41 +25,41 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app.kubernetes.io/name
-                  operator: In
-                  values:
-                  - smokeping
-              topologyKey: kubernetes.io/hostname
-            weight: 100
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - smokeping
+                topologyKey: kubernetes.io/hostname
+              weight: 100
       containers:
-      - args:
-        - 8.8.8.8
-        - 1.1.1.1
-        - lancre.thaum.xyz
-        - krupa.net.pl
-        - pawel.krupa.net.pl
-        image: quay.io/superq/smokeping-prober:v0.7.1
-        name: smokeping
-        ports:
-        - containerPort: 9374
-          name: http
-        readinessProbe:
-          failureThreshold: 5
-          initialDelaySeconds: 1
-          tcpSocket:
-            port: http
-          timeoutSeconds: 10
-        resources:
-          limits:
-            memory: 70Mi
-          requests:
-            cpu: 40m
-            memory: 30Mi
-        securityContext:
-          capabilities:
-            add:
-            - NET_RAW
+        - args:
+            - 8.8.8.8
+            - 1.1.1.1
+            - lancre.thaum.xyz
+            - krupa.net.pl
+            - pawel.krupa.net.pl
+          image: quay.io/superq/smokeping-prober:v0.7.1
+          name: smokeping
+          ports:
+            - containerPort: 9374
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 1
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            limits:
+              memory: 70Mi
+            requests:
+              cpu: 40m
+              memory: 30Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_RAW
       serviceAccountName: smokeping

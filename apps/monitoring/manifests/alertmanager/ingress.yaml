@@ -3,8 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator
-      CRDs
+    ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator CRDs
     probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://github.com/cncf/artwork/blob/master/projects/prometheus/icon/color/prometheus-icon-color.png
@@ -23,17 +22,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: alertmanager.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          service:
-            name: alertmanager-main
-            port:
-              name: web
-        path: /
-        pathType: Prefix
+    - host: alertmanager.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: alertmanager-main
+                port:
+                  name: web
+            path: /
+            pathType: Prefix
   tls:
-  - hosts:
-    - alertmanager.ankhmorpork.thaum.xyz
-    secretName: alertmanager-tls
+    - hosts:
+        - alertmanager.ankhmorpork.thaum.xyz
+      secretName: alertmanager-tls

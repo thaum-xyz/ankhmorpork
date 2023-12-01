@@ -8,140 +8,124 @@ metadata:
   namespace: monitoring
 spec:
   groups:
-  - name: sites
-    rules:
-    - expr: (uptimerobot_monitor_status == 2)/2 OR clamp(uptimerobot_monitor_status,0,0)
-      record: uptimerobot_monitor_normalized_status
-    - alert: SiteExtrenallyDown
-      annotations:
-        description: Synthetic monitoring reports site {{ $labels.instance }} not
-          to be up for 15m.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
-        summary: Site is not available from external network
-      expr: uptimerobot_monitor_status == 9
-      for: 10m
-      labels:
-        severity: warning
-    - alert: SiteDown
-      annotations:
-        description: Synthetic monitoring reports site {{ $labels.instance }} not
-          to be up for 15m.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteNotUP
-        summary: Site is down
-      expr: probe_success == 0 AND on (instance) uptimerobot_monitor_status == 9
-      for: 15m
-      labels:
-        severity: critical
-  - name: testing.rules
-    rules:
-    - alert: CPUStealTimeHigh
-      annotations:
-        description: CPU Steal Time is very high on {{ $labels.instance }} hypervisor.
-          This can lead to VM being stalled.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/CPUStealTimeHigh
-        summary: High CPU Steal Time
-      expr: |
-        sum by (instance) (rate(node_cpu_seconds_total{mode="steal"}[3m])) / count by (instance) (node_cpu_seconds_total{mode="steal"}) > 0.1
-      for: 20m
-      labels:
-        severity: warning
-    - alert: ExporterTargetDown
-      annotations:
-        description: Exporter {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container
-          }}) reported its target being down. This results in lack of ability to scrape
-          metrics from the main service.
-        summary: Service monitored by exporter is Down
-      expr: '{__name__=~".*_up",__name__!="node_network_up",__name__!="node_supervisord_up"}
-        == 0'
-      for: 5m
-      labels:
-        severity: warning
-  - name: custom-node-alerts
-    rules:
-    - alert: PackagesAvailable
-      annotations:
-        description: '{{ $value }} packages are available for upgrade. Maybe it is
-          time to upgrade?'
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/PackagesAvailable
-        summary: Packages are available for upgrade
-      expr: |
-        sum by (node,instance) (yum_upgrades_pending) > 200
-        or
-        sum by (node,instance) (apt_upgrades_pending) > 200
-      for: 48h
-      labels:
-        severity: info
-    - alert: RebootRequired
-      annotations:
-        description: Instance '{{ $labels.instance }}' was upgraded and now requires
-          a reboot.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/RebootRequired
-        summary: Reboot is required to finish package upgrade
-      expr: node_reboot_required > 0
-      for: 4h
-      labels:
-        severity: info
-    - alert: FilesystemReadOnly
-      annotations:
-        description: Filesystem went read-only on {{ $labels.instance }}. Check FS
-          for possible corruption.
-        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/FilesystemReadOnly
-        summary: Filesystem went read-only possibly due to device error.
-      expr: |
-        node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)",mountpoint!~"/mnt/snapshot.*"} != 0
-      labels:
-        severity: critical
-  - name: openshift.rules
-    rules:
-    - alert: HighlyAvailableWorkloadIncorrectlySpread
-      annotations:
-        description: Workload {{ $labels.namespace }}/{{ $labels.workload }} is incorrectly
-          spread across multiple nodes which breaks high-availability requirements.
-          Since the workload is using persistent volumes, manual intervention is needed.
-          Please follow the guidelines provided in the runbook of this alert to fix
-          this issue.
-        runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/HighlyAvailableWorkloadIncorrectlySpread.md
-        summary: Highly-available workload is incorrectly spread across multiple nodes
-          and manual intervention is needed.
-      expr: |
-        count without (node)
-        (
-          group by (node, workload, namespace)
-          (
-            kube_pod_info{node!=""}
-            * on(namespace,pod) group_left(workload)
+    - name: sites
+      rules:
+        - expr: (uptimerobot_monitor_status == 2)/2 OR clamp(uptimerobot_monitor_status,0,0)
+          record: uptimerobot_monitor_normalized_status
+        - alert: SiteExtrenallyDown
+          annotations:
+            description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
+            summary: Site is not available from external network
+          expr: uptimerobot_monitor_status == 9
+          for: 10m
+          labels:
+            severity: warning
+        - alert: SiteDown
+          annotations:
+            description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteNotUP
+            summary: Site is down
+          expr: probe_success == 0 AND on (instance) uptimerobot_monitor_status == 9
+          for: 15m
+          labels:
+            severity: critical
+    - name: testing.rules
+      rules:
+        - alert: CPUStealTimeHigh
+          annotations:
+            description: CPU Steal Time is very high on {{ $labels.instance }} hypervisor. This can lead to VM being stalled.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/CPUStealTimeHigh
+            summary: High CPU Steal Time
+          expr: |
+            sum by (instance) (rate(node_cpu_seconds_total{mode="steal"}[3m])) / count by (instance) (node_cpu_seconds_total{mode="steal"}) > 0.1
+          for: 20m
+          labels:
+            severity: warning
+        - alert: ExporterTargetDown
+          annotations:
+            description: Exporter {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) reported its target being down. This results in lack of ability to scrape metrics from the main service.
+            summary: Service monitored by exporter is Down
+          expr: '{__name__=~".*_up",__name__!="node_network_up",__name__!="node_supervisord_up"} == 0'
+          for: 5m
+          labels:
+            severity: warning
+    - name: custom-node-alerts
+      rules:
+        - alert: PackagesAvailable
+          annotations:
+            description: '{{ $value }} packages are available for upgrade. Maybe it is time to upgrade?'
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/PackagesAvailable
+            summary: Packages are available for upgrade
+          expr: |
+            sum by (node,instance) (yum_upgrades_pending) > 200
+            or
+            sum by (node,instance) (apt_upgrades_pending) > 200
+          for: 48h
+          labels:
+            severity: info
+        - alert: RebootRequired
+          annotations:
+            description: Instance '{{ $labels.instance }}' was upgraded and now requires a reboot.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/RebootRequired
+            summary: Reboot is required to finish package upgrade
+          expr: node_reboot_required > 0
+          for: 4h
+          labels:
+            severity: info
+        - alert: FilesystemReadOnly
+          annotations:
+            description: Filesystem went read-only on {{ $labels.instance }}. Check FS for possible corruption.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/FilesystemReadOnly
+            summary: Filesystem went read-only possibly due to device error.
+          expr: |
+            node_filesystem_readonly{fstype=~"(vfat|ext4|xfs)",mountpoint!~"/mnt/snapshot.*"} != 0
+          labels:
+            severity: critical
+    - name: openshift.rules
+      rules:
+        - alert: HighlyAvailableWorkloadIncorrectlySpread
+          annotations:
+            description: Workload {{ $labels.namespace }}/{{ $labels.workload }} is incorrectly spread across multiple nodes which breaks high-availability requirements. Since the workload is using persistent volumes, manual intervention is needed. Please follow the guidelines provided in the runbook of this alert to fix this issue.
+            runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/HighlyAvailableWorkloadIncorrectlySpread.md
+            summary: Highly-available workload is incorrectly spread across multiple nodes and manual intervention is needed.
+          expr: |
+            count without (node)
             (
-              kube_pod_spec_volumes_persistentvolumeclaims_info
-              * on(namespace,pod) group_left(workload)
+              group by (node, workload, namespace)
               (
-                namespace_workload_pod:kube_pod_owner:relabel
-                * on(namespace,workload,workload_type) group_left()
+                kube_pod_info{node!=""}
+                * on(namespace,pod) group_left(workload)
                 (
-                  count without(pod) (namespace_workload_pod:kube_pod_owner:relabel{namespace=~"(openshift-.*|kube-.*|default)"}) > 1
+                  kube_pod_spec_volumes_persistentvolumeclaims_info
+                  * on(namespace,pod) group_left(workload)
+                  (
+                    namespace_workload_pod:kube_pod_owner:relabel
+                    * on(namespace,workload,workload_type) group_left()
+                    (
+                      count without(pod) (namespace_workload_pod:kube_pod_owner:relabel{namespace=~"(openshift-.*|kube-.*|default)"}) > 1
+                    )
+                  )
                 )
               )
-            )
-          )
-        ) == 1
-      for: 1h
-      labels:
-        severity: warning
-    - alert: MultipleContainersOOMKilled
-      annotations:
-        description: Multiple containers were out of memory killed within the past
-          15 minutes. There are many potential causes of OOM errors, however issues
-          on a specific node or containers breaching their limits is common.'
-        summary: Containers are being killed due to OOM
-      expr: |
-        sum(
-          max by(namespace, container, pod) (
-            increase(kube_pod_container_status_restarts_total[12m])
-          )
-          and
-          max by(namespace, container, pod) (
-            kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}
-          ) == 1
-        ) > 2
-      for: 15m
-      labels:
-        severity: info
+            ) == 1
+          for: 1h
+          labels:
+            severity: warning
+        - alert: MultipleContainersOOMKilled
+          annotations:
+            description: Multiple containers were out of memory killed within the past 15 minutes. There are many potential causes of OOM errors, however issues on a specific node or containers breaching their limits is common.'
+            summary: Containers are being killed due to OOM
+          expr: |
+            sum(
+              max by(namespace, container, pod) (
+                increase(kube_pod_container_status_restarts_total[12m])
+              )
+              and
+              max by(namespace, container, pod) (
+                kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}
+              ) == 1
+            ) > 2
+          for: 15m
+          labels:
+            severity: info

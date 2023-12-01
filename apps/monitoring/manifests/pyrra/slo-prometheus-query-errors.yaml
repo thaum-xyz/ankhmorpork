@@ -13,7 +13,7 @@ spec:
       errors:
         metric: prometheus_http_requests_total{job="prometheus-k8s",handler=~"/api/v1/query.*",code=~"5.."}
       grouping:
-      - handler
+        - handler
       total:
         metric: prometheus_http_requests_total{job="prometheus-k8s",handler=~"/api/v1/query.*"}
   target: "95.0"

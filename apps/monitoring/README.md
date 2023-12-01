@@ -20,4 +20,4 @@ applied. Configuration for alertmanager is stored in `raw/` directory and is pic
 - `jsonnet >= 0.17`
 - `jsonnetfmt > 0.17`
 - `jsonnet-bundler >= 0.4`
-- `yamlfmt`
+- `yq`

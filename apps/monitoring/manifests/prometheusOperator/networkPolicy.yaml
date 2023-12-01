@@ -5,25 +5,25 @@ metadata:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: prometheus-operator
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.68.0
+    app.kubernetes.io/version: 0.69.1
   name: prometheus-operator
   namespace: monitoring
 spec:
   egress:
-  - {}
+    - {}
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app.kubernetes.io/name: prometheus
-    ports:
-    - port: 8443
-      protocol: TCP
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
+      ports:
+        - port: 8443
+          protocol: TCP
   podSelector:
     matchLabels:
       app.kubernetes.io/component: controller
       app.kubernetes.io/name: prometheus-operator
       app.kubernetes.io/part-of: kube-prometheus
   policyTypes:
-  - Egress
-  - Ingress
+    - Egress
+    - Ingress

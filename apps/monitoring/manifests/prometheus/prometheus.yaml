@@ -13,90 +13,90 @@ spec:
   affinity:
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-      - preference:
-          matchExpressions:
-          - key: kubernetes.io/arch
-            operator: In
-            values:
-            - amd64
-        weight: 1
+        - preference:
+            matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+          weight: 1
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-      - podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/component: prometheus
-              app.kubernetes.io/instance: k8s
-              app.kubernetes.io/name: prometheus
-              app.kubernetes.io/part-of: kube-prometheus
-          namespaces:
-          - monitoring
-          topologyKey: kubernetes.io/hostname
-        weight: 100
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: prometheus
+                app.kubernetes.io/instance: k8s
+                app.kubernetes.io/name: prometheus
+                app.kubernetes.io/part-of: kube-prometheus
+            namespaces:
+              - monitoring
+            topologyKey: kubernetes.io/hostname
+          weight: 100
   alerting:
     alertmanagers:
-    - apiVersion: v2
-      name: alertmanager-main
-      namespace: monitoring
-      port: web
+      - apiVersion: v2
+        name: alertmanager-main
+        namespace: monitoring
+        port: web
   enableFeatures:
-  - memory-snapshot-on-shutdown
+    - memory-snapshot-on-shutdown
   enforcedNamespaceLabel: namespace
   excludedFromEnforcement:
-  - name: kube-state-metrics
-    namespace: monitoring
-    resource: servicemonitors
-  - name: kubelet
-    namespace: monitoring
-    resource: scrapeconfigs
-  - name: kubelet-cadvisor
-    namespace: monitoring
-    resource: scrapeconfigs
-  - name: kubelet-probes
-    namespace: monitoring
-    resource: scrapeconfigs
-  - name: kubelet-slis
-    namespace: monitoring
-    resource: scrapeconfigs
-  - name: node-exporter
-    namespace: monitoring
-    resource: servicemonitors
-  - name: node-exporter-qnap
-    namespace: monitoring
-    resource: servicemonitors
-  - name: blackbox-exporter
-    namespace: monitoring
-    resource: servicemonitors
-  - name: kube-state-metrics-rules
-    namespace: monitoring
-    resource: prometheusrules
-  - name: node-exporter-rules
-    namespace: monitoring
-    resource: prometheusrules
-  - name: kubernetes-monitoring-rules
-    namespace: monitoring
-    resource: prometheusrules
-  - name: apiserver-read-resource-latency
-    namespace: monitoring
-    resource: prometheusrules
-  - name: apiserver-write-response-errors
-    namespace: monitoring
-    resource: prometheusrules
-  - name: apiserver-read-cluster-latency
-    namespace: monitoring
-    resource: prometheusrules
-  - name: apiserver-read-response-errors
-    namespace: monitoring
-    resource: prometheusrules
-  - name: apiserver-read-namespace-latency
-    namespace: monitoring
-    resource: prometheusrules
-  - name: kubelet-runtime-errors
-    namespace: monitoring
-    resource: prometheusrules
-  - name: kubelet-request-errors
-    namespace: monitoring
-    resource: prometheusrules
+    - name: kube-state-metrics
+      namespace: monitoring
+      resource: servicemonitors
+    - name: kubelet
+      namespace: monitoring
+      resource: scrapeconfigs
+    - name: kubelet-cadvisor
+      namespace: monitoring
+      resource: scrapeconfigs
+    - name: kubelet-probes
+      namespace: monitoring
+      resource: scrapeconfigs
+    - name: kubelet-slis
+      namespace: monitoring
+      resource: scrapeconfigs
+    - name: node-exporter
+      namespace: monitoring
+      resource: servicemonitors
+    - name: node-exporter-qnap
+      namespace: monitoring
+      resource: servicemonitors
+    - name: blackbox-exporter
+      namespace: monitoring
+      resource: servicemonitors
+    - name: kube-state-metrics-rules
+      namespace: monitoring
+      resource: prometheusrules
+    - name: node-exporter-rules
+      namespace: monitoring
+      resource: prometheusrules
+    - name: kubernetes-monitoring-rules
+      namespace: monitoring
+      resource: prometheusrules
+    - name: apiserver-read-resource-latency
+      namespace: monitoring
+      resource: prometheusrules
+    - name: apiserver-write-response-errors
+      namespace: monitoring
+      resource: prometheusrules
+    - name: apiserver-read-cluster-latency
+      namespace: monitoring
+      resource: prometheusrules
+    - name: apiserver-read-response-errors
+      namespace: monitoring
+      resource: prometheusrules
+    - name: apiserver-read-namespace-latency
+      namespace: monitoring
+      resource: prometheusrules
+    - name: kubelet-runtime-errors
+      namespace: monitoring
+      resource: prometheusrules
+    - name: kubelet-request-errors
+      namespace: monitoring
+      resource: prometheusrules
   externalLabels:
     cluster: ankhmorpork
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
@@ -117,12 +117,12 @@ spec:
   probeNamespaceSelector: {}
   probeSelector: {}
   remoteWrite:
-  - url: http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive
-    writeRelabelConfigs:
-    - action: drop
-      regex: ^apiserver_.*|longhorn_.*|workqueue_.*|etcd_.*|nginx_.*|storage_operation_.*|rest_client_.*|cnpg_pg_settings_setting|container_memory_failures_total
-      sourceLabels:
-      - __name__
+    - url: http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive
+      writeRelabelConfigs:
+        - action: drop
+          regex: ^apiserver_.*|longhorn_.*|workqueue_.*|etcd_.*|nginx_.*|storage_operation_.*|rest_client_.*|cnpg_pg_settings_setting|container_memory_failures_total
+          sourceLabels:
+            - __name__
   replicas: 2
   resources:
     limits:
@@ -146,7 +146,7 @@ spec:
         name: prometheus
       spec:
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 40Gi

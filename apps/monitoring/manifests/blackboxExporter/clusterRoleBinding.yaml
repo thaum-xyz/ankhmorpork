@@ -12,6 +12,6 @@ roleRef:
   kind: ClusterRole
   name: blackbox-exporter
 subjects:
-- kind: ServiceAccount
-  name: blackbox-exporter
-  namespace: monitoring
+  - kind: ServiceAccount
+    name: blackbox-exporter
+    namespace: monitoring

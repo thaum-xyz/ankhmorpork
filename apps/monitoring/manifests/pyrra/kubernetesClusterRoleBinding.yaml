@@ -13,6 +13,6 @@ roleRef:
   kind: ClusterRole
   name: pyrra-kubernetes
 subjects:
-- kind: ServiceAccount
-  name: pyrra-kubernetes
-  namespace: monitoring
+  - kind: ServiceAccount
+    name: pyrra-kubernetes
+    namespace: monitoring

@@ -9,9 +9,9 @@ metadata:
   namespace: monitoring
 spec:
   endpoints:
-  - honorLabels: true
-    interval: 30s
-    port: http-push
+    - honorLabels: true
+      interval: 30s
+      port: http-push
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter

@@ -13,17 +13,17 @@ spec:
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-      - podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/component: alert-router
-              app.kubernetes.io/instance: main
-              app.kubernetes.io/name: alertmanager
-              app.kubernetes.io/part-of: kube-prometheus
-          namespaces:
-          - monitoring
-          topologyKey: kubernetes.io/hostname
-        weight: 100
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: alert-router
+                app.kubernetes.io/instance: main
+                app.kubernetes.io/name: alertmanager
+                app.kubernetes.io/part-of: kube-prometheus
+            namespaces:
+              - monitoring
+            topologyKey: kubernetes.io/hostname
+          weight: 100
   externalUrl: https://alertmanager.ankhmorpork.thaum.xyz
   image: quay.io/prometheus/alertmanager:v0.26.0
   nodeSelector:

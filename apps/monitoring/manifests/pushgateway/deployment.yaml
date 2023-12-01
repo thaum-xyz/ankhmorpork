@@ -21,18 +21,18 @@ spec:
         app.kubernetes.io/version: 1.6.2
     spec:
       containers:
-      - image: quay.io/prometheus/pushgateway:v1.6.2
-        name: pushgateway
-        ports:
-        - containerPort: 9091
-          name: http-push
-        resources:
-          limits:
-            cpu: 10m
-            memory: 40Mi
-          requests:
-            cpu: 3m
-            memory: 25Mi
+        - image: quay.io/prometheus/pushgateway:v1.6.2
+          name: pushgateway
+          ports:
+            - containerPort: 9091
+              name: http-push
+          resources:
+            limits:
+              cpu: 10m
+              memory: 40Mi
+            requests:
+              cpu: 3m
+              memory: 25Mi
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534

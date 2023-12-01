@@ -19,17 +19,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: grafana.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          service:
-            name: grafana
-            port:
-              name: http
-        path: /
-        pathType: Prefix
+    - host: grafana.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: grafana
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
   tls:
-  - hosts:
-    - grafana.ankhmorpork.thaum.xyz
-    secretName: grafana-tls
+    - hosts:
+        - grafana.ankhmorpork.thaum.xyz
+      secretName: grafana-tls

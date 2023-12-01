@@ -9,8 +9,8 @@ metadata:
   namespace: monitoring
 spec:
   endpoints:
-  - interval: 30s
-    port: http
+    - interval: 30s
+      port: http
   selector:
     matchLabels:
       app.kubernetes.io/component: alertmanager-webhook-receiver

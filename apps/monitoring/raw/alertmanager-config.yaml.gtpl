@@ -128,12 +128,12 @@ inhibit_rules:
     - "severity = critical"
     target_matchers:
     - "severity =~ warning|info"
-    equal: ['cluster', 'namespace']
+    equal: ['namespace', 'alertname']
   - source_matchers:
     - "severity = warning"
     target_matchers:
     - "severity = info"
-    equal: ['cluster', 'namespace']
+    equal: ['namespace', 'alertname']
   - source_matchers:
     - "alertname = ProbeFailed"
     target_matchers:

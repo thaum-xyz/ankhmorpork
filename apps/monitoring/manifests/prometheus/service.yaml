@@ -2,8 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator
-      CRDs
+    ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator CRDs
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
   labels:
     app.kubernetes.io/component: prometheus
@@ -15,12 +14,12 @@ metadata:
   namespace: monitoring
 spec:
   ports:
-  - name: web
-    port: 9090
-    targetPort: web
-  - name: reloader-web
-    port: 8080
-    targetPort: reloader-web
+    - name: web
+      port: 9090
+      targetPort: web
+    - name: reloader-web
+      port: 8080
+      targetPort: reloader-web
   selector:
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/instance: k8s

@@ -19,10 +19,10 @@ spec:
       namespaceSelector:
         any: true
       relabelingConfigs:
-      - action: keep
-        regex: /
-        sourceLabels:
-        - __meta_kubernetes_ingress_path
+        - action: keep
+          regex: /
+          sourceLabels:
+            - __meta_kubernetes_ingress_path
       selector:
         matchLabels:
           probe: enabled

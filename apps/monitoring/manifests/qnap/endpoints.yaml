@@ -8,8 +8,8 @@ metadata:
   name: node-exporter-qnap
   namespace: monitoring
 subsets:
-- addresses:
-  - ip: 192.168.2.29
-  ports:
-  - name: http
-    port: 9100
+  - addresses:
+      - ip: 192.168.2.29
+    ports:
+      - name: http
+        port: 9100

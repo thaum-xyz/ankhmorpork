@@ -8,8 +8,8 @@ metadata:
   namespace: monitoring
 spec:
   endpoints:
-  - interval: 60s
-    port: http
+    - interval: 60s
+      port: http
   jobLabel: windows-exporter
   selector:
     matchLabels:

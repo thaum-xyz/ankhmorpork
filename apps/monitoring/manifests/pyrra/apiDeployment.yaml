@@ -30,27 +30,27 @@ spec:
         app.kubernetes.io/version: 0.6.3
     spec:
       containers:
-      - args:
-        - api
-        - --api-url=http://pyrra-kubernetes.monitoring.svc.cluster.local:9444
-        - --prometheus-url=http://prometheus-k8s.monitoring.svc.cluster.local:9090
-        - --prometheus-external-url=https://prometheus.ankhmorpork.thaum.xyz
-        image: ghcr.io/pyrra-dev/pyrra:v0.6.3
-        name: pyrra
-        ports:
-        - containerPort: 9099
-        resources:
-          requests:
-            cpu: 100m
-            memory: 30Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          seccompProfile:
-            type: RuntimeDefault
+        - args:
+            - api
+            - --api-url=http://pyrra-kubernetes.monitoring.svc.cluster.local:9444
+            - --prometheus-url=http://prometheus-k8s.monitoring.svc.cluster.local:9090
+            - --prometheus-external-url=https://prometheus.ankhmorpork.thaum.xyz
+          image: ghcr.io/pyrra-dev/pyrra:v0.6.3
+          name: pyrra
+          ports:
+            - containerPort: 9099
+          resources:
+            requests:
+              cpu: 100m
+              memory: 30Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
       nodeSelector:
         kubernetes.io/os: linux

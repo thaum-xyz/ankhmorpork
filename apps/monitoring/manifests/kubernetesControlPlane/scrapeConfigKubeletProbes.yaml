@@ -14,22 +14,22 @@ spec:
     type: Bearer
   honorLabels: true
   kubernetesSDConfigs:
-  - role: Node
+    - role: Node
   metricRelabelings: []
   metricsPath: /metrics/probes
   relabelings:
-  - action: replace
-    replacement: kube-system
-    targetLabel: namespace
-  - action: replace
-    sourceLabels:
-    - __meta_kubernetes_node_name
-    targetLabel: node
-  - sourceLabels:
-    - __metrics_path__
-    targetLabel: metrics_path
-  - replacement: kubelet
-    targetLabel: job
+    - action: replace
+      replacement: kube-system
+      targetLabel: namespace
+    - action: replace
+      sourceLabels:
+        - __meta_kubernetes_node_name
+      targetLabel: node
+    - sourceLabels:
+        - __metrics_path__
+      targetLabel: metrics_path
+    - replacement: kubelet
+      targetLabel: job
   scheme: HTTPS
   scrapeInterval: 30s
   tlsConfig:

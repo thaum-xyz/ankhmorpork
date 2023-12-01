@@ -9,9 +9,9 @@ metadata:
   namespace: monitoring
 spec:
   data:
-  - remoteRef:
-      key: MONITORING_UPTIMEROBOT_API_KEY
-    secretKey: apiKeyRef
+    - remoteRef:
+        key: MONITORING_UPTIMEROBOT_API_KEY
+      secretKey: apiKeyRef
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore

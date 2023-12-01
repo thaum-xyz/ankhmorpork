@@ -24,33 +24,33 @@ spec:
         app.kubernetes.io/version: 0.5.0
     spec:
       containers:
-      - args:
-        - --config.file
-        - /etc/json_exporter/config.yml
-        image: quay.io/prometheuscommunity/json-exporter:v0.5.0
-        name: uptimerobot
-        ports:
-        - containerPort: 7979
-          name: http
-        readinessProbe:
-          failureThreshold: 5
-          initialDelaySeconds: 1
-          tcpSocket:
-            port: http
-          timeoutSeconds: 10
-        resources:
-          limits:
-            cpu: 20m
-            memory: 50Mi
-          requests:
-            cpu: 5m
-            memory: 18Mi
-        volumeMounts:
-        - mountPath: /etc/json_exporter/
+        - args:
+            - --config.file
+            - /etc/json_exporter/config.yml
+          image: quay.io/prometheuscommunity/json-exporter:v0.5.0
           name: uptimerobot
-          readOnly: true
+          ports:
+            - containerPort: 7979
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 1
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 20m
+              memory: 50Mi
+            requests:
+              cpu: 5m
+              memory: 18Mi
+          volumeMounts:
+            - mountPath: /etc/json_exporter/
+              name: uptimerobot
+              readOnly: true
       serviceAccountName: uptimerobot
       volumes:
-      - name: uptimerobot
-        secret:
-          secretName: uptimerobot
+        - name: uptimerobot
+          secret:
+            secretName: uptimerobot

@@ -10,9 +10,9 @@ metadata:
   namespace: monitoring
 spec:
   ports:
-  - name: http
-    port: 9444
-    targetPort: 9444
+    - name: http
+      port: 9444
+      targetPort: 9444
   selector:
     app.kubernetes.io/component: kubernetes
     app.kubernetes.io/name: pyrra

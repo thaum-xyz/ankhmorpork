@@ -30,60 +30,60 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-      - env:
-        - name: GF_SERVER_ROOT_URL
-          value: https://grafana.ankhmorpork.thaum.xyz
-        - name: GF_AUTH_ANONYMOUS_ENABLED
-          value: "false"
-        - name: GF_AUTH_DISABLE_LOGIN_FORM
-          value: "true"
-        - name: GF_AUTH_SIGNOUT_REDIRECT_URL
-          value: https://auth.ankhmorpork.thaum.xyz/_oauth2/logout
-        - name: GF_AUTH_BASIC_ENABLED
-          value: "false"
-        - name: GF_AUTH_PROXY_AUTO_SIGN_UP
-          value: "false"
-        - name: GF_AUTH_PROXY_ENABLED
-          value: "true"
-        - name: GF_AUTH_PROXY_HEADER_NAME
-          value: X-Forwarded-User
-        - name: GF_AUTH_PROXY_HEADER_PROPERTY
-          value: username
-        - name: GF_AUTH_PROXY_HEADERS
-          value: Email:X-Forwarded-User
-        - name: GF_SNAPSHOTS_EXTERNAL_ENABLED
-          value: "false"
-        image: grafana/grafana:10.1.4
-        name: grafana
-        ports:
-        - containerPort: 3000
-          name: http
-        readinessProbe:
-          httpGet:
-            path: /api/health
-            port: http
-        resources:
-          limits:
-            cpu: 400m
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 59Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          seccompProfile:
-            type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /var/lib/grafana
-          name: grafana-storage
-        - mountPath: /etc/grafana/provisioning/datasources
-          name: grafana-datasources
-        - mountPath: /tmp
-          name: tmp
+        - env:
+            - name: GF_SERVER_ROOT_URL
+              value: https://grafana.ankhmorpork.thaum.xyz
+            - name: GF_AUTH_ANONYMOUS_ENABLED
+              value: "false"
+            - name: GF_AUTH_DISABLE_LOGIN_FORM
+              value: "true"
+            - name: GF_AUTH_SIGNOUT_REDIRECT_URL
+              value: https://auth.ankhmorpork.thaum.xyz/_oauth2/logout
+            - name: GF_AUTH_BASIC_ENABLED
+              value: "false"
+            - name: GF_AUTH_PROXY_AUTO_SIGN_UP
+              value: "false"
+            - name: GF_AUTH_PROXY_ENABLED
+              value: "true"
+            - name: GF_AUTH_PROXY_HEADER_NAME
+              value: X-Forwarded-User
+            - name: GF_AUTH_PROXY_HEADER_PROPERTY
+              value: username
+            - name: GF_AUTH_PROXY_HEADERS
+              value: Email:X-Forwarded-User
+            - name: GF_SNAPSHOTS_EXTERNAL_ENABLED
+              value: "false"
+          image: grafana/grafana:10.1.4
+          name: grafana
+          ports:
+            - containerPort: 3000
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+          resources:
+            limits:
+              cpu: 400m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 59Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-storage
+            - mountPath: /etc/grafana/provisioning/datasources
+              name: grafana-datasources
+            - mountPath: /tmp
+              name: tmp
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
@@ -91,11 +91,11 @@ spec:
         runAsUser: 472
       serviceAccountName: grafana
       volumes:
-      - name: grafana-storage
-        persistentVolumeClaim:
-          claimName: grafana-app-data
-      - name: grafana-datasources
-        secret:
-          secretName: grafana-datasources
-      - emptyDir: {}
-        name: tmp
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: grafana-app-data
+        - name: grafana-datasources
+          secret:
+            secretName: grafana-datasources
+        - emptyDir: {}
+          name: tmp

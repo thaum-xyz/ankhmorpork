@@ -13,7 +13,7 @@ spec:
       errors:
         metric: prometheus_operator_reconcile_errors_total{job="prometheus-operator"}
       grouping:
-      - controller
+        - controller
       total:
         metric: prometheus_operator_reconcile_operations_total{job="prometheus-operator"}
   target: "95"
