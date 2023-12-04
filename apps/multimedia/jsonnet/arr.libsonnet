@@ -168,8 +168,8 @@ function(params) {
               For more infromation check {{ $labels.wikiurl }}.
             ||| % ([$._config.name]),
           },
-          expr: '%s_system_health_issues{job="%s"} == 1' % ([$._config.name, $.serviceMonitor.metadata.name]),
-          'for': '5m',
+          expr: 'max_over_time(%s_system_health_issues{job="%s",source!="UpdateCheck"}[1h]) == 1' % ([$._config.name, $.serviceMonitor.metadata.name]),
+          'for': '2h',
           labels: {
             severity: 'warning',
           },

@@ -38,7 +38,7 @@ spec:
               Arr Application prowlarr is having issues with {{ $labels.source }} health check - {{ $labels.message }}.
               For more infromation check {{ $labels.wikiurl }}.
             summary: prowlarr is unhealthy
-          expr: prowlarr_system_health_issues{job="prowlarr"} == 1
-          for: 5m
+          expr: max_over_time(prowlarr_system_health_issues{job="prowlarr",source!="UpdateCheck"}[1h]) == 1
+          for: 2h
           labels:
             severity: warning

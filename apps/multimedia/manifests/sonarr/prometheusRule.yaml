@@ -38,7 +38,7 @@ spec:
               Arr Application sonarr is having issues with {{ $labels.source }} health check - {{ $labels.message }}.
               For more infromation check {{ $labels.wikiurl }}.
             summary: sonarr is unhealthy
-          expr: sonarr_system_health_issues{job="sonarr"} == 1
-          for: 5m
+          expr: max_over_time(sonarr_system_health_issues{job="sonarr",source!="UpdateCheck"}[1h]) == 1
+          for: 2h
           labels:
             severity: warning
