@@ -8,9 +8,9 @@ metadata:
   name: esp-dev
   namespace: homeassistant
 subsets:
-- addresses:
-  - ip: 192.168.2.221
-  - ip: 192.168.2.222
-  ports:
-  - name: http
-    port: 80
+  - addresses:
+      - ip: 192.168.2.221
+      - ip: 192.168.2.222
+    ports:
+      - name: http
+        port: 80

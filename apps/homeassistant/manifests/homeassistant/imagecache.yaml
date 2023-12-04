@@ -5,5 +5,5 @@ metadata:
   namespace: homeassistant
 spec:
   cacheSpec:
-  - images:
-    - homeassistant/home-assistant:2023.10.5
+    - images:
+        - homeassistant/home-assistant:2023.10.5

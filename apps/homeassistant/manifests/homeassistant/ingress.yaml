@@ -21,17 +21,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: home.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          service:
-            name: homeassistant
-            port:
-              name: http
-        path: /
-        pathType: Prefix
+    - host: home.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: homeassistant
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
   tls:
-  - hosts:
-    - home.ankhmorpork.thaum.xyz
-    secretName: homeassistant-tls
+    - hosts:
+        - home.ankhmorpork.thaum.xyz
+      secretName: homeassistant-tls

@@ -9,8 +9,8 @@ metadata:
   namespace: homeassistant
 spec:
   endpoints:
-  - interval: 60s
-    port: http
+    - interval: 60s
+      port: http
   selector:
     matchLabels:
       app.kubernetes.io/component: endpoint

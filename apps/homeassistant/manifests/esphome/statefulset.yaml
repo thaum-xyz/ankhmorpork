@@ -19,35 +19,35 @@ spec:
         app.kubernetes.io/version: 2023.10.5
     spec:
       containers:
-      - env:
-        - name: ESPHOME_DASHBOARD_USE_PING
-          value: "true"
-        image: esphome/esphome:2023.10.5
-        imagePullPolicy: IfNotPresent
-        name: esphome
-        ports:
-        - containerPort: 6052
-          name: http
-        resources:
-          limits:
-            cpu: 1800m
-            memory: 1000Mi
-          requests:
-            cpu: 400m
-            memory: 320Mi
-        volumeMounts:
-        - mountPath: /config
-          name: esphome-data
+        - env:
+            - name: ESPHOME_DASHBOARD_USE_PING
+              value: "true"
+          image: esphome/esphome:2023.10.5
+          imagePullPolicy: IfNotPresent
+          name: esphome
+          ports:
+            - containerPort: 6052
+              name: http
+          resources:
+            limits:
+              cpu: 1800m
+              memory: 1000Mi
+            requests:
+              cpu: 400m
+              memory: 320Mi
+          volumeMounts:
+            - mountPath: /config
+              name: esphome-data
       hostNetwork: true
       restartPolicy: Always
       serviceAccountName: esphome
   volumeClaimTemplates:
-  - metadata:
-      name: esphome-data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 300Mi
-      storageClassName: qnap-nfs
+    - metadata:
+        name: esphome-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 300Mi
+        storageClassName: qnap-nfs

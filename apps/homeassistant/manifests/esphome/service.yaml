@@ -11,9 +11,9 @@ metadata:
 spec:
   loadBalancerIP: 192.168.2.94
   ports:
-  - name: http
-    port: 6052
-    targetPort: http
+    - name: http
+      port: 6052
+      targetPort: http
   selector:
     app.kubernetes.io/name: esphome
   type: LoadBalancer

@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 36bf3b908475367d4a7373bf64ea278a
+        checksum.config/md5: a9839389abde8eede3af590dfd6f3174
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
@@ -27,71 +27,71 @@ spec:
         app.kubernetes.io/version: 2023.10.5
     spec:
       containers:
-      - env:
-        - name: TZ
-          value: Europe/Berlin
-        image: homeassistant/home-assistant:2023.10.5
-        imagePullPolicy: IfNotPresent
-        name: homeassistant
-        ports:
-        - containerPort: 8123
-          name: http
-        readinessProbe:
-          failureThreshold: 5
-          httpGet:
-            path: /
-            port: http
-            scheme: HTTP
-          initialDelaySeconds: 5
-          timeoutSeconds: 10
-        resources:
-          requests:
-            cpu: 500m
-            memory: 600Mi
-        securityContext:
-          privileged: false
-        startupProbe:
-          failureThreshold: 120
-          httpGet:
-            path: /
-            port: http
-            scheme: HTTP
-          periodSeconds: 2
-        volumeMounts:
-        - mountPath: /config
-          name: homeassistant-config
-        - mountPath: /config/backups
-          name: backups
-        - mountPath: /config/configuration.yaml
-          name: configs
-          readOnly: true
-          subPath: configuration.yaml
-        - mountPath: /config/customize.yaml
-          name: configs
-          readOnly: true
-          subPath: customize.yaml
-        - mountPath: /config/scripts.yaml
-          name: configs
-          readOnly: true
-          subPath: scripts.yaml
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+          image: homeassistant/home-assistant:2023.10.5
+          imagePullPolicy: IfNotPresent
+          name: homeassistant
+          ports:
+            - containerPort: 8123
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 500m
+              memory: 600Mi
+          securityContext:
+            privileged: false
+          startupProbe:
+            failureThreshold: 120
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            periodSeconds: 2
+          volumeMounts:
+            - mountPath: /config
+              name: homeassistant-config
+            - mountPath: /config/backups
+              name: backups
+            - mountPath: /config/configuration.yaml
+              name: configs
+              readOnly: true
+              subPath: configuration.yaml
+            - mountPath: /config/customize.yaml
+              name: configs
+              readOnly: true
+              subPath: customize.yaml
+            - mountPath: /config/scripts.yaml
+              name: configs
+              readOnly: true
+              subPath: scripts.yaml
       hostNetwork: true
       priorityClassName: production-high
       restartPolicy: Always
       serviceAccountName: homeassistant
       volumes:
-      - name: backups
-        persistentVolumeClaim:
-          claimName: homeassistant-backups
-      - configMap:
-          name: homeassistant-configs
-        name: configs
+        - name: backups
+          persistentVolumeClaim:
+            claimName: homeassistant-backups
+        - configMap:
+            name: homeassistant-configs
+          name: configs
   volumeClaimTemplates:
-  - metadata:
-      name: homeassistant-config
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
-      storageClassName: longhorn
+    - metadata:
+        name: homeassistant-config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: longhorn

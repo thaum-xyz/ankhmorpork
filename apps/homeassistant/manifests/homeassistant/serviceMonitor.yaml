@@ -10,12 +10,12 @@ metadata:
   namespace: homeassistant
 spec:
   endpoints:
-  - bearerTokenSecret:
-      key: token
-      name: credentials
-    interval: 90s
-    path: /api/prometheus
-    port: http
+    - bearerTokenSecret:
+        key: token
+        name: credentials
+      interval: 90s
+      path: /api/prometheus
+      port: http
   selector:
     matchLabels:
       app.kubernetes.io/component: server
