@@ -123,6 +123,61 @@ function(params) {
     },
   },
 
+  prometheusRule: {
+    apiVersion: 'monitoring.coreos.com/v1',
+    kind: 'PrometheusRule',
+    metadata: $._metadata,
+    spec: {
+      groups: [{
+        name: 'exportarr',
+        rules: [{
+          alert: 'ExportarrDown',
+          annotations: {
+            summary: 'Exportarr is down',
+            description: |||
+              Exportarr responsible for data collection from %s is down. Check configuration and logs.
+            ||| % ([$._config.name]),
+          },
+          expr: 'up{job="%s"} == 0' % ([$.serviceMonitor.metadata.name]),
+          'for': '5m',
+          labels: {
+            severity: 'critical',
+          },
+        }],
+      }, {
+        name: '%s' % ([$._config.name]),
+        rules: [{
+          alert: '%sDown' % ([$._config.name]),
+          annotations: {
+            summary: '%s is Down' % ([$._config.name]),
+            description: |||
+              Arr Application %s in namespace {{ $labels.namespace }} is not reporting status check correctly.
+            ||| % ([$._config.name]),
+          },
+          expr: '%s_system_status{job="%s"} != 1' % ([$._config.name, $.serviceMonitor.metadata.name]),
+          'for': '15m',
+          labels: {
+            severity: 'critical',
+          },
+        }, {
+          alert: '%sUnhealthy' % ([$._config.name]),
+          annotations: {
+            summary: '%s is unhealthy' % ([$._config.name]),
+            description: |||
+              Arr Application %s is having issues with {{ $labels.source }} health check - {{ $labels.message }}.
+              For more infromation check {{ $labels.wikiurl }}.
+            ||| % ([$._config.name]),
+          },
+          expr: '%s_system_health_issues{job="%s"} == 1' % ([$._config.name, $.serviceMonitor.metadata.name]),
+          'for': '5m',
+          labels: {
+            severity: 'warning',
+          },
+        }],
+      }],
+    },
+  },
+
   [if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then 'backupsPVC']: {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',

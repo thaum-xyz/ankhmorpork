@@ -1,0 +1,44 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/part-of: radarr
+    app.kubernetes.io/version: 5.1.3.8246-ls195
+  name: radarr
+  namespace: multimedia
+spec:
+  groups:
+    - name: exportarr
+      rules:
+        - alert: ExportarrDown
+          annotations:
+            description: |
+              Exportarr responsible for data collection from radarr is down. Check configuration and logs.
+            summary: Exportarr is down
+          expr: up{job="radarr"} == 0
+          for: 5m
+          labels:
+            severity: critical
+    - name: radarr
+      rules:
+        - alert: radarrDown
+          annotations:
+            description: |
+              Arr Application radarr in namespace {{ $labels.namespace }} is not reporting status check correctly.
+            summary: radarr is Down
+          expr: radarr_system_status{job="radarr"} != 1
+          for: 15m
+          labels:
+            severity: critical
+        - alert: radarrUnhealthy
+          annotations:
+            description: |
+              Arr Application radarr is having issues with {{ $labels.source }} health check - {{ $labels.message }}.
+              For more infromation check {{ $labels.wikiurl }}.
+            summary: radarr is unhealthy
+          expr: radarr_system_health_issues{job="radarr"} == 1
+          for: 5m
+          labels:
+            severity: warning
