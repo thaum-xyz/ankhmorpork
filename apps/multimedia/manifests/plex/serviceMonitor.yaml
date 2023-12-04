@@ -10,8 +10,8 @@ metadata:
   namespace: multimedia
 spec:
   endpoints:
-  - interval: 120s
-    port: metrics
+    - interval: 120s
+      port: metrics
   selector:
     matchLabels:
       app.kubernetes.io/component: server

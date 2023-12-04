@@ -27,85 +27,85 @@ spec:
         app.kubernetes.io/version: 1.9.4.4039-ls37
     spec:
       containers:
-      - env:
-        - name: TZ
-          value: Europe/Berlin
-        - name: PUID
-          value: "1000"
-        - name: GUID
-          value: "1000"
-        image: linuxserver/prowlarr:1.5.2.3484-ls19
-        imagePullPolicy: IfNotPresent
-        name: prowlarr
-        ports:
-        - containerPort: 9696
-          name: http
-        readinessProbe:
-          failureThreshold: 5
-          initialDelaySeconds: 2
-          tcpSocket:
-            port: http
-          timeoutSeconds: 10
-        resources:
-          requests:
-            cpu: 160m
-            memory: 37Mi
-        startupProbe:
-          failureThreshold: 60
-          initialDelaySeconds: 0
-          periodSeconds: 5
-          tcpSocket:
-            port: http
-          timeoutSeconds: 1
-        volumeMounts:
-        - mountPath: /config
-          name: config
-        - mountPath: /backup
-          name: backup
-      - args:
-        - prowlarr
-        env:
-        - name: CONFIG
-          value: /app/config.xml
-        - name: URL
-          value: http://localhost
-        - name: PORT
-          value: "9709"
-        image: ghcr.io/onedr0p/exportarr:v1.6.0
-        name: exportarr
-        ports:
-        - containerPort: 9709
-          name: metrics
-        readinessProbe:
-          failureThreshold: 5
-          httpGet:
-            path: /healthz
-            port: metrics
-          periodSeconds: 10
-        resources:
-          limits:
-            cpu: 50m
-            memory: 100Mi
-          requests:
-            cpu: 1m
-            memory: 11Mi
-        volumeMounts:
-        - mountPath: /app
-          name: config
-          readOnly: true
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+            - name: PUID
+              value: "1000"
+            - name: GUID
+              value: "1000"
+          image: linuxserver/prowlarr:1.5.2.3484-ls19
+          imagePullPolicy: IfNotPresent
+          name: prowlarr
+          ports:
+            - containerPort: 9696
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 2
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 160m
+              memory: 37Mi
+          startupProbe:
+            failureThreshold: 60
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            tcpSocket:
+              port: http
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /backup
+              name: backup
+        - args:
+            - prowlarr
+          env:
+            - name: CONFIG
+              value: /app/config.xml
+            - name: URL
+              value: http://localhost
+            - name: PORT
+              value: "9709"
+          image: ghcr.io/onedr0p/exportarr:v1.6.0
+          name: exportarr
+          ports:
+            - containerPort: 9709
+              name: metrics
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+            requests:
+              cpu: 1m
+              memory: 11Mi
+          volumeMounts:
+            - mountPath: /app
+              name: config
+              readOnly: true
       restartPolicy: Always
       serviceAccountName: prowlarr
       volumes:
-      - name: backup
-        persistentVolumeClaim:
-          claimName: prowlarr-config-backup
+        - name: backup
+          persistentVolumeClaim:
+            claimName: prowlarr-config-backup
   volumeClaimTemplates:
-  - metadata:
-      name: config
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
-      storageClassName: longhorn
+    - metadata:
+        name: config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: longhorn

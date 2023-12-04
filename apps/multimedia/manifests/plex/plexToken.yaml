@@ -5,9 +5,9 @@ metadata:
   namespace: multimedia
 spec:
   data:
-  - remoteRef:
-      key: MULTIMEDIA_PLEX_TOKEN
-    secretKey: token
+    - remoteRef:
+        key: MULTIMEDIA_PLEX_TOKEN
+      secretKey: token
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore

@@ -27,95 +27,95 @@ spec:
         app.kubernetes.io/version: 3.0.10.1567-ls210
     spec:
       containers:
-      - env:
-        - name: TZ
-          value: Europe/Berlin
-        - name: PUID
-          value: "1000"
-        - name: GUID
-          value: "1000"
-        image: lscr.io/linuxserver/sonarr:3.0.10.1567-ls210
-        imagePullPolicy: IfNotPresent
-        name: sonarr
-        ports:
-        - containerPort: 8989
-          name: http
-        readinessProbe:
-          failureThreshold: 5
-          initialDelaySeconds: 2
-          tcpSocket:
-            port: http
-          timeoutSeconds: 10
-        resources:
-          requests:
-            cpu: 20m
-            memory: 460Mi
-        startupProbe:
-          failureThreshold: 60
-          initialDelaySeconds: 0
-          periodSeconds: 5
-          tcpSocket:
-            port: http
-          timeoutSeconds: 1
-        volumeMounts:
-        - mountPath: /config
-          name: config
-        - mountPath: /backup
-          name: backup
-        - mountPath: /multimedia
-          name: multimedia
-        - mountPath: /download/completed
-          name: downloads
-      - args:
-        - sonarr
-        env:
-        - name: CONFIG
-          value: /app/config.xml
-        - name: URL
-          value: http://localhost
-        - name: PORT
-          value: "9707"
-        image: ghcr.io/onedr0p/exportarr:v1.6.0
-        name: exportarr
-        ports:
-        - containerPort: 9707
-          name: metrics
-        readinessProbe:
-          failureThreshold: 5
-          httpGet:
-            path: /healthz
-            port: metrics
-          periodSeconds: 10
-        resources:
-          limits:
-            cpu: 50m
-            memory: 100Mi
-          requests:
-            cpu: 1m
-            memory: 11Mi
-        volumeMounts:
-        - mountPath: /app
-          name: config
-          readOnly: true
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+            - name: PUID
+              value: "1000"
+            - name: GUID
+              value: "1000"
+          image: lscr.io/linuxserver/sonarr:3.0.10.1567-ls210
+          imagePullPolicy: IfNotPresent
+          name: sonarr
+          ports:
+            - containerPort: 8989
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 2
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 20m
+              memory: 460Mi
+          startupProbe:
+            failureThreshold: 60
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            tcpSocket:
+              port: http
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /backup
+              name: backup
+            - mountPath: /multimedia
+              name: multimedia
+            - mountPath: /download/completed
+              name: downloads
+        - args:
+            - sonarr
+          env:
+            - name: CONFIG
+              value: /app/config.xml
+            - name: URL
+              value: http://localhost
+            - name: PORT
+              value: "9707"
+          image: ghcr.io/onedr0p/exportarr:v1.6.0
+          name: exportarr
+          ports:
+            - containerPort: 9707
+              name: metrics
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+            requests:
+              cpu: 1m
+              memory: 11Mi
+          volumeMounts:
+            - mountPath: /app
+              name: config
+              readOnly: true
       restartPolicy: Always
       serviceAccountName: sonarr
       volumes:
-      - name: multimedia
-        persistentVolumeClaim:
-          claimName: tv
-      - name: downloads
-        persistentVolumeClaim:
-          claimName: downloaded
-      - name: backup
-        persistentVolumeClaim:
-          claimName: sonarr-config-backup
+        - name: multimedia
+          persistentVolumeClaim:
+            claimName: tv
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloaded
+        - name: backup
+          persistentVolumeClaim:
+            claimName: sonarr-config-backup
   volumeClaimTemplates:
-  - metadata:
-      name: config
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 3Gi
-      storageClassName: longhorn
+    - metadata:
+        name: config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 3Gi
+        storageClassName: longhorn

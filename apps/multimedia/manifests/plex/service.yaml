@@ -12,14 +12,14 @@ spec:
   externalTrafficPolicy: Local
   loadBalancerIP: 192.168.2.98
   ports:
-  - name: plex
-    port: 32400
-    protocol: TCP
-    targetPort: plex
-  - name: metrics
-    port: 9594
-    protocol: TCP
-    targetPort: metrics
+    - name: plex
+      port: 32400
+      protocol: TCP
+      targetPort: plex
+    - name: metrics
+      port: 9594
+      protocol: TCP
+      targetPort: metrics
   selector:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: plex

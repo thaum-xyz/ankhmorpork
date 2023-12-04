@@ -10,7 +10,7 @@ metadata:
   namespace: multimedia
 spec:
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
   resources:
     requests:
       storage: 300Mi

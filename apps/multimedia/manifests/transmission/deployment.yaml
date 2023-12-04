@@ -22,72 +22,72 @@ spec:
         app.kubernetes.io/version: "3.7"
     spec:
       containers:
-      - env:
-        - name: TRANSMISSION_ADDR
-          value: http://127.0.0.1:9091
-        image: metalmatze/transmission-exporter:master
-        imagePullPolicy: Always
-        name: exporter
-        ports:
-        - containerPort: 19091
-          name: metrics
-        resources:
-          limits:
-            memory: 20Mi
-          requests:
-            memory: 11Mi
-      - envFrom:
-        - configMapRef:
-            name: transmission-config
-            optional: false
-        - secretRef:
-            name: transmission-vpn-creds
-            optional: false
-        image: haugene/transmission-openvpn:5.2.0
-        name: transmission
-        ports:
-        - containerPort: 9091
-          name: http-api
-        readinessProbe:
-          failureThreshold: 5
-          initialDelaySeconds: 10
-          tcpSocket:
-            port: http-api
-          timeoutSeconds: 10
-        resources:
-          requests:
-            cpu: 50m
-            memory: 100Mi
-        securityContext:
-          allowPrivilegeEscalation: true
-          capabilities:
-            add:
-            - NET_ADMIN
-        volumeMounts:
-        - mountPath: /config
-          name: config
-        - mountPath: /download/incomplete
-          name: incomplete
-        - mountPath: /download/completed
-          name: completed
+        - env:
+            - name: TRANSMISSION_ADDR
+              value: http://127.0.0.1:9091
+          image: metalmatze/transmission-exporter:master
+          imagePullPolicy: Always
+          name: exporter
+          ports:
+            - containerPort: 19091
+              name: metrics
+          resources:
+            limits:
+              memory: 20Mi
+            requests:
+              memory: 11Mi
+        - envFrom:
+            - configMapRef:
+                name: transmission-config
+                optional: false
+            - secretRef:
+                name: transmission-vpn-creds
+                optional: false
+          image: haugene/transmission-openvpn:5.2.0
+          name: transmission
+          ports:
+            - containerPort: 9091
+              name: http-api
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: http-api
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - NET_ADMIN
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /download/incomplete
+              name: incomplete
+            - mountPath: /download/completed
+              name: completed
       dnsConfig:
         nameservers:
-        - 1.1.1.1
-        - 1.0.0.1
+          - 1.1.1.1
+          - 1.0.0.1
       dnsPolicy: None
       restartPolicy: Always
       securityContext:
         sysctls:
-        - name: net.ipv4.tcp_adv_win_scale
-          value: "4"
+          - name: net.ipv4.tcp_adv_win_scale
+            value: "4"
       tolerations: []
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: transmission-appdata
-      - name: incomplete
-        persistentVolumeClaim:
-          claimName: torrents-incomplete
-      - name: completed
-        persistentVolumeClaim:
-          claimName: downloaded
+        - name: config
+          persistentVolumeClaim:
+            claimName: transmission-appdata
+        - name: incomplete
+          persistentVolumeClaim:
+            claimName: torrents-incomplete
+        - name: completed
+          persistentVolumeClaim:
+            claimName: downloaded

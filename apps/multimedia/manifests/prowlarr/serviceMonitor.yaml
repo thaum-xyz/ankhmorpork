@@ -10,7 +10,7 @@ metadata:
   namespace: multimedia
 spec:
   endpoints:
-  - port: metrics
+    - port: metrics
   selector:
     matchLabels:
       app.kubernetes.io/component: server

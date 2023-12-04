@@ -5,9 +5,9 @@ metadata:
   namespace: multimedia
 spec:
   data:
-  - remoteRef:
-      key: MULTIMEDIA_PLEX_CLAIM
-    secretKey: PLEX_CLAIM
+    - remoteRef:
+        key: MULTIMEDIA_PLEX_CLAIM
+      secretKey: PLEX_CLAIM
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore
