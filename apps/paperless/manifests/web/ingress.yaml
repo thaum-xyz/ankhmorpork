@@ -21,17 +21,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: papers.krupa.net.pl
-    http:
-      paths:
-      - backend:
-          service:
-            name: paperless
-            port:
-              name: http
-        path: /
-        pathType: Prefix
+    - host: papers.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: paperless
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
   tls:
-  - hosts:
-    - papers.krupa.net.pl
-    secretName: paperless-tls
+    - hosts:
+        - papers.krupa.net.pl
+      secretName: paperless-tls

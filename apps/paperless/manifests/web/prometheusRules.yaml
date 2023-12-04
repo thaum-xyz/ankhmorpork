@@ -9,44 +9,39 @@ metadata:
   namespace: paperless
 spec:
   groups:
-  - name: paperless.rules
-    rules:
-    - alert: PaperlessUnhealthy
-      annotations:
-        description: Paperless has been unhealthy for more than 5 minutes.
-        summary: Paperless is unhealthy
-      expr: up{job="paperless"} == 0
-      for: 5m
-      labels:
-        severity: critical
-    - alert: CeleryWorkerOffline
-      annotations:
-        description: Celery worker {{ $labels.worker }} has been offline for more
-          than 2 minutes.
-        summary: Celery worker offline
-      expr: flower_worker_online == 0
-      for: 2m
-      labels:
-        context: celery-worker
-        severity: warning
-    - alert: TaskFailureRatioTooHigh
-      annotations:
-        description: Average task failure ratio for task {{ $labels.task }} is {{
-          $value }}.
-        summary: Task Failure Ratio High.
-      expr: sum(rate(flower_events_total{namespace="paperless",type="task-failed"}[15m]))
-        > 0
-      labels:
-        context: celery-task
-        severity: warning
-    - alert: TaskPrefetchTimeTooHigh
-      annotations:
-        description: Average task prefetch time at worker for task {{ $labels.task
-          }} and worker {{ $labels.worker }} is {{ $value }}.
-        summary: Average Task Prefetch Time Too High.
-      expr: sum(avg_over_time(flower_task_prefetch_time_seconds[15m])) by (task, worker)
-        > 1
-      for: 5m
-      labels:
-        context: celery-task
-        severity: warning
+    - name: paperless.rules
+      rules:
+        - alert: PaperlessUnhealthy
+          annotations:
+            description: Paperless has been unhealthy for more than 5 minutes.
+            summary: Paperless is unhealthy
+          expr: up{job="paperless"} == 0
+          for: 5m
+          labels:
+            severity: critical
+        - alert: CeleryWorkerOffline
+          annotations:
+            description: Celery worker {{ $labels.worker }} has been offline for more than 2 minutes.
+            summary: Celery worker offline
+          expr: flower_worker_online == 0
+          for: 2m
+          labels:
+            context: celery-worker
+            severity: warning
+        - alert: TaskFailureRatioTooHigh
+          annotations:
+            description: Average task failure ratio for task {{ $labels.task }} is {{ $value }}.
+            summary: Task Failure Ratio High.
+          expr: sum(rate(flower_events_total{namespace="paperless",type="task-failed"}[15m])) > 0
+          labels:
+            context: celery-task
+            severity: warning
+        - alert: TaskPrefetchTimeTooHigh
+          annotations:
+            description: Average task prefetch time at worker for task {{ $labels.task }} and worker {{ $labels.worker }} is {{ $value }}.
+            summary: Average Task Prefetch Time Too High.
+          expr: sum(avg_over_time(flower_task_prefetch_time_seconds[15m])) by (task, worker) > 1
+          for: 5m
+          labels:
+            context: celery-task
+            severity: warning

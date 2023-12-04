@@ -16,8 +16,8 @@
           "subdir": "grafonnet"
         }
       },
-      "version": "6db00c292d3a1c71661fc875f90e0ec7caa538c2",
-      "sum": "gF8foHByYcB25jcUOBqP6jxk0OPifQMjPvKY0HaCk6w="
+      "version": "a1d61cce1da59c71409b99b5c7568511fec661ea",
+      "sum": "342u++/7rViR/zj2jeJOjshzglkZ1SY+hFNuyCBFMdc="
     },
     {
       "source": {
@@ -26,8 +26,8 @@
           "subdir": "grafana-builder"
         }
       },
-      "version": "9e9d5cddd4f02a25b9dec09a5910878a8ba8e045",
-      "sum": "TieGrr7GyKjURk1+wXHFpdoCiwNaIVfZvyc5mbI9OM0="
+      "version": "931f6b1139bb3694b06f2261279ba3dc01aca5b8",
+      "sum": "VmOxvg9FuY9UYr3lN6ZJe2HhuIErJoWimPybQr3S3yQ="
     },
     {
       "source": {
@@ -36,18 +36,8 @@
           "subdir": ""
         }
       },
-      "version": "3422a511bf8f645e3e684632785b27864ee5dc0c",
-      "sum": "tpgokDM1s/6CL4p+tlq3Nu54r62/kPfGnLUKRgYIC4k="
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/prometheus-community/postgres_exporter.git",
-          "subdir": "postgres_mixin"
-        }
-      },
-      "version": "1b492a6c59d7967112e53a71a45fb9127f025206",
-      "sum": "H+okh0mBSyJSyvkCadCXck1ouZUhdokidsoDGA9h25c="
+      "version": "2dbe4f9625a811b8b89f0495e74509c74779da82",
+      "sum": "Fe7bN9E6qeKNUdENjQvYttgf4S1DDqXRVB80wdmQgHQ="
     },
     {
       "source": {

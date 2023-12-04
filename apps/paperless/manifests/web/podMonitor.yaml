@@ -9,10 +9,10 @@ metadata:
   namespace: paperless
 spec:
   podMetricsEndpoints:
-  - interval: 30s
-    path: /metrics
-    port: metrics
-    scheme: http
+    - interval: 30s
+      path: /metrics
+      port: metrics
+      scheme: http
   selector:
     matchLabels:
       app.kubernetes.io/component: webservice

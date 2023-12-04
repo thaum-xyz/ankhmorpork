@@ -20,51 +20,51 @@ spec:
             app.kubernetes.io/version: 1.17.4
         spec:
           containers:
-          - args:
-            - --use-folder-prefix
-            - --zip
-            - --no-color
-            - --skip-checks
-            - /mnt/backups
-            command:
-            - /usr/local/bin/document_exporter
-            env: []
-            envFrom:
-            - configMapRef:
-                name: paperless-config
-            - secretRef:
-                name: paperless-secrets
-            - secretRef:
-                name: paperless-db
-            image: ghcr.io/paperless-ngx/paperless-ngx:1.17.4
-            name: backup
-            ports: []
-            resources: {}
-            securityContext:
-              privileged: false
-            volumeMounts:
-            - mountPath: /usr/src/paperless/data
-              name: data
-            - mountPath: /usr/src/paperless/media
-              name: media
-            - mountPath: /usr/src/paperless/consume
-              name: consume
-            - mountPath: /mnt/backups
-              name: backups
+            - args:
+                - --use-folder-prefix
+                - --zip
+                - --no-color
+                - --skip-checks
+                - /mnt/backups
+              command:
+                - /usr/local/bin/document_exporter
+              env: []
+              envFrom:
+                - configMapRef:
+                    name: paperless-config
+                - secretRef:
+                    name: paperless-secrets
+                - secretRef:
+                    name: paperless-db
+              image: ghcr.io/paperless-ngx/paperless-ngx:1.17.4
+              name: backup
+              ports: []
+              resources: {}
+              securityContext:
+                privileged: false
+              volumeMounts:
+                - mountPath: /usr/src/paperless/data
+                  name: data
+                - mountPath: /usr/src/paperless/media
+                  name: media
+                - mountPath: /usr/src/paperless/consume
+                  name: consume
+                - mountPath: /mnt/backups
+                  name: backups
           restartPolicy: Never
           serviceAccountName: paperless
           volumes:
-          - name: data
-            persistentVolumeClaim:
-              claimName: data
-          - name: media
-            persistentVolumeClaim:
-              claimName: media
-          - name: consume
-            persistentVolumeClaim:
-              claimName: consume
-          - name: backups
-            persistentVolumeClaim:
-              claimName: backups
+            - name: data
+              persistentVolumeClaim:
+                claimName: data
+            - name: media
+              persistentVolumeClaim:
+                claimName: media
+            - name: consume
+              persistentVolumeClaim:
+                claimName: consume
+            - name: backups
+              persistentVolumeClaim:
+                claimName: backups
   schedule: 36 22 * * *
   successfulJobsHistoryLimit: 1

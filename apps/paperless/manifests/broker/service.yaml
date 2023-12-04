@@ -10,12 +10,12 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - name: redis
-    port: 6379
-    targetPort: redis
-  - name: metrics
-    port: 9121
-    targetPort: metrics
+    - name: redis
+      port: 6379
+      targetPort: redis
+    - name: metrics
+      port: 9121
+      targetPort: metrics
   selector:
     app.kubernetes.io/component: broker
     app.kubernetes.io/name: redis

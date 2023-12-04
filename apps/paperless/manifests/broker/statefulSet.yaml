@@ -24,50 +24,50 @@ spec:
         app.kubernetes.io/version: "6.0"
     spec:
       containers:
-      - image: redis:6.0
-        name: redis
-        ports:
-        - containerPort: 6379
+        - image: redis:6.0
           name: redis
-        resources:
-          limits:
-            cpu: 20m
-            memory: 30Mi
-          requests:
-            cpu: 4m
-            memory: 7Mi
-        securityContext:
-          privileged: false
-        volumeMounts:
-        - mountPath: /data
-          name: broker-data
-      - args:
-        - --redis.addr
-        - 127.0.0.1
-        image: oliver006/redis_exporter:latest
-        name: exporter
-        ports:
-        - containerPort: 9121
-          name: metrics
-        resources:
-          limits:
-            memory: 20Mi
-          requests:
-            cpu: 2m
-            memory: 13Mi
-        securityContext:
-          privileged: false
+          ports:
+            - containerPort: 6379
+              name: redis
+          resources:
+            limits:
+              cpu: 20m
+              memory: 30Mi
+            requests:
+              cpu: 4m
+              memory: 7Mi
+          securityContext:
+            privileged: false
+          volumeMounts:
+            - mountPath: /data
+              name: broker-data
+        - args:
+            - --redis.addr
+            - 127.0.0.1
+          image: oliver006/redis_exporter:latest
+          name: exporter
+          ports:
+            - containerPort: 9121
+              name: metrics
+          resources:
+            limits:
+              memory: 20Mi
+            requests:
+              cpu: 2m
+              memory: 13Mi
+          securityContext:
+            privileged: false
       nodeSelector:
         kubernetes.io/arch: amd64
       restartPolicy: Always
       serviceAccountName: redis
   volumeClaimTemplates:
-  - metadata:
-      name: broker-data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 300Mi
-      storageClassName: qnap-nfs
+    - metadata:
+        name: broker-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 300Mi
+        storageClassName: qnap-nfs

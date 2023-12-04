@@ -27,58 +27,58 @@ spec:
         app.kubernetes.io/version: 1.17.4
     spec:
       containers:
-      - env:
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        - name: PAPERLESS_ALLOWED_HOSTS
-          value: paperless.paperless.svc,$(POD_IP)
-        envFrom:
-        - configMapRef:
-            name: paperless-config
-        - secretRef:
-            name: paperless-secrets
-        - secretRef:
-            name: paperless-db
-        image: ghcr.io/paperless-ngx/paperless-ngx:1.17.4
-        name: paperless
-        ports:
-        - containerPort: 8000
-          name: http
-        - containerPort: 5555
-          name: metrics
-        readinessProbe:
-          httpGet:
-            path: /accounts/login/?next=/
-            port: http
-          initialDelaySeconds: 15
-          periodSeconds: 5
-        resources:
-          limits:
-            cpu: 2
-            memory: 4Gi
-          requests:
-            cpu: 1
-            memory: 2Gi
-        securityContext:
-          privileged: false
-        volumeMounts:
-        - mountPath: /usr/src/paperless/data
-          name: data
-        - mountPath: /usr/src/paperless/media
-          name: media
-        - mountPath: /usr/src/paperless/consume
-          name: consume
+        - env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: PAPERLESS_ALLOWED_HOSTS
+              value: paperless.paperless.svc,$(POD_IP)
+          envFrom:
+            - configMapRef:
+                name: paperless-config
+            - secretRef:
+                name: paperless-secrets
+            - secretRef:
+                name: paperless-db
+          image: ghcr.io/paperless-ngx/paperless-ngx:1.17.4
+          name: paperless
+          ports:
+            - containerPort: 8000
+              name: http
+            - containerPort: 5555
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /accounts/login/?next=/
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: 2
+              memory: 4Gi
+            requests:
+              cpu: 1
+              memory: 2Gi
+          securityContext:
+            privileged: false
+          volumeMounts:
+            - mountPath: /usr/src/paperless/data
+              name: data
+            - mountPath: /usr/src/paperless/media
+              name: media
+            - mountPath: /usr/src/paperless/consume
+              name: consume
       restartPolicy: Always
       serviceAccountName: paperless
       volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: data
-      - name: media
-        persistentVolumeClaim:
-          claimName: media
-      - name: consume
-        persistentVolumeClaim:
-          claimName: consume
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: media
+          persistentVolumeClaim:
+            claimName: media
+        - name: consume
+          persistentVolumeClaim:
+            claimName: consume

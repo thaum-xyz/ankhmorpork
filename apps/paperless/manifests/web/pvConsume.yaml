@@ -9,7 +9,7 @@ metadata:
   namespace: paperless
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   capacity:
     storage: 4Gi
   nfs:
