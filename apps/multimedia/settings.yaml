@@ -72,7 +72,7 @@ prowlarr:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
     backups:
       pvcSpec:
         storageClassName: qnap-nfs
