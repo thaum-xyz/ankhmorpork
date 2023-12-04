@@ -52,7 +52,7 @@ plex:
 prowlarr:
   name: prowlarr
   version: "1.10.5.4116-ls41"  # application-version-from-github: linuxserver/docker-prowlarr
-  image: "linuxserver/prowlarr:1.5.2.3484-ls19"  # application-image-from-github: linuxserver/docker-prowlarr
+  image: "linuxserver/prowlarr:1.10.5.4116-ls41"  # application-image-from-github: linuxserver/docker-prowlarr
   namespace: *namespace
   port: 9696
   exporter:
