@@ -36,6 +36,8 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /backup
+              name: backup
       containers:
         - env:
             - name: TZ
