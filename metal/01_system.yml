@@ -58,6 +58,32 @@
       state: present
       reload: yes
 
+# Multipathd needs to be configured to prevent colisions with longhorn
+# More in https://longhorn.io/kb/troubleshooting-volume-with-multipath/
+- name: Configure multipathd
+  hosts: all
+  become: true
+  handlers:
+  - name: restart multipathd
+    systemd:
+      name: multipathd
+      state: restarted
+  tasks:
+  - name: Configure multipathd
+    copy:
+      content: |
+        defaults {
+            user_friendly_names yes
+        }
+        blacklist {
+            devnode "^sd[a-z0-9]+"
+        }
+      dest: /etc/multipath.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart multipathd
+
 - name: Install metrics collectors
   hosts: all
   become: true
