@@ -64,7 +64,7 @@ spec:
       # nvidia/gpu-feature-discovery is installed alongside NFD
       nodeSelector:
         kubernetes.io/arch: amd64
-        kubernetes.io/hostname: metal01
+        gpu.infra/nvidia: 'true'
       volumes:
       - name: "pod-gpu-resources"
         hostPath:
