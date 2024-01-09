@@ -90,15 +90,6 @@ local all = {
   },
 
   homeassistant: homeassistant(config.homeassistant) + {
-    imagecache: imagecache(
-      {
-        name: 'homeassistant',
-        namespace: config.homeassistant.namespace,
-      },
-      [
-        config.homeassistant.image,
-      ]
-    ),
     credentials: externalsecret(
       {
         name: config.homeassistant.apiTokenSecretKeySelector.name,

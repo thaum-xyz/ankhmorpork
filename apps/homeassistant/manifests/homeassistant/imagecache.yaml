@@ -1,9 +1,0 @@
-apiVersion: kubefledged.io/v1alpha2
-kind: ImageCache
-metadata:
-  name: homeassistant
-  namespace: homeassistant
-spec:
-  cacheSpec:
-    - images:
-        - homeassistant/home-assistant:2024.1.2

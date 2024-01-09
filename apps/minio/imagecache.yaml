@@ -1,9 +1,0 @@
----
-apiVersion: kubefledged.io/v1alpha2
-kind: ImageCache
-metadata:
-  name: minio
-spec:
-  cacheSpec:
-  - images:
-    - quay.io/minio/minio:RELEASE.2023-10-07T15-07-38Z
