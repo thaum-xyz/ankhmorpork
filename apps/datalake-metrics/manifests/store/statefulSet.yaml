@@ -27,80 +27,80 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app.kubernetes.io/name
-                  operator: In
-                  values:
-                  - thanos-store
-                - key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                  - thanos-store
-              namespaces:
-              - datalake-metrics
-              topologyKey: kubernetes.io/hostname
-            weight: 100
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - thanos-store
+                    - key: app.kubernetes.io/instance
+                      operator: In
+                      values:
+                        - thanos-store
+                namespaces:
+                  - datalake-metrics
+                topologyKey: kubernetes.io/hostname
+              weight: 100
       containers:
-      - args:
-        - store
-        - --log.level=info
-        - --log.format=logfmt
-        - --data-dir=/var/thanos/store
-        - --grpc-address=0.0.0.0:10901
-        - --http-address=0.0.0.0:10902
-        - --objstore.config=$(OBJSTORE_CONFIG)
-        - --ignore-deletion-marks-delay=24h
-        env:
-        - name: OBJSTORE_CONFIG
-          valueFrom:
-            secretKeyRef:
-              key: thanos.yaml
-              name: thanos-objectstorage
-        - name: HOST_IP_ADDRESS
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        image: quay.io/thanos/thanos:v0.30.2
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 8
-          httpGet:
-            path: /-/healthy
-            port: 10902
-            scheme: HTTP
-          periodSeconds: 30
-          timeoutSeconds: 1
-        name: thanos-store
-        ports:
-        - containerPort: 10901
-          name: grpc
-        - containerPort: 10902
-          name: http
-        readinessProbe:
-          failureThreshold: 20
-          httpGet:
-            path: /-/ready
-            port: 10902
-            scheme: HTTP
-          periodSeconds: 5
-        resources:
-          limits:
-            cpu: 3
-            memory: 10Gi
-          requests:
-            cpu: 500m
-            memory: 1Gi
-        terminationMessagePolicy: FallbackToLogsOnError
-        volumeMounts:
-        - mountPath: /var/thanos/store
-          name: data
-          readOnly: false
+        - args:
+            - store
+            - --log.level=info
+            - --log.format=logfmt
+            - --data-dir=/var/thanos/store
+            - --grpc-address=0.0.0.0:10901
+            - --http-address=0.0.0.0:10902
+            - --objstore.config=$(OBJSTORE_CONFIG)
+            - --ignore-deletion-marks-delay=24h
+          env:
+            - name: OBJSTORE_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  key: thanos.yaml
+                  name: thanos-objectstorage
+            - name: HOST_IP_ADDRESS
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          image: quay.io/thanos/thanos:v0.30.2
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 8
+            httpGet:
+              path: /-/healthy
+              port: 10902
+              scheme: HTTP
+            periodSeconds: 30
+            timeoutSeconds: 1
+          name: thanos-store
+          ports:
+            - containerPort: 10901
+              name: grpc
+            - containerPort: 10902
+              name: http
+          readinessProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /-/ready
+              port: 10902
+              scheme: HTTP
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: 3
+              memory: 10Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          terminationMessagePolicy: FallbackToLogsOnError
+          volumeMounts:
+            - mountPath: /var/thanos/store
+              name: data
+              readOnly: false
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
@@ -111,16 +111,16 @@ spec:
       terminationGracePeriodSeconds: 120
       volumes: []
   volumeClaimTemplates:
-  - metadata:
-      labels:
-        app.kubernetes.io/component: object-store-gateway
-        app.kubernetes.io/instance: thanos-store
-        app.kubernetes.io/name: thanos-store
-      name: data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 7Gi
-      storageClassName: longhorn
+    - metadata:
+        labels:
+          app.kubernetes.io/component: object-store-gateway
+          app.kubernetes.io/instance: thanos-store
+          app.kubernetes.io/name: thanos-store
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 7Gi
+        storageClassName: longhorn

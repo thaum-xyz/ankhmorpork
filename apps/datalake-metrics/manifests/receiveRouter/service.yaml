@@ -10,15 +10,15 @@ metadata:
   namespace: datalake-metrics
 spec:
   ports:
-  - name: grpc
-    port: 10901
-    targetPort: 10901
-  - name: http
-    port: 10902
-    targetPort: 10902
-  - name: remote-write
-    port: 19291
-    targetPort: 19291
+    - name: grpc
+      port: 10901
+      targetPort: 10901
+    - name: http
+      port: 10902
+      targetPort: 10902
+    - name: remote-write
+      port: 19291
+      targetPort: 19291
   selector:
     app.kubernetes.io/component: thanos-receive-router
     app.kubernetes.io/instance: thanos-receive

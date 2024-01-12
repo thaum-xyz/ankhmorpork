@@ -32,105 +32,105 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app.kubernetes.io/name
-                  operator: In
-                  values:
-                  - thanos-receive
-                - key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                  - thanos-receive-ingestor-default
-              namespaces:
-              - datalake-metrics
-              topologyKey: kubernetes.io/hostname
-            weight: 100
-          - podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app.kubernetes.io/name
-                  operator: In
-                  values:
-                  - thanos-receive
-                - key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                  - thanos-receive-ingestor-default
-              namespaces:
-              - datalake-metrics
-              topologyKey: topology.kubernetes.io/zone
-            weight: 100
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - thanos-receive
+                    - key: app.kubernetes.io/instance
+                      operator: In
+                      values:
+                        - thanos-receive-ingestor-default
+                namespaces:
+                  - datalake-metrics
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - thanos-receive
+                    - key: app.kubernetes.io/instance
+                      operator: In
+                      values:
+                        - thanos-receive-ingestor-default
+                namespaces:
+                  - datalake-metrics
+                topologyKey: topology.kubernetes.io/zone
+              weight: 100
       containers:
-      - args:
-        - receive
-        - --log.level=info
-        - --log.format=logfmt
-        - --grpc-address=0.0.0.0:10901
-        - --http-address=0.0.0.0:10902
-        - --remote-write.address=0.0.0.0:19291
-        - --receive.replication-factor=1
-        - --tsdb.path=/var/thanos/receive
-        - --tsdb.retention=2d
-        - --label=replica="$(NAME)"
-        - --label=receive="true"
-        - --objstore.config=$(OBJSTORE_CONFIG)
-        - --receive.local-endpoint=$(NAME).thanos-receive-ingestor-default.$(NAMESPACE).svc.cluster.local:10901
-        - --receive.hashrings-file=/var/lib/thanos-receive/hashrings.json
-        env:
-        - name: NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: HOST_IP_ADDRESS
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
-        - name: OBJSTORE_CONFIG
-          valueFrom:
-            secretKeyRef:
-              key: thanos.yaml
-              name: thanos-objectstorage
-        image: quay.io/thanos/thanos:v0.30.2
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 8
-          httpGet:
-            path: /-/healthy
-            port: 10902
-            scheme: HTTP
-          periodSeconds: 30
-        name: thanos-receive
-        ports:
-        - containerPort: 10901
-          name: grpc
-        - containerPort: 10902
-          name: http
-        - containerPort: 19291
-          name: remote-write
-        readinessProbe:
-          failureThreshold: 20
-          httpGet:
-            path: /-/ready
-            port: 10902
-            scheme: HTTP
-          periodSeconds: 5
-        resources:
-          requests:
-            cpu: 150m
-            memory: 1100Mi
-        terminationMessagePolicy: FallbackToLogsOnError
-        volumeMounts:
-        - mountPath: /var/thanos/receive
-          name: data
-          readOnly: false
-        - mountPath: /var/lib/thanos-receive
-          name: hashring-config
+        - args:
+            - receive
+            - --log.level=info
+            - --log.format=logfmt
+            - --grpc-address=0.0.0.0:10901
+            - --http-address=0.0.0.0:10902
+            - --remote-write.address=0.0.0.0:19291
+            - --receive.replication-factor=1
+            - --tsdb.path=/var/thanos/receive
+            - --tsdb.retention=2d
+            - --label=replica="$(NAME)"
+            - --label=receive="true"
+            - --objstore.config=$(OBJSTORE_CONFIG)
+            - --receive.local-endpoint=$(NAME).thanos-receive-ingestor-default.$(NAMESPACE).svc.cluster.local:10901
+            - --receive.hashrings-file=/var/lib/thanos-receive/hashrings.json
+          env:
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: HOST_IP_ADDRESS
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OBJSTORE_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  key: thanos.yaml
+                  name: thanos-objectstorage
+          image: quay.io/thanos/thanos:v0.30.2
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 8
+            httpGet:
+              path: /-/healthy
+              port: 10902
+              scheme: HTTP
+            periodSeconds: 30
+          name: thanos-receive
+          ports:
+            - containerPort: 10901
+              name: grpc
+            - containerPort: 10902
+              name: http
+            - containerPort: 19291
+              name: remote-write
+          readinessProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /-/ready
+              port: 10902
+              scheme: HTTP
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 150m
+              memory: 1100Mi
+          terminationMessagePolicy: FallbackToLogsOnError
+          volumeMounts:
+            - mountPath: /var/thanos/receive
+              name: data
+              readOnly: false
+            - mountPath: /var/lib/thanos-receive
+              name: hashring-config
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
@@ -140,21 +140,21 @@ spec:
       serviceAccountName: thanos-receive-ingestor
       terminationGracePeriodSeconds: 900
       volumes:
-      - configMap:
+        - configMap:
+            name: hashring-config
           name: hashring-config
-        name: hashring-config
   volumeClaimTemplates:
-  - metadata:
-      labels:
-        app.kubernetes.io/component: database-write-hashring
-        app.kubernetes.io/instance: thanos-receive-ingestor-default
-        app.kubernetes.io/name: thanos-receive
-        controller.receive.thanos.io/hashring: default
-      name: data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 20Gi
-      storageClassName: longhorn
+    - metadata:
+        labels:
+          app.kubernetes.io/component: database-write-hashring
+          app.kubernetes.io/instance: thanos-receive-ingestor-default
+          app.kubernetes.io/name: thanos-receive
+          controller.receive.thanos.io/hashring: default
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 30Gi
+        storageClassName: longhorn

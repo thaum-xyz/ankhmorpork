@@ -9,17 +9,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: metrics.datalake.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          service:
-            name: thanos-receive-router
-            port:
-              name: remote-write
-        path: /
-        pathType: Prefix
+    - host: metrics.datalake.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: thanos-receive-router
+                port:
+                  name: remote-write
+            path: /
+            pathType: Prefix
   tls:
-  - hosts:
-    - metrics.datalake.ankhmorpork.thaum.xyz
-    secretName: thanos-receive-ingress-tls
+    - hosts:
+        - metrics.datalake.ankhmorpork.thaum.xyz
+      secretName: thanos-receive-ingress-tls

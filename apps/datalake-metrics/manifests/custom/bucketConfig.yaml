@@ -5,12 +5,12 @@ metadata:
   namespace: datalake-metrics
 spec:
   data:
-  - remoteRef:
-      key: THANOS_MINIO_ACCESS_KEY
-    secretKey: access_key
-  - remoteRef:
-      key: THANOS_MINIO_SECRET_KEY
-    secretKey: secret_key
+    - remoteRef:
+        key: THANOS_MINIO_ACCESS_KEY
+      secretKey: access_key
+    - remoteRef:
+        key: THANOS_MINIO_SECRET_KEY
+      secretKey: secret_key
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore

@@ -5,9 +5,9 @@ metadata:
   namespace: datalake-metrics
 spec:
   data:
-  - remoteRef:
-      key: THANOS_INGRESS_HTPASSWD
-    secretKey: users
+    - remoteRef:
+        key: THANOS_INGRESS_HTPASSWD
+      secretKey: users
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore

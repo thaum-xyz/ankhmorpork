@@ -48,7 +48,7 @@ write:
   - secretRef:
       name: s3-credentials
   persistence:
-    size: 5Gi
+    size: 10Gi
     storageClass: longhorn
 
 read:

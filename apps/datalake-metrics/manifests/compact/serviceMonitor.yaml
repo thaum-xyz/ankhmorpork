@@ -10,14 +10,14 @@ metadata:
   namespace: datalake-metrics
 spec:
   endpoints:
-  - port: http
-    relabelings:
-    - action: replace
-      separator: /
-      sourceLabels:
-      - namespace
-      - pod
-      targetLabel: instance
+    - port: http
+      relabelings:
+        - action: replace
+          separator: /
+          sourceLabels:
+            - namespace
+            - pod
+          targetLabel: instance
   selector:
     matchLabels:
       app.kubernetes.io/component: database-compactor

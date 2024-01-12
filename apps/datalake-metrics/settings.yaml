@@ -49,7 +49,7 @@ receiveIngestor:
       storageClassName: 'longhorn'
       resources:
         requests:
-          storage: '20Gi'
+          storage: '30Gi'
 
 receiveRouter:
   replicas: 3
