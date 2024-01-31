@@ -324,51 +324,34 @@ switch:
     switches:
       projector:
         friendly_name: "Projector"
-        unique_id: projector_anker_nebula
+        unique_id: projector_benq
         turn_on:
-        - service: switch.turn_on
-          target:
-            entity_id: switch.projector_switch
         - service: remote.send_command
           data:
-            device: nebula
-            command: toggle
-            num_repeats: 2
-            delay_secs: 0.5
-            hold_secs: 0
+            device: Projector
+            command: "on"
           target:
             entity_id: remote.broadlink
         - delay:
             hours: 0
             minutes: 0
-            seconds: 20
+            seconds: 15
             milliseconds: 0
         turn_off:
         - service: remote.send_command
           data:
-            device: nebula
-            command: toggle
+            device: Projector
+            command: "off"
             num_repeats: 2
-            delay_secs: 0.5
+            delay_secs: 1
             hold_secs: 0
           target:
             entity_id: remote.broadlink
         - delay:
             hours: 0
             minutes: 0
-            seconds: 5
+            seconds: 60
             milliseconds: 0
-        - service: switch.turn_off
-          target:
-            entity_id: switch.projector_switch
-        - delay:
-            hours: 0
-            minutes: 0
-            seconds: 5
-            milliseconds: 0
-        - service: switch.turn_on
-          target:
-            entity_id: switch.projector_switch
         icon_template: >
           {% if this.state == 'on' %}
             mdi:projector
