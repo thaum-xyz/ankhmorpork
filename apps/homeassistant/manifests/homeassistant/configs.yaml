@@ -333,6 +333,7 @@ data:
               data:
                 device: projector
                 command: "on"
+                num_repeats: 1
               target:
                 entity_id: remote.broadlink
             - delay:
@@ -346,7 +347,7 @@ data:
                 device: projector
                 command: "off"
                 num_repeats: 2
-                delay_secs: 1
+                delay_secs: 60
                 hold_secs: 0
               target:
                 entity_id: remote.broadlink

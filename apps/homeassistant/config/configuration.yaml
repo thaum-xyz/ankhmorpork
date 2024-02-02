@@ -328,8 +328,9 @@ switch:
         turn_on:
         - service: remote.send_command
           data:
-            device: Projector
+            device: projector
             command: "on"
+            num_repeats: 1
           target:
             entity_id: remote.broadlink
         - delay:
@@ -340,7 +341,7 @@ switch:
         turn_off:
         - service: remote.send_command
           data:
-            device: Projector
+            device: projector
             command: "off"
             num_repeats: 2
             delay_secs: 1
