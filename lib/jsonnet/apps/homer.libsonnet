@@ -125,7 +125,6 @@ function(params) {
       namespace: h._config.namespace,
       labels: h._config.commonLabels,  // + { probe: "enabled" }
       annotations: {
-        'kubernetes.io/ingress.class': 'nginx',
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',  // TODO: customize
       },
     },
