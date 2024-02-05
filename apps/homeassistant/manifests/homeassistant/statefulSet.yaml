@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2024.1.2
+    app.kubernetes.io/version: 2024.1.6
   name: homeassistant
   namespace: homeassistant
 spec:
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
         app.kubernetes.io/part-of: homeassistant
-        app.kubernetes.io/version: 2024.1.2
+        app.kubernetes.io/version: 2024.1.6
     spec:
       containers:
         - env:

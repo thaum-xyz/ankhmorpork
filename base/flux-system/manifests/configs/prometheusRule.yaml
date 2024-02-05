@@ -10,17 +10,16 @@ metadata:
   namespace: flux-system
 spec:
   groups:
-  - name: GitOpsToolkit
-    rules:
-    - alert: ReconciliationFailure
-      annotations:
-        description: '{{ $labels.kind }} {{ $labels.namespace }}/{{ $labels.name }}
-          reconciliation has been failing for more than 10 minutes.'
-        summary: Flux objects reconciliation failure
-      expr: |
-        sum by (kind, name, namespace) (
-          max_over_time(gotk_reconcile_condition{status=~"False|Unknown",type="Ready"}[3m])
-        ) != 0
-      for: 20m
-      labels:
-        severity: warning
+    - name: GitOpsToolkit
+      rules:
+        - alert: ReconciliationFailure
+          annotations:
+            description: '{{ $labels.kind }} {{ $labels.namespace }}/{{ $labels.name }} reconciliation has been failing for more than 10 minutes.'
+            summary: Flux objects reconciliation failure
+          expr: |
+            sum by (kind, name, namespace) (
+              max_over_time(gotk_reconcile_condition{status=~"False|Unknown",type="Ready"}[3m])
+            ) != 0
+          for: 20m
+          labels:
+            severity: warning

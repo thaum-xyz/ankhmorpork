@@ -7,16 +7,16 @@ metadata:
   labels:
     app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns
-    app.kubernetes.io/version: 1.10.1
+    app.kubernetes.io/version: 1.11.1
   name: coredns-tcp
   namespace: dns
 spec:
   loadBalancerIP: 192.168.2.99
   ports:
-  - name: dns-tcp
-    port: 53
-    protocol: TCP
-    targetPort: dns-tcp
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+      targetPort: dns-tcp
   selector:
     app.kubernetes.io/component: dns-server
     app.kubernetes.io/name: coredns

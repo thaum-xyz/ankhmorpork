@@ -199,7 +199,7 @@
   },
   grafana+: {
     version: '10.1.4',  // application-version-from-github: grafana/grafana
-    image: 'grafana/grafana:10.1.4',  // application-version-from-github: grafana/grafana
+    image: 'grafana/grafana:10.1.4',  // application-image-from-github: grafana/grafana
     datasources: [{
       name: 'Prometheus',
       type: 'prometheus',

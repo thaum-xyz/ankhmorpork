@@ -5,15 +5,15 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homer
     app.kubernetes.io/part-of: homer
-    app.kubernetes.io/version: 23.02.2
+    app.kubernetes.io/version: 23.10.1
   name: homer
   namespace: homer
 spec:
   clusterIP: None
   ports:
-  - name: http
-    port: 8080
-    targetPort: http
+    - name: http
+      port: 8080
+      targetPort: http
   selector:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homer

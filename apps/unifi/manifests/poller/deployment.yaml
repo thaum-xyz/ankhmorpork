@@ -24,25 +24,25 @@ spec:
       namespace: unifi
     spec:
       containers:
-      - image: ghcr.io/unpoller/unpoller:v2.7.20
-        name: unifi-poller
-        ports:
-        - containerPort: 9130
-          name: metrics
-          protocol: TCP
-        resources:
-          limits:
-            cpu: 20m
-            memory: 100Mi
-          requests:
-            cpu: 5m
-            memory: 12Mi
-        volumeMounts:
-        - mountPath: /etc/unpoller/up.conf
-          name: config
-          subPath: up.conf
+        - image: ghcr.io/unpoller/unpoller:v2.9.5
+          name: unifi-poller
+          ports:
+            - containerPort: 9130
+              name: metrics
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 20m
+              memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 12Mi
+          volumeMounts:
+            - mountPath: /etc/unpoller/up.conf
+              name: config
+              subPath: up.conf
       restartPolicy: Always
       volumes:
-      - name: config
-        secret:
-          secretName: poller
+        - name: config
+          secret:
+            secretName: poller

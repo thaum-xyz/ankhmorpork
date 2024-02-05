@@ -8,8 +8,16 @@
           "subdir": "utils"
         }
       },
-      "version": "ae17eb87b39de538be8d9e707633727ff5620869",
-      "sum": "fpU9+wurrgNrnBmnPHYehqp3R5TqVWVdg8s8akBRmYM="
+      "version": "d132eb935ddeac4d3636031be8d0314217100887",
+      "sum": "LOjKOZTRo2/C+BfmfZCP9GesHhHyIdmAIrbI4jUdALs="
+    },
+    {
+      "source": {
+        "local": {
+          "directory": "../../../lib/jsonnet/utils"
+        }
+      },
+      "version": ""
     }
   ],
   "legacyImports": false

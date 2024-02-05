@@ -5,7 +5,7 @@ metadata:
   namespace: homer
 spec:
   podMetricsEndpoints:
-  - port: http
+    - port: http
   selector:
     matchLabels:
       app.kubernetes.io/name: reloader

@@ -8,12 +8,12 @@ metadata:
   namespace: unifi
 spec:
   data:
-  - remoteRef:
-      key: UNIFI_PASS
-    secretKey: pass
-  - remoteRef:
-      key: UNIFI_USER
-    secretKey: user
+    - remoteRef:
+        key: UNIFI_PASS
+      secretKey: pass
+    - remoteRef:
+        key: UNIFI_USER
+      secretKey: user
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore

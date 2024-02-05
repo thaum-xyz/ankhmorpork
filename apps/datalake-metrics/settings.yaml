@@ -1,6 +1,6 @@
 ---
-version: 'v0.30.2'  # application-version-from-github: thanos-io/thanos
-image: "quay.io/thanos/thanos:v0.30.2"  # application-image-from-github: thanos-io/thanos
+version: '0.34.0'  # application-version-from-github: thanos-io/thanos
+image: "quay.io/thanos/thanos:0.34.0"  # application-image-from-github: thanos-io/thanos
 namespace: "datalake-metrics"
 imagePullPolicy: 'IfNotPresent'
 hashringConfigMapName: 'hashring-config'

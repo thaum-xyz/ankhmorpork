@@ -9,6 +9,6 @@ roleRef:
   kind: ClusterRole
   name: homer-reloader
 subjects:
-- kind: ServiceAccount
-  name: reloader
-  namespace: homer
+  - kind: ServiceAccount
+    name: reloader
+    namespace: homer

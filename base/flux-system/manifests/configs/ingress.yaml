@@ -11,17 +11,17 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: flux.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          service:
-            name: notification-controller
-            port:
-              name: http
-        path: /
-        pathType: Prefix
+    - host: flux.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: notification-controller
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
   tls:
-  - hosts:
-    - flux.ankhmorpork.thaum.xyz
-    secretName: flux-tls
+    - hosts:
+        - flux.ankhmorpork.thaum.xyz
+      secretName: flux-tls

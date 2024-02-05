@@ -1,14 +1,13 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  creationTimestamp: null
   name: github-webhook-token
   namespace: flux-system
 spec:
   data:
-  - remoteRef:
-      key: FLUX_GITHUB_TOKEN
-    secretKey: token
+    - remoteRef:
+        key: FLUX_GITHUB_TOKEN
+      secretKey: token
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore

@@ -8,12 +8,12 @@ metadata:
   namespace: flux-system
 spec:
   events:
-  - ping
-  - push
+    - ping
+    - push
   resources:
-  - apiVersion: source.toolkit.fluxcd.io/v1beta1
-    kind: GitRepository
-    name: ankhmorpork
+    - apiVersion: source.toolkit.fluxcd.io/v1beta1
+      kind: GitRepository
+      name: ankhmorpork
   secretRef:
     name: github-webhook-token
   type: github

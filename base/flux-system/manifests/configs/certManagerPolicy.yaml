@@ -8,10 +8,10 @@ metadata:
   namespace: flux-system
 spec:
   ingress:
-  - from:
-    - namespaceSelector: {}
+    - from:
+        - namespaceSelector: {}
   podSelector:
     matchLabels:
       acme.cert-manager.io/http01-solver: "true"
   policyTypes:
-  - Ingress
+    - Ingress

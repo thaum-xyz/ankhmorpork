@@ -3,7 +3,6 @@ SHELL:=/bin/bash
 DIRS=\
 	base/cert-manager \
 	base/flux-system \
-	apps/auth \
 	apps/datalake-metrics \
 	apps/dns \
 	apps/homeassistant \
@@ -43,7 +42,7 @@ generate:  ## Generate all manifests
 
 .PHONY: upgrade
 upgrade:  ## Update all components and their versions
-#	for d in $(DIRS); do $(MAKE) -C $$d version-update || exit 1; done
+	for d in $(DIRS); do $(MAKE) -C $$d version-update || exit 1; done
 	for d in $(HELMDIRS); do hack/helm-updater.sh "$$d" || exit 1; done
 
 .PHONY: validate

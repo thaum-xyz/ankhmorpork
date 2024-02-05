@@ -8,8 +8,8 @@ metadata:
   namespace: unifi
 spec:
   podMetricsEndpoints:
-  - interval: 30s
-    port: metrics
+    - interval: 30s
+      port: metrics
   selector:
     matchLabels:
       app.kubernetes.io/component: exporter
