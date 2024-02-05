@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: static-files-webserver
     app.kubernetes.io/name: nginx
     app.kubernetes.io/part-of: tandoor
-    app.kubernetes.io/version: 1.5.6
+    app.kubernetes.io/version: 1.5.12
   name: tandoor-static
   namespace: tandoor
 spec:
