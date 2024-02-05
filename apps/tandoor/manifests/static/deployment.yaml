@@ -24,37 +24,37 @@ spec:
         app.kubernetes.io/part-of: tandoor
     spec:
       containers:
-      - image: nginx:latest
-        imagePullPolicy: Always
-        name: nginx
-        ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
-        resources:
-          requests:
-            cpu: 2m
-            memory: 5Mi
-        volumeMounts:
-        - mountPath: /etc/nginx/nginx.conf
-          name: nginx-config
-          readOnly: true
-          subPath: nginx.conf
-        - mountPath: /media
-          name: media
-          subPath: files
-        - mountPath: /static
-          name: static
-          subPath: files
+        - image: nginx:latest
+          imagePullPolicy: Always
+          name: nginx
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 2m
+              memory: 5Mi
+          volumeMounts:
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginx-config
+              readOnly: true
+              subPath: nginx.conf
+            - mountPath: /media
+              name: media
+              subPath: files
+            - mountPath: /static
+              name: static
+              subPath: files
       restartPolicy: Always
       serviceAccountName: tandoor-static
       volumes:
-      - name: media
-        persistentVolumeClaim:
-          claimName: media
-      - name: static
-        persistentVolumeClaim:
-          claimName: static
-      - configMap:
-          name: tandoor-static
-        name: nginx-config
+        - name: media
+          persistentVolumeClaim:
+            claimName: media
+        - name: static
+          persistentVolumeClaim:
+            claimName: static
+        - configMap:
+            name: tandoor-static
+          name: nginx-config

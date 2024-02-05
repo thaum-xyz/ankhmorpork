@@ -10,10 +10,10 @@ metadata:
   namespace: tandoor
 spec:
   ports:
-  - name: gunicorn
-    port: 8080
-    protocol: TCP
-    targetPort: gunicorn
+    - name: gunicorn
+      port: 8080
+      protocol: TCP
+      targetPort: gunicorn
   selector:
     app.kubernetes.io/component: webapp
     app.kubernetes.io/name: tandoor

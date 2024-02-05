@@ -17,31 +17,31 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: recipes.krupa.net.pl
-    http:
-      paths:
-      - backend:
-          service:
-            name: tandoor
-            port:
-              name: gunicorn
-        path: /
-        pathType: Prefix
-      - backend:
-          service:
-            name: tandoor-static
-            port:
-              name: http
-        path: /media
-        pathType: Prefix
-      - backend:
-          service:
-            name: tandoor-static
-            port:
-              name: http
-        path: /static
-        pathType: Prefix
+    - host: recipes.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: tandoor
+                port:
+                  name: gunicorn
+            path: /
+            pathType: Prefix
+          - backend:
+              service:
+                name: tandoor-static
+                port:
+                  name: http
+            path: /media
+            pathType: Prefix
+          - backend:
+              service:
+                name: tandoor-static
+                port:
+                  name: http
+            path: /static
+            pathType: Prefix
   tls:
-  - hosts:
-    - recipes.krupa.net.pl
-    secretName: tandoor-tls
+    - hosts:
+        - recipes.krupa.net.pl
+      secretName: tandoor-tls

@@ -9,7 +9,7 @@ metadata:
   namespace: tandoor
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
