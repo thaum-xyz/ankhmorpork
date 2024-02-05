@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: sonarr
     app.kubernetes.io/part-of: sonarr
-    app.kubernetes.io/version: 3.0.10.1567-ls215
+    app.kubernetes.io/version: 4.0.1.929-ls224
   name: sonarr-config-backup
   namespace: multimedia
 spec:

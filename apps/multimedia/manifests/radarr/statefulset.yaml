@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: radarr
     app.kubernetes.io/part-of: radarr
-    app.kubernetes.io/version: 5.1.3.8246-ls195
+    app.kubernetes.io/version: 5.2.6.8376-ls202
   name: radarr
   namespace: multimedia
 spec:
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: radarr
         app.kubernetes.io/part-of: radarr
-        app.kubernetes.io/version: 5.1.3.8246-ls195
+        app.kubernetes.io/version: 5.2.6.8376-ls202
     spec:
       containers:
         - env:
@@ -34,7 +34,7 @@ spec:
               value: "1000"
             - name: GUID
               value: "1000"
-          image: lscr.io/linuxserver/radarr:5.1.3.8246-ls195
+          image: lscr.io/linuxserver/radarr:5.2.6.8376-ls202
           imagePullPolicy: IfNotPresent
           name: radarr
           ports:
