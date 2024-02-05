@@ -123,7 +123,7 @@ function(params) {
     },
   },
 
-  prometheusRule: {
+  prometheusRule: std.prune({
     apiVersion: 'monitoring.coreos.com/v1',
     kind: 'PrometheusRule',
     metadata: $._metadata,
@@ -168,7 +168,21 @@ function(params) {
               For more infromation check {{ $labels.wikiurl }}.
             ||| % ([$._config.name]),
           },
-          expr: 'max_over_time(%s_system_health_issues{job="%s",source!="UpdateCheck"}[1h]) == 1' % ([$._config.name, $.serviceMonitor.metadata.name]),
+          expr: 'max_over_time(%s_system_health_issues{job="%s",source!="UpdateCheck",source!="IndexerLongTermStatusCheck"}[1h]) == 1' % ([$._config.name, $.serviceMonitor.metadata.name]),
+          'for': '2h',
+          labels: {
+            severity: 'warning',
+          },
+        }] + [if params.name == 'prowlarr' then {
+          alert: 'ProwlarIndexerUnhealthy',
+          annotations: {
+            summary: 'One of Prowlarr Indexers stopped working properly',
+            description: |||
+              Prowalarr reports problems with indexer - {{ labels.message }}.
+              For more infromation check {{ $labels.wikiurl }}.
+            |||,
+          },
+          expr: 'max_over_time(%s_system_health_issues{job="%s",source="IndexerLongTermStatusCheck"}[1h]) == 1' % ([$._config.name, $.serviceMonitor.metadata.name]),
           'for': '2h',
           labels: {
             severity: 'warning',
@@ -176,7 +190,7 @@ function(params) {
         }],
       }],
     },
-  },
+  }),
 
   [if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then 'backupsPVC']: {
     apiVersion: 'v1',

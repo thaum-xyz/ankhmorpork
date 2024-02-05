@@ -26,18 +26,6 @@ spec:
         app.kubernetes.io/part-of: prowlarr
         app.kubernetes.io/version: 1.7.4.3769-ls30
     spec:
-      #initContainers:
-      #  - name: sqlite-fixer
-      #    image: alpine:3.14.2
-      #    command:
-      #      - /bin/sh
-      #      - -c
-      #      - sleep 999999999
-      #    volumeMounts:
-      #      - mountPath: /config
-      #        name: config
-      #      - mountPath: /backup
-      #        name: backup
       containers:
         - env:
             - name: TZ
