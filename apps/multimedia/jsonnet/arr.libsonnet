@@ -178,7 +178,7 @@ function(params) {
           annotations: {
             summary: 'One of Prowlarr Indexers stopped working properly',
             description: |||
-              Prowalarr reports problems with indexer - {{ labels.message }}.
+              Prowalarr reports problems with indexer - {{ $labels.message }}.
               For more infromation check {{ $labels.wikiurl }}.
             |||,
           },

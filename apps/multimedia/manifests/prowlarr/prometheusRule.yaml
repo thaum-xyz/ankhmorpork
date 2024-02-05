@@ -45,7 +45,7 @@ spec:
         - alert: ProwlarIndexerUnhealthy
           annotations:
             description: |
-              Prowalarr reports problems with indexer - {{ labels.message }}.
+              Prowalarr reports problems with indexer - {{ $labels.message }}.
               For more infromation check {{ $labels.wikiurl }}.
             summary: One of Prowlarr Indexers stopped working properly
           expr: max_over_time(prowlarr_system_health_issues{job="prowlarr",source="IndexerLongTermStatusCheck"}[1h]) == 1
