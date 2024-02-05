@@ -96,7 +96,7 @@ spec:
                 secretKeyRef:
                   key: thanos.yaml
                   name: thanos-objectstorage
-          image: quay.io/thanos/thanos:0.34.0
+          image: quay.io/thanos/thanos:v0.34.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 8
