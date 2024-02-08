@@ -195,22 +195,22 @@ data:
           - name: "Today's Breakfast"
             unique_id: "meal_today_breakfast"
             value_template: >
-              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Breakfast') | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 'Breakfast') | first -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Today's Lunch"
             unique_id: "meal_today_lunch"
             value_template: >
-              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Lunch') | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 'Lunch') | first -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Today's Snack"
             unique_id: "meal_today_snack"
             value_template: >
-              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Snack') | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 'Snack') | first -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Today's Dinner"
             unique_id: "meal_today_dinner"
             value_template: >
-              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Dinner') | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 'Dinner') | first -%}
               {{ data.title if data.title else data.recipe_name | default() }}
             json_attributes_path: "$.[?(@.meal_type_name=='Dinnert')].recipe"
             json_attributes:
@@ -231,24 +231,24 @@ data:
           - name: "Tomorrow's Breakfast"
             unique_id: "meal_tomorrow_breakfast"
             value_template: >
-              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Breakfast') | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 0) | first -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Tomorrow's Lunch"
             unique_id: "meal_tomorrow_lunch"
             value_template: >
-              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Lunch') | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 1) | first -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Tomorrow's Snack"
             unique_id: "meal_tomorrow_snack"
             value_template: >
-              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Snack') | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 2) | first -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Tomorrow's Dinner"
             unique_id: "meal_tomorrow_dinner"
             value_template: >
-              {% set data = value_json | selectattr('meal_type_name', 'eq', 'Dinner') | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 3) | first -%}
               {{ data.title if data.title else data.recipe_name | default() }}
-            json_attributes_path: "$.[?(@.meal_type_name=='Dinnert')].recipe"
+            json_attributes_path: "$.[?(@.meal_type.order==3)].recipe"
             json_attributes:
               - image
               - id
@@ -328,6 +328,7 @@ data:
           projector:
             friendly_name: "Projector"
             unique_id: projector_benq
+            icon: "mdi:projector"
             turn_on:
             - service: remote.send_command
               data:
@@ -346,12 +347,7 @@ data:
                 hold_secs: 0
               target:
                 entity_id: remote.broadlink
-            icon_template: >
-              {% if this.state == 'on' %}
-                mdi:projector
-              {% else %}
-                mdi:projector-off
-              {% endif %}
+
       - platform: wake_on_lan
         name: pawel-pc
         host: "192.168.2.51"
