@@ -231,22 +231,22 @@ data:
           - name: "Tomorrow's Breakfast"
             unique_id: "meal_tomorrow_breakfast"
             value_template: >
-              {% set data = value_json | selectattr('meal_type.order', 'eq', 0) | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 0) | first | default({}) -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Tomorrow's Lunch"
             unique_id: "meal_tomorrow_lunch"
             value_template: >
-              {% set data = value_json | selectattr('meal_type.order', 'eq', 1) | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 1) | first | default({}) -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Tomorrow's Snack"
             unique_id: "meal_tomorrow_snack"
             value_template: >
-              {% set data = value_json | selectattr('meal_type.order', 'eq', 2) | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 2) | first | default({}) -%}
               {{ data.title if data.title else data.recipe_name | default() }}
           - name: "Tomorrow's Dinner"
             unique_id: "meal_tomorrow_dinner"
             value_template: >
-              {% set data = value_json | selectattr('meal_type.order', 'eq', 3) | first -%}
+              {% set data = value_json | selectattr('meal_type.order', 'eq', 3) | first | default({}) -%}
               {{ data.title if data.title else data.recipe_name | default() }}
             json_attributes_path: "$.[?(@.meal_type.order==3)].recipe"
             json_attributes:
@@ -328,7 +328,7 @@ data:
           projector:
             friendly_name: "Projector"
             unique_id: projector_benq
-            icon: "mdi:projector"
+            icon_template: "mdi:projector"
             turn_on:
             - service: remote.send_command
               data:
