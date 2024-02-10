@@ -25,6 +25,16 @@ spec:
         app.kubernetes.io/name: plex
         app.kubernetes.io/part-of: plex
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: gpu.intel.com/device-id.0300-9a49.present
+                    operator: In
+                    values:
+                      - "true"
+              weight: 1
       containers:
         - env:
             - name: TZ

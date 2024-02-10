@@ -10,7 +10,7 @@ plex:
   namespace: *namespace
   loadBalancerIP: "192.168.2.98"
   port: 32400
-  runtimeClassName: nvidia
+  runtimeClassName: nvidia  # TODO: Remove when switching to Intel GPU HW decoding
   hostname: nas
   exporter:
     config:
@@ -23,7 +23,19 @@ plex:
     limits:
       cpu: 2
       memory: 8Gi
-      nvidia.com/gpu: 1
+      nvidia.com/gpu: 1  # TODO: Remove when switching to Intel GPU HW decoding
+      # gpu.intel.com/i915: 1
+  affinity:
+    # Preffer to deploy on nodes with Intel GPU with 11th gen
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+              - key: gpu.intel.com/device-id.0300-9a49.present
+                operator: In
+                values:
+                  - "true"
+          weight: 1
   externalSecretStoreName: doppler-auth-api
   plexClaim:
     secretName: plex-claim

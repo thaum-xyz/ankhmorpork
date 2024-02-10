@@ -25,6 +25,7 @@ local defaults = {
       },
     },
   },
+  affinity: {},
   resources: {
     requests: {
       cpu: '500m',
@@ -298,6 +299,7 @@ function(params) {
           labels: $._config.selectorLabels,
         },
         spec: {
+          affinity: $._config.affinity,
           serviceAccountName: $.serviceAccount.metadata.name,
           containers: [p, e],
           hostname: $._config.hostname,
