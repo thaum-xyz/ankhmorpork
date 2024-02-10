@@ -217,7 +217,7 @@ function(params) {
             description: 'Home Assistant instance {{ $labels.instance }} is down',
             summary: 'Home Assistant is down',
           },
-          expr: 'up{job=~"homeassistant.*"} == 0',
+          expr: 'up{job="homeassistant"} == 0',
           'for': '30m',
           labels: {
             priority: 'P1',
