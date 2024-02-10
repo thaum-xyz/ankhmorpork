@@ -6,7 +6,7 @@
   #- devsec.hardening
   roles:
   - { role: oefenweb.locales, when: (ansible_os_family == "Debian") }
-  - { role: jnv.unattended-upgrades, when: (ansible_os_family == "Debian") }
+  - { role: hifis.unattended_upgrades, when: (ansible_os_family == "Debian") }
   - devsec.hardening.ssh_hardening
   - prometheus.prometheus.systemd_exporter
 

@@ -2,8 +2,8 @@
 roles:
 - name: oefenweb.locales
   version: v1.0.52
-- name: jnv.unattended-upgrades
-  version: v1.12.2
+- name: hifis.unattended_upgrades
+  version: v3.2.1
 - name: paulfantom.system
 
 collections:

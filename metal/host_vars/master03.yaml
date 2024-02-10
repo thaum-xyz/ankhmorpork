@@ -1,0 +1,12 @@
+system_mountpoints:
+  - description: k3s data
+    before: "k3s.service"
+    device: "/dev/ubuntu-vg/rancher"
+    mountpoint: "/var/lib/rancher"
+    type: "ext4"
+  - description: longhorn storage
+    after: "var-lib-rancher.mount"
+    before: "k3s.service"
+    device: "/dev/ubuntu-vg/longhorn"
+    mountpoint: "/var/lib/rancher/longhorn"
+    type: "xfs"
