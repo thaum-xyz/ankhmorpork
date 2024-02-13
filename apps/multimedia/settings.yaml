@@ -10,7 +10,6 @@ plex:
   namespace: *namespace
   loadBalancerIP: "192.168.2.98"
   port: 32400
-  runtimeClassName: nvidia  # TODO: Remove when switching to Intel GPU HW decoding
   hostname: nas
   exporter:
     config:
@@ -23,10 +22,11 @@ plex:
     limits:
       cpu: 2
       memory: 8Gi
-      nvidia.com/gpu: 1  # TODO: Remove when switching to Intel GPU HW decoding
-      # gpu.intel.com/i915: 1
+      gpu.intel.com/i915: 1
+      # nvidia.com/gpu: 1
+  # runtimeClassName: nvidia
   affinity:
-    # Preffer to deploy on nodes with Intel GPU with 11th gen
+    # Preffer to deploy on nodes with Intel GPU 11th gen
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
         - preference:
