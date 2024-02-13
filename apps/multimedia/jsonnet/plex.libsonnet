@@ -298,50 +298,48 @@ function(params) {
           },
           labels: $._config.selectorLabels,
         },
-        spec:
-          if $._config.runtimeClassName != '' then {
-            runtimeClassName: $._config.runtimeClassName,
-          } else {} + {
-            affinity: $._config.affinity,
-            serviceAccountName: $.serviceAccount.metadata.name,
-            containers: [p, e],
-            hostname: $._config.hostname,
-            nodeSelector: {
-              'kubernetes.io/arch': 'amd64',
-              'kubernetes.io/os': 'linux',
-            },
-            volumes: [
-              {
-                emptyDir: {},
-                name: 'transcode',
-              },
-              {
-                name: 'backup',
-                persistentVolumeClaim: {
-                  claimName: $._metadata.name + '-backup',
-                },
-              },
-              {
-                name: 'exporter-config',
-                secret: {
-                  optional: true,
-                  secretName: $._config.exporter.config.secretName,
-                },
-              },
-              {
-                name: 'movies',
-                persistentVolumeClaim: {
-                  claimName: $._config.moviesPVCName,
-                },
-              },
-              {
-                name: 'tv',
-                persistentVolumeClaim: {
-                  claimName: $._config.tvshowsPVCName,
-                },
-              },
-            ],
+        spec: {
+          affinity: $._config.affinity,
+          serviceAccountName: $.serviceAccount.metadata.name,
+          containers: [p, e],
+          hostname: $._config.hostname,
+          [if std.objectHas(params, 'runtimeClassName') then 'runtimeClassName']: $._config.runtimeClassName,
+          nodeSelector: {
+            'kubernetes.io/arch': 'amd64',
+            'kubernetes.io/os': 'linux',
           },
+          volumes: [
+            {
+              emptyDir: {},
+              name: 'transcode',
+            },
+            {
+              name: 'backup',
+              persistentVolumeClaim: {
+                claimName: $._metadata.name + '-backup',
+              },
+            },
+            {
+              name: 'exporter-config',
+              secret: {
+                optional: true,
+                secretName: $._config.exporter.config.secretName,
+              },
+            },
+            {
+              name: 'movies',
+              persistentVolumeClaim: {
+                claimName: $._config.moviesPVCName,
+              },
+            },
+            {
+              name: 'tv',
+              persistentVolumeClaim: {
+                claimName: $._config.tvshowsPVCName,
+              },
+            },
+          ],
+        },
       },
       volumeClaimTemplates: [{
         metadata: {

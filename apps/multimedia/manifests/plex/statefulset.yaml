@@ -71,8 +71,8 @@ spec:
           resources:
             limits:
               cpu: 2
-              gpu.intel.com/i915: 1
               memory: 8Gi
+              nvidia.com/gpu: 1
             requests:
               cpu: 500m
               memory: 3Gi
@@ -109,6 +109,7 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
+      runtimeClassName: nvidia
       serviceAccountName: plex
       volumes:
         - emptyDir: {}
