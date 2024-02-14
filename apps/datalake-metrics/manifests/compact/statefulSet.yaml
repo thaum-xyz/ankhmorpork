@@ -58,6 +58,7 @@ spec:
             - --compact.concurrency=1
             - --downsample.concurrency=1
             - --deduplication.replica-label=replica
+            - --max-time=2023-12-01T00:00:00Z
           env:
             - name: OBJSTORE_CONFIG
               valueFrom:
