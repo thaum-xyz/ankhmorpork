@@ -1,4 +1,8 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homer-template
+  namespace: homer
 data:
   config.yml.tpl: |-
     # This file is read by homer reloader which uses golang templates to generate the final config.yml file.
@@ -91,6 +95,10 @@ data:
             subtitle: Tracking content stored remotely
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
             url: "https://docs.google.com/spreadsheets/d/1-aFb40yjIjdcJNJ3Ngvbw9HWo5r1eGugZBWqSPcU-HU"
+          - name: Pantry
+            subtitle: Tracking pantry content
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
+            url: "https://docs.google.com/spreadsheets/d/13JSCTEgDHP26carFuHO5j5mfqvI5UBNAu_B9ED3vWbQ"
           - name: Image Compressor
             subtitle: "Compress images online"
             logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
@@ -182,7 +190,3 @@ data:
             logo: "https://esphome.io/_static/favicon-512x512.png"
             <<: *local
             url: "http://192.168.2.94:6052/"
-kind: ConfigMap
-metadata:
-  name: homer-template
-  namespace: homer
