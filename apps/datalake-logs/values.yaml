@@ -1,7 +1,7 @@
 # helm chart values reference: https://github.com/grafana/loki/blob/main/production/helm/loki/values.yaml
 
 minio:
-  # We are using dedicated external Minio Cluster
+  # Using dedicated external Minio Cluster
   enabled: false
 
 # TODO: Enable when we have tracing
@@ -76,7 +76,11 @@ backend:
     storageClass: longhorn
 
 tableManager:
-  enabled: false
+  enabled: true
+  retention_deletes_enabled: true
+  retention_period: 122d
+  serviceMonitor:
+    enabled: true
 
 test:
   enabled: false
