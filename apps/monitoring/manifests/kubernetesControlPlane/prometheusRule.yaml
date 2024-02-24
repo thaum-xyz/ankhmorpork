@@ -350,9 +350,9 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/cputhrottlinghigh
             summary: Processes experience elevated CPU throttling.
           expr: |
-            sum(increase(container_cpu_cfs_throttled_periods_total{container!="", }[5m])) by (container, pod, namespace)
+            sum(increase(container_cpu_cfs_throttled_periods_total{container!="", }[5m])) by (cluster, container, pod, namespace)
               /
-            sum(increase(container_cpu_cfs_periods_total{}[5m])) by (container, pod, namespace)
+            sum(increase(container_cpu_cfs_periods_total{}[5m])) by (cluster, container, pod, namespace)
               > ( 70 / 100 )
           for: 15m
           labels:
@@ -361,7 +361,7 @@ spec:
       rules:
         - alert: KubePersistentVolumeFillingUp
           annotations:
-            description: The PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} is only {{ $value | humanizePercentage }} free.
+            description: The PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} {{ with $labels.cluster -}} on Cluster {{ . }} {{- end }} is only {{ $value | humanizePercentage }} free.
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubepersistentvolumefillingup
             summary: PersistentVolume is filling up.
           expr: |
@@ -372,16 +372,16 @@ spec:
             ) < 0.03
             and
             kubelet_volume_stats_used_bytes{job="kubelet", metrics_path="/metrics"} > 0
-            unless on(namespace, persistentvolumeclaim)
+            unless on(cluster, namespace, persistentvolumeclaim)
             kube_persistentvolumeclaim_access_mode{ access_mode="ReadOnlyMany"} == 1
-            unless on(namespace, persistentvolumeclaim)
+            unless on(cluster, namespace, persistentvolumeclaim)
             kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
           for: 1m
           labels:
             severity: critical
         - alert: KubePersistentVolumeFillingUp
           annotations:
-            description: Based on recent sampling, the PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} is expected to fill up within four days. Currently {{ $value | humanizePercentage }} is available.
+            description: Based on recent sampling, the PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} {{ with $labels.cluster -}} on Cluster {{ . }} {{- end }} is expected to fill up within four days. Currently {{ $value | humanizePercentage }} is available.
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubepersistentvolumefillingup
             summary: PersistentVolume is filling up.
           expr: |
@@ -394,16 +394,16 @@ spec:
             kubelet_volume_stats_used_bytes{job="kubelet", metrics_path="/metrics"} > 0
             and
             predict_linear(kubelet_volume_stats_available_bytes{job="kubelet", metrics_path="/metrics"}[6h], 4 * 24 * 3600) < 0
-            unless on(namespace, persistentvolumeclaim)
+            unless on(cluster, namespace, persistentvolumeclaim)
             kube_persistentvolumeclaim_access_mode{ access_mode="ReadOnlyMany"} == 1
-            unless on(namespace, persistentvolumeclaim)
+            unless on(cluster, namespace, persistentvolumeclaim)
             kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
           for: 1h
           labels:
             severity: warning
         - alert: KubePersistentVolumeInodesFillingUp
           annotations:
-            description: The PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} only has {{ $value | humanizePercentage }} free inodes.
+            description: The PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} {{ with $labels.cluster -}} on Cluster {{ . }} {{- end }} only has {{ $value | humanizePercentage }} free inodes.
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubepersistentvolumeinodesfillingup
             summary: PersistentVolumeInodes are filling up.
           expr: |
@@ -414,16 +414,16 @@ spec:
             ) < 0.03
             and
             kubelet_volume_stats_inodes_used{job="kubelet", metrics_path="/metrics"} > 0
-            unless on(namespace, persistentvolumeclaim)
+            unless on(cluster, namespace, persistentvolumeclaim)
             kube_persistentvolumeclaim_access_mode{ access_mode="ReadOnlyMany"} == 1
-            unless on(namespace, persistentvolumeclaim)
+            unless on(cluster, namespace, persistentvolumeclaim)
             kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
           for: 1m
           labels:
             severity: critical
         - alert: KubePersistentVolumeInodesFillingUp
           annotations:
-            description: Based on recent sampling, the PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} is expected to run out of inodes within four days. Currently {{ $value | humanizePercentage }} of its inodes are free.
+            description: Based on recent sampling, the PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} {{ with $labels.cluster -}} on Cluster {{ . }} {{- end }} is expected to run out of inodes within four days. Currently {{ $value | humanizePercentage }} of its inodes are free.
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubepersistentvolumeinodesfillingup
             summary: PersistentVolumeInodes are filling up.
           expr: |
@@ -436,16 +436,16 @@ spec:
             kubelet_volume_stats_inodes_used{job="kubelet", metrics_path="/metrics"} > 0
             and
             predict_linear(kubelet_volume_stats_inodes_free{job="kubelet", metrics_path="/metrics"}[6h], 4 * 24 * 3600) < 0
-            unless on(namespace, persistentvolumeclaim)
+            unless on(cluster, namespace, persistentvolumeclaim)
             kube_persistentvolumeclaim_access_mode{ access_mode="ReadOnlyMany"} == 1
-            unless on(namespace, persistentvolumeclaim)
+            unless on(cluster, namespace, persistentvolumeclaim)
             kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
           for: 1h
           labels:
             severity: warning
         - alert: KubePersistentVolumeErrors
           annotations:
-            description: The persistent volume {{ $labels.persistentvolume }} has status {{ $labels.phase }}.
+            description: The persistent volume {{ $labels.persistentvolume }} {{ with $labels.cluster -}} on Cluster {{ . }} {{- end }} has status {{ $labels.phase }}.
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubepersistentvolumeerrors
             summary: PersistentVolume is having issues with provisioning.
           expr: |
@@ -1208,7 +1208,7 @@ spec:
         - expr: |
             sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"5.."}[1h]))
           record: code_verb:apiserver_request_total:increase1h
-    - name: k8s.rules
+    - name: k8s.rules.container_cpu_usage_seconds_total
       rules:
         - expr: |
             sum by (cluster, namespace, pod, container) (
@@ -1217,30 +1217,40 @@ spec:
               1, max by(cluster, namespace, pod, node) (kube_pod_info{node!=""})
             )
           record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate
+    - name: k8s.rules.container_memory_working_set_bytes
+      rules:
         - expr: |
             container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", image!=""}
             * on (cluster, namespace, pod) group_left(node) topk by(cluster, namespace, pod) (1,
               max by(cluster, namespace, pod, node) (kube_pod_info{node!=""})
             )
           record: node_namespace_pod_container:container_memory_working_set_bytes
+    - name: k8s.rules.container_memory_rss
+      rules:
         - expr: |
             container_memory_rss{job="kubelet", metrics_path="/metrics/cadvisor", image!=""}
             * on (cluster, namespace, pod) group_left(node) topk by(cluster, namespace, pod) (1,
               max by(cluster, namespace, pod, node) (kube_pod_info{node!=""})
             )
           record: node_namespace_pod_container:container_memory_rss
+    - name: k8s.rules.container_memory_cache
+      rules:
         - expr: |
             container_memory_cache{job="kubelet", metrics_path="/metrics/cadvisor", image!=""}
             * on (cluster, namespace, pod) group_left(node) topk by(cluster, namespace, pod) (1,
               max by(cluster, namespace, pod, node) (kube_pod_info{node!=""})
             )
           record: node_namespace_pod_container:container_memory_cache
+    - name: k8s.rules.container_memory_swap
+      rules:
         - expr: |
             container_memory_swap{job="kubelet", metrics_path="/metrics/cadvisor", image!=""}
             * on (cluster, namespace, pod) group_left(node) topk by(cluster, namespace, pod) (1,
               max by(cluster, namespace, pod, node) (kube_pod_info{node!=""})
             )
           record: node_namespace_pod_container:container_memory_swap
+    - name: k8s.rules.container_resource
+      rules:
         - expr: |
             kube_pod_container_resource_requests{resource="memory",job="kube-state-metrics"}  * on (namespace, pod, cluster)
             group_left() max by (namespace, pod, cluster) (
@@ -1309,6 +1319,8 @@ spec:
                 )
             )
           record: namespace_cpu:kube_pod_container_resource_limits:sum
+    - name: k8s.rules.pod_owner
+      rules:
         - expr: |
             max by (cluster, namespace, workload, pod) (
               label_replace(
@@ -1414,8 +1426,8 @@ spec:
         - expr: |
             count by (cluster, node) (
               node_cpu_seconds_total{mode="idle",job="node-exporter"}
-              * on (namespace, pod) group_left(node)
-              topk by(namespace, pod) (1, node_namespace_pod:kube_pod_info:)
+              * on (cluster, namespace, pod) group_left(node)
+              topk by(cluster, namespace, pod) (1, node_namespace_pod:kube_pod_info:)
             )
           record: node:node_num_cpu:sum
         - expr: |
