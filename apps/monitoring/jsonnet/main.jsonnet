@@ -43,7 +43,7 @@ local ingress(metadata, domain, service) = {
       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
       'traefik.ingress.kubernetes.io/router.middlewares': 'auth-traefik-forward-auth@kubernetescrd',
       'reloader.homer/group': 'Administration',
-      'reloader.homer/logo': 'https://github.com/cncf/artwork/blob/master/projects/prometheus/icon/color/prometheus-icon-color.png',  // Default to prometheus logo
+      'reloader.homer/logo': 'https://github.com/cncf/artwork/blob/main/projects/prometheus/icon/color/prometheus-icon-color.png?raw=true',  // Default to prometheus logo
       'reloader.homer/name': $.metadata.name,
       'probe-uri': '/-/healthy',
     },

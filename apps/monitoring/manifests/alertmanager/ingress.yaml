@@ -6,7 +6,7 @@ metadata:
     ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator CRDs
     probe-uri: /-/healthy
     reloader.homer/group: Administration
-    reloader.homer/logo: https://github.com/cncf/artwork/blob/master/projects/prometheus/icon/color/prometheus-icon-color.png
+    reloader.homer/logo: https://github.com/cncf/artwork/blob/main/projects/prometheus/icon/color/prometheus-icon-color.png?raw=true
     reloader.homer/name: alertmanager
     traefik.ingress.kubernetes.io/router.middlewares: auth-traefik-forward-auth@kubernetescrd
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
