@@ -76,11 +76,7 @@ backend:
     storageClass: longhorn
 
 tableManager:
-  enabled: true
-  retention_deletes_enabled: true
-  retention_period: 122d
-  serviceMonitor:
-    enabled: true
+  enabled: false
 
 test:
   enabled: false
@@ -104,6 +100,10 @@ monitoring:
 # configStorageType: ConfigMap
 loki:
   auth_enabled: false  # Disable multi-tenancy
+  compactor:
+    retention_enabled: true
+  limits_config:
+    retention_period: 122d
   storage:
     bucketNames:
       chunks: logs-chunks
