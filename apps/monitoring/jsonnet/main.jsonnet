@@ -480,7 +480,7 @@ local kp =
                 name: 'prometheus',
               },
               spec: {
-                storageClassName: 'lvm-secondary',  // For performance reasons use local disk
+                storageClassName: 'lvm-thin',  // For performance reasons use local disk
                 accessModes: ['ReadWriteOnce'],
                 resources: {
                   requests: { storage: '40Gi' },

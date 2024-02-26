@@ -153,5 +153,5 @@ spec:
         resources:
           requests:
             storage: 40Gi
-        storageClassName: lvm-secondary
+        storageClassName: lvm-thin
   version: 2.47.1
