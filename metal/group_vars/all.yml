@@ -19,11 +19,12 @@ systemd_exporter_unit_blacklist: '.*.mount|user-runtime-dir@0.service'
 
 node_exporter_scripts:
   - name: apt
-    file: apt_info.py
+    exec: /usr/local/bin/apt_info.py
     url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/apt_info.py"
   - name: smartmon
-    file: smartmon.sh
+    exec: /usr/local/bin/smartmon.sh
     url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/smartmon.sh"
   - name: lvm
-    file: lvm.sh
+    exec: /usr/local/bin/lvm.sh
     url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/lvm-prom-collector"
+    params: "-a"

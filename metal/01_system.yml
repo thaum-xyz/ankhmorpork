@@ -96,7 +96,7 @@
   - name: Download textfile collector scripts
     get_url:
       url: "{{ item.url }}"
-      dest: "/usr/local/bin/{{ item.file }}"
+      dest: "{{ item.exec }}"
       mode: 0755
     loop: "{{ node_exporter_scripts }}"
   - name: Set cronjob for textfile scripts
@@ -104,6 +104,6 @@
       cron_file: "/etc/cron.d/metrics"
       user: root
       name: "{{ item.name }}"
-      minute: "*/10"
-      job: "/usr/local/bin/{{ item.file }} | sponge /var/lib/node_exporter/{{ item.name }}.prom"
+      minute: "*/5"
+      job: "{{ item.exec }} {{ item.params | default('') }} | sponge /var/lib/node_exporter/{{ item.name }}.prom"
     loop: "{{ node_exporter_scripts }}"
