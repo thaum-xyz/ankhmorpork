@@ -61,7 +61,7 @@ metrics:
       - sourceLabels: [__name__]
         regex: 'minio_audit_.*|minio_inter_node_traffic_.*|minio_notify_current_send_in_progress|minio_s3_requests_.*|minio_software_.*'
         action: drop
-      - sourceLabels: [pod]
+      - sourceLabels: [namespace]
         targetLabel: server
       # Replace server label as it unnecesarily differentiates cluster-level metrics
       - sourceLabels: [server, __name__]
