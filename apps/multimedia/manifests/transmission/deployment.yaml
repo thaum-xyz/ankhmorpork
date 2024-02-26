@@ -81,7 +81,8 @@ spec:
           - name: net.ipv4.tcp_adv_win_scale
             value: "4"
       tolerations: []
-      nodeName: metal01
+      nodeSelector:
+        kubernetes.io/hostname: metal01
       volumes:
         - name: config
           persistentVolumeClaim:
