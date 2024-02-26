@@ -16,3 +16,14 @@ system_earlyoom_params: "-r 60 -m 4"
 systemd_exporter_enable_ip_accounting: true
 systemd_exporter_enable_restart_count: true
 systemd_exporter_unit_blacklist: '.*.mount|user-runtime-dir@0.service'
+
+node_exporter_scripts:
+  - name: apt
+    file: apt_info.py
+    url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/apt_info.py"
+  - name: smartmon
+    file: smartmon.sh
+    url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/smartmon.sh"
+  - name: lvm
+    file: lvm.sh
+    url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/lvm-prom-collector"

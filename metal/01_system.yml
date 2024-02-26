@@ -1,7 +1,6 @@
 ---
 - hosts: all
   become: true
-  any_errors_fatal: true
   #collections:
   #- devsec.hardening
   roles:
@@ -94,28 +93,17 @@
       - moreutils
       - cron
       state: present
-  - name: Download apt_info textfile collector script
+  - name: Download textfile collector scripts
     get_url:
-      url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/apt_info.py"
-      dest: "/usr/local/bin/apt_info.py"
+      url: "{{ item.url }}"
+      dest: "/usr/local/bin/{{ item.file }}"
       mode: 0755
-  - name: Set cronjob for package manager
+    loop: "{{ node_exporter_scripts }}"
+  - name: Set cronjob for textfile scripts
     cron:
       cron_file: "/etc/cron.d/metrics"
       user: root
-      name: "apt"
-      minute: "13"
-      job: "/usr/local/bin/apt_info.py | sponge /var/lib/node_exporter/apt.prom"
-  - block:
-    - name: Download smartmon textfile collector script
-      get_url:
-        url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/smartmon.sh"
-        dest: "/usr/local/bin/smartmon.sh"
-        mode: 0755
-    - name: Set SMART metrics collection cronjob
-      cron:
-        cron_file: "/etc/cron.d/metrics"
-        user: root
-        name: "smartmon"
-        minute: "*/10"
-        job: "/usr/local/bin/smartmon.sh | sponge /var/lib/node_exporter/smartmon.prom"
+      name: "{{ item.name }}"
+      minute: "*/10"
+      job: "/usr/local/bin/{{ item.file }} | sponge /var/lib/node_exporter/{{ item.name }}.prom"
+    loop: "{{ node_exporter_scripts }}"
