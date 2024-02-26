@@ -20,7 +20,7 @@ lvmd:
       type: thin
       thin-pool:
         name: thin-pool0
-        overprovision-ratio: 1.0
+        overprovision-ratio: 5.0
 
 node:
   metrics:
