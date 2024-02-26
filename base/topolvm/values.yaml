@@ -5,7 +5,7 @@ scheduler:
 
 lvmd:
   # lvmd.managed -- If true, set up lvmd service with DaemonSet.
-  managed: true
+  managed: false
   deviceClasses:
     - name: main
       volume-group: ubuntu-vg
@@ -23,6 +23,7 @@ lvmd:
         overprovision-ratio: 5.0
 
 node:
+  lvmdEmbedded: true
   metrics:
     enabled: true
   prometheus:
