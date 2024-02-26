@@ -12,8 +12,15 @@ lvmd:
       spare-gb: 20
     - name: secondary
       volume-group: secondary-vg
-      default: true
       spare-gb: 5
+    - name: thin
+      volume-group: secondary-vg
+      default: true
+      spare-gb: 1
+      type: thin
+      thin-pool:
+        name: thin-pool0
+        overprovision-ratio: 1.0
 
 node:
   metrics:
@@ -57,6 +64,16 @@ storageClasses:
       allowVolumeExpansion: true
       additionalParameters:
         "topolvm.io/device-class": "secondary"
+  - name: lvm-thin
+    storageClass:
+      fsType: xfs
+      reclaimPolicy: Delete
+      annotations: {}
+      isDefaultClass: false
+      volumeBindingMode: WaitForFirstConsumer
+      allowVolumeExpansion: true
+      additionalParameters:
+        "topolvm.io/device-class": "thin"
 
 webhook:
   podMutatingWebhook:
