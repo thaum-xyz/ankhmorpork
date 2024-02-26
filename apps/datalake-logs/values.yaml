@@ -38,7 +38,7 @@ ingress:
     secretName: ingress-logs-tls
 
 write:
-  replicas: 2
+  replicas: 3
   autoscaling:
     enabled: false
   extraArgs:
