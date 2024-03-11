@@ -1,0 +1,25 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres
+spec:
+  bootstrap:
+    initdb:
+      database: immich
+      owner: immich
+      secret:
+        name: postgres-user
+  instances: 2
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 120Mi
+  storage:
+    size: 2Gi
+    storageClass: lvm-secondary
+  superuserSecret:
+    name: postgres-admin

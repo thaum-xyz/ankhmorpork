@@ -1,0 +1,22 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres-admin
+spec:
+  data:
+  - remoteRef:
+      key: IMMICH_POSTGRES_ADMIN_PASS
+    secretKey: password
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    name: postgres-admin
+    template:
+      data:
+        password: '{{ .password }}'
+        username: postgres
+      type: kubernetes.io/basic-auth

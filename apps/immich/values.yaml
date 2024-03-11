@@ -1,0 +1,61 @@
+# Config reference: https://github.com/goauthentik/helm/tree/main/charts/authentik
+
+env:
+  DB_HOSTNAME: "postgres-rw"
+  DB_USERNAME:
+    valueFrom:
+      secretKeyRef:
+        name: postgres-user
+        key: username
+  DB_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: postgres-user
+        key: password
+  DB_DATABASE_NAME: "immich"
+  IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
+
+immich:
+  persistence:
+    library:
+      existingClaim: immich-library-pvc
+
+postgresql:
+  # Postgres is provided by cnpg
+  enabled: false
+
+redis:
+  enabled: true
+  architecture: standalone
+
+server:
+  ingress:
+    main:
+      enabled: false  # FIXME(paulfantom): enable after bootstrap
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        reloader.homer/group: Multimedia
+        reloader.homer/logo: https://immich.app/img/immich-logo.svg
+        reloader.homer/name: Immich
+        reloader.homer/subtitle: Photo & Video Library
+      labels:
+        probe: enabled
+        reloader.homer/enabled: "true"
+      hosts:
+        - host: media.ankhmorpork.thaum.xyz
+          paths:
+            - path: "/"
+      tls:
+        - secretName: immich-tls
+          hosts:
+            - media.ankhmorpork.thaum.xyz
+
+machine-learning:
+  enabled: true
+  persistence:
+    cache:
+      enabled: true
+      size: 10Gi
+      type: pvc
+      accessMode: ReadWriteMany
+      storageClass: qnap-nfs
