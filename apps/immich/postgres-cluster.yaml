@@ -5,6 +5,7 @@ metadata:
     app.kubernetes.io/name: postgres
   name: postgres
 spec:
+  # Image from https://github.com/tensorchord/cloudnative-pgvecto.rs
   imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16-v0.2.1
   bootstrap:
     initdb:
@@ -12,6 +13,8 @@ spec:
       owner: immich
       secret:
         name: postgres-user
+      postInitSQL:
+        - CREATE EXTENSION IF NOT EXISTS vectors
   instances: 2
   monitoring:
     enablePodMonitor: true
