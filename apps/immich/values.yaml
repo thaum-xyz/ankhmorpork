@@ -18,7 +18,7 @@ env:
 immich:
   persistence:
     library:
-      existingClaim: immich-library-pvc
+      existingClaim: immich-library
 
 postgresql:
   # Postgres is provided by cnpg
