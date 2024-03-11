@@ -34,7 +34,7 @@ redis:
 server:
   ingress:
     main:
-      enabled: false  # FIXME(paulfantom): enable after bootstrap
+      enabled: true
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         reloader.homer/group: Multimedia

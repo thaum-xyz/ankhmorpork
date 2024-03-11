@@ -6,7 +6,7 @@ metadata:
   name: postgres
 spec:
   # Image from https://github.com/tensorchord/cloudnative-pgvecto.rs
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16-v0.2.1
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16-v0.2.0
   bootstrap:
     initdb:
       database: immich
@@ -17,7 +17,8 @@ spec:
         - CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;
         - CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;
         - CREATE EXTENSION IF NOT EXISTS "vectors";
-        - GRANT ALL ON SCHEMA vectors TO immich;
+        #- GRANT ALL ON SCHEMA vectors TO immich;
+        - ALTER SCHEMA vectors OWNER TO immich;
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
