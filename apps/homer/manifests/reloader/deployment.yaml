@@ -20,6 +20,7 @@ spec:
             - --homer-deployment=homer
             - --homer-configmap=homer-config
             - --template-configmap=homer-template
+            - --watch-all-ingresses
           env:
             - name: NAMESPACE
               valueFrom:
