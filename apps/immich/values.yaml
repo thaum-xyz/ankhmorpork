@@ -41,6 +41,7 @@ server:
         reloader.homer/logo: https://immich.app/img/immich-logo.svg
         reloader.homer/name: Immich
         reloader.homer/subtitle: Photo & Video Library
+        reloader.homer/tag: testing
       labels:
         probe: enabled
         reloader.homer/enabled: "true"
