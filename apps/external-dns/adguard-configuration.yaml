@@ -1,0 +1,22 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: adguard-configuration
+spec:
+  data:
+  - remoteRef:
+      key: ADGUARD_ADMIN_USER
+    secretKey: user
+  - remoteRef:
+      key: ADGUARD_ADMIN_PASS
+    secretKey: password
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    template:
+      data:
+        password: '{{ .password }}'
+        user: '{{ .user }}'
+        url: 'http://192.168.2.4'

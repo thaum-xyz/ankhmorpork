@@ -1,0 +1,70 @@
+# Reference documentation: https://artifacthub.io/packages/helm/bitnami/external-dns
+
+provider: webhook
+
+sources:
+  - service
+  - ingress
+
+txtOwnerId: ankhmorpork.thaum.xyz
+domainFilters:
+  - ankhmorpork.thaum.xyz
+
+fqdnTemplates:
+  - "{{.Name}}.{{.Namespace}}.ankhmorpork.thaum.xyz"
+
+serviceTypeFilter:
+  - LoadBalancer
+
+registry: txt
+triggerLoopOnEvent: true
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    honorLabels: true
+
+extraArgs:
+  webhook-provider-url: http://localhost:8888
+
+sidecars:
+  - name: adguard-webhook
+    image: ghcr.io/muhlba91/external-dns-provider-adguard:v5.0.0
+    ports:
+      - containerPort: 8888
+        name: http
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: http
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: http
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+    env:
+      - name: LOG_LEVEL
+        value: debug
+      - name: SERVER_HOST
+        value: "0.0.0.0"
+      - name: DRY_RUN
+        value: "false"
+      - name: ADGUARD_URL
+        valueFrom:
+          secretKeyRef:
+            name: adguard-configuration
+            key: url
+      - name: ADGUARD_USER
+        valueFrom:
+          secretKeyRef:
+            name: adguard-configuration
+            key: user
+      - name: ADGUARD_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: adguard-configuration
+            key: password
