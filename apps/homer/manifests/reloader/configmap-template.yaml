@@ -111,7 +111,7 @@ data:
           - name: Qnap
             logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
             <<: *local
-            url: "https://192.168.2.29/"
+            url: "https://qnap.ankhmorpork.thaum.xyz"
           - name: Plex
             subtitle: "Video on demand"
             logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
@@ -120,22 +120,22 @@ data:
             subtitle: "Movie collection manager"
             logo: "https://avatars1.githubusercontent.com/u/25025331?s=200&v=4"
             <<: *local
-            url: "http://192.168.2.95:7878/"
+            url: "http://radarr.multimedia.ankhmorpork.thaum.xyz:7878/"
           - name: Sonarr
             subtitle: "TV series collection manager"
             logo: "https://avatars3.githubusercontent.com/u/1082903?s=200&v=4"
             <<: *local
-            url: "http://192.168.2.95:8989/"
+            url: "http://sonarr.multimedia.ankhmorpork.thaum.xyz:8989/"
           - name: Prowlarr
             subtitle: "Indexer manager/proxy"
             logo: "https://avatars.githubusercontent.com/u/73049443?s=200&v=4"
             <<: *local
-            url: "http://192.168.2.95:9696/"
+            url: "http://prowlarr.multimedia.ankhmorpork.thaum.xyz:9696/"
           - name: Transmission
             subtitle: "downloader"
             logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
             <<: *local
-            url: "http://192.168.2.95:9091/transmission/web/"
+            url: "http://transmission-ui.multimedia.ankhmorpork.thaum.xyz:9091/transmission/web/"
     {{- range . }}
     {{- if eq .Group "Multimedia" }}
           - name: {{ .Name }}
@@ -189,4 +189,4 @@ data:
           - name: ESPHome
             logo: "https://esphome.io/_static/favicon-512x512.png"
             <<: *local
-            url: "http://192.168.2.94:6052/"
+            url: "http://esphome.homeassistant.ankhmorpork.thaum.xyz:6052/"
