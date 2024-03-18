@@ -31,6 +31,17 @@ consoleIngress:
       hosts:
         - minio.ankhmorpork.thaum.xyz
 
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app
+              operator: In
+              values:
+                - minio
+        topologyKey: kubernetes.io/hostname
+
 resources:
   requests:
     cpu: 620m
