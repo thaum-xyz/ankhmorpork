@@ -25,19 +25,6 @@ immich:
     library:
       existingClaim: immich-library
 
-  probes:
-    liveness:
-      enabled: false
-    startup:
-      enabled: true
-      custom: true
-      spec:
-        httpGet:
-          path: /server-info/ping
-          port: http
-        periodSeconds: 10
-        timeoutSeconds: 1
-
 postgresql:
   # Postgres is provided by cnpg
   enabled: false

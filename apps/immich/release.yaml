@@ -28,3 +28,14 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              group: apps
+              version: v1
+              kind: Deployment
+              name: immich-server
+            patch: |-
+              - op: delete
+                path: /spec/template/spec/containers/0/livenessProbe
