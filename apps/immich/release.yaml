@@ -37,5 +37,5 @@ spec:
               kind: Deployment
               name: immich-server
             patch: |-
-              - op: delete
+              - op: remove
                 path: /spec/template/spec/containers/0/livenessProbe
