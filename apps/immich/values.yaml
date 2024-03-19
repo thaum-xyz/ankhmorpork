@@ -32,6 +32,14 @@ postgresql:
 redis:
   enabled: true
   architecture: standalone
+  master:
+    persistence:
+      enabled: false
+      medium: Memory
+  replica:
+    persistence:
+      enabled: false
+      medium: Memory
 
 server:
   ingress:
