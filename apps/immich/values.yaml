@@ -1,6 +1,7 @@
 # Config reference: https://github.com/goauthentik/helm/tree/main/charts/authentik
 
 env:
+  LOG_LEVEL: "verbose"
   DB_HOSTNAME: "postgres-rw"
   DB_USERNAME:
     valueFrom:
