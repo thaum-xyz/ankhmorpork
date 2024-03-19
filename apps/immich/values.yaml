@@ -2,7 +2,7 @@
 
 env:
   TZ: "Europe/Warsaw"
-  LOG_LEVEL: "verbose"
+  LOG_LEVEL: "debug"
   DB_HOSTNAME: "postgres-rw"
   DB_USERNAME:
     valueFrom:
