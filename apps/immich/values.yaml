@@ -1,6 +1,7 @@
 # Config reference: https://github.com/goauthentik/helm/tree/main/charts/authentik
 
 env:
+  TZ: "Europe/Warsaw"
   LOG_LEVEL: "verbose"
   DB_HOSTNAME: "postgres-rw"
   DB_USERNAME:
@@ -23,6 +24,19 @@ immich:
   persistence:
     library:
       existingClaim: immich-library
+
+  probes:
+    liveness:
+      enabled: false
+    startup:
+      enabled: true
+      custom: true
+      spec:
+        httpGet:
+          path: /server-info/ping
+          port: http
+        periodSeconds: 10
+        timeoutSeconds: 1
 
 postgresql:
   # Postgres is provided by cnpg
