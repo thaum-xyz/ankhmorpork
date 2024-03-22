@@ -1,0 +1,26 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: topolvm-rules
+  namespace: topolvm-system
+spec:
+  groups:
+  - name: topolvm.rules
+    rules:
+    - alert: TopoLVMThinPoolDataUsedHigh
+      annotations:
+        description: The data in LVM thin pool connected to device class {{$labels.device_class}} on node {{$labels.node}} reached {{$value}} occupancy level. If it reaches 100% the LogicalVolumes in that pool can start misbehaving.
+        summary: LVM thin pool data usage is high.
+      expr: topolvm_thinpool_data_percent > 90
+      for: 5m
+      labels:
+        severity: warning
+    - alert: TopoLVMThinPoolDataUsedHigh
+      annotations:
+        description: The data in LVM thin pool connected to device class {{$labels.device_class}} on node {{$labels.node}} reached {{$value}} occupancy level. If it reaches 100% the LogicalVolumes in that pool can start misbehaving.
+        summary: LVM thin pool data usage is high.
+      expr: topolvm_thinpool_data_percent > 95
+      for: 5m
+      labels:
+        severity: critical

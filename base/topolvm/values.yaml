@@ -29,11 +29,11 @@ node:
   prometheus:
     podMonitor:
       enabled: true
-      relabelings:
-      - action: replace
-        sourceLabels:
-        - __meta_kubernetes_pod_node_name
-        targetLabel: node
+      #relabelings:
+      #- action: replace
+      #  sourceLabels:
+      #  - __meta_kubernetes_pod_node_name
+      #  targetLabel: node
   priorityClassName: system-node-critical
 
 controller:

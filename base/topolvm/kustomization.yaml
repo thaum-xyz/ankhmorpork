@@ -5,6 +5,7 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
+  - prometheusrules.yaml
 configMapGenerator:
   - name: values
     files:
