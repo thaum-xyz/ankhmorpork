@@ -8,19 +8,41 @@ spec:
   groups:
   - name: topolvm.rules
     rules:
-    - alert: TopoLVMThinPoolDataUsedHigh
+    - alert: TopoLVMThinPoolAlmostOutOfSpace
       annotations:
         description: The data in LVM thin pool connected to device class {{$labels.device_class}} on node {{$labels.node}} reached {{$value}} occupancy level. If it reaches 100% the LogicalVolumes in that pool can start misbehaving.
-        summary: LVM thin pool data usage is high.
+        summary: LVM thin pool has less than 10% free space.
       expr: topolvm_thinpool_data_percent > 90
       for: 5m
       labels:
         severity: warning
-    - alert: TopoLVMThinPoolDataUsedHigh
+    - alert: TopoLVMThinPoolAlmostOutOfSpace
       annotations:
         description: The data in LVM thin pool connected to device class {{$labels.device_class}} on node {{$labels.node}} reached {{$value}} occupancy level. If it reaches 100% the LogicalVolumes in that pool can start misbehaving.
-        summary: LVM thin pool data usage is high.
+        summary: LVM thin pool has less than 5% free space.
       expr: topolvm_thinpool_data_percent > 95
+      for: 5m
+      labels:
+        severity: critical
+    - alert: TopoLVMThinPoolFillingUp
+      annotations:
+        description: The data in LVM thin pool connected to device class {{$labels.device_class}} on node {{$labels.node}} has {{$value}}% occupancy level and it is predicted to reach 100% in the next 24 hours.
+        summary: LVM thin pool is predicted to run out of space in next 24 hours.
+      expr: |
+        sum by (node, device_class) (topolvm_thinpool_data_percent) > 85
+        and
+        sum by (node, device_class) (predict_linear(topolvm_thinpool_data_percent[6h], 24 * 60 * 60)) > 100
+      for: 5m
+      labels:
+        severity: warning
+    - alert: TopoLVMThinPoolFillingUp
+      annotations:
+        description: The data in LVM thin pool connected to device class {{$labels.device_class}} on node {{$labels.node}} has {{$value}}% occupancy level and it is predicted to reach 100% in the next 4 hours.
+        summary: LVM thin pool is predicted to run out of space in next 4 hours.
+      expr: |
+        sum by (node, device_class) (topolvm_thinpool_data_percent) > 90
+        and
+        sum by (node, device_class) (predict_linear(topolvm_thinpool_data_percent[6h], 4 * 60 * 60)) > 100
       for: 5m
       labels:
         severity: critical
