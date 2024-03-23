@@ -15,25 +15,9 @@ local defaults = {
   },
   instances: 2,
   affinity: {
-    podAntiAffinity: {
-      preferredDuringSchedulingIgnoredDuringExecution: [
-        {
-          weight: 100,
-          podAffinityTerm: {
-            topologyKey: 'kubernetes.io/hostname',
-            labelSelector: {
-              matchExpressions: [
-                {
-                  key: 'app.kubernetes.io/name',
-                  operator: 'In',
-                  values: ['postgres'],
-                },
-              ],
-            },
-          },
-        },
-      ],
-    },
+    enablePodAntiAffinity: true,
+    topologyKey: 'kubernetes.io/hostname',
+    podAntiAffinityType: 'required',
   },
   db: {
     name: 'postgres',
