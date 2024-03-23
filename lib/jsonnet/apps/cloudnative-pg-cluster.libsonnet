@@ -14,6 +14,27 @@ local defaults = {
     'app.kubernetes.io/name': 'postgres',
   },
   instances: 2,
+  affinity: {
+    podAntiAffinity: {
+      preferredDuringSchedulingIgnoredDuringExecution: [
+        {
+          weight: 100,
+          podAffinityTerm: {
+            topologyKey: 'kubernetes.io/hostname',
+            labelSelector: {
+              matchExpressions: [
+                {
+                  key: 'app.kubernetes.io/name',
+                  operator: 'In',
+                  values: ['postgres'],
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
   db: {
     name: 'postgres',
     user: '',
@@ -142,7 +163,7 @@ function(params) {
         }
         else
         {},
-      bootstrap: 
+      bootstrap:
         local dbBootstrap = {
           database: $._config.db.name,
             owner: $._config.db.user,
@@ -159,6 +180,7 @@ function(params) {
         } else {
           initdb: dbBootstrap,
         },
+      affinity: $._config.affinity,
       resources: $._config.resources,
       storage: $._config.storage,
     },

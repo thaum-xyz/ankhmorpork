@@ -6,6 +6,18 @@ metadata:
   name: postgres
   namespace: paperless
 spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                    - postgres
+            topologyKey: kubernetes.io/hostname
+          weight: 100
   backup:
     barmanObjectStore:
       destinationPath: s3://postgres/paperless
