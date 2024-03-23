@@ -232,6 +232,9 @@
       { name: 'GF_AUTH_PROXY_HEADERS', value: 'Email:X-Forwarded-User' },
       // { name: 'GF_AUTH_PROXY_HEADERS', value: 'Email:X-Auth-Request-Email' },
       { name: 'GF_SNAPSHOTS_EXTERNAL_ENABLED', value: 'false' },
+      { name: 'GF_ANALYTICS_REPORTING_ENABLED', value: 'false' },
+      { name: 'GF_ANALYTICS_CHECK_FOR_UPDATES', value: 'false' },
+      { name: 'GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES', value: 'false' },
     ],
   },
   // Following are not in kube-prometheus
