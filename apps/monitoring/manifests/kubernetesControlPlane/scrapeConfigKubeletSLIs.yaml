@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  labels:
+    app.kubernetes.io/name: kubelet
+    app.kubernetes.io/part-of: kube-prometheus
+  name: kubelet-slis
+  namespace: monitoring
+spec:
+  authorization:
+    credentials:
+      key: token
+      name: prometheus-k8s-token
+    type: Bearer
+  honorLabels: true
+  kubernetesSDConfigs:
+    - role: Node
+  metricRelabelings: []
+  metricsPath: /metrics/slis
+  relabelings:
+    - action: replace
+      replacement: kube-system
+      targetLabel: namespace
+    - action: replace
+      sourceLabels:
+        - __meta_kubernetes_node_name
+      targetLabel: node
+    - sourceLabels:
+        - __metrics_path__
+      targetLabel: metrics_path
+    - replacement: kubelet
+      targetLabel: job
+  scheme: HTTPS
+  scrapeInterval: 5s
+  scrapeTimeout: 5s
+  tlsConfig:
+    insecureSkipVerify: true

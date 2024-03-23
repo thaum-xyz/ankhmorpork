@@ -9,7 +9,7 @@ metadata:
   labels:
     app.kubernetes.io/name: tandoor
     app.kubernetes.io/part-of: tandoor
-    app.kubernetes.io/version: 1.5.12
+    app.kubernetes.io/version: 1.5.15
     probe: enabled
     reloader.homer/enabled: "true"
   name: tandoor
