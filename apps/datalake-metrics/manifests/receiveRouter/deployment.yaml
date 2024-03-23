@@ -9,7 +9,7 @@ metadata:
   name: thanos-receive-router
   namespace: datalake-metrics
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app.kubernetes.io/component: thanos-receive-router
