@@ -6,7 +6,7 @@ metadata:
   name: postgres
 spec:
   # Image from https://github.com/tensorchord/cloudnative-pgvecto.rs
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16-v0.2.0
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16-v0.2.1
   bootstrap:
     initdb:
       database: immich
