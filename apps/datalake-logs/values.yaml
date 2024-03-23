@@ -48,8 +48,8 @@ write:
   - secretRef:
       name: s3-credentials
   persistence:
-    size: 10Gi
-    storageClass: longhorn
+    size: 20Gi
+    storageClass: lvm-thin
 
 read:
   replicas: 2
