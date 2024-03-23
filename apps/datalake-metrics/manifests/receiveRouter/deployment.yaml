@@ -5,24 +5,24 @@ metadata:
     app.kubernetes.io/component: thanos-receive-router
     app.kubernetes.io/instance: thanos-receive
     app.kubernetes.io/name: thanos-receive
-    app.kubernetes.io/version: 0.34.0
+    app.kubernetes.io/version: 0.34.1
   name: thanos-receive-router
   namespace: datalake-metrics
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: thanos-receive-router
       app.kubernetes.io/instance: thanos-receive
       app.kubernetes.io/name: thanos-receive
-      app.kubernetes.io/version: 0.34.0
+      app.kubernetes.io/version: 0.34.1
   template:
     metadata:
       labels:
         app.kubernetes.io/component: thanos-receive-router
         app.kubernetes.io/instance: thanos-receive
         app.kubernetes.io/name: thanos-receive
-        app.kubernetes.io/version: 0.34.0
+        app.kubernetes.io/version: 0.34.1
     spec:
       containers:
         - args:
@@ -49,7 +49,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
-          image: quay.io/thanos/thanos:v0.34.0
+          image: quay.io/thanos/thanos:v0.34.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 8

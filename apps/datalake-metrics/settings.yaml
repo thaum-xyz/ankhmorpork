@@ -1,6 +1,6 @@
 ---
-version: '0.34.0'  # application-version-from-github: thanos-io/thanos
-image: "quay.io/thanos/thanos:v0.34.0"  # application-image-from-github: thanos-io/thanos
+version: '0.34.1'  # application-version-from-github: thanos-io/thanos
+image: "quay.io/thanos/thanos:v0.34.1"  # application-image-from-github: thanos-io/thanos
 namespace: "datalake-metrics"
 imagePullPolicy: 'IfNotPresent'
 hashringConfigMapName: 'hashring-config'
@@ -46,10 +46,10 @@ receiveIngestor:
   volumeClaimTemplate:
     spec:
       accessModes: ['ReadWriteOnce']
-      storageClassName: 'longhorn'
+      storageClassName: 'lvm-thin'
       resources:
         requests:
-          storage: '30Gi'
+          storage: '35Gi'
 
 receiveRouter:
   replicas: 3
