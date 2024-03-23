@@ -7,9 +7,9 @@ lvmd:
   # lvmd.managed -- If true, set up lvmd service with DaemonSet.
   managed: false
   deviceClasses:
-    - name: main
-      volume-group: ubuntu-vg
-      spare-gb: 20
+    #- name: main
+    #  volume-group: ubuntu-vg
+    #  spare-gb: 20
     - name: secondary
       volume-group: secondary-vg
       spare-gb: 5
@@ -45,16 +45,16 @@ controller:
   priorityClassName: system-cluster-critical
 
 storageClasses:
-  - name: lvm-main
-    storageClass:
-      fsType: xfs
-      reclaimPolicy: Delete
-      annotations: {}
-      isDefaultClass: false
-      volumeBindingMode: WaitForFirstConsumer
-      allowVolumeExpansion: true
-      additionalParameters:
-        "topolvm.io/device-class": "main"
+  #- name: lvm-main
+  #  storageClass:
+  #    fsType: xfs
+  #    reclaimPolicy: Delete
+  #    annotations: {}
+  #    isDefaultClass: false
+  #    volumeBindingMode: WaitForFirstConsumer
+  #    allowVolumeExpansion: true
+  #    additionalParameters:
+  #      "topolvm.io/device-class": "main"
   - name: lvm-secondary
     storageClass:
       fsType: xfs
