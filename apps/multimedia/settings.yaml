@@ -5,8 +5,8 @@ common:
 
 plex:
   name: plex
-  version: "1.32.8.7639-fb6452ebf"
-  image: "plexinc/pms-docker:1.32.8.7639-fb6452ebf"
+  version: "1.40.1.8227-c0dd5a73e"
+  image: "plexinc/pms-docker:1.40.1.8227-c0dd5a73e"
   namespace: *namespace
   loadBalancerIP: "192.168.2.98"
   port: 32400

@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: plex
     app.kubernetes.io/part-of: plex
-    app.kubernetes.io/version: 1.32.8.7639-fb6452ebf
+    app.kubernetes.io/version: 1.40.1.8227-c0dd5a73e
   name: plex
   namespace: multimedia
 spec:
@@ -52,7 +52,7 @@ spec:
           envFrom:
             - secretRef:
                 name: plex-claim
-          image: plexinc/pms-docker:1.32.8.7639-fb6452ebf
+          image: plexinc/pms-docker:1.40.1.8227-c0dd5a73e
           name: plex
           ports:
             - containerPort: 32400
