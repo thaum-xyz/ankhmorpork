@@ -187,7 +187,7 @@ data:
           - name: Unifi
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             <<: *local
-            url: "https://192.168.2.1/"
+            url: "https://unifi.ankhmorpork.thaum.xyz"
           - name: ESPHome
             logo: "https://esphome.io/_static/favicon-512x512.png"
             <<: *local
