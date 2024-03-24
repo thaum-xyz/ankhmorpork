@@ -26,6 +26,49 @@ spec:
         app.kubernetes.io/part-of: radarr
         app.kubernetes.io/version: 5.2.6.8376-ls202
     spec:
+      initContainers:
+        - env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: postgres-radarr-user
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-radarr-user
+            - name: POSTGRES_HOST
+              value: "postgres-radarr"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_MAIN_DB
+              value: "radarr"
+            - name: POSTGRES_LOG_DB
+              value: "logs"
+            - name: CONFIG
+              value: /app/config.xml
+          image: mikefarah/yq:4.13.0
+          name: postgres-setup
+          command: ["sh", "-c"]
+          args:
+            - |
+                mkdir -p /backup/configs
+                cp $CONFIG /backup/configs/$CONFIG.$(date +%Y%m%d%H%M%S).bak
+                export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
+                yq -i '
+                        (.Config.PostgresHost = env(POSTGRES_HOST)) |
+                        (.Config.PostgresPort = env(POSTGRES_PORT)) |
+                        (.Config.PostgresUser = env(POSTGRES_USER)) |
+                        (.Config.PostgresPassword = env(POSTGRES_PASS)) |
+                        (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
+                        (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
+                      ' $CONFIG_FILE
+          volumeMounts:
+            - mountPath: /app
+              name: config
+            - mountPath: /backup
+              name: backup
       containers:
         - env:
             - name: TZ
