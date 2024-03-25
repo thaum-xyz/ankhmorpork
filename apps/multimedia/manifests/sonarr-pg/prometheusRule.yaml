@@ -1,0 +1,44 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: sonarr-pg
+    app.kubernetes.io/version: 3.0.10.1567-ls215
+  name: sonarr-pg
+  namespace: multimedia
+spec:
+  groups:
+    - name: exportarr
+      rules:
+        - alert: ExportarrDown
+          annotations:
+            description: |
+              Exportarr responsible for data collection from sonarr is down. Check configuration and logs.
+            summary: Exportarr is down
+          expr: up{job="sonarr"} == 0
+          for: 5m
+          labels:
+            severity: critical
+    - name: sonarr
+      rules:
+        - alert: sonarrDown
+          annotations:
+            description: |
+              Arr Application sonarr in namespace {{ $labels.namespace }} is not reporting status check correctly.
+            summary: sonarr is Down
+          expr: sonarr_system_status{job="sonarr"} != 1
+          for: 15m
+          labels:
+            severity: critical
+        - alert: sonarrUnhealthy
+          annotations:
+            description: |
+              Arr Application sonarr is having issues with {{ $labels.source }} health check - {{ $labels.message }}.
+              For more infromation check {{ $labels.wikiurl }}.
+            summary: sonarr is unhealthy
+          expr: max_over_time(sonarr_system_health_issues{job="sonarr",source!="UpdateCheck",source!="IndexerLongTermStatusCheck"}[1h]) == 1
+          for: 2h
+          labels:
+            severity: warning

@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: sonarr-pg
+    app.kubernetes.io/version: 3.0.10.1567-ls215
+  name: sonarr-pg
+  namespace: multimedia
+spec:
+  endpoints:
+    - port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: sonarr
+      app.kubernetes.io/part-of: sonarr-pg
