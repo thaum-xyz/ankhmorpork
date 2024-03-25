@@ -19,7 +19,7 @@ spec:
       postInitSQL:
         - CREATE DATABASE logs;
         - ALTER DATABASE logs OWNER TO radarr;
-  instances: 1
+  instances: 2
   monitoring:
     enablePodMonitor: true
   resources:

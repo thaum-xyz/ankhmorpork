@@ -5,11 +5,11 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: radarr
     app.kubernetes.io/part-of: radarr
-    app.kubernetes.io/version: 5.2.6.8376-ls202
+    app.kubernetes.io/version: 5.3.6.8612-ls210
   name: radarr
   namespace: multimedia
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: server
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: radarr
         app.kubernetes.io/part-of: radarr
-        app.kubernetes.io/version: 5.2.6.8376-ls202
+        app.kubernetes.io/version: 5.3.6.8612-ls210
     spec:
       initContainers:
         - env:
@@ -39,22 +39,25 @@ spec:
                   key: password
                   name: postgres-radarr-user
             - name: POSTGRES_HOST
-              value: "postgres-radarr"
+              value: "postgres-radarr-rw"
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_MAIN_DB
               value: "radarr"
             - name: POSTGRES_LOG_DB
               value: "logs"
-            - name: CONFIG
-              value: /app/config.xml
-          image: mikefarah/yq:4.13.0
+          image: mikefarah/yq:4.43.1
           name: postgres-setup
           command: ["sh", "-c"]
           args:
             - |
-                mkdir -p /backup/configs
-                cp $CONFIG /backup/configs/$CONFIG.$(date +%Y%m%d%H%M%S).bak
+                set -euo pipefail
+                mkdir -p /config/backups
+                if [ -f /config/config.xml ]; then
+                  cp /config/config.xml /config/backups/config.xml.$(date +%Y%m%d%H%M%S).bak
+                else
+                  touch /config/config.xml
+                fi
                 export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
                 yq -i '
                         (.Config.PostgresHost = env(POSTGRES_HOST)) |
@@ -63,12 +66,10 @@ spec:
                         (.Config.PostgresPassword = env(POSTGRES_PASS)) |
                         (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
                         (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
-                      ' $CONFIG_FILE
+                      ' /config/config.xml
           volumeMounts:
-            - mountPath: /app
+            - mountPath: /config
               name: config
-            - mountPath: /backup
-              name: backup
       containers:
         - env:
             - name: TZ
@@ -77,7 +78,7 @@ spec:
               value: "1000"
             - name: GUID
               value: "1000"
-          image: lscr.io/linuxserver/radarr:5.2.6.8376-ls202
+          image: lscr.io/linuxserver/radarr:5.3.6.8612-ls210
           imagePullPolicy: IfNotPresent
           name: radarr
           ports:
@@ -103,8 +104,6 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
-            - mountPath: /backup
-              name: backup
             - mountPath: /multimedia
               name: multimedia
             - mountPath: /download/completed
@@ -141,6 +140,8 @@ spec:
               name: config
               readOnly: true
       restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
       serviceAccountName: radarr
       volumes:
         - name: multimedia
@@ -149,9 +150,6 @@ spec:
         - name: downloads
           persistentVolumeClaim:
             claimName: downloaded
-        - name: backup
-          persistentVolumeClaim:
-            claimName: radarr-config-backup
   volumeClaimTemplates:
     - metadata:
         name: config
@@ -160,5 +158,5 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 4Gi
+            storage: 1Gi
         storageClassName: longhorn
