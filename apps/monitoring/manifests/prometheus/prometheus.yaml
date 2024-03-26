@@ -61,9 +61,6 @@ spec:
     - name: node-exporter
       namespace: monitoring
       resource: servicemonitors
-    - name: node-exporter-qnap
-      namespace: monitoring
-      resource: servicemonitors
     - name: blackbox-exporter
       namespace: monitoring
       resource: servicemonitors

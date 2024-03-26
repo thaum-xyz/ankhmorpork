@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: node-exporter-external
+  namespace: monitoring
+spec:
+  metricRelabelings:
+    - action: drop
+      regex: node_md_disks_required(md9|md13)
+      sourceLabels:
+        - __name__
+        - device
+  relabelings:
+    - replacement: node-exporter
+      sourceLabels:
+        - __name__
+      targetLabel: job
+  scrapeInterval: 15s
+  staticConfigs:
+    - labels:
+        node: dns.ankhmorpork.thaum.xyz
+        pod: dns1
+      targets:
+        - dns.ankhmorpork.thaum.xyz:9100
+    - labels:
+        node: qnap.ankhmorpork.thaum.xyz
+        pod: qnap
+      targets:
+        - qnap.ankhmorpork.thaum.xyz:9100

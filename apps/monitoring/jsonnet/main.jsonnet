@@ -295,7 +295,7 @@ local kp =
           groups: std.map(function(ruleGroup) ruleGroup {
             rules: std.map(
               function(rule) if 'alert' in rule && rule.alert == 'NodeClockNotSynchronising' then
-                rule { expr: 'min_over_time(node_timex_sync_status{job="node-exporter",instance!="qnap"}[5m]) == 0 and node_timex_maxerror_seconds{job="node-exporter",instance!="qnap"} >= 16' }
+                rule { expr: 'min_over_time(node_timex_sync_status{job="node-exporter",instance!~"qnap.*"}[5m]) == 0 and node_timex_maxerror_seconds{job="node-exporter",instance!~"qnap.*"} >= 16' }
               else rule,
               ruleGroup.rules,
             ),
@@ -407,11 +407,6 @@ local kp =
               resource: 'servicemonitors',
               namespace: $.values.common.namespace,
               name: 'node-exporter',
-            },
-            {
-              resource: 'servicemonitors',
-              namespace: $.values.common.namespace,
-              name: 'node-exporter-qnap',
             },
             {
               resource: 'servicemonitors',
@@ -819,74 +814,47 @@ local kp =
     //
     // Custom components
     //
-
-    // TODO: Consider moving this out of monitoring NS
-    qnap: {
-      _metadata:: $.nodeExporter.serviceMonitor.metadata {
-        name: 'node-exporter-qnap',
-        labels+: {
-          'app.kubernetes.io/version':: '',
-          'app.kubernetes.io/part-of': 'qnap',
+    external: {
+      nodeScrapeConfig: {
+        apiVersion: 'monitoring.coreos.com/v1alpha1',
+        kind: 'ScrapeConfig',
+        metadata: {
+          name: 'node-exporter-external',
+          namespace: $.values.common.namespace,
         },
-      },
-      serviceMonitor: $.nodeExporter.serviceMonitor {
-        metadata+: $.qnap._metadata,
-        spec+: {
-          endpoints: [{
-            interval: '15s',
-            port: 'http',
-            relabelings: [
-              {
-                action: 'replace',
-                regex: '(.*)',
-                replacement: '$1',
-                sourceLabels: ['__meta_kubernetes_service_label_app_kubernetes_io_part_of'],
-                targetLabel: 'instance',
-              },
-              {
-                action: 'replace',
-                regex: '(.*)',
-                replacement: '$1',
-                sourceLabels: ['__meta_kubernetes_endpoints_name'],
-                targetLabel: 'pod',
-              },
-            ],
-            metricRelabelings: [{
-              action: 'drop',
-              regex: 'node_md_disks_required(md9|md13)',
-              sourceLabels: ['__name__', 'device'],
-            }],
-          }],
-          selector+: {
-            matchLabels+: {
-              'app.kubernetes.io/part-of': 'qnap',
-            },
-          },
-        },
-      },
-      service: $.nodeExporter.service {
-        metadata+: $.qnap._metadata,
         spec: {
-          clusterIP: 'None',
-          ports: [{
-            name: 'http',
-            port: 9100,
+          scrapeInterval: '15s',
+          staticConfigs: [
+            {
+              targets: [
+                'dns.ankhmorpork.thaum.xyz:9100',
+              ],
+              labels: {
+                pod: 'dns1',
+                node: 'dns.ankhmorpork.thaum.xyz',
+              },
+            },
+            {
+              targets: [
+                'qnap.ankhmorpork.thaum.xyz:9100',
+              ],
+              labels: {
+                pod: 'qnap',
+                node: 'qnap.ankhmorpork.thaum.xyz',
+              },
+            },
+          ],
+          relabelings: [{
+            sourceLabels: ['__name__'],
+            targetLabel: 'job',
+            replacement: 'node-exporter',
+          }],
+          metricRelabelings: [{
+            action: 'drop',
+            regex: 'node_md_disks_required(md9|md13)',
+            sourceLabels: ['__name__', 'device'],
           }],
         },
-      },
-      endpoints: {
-        apiVersion: 'v1',
-        kind: 'Endpoints',
-        metadata: $.qnap._metadata,
-        subsets: [{
-          addresses: [{
-            ip: '192.168.2.29',
-          }],
-          ports: [{
-            name: 'http',
-            port: 9100,
-          }],
-        }],
       },
     },
 
