@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: adguard
+  name: adguard
+  namespace: adguard
+spec:
+  interval: 30s
+  prober:
+    url: adguard.adguard.svc:7979
+  targets:
+    staticConfig:
+      static:
+        - http://dns.ankhmorpork.thaum.xyz/control/stats

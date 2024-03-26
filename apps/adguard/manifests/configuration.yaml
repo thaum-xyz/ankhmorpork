@@ -1,0 +1,80 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: adguard
+    app.kubernetes.io/version: 0.5.0
+  name: adguard
+  namespace: adguard
+spec:
+  data:
+    - remoteRef:
+        key: ADGUARD_ADMIN_USER
+      secretKey: username
+    - remoteRef:
+        key: ADGUARD_ADMIN_PASS
+      secretKey: password
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    name: adguard
+    template:
+      data:
+        config.yml: |
+          modules:
+            default:
+              http_client_config:
+                basic_auth:
+                  username: {{ .username }}
+                  password: {{ .password }}
+              headers:
+                Content-Type: "application/json"
+                Cache-Control: "no-cache"
+              metrics:
+              - name: "adguard_dns_queries_processing_time_seconds"
+                help: "Avg time to process a DNS query"
+                path: "{.avg_processing_time}"
+              - name: "adguard_dns_queries_total"
+                help: "Total number of DNS queries"
+                path: "{.num_dns_queries}"
+              - name: "adguard_dns_blocked_total"
+                help: "Total number of blocked DNS queries"
+                path: "{.num_blocked_filtering}"
+              - name: "adguard_dns_replaced_total"
+                help: "Total number of replaced DNS queries"
+                path: "{.num_replaced_safebrowsing}"
+                labels:
+                  reason: "safebrowsing"
+              - name: "adguard_dns_replaced_total"
+                help: "Total number of replaced DNS queries"
+                path: "{.num_replaced_safesearch}"
+                labels:
+                  reason: "safesearch"
+              - name: "adguard_dns_replaced_total"
+                help: "Total number of replaced DNS queries"
+                path: "{.num_replaced_parental}"
+                labels:
+                  reason: "parental"
+              - name: "adguard_dns_upstream_responses_total"
+                path: "{.top_upstreams_responses[0].*}"
+                help: "Upstream DNS responses total"
+                labels:
+                  server: "primary"
+              - name: "adguard_dns_upstream_responses_total"
+                path: "{.top_upstreams_responses[1].*}"
+                help: "Upstream DNS responses total"
+                labels:
+                  server: "secondary"
+              - name: "adguard_dns_upstream_response_time_seconds"
+                path: "{.top_upstreams_avg_time[0].*}"
+                help: "Upstream DNS avg response time"
+                labels:
+                  server: "primary"
+              - name: "adguard_dns_upstream_response_time_seconds"
+                path: "{.top_upstreams_avg_time[1].*}"
+                help: "Upstream DNS avg response time"
+                labels:
+                  server: "secondary"
