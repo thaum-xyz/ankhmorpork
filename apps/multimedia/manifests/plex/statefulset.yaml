@@ -70,11 +70,11 @@ spec:
             timeoutSeconds: 5
           resources:
             limits:
-              cpu: 2
+              cpu: 3
               memory: 8Gi
               nvidia.com/gpu: 1
             requests:
-              cpu: 500m
+              cpu: 1
               memory: 3Gi
           volumeMounts:
             - mountPath: /config

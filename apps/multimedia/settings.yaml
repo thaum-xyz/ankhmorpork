@@ -17,10 +17,10 @@ plex:
       remoteRef: MULTIMEDIA_PLEX_TOKEN
   resources:
     requests:
-      cpu: 500m
+      cpu: 1
       memory: 3Gi
     limits:
-      cpu: 2
+      cpu: 3
       memory: 8Gi
       # gpu.intel.com/i915: 1
       nvidia.com/gpu: 1
@@ -104,11 +104,11 @@ radarr:
   downloadsPVCName: "downloaded"
   resources:
     requests:
-      cpu: 35m
-      memory: 215Mi
-    #limits:
-    #  cpu: 100m
-    #  memory: 400Mi
+      cpu: 350m
+      memory: 350Mi
+    limits:
+      cpu: 350m
+      memory: 600Mi
   storage:
     config:
       pvcSpec:
@@ -139,11 +139,11 @@ sonarr:
     port: 9707
   resources:
     requests:
-      cpu: 20m
-      memory: 460Mi
-#    limits:
-#      cpu: 100m
-#      memory: 4Gi
+      cpu: 500m
+      memory: 230Mi
+    limits:
+      cpu: 750m
+      memory: 500Mi
   storage:
     config:
       pvcSpec:
