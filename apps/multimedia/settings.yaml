@@ -222,3 +222,80 @@ sonarr:
     storage:
       size: 2Gi
       storageClass: lvm-secondary
+
+bazarr:
+  name: bazarr
+  version: "v1.4.2-ls244"  # application-version-from-github: linuxserver/docker-bazarr
+  image: "linuxserver/bazarr:v1.4.2-ls244"  # application-image-from-github: linuxserver/docker-bazarr
+  namespace: *namespace
+  multimediaPVCName: "movies"
+  port: 6767
+  resources:
+    requests:
+      cpu: 160m
+      memory: 37Mi
+  storage:
+    config:
+      pvcSpec:
+        storageClassName: longhorn
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+  postgres:
+    name: postgres-bazarr
+    namespace: *namespace
+    instances: 2
+    db:
+      name: bazarr
+      user: bazarr
+      userPassRef: BAZARR_DB_PASS
+      adminPassRef: BAZARR_DB_ADMIN_PASS
+    externalSecretStoreName: *externalSecretStoreName
+    resources:
+      requests:
+        cpu: 130m
+        memory: 300Mi
+    storage:
+      size: 1Gi
+      storageClass: lvm-secondary
+
+readarr:
+  name: readarr
+  version: "0.3.21-develop"  # application-version-from-github: linuxserver/docker-readarr
+  image: "linuxserver/readarr:0.3.21-develop"  # application-image-from-github: linuxserver/docker-readarr
+  namespace: *namespace
+  multimediaPVCName: "books"
+  downloadsPVCName: "downloaded"
+  port: 8787
+  resources:
+    requests:
+      cpu: 160m
+      memory: 37Mi
+  storage:
+    config:
+      pvcSpec:
+        storageClassName: longhorn
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+  postgres:
+    name: postgres-readarr
+    namespace: *namespace
+    instances: 2
+    db:
+      name: readarr
+      user: readarr
+      userPassRef: READARR_DB_PASS
+      adminPassRef: READARR_DB_ADMIN_PASS
+    externalSecretStoreName: *externalSecretStoreName
+    resources:
+      requests:
+        cpu: 130m
+        memory: 300Mi
+    storage:
+      size: 1Gi
+      storageClass: lvm-secondary

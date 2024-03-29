@@ -1,0 +1,164 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: readarr
+    app.kubernetes.io/part-of: readarr
+    app.kubernetes.io/version: 0.3.21-develop
+  name: readarr
+  namespace: multimedia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: readarr
+      app.kubernetes.io/part-of: readarr
+  serviceName: readarr
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: readarr
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: readarr
+        app.kubernetes.io/part-of: readarr
+        app.kubernetes.io/version: 0.3.21-develop
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+            - name: PUID
+              value: "1000"
+            - name: GUID
+              value: "1000"
+          image: linuxserver/readarr:0.3.21-develop
+          imagePullPolicy: IfNotPresent
+          name: readarr
+          ports:
+            - containerPort: 8787
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 2
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 160m
+              memory: 37Mi
+          startupProbe:
+            failureThreshold: 60
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            tcpSocket:
+              port: http
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /multimedia
+              name: multimedia
+            - mountPath: /download/completed
+              name: downloads
+        - args:
+            - readarr
+          env:
+            - name: CONFIG
+              value: /app/config.xml
+            - name: URL
+              value: http://localhost
+            - name: PORT
+              value: "9708"
+          image: ghcr.io/onedr0p/exportarr:v1.6.0
+          name: exportarr
+          ports:
+            - containerPort: 9708
+              name: metrics
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+            requests:
+              cpu: 1m
+              memory: 11Mi
+          volumeMounts:
+            - mountPath: /app
+              name: config
+              readOnly: true
+      initContainers:
+        - args:
+            - |
+              set -euo pipefail
+              mkdir -p /config/backups
+              if [ -f /config/config.xml ]; then
+                cp /config/config.xml /config/backups/config.xml.$(date +%Y%m%d%H%M%S).bak
+              else
+                touch /config/config.xml
+              fi
+              export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
+              yq -i '
+                      (.Config.PostgresHost = env(POSTGRES_HOST)) |
+                      (.Config.PostgresPort = env(POSTGRES_PORT)) |
+                      (.Config.PostgresUser = env(POSTGRES_USER)) |
+                      (.Config.PostgresPassword = env(POSTGRES_PASS)) |
+                      (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
+                      (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
+                    ' /config/config.xml
+          command:
+            - sh
+            - -c
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: postgres-readarr-user
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-readarr-user
+            - name: POSTGRES_HOST
+              value: postgres-readarr-rw
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_MAIN_DB
+              value: readarr
+            - name: POSTGRES_LOG_DB
+              value: logs
+          image: mikefarah/yq:4.43.1
+          name: postgres-setup
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+      serviceAccountName: readarr
+      volumes:
+        - name: multimedia
+          persistentVolumeClaim:
+            claimName: books
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloaded
+  volumeClaimTemplates:
+    - metadata:
+        name: config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+        storageClassName: longhorn

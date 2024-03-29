@@ -61,6 +61,20 @@ local all = {
     cluster+: logsDBInit(config.prowlarr.postgres.db.user),
   },
 
+  /*bazarr: arr(config.bazarr) + {
+    service+: lbService,
+  },
+  bazarrdb: postgres(config.bazarr.postgres) + {
+    cluster+: logsDBInit(config.bazarr.postgres.db.user),
+  },*/
+
+  readarr: arr(config.readarr) + {
+    service+: lbService,
+  },
+  readarrdb: postgres(config.readarr.postgres) + {
+    cluster+: logsDBInit(config.readarr.postgres.db.user),
+  },
+
   plex: plex(config.plex) + {
     plexClaim: externalsecret(
       {

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: books
+  namespace: multimedia
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 4000Gi
+  nfs:
+    path: /books
+    server: 192.168.2.29
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  volumeMode: Filesystem

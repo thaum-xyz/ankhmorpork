@@ -1,0 +1,34 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres-readarr
+  namespace: multimedia
+spec:
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: required
+    topologyKey: kubernetes.io/hostname
+  backup: {}
+  bootstrap:
+    initdb:
+      database: readarr
+      owner: readarr
+      postInitSQL:
+        - CREATE DATABASE logs;
+        - ALTER DATABASE logs OWNER TO readarr;
+      secret:
+        name: postgres-readarr-user
+  instances: 2
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  storage:
+    size: 1Gi
+    storageClass: lvm-secondary
+  superuserSecret:
+    name: postgres-readarr-admin

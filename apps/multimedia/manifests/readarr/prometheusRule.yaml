@@ -1,0 +1,44 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: readarr
+    app.kubernetes.io/part-of: readarr
+    app.kubernetes.io/version: 0.3.21-develop
+  name: readarr
+  namespace: multimedia
+spec:
+  groups:
+    - name: exportarr
+      rules:
+        - alert: ExportarrDown
+          annotations:
+            description: |
+              Exportarr responsible for data collection from readarr is down. Check configuration and logs.
+            summary: Exportarr is down
+          expr: up{job="readarr"} == 0
+          for: 5m
+          labels:
+            severity: critical
+    - name: readarr
+      rules:
+        - alert: readarrDown
+          annotations:
+            description: |
+              Arr Application readarr in namespace {{ $labels.namespace }} is not reporting status check correctly.
+            summary: readarr is Down
+          expr: readarr_system_status{job="readarr"} != 1
+          for: 15m
+          labels:
+            severity: critical
+        - alert: readarrUnhealthy
+          annotations:
+            description: |
+              Arr Application readarr is having issues with {{ $labels.source }} health check - {{ $labels.message }}.
+              For more infromation check {{ $labels.wikiurl }}.
+            summary: readarr is unhealthy
+          expr: max_over_time(readarr_system_health_issues{job="readarr",source!="UpdateCheck",source!="IndexerLongTermStatusCheck"}[1h]) == 1
+          for: 2h
+          labels:
+            severity: warning
