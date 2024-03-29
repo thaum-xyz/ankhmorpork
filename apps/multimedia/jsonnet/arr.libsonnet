@@ -36,6 +36,20 @@ local defaults = {
     for labelName in std.objectFields(defaults.commonLabels)
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
+  database: {
+    usernameRef: {
+      key: 'username',
+      name: 'postgres-%s-user' % defaults.name,
+    },
+    passwordRef: {
+      key: 'password',
+      name: 'postgres-%s-user' % defaults.name,
+    },
+    host: 'postgres-%s-rw' % defaults.name,
+    port: 5432,
+    mainDB: defaults.name,
+    logDB: 'logs',
+  },
   storage: {
     config: {
       pvcSpec: {
@@ -45,16 +59,6 @@ local defaults = {
             storage: '1Gi',
           },
         },
-      },
-    },
-    backups: {
-      pvcSpec: {
-        //  accessModes: ['ReadWriteMany'],
-        //  resources: {
-        //    requests: {
-        //      storage: '1Gi',
-        //    },
-        //  },
       },
     },
   },
@@ -192,16 +196,6 @@ function(params) {
     },
   }),
 
-  [if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then 'backupsPVC']: {
-    apiVersion: 'v1',
-    kind: 'PersistentVolumeClaim',
-    metadata: $._metadata {
-      //name: 'backups',
-      name: $._metadata.name + '-config-backup',
-    },
-    spec: $._config.storage.backups.pvcSpec,
-  },
-
   statefulset: {
     local c = {
       name: $._config.name,
@@ -251,10 +245,6 @@ function(params) {
           mountPath: '/config',
           name: 'config',
         },
-        {
-          mountPath: '/backup',
-          name: 'backup',
-        },
       ] + multimediaPVCmount + downloadsPVCmount,
       resources: $._config.resources,
     },
@@ -297,23 +287,65 @@ function(params) {
       }],
     },
 
-    /*local init = {
-      command: ['/bin/sh'],
-      args: ['-c', "cd /config && unzip $(find /backup -type f -exec stat -c '%Y :%y %n' {} + | sort -nr | head -n1 | cut -d' ' -f4) && chown 1000:1000 /config/*"],
-      image: 'quay.io/paulfantom/rsync',
-      name: 'restore',
-      volumeMounts: [
+    local dbInit = {
+      env: [
         {
-          name: 'config',
-          mountPath: '/config',
+          name: 'POSTGRES_USER',
+          valueFrom: {
+            secretKeyRef: $._config.database.usernameRef,
+          },
         },
         {
-          name: 'backup',
-          mountPath: '/backup',
-          readOnly: true,
+          name: 'POSTGRES_PASS',
+          valueFrom: {
+            secretKeyRef: $._config.database.passwordRef,
+          },
+        },
+        {
+          name: 'POSTGRES_HOST',
+          value: $._config.database.host,
+        },
+        {
+          name: 'POSTGRES_PORT',
+          value: std.toString($._config.database.port),
+        },
+        {
+          name: 'POSTGRES_MAIN_DB',
+          value: $._config.database.mainDB,
+        },
+        {
+          name: 'POSTGRES_LOG_DB',
+          value: $._config.database.logDB,
         },
       ],
-    },*/
+      image: 'mikefarah/yq:4.43.1',
+      name: 'postgres-setup',
+      command: ['sh', '-c'],
+      args: [
+        |||
+          set -euo pipefail
+          mkdir -p /config/backups
+          if [ -f /config/config.xml ]; then
+            cp /config/config.xml /config/backups/config.xml.$(date +%Y%m%d%H%M%S).bak
+          else
+            touch /config/config.xml
+          fi
+          export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
+          yq -i '
+                  (.Config.PostgresHost = env(POSTGRES_HOST)) |
+                  (.Config.PostgresPort = env(POSTGRES_PORT)) |
+                  (.Config.PostgresUser = env(POSTGRES_USER)) |
+                  (.Config.PostgresPassword = env(POSTGRES_PASS)) |
+                  (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
+                  (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
+                ' /config/config.xml
+        |||,
+      ],
+      volumeMounts: [{
+        mountPath: '/config',
+        name: 'config',
+      }],
+    },
 
     apiVersion: 'apps/v1',
     kind: 'StatefulSet',
@@ -330,9 +362,12 @@ function(params) {
           labels: $._config.commonLabels,
         },
         spec: {
-          //[if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then 'initContainers']: [init],
+          initContainers: [dbInit],
           containers: [c, e],
           restartPolicy: 'Always',
+          securityContext: {
+            fsGroup: 1000,
+          },
           serviceAccountName: $.serviceAccount.metadata.name,
           local multimediaVolume = if std.objectHas(params, 'multimediaPVCName') && std.length(params.multimediaPVCName) > 0 then [{
             name: 'multimedia',
@@ -346,16 +381,7 @@ function(params) {
               claimName: $._config.downloadsPVCName,
             },
           }] else [],
-          local backupVolume = if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then [{
-            name: 'backup',
-            persistentVolumeClaim: {
-              claimName: $.backupsPVC.metadata.name,
-            },
-          }] else [{
-            name: 'backup',
-            emptyDir: {},
-          }],
-          volumes: multimediaVolume + downloadsVolume + backupVolume,
+          volumes: multimediaVolume + downloadsVolume,
         },
       },
       volumeClaimTemplates: [{

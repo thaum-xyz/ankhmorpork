@@ -26,50 +26,6 @@ spec:
         app.kubernetes.io/part-of: sonarr
         app.kubernetes.io/version: 4.0.2.1183-ls231
     spec:
-      initContainers:
-        - env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  key: username
-                  name: postgres-sonarr-user
-            - name: POSTGRES_PASS
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: postgres-sonarr-user
-            - name: POSTGRES_HOST
-              value: "postgres-sonarr-rw"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: POSTGRES_MAIN_DB
-              value: "sonarr"
-            - name: POSTGRES_LOG_DB
-              value: "logs"
-          image: mikefarah/yq:4.43.1
-          name: postgres-setup
-          command: ["sh", "-c"]
-          args:
-            - |
-                set -euo pipefail
-                mkdir -p /config/backups
-                if [ -f /config/config.xml ]; then
-                  cp /config/config.xml /config/backups/config.xml.$(date +%Y%m%d%H%M%S).bak
-                else
-                  touch /config/config.xml
-                fi
-                export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
-                yq -i '
-                        (.Config.PostgresHost = env(POSTGRES_HOST)) |
-                        (.Config.PostgresPort = env(POSTGRES_PORT)) |
-                        (.Config.PostgresUser = env(POSTGRES_USER)) |
-                        (.Config.PostgresPassword = env(POSTGRES_PASS)) |
-                        (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
-                        (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
-                      ' /config/config.xml
-          volumeMounts:
-            - mountPath: /config
-              name: config
       containers:
         - env:
             - name: TZ
@@ -91,12 +47,12 @@ spec:
               port: http
             timeoutSeconds: 10
           resources:
-            requests:
-              cpu: 500m
-              memory: 230Mi
             limits:
               cpu: 750m
               memory: 500Mi
+            requests:
+              cpu: 500m
+              memory: 230Mi
           startupProbe:
             failureThreshold: 60
             initialDelaySeconds: 0
@@ -142,6 +98,52 @@ spec:
             - mountPath: /app
               name: config
               readOnly: true
+      initContainers:
+        - args:
+            - |
+              set -euo pipefail
+              mkdir -p /config/backups
+              if [ -f /config/config.xml ]; then
+                cp /config/config.xml /config/backups/config.xml.$(date +%Y%m%d%H%M%S).bak
+              else
+                touch /config/config.xml
+              fi
+              export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
+              yq -i '
+                      (.Config.PostgresHost = env(POSTGRES_HOST)) |
+                      (.Config.PostgresPort = env(POSTGRES_PORT)) |
+                      (.Config.PostgresUser = env(POSTGRES_USER)) |
+                      (.Config.PostgresPassword = env(POSTGRES_PASS)) |
+                      (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
+                      (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
+                    ' /config/config.xml
+          command:
+            - sh
+            - -c
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: postgres-sonarr-user
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-sonarr-user
+            - name: POSTGRES_HOST
+              value: postgres-sonarr-rw
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_MAIN_DB
+              value: sonarr
+            - name: POSTGRES_LOG_DB
+              value: logs
+          image: mikefarah/yq:4.43.1
+          name: postgres-setup
+          volumeMounts:
+            - mountPath: /config
+              name: config
       restartPolicy: Always
       securityContext:
         fsGroup: 1000
@@ -161,5 +163,5 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 3Gi
+            storage: 1Gi
         storageClassName: longhorn
