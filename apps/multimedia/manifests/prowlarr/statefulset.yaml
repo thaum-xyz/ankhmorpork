@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: prowlarr
     app.kubernetes.io/part-of: prowlarr
-    app.kubernetes.io/version: 1.7.4.3769-ls30
+    app.kubernetes.io/version: 1.14.3.4333-ls60
   name: prowlarr
   namespace: multimedia
 spec:
@@ -24,8 +24,54 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: prowlarr
         app.kubernetes.io/part-of: prowlarr
-        app.kubernetes.io/version: 1.7.4.3769-ls30
+        app.kubernetes.io/version: 1.14.3.4333-ls60
     spec:
+      initContainers:
+        - env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: postgres-prowlarr-user
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-prowlarr-user
+            - name: POSTGRES_HOST
+              value: postgres-prowlarr-rw
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_MAIN_DB
+              value: prowlarr
+            - name: POSTGRES_LOG_DB
+              value: logs
+          image: mikefarah/yq:4.43.1
+          name: postgres-setup
+          command:
+            - sh
+            - -c
+          args:
+            - |
+              set -euo pipefail
+              mkdir -p /config/backups
+              if [ -f /config/config.xml ]; then
+                cp /config/config.xml /config/backups/config.xml.$(date +%Y%m%d%H%M%S).bak
+              else
+                touch /config/config.xml
+              fi
+              export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
+              yq -i '
+                      (.Config.PostgresHost = env(POSTGRES_HOST)) |
+                      (.Config.PostgresPort = env(POSTGRES_PORT)) |
+                      (.Config.PostgresUser = env(POSTGRES_USER)) |
+                      (.Config.PostgresPassword = env(POSTGRES_PASS)) |
+                      (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
+                      (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
+                    ' /config/config.xml
+          volumeMounts:
+            - mountPath: /config
+              name: config
       containers:
         - env:
             - name: TZ
@@ -34,7 +80,7 @@ spec:
               value: "1000"
             - name: GUID
               value: "1000"
-          image: linuxserver/prowlarr:1.7.4.3769-ls30
+          image: linuxserver/prowlarr:1.14.3.4333-ls60
           imagePullPolicy: IfNotPresent
           name: prowlarr
           ports:
@@ -60,8 +106,6 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
-            - mountPath: /backup
-              name: backup
         - args:
             - prowlarr
           env:
@@ -95,10 +139,8 @@ spec:
               readOnly: true
       restartPolicy: Always
       serviceAccountName: prowlarr
-      volumes:
-        - name: backup
-          persistentVolumeClaim:
-            claimName: prowlarr-config-backup
+      securityContext:
+        fsGroup: 1000
   volumeClaimTemplates:
     - metadata:
         name: config
