@@ -72,7 +72,20 @@ local all = {
     service+: lbService,
   },
   readarrdb: postgres(config.readarr.postgres) + {
-    cluster+: logsDBInit(config.readarr.postgres.db.user),
+    cluster+: {
+      spec+: {
+        bootstrap+: {
+          initdb+: {
+            postInitSQL: [
+              'CREATE DATABASE logs;',
+              'ALTER DATABASE logs OWNER TO %s;' % config.readarr.postgres.db.user,
+              'CREATE DATABASE readarr-cache;',
+              'ALTER DATABASE readarr-cache OWNER TO %s;' % config.readarr.postgres.db.user,
+            ],
+          },
+        },
+      },
+    },
   },
 
   plex: plex(config.plex) + {
