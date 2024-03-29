@@ -18,8 +18,8 @@ spec:
       postInitSQL:
         - CREATE DATABASE logs;
         - ALTER DATABASE logs OWNER TO readarr;
-        - CREATE DATABASE readarr-cache;
-        - ALTER DATABASE readarr-cache OWNER TO readarr;
+        - CREATE DATABASE "readarr-cache";
+        - ALTER DATABASE "readarr-cache" OWNER TO readarr;
       secret:
         name: postgres-readarr-user
   instances: 2
