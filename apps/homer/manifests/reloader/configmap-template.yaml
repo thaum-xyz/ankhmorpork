@@ -128,6 +128,11 @@ data:
             logo: "https://avatars3.githubusercontent.com/u/1082903?s=200&v=4"
             <<: *local
             url: "http://sonarr.multimedia.ankhmorpork.thaum.xyz:8989/"
+          - name: Readarr
+            subtitle: "Books collection manager"
+            logo: "https://avatars.githubusercontent.com/u/57576474?s=200&v=4"
+            <<: *local
+            url: "http://readarr.multimedia.ankhmorpork.thaum.xyz:8787/"
           - name: Prowlarr
             subtitle: "Indexer manager/proxy"
             logo: "https://avatars.githubusercontent.com/u/73049443?s=200&v=4"
