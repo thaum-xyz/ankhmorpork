@@ -3,29 +3,27 @@ kind: Cluster
 metadata:
   labels:
     app.kubernetes.io/name: postgres
-  name: postgres-radarr
+  name: postgres-sonarr
   namespace: multimedia
 spec:
   affinity:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
     topologyKey: kubernetes.io/hostname
+  backup: {}
   bootstrap:
     initdb:
-      database: radarr
-      owner: radarr
-      secret:
-        name: postgres-radarr-user
+      database: sonarr
+      owner: sonarr
       postInitSQL:
         - CREATE DATABASE logs;
-        - ALTER DATABASE logs OWNER TO radarr;
+        - ALTER DATABASE logs OWNER TO sonarr;
+      secret:
+        name: postgres-sonarr-user
   instances: 2
   monitoring:
     enablePodMonitor: true
   resources:
-    #limits:
-    #  cpu: 400m
-    #  memory: 420Mi
     requests:
       cpu: 130m
       memory: 300Mi
@@ -33,4 +31,4 @@ spec:
     size: 2Gi
     storageClass: lvm-secondary
   superuserSecret:
-    name: postgres-radar-admin
+    name: postgres-sonarr-admin

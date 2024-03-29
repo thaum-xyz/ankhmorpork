@@ -1,0 +1,34 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres-radarr
+  namespace: multimedia
+spec:
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: required
+    topologyKey: kubernetes.io/hostname
+  backup: {}
+  bootstrap:
+    initdb:
+      database: radarr
+      owner: radarr
+      postInitSQL:
+        - CREATE DATABASE logs;
+        - ALTER DATABASE logs OWNER TO radarr;
+      secret:
+        name: postgres-radarr-user
+  instances: 2
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  storage:
+    size: 2Gi
+    storageClass: lvm-secondary
+  superuserSecret:
+    name: postgres-radarr-admin

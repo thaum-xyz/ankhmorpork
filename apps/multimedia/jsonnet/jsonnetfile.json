@@ -4,6 +4,14 @@
     {
       "source": {
         "local": {
+          "directory": "../../../lib/jsonnet/apps"
+        }
+      },
+      "version": ""
+    },
+    {
+      "source": {
+        "local": {
           "directory": "../../../lib/jsonnet/utils"
         }
       },

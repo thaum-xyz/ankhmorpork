@@ -2,6 +2,7 @@
 common:
   loadBalancerIP: "192.168.2.95"
   namespace: &namespace "multimedia"
+  externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
 
 plex:
   name: plex
@@ -85,14 +86,34 @@ prowlarr:
         resources:
           requests:
             storage: 2Gi
-    backups:
-      pvcSpec:
-        storageClassName: qnap-nfs
-        accessModes:
-        - ReadWriteMany
-        resources:
-          requests:
-            storage: 300Mi
+  postgres:
+    name: postgres-prowlarr
+    namespace: *namespace
+    instances: 2
+    db:
+      name: prowlarr
+      user: prowlarr
+      userPassRef: PROWLARR_DB_PASS
+      adminPassRef: PROWLARR_DB_ADMIN_PASS
+    externalSecretStoreName: *externalSecretStoreName
+    #backup:
+    #  schedule: "0 17 23 * * *"
+    #  retentionPolicy: 3d
+    #  suspend: false
+    #  destinationPath: "s3://postgres/homeassistant"
+    #  endpointURL:  http://main-minio.minio.svc:9000
+    #  accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
+    #  secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
+    resources:
+      requests:
+        cpu: 130m
+        memory: 300Mi
+    #  limits:
+    #    cpu: 400m
+    #    memory: 420Mi
+    storage:
+      size: 2Gi
+      storageClass: lvm-secondary
 
 radarr:
   name: radarr
@@ -118,15 +139,35 @@ radarr:
         resources:
           requests:
             storage: 1Gi
-    backups:
-      pvcSpec:
-        storageClassName: qnap-nfs
-        accessModes:
-        #- ReadWriteMany
-        - ReadWriteOnce  # FIXME
-        resources:
-          requests:
-            storage: 300Mi
+  postgres:
+    name: postgres-radarr
+    namespace: *namespace
+    instances: 2
+    db:
+      name: radarr
+      user: radarr
+      userPassRef: RADARR_DB_PASS
+      adminPassRef: RADARR_DB_ADMIN_PASS
+    externalSecretStoreName: *externalSecretStoreName
+    #backup:
+    #  schedule: "0 17 23 * * *"
+    #  retentionPolicy: 3d
+    #  suspend: false
+    #  destinationPath: "s3://postgres/homeassistant"
+    #  endpointURL:  http://main-minio.minio.svc:9000
+    #  accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
+    #  secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
+    resources:
+      requests:
+        cpu: 130m
+        memory: 300Mi
+    #  limits:
+    #    cpu: 400m
+    #    memory: 420Mi
+    storage:
+      size: 2Gi
+      storageClass: lvm-secondary
+
 sonarr:
   name: sonarr
   version: "4.0.2.1183-ls231"  # application-version-from-github: linuxserver/docker-sonarr
@@ -153,12 +194,31 @@ sonarr:
         resources:
           requests:
             storage: 1Gi
-    backups:
-      pvcSpec:
-        storageClassName: qnap-nfs
-        accessModes:
-        #- ReadWriteMany
-        - ReadWriteOnce  # FIXME
-        resources:
-          requests:
-            storage: 300Mi
+  postgres:
+    name: postgres-sonarr
+    namespace: *namespace
+    instances: 2
+    db:
+      name: sonarr
+      user: sonarr
+      userPassRef: SONARR_DB_PASS
+      adminPassRef: SONARR_DB_ADMIN_PASS
+    externalSecretStoreName: *externalSecretStoreName
+    #backup:
+    #  schedule: "0 17 23 * * *"
+    #  retentionPolicy: 3d
+    #  suspend: false
+    #  destinationPath: "s3://postgres/homeassistant"
+    #  endpointURL:  http://main-minio.minio.svc:9000
+    #  accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
+    #  secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
+    resources:
+      requests:
+        cpu: 130m
+        memory: 300Mi
+    #  limits:
+    #    cpu: 400m
+    #    memory: 420Mi
+    storage:
+      size: 2Gi
+      storageClass: lvm-secondary

@@ -1,3 +1,4 @@
+local postgres = import 'apps/cloudnative-pg-cluster.libsonnet';
 local arr = import 'arr.libsonnet';
 local plex = import 'plex.libsonnet';
 
@@ -25,15 +26,39 @@ local lbService = {
   },
 };
 
+local logsDBInit(user) = {
+  spec+: {
+    bootstrap+: {
+      initdb+: {
+        postInitSQL: [
+          'CREATE DATABASE logs;',
+          'ALTER DATABASE logs OWNER TO %s;' % user,
+        ],
+      },
+    },
+  },
+};
+
 local all = {
   sonarr: arr(config.sonarr) + {
     service+: lbService,
   },
+  sonarrdb: postgres(config.sonarr.postgres) + {
+    cluster+: logsDBInit(config.sonarr.postgres.db.user),
+  },
+
   radarr: arr(config.radarr) + {
     service+: lbService,
   },
+  radarrdb: postgres(config.radarr.postgres) + {
+    cluster+: logsDBInit(config.radarr.postgres.db.user),
+  },
+
   prowlarr: arr(config.prowlarr) + {
     service+: lbService,
+  },
+  prowlarrdb: postgres(config.prowlarr.postgres) + {
+    cluster+: logsDBInit(config.prowlarr.postgres.db.user),
   },
 
   plex: plex(config.plex) + {
