@@ -18,8 +18,8 @@ spec:
       postInitSQL:
         - CREATE DATABASE logs;
         - ALTER DATABASE logs OWNER TO readarr;
-        - CREATE DATABASE "readarr-cache";
-        - ALTER DATABASE "readarr-cache" OWNER TO readarr;
+        - CREATE DATABASE readarr-cache;
+        - ALTER DATABASE readarr-cache OWNER TO readarr;
       secret:
         name: postgres-readarr-user
   instances: 2
@@ -30,7 +30,7 @@ spec:
       cpu: 130m
       memory: 300Mi
   storage:
-    size: 2Gi
+    size: 3Gi
     storageClass: lvm-secondary
   superuserSecret:
     name: postgres-readarr-admin
