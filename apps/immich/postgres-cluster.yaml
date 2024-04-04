@@ -22,7 +22,7 @@ spec:
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
-  instances: 2
+  instances: 3
   monitoring:
     enablePodMonitor: true
   resources:
