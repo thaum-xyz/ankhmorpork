@@ -30,7 +30,7 @@ spec:
       cpu: 50m
       memory: 120Mi
   storage:
-    size: 2Gi
+    size: 5Gi
     storageClass: lvm-secondary
   superuserSecret:
     name: postgres-admin
