@@ -112,7 +112,7 @@ prowlarr:
     #    cpu: 400m
     #    memory: 420Mi
     storage:
-      size: 4Gi
+      size: 5Gi
       storageClass: lvm-secondary
 
 radarr:
