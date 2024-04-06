@@ -28,7 +28,7 @@ spec:
       cpu: 130m
       memory: 300Mi
   storage:
-    size: 7Gi
+    size: 10Gi
     storageClass: lvm-secondary
   superuserSecret:
     name: postgres-prowlarr-admin
