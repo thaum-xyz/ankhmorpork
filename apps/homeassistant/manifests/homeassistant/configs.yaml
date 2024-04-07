@@ -456,6 +456,19 @@ data:
 
     recorder:
       db_url: !secret postgresql_uri
+      exclude:
+        domains:
+          - device_tracker
+          - media_player
+          - uptime
+          - time_date
+          - worldclock
+        entity_globs:
+          - sensor.date*
+          - sensor.time*
+          - sensor.uptime*
+        entities:
+          - weather.openweathermap
   customize.yaml: |
     switch.adus_pc:
       icon: 'mdi:desktop-classic'
