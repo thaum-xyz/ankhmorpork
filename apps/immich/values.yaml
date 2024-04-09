@@ -18,7 +18,7 @@ env:
   IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
 image:
-  tag: v1.98.2
+  tag: v1.101.0
 
 immich:
   persistence:
