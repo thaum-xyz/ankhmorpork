@@ -1,0 +1,34 @@
+# Config reference: https://github.com/enix/kube-image-keeper/blob/main/helm/kube-image-keeper/values.yaml
+
+cachedImagesExpiryDelay: 30
+
+controllers:
+  replicas: 1
+  podMonitor:
+    create: true
+
+proxy:
+  podMonitor:
+    create: true
+
+registry:
+  replicas: 2
+  serviceMonitor:
+    create: true
+  pdb:
+    create: true
+    minAvailable: ""
+    maxUnavailable: 1
+  persistence:
+    disableS3Redirections: true
+    s3ExistingSecret: "s3-credentials"
+    s3:
+      bucket: docker-cache
+      regionEndpoint: http://main-minio.minio.svc:9000
+      rootdirectory: /kuik
+      region: internal
+      secure: false
+      encrypt: false
+
+minio:
+  enabled: false
