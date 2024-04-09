@@ -456,6 +456,8 @@ data:
 
     recorder:
       db_url: !secret postgresql_uri
+      purge_keep_days: 10
+      auto_purge: true
       exclude:
         domains:
           - device_tracker
