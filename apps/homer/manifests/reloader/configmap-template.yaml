@@ -178,9 +178,9 @@ data:
     {{- end }}
     {{- end }}
           - name: UptimeRobot
-            logo: "https://image.pngaaa.com/957/4965957-middle.png"
+            logo: "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"
             <<: *external
-            url: "https://dashboard.uptimerobot.com"
+            url: "https://uptimerobot.com/dashboard"
           - name: Doppler
             logo: "https://dashboard.doppler.com/imgs/logo.png"
             <<: *external

@@ -13,8 +13,6 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: reloader
-      annotations:
-        revision.config/number: "2"
     spec:
       containers:
         - args:
