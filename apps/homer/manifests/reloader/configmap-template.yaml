@@ -180,7 +180,7 @@ data:
           - name: UptimeRobot
             logo: "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"
             <<: *external
-            url: "https://uptimerobot.com/dashboard"
+            url: "https://dashboard.uptimerobot.com"
           - name: Doppler
             logo: "https://dashboard.doppler.com/imgs/logo.png"
             <<: *external
