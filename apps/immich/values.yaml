@@ -42,7 +42,8 @@ redis:
       medium: Memory
 
 server:
-  replicas: 2
+  controller:
+    replicas: 2
   ingress:
     main:
       enabled: true
@@ -67,11 +68,13 @@ server:
 
 microservices:
   enabled: true
-  replicas: 2
+  controller:
+    replicas: 2
 
 machine-learning:
   enabled: true
-  replicas: 2
+  controller:
+    replicas: 2
   persistence:
     cache:
       enabled: true
