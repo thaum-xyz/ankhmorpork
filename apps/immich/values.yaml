@@ -1,4 +1,7 @@
-# Config reference: https://github.com/goauthentik/helm/tree/main/charts/authentik
+# Config reference: https://github.com/immich-app/immich-charts/tree/main/charts/immich
+
+image:
+  tag: v1.101.0
 
 env:
   TZ: "Europe/Warsaw"
@@ -16,9 +19,6 @@ env:
         key: password
   DB_DATABASE_NAME: "immich"
   IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
-
-image:
-  tag: v1.101.0
 
 immich:
   persistence:
@@ -42,6 +42,7 @@ redis:
       medium: Memory
 
 server:
+  replicas: 2
   ingress:
     main:
       enabled: true
@@ -64,8 +65,13 @@ server:
           hosts:
             - media.ankhmorpork.thaum.xyz
 
+microservices:
+  enabled: true
+  replicas: 2
+
 machine-learning:
   enabled: true
+  replicas: 2
   persistence:
     cache:
       enabled: true
