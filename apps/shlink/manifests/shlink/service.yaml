@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shlink
+  namespace: shlink
+  labels:
+    app.kubernetes.io/name: shlink
+spec:
+  clusterIP: None
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: shlink
