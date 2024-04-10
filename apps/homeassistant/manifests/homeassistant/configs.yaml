@@ -61,7 +61,6 @@ data:
     input_text:
     logbook:
     logger: # CHECK
-    map:
     #media_source:
     mobile_app:
     my:
