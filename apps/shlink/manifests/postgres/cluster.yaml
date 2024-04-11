@@ -31,7 +31,7 @@ spec:
       secret:
         name: postgres-user
   imageName: ghcr.io/cloudnative-pg/postgresql:16.2
-  instances: 1
+  instances: 2
   monitoring:
     enablePodMonitor: true
   resources:
