@@ -35,6 +35,8 @@ spec:
             - containerPort: 8080
               name: http
           env:
+          - name: SHELL_VERBOSITY
+            value: "3"
           - name: DEFAULT_DOMAIN
             value: https://link.ankhmorpork.thaum.xyz
           - name: IS_HTTPS_ENABLED
