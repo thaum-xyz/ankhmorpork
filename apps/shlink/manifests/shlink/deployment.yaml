@@ -65,11 +65,11 @@ spec:
                 key: password
           #- name: REDIS_SERVERS
           #  value: redis://redis:6379
-          - name: WEB_WORKER_NUM
-            valueFrom:
-              resourceFieldRef:
-                resource: limits.cpu
-                divisor: 100m
+          #- name: WEB_WORKER_NUM
+          #  valueFrom:
+          #    resourceFieldRef:
+          #      resource: limits.cpu
+          #      divisor: 100m
           resources:
             limits:
               cpu: 200m
