@@ -192,22 +192,22 @@ rest:
         unique_id: "meal_today_breakfast"
         value_template: >
           {% set data = value_json | selectattr('meal_type.order', 'eq', 0) | first | default({}) -%}
-          {{ data.title if data.title is defined else data.recipe_name | default() }}
+          {{ data.title if data.title is defined and data.title != "" else data.recipe_name | default() }}
       - name: "Today's Lunch"
         unique_id: "meal_today_lunch"
         value_template: >
           {% set data = value_json | selectattr('meal_type.order', 'eq', 1) | first | default({}) -%}
-          {{ data.title if data.title is defined else data.recipe_name | default() }}
+          {{ data.title if data.title is defined and data.title != "" else data.recipe_name | default() }}
       - name: "Today's Snack"
         unique_id: "meal_today_snack"
         value_template: >
           {% set data = value_json | selectattr('meal_type.order', 'eq', 2) | first | default({}) -%}
-          {{ data.title if data.title is defined else data.recipe_name | default() }}
+          {{ data.title if data.title is defined and data.title != "" else data.recipe_name | default() }}
       - name: "Today's Dinner"
         unique_id: "meal_today_dinner"
         value_template: >
           {% set data = value_json | selectattr('meal_type.order', 'eq', 3) | first | default({}) -%}
-          {{ data.title if data.title is defined else data.recipe_name | default() }}
+          {{ data.title if data.title is defined and data.title != "" else data.recipe_name | default() }}
         json_attributes_path: "$.[?(@.meal_type.order==3)].recipe"
         json_attributes:
           - image
@@ -228,22 +228,22 @@ rest:
         unique_id: "meal_tomorrow_breakfast"
         value_template: >
           {% set data = value_json | selectattr('meal_type.order', 'eq', 0) | first | default({}) -%}
-          {{ data.title if data.title is defined else data.recipe_name | default() }}
+          {{ data.title if data.title is defined and data.title != "" else data.recipe_name | default() }}
       - name: "Tomorrow's Lunch"
         unique_id: "meal_tomorrow_lunch"
         value_template: >
           {% set data = value_json | selectattr('meal_type.order', 'eq', 1) | first | default({}) -%}
-          {{ data.title if data.title is defined else data.recipe_name | default() }}
+          {{ data.title if data.title is defined and data.title != "" else data.recipe_name | default() }}
       - name: "Tomorrow's Snack"
         unique_id: "meal_tomorrow_snack"
         value_template: >
           {% set data = value_json | selectattr('meal_type.order', 'eq', 2) | first | default({}) -%}
-          {{ data.title if data.title is defined else data.recipe_name | default() }}
+          {{ data.title if data.title is defined and data.title != "" else data.recipe_name | default() }}
       - name: "Tomorrow's Dinner"
         unique_id: "meal_tomorrow_dinner"
         value_template: >
           {% set data = value_json | selectattr('meal_type.order', 'eq', 3) | first | default({}) -%}
-          {{ data.title if data.title is defined else data.recipe_name | default() }}
+          {{ data.title if data.title is defined and data.title != "" else data.recipe_name | default() }}
         json_attributes_path: "$.[?(@.meal_type.order==3)].recipe"
         json_attributes:
           - image
