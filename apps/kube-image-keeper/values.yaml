@@ -6,6 +6,10 @@ controllers:
   replicas: 1
   podMonitor:
     create: true
+  webhook:
+    ignoredImages:
+    - ghcr.io/cloudnative-pg/*
+    - ghcr.io/tensorchord/cloudnative*
 
 proxy:
   podMonitor:
