@@ -1,0 +1,102 @@
+# Config reference: https://github.com/immich-app/immich-charts/tree/main/charts/immich
+
+image:
+  tag: v1.101.0
+
+env:
+  TZ: "Europe/Warsaw"
+  DB_HOSTNAME: "postgres-rw"
+  DB_USERNAME:
+    valueFrom:
+      secretKeyRef:
+        name: postgres-user
+        key: username
+  DB_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: postgres-user
+        key: password
+  DB_DATABASE_NAME: "immich"
+  IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
+
+immich:
+  metrics:
+    enabled: true
+  persistence:
+    library:
+      existingClaim: immich-library
+
+postgresql:
+  # Postgres is provided by cnpg
+  enabled: false
+
+redis:
+  enabled: true
+  architecture: standalone
+  master:
+    persistence:
+      enabled: false
+      medium: Memory
+  replica:
+    persistence:
+      enabled: false
+      medium: Memory
+
+server:
+  controller:
+    replicas: 2
+  resources:
+    requests:
+      cpu: 30m
+      memory: 200Mi
+    limits:
+      cpu: 100m
+      memory: 240Mi
+  ingress:
+    main:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        # reloader.homer/group: Multimedia
+        # reloader.homer/logo: https://immich.app/img/immich-logo.svg
+        # reloader.homer/name: Immich
+        # reloader.homer/subtitle: Photo & Video Library
+        # reloader.homer/tag: testing
+      labels:
+        probe: enabled
+        # reloader.homer/enabled: "true"
+      hosts:
+        - host: photos.krupa.net.pl
+          paths:
+            - path: "/"
+      tls:
+        - secretName: immich-tls
+          hosts:
+            - photos.krupa.net.pl
+
+microservices:
+  enabled: true
+  controller:
+    replicas: 2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 560Mi
+    limits:
+      memory: 5Gi
+
+machine-learning:
+  enabled: true
+  controller:
+    replicas: 2
+  resources:
+    requests:
+      cpu: 10m
+      memory: 780Mi
+  persistence:
+    cache:
+      enabled: true
+      size: 10Gi
+      type: pvc
+      accessMode: ReadWriteMany
+      storageClass: qnap-nfs

@@ -1,0 +1,40 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres
+spec:
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: required
+    topologyKey: kubernetes.io/hostname
+  # Image from https://github.com/tensorchord/cloudnative-pgvecto.rs
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16-v0.2.1
+  bootstrap:
+    initdb:
+      database: immich
+      owner: immich
+      secret:
+        name: postgres-user
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;
+        - CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;
+        - CREATE EXTENSION IF NOT EXISTS "vectors";
+        #- GRANT ALL ON SCHEMA vectors TO immich;
+        - ALTER SCHEMA vectors OWNER TO immich;
+  postgresql:
+    shared_preload_libraries:
+      - "vectors.so"
+  instances: 3
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 500Mi
+  storage:
+    size: 5Gi
+    storageClass: lvm-secondary
+  superuserSecret:
+    name: postgres-admin
