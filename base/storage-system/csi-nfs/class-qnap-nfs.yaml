@@ -2,9 +2,6 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: qnap-nfs
-#  TODO: uncomment after removing qnap-nfs-storage class
-#  annotations:
-#    "storageclass.kubernetes.io/is-default-class": "true"
 provisioner: nfs.csi.k8s.io
 volumeBindingMode: Immediate
 reclaimPolicy: Retain
@@ -14,7 +11,6 @@ parameters:
   server: 192.168.2.29
   share: /nfsshare
   subDir: "${pvc.metadata.namespace}/${pvc.metadata.name}-${pv.metadata.name}"
-#  volumeHandle: 
 mountOptions:
 # `hard` will disable IO tiemout and make NFS volume behave more like block device
 - hard
