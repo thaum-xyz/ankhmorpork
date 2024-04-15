@@ -1,0 +1,32 @@
+# Config reference: https://github.com/authelia/chartrepo/tree/master/charts/authelia
+
+domain: ankhmorpork.thaum.xyz
+ingress:
+  enabled: true
+  certManager: true
+  subdomain: authelia
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+
+  traefikCRD:
+    enabled: true
+    disableIngressRoute: true
+
+pod:
+  kind: Deployment
+
+configMap:
+  storage:
+    postgres:
+      enabled: true
+      host: postgres-rw
+      database: authelia
+      username: authelia
+  telemetry:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+secret:
+  existingSecret: "authelia-secrets"

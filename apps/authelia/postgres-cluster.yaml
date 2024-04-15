@@ -1,0 +1,30 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres
+spec:
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: required
+    topologyKey: kubernetes.io/hostname
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.2
+  bootstrap:
+    initdb:
+      database: authelia
+      owner: authelia
+      secret:
+        name: postgres-user
+  instances: 2
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 200Mi
+  storage:
+    size: 2Gi
+    storageClass: lvm-thin
+  superuserSecret:
+    name: postgres-admin
