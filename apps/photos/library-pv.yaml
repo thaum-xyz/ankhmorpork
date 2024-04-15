@@ -5,7 +5,7 @@ metadata:
   name: immich-library
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   capacity:
     storage: 500Gi
   nfs:
