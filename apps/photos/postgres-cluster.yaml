@@ -21,7 +21,7 @@ spec:
         - CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;
         - CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;
         - CREATE EXTENSION IF NOT EXISTS "vectors";
-        #- GRANT ALL ON SCHEMA vectors TO immich;
+        - GRANT ALL ON SCHEMA vectors TO immich;
         - ALTER SCHEMA vectors OWNER TO immich;
   postgresql:
     shared_preload_libraries:
