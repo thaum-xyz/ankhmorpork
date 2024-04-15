@@ -35,6 +35,6 @@ spec:
       memory: 500Mi
   storage:
     size: 5Gi
-    storageClass: lvm-secondary
+    storageClass: lvm-thin
   superuserSecret:
     name: postgres-admin
