@@ -44,7 +44,8 @@ redis:
 
 server:
   controller:
-    replicas: 2
+    #replicas: 2
+    replicas: 0
   resources:
     requests:
       cpu: 30m
@@ -77,7 +78,8 @@ server:
 microservices:
   enabled: true
   controller:
-    replicas: 2
+    #replicas: 2
+    replicas: 0
   resources:
     requests:
       cpu: 500m
@@ -88,7 +90,8 @@ microservices:
 machine-learning:
   enabled: true
   controller:
-    replicas: 2
+    #replicas: 2
+    replicas: 0
   resources:
     requests:
       cpu: 10m
