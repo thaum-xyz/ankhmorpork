@@ -83,6 +83,27 @@
       mode: 0644
     notify: restart multipathd
 
+- name: Block k3s start if LVM VG secondary-vg is not present
+  hosts: all
+  become: true
+  tasks:
+  - name: Create directory for systemd pre-check
+    file:
+      path: /etc/systemd/system/k3s.service.d
+      state: directory
+      owner: root
+      group: root
+      mode: 0755
+  - name: Create systemd pre-check for k3s service
+    copy:
+      content: |
+        [Service]
+        ExecStartPre=vgs secondary-vg &>/dev/null
+      dest: /etc/systemd/system/k3s.service.d/pre-check.service
+      owner: root
+      group: root
+      mode: 0644
+
 - name: Install metrics collectors
   hosts: all
   become: true
