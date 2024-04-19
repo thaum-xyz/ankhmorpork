@@ -99,4 +99,4 @@ spec:
       resources:
         requests:
           storage: 7Gi
-      storageClassName: lvm-secondary
+      storageClassName: lvm-thin
