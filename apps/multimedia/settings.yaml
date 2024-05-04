@@ -166,7 +166,7 @@ radarr:
     #    memory: 420Mi
     storage:
       size: 6Gi
-      storageClass: lvm-secondary
+      storageClass: lvm-thin
 
 sonarr:
   name: sonarr
