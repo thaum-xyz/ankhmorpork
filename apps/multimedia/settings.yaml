@@ -112,7 +112,7 @@ prowlarr:
     #    cpu: 400m
     #    memory: 420Mi
     storage:
-      size: 7Gi
+      size: 10Gi
       storageClass: lvm-secondary
 
 radarr:
@@ -165,7 +165,7 @@ radarr:
     #    cpu: 400m
     #    memory: 420Mi
     storage:
-      size: 4Gi
+      size: 6Gi
       storageClass: lvm-secondary
 
 sonarr:
@@ -220,7 +220,7 @@ sonarr:
     #    cpu: 400m
     #    memory: 420Mi
     storage:
-      size: 6Gi
+      size: 8Gi
       storageClass: lvm-secondary
 
 bazarr:

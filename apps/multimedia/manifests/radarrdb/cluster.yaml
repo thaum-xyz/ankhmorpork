@@ -28,7 +28,7 @@ spec:
       cpu: 130m
       memory: 300Mi
   storage:
-    size: 4Gi
+    size: 6Gi
     storageClass: lvm-secondary
   superuserSecret:
     name: postgres-radarr-admin

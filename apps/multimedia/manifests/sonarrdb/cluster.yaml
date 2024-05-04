@@ -28,7 +28,7 @@ spec:
       cpu: 130m
       memory: 300Mi
   storage:
-    size: 10Gi
+    size: 8Gi
     storageClass: lvm-secondary
   superuserSecret:
     name: postgres-sonarr-admin
