@@ -1,0 +1,13 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres-radarr
+  namespace: multimedia
+spec:
+  backupOwnerReference: self
+  cluster:
+    name: postgres-radarr
+  schedule: 0 17 23 * * *
+  suspend: false
