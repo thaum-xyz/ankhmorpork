@@ -9,7 +9,7 @@ controllers:
   webhook:
     ignoredImages:
     - ghcr.io/cloudnative-pg/*
-    - ghcr.io/tensorchord/cloudnative*
+    - ghcr.io/tensorchord/*
 
 proxy:
   podMonitor:
