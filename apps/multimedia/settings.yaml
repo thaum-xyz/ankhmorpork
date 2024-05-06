@@ -113,7 +113,7 @@ prowlarr:
     #    memory: 420Mi
     storage:
       size: 7Gi
-      storageClass: lvm-secondary
+      storageClass: lvm-thin
 
 radarr:
   name: radarr
@@ -221,7 +221,7 @@ sonarr:
     #    memory: 420Mi
     storage:
       size: 8Gi
-      storageClass: lvm-secondary
+      storageClass: lvm-thin
 
 bazarr:
   name: bazarr
@@ -259,7 +259,7 @@ bazarr:
         memory: 300Mi
     storage:
       size: 1Gi
-      storageClass: lvm-secondary
+      storageClass: lvm-thin
 
 readarr:
   name: readarr
@@ -298,4 +298,4 @@ readarr:
         memory: 300Mi
     storage:
       size: 3Gi
-      storageClass: lvm-secondary
+      storageClass: lvm-thin
