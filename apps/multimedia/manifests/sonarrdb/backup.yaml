@@ -9,5 +9,5 @@ spec:
   backupOwnerReference: self
   cluster:
     name: postgres-sonarr
-  schedule: 0 17 23 * * *
+  schedule: 0 27 3 * * *
   suspend: false

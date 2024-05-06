@@ -9,5 +9,5 @@ spec:
   backupOwnerReference: self
   cluster:
     name: postgres-radarr
-  schedule: 0 17 13 * * *
+  schedule: 0 17 3 * * *
   suspend: false

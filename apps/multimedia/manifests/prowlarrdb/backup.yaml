@@ -9,5 +9,5 @@ spec:
   backupOwnerReference: self
   cluster:
     name: postgres-prowlarr
-  schedule: 0 17 03 * * *
+  schedule: 0 7 3 * * *
   suspend: false
