@@ -100,9 +100,9 @@ receivers:
     priority: '{{ `{{ if eq .Status "firing" }}` }}0{{ `{{ else }}` }}-1{{ `{{ end }}` }}'
     title: |
       {{ `{{- if .CommonAnnotations.summary -}}` }}
-        {{ .CommonAnnotations.summary }}
+        {{ `{{- .CommonAnnotations.summary -}}` }}
       {{ `{{- else -}}` }}
-        {{ .CommonLabels.alertname }}
+        {{ `{{- .CommonLabels.alertname -}}` }}
       {{ `{{- end }}` }}
     message: >-
       {{ `{{- if .CommonAnnotations.message }}` }}
