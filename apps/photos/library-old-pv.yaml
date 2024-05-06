@@ -1,4 +1,3 @@
-# This file is listed here for future use. It is not used in the current, evaluation setup.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -7,7 +6,7 @@ spec:
   accessModes:
     - ReadWriteMany
   capacity:
-    storage: 500Gi
+    storage: 4000Gi
   nfs:
     path: /Multimedia
     server: 192.168.2.29
