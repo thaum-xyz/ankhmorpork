@@ -86,6 +86,8 @@ server:
   persistence:
     old:
       enabled: true
+      accessMode: ReadWriteMany
+      readOnly: true
       mountPath: /old
       existingClaim: library-old
 
@@ -102,6 +104,8 @@ microservices:
   persistence:
     old:
       enabled: true
+      accessMode: ReadWriteMany
+      readOnly: true
       mountPath: /old
       existingClaim: library-old
 
