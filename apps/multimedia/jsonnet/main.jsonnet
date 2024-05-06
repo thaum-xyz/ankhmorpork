@@ -69,7 +69,17 @@ local all = {
   },*/
 
   readarr: arr(config.readarr) + {
-    service+: lbService,
+    prometheusRule+:: {},
+    service+: lbService {
+      metadata+: {
+        annotations: {
+          'metallb.universe.tf/address-pool': 'default',
+        },
+      },
+      spec+: {
+        loadBalancerIP:: null,
+      },
+    },
   },
   readarrdb: postgres(config.readarr.postgres) + {
     cluster+: {

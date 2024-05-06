@@ -64,6 +64,37 @@ spec:
               name: multimedia
             - mountPath: /download/completed
               name: downloads
+        - args:
+            - readarr
+          env:
+            - name: CONFIG
+              value: /app/config.xml
+            - name: URL
+              value: http://localhost
+            - name: PORT
+              value: "9708"
+          image: ghcr.io/onedr0p/exportarr:v2.0.1
+          name: exportarr
+          ports:
+            - containerPort: 9708
+              name: metrics
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+            requests:
+              cpu: 1m
+              memory: 11Mi
+          volumeMounts:
+            - mountPath: /app
+              name: config
+              readOnly: true
       initContainers:
         - args:
             - |
