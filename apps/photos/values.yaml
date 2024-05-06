@@ -83,6 +83,11 @@ server:
         - secretName: immich-tls
           hosts:
             - photos.krupa.net.pl
+  persistence:
+    old:
+      enabled: true
+      mountPath: /old
+      existingClaim: library-old
 
 microservices:
   enabled: true
@@ -94,6 +99,11 @@ microservices:
       memory: 560Mi
     limits:
       memory: 3Gi
+  persistence:
+    old:
+      enabled: true
+      mountPath: /old
+      existingClaim: library-old
 
 machine-learning:
   enabled: true

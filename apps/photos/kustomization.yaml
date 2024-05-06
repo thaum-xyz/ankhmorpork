@@ -5,6 +5,8 @@ resources:
   - namespace.yaml
   - repository.yaml
   - release.yaml
+  - library-old-pv.yaml
+  - library-old-pvc.yaml
   - library-pv.yaml
   - library-pvc.yaml
   - postgres-backup.yaml
