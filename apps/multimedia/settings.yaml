@@ -97,7 +97,7 @@ prowlarr:
       adminPassRef: PROWLARR_DB_ADMIN_PASS
     externalSecretStoreName: *externalSecretStoreName
     backup:
-      schedule: "0 17 23 * * *"
+      schedule: "0 17 03 * * *"
       retentionPolicy: 7d
       suspend: false
       destinationPath: "s3://postgres/multimedia/prowlarr"
@@ -150,7 +150,7 @@ radarr:
       adminPassRef: RADARR_DB_ADMIN_PASS
     externalSecretStoreName: *externalSecretStoreName
     backup:
-      schedule: "0 17 23 * * *"
+      schedule: "0 17 13 * * *"
       retentionPolicy: 14d
       suspend: false
       destinationPath: "s3://postgres/multimedia/radarr"
@@ -204,14 +204,14 @@ sonarr:
       userPassRef: SONARR_DB_PASS
       adminPassRef: SONARR_DB_ADMIN_PASS
     externalSecretStoreName: *externalSecretStoreName
-    #backup:
-    #  schedule: "0 17 23 * * *"
-    #  retentionPolicy: 3d
-    #  suspend: false
-    #  destinationPath: "s3://postgres/homeassistant"
-    #  endpointURL:  http://main-minio.minio.svc:9000
-    #  accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
-    #  secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
+    backup:
+      schedule: "0 17 23 * * *"
+      retentionPolicy: 7d
+      suspend: false
+      destinationPath: "s3://postgres/multimedia/sonarr"
+      endpointURL:  http://main-minio.minio.svc:9000
+      accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
+      secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
     resources:
       requests:
         cpu: 130m
@@ -292,6 +292,14 @@ readarr:
       userPassRef: READARR_DB_PASS
       adminPassRef: READARR_DB_ADMIN_PASS
     externalSecretStoreName: *externalSecretStoreName
+    backup:
+      schedule: "0 17 33 * * *"
+      retentionPolicy: 7d
+      suspend: false
+      destinationPath: "s3://postgres/multimedia/readarr"
+      endpointURL:  http://main-minio.minio.svc:9000
+      accessKeyRef: 'POSTGRES_S3_ACCESS_KEY'
+      secretKeyRef: 'POSTGRES_S3_SECRET_KEY'
     resources:
       requests:
         cpu: 130m

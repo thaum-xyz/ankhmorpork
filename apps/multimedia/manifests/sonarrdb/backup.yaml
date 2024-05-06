@@ -3,11 +3,11 @@ kind: ScheduledBackup
 metadata:
   labels:
     app.kubernetes.io/name: postgres
-  name: postgres-prowlarr
+  name: postgres-sonarr
   namespace: multimedia
 spec:
   backupOwnerReference: self
   cluster:
-    name: postgres-prowlarr
-  schedule: 0 17 03 * * *
+    name: postgres-sonarr
+  schedule: 0 17 23 * * *
   suspend: false

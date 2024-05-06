@@ -10,7 +10,20 @@ spec:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
     topologyKey: kubernetes.io/hostname
-  backup: {}
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://postgres/multimedia/readarr
+      endpointURL: http://main-minio.minio.svc:9000
+      s3Credentials:
+        accessKeyId:
+          key: S3_ACCESS_KEY
+          name: postgres-readarr-backup
+        secretAccessKey:
+          key: S3_SECRET_KEY
+          name: postgres-readarr-backup
+      wal:
+        compression: gzip
+    retentionPolicy: 7d
   bootstrap:
     initdb:
       database: readarr
