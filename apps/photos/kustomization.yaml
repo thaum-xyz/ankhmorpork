@@ -7,7 +7,9 @@ resources:
   - release.yaml
   - library-pv.yaml
   - library-pvc.yaml
+  - postgres-backup.yaml
   - postgres-creds-admin.yaml
+  - postgres-creds-backup.yaml
   - postgres-creds-user.yaml
   - postgres-cluster.yaml
 configMapGenerator:
