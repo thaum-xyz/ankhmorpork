@@ -9,6 +9,7 @@ sources:
 txtOwnerId: ankhmorpork.thaum.xyz
 domainFilters:
   - ankhmorpork.thaum.xyz
+  - krupa.net.pl
 
 fqdnTemplates:
   - "{{.Name}}.{{.Namespace}}.ankhmorpork.thaum.xyz"
