@@ -99,13 +99,14 @@ data:
         token: {{ .pushover_token }}  {{/* This is a reference to a secret stored in doppler */}}
         retry: 10m
         device: McAir
+        url: '{{ `{{ (index .Alerts 0).GeneratorURL }}` }}'
         priority: '{{ `{{ if eq .Status "firing" }}` }}0{{ `{{ else }}` }}-1{{ `{{ end }}` }}'
         title: |
-          {{ `{{- if eq .Status "firing" -}}` }}
-            Firing {{ `{{ .Alerts.Firing | len }}` }}
+          {{ `{{- if .CommonAnnotations.summary -}}` }}
+            {{ .CommonAnnotations.summary }}
           {{ `{{- else -}}` }}
-            Resolved {{ `{{ .Alerts.Resolved | len }}` }}
-          {{ `{{- end }}` }} - {{ `{{ .CommonAnnotations.summary }}` }}
+            {{ .CommonLabels.alertname }}
+          {{ `{{- end }}` }}
         message: >-
           {{ `{{- if .CommonAnnotations.message }}` }}
             {{ `{{ .CommonAnnotations.message }}` }}
