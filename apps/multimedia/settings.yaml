@@ -293,7 +293,7 @@ readarr:
       adminPassRef: READARR_DB_ADMIN_PASS
     externalSecretStoreName: *externalSecretStoreName
     backup:
-      schedule: "0 17 33 * * *"
+      schedule: "0 17 23 * * *"
       retentionPolicy: 7d
       suspend: false
       destinationPath: "s3://postgres/multimedia/readarr"

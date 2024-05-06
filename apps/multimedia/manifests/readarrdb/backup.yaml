@@ -9,5 +9,5 @@ spec:
   backupOwnerReference: self
   cluster:
     name: postgres-readarr
-  schedule: 0 17 33 * * *
+  schedule: 0 17 23 * * *
   suspend: false
