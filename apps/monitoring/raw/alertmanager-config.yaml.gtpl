@@ -95,7 +95,7 @@ receivers:
     token: {{ .pushover_token }}  {{/* This is a reference to a secret stored in doppler */}}
     retry: 10m
     device: McAir
-    priority: {{ `{{- if eq .Status "firing" -}}` }}0{{ `{{- else -}}` }}-1{{ `{{- end }}` }}
+    priority: {{ `{{ if eq .Status "firing" }}` }}0{{ `{{ else }}` }}-1{{ `{{ end }}` }}
     ttl: 2h
     title: |
       {{ `{{- if eq .Status "firing" -}}` }}
