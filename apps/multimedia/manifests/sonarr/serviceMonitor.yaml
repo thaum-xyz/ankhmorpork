@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: sonarr
     app.kubernetes.io/part-of: sonarr
-    app.kubernetes.io/version: 4.0.2.1183-ls231
+    app.kubernetes.io/version: 4.0.4.1491-ls237
   name: sonarr
   namespace: multimedia
 spec:

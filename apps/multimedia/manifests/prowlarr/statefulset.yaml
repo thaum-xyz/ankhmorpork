@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: prowlarr
     app.kubernetes.io/part-of: prowlarr
-    app.kubernetes.io/version: 1.14.3.4333-ls60
+    app.kubernetes.io/version: 1.16.2.4435-ls67
   name: prowlarr
   namespace: multimedia
 spec:
@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: prowlarr
         app.kubernetes.io/part-of: prowlarr
-        app.kubernetes.io/version: 1.14.3.4333-ls60
+        app.kubernetes.io/version: 1.16.2.4435-ls67
     spec:
       containers:
         - env:
@@ -34,7 +34,7 @@ spec:
               value: "1000"
             - name: GUID
               value: "1000"
-          image: linuxserver/prowlarr:1.14.3.4333-ls60
+          image: linuxserver/prowlarr:1.16.2.4435-ls67
           imagePullPolicy: IfNotPresent
           name: prowlarr
           ports:

@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: readarr
     app.kubernetes.io/part-of: readarr
-    app.kubernetes.io/version: 0.3.21-develop
+    app.kubernetes.io/version: develop-0.3.26.2526-ls107
   name: readarr
   namespace: multimedia
 spec:
