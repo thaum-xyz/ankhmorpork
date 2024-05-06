@@ -49,10 +49,10 @@ spec:
           resources:
             limits:
               cpu: 750m
-              memory: 500Mi
+              memory: 700Mi
             requests:
-              cpu: 500m
-              memory: 230Mi
+              cpu: 200m
+              memory: 300Mi
           startupProbe:
             failureThreshold: 60
             initialDelaySeconds: 0

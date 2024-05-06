@@ -47,9 +47,12 @@ spec:
               port: http
             timeoutSeconds: 10
           resources:
+            limits:
+              cpu: 300m
+              memory: 350Mi
             requests:
-              cpu: 160m
-              memory: 37Mi
+              cpu: 100m
+              memory: 130Mi
           startupProbe:
             failureThreshold: 60
             initialDelaySeconds: 0

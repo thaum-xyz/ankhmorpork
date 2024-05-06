@@ -125,10 +125,10 @@ radarr:
   downloadsPVCName: "downloaded"
   resources:
     requests:
-      cpu: 350m
-      memory: 350Mi
+      cpu: 180m
+      memory: 250Mi
     limits:
-      cpu: 350m
+      cpu: 400m
       memory: 600Mi
   storage:
     config:
@@ -180,11 +180,11 @@ sonarr:
     port: 9707
   resources:
     requests:
-      cpu: 500m
-      memory: 230Mi
+      cpu: 200m
+      memory: 300Mi
     limits:
       cpu: 750m
-      memory: 500Mi
+      memory: 700Mi
   storage:
     config:
       pvcSpec:
@@ -271,8 +271,11 @@ readarr:
   port: 8787
   resources:
     requests:
-      cpu: 160m
-      memory: 37Mi
+      cpu: 100m
+      memory: 130Mi
+    limits:
+      cpu: 300m
+      memory: 350Mi
   storage:
     config:
       pvcSpec:
