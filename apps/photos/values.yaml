@@ -18,6 +18,7 @@ env:
         name: postgres-user
         key: password
   DB_DATABASE_NAME: "immich"
+  IMMICH_METRICS: "true"
   IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
 immich:
