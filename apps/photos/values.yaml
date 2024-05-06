@@ -67,14 +67,13 @@ server:
       enabled: true
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        # reloader.homer/group: Multimedia
-        # reloader.homer/logo: https://immich.app/img/immich-logo.svg
-        # reloader.homer/name: Immich
-        # reloader.homer/subtitle: Photo & Video Library
-        # reloader.homer/tag: testing
+        reloader.homer/group: Ankh Cloud
+        reloader.homer/logo: https://immich.app/img/immich-logo.svg
+        reloader.homer/name: Immich
+        reloader.homer/subtitle: Photo & Video Library
       labels:
         probe: enabled
-        # reloader.homer/enabled: "true"
+        reloader.homer/enabled: "true"
       hosts:
         - host: photos.krupa.net.pl
           paths:
