@@ -48,6 +48,8 @@ server:
   controller:
     replicas: 2
     strategy: RollingUpdate
+    rollingUpdate:
+      unavailable: 1
   probes:
     liveness:
       spec:
@@ -97,6 +99,8 @@ microservices:
   controller:
     replicas: 1
     strategy: RollingUpdate
+    rollingUpdate:
+      unavailable: 1
   resources:
     requests:
       cpu: 400m
@@ -116,6 +120,8 @@ machine-learning:
   controller:
     replicas: 1
     strategy: RollingUpdate
+    rollingUpdate:
+      unavailable: 1
   resources:
     requests:
       cpu: 10m
