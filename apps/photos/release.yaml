@@ -25,6 +25,8 @@ spec:
     timeout: 10m
     disableWait: false
     crds: CreateReplace
+  driftDetection:
+    mode: warn
   valuesFrom:
     - kind: ConfigMap
       name: values
