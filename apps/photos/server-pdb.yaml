@@ -2,7 +2,8 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   labels:
-    app.kubernetes.io/name: immich-server
+    app.kubernetes.io/instance: immich
+    app.kubernetes.io/name: server
   name: immich-server
 spec:
   minAvailable: 1
