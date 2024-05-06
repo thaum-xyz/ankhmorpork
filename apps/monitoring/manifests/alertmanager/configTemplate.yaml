@@ -95,6 +95,7 @@ data:
     - name: 'pushover-mac'
       pushover_configs:
       - send_resolved: false
+        user_key: {{ .pushover_user_key }}  {{/* This is a reference to a secret stored in doppler */}}
         token: {{ .pushover_token }}  {{/* This is a reference to a secret stored in doppler */}}
         retry: 10m
         device: McAir
