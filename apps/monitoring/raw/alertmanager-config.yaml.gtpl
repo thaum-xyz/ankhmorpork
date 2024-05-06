@@ -96,7 +96,6 @@ receivers:
     retry: 10m
     device: McAir
     priority: '{{ `{{ if eq .Status "firing" }}` }}0{{ `{{ else }}` }}-1{{ `{{ end }}` }}'
-    ttl: 2h
     title: |
       {{ `{{- if eq .Status "firing" -}}` }}
         Firing {{ `{{ .Alerts.Firing | len }}` }}
