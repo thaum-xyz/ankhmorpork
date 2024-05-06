@@ -12,6 +12,7 @@ resources:
   - postgres-creds-backup.yaml
   - postgres-creds-user.yaml
   - postgres-cluster.yaml
+  - server-pdb.yaml
 configMapGenerator:
   - name: values
     files:
