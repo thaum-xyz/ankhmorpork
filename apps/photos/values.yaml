@@ -46,7 +46,16 @@ redis:
 server:
   controller:
     #replicas: 2
-    replicas: 0
+    replicas: 1
+  probes:
+    liveness:
+      spec:
+        initialDelaySeconds: 180
+        failureThreshold: 6
+    readiness:
+      spec:
+        failureThreshold: 2
+        periodSeconds: 5
   resources:
     requests:
       cpu: 30m
@@ -80,7 +89,7 @@ microservices:
   enabled: true
   controller:
     #replicas: 2
-    replicas: 0
+    replicas: 1
   resources:
     requests:
       cpu: 500m
