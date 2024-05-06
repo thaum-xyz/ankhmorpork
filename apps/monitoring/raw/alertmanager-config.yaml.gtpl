@@ -89,6 +89,27 @@ receivers:
       responders:
       - name: 'Main'
         type: team
+- name: 'pushover-mac'
+  pushover_configs:
+  - send_resolved: false
+    token: {{ .pushover_token }}  {{/* This is a reference to a secret stored in doppler */}}
+    retry: 10m
+    device: McAir
+    priority: {{ if eq .Status "firing" }}0{{ else }}-1{{ end }}
+    ttl: 2h
+    title: |
+      {{ `{{- if eq .Status "firing" -}}` }}
+        Firing {{ `{{ .Alerts.Firing | len }}` }}
+      {{ `{{- else -}}` }}
+        Resolved {{ `{{ .Alerts.Resolved | len }}` }}
+      {{ `{{- end }}` }} - {{ `{{ .CommonAnnotations.summary }}` }}
+    message: >-
+      {{ `{{- if .CommonAnnotations.message }}` }}
+        {{ `{{ .CommonAnnotations.message }}` }}
+      {{ `{{- end }}` }}
+      {{ `{{- if .CommonAnnotations.description }}` }}
+        {{ `{{ .CommonAnnotations.description }}` }}
+      {{ `{{- end }}` }}
 - name: 'healthchecks.io'
   webhook_configs:
     - send_resolved: false
@@ -118,6 +139,10 @@ route:
     - matchers:
       - "severity = critical"
       receiver: 'opsgenie'
+      continue: true
+    - matchers:
+      - "severity = warning"
+      receiver: 'pushover-mac'
       continue: true
     - matchers:
       - "severity = warning"

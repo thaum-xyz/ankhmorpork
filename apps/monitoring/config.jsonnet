@@ -31,6 +31,7 @@
       healthchecks_url: 'MONITORING_AM_HEALTHCHECKS_URL',
       opsgenie_api_key: 'MONITORING_AM_OPSGENIE_API_KEY',
       slack_api_url: 'MONITORING_AM_SLACK_API_URL',
+      pushover_token: 'MONITORING_AM_PUSHOVER_TOKEN',
     },
   },
   prometheus+: {
