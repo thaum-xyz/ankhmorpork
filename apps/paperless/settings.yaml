@@ -105,7 +105,7 @@ postgres:
       memory: 800Mi
   storage:
     size: 4Gi
-    storageClass: "lvm-secondary"
+    storageClass: "lvm-thin"
 
 broker:
   version: "6.0"  # application-version-from-github: redis/redis
