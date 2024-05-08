@@ -1,6 +1,8 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
+  annotations:
+    cnpg.io/skipWalArchiving: enabled
   labels:
     app.kubernetes.io/name: postgres
   name: postgres-radarr

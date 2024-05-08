@@ -51,7 +51,13 @@ local all = {
     service+: lbService,
   },
   radarrdb: postgres(config.radarr.postgres) + {
-    cluster+: logsDBInit(config.radarr.postgres.db.user),
+    cluster+: logsDBInit(config.radarr.postgres.db.user) + {
+      metadata+: {
+        annotations+: {
+          'cnpg.io/skipWalArchiving': 'enabled',
+        },
+      },
+    },
   },
 
   prowlarr: arr(config.prowlarr) + {

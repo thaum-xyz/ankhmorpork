@@ -73,21 +73,21 @@ function(params) {
   assert std.isObject($._config.resources),
 
   credentialsUser: externalSecretBasicAuth(
-    $._metadata + {name: $._config.name + '-user'},
+    $._metadata + {name: $._config.name + '-user'} + {annotations+: { 'cnpg.io/reload': 'true' }},
     $._config.externalSecretStoreName,
     $._config.db.user,
     $._config.db.userPassRef
   ),
 
   credentialsAdmin: externalSecretBasicAuth(
-    $._metadata + {name: $._config.name + '-admin'},
+    $._metadata + {name: $._config.name + '-admin'} + {annotations+: { 'cnpg.io/reload': 'true' }},
     $._config.externalSecretStoreName,
     'postgres',
     $._config.db.adminPassRef
   ),
 
   [if std.objectHas(params, 'backup') && std.objectHas(params.backup, 'secretKeyRef') && std.length(params.backup.secretKeyRef) > 0 then 'credentialsBackup']: externalsecret(
-    $._metadata + {name: $._config.name + '-backup'},
+    $._metadata + {name: $._config.name + '-backup'} + {annotations+: { 'cnpg.io/reload': 'true' }},
     $._config.externalSecretStoreName,
     {
       S3_ACCESS_KEY: $._config.backup.accessKeyRef,
