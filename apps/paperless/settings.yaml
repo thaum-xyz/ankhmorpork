@@ -3,8 +3,8 @@ common:
   namespace: &namespace "paperless"
   externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
 paperless:
-  version: "2.4.3"  # application-version-from-github: paperless-ngx/paperless-ngx
-  image: "ghcr.io/paperless-ngx/paperless-ngx:2.4.3"  # application-image-from-github: paperless-ngx/paperless-ngx
+  version: "2.7.2"  # application-version-from-github: paperless-ngx/paperless-ngx
+  image: "ghcr.io/paperless-ngx/paperless-ngx:2.7.2"  # application-image-from-github: paperless-ngx/paperless-ngx
   namespace: *namespace
   resources:
     requests:
