@@ -15,4 +15,4 @@ data:
   SERVER_PUBLIC: "false"
   SERVER_PASS: "babeczka"
   SERVER_ARGS: "-preset hard -raids muchmore"
-  #STEAMCMD_ARGS: "-beta public-test -betapassword yesimadebackups"
+  STEAMCMD_ARGS: "-beta public-test -betapassword yesimadebackups"

@@ -19,6 +19,7 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: valheim
+        config/version: "1"
       labels:
         app.kubernetes.io/component: game-server
         app.kubernetes.io/name: valheim
