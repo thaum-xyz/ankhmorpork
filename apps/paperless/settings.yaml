@@ -52,6 +52,7 @@ paperless:
       reloader.homer/name: Paperless
       reloader.homer/subtitle: "Document management system"
       reloader.homer/logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png"
+      reloader.homer/tag: local
       nginx.ingress.kubernetes.io/proxy-body-size: 10m
       nginx.ingress.kubernetes.io/limit-rpm: '100'
       nginx.ingress.kubernetes.io/limit-rps: '10'
