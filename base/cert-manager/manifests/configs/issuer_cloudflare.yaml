@@ -2,15 +2,17 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
- name: letsencrypt-prod
+ name: letsencrypt-dns01
  namespace: cert-manager
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: thaumxyz@gmail.com
     privateKeySecretRef:
-      name: letsencrypt-prod
+      name: letsencrypt-dns01
     solvers:
-    - http01:
-        ingress:
-          class: public
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: "cloudflare-auth"
+            key: "token"
