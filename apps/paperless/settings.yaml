@@ -45,14 +45,13 @@ paperless:
           storage: 10Gi
   ingress:
     domain: "papers.krupa.net.pl"
-    className: private
+    className: public
     annotations:
-      cert-manager.io/cluster-issuer: 'letsencrypt-dns01'
+      cert-manager.io/cluster-issuer: 'letsencrypt-prod'
       reloader.homer/group: Ankh Cloud
       reloader.homer/name: Paperless
       reloader.homer/subtitle: "Document management system"
       reloader.homer/logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png"
-      reloader.homer/tag: local
       nginx.ingress.kubernetes.io/proxy-body-size: 10m
       nginx.ingress.kubernetes.io/limit-rpm: '100'
       nginx.ingress.kubernetes.io/limit-rps: '10'
