@@ -29,10 +29,10 @@ longhornRecoveryBackend:
 ingress:
   enabled: true
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
     traefik.ingress.kubernetes.io/router.middlewares: auth-traefik-forward-auth@kubernetescrd
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
-  ingressClassName: public
+  ingressClassName: private
   tls: true
   tlsSecret: "longhorn-ui-tls"
   host: "longhorn.ankhmorpork.thaum.xyz"
