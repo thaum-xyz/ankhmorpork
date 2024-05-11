@@ -56,7 +56,7 @@ local ingress(metadata, domain, service) = {
       hosts: [domain],
       secretName: metadata.name + '-tls',
     }],
-    ingressClassName: 'traefik',
+    ingressClassName: 'public',
     rules: [{
       host: domain,
       http: {

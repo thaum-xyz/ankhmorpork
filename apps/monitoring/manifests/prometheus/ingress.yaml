@@ -20,7 +20,7 @@ metadata:
   name: prometheus-k8s
   namespace: monitoring
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
     - host: prometheus.ankhmorpork.thaum.xyz
       http:

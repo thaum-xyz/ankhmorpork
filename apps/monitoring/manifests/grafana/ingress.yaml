@@ -17,7 +17,7 @@ metadata:
   name: grafana
   namespace: monitoring
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
     - host: grafana.ankhmorpork.thaum.xyz
       http:

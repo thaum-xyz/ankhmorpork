@@ -20,7 +20,7 @@ metadata:
   name: alertmanager
   namespace: monitoring
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
     - host: alertmanager.ankhmorpork.thaum.xyz
       http:
