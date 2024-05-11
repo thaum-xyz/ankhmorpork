@@ -137,7 +137,7 @@ local all = {
         },
       },
       spec: {
-        ingressClassName: 'traefik',
+        ingressClassName: 'public',
         rules: [{
           host: 'metrics.datalake.ankhmorpork.thaum.xyz',
           http: {

@@ -45,7 +45,7 @@ paperless:
           storage: 10Gi
   ingress:
     domain: "papers.krupa.net.pl"
-    className: traefik
+    className: public
     annotations:
       # cert-manager.io/cluster-issuer: 'letsencrypt-prod'
       reloader.homer/group: Ankh Cloud

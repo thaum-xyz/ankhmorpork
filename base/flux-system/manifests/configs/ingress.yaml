@@ -9,7 +9,7 @@ metadata:
   name: flux
   namespace: flux-system
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
     - host: flux.ankhmorpork.thaum.xyz
       http:

@@ -8,7 +8,7 @@ metadata:
   name: traefik-forward-auth
   namespace: auth
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
   - host: auth.ankhmorpork.thaum.xyz
     http:

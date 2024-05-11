@@ -129,7 +129,7 @@ function(params) {
       },
     },
     spec: {
-      ingressClassName: 'traefik',
+      ingressClassName: 'public',
       tls: [{
         secretName: h._config.name + '-tls',
         hosts: [h._config.domain],

@@ -25,6 +25,7 @@ ingress:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
     traefik.ingress.kubernetes.io/router.middlewares: datalake-logs-basicauth@kubernetescrd
+  ingressClassName: public
   paths:
     write:
       - /loki/api/v1/push

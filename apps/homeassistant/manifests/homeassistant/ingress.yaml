@@ -19,7 +19,7 @@ metadata:
   name: homeassistant
   namespace: homeassistant
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
     - host: home.ankhmorpork.thaum.xyz
       http:

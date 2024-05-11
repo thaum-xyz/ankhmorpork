@@ -3,12 +3,12 @@
 # Create a default IngressClass for Traefik
 ingressClass:
   enabled: true
-  name: traefik
+  name: public
   isDefaultClass: true
 
 providers:
   kubernetesIngress:
-    ingressClass: traefik
+    ingressClass: public
 
 service:
   spec:

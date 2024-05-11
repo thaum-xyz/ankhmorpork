@@ -22,7 +22,7 @@ ingress:
 
 consoleIngress:
   enabled: true
-  ingressClassName: traefik
+  ingressClassName: public
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   path: /

@@ -19,7 +19,7 @@ metadata:
   name: paperless
   namespace: paperless
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
     - host: papers.krupa.net.pl
       http:

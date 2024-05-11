@@ -12,7 +12,7 @@ metadata:
   name: homer
   namespace: homer
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
     - host: ankhmorpork.thaum.xyz
       http:

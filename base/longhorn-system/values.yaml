@@ -32,7 +32,7 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     traefik.ingress.kubernetes.io/router.middlewares: auth-traefik-forward-auth@kubernetescrd
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
-  ingressClassName: traefik
+  ingressClassName: public
   tls: true
   tlsSecret: "longhorn-ui-tls"
   host: "longhorn.ankhmorpork.thaum.xyz"

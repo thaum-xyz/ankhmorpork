@@ -15,7 +15,7 @@ metadata:
   name: cats
   namespace: cats
 spec:
-  ingressClassName: traefik
+  ingressClassName: public
   rules:
   - host: cats.ankhmorpork.thaum.xyz
     http:
