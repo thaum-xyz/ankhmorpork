@@ -22,9 +22,9 @@ ingress:
 
 consoleIngress:
   enabled: true
-  ingressClassName: public
+  ingressClassName: private
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
   path: /
   hosts:
     - minio.ankhmorpork.thaum.xyz
