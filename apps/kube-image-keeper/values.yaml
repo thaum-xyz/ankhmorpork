@@ -10,6 +10,7 @@ controllers:
     ignoredImages:
     - ghcr.io/cloudnative-pg/*
     - ghcr.io/tensorchord/*
+    - quay.io/minio/*
 
 proxy:
   podMonitor:
