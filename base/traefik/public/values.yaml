@@ -1,0 +1,15 @@
+# Config reference: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
+
+# Create a default IngressClass for Traefik
+ingressClass:
+  enabled: true
+  name: traefik
+  isDefaultClass: true
+
+providers:
+  kubernetesIngress:
+    ingressClass: traefik
+
+service:
+  spec:
+    loadBalancerIP: "192.168.2.92"

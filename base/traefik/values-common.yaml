@@ -1,23 +1,25 @@
 # Config reference: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 
-# Create a default IngressClass for Traefik
-ingressClass:
-  enabled: true
-  name: traefik
-  isDefaultClass: true
-
-ingressRoute:
-  dashboard:
-    enabled: true
-
 providers:
   kubernetesCRD:
     enabled: true
     allowCrossNamespace: true  # Required by current oauth2-proxy setup
   kubernetesIngress:
-    ingressClass: traefik
     publishedService:
       enabled: true
+
+ingressRoute:
+  dashboard:
+    enabled: true
+
+service:
+  annotations:
+    metallb.universe.tf/address-pool: default
+
+ports:
+  web:
+    redirectTo:
+      port: websecure
 
 deployment:
   replicas: 2
@@ -39,29 +41,9 @@ affinity:
             app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
         topologyKey: kubernetes.io/hostname
 
-service:
-  annotations:
-    metallb.universe.tf/address-pool: default
-  spec:
-    loadBalancerIP: "192.168.2.92"
-
-ports:
-  web:
-    redirectTo:
-      port: websecure
-
 metrics:
   prometheus:
     service:
       enabled: true
     serviceMonitor:
       honorLabels: true
-
-affinity:
-  podAntiAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
-            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
-        topologyKey: kubernetes.io/hostname
