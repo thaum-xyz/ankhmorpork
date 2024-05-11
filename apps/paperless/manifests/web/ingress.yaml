@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
     nginx.ingress.kubernetes.io/limit-req-status-code: "429"
     nginx.ingress.kubernetes.io/limit-rpm: "100"
     nginx.ingress.kubernetes.io/limit-rps: "10"
@@ -19,7 +20,7 @@ metadata:
   name: paperless
   namespace: paperless
 spec:
-  ingressClassName: public
+  ingressClassName: private
   rules:
     - host: papers.krupa.net.pl
       http:

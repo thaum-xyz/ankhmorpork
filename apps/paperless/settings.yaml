@@ -45,9 +45,9 @@ paperless:
           storage: 10Gi
   ingress:
     domain: "papers.krupa.net.pl"
-    className: public
+    className: private
     annotations:
-      # cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+      cert-manager.io/cluster-issuer: 'letsencrypt-dns01'
       reloader.homer/group: Ankh Cloud
       reloader.homer/name: Paperless
       reloader.homer/subtitle: "Document management system"
