@@ -27,8 +27,6 @@ spec:
   upgrade:
     timeout: 20m
     disableWait: false
-    # CRDs are already created by the "public" release
-    skipCRDs: true
     crds: CreateReplace
   driftDetection:
     mode: warn
