@@ -68,4 +68,4 @@ postgres:
       memory: 120Mi
   storage:
     size: 2Gi
-    storageClass: "lvm-secondary"
+    storageClass: "lvm-thin"
