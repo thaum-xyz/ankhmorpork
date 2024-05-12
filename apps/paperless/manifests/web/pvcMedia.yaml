@@ -5,12 +5,12 @@ metadata:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
     app.kubernetes.io/version: 2.7.2
-  name: media
+  name: paperless-media
   namespace: paperless
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
-  storageClassName: qnap-nfs
+      storage: 2Gi
+  storageClassName: longhorn

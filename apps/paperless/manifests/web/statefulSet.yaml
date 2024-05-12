@@ -26,6 +26,28 @@ spec:
         app.kubernetes.io/name: paperless
         app.kubernetes.io/version: 2.7.2
     spec:
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - |
+              if [ ! -f /usr/src/paperless/data/celerybeat-schedule.db ]; then
+                cp -vr /usr/src/paperless/data-old/* /usr/src/paperless/data
+              fi
+              if [ ! -d /usr/src/paperless/media/documents ]; then
+                cp -vr /usr/src/paperless/media-old/* /usr/src/paperless/media
+              fi
+          image: busybox
+          name: migrate
+          volumeMounts:
+            - mountPath: /usr/src/paperless/data
+              name: data
+            - mountPath: /usr/src/paperless/data-old
+              name: data-old
+            - mountPath: /usr/src/paperless/media
+              name: media
+            - mountPath: /usr/src/paperless/media-old
+              name: media-old
       containers:
         - env:
             - name: POD_IP
@@ -73,12 +95,18 @@ spec:
       restartPolicy: Always
       serviceAccountName: paperless
       volumes:
-        - name: data
+        - name: data-old
           persistentVolumeClaim:
             claimName: data
-        - name: media
+        - name: media-old
           persistentVolumeClaim:
             claimName: media
+        - name: data
+          persistentVolumeClaim:
+            claimName: paperless-data
+        - name: media
+          persistentVolumeClaim:
+            claimName: paperless-media
         - name: consume
           persistentVolumeClaim:
             claimName: consume
