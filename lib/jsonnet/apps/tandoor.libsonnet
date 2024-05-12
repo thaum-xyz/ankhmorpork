@@ -61,7 +61,7 @@ function(params) {
       apiVersion: 'v1',
       kind: 'PersistentVolumeClaim',
       metadata: $._metadata {
-        name: 'media',
+        name: 'tandoor-media',
       },
       spec: {
         [if std.length($._config.storage.media.storageClassName) > 0 then 'storageClassName']: $._config.storage.media.storageClassName,
@@ -77,7 +77,7 @@ function(params) {
       apiVersion: 'v1',
       kind: 'PersistentVolumeClaim',
       metadata: $._metadata {
-        name: 'static',
+        name: 'tandoor-app',
       },
       spec: {
         [if std.length($._config.storage.static.storageClassName) > 0 then 'storageClassName']: $._config.storage.static.storageClassName,
@@ -325,13 +325,13 @@ function(params) {
               {
                 name: 'media',
                 persistentVolumeClaim: {
-                  claimName: 'media',
+                  claimName: $.common.pvcMedia.metadata.name,
                 },
               },
               {
                 name: 'static',
                 persistentVolumeClaim: {
-                  claimName: 'static',
+                  claimName: $.common.pvcStatic.metadata.name,
                 },
               },
             ],

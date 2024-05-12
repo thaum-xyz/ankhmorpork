@@ -15,11 +15,11 @@ tandoor:
       memory: 250Mi
   storage:
     static:
-      storageClassName: "qnap-nfs"
+      storageClassName: "longhorn"
       size: 1Gi
     media:
-      storageClassName: "qnap-nfs"
-      size: 1Gi
+      storageClassName: "longhorn"
+      size: 2Gi
   ingress:
     domain: "recipes.krupa.net.pl"
     className: public

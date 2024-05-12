@@ -136,9 +136,9 @@ spec:
       volumes:
         - name: media
           persistentVolumeClaim:
-            claimName: media
+            claimName: tandoor-media
         - name: static
           persistentVolumeClaim:
-            claimName: static
+            claimName: tandoor-app
   updateStrategy:
     type: RollingUpdate
