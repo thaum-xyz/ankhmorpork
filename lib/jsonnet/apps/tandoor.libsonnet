@@ -372,6 +372,7 @@ function(params) {
               server_name _;
               client_max_body_size 16M;
               gzip on;
+              gzip_static on;
               # serve static files
               location /static/ {
                 expires 365d;
