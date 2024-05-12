@@ -468,6 +468,26 @@ local kp =
               namespace: $.values.common.namespace,
               name: 'kubelet-request-errors',
             },
+            {
+              resource: 'prometheusrules',
+              namespace: 'cnpg-system',
+            },
+            {
+              resource: 'servicemonitors',
+              namespace: 'cert-manager',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: 'cert-manager',
+            },
+            {
+              resource: 'podmonitors',
+              namespace: 'flux-system',
+            },
+            {
+              resource: 'prometheusrules',
+              namespace: 'flux-system',
+            },
           ],
           storage: {
             volumeClaimTemplate: {

@@ -97,6 +97,16 @@ spec:
     - name: kubelet-request-errors
       namespace: monitoring
       resource: prometheusrules
+    - namespace: cnpg-system
+      resource: prometheusrules
+    - namespace: cert-manager
+      resource: servicemonitors
+    - namespace: cert-manager
+      resource: prometheusrules
+    - namespace: flux-system
+      resource: podmonitors
+    - namespace: flux-system
+      resource: prometheusrules
   externalLabels:
     cluster: ankhmorpork
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
