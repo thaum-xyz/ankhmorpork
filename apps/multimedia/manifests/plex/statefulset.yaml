@@ -35,6 +35,21 @@ spec:
                     values:
                       - "true"
               weight: 1
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - |
+              if [ ! -f /config/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml ]; then
+                cp -r /config-old/* /config/
+              fi
+          image: busybox
+          name: migrate
+          volumeMounts:
+            - mountPath: /config
+              name: library
+            - mountPath: /config-old
+              name: library-old
       containers:
         - env:
             - name: TZ
@@ -129,7 +144,7 @@ spec:
             claimName: tv
   volumeClaimTemplates:
     - metadata:
-        name: library
+        name: library-old
       spec:
         accessModes:
           - ReadWriteOnce
@@ -137,3 +152,12 @@ spec:
           requests:
             storage: 45Gi
         storageClassName: lvm-secondary
+    - metadata:
+        name: library
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 45Gi
+        storageClassName: lvm-thin
