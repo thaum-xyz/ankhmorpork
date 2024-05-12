@@ -2,6 +2,9 @@
 
 persistence:
   defaultClass: false
+  defaultFsType: ext4
+  defaultDataLocality: best-effort
+  migratable: true
 
 defaultSettings:
   defaultDataPath: "/var/lib/rancher/longhorn"
