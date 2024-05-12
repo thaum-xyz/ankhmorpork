@@ -371,9 +371,10 @@ function(params) {
               listen 80;
               server_name _;
               client_max_body_size 16M;
+              gzip on;
               # serve static files
               location /static/ {
-                expires 30d;
+                expires 365d;
                 alias /static/;
               }
               # serve media files
