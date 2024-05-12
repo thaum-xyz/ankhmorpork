@@ -14,8 +14,6 @@ spec:
       app.kubernetes.io/component: static-files-webserver
       app.kubernetes.io/name: nginx
       app.kubernetes.io/part-of: tandoor
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:

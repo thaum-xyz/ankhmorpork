@@ -444,9 +444,6 @@ function(params) {
         selector: {
           matchLabels: $.static._metadata.selectorLabels,
         },
-        strategy: {
-          type: 'Recreate',
-        },
         template: {
           metadata: {
             labels: $.static._metadata.selectorLabels,
