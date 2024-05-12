@@ -23,6 +23,16 @@ spec:
         app.kubernetes.io/name: nginx
         app.kubernetes.io/part-of: tandoor
     spec:
+      affinity:
+        podAntiAffinity:
+          prefferedDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - nginx
+              topologyKey: kubernetes.io/hostname
       containers:
         - image: nginx:latest
           imagePullPolicy: Always

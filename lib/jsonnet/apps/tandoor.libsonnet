@@ -452,6 +452,20 @@ function(params) {
             labels: $.static._metadata.selectorLabels,
           },
           spec: {
+            affinity: {
+              podAntiAffinity: {
+                prefferedDuringSchedulingIgnoredDuringExecution: [{
+                  labelSelector: {
+                    matchExpressions: [{
+                      key: 'app.kubernetes.io/name',
+                      operator: 'In',
+                      values: [$.static._metadata.labels['app.kubernetes.io/name']],
+                    }],
+                  },
+                  topologyKey: 'kubernetes.io/hostname',
+                }],
+              },
+            },
             containers: [nginx],
             restartPolicy: 'Always',
             serviceAccountName: $.static.serviceAccount.metadata.name,
