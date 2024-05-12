@@ -26,6 +26,16 @@ local lbService = {
   },
 };
 
+local pgWALLimit = {
+  spec+: {
+    postgresql+: {
+      parameters+: {
+        max_slot_wal_keep_size: '3GB',
+      },
+    },
+  },
+};
+
 local logsDBInit(user) = {
   spec+: {
     bootstrap+: {
@@ -51,13 +61,7 @@ local all = {
     service+: lbService,
   },
   radarrdb: postgres(config.radarr.postgres) + {
-    cluster+: logsDBInit(config.radarr.postgres.db.user) + {
-      metadata+: {
-        annotations+: {
-          'cnpg.io/skipWalArchiving': 'enabled',
-        },
-      },
-    },
+    cluster+: logsDBInit(config.radarr.postgres.db.user) + pgWALLimit,
   },
 
   prowlarr: arr(config.prowlarr) + {
