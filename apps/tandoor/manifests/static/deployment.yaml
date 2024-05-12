@@ -42,9 +42,11 @@ spec:
               subPath: nginx.conf
             - mountPath: /media
               name: media
+              readOnly: true
               subPath: files
             - mountPath: /static
               name: static
+              readOnly: true
               subPath: files
       restartPolicy: Always
       serviceAccountName: tandoor-static

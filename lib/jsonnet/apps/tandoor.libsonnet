@@ -373,10 +373,12 @@ function(params) {
               client_max_body_size 16M;
               # serve static files
               location /static/ {
+                add_header Cache-Control "max-age=2592000, public";
                 alias /static/;
               }
               # serve media files
               location /media/ {
+                add_header Cache-Control "max-age=5184000, public";
                 alias /media/;
               }
             }
@@ -424,11 +426,13 @@ function(params) {
           mountPath: '/media',
           name: 'media',
           subPath: 'files',
+          readOnly: true,
         },
         {
           mountPath: '/static',
           name: 'static',
           subPath: 'files',
+          readOnly: true,
         },
       ],
     },
