@@ -1,8 +1,6 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  annotations:
-    cnpg.io/skipWalArchiving: enabled
   labels:
     app.kubernetes.io/name: postgres
   name: postgres-radarr
@@ -38,6 +36,9 @@ spec:
   instances: 2
   monitoring:
     enablePodMonitor: true
+  postgresql:
+    parameters:
+      max_slot_wal_keep_size: 3GB
   resources:
     requests:
       cpu: 130m
