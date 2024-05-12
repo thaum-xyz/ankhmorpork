@@ -90,11 +90,9 @@ spec:
         - name: media-old
           persistentVolumeClaim:
             claimName: media
-            readOnly: true
         - name: static-old
           persistentVolumeClaim:
             claimName: static
-            readOnly: true
         - configMap:
             name: tandoor-static
           name: nginx-config
