@@ -5,12 +5,12 @@ metadata:
     app.kubernetes.io/name: tandoor
     app.kubernetes.io/part-of: tandoor
     app.kubernetes.io/version: 1.5.12
-  name: tandoor-app
+  name: media
   namespace: tandoor
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
-  storageClassName: longhorn
+  storageClassName: qnap-nfs

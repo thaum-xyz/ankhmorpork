@@ -31,6 +31,28 @@ spec:
                     values:
                       - nginx
               topologyKey: kubernetes.io/hostname
+      initContainers:
+       - command:
+           - sh
+           - -c
+           - |
+             if [ ! -f /static/staticfiles.json ]; then
+               cp -vr /static-old/* /static
+             fi
+             if [ ! -d /media-old/recipes ]; then
+               cp -vr /media-old/* /media
+             fi
+         image: busybox
+         name: migrate
+         volumeMounts:
+           - mountPath: /media
+             name: media
+           - mountPath: /media-old
+             name: media-old
+           - mountPath: /static
+             name: static
+           - mountPath: /static-old
+             name: static-old
       containers:
         - image: nginx:latest
           imagePullPolicy: Always
@@ -61,10 +83,18 @@ spec:
       volumes:
         - name: media
           persistentVolumeClaim:
-            claimName: media
+            claimName: tandoor-media
         - name: static
           persistentVolumeClaim:
+            claimName: tandoor-app
+        - name: media-old
+          persistentVolumeClaim:
+            claimName: media
+            readOnly: true
+        - name: static-old
+          persistentVolumeClaim:
             claimName: static
+            readOnly: true
         - configMap:
             name: tandoor-static
           name: nginx-config
