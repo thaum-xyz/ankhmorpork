@@ -373,12 +373,12 @@ function(params) {
               client_max_body_size 16M;
               # serve static files
               location /static/ {
-                add_header Cache-Control "max-age=2592000, public";
+                expires 30d;
                 alias /static/;
               }
               # serve media files
               location /media/ {
-                add_header Cache-Control "max-age=5184000, public";
+                expires 60d;
                 alias /media/;
               }
             }
