@@ -10,9 +10,6 @@ lvmd:
     #- name: main
     #  volume-group: ubuntu-vg
     #  spare-gb: 20
-    - name: secondary
-      volume-group: secondary-vg
-      spare-gb: 5
     - name: thin
       volume-group: secondary-vg
       default: true
@@ -55,16 +52,6 @@ storageClasses:
   #    allowVolumeExpansion: true
   #    additionalParameters:
   #      "topolvm.io/device-class": "main"
-  - name: lvm-secondary
-    storageClass:
-      fsType: xfs
-      reclaimPolicy: Delete
-      annotations: {}
-      isDefaultClass: false
-      volumeBindingMode: WaitForFirstConsumer
-      allowVolumeExpansion: true
-      additionalParameters:
-        "topolvm.io/device-class": "secondary"
   - name: lvm-thin
     storageClass:
       fsType: xfs
