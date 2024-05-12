@@ -16,19 +16,19 @@ paperless:
   backupSchedule: '36 22 * * *'
   storage:
     data:
-      storageClassName: "qnap-nfs"
+      storageClassName: "longhorn"
       accessModes:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
     media:
-      storageClassName: "qnap-nfs"
+      storageClassName: "longhorn"
       accessModes:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 10Gi
+          storage: 2Gi
     consume:
       storageClassName: "manual"
       accessModes:

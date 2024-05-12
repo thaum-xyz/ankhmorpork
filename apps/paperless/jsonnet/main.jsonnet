@@ -47,6 +47,18 @@ local all = {
       }
     ),
 
+    pvcData+: {
+      metadata+: {
+        name: 'paperless-data',
+      },
+    },
+
+    pvcMedia+: {
+      metadata+: {
+        name: 'paperless-media',
+      },
+    },
+
     pvConsume: {
       apiVersion: 'v1',
       kind: 'PersistentVolume',

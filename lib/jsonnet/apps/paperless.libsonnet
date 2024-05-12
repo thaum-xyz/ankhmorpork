@@ -54,7 +54,7 @@ local defaults = {
       accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: '1Gi',
+          storage: '2Gi',
         },
       },
     },
@@ -62,7 +62,7 @@ local defaults = {
       accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: '10Gi',
+          storage: '2Gi',
         },
       },
     },
@@ -304,19 +304,19 @@ function(params) {
             {
               name: 'data',
               persistentVolumeClaim: {
-                claimName: 'data',
+                claimName: $.pvcData.metadata.name,
               },
             },
             {
               name: 'media',
               persistentVolumeClaim: {
-                claimName: 'media',
+                claimName: $.pvcMedia.metadata.name,
               },
             },
             {
               name: 'consume',
               persistentVolumeClaim: {
-                claimName: 'consume',
+                claimName: $.pvcConsume.metadata.name,
               },
             },
           ],
