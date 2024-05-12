@@ -5,7 +5,6 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
-  - servicemonitor.yaml
   - prometheusrule.yaml
   - cronjob-trim.yaml  # Temporary workaround from https://github.com/longhorn/longhorn/issues/5186
 configMapGenerator:

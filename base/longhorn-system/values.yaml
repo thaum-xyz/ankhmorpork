@@ -36,3 +36,7 @@ ingress:
   tls: true
   tlsSecret: "longhorn-ui-tls"
   host: "longhorn.ankhmorpork.thaum.xyz"
+
+metrics:
+  serviceMonitor:
+    enabled: true
