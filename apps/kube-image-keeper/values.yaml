@@ -11,6 +11,7 @@ controllers:
     - ghcr.io/cloudnative-pg/*
     - ghcr.io/tensorchord/*
     - quay.io/minio/*
+    - longhornio/*
 
 proxy:
   podMonitor:
