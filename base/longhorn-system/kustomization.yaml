@@ -6,7 +6,7 @@ resources:
   - namespace.yaml
   - release.yaml
   - prometheusrule.yaml
-  - cronjob-trim.yaml  # Temporary workaround from https://github.com/longhorn/longhorn/issues/5186
+  - cronjob-trim.yaml  # Temporary workaround from https://github.com/longhorn/longhorn/issues/5186. Remove in 1.7.0
 configMapGenerator:
   - name: values
     files:
