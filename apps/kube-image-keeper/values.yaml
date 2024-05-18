@@ -8,10 +8,10 @@ controllers:
     create: true
   webhook:
     ignoredImages:
-    - ghcr.io/cloudnative-pg/*
-    - ghcr.io/tensorchord/*
-    - quay.io/minio/*
-    - longhornio/*
+    - ghcr.io/cloudnative-pg/*  # Due to https://github.com/cloudnative-pg/cloudnative-pg/issues/3231
+    - ghcr.io/tensorchord/*  # Same as above, just for images used in immich
+    - quay.io/minio/*  # To prevent circular dependency as kuik stores images in minio
+    - longhornio/*  # Longhorn checks longhorn-manager image during upgrades and modifications blocks the upgrade
 
 proxy:
   podMonitor:
