@@ -56,10 +56,10 @@ spec:
           volumes:
             - name: data
               persistentVolumeClaim:
-                claimName: data
+                claimName: paperless-data
             - name: media
               persistentVolumeClaim:
-                claimName: media
+                claimName: paperless-media
             - name: consume
               persistentVolumeClaim:
                 claimName: consume

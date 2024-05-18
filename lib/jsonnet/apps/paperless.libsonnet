@@ -375,25 +375,25 @@ function(params) {
                 {
                   name: 'data',
                   persistentVolumeClaim: {
-                    claimName: 'data',
+                    claimName: $.pvcData.metadata.name,
                   },
                 },
                 {
                   name: 'media',
                   persistentVolumeClaim: {
-                    claimName: 'media',
+                    claimName: $.pvcMedia.metadata.name,
                   },
                 },
                 {
                   name: 'consume',
                   persistentVolumeClaim: {
-                    claimName: 'consume',
+                    claimName: $.pvcConsume.metadata.name,
                   },
                 },
                 {
                   name: 'backups',
                   persistentVolumeClaim: {
-                    claimName: 'backups',
+                    claimName: $.pvcBackups.metadata.name,
                   },
                 },
               ],
