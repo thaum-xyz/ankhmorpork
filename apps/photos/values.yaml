@@ -1,7 +1,7 @@
 # Config reference: https://github.com/immich-app/immich-charts/tree/main/charts/immich
 
 image:
-  tag: v1.103.1
+  tag: v1.105.1
 
 env:
   TZ: "Europe/Warsaw"
