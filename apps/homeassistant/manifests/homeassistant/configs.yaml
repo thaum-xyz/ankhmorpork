@@ -142,6 +142,7 @@ data:
       sensor:
         - name: we_wash_t1
           state: >-
+            {% set curr = states('sensor.we_wash_t1') %}
             {% if 'T1 is ready for pick up' in trigger.event.data["subject"] %}
               Ready
             {% elif 'T1 started' in trigger.event.data["subject"] %}
@@ -149,10 +150,11 @@ data:
             {% elif 'T1 is waiting for you' in trigger.event.data["subject"] %}
               Waiting
             {% else %}
-              Unknown
+              {{ curr }}
             {% endif %}
         - name: we_wash_w1
           state: >-
+            {% set curr = states('sensor.we_wash_w1') %}
             {% if 'W1 is ready for pick up' in trigger.event.data["subject"] %}
               Ready
             {% elif 'W1 started' in trigger.event.data["subject"] %}
@@ -160,10 +162,11 @@ data:
             {% elif 'W1 is waiting for you' in trigger.event.data["subject"] %}
               Waiting
             {% else %}
-              Unknown
+              {{ curr }}
             {% endif %}
         - name: we_wash_w2
           state: >-
+            {% set curr = states('sensor.we_wash_w2') %}
             {% if 'W2 is ready for pick up' in trigger.event.data["subject"] %}
               Ready
             {% elif 'W2 started' in trigger.event.data["subject"] %}
@@ -171,7 +174,7 @@ data:
             {% elif 'W2 is waiting for you' in trigger.event.data["subject"] %}
               Waiting
             {% else %}
-              Unknown
+              {{ curr }}
             {% endif %}
 
     # Sensors
