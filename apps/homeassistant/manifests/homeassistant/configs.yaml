@@ -60,7 +60,10 @@ data:
     #input_select:  # configured in lower part of the file
     input_text:
     logbook:
-    logger: # CHECK
+    logger:
+      default: info
+      logs:
+        homeassistant.components.rest: debug
     #media_source:
     mobile_app:
     my:
