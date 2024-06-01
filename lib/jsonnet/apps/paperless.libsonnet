@@ -348,6 +348,18 @@ function(params) {
               },
             },
             spec: {
+              affinity: {
+                podAffinity: {
+                  requiredDuringSchedulingIgnoredDuringExecution: [
+                    {
+                      labelSelector: {
+                        matchLabels: $._config.selectorLabels,
+                      },
+                      topologyKey: 'kubernetes.io/hostname',
+                    },
+                  ],
+                },
+              },
               containers: [c {
                 env: [],
                 command: ["/usr/local/bin/document_exporter"],

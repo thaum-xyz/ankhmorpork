@@ -19,6 +19,14 @@ spec:
             app.kubernetes.io/name: paperless
             app.kubernetes.io/version: 2.7.2
         spec:
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/component: webservice
+                      app.kubernetes.io/name: paperless
+                  topologyKey: kubernetes.io/hostname
           containers:
             - args:
                 - --use-folder-prefix
