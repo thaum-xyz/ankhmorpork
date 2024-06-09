@@ -29,7 +29,7 @@ spec:
         - --ds-name=kured
         - --ds-namespace=system-update
         - --drain-timeout=15m
-        - --reboot-days=fri,sat
+        - --reboot-days=mo,we,th
         - --period=2h
         - --start-time=07:00:00
         - --end-time=12:00:00
