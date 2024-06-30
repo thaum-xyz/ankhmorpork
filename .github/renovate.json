@@ -41,5 +41,11 @@
       "groupName": "applications",
       "matchPaths": ["apps/**"]
     }
-  ]
+  ],
+  "flux": {
+    "fileMatch": [
+      "(?:^|/)release\\.ya?ml$",
+      "(?:^|/)repository\\.ya?ml$"
+    ]
+  }
 }
