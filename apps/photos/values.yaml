@@ -94,27 +94,6 @@ server:
       mountPath: /old
       existingClaim: library-old
 
-microservices:
-  enabled: true
-  controller:
-    replicas: 1
-    strategy: RollingUpdate
-    rollingUpdate:
-      unavailable: 1
-  resources:
-    requests:
-      cpu: 400m
-      memory: 560Mi
-    limits:
-      memory: 3Gi
-  persistence:
-    old:
-      enabled: true
-      accessMode: ReadWriteMany
-      readOnly: true
-      mountPath: /old
-      existingClaim: library-old
-
 machine-learning:
   enabled: true
   controller:
