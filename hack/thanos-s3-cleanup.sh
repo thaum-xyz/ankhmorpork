@@ -9,9 +9,9 @@
 
 #MINIO_ACCESS_KEY=
 #MINIO_SECRET_KEY=
-MINIO_BUCKET="metrics"
-MINIO_URL="http://127.0.0.1:9000"
-DRY_RUN="true"
+MINIO_BUCKET="${MINIO_BUCKET:-"metrics"}"
+MINIO_URL="${MINIO_URL:-"http://127.0.0.1:9000"}"
+DRY_RUN="${DRY_RUN:-"true"}"
 
 remove_folder() {
     if [ "$DRY_RUN" != "true" ]; then
@@ -28,6 +28,9 @@ mc alias set minio $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 # Get the list of folders
 folders=$(mc ls minio/$MINIO_BUCKET | awk '{print $5}')
 
+all=0
+deleted=0
+
 # Loop through the folders
 for folder in $folders; do
     # Check if there is a file called `deletion-mark.json` in the folder
@@ -36,15 +39,20 @@ for folder in $folders; do
     meta=$(mc ls minio/$MINIO_BUCKET/$folder | grep "meta.json")
 
     echo -n "Checking $folder... " >&2
+    all=$((all+1))
 
     # If there is a file called `deletion-mark.json` in the folder
     if [ -n "$deletion_mark" ]; then
         echo "Found deletion-mark.json" >&2
         remove_folder $folder
+        deleted=$((deleted+1))
     # If there is no file called `meta.json` in the folder
     elif [ -z "$meta" ]; then
         echo "No meta.json found" >&2
         remove_folder $folder
+        deleted=$((deleted+1))
     fi
     echo "" >&2
 done
+
+echo "All folders: $all, Deleted folders: $deleted" >&2
