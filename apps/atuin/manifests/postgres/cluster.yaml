@@ -1,0 +1,46 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres
+  name: postgres
+spec:
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: required
+    topologyKey: kubernetes.io/hostname
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://postgres/atuin
+      endpointURL: http://main-minio.minio.svc:9000
+      s3Credentials:
+        accessKeyId:
+          key: S3_ACCESS_KEY
+          name: postgres-backup
+        secretAccessKey:
+          key: S3_SECRET_KEY
+          name: postgres-backup
+      wal:
+        compression: gzip
+    retentionPolicy: 3d
+  bootstrap:
+    initdb:
+      database: atuin
+      owner: atuin
+      secret:
+        name: postgres-user
+  instances: 2
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    limits:
+      cpu: 400m
+      memory: 420Mi
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  storage:
+    size: 7Gi
+    storageClass: lvm-thin
+  superuserSecret:
+    name: postgres-admin

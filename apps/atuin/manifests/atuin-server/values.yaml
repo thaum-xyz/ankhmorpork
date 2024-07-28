@@ -1,0 +1,38 @@
+# Config reference: https://github.com/atuinsh/helm-charts/blob/main/charts/atuin/values.yaml
+
+serviceMonitor:
+  enabled: true
+
+postgresql:
+  # Currently does nothing as we only support postgres. _coming soon_
+  enabled: true
+  uri:
+    secretName: atuin-secrets
+    secretKey: dbUri
+
+serviceAccount:
+  automount: false
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+  className: "public"
+  hosts:
+    - host: atuin.ankhmorpork.thaum.xyz
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: atuin-tls
+      hosts:
+      - atuin.ankhmorpork.thaum.xyz
+
+autoscaling:
+  enabled: false
+
+atuin:
+  openRegistration: false
+  maxHistoryLength: 0
+  metrics:
+    enabled: true
