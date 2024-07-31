@@ -12,7 +12,7 @@ spec:
     topologyKey: kubernetes.io/hostname
   backup:
     barmanObjectStore:
-      destinationPath: s3://postgres/multimedia/readarr
+      destinationPath: s3://postgres/multimedia/readarr-new
       endpointURL: http://main-minio.minio.svc:9000
       s3Credentials:
         accessKeyId:
@@ -25,16 +25,19 @@ spec:
         compression: gzip
     retentionPolicy: 7d
   bootstrap:
-    initdb:
-      database: readarr
-      owner: readarr
-      postInitSQL:
-        - CREATE DATABASE logs;
-        - ALTER DATABASE logs OWNER TO readarr;
-        - CREATE DATABASE readarr-cache;
-        - ALTER DATABASE readarr-cache OWNER TO readarr;
-      secret:
-        name: postgres-readarr-user
+  #  initdb:
+  #    database: readarr
+  #    owner: readarr
+  #    postInitSQL:
+  #      - CREATE DATABASE logs;
+  #      - ALTER DATABASE logs OWNER TO readarr;
+  #      - CREATE DATABASE readarr-cache;
+  #      - ALTER DATABASE readarr-cache OWNER TO readarr;
+  #    secret:
+  #      name: postgres-readarr-user
+    recovery:
+      backup:
+        name: postgres-readarr-20240728033700
   instances: 2
   monitoring:
     enablePodMonitor: true
@@ -43,7 +46,7 @@ spec:
       cpu: 130m
       memory: 300Mi
   storage:
-    size: 3Gi
+    size: 4Gi
     storageClass: lvm-thin
   superuserSecret:
     name: postgres-readarr-admin
