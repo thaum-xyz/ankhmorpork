@@ -104,7 +104,7 @@ postgres:
       cpu: 200m
       memory: 800Mi
   storage:
-    size: 6Gi
+    size: 7Gi
     storageClass: "lvm-thin"
 
 broker:
