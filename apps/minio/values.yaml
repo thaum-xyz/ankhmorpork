@@ -13,7 +13,7 @@ persistence:
   enabled: true
   storageClass: lvm-thin
   accessMode: ReadWriteOnce
-  size: 225Gi
+  size: 200Gi
 
 priorityClassName: "production-high"
 
