@@ -15,4 +15,5 @@ data:
   SERVER_PUBLIC: "false"
   SERVER_PASS: "babeczka"
   #SERVER_ARGS: "-preset hard -modifier raids more"
+  SERVER_ARGS: "-preset easy -modifier raids more"
   STEAMCMD_ARGS: "-beta public-test -betapassword yesimadebackups"
