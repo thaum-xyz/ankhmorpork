@@ -46,7 +46,7 @@ redis:
 
 server:
   controller:
-    replicas: 2
+    replicas: 3
     strategy: RollingUpdate
     rollingUpdate:
       unavailable: 1
