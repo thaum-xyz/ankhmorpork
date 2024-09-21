@@ -88,7 +88,7 @@ server:
             - photos.krupa.net.pl
   persistence:
     old:
-      enabled: true
+      enabled: false
       accessMode: ReadWriteMany
       readOnly: true
       mountPath: /old
