@@ -63,9 +63,6 @@ server:
     requests:
       cpu: 100m
       memory: 160Mi
-    limits:
-      cpu: 700m
-      memory: 800Mi
   ingress:
     main:
       enabled: true
