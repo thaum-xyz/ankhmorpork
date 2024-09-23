@@ -19,6 +19,8 @@ spec:
         args:
         - "-enable-monitoring"
         - "-v=2"
+        # SharedDevNum is a number of containers that can share the same GPU device. Do not set over 10
+        - "-shared-dev-num=4"
         env:
           - name: NODE_NAME
             valueFrom:
