@@ -5,8 +5,8 @@ kured:
   namespace: "system-update"
   args:
     - "--drain-timeout=15m"
+    - "--lock-release-delay=60m"
     - "--reboot-days=we,th"
-    - "--period=2h"
     - "--start-time=07:00:00"
     - "--end-time=12:00:00"
   resources:
