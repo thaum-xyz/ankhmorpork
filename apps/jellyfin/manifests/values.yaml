@@ -19,7 +19,7 @@ persistence:
     enabled: true
     storageClass: "longhorn"
     accessMode: ReadWriteOnce
-    size: 1Gi
+    size: 5Gi
   media:
     enabled: false
     existingClaim: your-claim
