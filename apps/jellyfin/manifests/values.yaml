@@ -1,0 +1,40 @@
+# Config reference: https://github.com/jellyfin/jellyfin-helm/blob/master/charts/jellyfin/values.yaml
+
+enableDLNA: false
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    kubernetes.io/ingress.class: private
+  hosts:
+    - jellyfin.ankhmorpork.thaum.xyz
+  tls:
+    - secretName: jellyfin-ankhmorpork-thaum-xyz-tls
+      hosts:
+        - jellyfin.ankhmorpork.thaum.xyz
+
+persistence:
+  config:
+    enabled: true
+    storageClass: "longhorn"
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  media:
+    enabled: false
+    existingClaim: your-claim
+  extraExistingClaimMounts:
+    - name: media-tv
+      mountPath: /media/tv
+      readOnly: true
+    #- name: media-movies
+    #  mountPath: /media/movies
+    #  readOnly: true
+    #- name: media-books
+    #  mountPath: /media/books
+    #  readOnly: true
+
+extraVolumes: []
+  #- name: renderD129
+  #  hostPath:
+  #    path: /dev/dri/renderD129
