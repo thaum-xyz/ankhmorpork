@@ -5,7 +5,7 @@
       kind: 'PersistentVolume',
       metadata: metadata,
       spec: {
-        accessModes: ['ReadWriteOnce'],
+        accessModes: ['ReadWriteMany'],
         capacity: {
           storage: capacity,
         },
@@ -24,7 +24,7 @@
       kind: 'PersistentVolumeClaim',
       metadata: metadata,
       spec: {
-        accessModes: ['ReadWriteOnce'],
+        accessModes: ['ReadWriteMany'],
         resources: {
           requests: {
             storage: capacity,
