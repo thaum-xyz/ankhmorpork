@@ -11,6 +11,7 @@ resources:
   - pvc-media-movies.yaml
   - pv-media-books.yaml
   - pvc-media-books.yaml
+  - servicemonitor.yaml
 configMapGenerator:
   - name: values
     files:
