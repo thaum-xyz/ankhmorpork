@@ -26,6 +26,7 @@ persistence:
   extraExistingClaimMounts:
     - name: media-tv
       mountPath: /media/tv
+      claimName: media-tv
       readOnly: true
     #- name: media-movies
     #  mountPath: /media/movies
