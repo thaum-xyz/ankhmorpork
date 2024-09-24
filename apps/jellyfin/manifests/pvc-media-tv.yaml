@@ -10,4 +10,4 @@ spec:
     requests:
       storage: 4000Gi
   storageClassName: manual
-  volumeName: tv
+  volumeName: media-tv

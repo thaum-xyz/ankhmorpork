@@ -5,6 +5,7 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
+  - pv-media-tv.yaml
   - pvc-media-tv.yaml
 configMapGenerator:
   - name: values
