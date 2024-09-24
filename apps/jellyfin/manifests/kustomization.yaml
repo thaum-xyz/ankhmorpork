@@ -7,6 +7,10 @@ resources:
   - release.yaml
   - pv-media-tv.yaml
   - pvc-media-tv.yaml
+  - pv-media-movies.yaml
+  - pvc-media-movies.yaml
+  - pv-media-books.yaml
+  - pvc-media-books.yaml
 configMapGenerator:
   - name: values
     files:

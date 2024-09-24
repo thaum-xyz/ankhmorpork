@@ -28,12 +28,14 @@ persistence:
       mountPath: /media/tv
       existingClaim: media-tv
       readOnly: true
-    #- name: media-movies
-    #  mountPath: /media/movies
-    #  readOnly: true
-    #- name: media-books
-    #  mountPath: /media/books
-    #  readOnly: true
+    - name: media-movies
+      mountPath: /media/movies
+      existingClaim: media-movies
+      readOnly: true
+    - name: media-books
+      mountPath: /media/books
+      existingClaim: media-books
+      readOnly: true
 
 extraVolumes: []
   #- name: renderD129
