@@ -5,7 +5,7 @@ enableDLNA: false
 ingress:
   enabled: true
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: public
     traefik.ingress.kubernetes.io/router.middlewares: jellyfin-deny-metrics-path@kubernetescrd
     reloader.homer/group: Multimedia
