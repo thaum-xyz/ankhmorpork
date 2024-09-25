@@ -22,6 +22,19 @@ ingress:
       hosts:
         - vod.krupa.net.pl
 
+nodeSelector:
+  intel.feature.node.kubernetes.io/gpu: "true"
+  kubernetes.io/hostname: master03
+
+# FIXME: This will work when helm chart in version > 1.3.0 is released
+#        For now flux post renderer is used to patch the deployment
+securityContext:
+  privileged: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  supplementalGroups:
+    - 109
+
 persistence:
   config:
     enabled: true
@@ -45,7 +58,17 @@ persistence:
       existingClaim: media-books
       #readOnly: true
 
-extraVolumes: []
-  #- name: renderD129
-  #  hostPath:
-  #    path: /dev/dri/renderD129
+extraVolumes:
+  - name: transcodes
+    emptyDir:
+      medium: Memory
+      sizeLimit: 2Gi
+  - name: render-device
+    hostPath:
+      path: /dev/dri/renderD128
+
+extraVolumeMounts:
+  - name: transcodes
+    mountPath: /cache/transcodes
+  - mountPath: /dev/dri/renderD128
+    name: render-device

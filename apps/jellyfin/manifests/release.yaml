@@ -30,3 +30,24 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
+  # FIXME: This can be removed with helm chart in version > 1.3.0
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              version: v1
+              kind: Deployment
+              name: jellyfin
+            patch: |
+              - op: add
+                path: /spec/template/spec/securityContext/privileged
+                value: true
+              - op: add
+                path: /spec/template/spec/securityContext/runAsUser
+                value: 1000
+              - op: add
+                path: /spec/template/spec/securityContext/runAsGroup
+                value: 1000
+              - op: add
+                path: /spec/template/spec/securityContext/supplementalGroups/0
+                value: 109
