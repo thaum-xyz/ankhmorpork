@@ -35,19 +35,13 @@ spec:
     - kustomize:
         patches:
           - target:
-              version: v1
+              version: apps/v1
               kind: Deployment
               name: jellyfin
             patch: |
               - op: add
                 path: /spec/template/spec/containers/0/securityContext/privileged
                 value: true
-              - op: add
-                path: /spec/template/spec/securityContext/runAsUser
-                value: 1000
-              - op: add
-                path: /spec/template/spec/securityContext/runAsGroup
-                value: 1000
               - op: add
                 path: /spec/template/spec/securityContext/supplementalGroups/0
                 value: 109

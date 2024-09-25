@@ -30,8 +30,8 @@ nodeSelector:
 #        For now flux post renderer is used to patch the deployment
 securityContext:
   privileged: true
-  runAsUser: 1000
-  runAsGroup: 1000
+  #runAsUser: 1000
+  #runAsGroup: 1000
   supplementalGroups:
     - 109
 
