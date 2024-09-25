@@ -40,7 +40,7 @@ spec:
               name: jellyfin
             patch: |
               - op: add
-                path: /spec/template/spec/securityContext/privileged
+                path: /spec/template/spec/containers/0/securityContext/privileged
                 value: true
               - op: add
                 path: /spec/template/spec/securityContext/runAsUser
