@@ -6,14 +6,18 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
-    kubernetes.io/ingress.class: private
+    kubernetes.io/ingress.class: public
     traefik.ingress.kubernetes.io/router.middlewares: jellyfin-deny-metrics-path@kubernetescrd
+    reloader.homer/group: Multimedia
+    reloader.homer/logo: https://jellyfin.org/images/logo.svg
+    reloader.homer/name: Jellyfin
+    reloader.homer/subtitle: Video on demand
   hosts:
-    - jellyfin.ankhmorpork.thaum.xyz
+    - vod.krupa.net.pl
   tls:
-    - secretName: jellyfin-ankhmorpork-thaum-xyz-tls
+    - secretName: vod-krupa-net-pl-tls
       hosts:
-        - jellyfin.ankhmorpork.thaum.xyz
+        - vod.krupa.net.pl
 
 persistence:
   config:
@@ -28,15 +32,15 @@ persistence:
     - name: media-tv
       mountPath: /media/tv
       existingClaim: media-tv
-      readOnly: true
+      #readOnly: true
     - name: media-movies
       mountPath: /media/movies
       existingClaim: media-movies
-      readOnly: true
+      #readOnly: true
     - name: media-books
       mountPath: /media/books
       existingClaim: media-books
-      readOnly: true
+      #readOnly: true
 
 extraVolumes: []
   #- name: renderD129
