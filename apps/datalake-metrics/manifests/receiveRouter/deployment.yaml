@@ -9,7 +9,7 @@ metadata:
   name: thanos-receive-router
   namespace: datalake-metrics
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app.kubernetes.io/component: thanos-receive-router
@@ -32,7 +32,7 @@ spec:
             - --grpc-address=0.0.0.0:10901
             - --http-address=0.0.0.0:10902
             - --remote-write.address=0.0.0.0:19291
-            - --receive.replication-factor=1
+            - --receive.replication-factor=3
             - --receive.hashrings-file=/var/lib/thanos-receive/hashrings.json
             - --label=replica="$(NAME)"
             - --label=receive="true"

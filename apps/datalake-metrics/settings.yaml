@@ -31,7 +31,7 @@ objectStorageConfig:
 ingressAuthHTPasswdRef: THANOS_INGRESS_HTPASSWD
 
 receiveIngestor:
-  replicas: 2
+  replicas: 3
   retention: 2d
   resources:
     requests:
@@ -41,7 +41,7 @@ receiveIngestor:
 #      cpu: 700m
 #      memory: 2Gi
   replicaLabels: ['replica', 'receive_replica']
-  replicationFactor: 1
+  replicationFactor: 3
   serviceMonitor: true
   volumeClaimTemplate:
     spec:
@@ -61,7 +61,7 @@ receiveRouter:
 #      cpu: 300m
 #      memory: 200Mi
   replicaLabels: ['replica', 'receive_replica']
-  replicationFactor: 1
+  replicationFactor: 3
 
 store:
   replicas: 2
