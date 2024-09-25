@@ -12,6 +12,9 @@ ingress:
     reloader.homer/logo: https://jellyfin.org/images/logo.svg
     reloader.homer/name: Jellyfin
     reloader.homer/subtitle: Video on demand
+  labels:
+    reloader.homer/enabled: "true"
+    probe: enabled
   hosts:
     - vod.krupa.net.pl
   tls:
