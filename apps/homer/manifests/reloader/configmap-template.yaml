@@ -116,7 +116,7 @@ data:
             url: "https://qnap.ankhmorpork.thaum.xyz"
           - name: Trakt
             subtitle: "Movie and TV series tracking"
-            logo: "https://trakt.tv/assets/branding/logos/icon/pixels/trakt-icon-red-46d9d5748d43ee952be3861646c10e584a6e0cbade5ef6651b6de41b88058175.png"
+            logo: "https://user-images.githubusercontent.com/67451572/160710031-1c69ffdb-918a-474f-a3cf-257313b4c8d6.png"
             <<: *external
             url: "https://trakt.tv"
           #- name: Plex
