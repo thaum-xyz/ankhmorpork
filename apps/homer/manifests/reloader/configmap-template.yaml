@@ -111,7 +111,7 @@ data:
         icon: "fa fa-tv"
         items:
           - name: Trakt
-            logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/4c/d7/10/4cd71097-1325-a24a-80ce-a89cfca1c0f3/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/460x0w.png"
+            logo: "https://trakt.tv/assets/logos/white-bg@2x-626e9680c03d0542b3e26c3305f58050d2178e5d4222fac7831d83cf37fef42b.png"
             <<: *external
             url: "https://trakt.tv"
           - name: Qnap
