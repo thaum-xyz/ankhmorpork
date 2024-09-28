@@ -110,14 +110,18 @@ data:
       - name: Multimedia
         icon: "fa fa-tv"
         items:
+          - name: Trakt
+            logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/4c/d7/10/4cd71097-1325-a24a-80ce-a89cfca1c0f3/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/460x0w.png"
+            <<: *external
+            url: "https://trakt.tv"
           - name: Qnap
             logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
             <<: *local
             url: "https://qnap.ankhmorpork.thaum.xyz"
-          - name: Plex
-            subtitle: "Video on demand"
-            logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
-            url: "https://app.plex.tv/"
+          #- name: Plex
+          #  subtitle: "Video on demand"
+          #  logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
+          #  url: "https://app.plex.tv/"
           - name: Radarr
             subtitle: "Movie collection manager"
             logo: "https://avatars1.githubusercontent.com/u/25025331?s=200&v=4"
