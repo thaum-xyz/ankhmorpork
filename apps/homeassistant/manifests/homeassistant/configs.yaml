@@ -85,7 +85,6 @@ data:
     # END OF default_config
 
     wake_on_lan:
-    media_extractor:
 
     group:
       people:
@@ -465,8 +464,6 @@ data:
           - sensor.date*
           - sensor.time*
           - sensor.uptime*
-        entities:
-          - weather.openweathermap
   customize.yaml: |
     switch.adus_pc:
       icon: 'mdi:desktop-classic'

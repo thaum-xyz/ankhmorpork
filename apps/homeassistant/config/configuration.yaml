@@ -82,7 +82,6 @@ zone:
 # END OF default_config
 
 wake_on_lan:
-media_extractor:
 
 group:
   people:
@@ -462,5 +461,3 @@ recorder:
       - sensor.date*
       - sensor.time*
       - sensor.uptime*
-    entities:
-      - weather.openweathermap
