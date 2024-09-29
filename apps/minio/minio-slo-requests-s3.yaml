@@ -5,6 +5,7 @@ metadata:
   namespace: minio
 spec:
   alerting:
+    absent: false
     disabled: true
     name: MinioErrorBudgetBurn
   indicator:
