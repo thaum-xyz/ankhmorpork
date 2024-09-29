@@ -64,7 +64,7 @@ local all = {
         },
         labels: {
           'reloader.homer/enabled': 'true',
-          probe: 'enabled',
+          //probe: 'enabled',
         },
       },
     },
@@ -87,7 +87,7 @@ local all = {
         },
         labels: {
           'reloader.homer/enabled': 'true',
-          probe: 'enabled',
+          //probe: 'enabled',
         },
       },
     },
@@ -110,7 +110,7 @@ local all = {
         },
         labels: {
           'reloader.homer/enabled': 'true',
-          probe: 'enabled',
+          //probe: 'enabled',
         },
       },
     },
@@ -150,7 +150,7 @@ local all = {
         },
         labels: {
           'reloader.homer/enabled': 'true',
-          probe: 'enabled',
+          //probe: 'enabled',
         },
       },
     },

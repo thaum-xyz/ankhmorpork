@@ -9,7 +9,6 @@ metadata:
     reloader.homer/subtitle: TV shows collection management
     reloader.homer/tag: local
   labels:
-    probe: enabled
     reloader.homer/enabled: "true"
   name: sonarr
   namespace: multimedia
