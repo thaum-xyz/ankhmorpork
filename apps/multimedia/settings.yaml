@@ -272,6 +272,7 @@ readarr:
   multimediaPVCName: "books"
   downloadsPVCName: "downloaded"
   port: 8787
+  domain: "readarr.ankhmorpork.thaum.xyz"
   resources:
     requests:
       cpu: 100m

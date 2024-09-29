@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: private
   rules:
-    - host: ""
+    - host: readarr.ankhmorpork.thaum.xyz
       http:
         paths:
           - backend:
@@ -23,5 +23,5 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - ""
-      secretName: -tls
+        - readarr.ankhmorpork.thaum.xyz
+      secretName: readarr-ankhmorpork-thaum-xyz-tls
