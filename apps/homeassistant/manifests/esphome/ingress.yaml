@@ -5,7 +5,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
   labels:
     app.kubernetes.io/name: esphome
-    app.kubernetes.io/version: 2024.3.2
+    app.kubernetes.io/version: 2024.9.1
   name: esphome
   namespace: homeassistant
 spec:

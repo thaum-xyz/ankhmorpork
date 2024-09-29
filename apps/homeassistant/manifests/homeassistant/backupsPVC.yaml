@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2024.4.2
+    app.kubernetes.io/version: 2024.9.3
   name: homeassistant-backups
   namespace: homeassistant
 spec:
