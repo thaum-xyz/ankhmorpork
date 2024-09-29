@@ -91,6 +91,11 @@ esphome:
     limits:
       cpu: 1800m
       memory: 1000Mi
+  ingress:
+    domain: 'esphome.ankhmorpork.thaum.xyz'
+    className: 'private'
+    annotations:
+      'cert-manager.io/cluster-issuer': 'letsencrypt-dns01'
   storage:
     name: "esphome-data"
     pvcSpec:
