@@ -119,30 +119,6 @@ data:
             logo: "https://user-images.githubusercontent.com/67451572/160710031-1c69ffdb-918a-474f-a3cf-257313b4c8d6.png"
             <<: *external
             url: "https://trakt.tv"
-          #- name: Plex
-          #  subtitle: "Video on demand"
-          #  logo: "https://user-images.githubusercontent.com/58919902/70870444-48efc180-1f48-11ea-9994-dff2df2d9484.png"
-          #  url: "https://app.plex.tv/"
-          - name: Radarr
-            subtitle: "Movie collection manager"
-            logo: "https://avatars1.githubusercontent.com/u/25025331?s=200&v=4"
-            <<: *local
-            url: "http://radarr.multimedia.ankhmorpork.thaum.xyz:7878/"
-          - name: Sonarr
-            subtitle: "TV series collection manager"
-            logo: "https://avatars3.githubusercontent.com/u/1082903?s=200&v=4"
-            <<: *local
-            url: "http://sonarr.multimedia.ankhmorpork.thaum.xyz:8989/"
-          - name: Readarr
-            subtitle: "Books collection manager"
-            logo: "https://avatars.githubusercontent.com/u/57576474?s=200&v=4"
-            <<: *local
-            url: "http://readarr.multimedia.ankhmorpork.thaum.xyz:8787/"
-          - name: Prowlarr
-            subtitle: "Indexer manager/proxy"
-            logo: "https://avatars.githubusercontent.com/u/73049443?s=200&v=4"
-            <<: *local
-            url: "http://prowlarr.multimedia.ankhmorpork.thaum.xyz:9696/"
           - name: Transmission
             subtitle: "downloader"
             logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
