@@ -40,6 +40,20 @@ affinity:
             app.kubernetes.io/name: '{{ template "traefik.name" . }}'
             app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
         topologyKey: kubernetes.io/hostname
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+          topologyKey: kubernetes.io/hostname
+  #podAffinity:
+  #  requiredDuringSchedulingIgnoredDuringExecution:
+  #    - labelSelector:
+  #        matchLabels:
+  #          app.kubernetes.io/name: metallb
+  #          app.kubernetes.io/component: speaker
+  #      topologyKey: kubernetes.io/hostname
 
 metrics:
   prometheus:
