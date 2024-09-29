@@ -115,7 +115,7 @@ spec:
             summary: StatefulSet update has not been rolled out.
           expr: |
             (
-              max without (revision) (
+              max by(namespace, statefulset, job, cluster) (
                 kube_statefulset_status_current_revision{job="kube-state-metrics"}
                   unless
                 kube_statefulset_status_update_revision{job="kube-state-metrics"}
@@ -261,7 +261,7 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubecpuovercommit
             summary: Cluster has overcommitted CPU resource requests.
           expr: |
-            sum(namespace_cpu:kube_pod_container_resource_requests:sum{job="kube-state-metrics",}) by (cluster) - (sum(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster) - max(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster)) > 0
+            sum(namespace_cpu:kube_pod_container_resource_requests:sum{}) by (cluster) - (sum(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster) - max(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster)) > 0
             and
             (sum(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster) - max(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"}) by (cluster)) > 0
           for: 10m
@@ -486,9 +486,9 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubeapierrorbudgetburn
             summary: The API server is burning too much error budget.
           expr: |
-            sum(apiserver_request:burnrate1h) > (14.40 * 0.01000)
-            and
-            sum(apiserver_request:burnrate5m) > (14.40 * 0.01000)
+            sum by(cluster) (apiserver_request:burnrate1h) > (14.40 * 0.01000)
+            and on(cluster)
+            sum by(cluster) (apiserver_request:burnrate5m) > (14.40 * 0.01000)
           for: 2m
           labels:
             long: 1h
@@ -500,9 +500,9 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubeapierrorbudgetburn
             summary: The API server is burning too much error budget.
           expr: |
-            sum(apiserver_request:burnrate6h) > (6.00 * 0.01000)
-            and
-            sum(apiserver_request:burnrate30m) > (6.00 * 0.01000)
+            sum by(cluster) (apiserver_request:burnrate6h) > (6.00 * 0.01000)
+            and on(cluster)
+            sum by(cluster) (apiserver_request:burnrate30m) > (6.00 * 0.01000)
           for: 15m
           labels:
             long: 6h
@@ -514,9 +514,9 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubeapierrorbudgetburn
             summary: The API server is burning too much error budget.
           expr: |
-            sum(apiserver_request:burnrate1d) > (3.00 * 0.01000)
-            and
-            sum(apiserver_request:burnrate2h) > (3.00 * 0.01000)
+            sum by(cluster) (apiserver_request:burnrate1d) > (3.00 * 0.01000)
+            and on(cluster)
+            sum by(cluster) (apiserver_request:burnrate2h) > (3.00 * 0.01000)
           for: 1h
           labels:
             long: 1d
@@ -528,9 +528,9 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubeapierrorbudgetburn
             summary: The API server is burning too much error budget.
           expr: |
-            sum(apiserver_request:burnrate3d) > (1.00 * 0.01000)
-            and
-            sum(apiserver_request:burnrate6h) > (1.00 * 0.01000)
+            sum by(cluster) (apiserver_request:burnrate3d) > (1.00 * 0.01000)
+            and on(cluster)
+            sum by(cluster) (apiserver_request:burnrate6h) > (1.00 * 0.01000)
           for: 3h
           labels:
             long: 3d
@@ -544,7 +544,7 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubeclientcertificateexpiration
             summary: Client certificate is about to expire.
           expr: |
-            apiserver_client_certificate_expiration_seconds_count{job="kubelet"} > 0 and on(job) histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="kubelet"}[5m]))) < 604800
+            apiserver_client_certificate_expiration_seconds_count{job="kubelet"} > 0 and on(cluster, job) histogram_quantile(0.01, sum by (cluster, job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="kubelet"}[5m]))) < 604800
           for: 5m
           labels:
             severity: warning
@@ -554,7 +554,7 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubeclientcertificateexpiration
             summary: Client certificate is about to expire.
           expr: |
-            apiserver_client_certificate_expiration_seconds_count{job="kubelet"} > 0 and on(job) histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="kubelet"}[5m]))) < 86400
+            apiserver_client_certificate_expiration_seconds_count{job="kubelet"} > 0 and on(cluster, job) histogram_quantile(0.01, sum by (cluster, job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="kubelet"}[5m]))) < 86400
           for: 5m
           labels:
             severity: critical
@@ -593,7 +593,7 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/kubernetes/kubeapiterminatedrequests
             summary: The kubernetes apiserver has terminated {{ $value | humanizePercentage }} of its incoming requests.
           expr: |
-            sum(rate(apiserver_request_terminations_total{job="kubelet"}[10m]))  / (  sum(rate(apiserver_request_total{job="kubelet"}[10m])) + sum(rate(apiserver_request_terminations_total{job="kubelet"}[10m])) ) > 0.20
+            sum by(cluster) (rate(apiserver_request_terminations_total{job="kubelet"}[10m])) / ( sum by(cluster) (rate(apiserver_request_total{job="kubelet"}[10m])) + sum by(cluster) (rate(apiserver_request_terminations_total{job="kubelet"}[10m])) ) > 0.20
           for: 5m
           labels:
             severity: warning
@@ -767,6 +767,130 @@ spec:
           for: 15m
           labels:
             severity: critical
+    - interval: 3m
+      name: kube-apiserver-availability.rules
+      rules:
+        - expr: |
+            avg_over_time(code_verb:apiserver_request_total:increase1h[30d]) * 24 * 30
+          record: code_verb:apiserver_request_total:increase30d
+        - expr: |
+            sum by (cluster, code) (code_verb:apiserver_request_total:increase30d{verb=~"LIST|GET"})
+          labels:
+            verb: read
+          record: code:apiserver_request_total:increase30d
+        - expr: |
+            sum by (cluster, code) (code_verb:apiserver_request_total:increase30d{verb=~"POST|PUT|PATCH|DELETE"})
+          labels:
+            verb: write
+          record: code:apiserver_request_total:increase30d
+        - expr: |
+            sum by (cluster, verb, scope) (increase(apiserver_request_sli_duration_seconds_count{job="kubelet"}[1h]))
+          record: cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase1h
+        - expr: |
+            sum by (cluster, verb, scope) (avg_over_time(cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase1h[30d]) * 24 * 30)
+          record: cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d
+        - expr: |
+            sum by (cluster, verb, scope, le) (increase(apiserver_request_sli_duration_seconds_bucket[1h]))
+          record: cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase1h
+        - expr: |
+            sum by (cluster, verb, scope, le) (avg_over_time(cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase1h[30d]) * 24 * 30)
+          record: cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d
+        - expr: |
+            1 - (
+              (
+                # write too slow
+                sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~"POST|PUT|PATCH|DELETE"})
+                -
+                sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"POST|PUT|PATCH|DELETE",le="1"})
+              ) +
+              (
+                # read too slow
+                sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~"LIST|GET"})
+                -
+                (
+                  (
+                    sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope=~"resource|",le="1"})
+                    or
+                    vector(0)
+                  )
+                  +
+                  sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope="namespace",le="5"})
+                  +
+                  sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope="cluster",le="30"})
+                )
+              ) +
+              # errors
+              sum by (cluster) (code:apiserver_request_total:increase30d{code=~"5.."} or vector(0))
+            )
+            /
+            sum by (cluster) (code:apiserver_request_total:increase30d)
+          labels:
+            verb: all
+          record: apiserver_request:availability30d
+        - expr: |
+            1 - (
+              sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~"LIST|GET"})
+              -
+              (
+                # too slow
+                (
+                  sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope=~"resource|",le="1"})
+                  or
+                  vector(0)
+                )
+                +
+                sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope="namespace",le="5"})
+                +
+                sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope="cluster",le="30"})
+              )
+              +
+              # errors
+              sum by (cluster) (code:apiserver_request_total:increase30d{verb="read",code=~"5.."} or vector(0))
+            )
+            /
+            sum by (cluster) (code:apiserver_request_total:increase30d{verb="read"})
+          labels:
+            verb: read
+          record: apiserver_request:availability30d
+        - expr: |
+            1 - (
+              (
+                # too slow
+                sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~"POST|PUT|PATCH|DELETE"})
+                -
+                sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"POST|PUT|PATCH|DELETE",le="1"})
+              )
+              +
+              # errors
+              sum by (cluster) (code:apiserver_request_total:increase30d{verb="write",code=~"5.."} or vector(0))
+            )
+            /
+            sum by (cluster) (code:apiserver_request_total:increase30d{verb="write"})
+          labels:
+            verb: write
+          record: apiserver_request:availability30d
+        - expr: |
+            sum by (cluster,code,resource) (rate(apiserver_request_total{job="kubelet",verb=~"LIST|GET"}[5m]))
+          labels:
+            verb: read
+          record: code_resource:apiserver_request_total:rate5m
+        - expr: |
+            sum by (cluster,code,resource) (rate(apiserver_request_total{job="kubelet",verb=~"POST|PUT|PATCH|DELETE"}[5m]))
+          labels:
+            verb: write
+          record: code_resource:apiserver_request_total:rate5m
+        - expr: |
+            sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"2.."}[1h]))
+          record: code_verb:apiserver_request_total:increase1h
+        - expr: |
+            sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"3.."}[1h]))
+          record: code_verb:apiserver_request_total:increase1h
+        - expr: |
+            sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"4.."}[1h]))
+          record: code_verb:apiserver_request_total:increase1h
+        - expr: |
+            sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"5.."}[1h]))
+          record: code_verb:apiserver_request_total:increase1h
     - name: kube-apiserver-burnrate.rules
       rules:
         - expr: |
@@ -1084,130 +1208,6 @@ spec:
             quantile: "0.99"
             verb: write
           record: cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile
-    - interval: 3m
-      name: kube-apiserver-availability.rules
-      rules:
-        - expr: |
-            avg_over_time(code_verb:apiserver_request_total:increase1h[30d]) * 24 * 30
-          record: code_verb:apiserver_request_total:increase30d
-        - expr: |
-            sum by (cluster, code) (code_verb:apiserver_request_total:increase30d{verb=~"LIST|GET"})
-          labels:
-            verb: read
-          record: code:apiserver_request_total:increase30d
-        - expr: |
-            sum by (cluster, code) (code_verb:apiserver_request_total:increase30d{verb=~"POST|PUT|PATCH|DELETE"})
-          labels:
-            verb: write
-          record: code:apiserver_request_total:increase30d
-        - expr: |
-            sum by (cluster, verb, scope) (increase(apiserver_request_sli_duration_seconds_count{job="kubelet"}[1h]))
-          record: cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase1h
-        - expr: |
-            sum by (cluster, verb, scope) (avg_over_time(cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase1h[30d]) * 24 * 30)
-          record: cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d
-        - expr: |
-            sum by (cluster, verb, scope, le) (increase(apiserver_request_sli_duration_seconds_bucket[1h]))
-          record: cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase1h
-        - expr: |
-            sum by (cluster, verb, scope, le) (avg_over_time(cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase1h[30d]) * 24 * 30)
-          record: cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d
-        - expr: |
-            1 - (
-              (
-                # write too slow
-                sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~"POST|PUT|PATCH|DELETE"})
-                -
-                sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"POST|PUT|PATCH|DELETE",le="1"})
-              ) +
-              (
-                # read too slow
-                sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~"LIST|GET"})
-                -
-                (
-                  (
-                    sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope=~"resource|",le="1"})
-                    or
-                    vector(0)
-                  )
-                  +
-                  sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope="namespace",le="5"})
-                  +
-                  sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope="cluster",le="30"})
-                )
-              ) +
-              # errors
-              sum by (cluster) (code:apiserver_request_total:increase30d{code=~"5.."} or vector(0))
-            )
-            /
-            sum by (cluster) (code:apiserver_request_total:increase30d)
-          labels:
-            verb: all
-          record: apiserver_request:availability30d
-        - expr: |
-            1 - (
-              sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~"LIST|GET"})
-              -
-              (
-                # too slow
-                (
-                  sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope=~"resource|",le="1"})
-                  or
-                  vector(0)
-                )
-                +
-                sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope="namespace",le="5"})
-                +
-                sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"LIST|GET",scope="cluster",le="30"})
-              )
-              +
-              # errors
-              sum by (cluster) (code:apiserver_request_total:increase30d{verb="read",code=~"5.."} or vector(0))
-            )
-            /
-            sum by (cluster) (code:apiserver_request_total:increase30d{verb="read"})
-          labels:
-            verb: read
-          record: apiserver_request:availability30d
-        - expr: |
-            1 - (
-              (
-                # too slow
-                sum by (cluster) (cluster_verb_scope:apiserver_request_sli_duration_seconds_count:increase30d{verb=~"POST|PUT|PATCH|DELETE"})
-                -
-                sum by (cluster) (cluster_verb_scope_le:apiserver_request_sli_duration_seconds_bucket:increase30d{verb=~"POST|PUT|PATCH|DELETE",le="1"})
-              )
-              +
-              # errors
-              sum by (cluster) (code:apiserver_request_total:increase30d{verb="write",code=~"5.."} or vector(0))
-            )
-            /
-            sum by (cluster) (code:apiserver_request_total:increase30d{verb="write"})
-          labels:
-            verb: write
-          record: apiserver_request:availability30d
-        - expr: |
-            sum by (cluster,code,resource) (rate(apiserver_request_total{job="kubelet",verb=~"LIST|GET"}[5m]))
-          labels:
-            verb: read
-          record: code_resource:apiserver_request_total:rate5m
-        - expr: |
-            sum by (cluster,code,resource) (rate(apiserver_request_total{job="kubelet",verb=~"POST|PUT|PATCH|DELETE"}[5m]))
-          labels:
-            verb: write
-          record: code_resource:apiserver_request_total:rate5m
-        - expr: |
-            sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"2.."}[1h]))
-          record: code_verb:apiserver_request_total:increase1h
-        - expr: |
-            sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"3.."}[1h]))
-          record: code_verb:apiserver_request_total:increase1h
-        - expr: |
-            sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"4.."}[1h]))
-          record: code_verb:apiserver_request_total:increase1h
-        - expr: |
-            sum by (cluster, code, verb) (increase(apiserver_request_total{job="kubelet",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"5.."}[1h]))
-          record: code_verb:apiserver_request_total:increase1h
     - name: k8s.rules.container_cpu_usage_seconds_total
       rules:
         - expr: |
@@ -1249,7 +1249,7 @@ spec:
               max by(cluster, namespace, pod, node) (kube_pod_info{node!=""})
             )
           record: node_namespace_pod_container:container_memory_swap
-    - name: k8s.rules.container_resource
+    - name: k8s.rules.container_memory_requests
       rules:
         - expr: |
             kube_pod_container_resource_requests{resource="memory",job="kube-state-metrics"}  * on (namespace, pod, cluster)
@@ -1268,6 +1268,8 @@ spec:
                 )
             )
           record: namespace_memory:kube_pod_container_resource_requests:sum
+    - name: k8s.rules.container_cpu_requests
+      rules:
         - expr: |
             kube_pod_container_resource_requests{resource="cpu",job="kube-state-metrics"}  * on (namespace, pod, cluster)
             group_left() max by (namespace, pod, cluster) (
@@ -1285,6 +1287,8 @@ spec:
                 )
             )
           record: namespace_cpu:kube_pod_container_resource_requests:sum
+    - name: k8s.rules.container_memory_limits
+      rules:
         - expr: |
             kube_pod_container_resource_limits{resource="memory",job="kube-state-metrics"}  * on (namespace, pod, cluster)
             group_left() max by (namespace, pod, cluster) (
@@ -1302,6 +1306,8 @@ spec:
                 )
             )
           record: namespace_memory:kube_pod_container_resource_limits:sum
+    - name: k8s.rules.container_cpu_limits
+      rules:
         - expr: |
             kube_pod_container_resource_limits{resource="cpu",job="kube-state-metrics"}  * on (namespace, pod, cluster)
             group_left() max by (namespace, pod, cluster) (
