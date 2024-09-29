@@ -68,6 +68,7 @@ prowlarr:
   image: "linuxserver/prowlarr:1.16.2.4435-ls67"  # application-image-from-github: linuxserver/docker-prowlarr
   namespace: *namespace
   port: 9696
+  domain: "prowlarr.ankhmorpork.thaum.xyz"
   exporter:
     port: 9709
   resources:
@@ -121,6 +122,7 @@ radarr:
   image: "lscr.io/linuxserver/radarr:5.4.6.8723-ls216"  # application-image-from-github: linuxserver/docker-radarr
   namespace: *namespace
   port: 7878
+  domain: "radarr.ankhmorpork.thaum.xyz"
   multimediaPVCName: "movies"
   downloadsPVCName: "downloaded"
   resources:
@@ -174,6 +176,7 @@ sonarr:
   image: "lscr.io/linuxserver/sonarr:4.0.4.1491-ls237"  # application-image-from-github: linuxserver/docker-sonarr
   namespace: *namespace
   port: 8989
+  domain: "sonarr.ankhmorpork.thaum.xyz"
   multimediaPVCName: "tv"
   downloadsPVCName: "downloaded"
   exporter:

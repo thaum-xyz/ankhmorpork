@@ -109,6 +109,11 @@ local all = {
   },
 
   plex: plex(config.plex) + {
+    statefulset+: {
+      spec+: {
+        replicas: 0,
+      },
+    },
     plexClaim: externalsecret(
       {
         name: config.plex.plexClaim.secretName,

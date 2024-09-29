@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: readarr
+    app.kubernetes.io/part-of: readarr
+    app.kubernetes.io/version: develop-0.3.26.2526-ls107
+  name: readarr
+  namespace: multimedia
+spec:
+  ingressClassName: private
+  rules:
+    - host: ""
+      http:
+        paths:
+          - backend:
+              service:
+                name: readarr
+                port:
+                  number: 8787
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - ""
+      secretName: -tls

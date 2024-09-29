@@ -36,6 +36,8 @@ local defaults = {
     for labelName in std.objectFields(defaults.commonLabels)
     if !std.setMember(labelName, ['app.kubernetes.io/version'])
   },
+  domain: '',
+  ingressClassName: 'private',
   database: {
     usernameRef: {
       key: 'username',
@@ -110,6 +112,36 @@ function(params) {
       ],
       selector: $._config.selectorLabels,
       clusterIP: 'None',
+    },
+  },
+
+  ingress: {
+    apiVersion: 'networking.k8s.io/v1',
+    kind: 'Ingress',
+    metadata: $._metadata,
+    spec: {
+      ingressClassName: $._config.ingressClassName,
+      rules: [{
+        host: $._config.domain,
+        http: {
+          paths: [{
+            path: '/',
+            pathType: 'Prefix',
+            backend: {
+              service: {
+                name: $._config.name,
+                port: {
+                  number: $.service.spec.ports[0].port,
+                },
+              },
+            },
+          }],
+        },
+      }],
+      tls: [{
+        hosts: [$._config.domain],
+        secretName: '%s-tls' % std.strReplace($._config.domain, '.', '-'),
+      }],
     },
   },
 

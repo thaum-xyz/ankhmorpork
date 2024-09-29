@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/part-of: radarr
+    app.kubernetes.io/version: 5.4.6.8723-ls216
+  name: radarr
+  namespace: multimedia
+spec:
+  ingressClassName: private
+  rules:
+    - host: radarr.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: radarr
+                port:
+                  number: 7878
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - radarr.ankhmorpork.thaum.xyz
+      secretName: radarr-ankhmorpork-thaum-xyz-tls

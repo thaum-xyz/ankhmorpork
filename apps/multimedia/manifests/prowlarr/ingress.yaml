@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: prowlarr
+    app.kubernetes.io/part-of: prowlarr
+    app.kubernetes.io/version: 1.16.2.4435-ls67
+  name: prowlarr
+  namespace: multimedia
+spec:
+  ingressClassName: private
+  rules:
+    - host: prowlarr.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: prowlarr
+                port:
+                  number: 9696
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - prowlarr.ankhmorpork.thaum.xyz
+      secretName: prowlarr-ankhmorpork-thaum-xyz-tls
