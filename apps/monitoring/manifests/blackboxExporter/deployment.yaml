@@ -120,6 +120,12 @@ spec:
             runAsUser: 65532
             seccompProfile:
               type: RuntimeDefault
+      dnsConfig:
+        nameservers:
+          - 192.168.2.4
+        searches:
+          - thaum.xyz
+      dnsPolicy: None
       nodeSelector:
         kubernetes.io/os: linux
       serviceAccountName: blackbox-exporter

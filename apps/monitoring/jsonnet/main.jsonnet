@@ -238,6 +238,11 @@ local kp =
             metadata+: parcaEnable,
             spec+: {
               affinity: pod.antiaffinity('blackbox-exporter'),
+              dnsPolicy: 'None',
+              dnsConfig: {
+                nameservers: ['192.168.2.4'],
+                searches: ['thaum.xyz'],
+              },
             },
           },
         },
