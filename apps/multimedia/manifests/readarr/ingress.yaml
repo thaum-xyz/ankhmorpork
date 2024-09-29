@@ -3,11 +3,14 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
+    reloader.homer/group: Multimedia
+    reloader.homer/logo: https://avatars.githubusercontent.com/u/57576474?s=200&v=4
+    reloader.homer/name: Readarr
+    reloader.homer/subtitle: Books collection management
+    reloader.homer/tag: local
   labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/name: readarr
-    app.kubernetes.io/part-of: readarr
-    app.kubernetes.io/version: develop-0.3.26.2526-ls107
+    probe: enabled
+    reloader.homer/enabled: "true"
   name: readarr
   namespace: multimedia
 spec:

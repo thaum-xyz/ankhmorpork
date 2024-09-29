@@ -3,11 +3,14 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
+    reloader.homer/group: Multimedia
+    reloader.homer/logo: https://avatars1.githubusercontent.com/u/25025331?s=200&v=4
+    reloader.homer/name: Radarr
+    reloader.homer/subtitle: Movie collection management
+    reloader.homer/tag: local
   labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/name: radarr
-    app.kubernetes.io/part-of: radarr
-    app.kubernetes.io/version: 5.4.6.8723-ls216
+    probe: enabled
+    reloader.homer/enabled: "true"
   name: radarr
   namespace: multimedia
 spec:

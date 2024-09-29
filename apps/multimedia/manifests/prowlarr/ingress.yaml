@@ -3,11 +3,14 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
+    reloader.homer/group: Multimedia
+    reloader.homer/logo: https://avatars.githubusercontent.com/u/73049443?s=200&v=4
+    reloader.homer/name: Prowlarr
+    reloader.homer/subtitle: Indexer/proxy management
+    reloader.homer/tag: local
   labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/name: prowlarr
-    app.kubernetes.io/part-of: prowlarr
-    app.kubernetes.io/version: 1.16.2.4435-ls67
+    probe: enabled
+    reloader.homer/enabled: "true"
   name: prowlarr
   namespace: multimedia
 spec:
