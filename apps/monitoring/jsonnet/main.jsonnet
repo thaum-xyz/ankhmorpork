@@ -645,7 +645,7 @@ local kp =
         spec+: {
           honorLabels: true,
           metricsPath: '/metrics/probes',
-          metricRelabelings: [],
+          metricRelabelings:: [],
           scrapeInterval: '30s',
         },
       },
@@ -656,7 +656,7 @@ local kp =
         spec+: {
           honorLabels: true,
           metricsPath: '/metrics/slis',
-          metricRelabelings: [],
+          metricRelabelings:: [],
           scrapeInterval: '5s',
           scrapeTimeout: '5s',
         },

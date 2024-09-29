@@ -15,7 +15,6 @@ spec:
   honorLabels: true
   kubernetesSDConfigs:
     - role: Node
-  metricRelabelings: []
   metricsPath: /metrics/slis
   relabelings:
     - action: replace
