@@ -52,6 +52,13 @@ local logsDBInit(user) = {
 local all = {
   sonarr: arr(config.sonarr) + {
     service+: lbService,
+    ingress+: {
+      metadata+: {
+        annotations+: {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-dns01',
+        },
+      },
+    },
   },
   sonarrdb: postgres(config.sonarr.postgres) + {
     cluster+: logsDBInit(config.sonarr.postgres.db.user),
@@ -59,6 +66,13 @@ local all = {
 
   radarr: arr(config.radarr) + {
     service+: lbService,
+    ingress+: {
+      metadata+: {
+        annotations+: {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-dns01',
+        },
+      },
+    },
   },
   radarrdb: postgres(config.radarr.postgres) + {
     cluster+: logsDBInit(config.radarr.postgres.db.user) + pgWALLimit,
@@ -66,6 +80,13 @@ local all = {
 
   prowlarr: arr(config.prowlarr) + {
     service+: lbService,
+    ingress+: {
+      metadata+: {
+        annotations+: {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-dns01',
+        },
+      },
+    },
   },
   prowlarrdb: postgres(config.prowlarr.postgres) + {
     cluster+: logsDBInit(config.prowlarr.postgres.db.user),
@@ -88,6 +109,13 @@ local all = {
       },
       spec+: {
         loadBalancerIP:: null,
+      },
+    },
+    ingress+: {
+      metadata+: {
+        annotations+: {
+          'cert-manager.io/cluster-issuer': 'letsencrypt-dns01',
+        },
       },
     },
   },
