@@ -48,7 +48,9 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-          image: "docker.io/bloomberg/goldpinger:v3.10.1"
+            - name: LABEL_SELECTOR
+              value: "app.kubernetes.io/name=goldpinger"
+          image: "docker.io/bloomberg/goldpinger:3.10.1"
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
