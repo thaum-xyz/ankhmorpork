@@ -51,8 +51,6 @@ spec:
               value: "true"
             #- name: HOSTS_TO_RESOLVE
             #  value: "www.google.com"
-            - name: REFRESH_INTERVAL
-              value: "10"
             - name: HTTP_TARGETS
               value: "http://www.google.com"
           image: "docker.io/bloomberg/goldpinger:3.10.1"
