@@ -6,7 +6,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: view
+  name: goldpinger-clusterrole
 subjects:
   - kind: ServiceAccount
     name: goldpinger-serviceaccount
