@@ -16,9 +16,6 @@ spec:
       app.kubernetes.io/name: goldpinger
   template:
     metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '8080'
       labels:
         app: goldpinger
         app.kubernetes.io/name: goldpinger
@@ -40,21 +37,32 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            # podIP is used to select a randomized subset of nodes to ping.
             - name: POD_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: LABEL_SELECTOR
               value: "app.kubernetes.io/name=goldpinger"
+            - name: DISPLAY_NODENAME
+              value: "true"
+            #- name: HOSTS_TO_RESOLVE
+            #  value: "www.google.com"
+            - name: REFRESH_INTERVAL
+              value: "10"
+            - name: HTTP_TARGETS
+              value: "http://www.google.com"
           image: "docker.io/bloomberg/goldpinger:3.10.1"
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
           resources:
-            limits:
-              memory: 80Mi
+            #limits:
+            #  memory: 80Mi
             requests:
               cpu: 1m
               memory: 40Mi
@@ -64,19 +72,12 @@ spec:
           readinessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: http
             initialDelaySeconds: 20
             periodSeconds: 5
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 8080
+              port: http
             initialDelaySeconds: 20
             periodSeconds: 5
-          volumeMounts:
-            - name: zap
-              mountPath: /config
-      volumes:
-        - name: zap
-          configMap:
-            name: goldpinger-zap
