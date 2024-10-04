@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: goldpinger
+  namespace: monitoring
+  labels:
+    app: goldpinger
+    app.kubernetes.io/name: goldpinger
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30080
+      name: http
+  selector:
+    app: goldpinger
+    app.kubernetes.io/name: goldpinger

@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: goldpinger
+  namespace: monitoring
+  labels:
+    app: goldpinger
+    app.kubernetes.io/name: goldpinger
+spec:
+  endpoints:
+    - port: http
+      honorLabels: true
+  jobLabel: name
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  selector:
+    matchLabels:
+      app: goldpinger
+      app.kubernetes.io/name: goldpinger
