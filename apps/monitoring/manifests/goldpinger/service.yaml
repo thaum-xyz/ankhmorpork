@@ -8,7 +8,6 @@ metadata:
     app: goldpinger
     app.kubernetes.io/name: goldpinger
 spec:
-  type: NodePort
   ports:
     - port: 8080
       nodePort: 30080
