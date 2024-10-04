@@ -76,3 +76,10 @@ spec:
               port: 8080
             initialDelaySeconds: 20
             periodSeconds: 5
+          volumeMounts:
+            - name: zap
+              mountPath: /config
+      volumes:
+        - name: zap
+          configMap:
+            name: goldpinger-zap
