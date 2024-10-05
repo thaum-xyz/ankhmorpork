@@ -79,3 +79,5 @@ spec:
               port: http
             initialDelaySeconds: 20
             periodSeconds: 5
+      tolerations:
+        - operator: Exists
