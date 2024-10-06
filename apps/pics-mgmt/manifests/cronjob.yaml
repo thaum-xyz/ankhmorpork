@@ -4,6 +4,7 @@ metadata:
   name: manager
   namespace: pics-mgmt
 spec:
+  suspend: true
   schedule: "59 23 7 * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 2
