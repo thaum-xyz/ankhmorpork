@@ -24,7 +24,6 @@ k3s_etcd_s3_secret_key: "{{ lookup('env', 'S3_SECRET_KEY') }}"
 #        - "http://192.168.2.96:5002"
 
 k3s_server_config:
-  # flannel-backend: none
   disable:
   - servicelb
   - traefik
@@ -54,10 +53,11 @@ k3s_server_config:
   - "feature-gates=PDBUnhealthyPodEvictionPolicy=true"
   - "enable-admission-plugins=NamespaceAutoProvision"
   resolv-conf: "/run/systemd/resolve/resolv.conf"
+  flannel-backend: none
+  disable-network-policy: "true"
 
 
 k3s_agent_config:
-  # flannel-backend: none
   kubelet-arg:
   - "system-reserved=cpu=250m,memory=300Mi"
   - "kube-reserved=cpu=200m,memory=150Mi"
