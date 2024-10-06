@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    reloader.homer/group: Administration
+    reloader.homer/logo: https://avatars.githubusercontent.com/u/1416818?s=200&v=4
+    reloader.homer/name: Goldpinger
+    reloader.homer/subtitle: Cluster connectivity checker
+    reloader.homer/tag: local
+  labels:
+    reloader.homer/enabled: "true"
+  name: goldpinger
+  namespace: monitoring
+spec:
+  ingressClassName: private
+  rules:
+  - host: goldpinger.ankhmorpork.thaum.xyz
+    http:
+      paths:
+      - backend:
+          service:
+            name: goldpinger
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - goldpinger.ankhmorpork.thaum.xyz
+    secretName: goldpinger-ankhmorpork-thaum-xyz-tls
