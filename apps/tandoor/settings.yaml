@@ -3,8 +3,8 @@ common:
   namespace: &namespace "tandoor"
   externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
 tandoor:
-  version: "1.5.17"  # application-version-from-github: TandoorRecipes/recipes
-  image: vabene1111/recipes:1.5.17  # application-image-from-github: TandoorRecipes/recipes
+  version: "1.5.19"  # application-version-from-github: TandoorRecipes/recipes
+  image: vabene1111/recipes:1.5.19  # application-image-from-github: TandoorRecipes/recipes
   namespace: *namespace
   resources:
     requests:

@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: tandoor
     app.kubernetes.io/part-of: tandoor
-    app.kubernetes.io/version: 1.5.17
+    app.kubernetes.io/version: 1.5.19
   name: tandoor-media
   namespace: tandoor
 spec:
