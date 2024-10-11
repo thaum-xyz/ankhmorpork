@@ -1,6 +1,7 @@
 bpf:
   hostLegacyRouting: false
   masquerade: true
+  disableExternalIPMitigation: true
 cluster:
   name: ankhmorpork
 cni:
@@ -19,6 +20,8 @@ routingMode: tunnel
 tunnelPort: 6081
 tunnelProtocol: geneve
 
+hostPort:
+  enabled: true
 
 operator:
   replicas: 1
