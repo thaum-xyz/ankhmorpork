@@ -1,5 +1,6 @@
 bpf:
   hostLegacyRouting: false
+  masquerade: true
 cluster:
   name: ankhmorpork
 cni:
