@@ -20,6 +20,8 @@ tunnelPort: 6081
 tunnelProtocol: geneve
 
 #ipv4NativeRoutingCIDR: 192.168.2.0/24
+ipMasqAgent:
+  enabled: true
 
 operator:
   replicas: 1
