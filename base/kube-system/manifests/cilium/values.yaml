@@ -1,6 +1,6 @@
 bpf:
   hostLegacyRouting: false
-  masquerade: true
+  masquerade: false
 cluster:
   name: ankhmorpork
 cni:
@@ -19,7 +19,6 @@ routingMode: tunnel
 tunnelPort: 6081
 tunnelProtocol: geneve
 
-ipv4NativeRoutingCIDR: 192.168.2.0/24
 #ipMasqAgent:
 #  enabled: true
 
