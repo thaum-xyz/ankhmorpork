@@ -35,8 +35,8 @@ prometheus:
   serviceMonitor:
     enabled: true
 
-hubble:
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: false
+#hubble:
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: false
