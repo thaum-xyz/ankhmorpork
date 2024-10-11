@@ -20,8 +20,6 @@ tunnelPort: 6081
 tunnelProtocol: geneve
 
 #ipv4NativeRoutingCIDR: 192.168.2.0/24
-autoDirectNodeRoutes: true
-directRoutingSkipUnreachable: true
 
 operator:
   replicas: 1
