@@ -8,7 +8,7 @@ master02 ansible_host=192.168.2.32
 master03  ansible_host=192.168.2.33
 
 metal01  ansible_host=192.168.2.40
-#metal02  ansible_host=192.168.2.41
+metal02  ansible_host=192.168.2.41
 
 [nvidia]
 metal01
@@ -19,7 +19,7 @@ master0[1:3]
 
 [k3s_nodes]
 metal01
-#metal02
+metal02
 
 [k3s:children]
 k3s_control_plane
