@@ -182,13 +182,6 @@ sensor:
       - 'date'
 
 rest:
-  - resource: http://192.168.2.3/sql_handle.php?type=status_layout
-    scan_interval: 15
-    sensor:
-      - name: "PDU Amperage"
-        unique_id: "pdu_amperage"
-        value_template: "{{ value.split(',')[0] | float / 10 }}"
-
   - resource: https://recipes.krupa.net.pl/api/meal-plan
     scan_interval: 1800
     headers:
