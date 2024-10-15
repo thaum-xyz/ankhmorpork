@@ -1,0 +1,52 @@
+# Config reference: https://github.com/ricoberger/script_exporter/blob/main/charts/script-exporter/values.yaml
+
+serviceMonitor:
+  selfMonitor:
+    enabled: true
+  enabled: true
+
+config: |
+  scripts:
+    - name: pdu
+      command: /etc/script-exporter/pdu.sh
+
+scripts:
+  pdu.sh: |
+    #!/bin/bash
+    invert() {
+      if [ "$1" -eq 0 ]; then
+        echo 1
+      else
+        echo 0
+      fi
+    }
+
+    data=$(curl 'http://192.168.2.3/sql_handle.php?type=status_layout' 2>/dev/null)
+
+    echo "# HELP pdu_status"
+    echo "# TYPE pdu_status gauge"
+    if [ $? -ne 0 ]; then
+        echo "pdu_status 0"
+        exit 1
+    fi
+    if [[ $data == "" ]]; then
+        echo "pdu_status 0"
+        exit 1
+    else
+        echo "pdu_status 1"
+    fi
+    echo "# HELP pdu_ampere"
+    echo "# TYPE pdu_ampere gauge"
+    echo "pdu_ampere $(echo $data | awk -F , '{print $1 / 10}')"
+    echo "# HELP pdu_socket_status"
+    echo "# TYPE pdu_socket_status gauge"
+    sockets=$(echo $data | awk -F '|' '{print $3}')
+    echo "pdu_socket_status{socket=\"1\"} $(invert $(echo $sockets | awk -F , '{print $1}'))"
+    echo "pdu_socket_status{socket=\"2\"} $(invert $(echo $sockets | awk -F , '{print $2}'))"
+    echo "pdu_socket_status{socket=\"3\"} $(invert $(echo $sockets | awk -F , '{print $3}'))"
+    echo "pdu_socket_status{socket=\"4\"} $(invert $(echo $sockets | awk -F , '{print $4}'))"
+    echo "pdu_socket_status{socket=\"5\"} $(invert $(echo $sockets | awk -F , '{print $5}'))"
+    echo "pdu_socket_status{socket=\"6\"} $(invert $(echo $sockets | awk -F , '{print $6}'))"
+    echo "pdu_socket_status{socket=\"7\"} $(invert $(echo $sockets | awk -F , '{print $7}'))"
+    echo "pdu_socket_status{socket=\"8\"} $(invert $(echo $sockets | awk -F , '{print $8}'))"
+    exit 0
