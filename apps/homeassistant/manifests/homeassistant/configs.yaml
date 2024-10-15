@@ -185,6 +185,13 @@ data:
           - 'date'
 
     rest:
+      - resource: http://192.168.2.3/sql_handle.php?type=status_layout
+        scan_interval: 15
+        sensors:
+          - name: "PDU Amperage"
+            unique_id: "pdu_amperage"
+            value_template: "{{ value.split(',')[0] | float / 10 }}"
+
       - resource: https://recipes.krupa.net.pl/api/meal-plan
         scan_interval: 1800
         headers:
@@ -553,6 +560,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2024.9.3
+    app.kubernetes.io/version: 2024.10.2
   name: homeassistant-configs
   namespace: homeassistant
