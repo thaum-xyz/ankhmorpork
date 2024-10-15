@@ -14,6 +14,7 @@ controllers:
     - longhornio/*  # Longhorn checks longhorn-manager image during upgrades and modifications blocks the upgrade
 
 proxy:
+  hostNetwork: true
   podMonitor:
     create: true
 
