@@ -4,6 +4,7 @@ serviceMonitor:
   selfMonitor:
     enabled: true
   enabled: true
+  interval: 15s
 
 config: |
   scripts:
