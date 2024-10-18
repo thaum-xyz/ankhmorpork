@@ -5,5 +5,3 @@ resources:
   - intel-gpu-nfd-platform.yaml
   - intel-gpu-nfd.yaml
   - intel-gpu-plugin.yaml
-  - nvidia-gpu-plugin.yaml
-  - runtimeclass.yaml
