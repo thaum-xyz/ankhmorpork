@@ -97,6 +97,29 @@ function(params) {
     spec: $._config.storage.backups.pvcSpec,
   },
 
+  jobPull: {
+    # Kubernetes job to download new image
+    # This works together with kuik and preStop sleep lifecycle hook
+    apiVersion: "batch/v1",
+    kind: "Job",
+    metadata: $._metadata {
+      name: "pre-pull-image",
+    },
+    spec: {
+      ttlSecondsAfterFinished: 1800,
+      template: {
+        spec: {
+          containers: [{
+            name: "prepull",
+            image: $._config.image,
+            command: ["sleep", "1"],
+          }],
+          restartPolicy: "Never",
+        },
+      },
+    },
+  },
+
   statefulSet: {
     local c = {
       name: $._config.name,
@@ -106,6 +129,10 @@ function(params) {
         name: 'TZ',
         value: $._config.timezone,
       }],
+      preStop: {
+        # Time to wait before job downloading new image completes
+        sleep: 120,
+      },
       ports: [{
         containerPort: 8123,
         name: 'http',

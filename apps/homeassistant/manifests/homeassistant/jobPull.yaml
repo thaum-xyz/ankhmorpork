@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: homeassistant
+    app.kubernetes.io/part-of: homeassistant
+    app.kubernetes.io/version: 2024.10.2
+  name: pre-pull-image
+  namespace: homeassistant
+spec:
+  template:
+    spec:
+      containers:
+        - command:
+            - sleep
+            - "1"
+          image: homeassistant/home-assistant:2024.10.2
+          name: prepull
+      restartPolicy: Never
+  ttlSecondsAfterFinished: 1800
