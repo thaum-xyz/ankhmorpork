@@ -22,6 +22,18 @@ ingress:
       hosts:
         - vod.krupa.net.pl
 
+# Prefer nodes with gpu.intel.com/family: A_Series label
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: gpu.intel.com/family
+              operator: In
+              values:
+                - A_Series
+
 nodeSelector:
   intel.feature.node.kubernetes.io/gpu: "true"
   kubernetes.io/hostname: master03
