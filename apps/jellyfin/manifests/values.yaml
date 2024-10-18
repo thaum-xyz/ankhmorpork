@@ -22,21 +22,32 @@ ingress:
       hosts:
         - vod.krupa.net.pl
 
+nodeSelector:
+  intel.feature.node.kubernetes.io/gpu: "true"
+
 # Prefer nodes with gpu.intel.com/family: A_Series label
+# Prefer non-control-plane nodes
 affinity:
   nodeAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 1
+      - weight: 50
         preference:
           matchExpressions:
             - key: gpu.intel.com/family
               operator: In
               values:
                 - A_Series
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: DoesNotExist
 
-nodeSelector:
-  intel.feature.node.kubernetes.io/gpu: "true"
-  kubernetes.io/hostname: master03
+resources:
+  requests:
+    memory: "1Gi"
+  limits:
+    gpu.intel.com/i915: "1"
 
 # FIXME: This will work when helm chart in version > 1.3.0 is released
 #        For now flux post renderer is used to patch the deployment
