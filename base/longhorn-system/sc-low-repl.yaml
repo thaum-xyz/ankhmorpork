@@ -6,7 +6,6 @@ parameters:
   dataLocality: best-effort
   disableRevisionCounter: "true"
   fsType: xfs
-  migratable: "true"
   numberOfReplicas: "2"
   staleReplicaTimeout: "30"
   unmapMarkSnapChainRemoved: ignored
