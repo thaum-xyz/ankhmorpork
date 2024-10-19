@@ -169,7 +169,7 @@ spec:
             severity: critical
         - alert: ThanosQueryOverload
           annotations:
-            description: Thanos Query {{$labels.job}} has been overloaded for more than 15 minutes. This may be a symptom of excessive simultanous complex requests, low performance of the Prometheus API, or failures within these components. Assess the health of the Thanos query instances, the connnected Prometheus instances, look for potential senders of these requests and then contact support.
+            description: Thanos Query {{$labels.job}} has been overloaded for more than 15 minutes. This may be a symptom of excessive simultaneous complex requests, low performance of the Prometheus API, or failures within these components. Assess the health of the Thanos query instances, the connected Prometheus instances, look for potential senders of these requests and then contact support.
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosqueryoverload
             summary: Thanos query reaches its maximum capacity serving concurrent requests.
           expr: |
@@ -283,6 +283,33 @@ spec:
           for: 3h
           labels:
             severity: critical
+        - alert: ThanosReceiveLimitsConfigReloadFailure
+          annotations:
+            description: Thanos Receive {{$labels.job}} has not been able to reload the limits configuration.
+            runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivelimitsconfigreloadfailure
+            summary: Thanos Receive has not been able to reload the limits configuration.
+          expr: sum by(job) (increase(thanos_receive_limits_config_reload_err_total{job=~".*thanos-receive.*"}[5m])) > 0
+          for: 5m
+          labels:
+            severity: warning
+        - alert: ThanosReceiveLimitsHighMetaMonitoringQueriesFailureRate
+          annotations:
+            description: Thanos Receive {{$labels.job}} is failing for {{$value | humanize}}% of meta monitoring queries.
+            runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivelimitshighmetamonitoringqueriesfailurerate
+            summary: Thanos Receive has not been able to update the number of head series.
+          expr: (sum by(job) (increase(thanos_receive_metamonitoring_failed_queries_total{job=~".*thanos-receive.*"}[5m])) / 20) * 100 > 20
+          for: 5m
+          labels:
+            severity: warning
+        - alert: ThanosReceiveTenantLimitedByHeadSeries
+          annotations:
+            description: Thanos Receive tenant {{$labels.tenant}} is limited by head series.
+            runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivetenantlimitedbyheadseries
+            summary: A Thanos Receive tenant is limited by head series.
+          expr: sum by(job, tenant) (increase(thanos_receive_head_series_limited_requests_total{job=~".*thanos-receive.*"}[5m])) > 0
+          for: 5m
+          labels:
+            severity: warning
     - name: thanos-store
       rules:
         - alert: ThanosStoreGrpcErrorRate
@@ -430,14 +457,14 @@ spec:
             /
               sum by (job) (rate(grpc_server_started_total{job=~".*thanos-receive.*", grpc_type="unary"}[5m]))
             )
-          record: :grpc_server_failures_per_unary:sum_rate
+          record: :thanos_query_receive_grpc_server_failures_per_unary:sum_rate
         - expr: |
             (
               sum by (job) (rate(grpc_server_handled_total{grpc_code=~"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss|DeadlineExceeded", job=~".*thanos-receive.*", grpc_type="server_stream"}[5m]))
             /
               sum by (job) (rate(grpc_server_started_total{job=~".*thanos-receive.*", grpc_type="server_stream"}[5m]))
             )
-          record: :grpc_server_failures_per_stream:sum_rate
+          record: :thanos_query_receive_grpc_server_failures_per_stream:sum_rate
         - expr: |
             (
               sum by (job) (rate(http_requests_total{handler="receive", job=~".*thanos-receive.*", code!~"5.."}[5m]))
@@ -481,14 +508,14 @@ spec:
             /
               sum by (job) (rate(grpc_server_started_total{job=~".*thanos-store.*", grpc_type="unary"}[5m]))
             )
-          record: :grpc_server_failures_per_unary:sum_rate
+          record: :thanos_query_store_grpc_server_failures_per_unary:sum_rate
         - expr: |
             (
               sum by (job) (rate(grpc_server_handled_total{grpc_code=~"Unknown|Internal|Unavailable|DataLoss|DeadlineExceeded", job=~".*thanos-store.*", grpc_type="server_stream"}[5m]))
             /
               sum by (job) (rate(grpc_server_started_total{job=~".*thanos-store.*", grpc_type="server_stream"}[5m]))
             )
-          record: :grpc_server_failures_per_stream:sum_rate
+          record: :thanos_query_store_grpc_server_failures_per_stream:sum_rate
         - expr: |
             (
               sum by (job) (rate(thanos_objstore_bucket_operation_failures_total{job=~".*thanos-store.*"}[5m]))

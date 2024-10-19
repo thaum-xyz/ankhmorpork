@@ -4,10 +4,6 @@ local settings = std.parseYaml(importstr '../settings.yaml')[0];
 
 local i = t.receiveIngestor(std.mergePatch(settings, settings.receiveIngestor));
 
-local r = t.receiveRouter(std.mergePatch(settings, settings.receiveRouter) + {
-  endpoints: i.endpoints,
-});
-
 local s = t.store(std.mergePatch(settings, settings.store));
 
 local q = t.query(settings + settings.query + {
@@ -69,6 +65,17 @@ local all = {
   },
   compact: c,
   custom: {
+    hashring: {
+      apiVersion: 'v1',
+      kind: 'ConfigMap',
+      metadata: {
+        name: 'hashring-config',
+        namespace: settings.namespace,
+      },
+      data: {
+        'hashrings.json': '[{"endpoints": ["thanos-receive-ingestor-default-0.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901", "thanos-receive-ingestor-default-1.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901", "thanos-receive-ingestor-default-2.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901"], "hashring": "default", "tenants": [ ]}]',
+      },
+    },
     bucketConfig: externalsecret(
       {
         name: settings.objectStorageConfig.name,

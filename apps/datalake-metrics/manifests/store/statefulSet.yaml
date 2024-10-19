@@ -96,6 +96,17 @@ spec:
             requests:
               cpu: 500m
               memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65534
+            seccompProfile:
+              type: RuntimeDefault
           terminationMessagePolicy: FallbackToLogsOnError
           volumeMounts:
             - mountPath: /var/thanos/store
@@ -106,7 +117,11 @@ spec:
         kubernetes.io/os: linux
       securityContext:
         fsGroup: 65534
+        runAsGroup: 65532
+        runAsNonRoot: true
         runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: thanos-store
       terminationGracePeriodSeconds: 120
       volumes: []
