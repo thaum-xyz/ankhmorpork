@@ -67,19 +67,6 @@ local all = {
       },
     },
   },
-  receiveRouter: r {
-    serviceMonitor: $.receiveIngestor.serviceMonitor {
-      metadata: r.service.metadata,
-      spec+: {
-        selector+: {
-          matchLabels: {
-            'app.kubernetes.io/component': r.service.metadata.labels['app.kubernetes.io/component'],
-            'app.kubernetes.io/name': r.service.metadata.labels['app.kubernetes.io/name'],
-          },
-        },
-      },
-    },
-  },
   compact: c,
   custom: {
     bucketConfig: externalsecret(
@@ -146,7 +133,7 @@ local all = {
               pathType: 'Prefix',
               backend: {
                 service: {
-                  name: 'thanos-receive-router',
+                  name: 'thanos-receive-ingestor-default',
                   port: {
                     name: 'remote-write',
                   },

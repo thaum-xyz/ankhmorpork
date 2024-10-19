@@ -14,7 +14,7 @@ spec:
         paths:
           - backend:
               service:
-                name: thanos-receive-router
+                name: thanos-receive-ingestor-default
                 port:
                   name: remote-write
             path: /

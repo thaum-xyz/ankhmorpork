@@ -363,7 +363,7 @@ local kp =
 
           // TODO: expose remoteWrite as a top-level config in kube-prometheus
           remoteWrite: [{
-            url: 'http://thanos-receive-router.datalake-metrics.svc:19291/api/v1/receive',
+            url: 'http://thanos-receive-ingestor-default.datalake-metrics.svc:19291/api/v1/receive',
             writeRelabelConfigs: [
               {
                 sourceLabels: ['__name__'],

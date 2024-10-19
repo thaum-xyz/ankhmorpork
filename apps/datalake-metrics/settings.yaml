@@ -41,7 +41,7 @@ receiveIngestor:
 #      cpu: 700m
 #      memory: 2Gi
   replicaLabels: ['replica', 'receive_replica']
-  replicationFactor: 3
+  replicationFactor: 2
   serviceMonitor: true
   volumeClaimTemplate:
     spec:
@@ -50,18 +50,6 @@ receiveIngestor:
       resources:
         requests:
           storage: '35Gi'
-
-receiveRouter:
-  replicas: 3
-  resources:
-    requests:
-      cpu: 200m
-      memory: 98Mi
-#    limits:
-#      cpu: 300m
-#      memory: 200Mi
-  replicaLabels: ['replica', 'receive_replica']
-  replicationFactor: 3
 
 store:
   replicas: 2

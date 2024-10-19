@@ -70,7 +70,7 @@ spec:
             - --grpc-address=0.0.0.0:10901
             - --http-address=0.0.0.0:10902
             - --remote-write.address=0.0.0.0:19291
-            - --receive.replication-factor=3
+            - --receive.replication-factor=2
             - --tsdb.path=/var/thanos/receive
             - --tsdb.retention=2d
             - --label=replica="$(NAME)"
