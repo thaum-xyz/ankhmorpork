@@ -21,18 +21,6 @@ local defaults = {
   /*config: {
 
   },*/
-  storage: {
-    name: 'redis-data',
-    pvcSpec: {
-      // storageClassName: 'local-path',
-      accessModes: ['ReadWriteOnce'],
-      resources: {
-        requests: {
-          storage: '2Gi',
-        },
-      },
-    },
-  },
   mixin:: {
     ruleLabels: {
       prometheus: 'k8s',
@@ -150,7 +138,7 @@ function(params) {
       },
       volumeMounts: [{
         mountPath: '/data',
-        name: $._config.storage.name,
+        name: 'broker-data',
       }],
       resources: $._config.resources,
     },
@@ -201,14 +189,15 @@ function(params) {
           nodeSelector: {
             'kubernetes.io/arch': 'amd64',  // Redis exporter only supports amd64
           },
+          volumes: [{
+            name: 'broker-data',
+            emptyDir: {
+              sizeLimit: '100Mi',
+              medium: 'Memory',
+            },
+          }],
         },
       },
-      volumeClaimTemplates: [{
-        metadata: {
-          name: $._config.storage.name,
-        },
-        spec: $._config.storage.pvcSpec,
-      }],
     },
   },
 

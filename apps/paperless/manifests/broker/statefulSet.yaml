@@ -62,7 +62,7 @@ spec:
       restartPolicy: Always
       serviceAccountName: redis
       volumes:
-      - name: broker-data
-        emptyDir:
-          sizeLimit: 100Mi
-          medium: Memory
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 100Mi
+          name: broker-data

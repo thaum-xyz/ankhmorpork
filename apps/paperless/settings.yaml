@@ -118,12 +118,3 @@ broker:
     limits:
       cpu: 20m
       memory: 30Mi
-  storage:
-    name: "broker-data"
-    pvcSpec:
-      storageClassName: "longhorn"
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 300Mi
