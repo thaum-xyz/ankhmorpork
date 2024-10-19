@@ -154,7 +154,7 @@ spec:
             claimName: books
         - name: downloads
           persistentVolumeClaim:
-            claimName: downloaded
+            claimName: downloads
   volumeClaimTemplates:
     - metadata:
         name: config

@@ -172,15 +172,24 @@ local all = {
   },
 
   shared:
-    utils.persistentVolume({ name: 'downloaded', namespace: config.common.namespace }, '100Gi', 'qnap-nfs') +
     utils.persistentVolume({ name: 'tv', namespace: config.common.namespace }, '4000Gi', 'manual', '192.168.2.29') +
     utils.persistentVolume({ name: 'movies', namespace: config.common.namespace }, '4000Gi', 'manual', '192.168.2.29') +
     {
-      'pv-downloaded':: {},
-      'pvc-downloaded'+: {
-        spec+: {
+      'pvc-downloads': {
+        apiVersion: 'v1',
+        kind: 'PersistentVolumeClaim',
+        metadata: {
+          name: 'downloads',
+          namespace: config.common.namespace,
+        },
+        spec: {
           accessModes: ['ReadWriteMany'],
-          volumeName:: {},
+          resources: {
+            requests: {
+              storage: '100Gi',
+            },
+          },
+          storageClassName: 'longhorn-r2',
         },
       },
     },

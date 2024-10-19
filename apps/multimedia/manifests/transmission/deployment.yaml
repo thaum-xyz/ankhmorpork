@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: transmission
-    app.kubernetes.io/version: "5.3.0"
+    app.kubernetes.io/version: 5.3.0
   name: transmission
   namespace: multimedia
 spec:
@@ -19,7 +19,7 @@ spec:
         kubectl.kubernetes.io/default-container: transmission
       labels:
         app.kubernetes.io/name: transmission
-        app.kubernetes.io/version: "5.3.0"
+        app.kubernetes.io/version: 5.3.0
     spec:
       containers:
         - env:
@@ -91,4 +91,4 @@ spec:
             claimName: transmission-data
         - name: completed
           persistentVolumeClaim:
-            claimName: downloaded
+            claimName: downloads
