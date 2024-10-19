@@ -104,7 +104,7 @@ esphome:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 300Mi
+          storage: 5Gi
 espdevices:
   name: "esp-dev"
   namespace: *namespace
