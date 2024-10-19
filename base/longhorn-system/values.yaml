@@ -2,7 +2,7 @@
 
 persistence:
   defaultClass: false
-  defaultFsType: ext4
+  defaultFsType: xfs
   defaultDataLocality: best-effort
   migratable: true
 
