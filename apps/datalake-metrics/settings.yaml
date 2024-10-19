@@ -1,6 +1,6 @@
 ---
-version: '0.34.1'  # application-version-from-github: thanos-io/thanos
-image: "quay.io/thanos/thanos:v0.34.1"  # application-image-from-github: thanos-io/thanos
+version: '0.36.1'  # application-version-from-github: thanos-io/thanos
+image: "quay.io/thanos/thanos:v0.36.1"  # application-image-from-github: thanos-io/thanos
 namespace: "datalake-metrics"
 imagePullPolicy: 'IfNotPresent'
 hashringConfigMapName: 'hashring-config'
@@ -106,8 +106,8 @@ compact:
   volumeClaimTemplate:
     spec:
       accessModes: ['ReadWriteOnce']
-      storageClassName: 'qnap-nfs'
+      storageClassName: 'longhorn-r2'
       resources:
         requests:
-          storage: '30Gi'
+          storage: '5Gi'
   serviceMonitor: true

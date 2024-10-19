@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: database-compactor
     app.kubernetes.io/instance: thanos-compact
     app.kubernetes.io/name: thanos-compact
-    app.kubernetes.io/version: 0.34.1
+    app.kubernetes.io/version: 0.36.1
   name: thanos-compact
   namespace: datalake-metrics
 spec:
