@@ -37,7 +37,7 @@ paperless:
         requests:
           storage: 1Gi
     backups:
-      storageClassName: "qnap-nfs"
+      storageClassName: "longhorn-r2"
       accessModes:
         - ReadWriteOnce
       resources:
@@ -121,9 +121,9 @@ broker:
   storage:
     name: "broker-data"
     pvcSpec:
-      storageClassName: "qnap-nfs"
+      storageClassName: "longhorn"
       accessModes:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 300Mi
+          storage: 100Mi
