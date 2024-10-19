@@ -1,7 +1,7 @@
 # Config reference: https://github.com/immich-app/immich-charts/tree/main/charts/immich
 
 image:
-  tag: v1.117.0
+  tag: v1.118.0
 
 env:
   TZ: "Europe/Warsaw"
@@ -105,7 +105,7 @@ machine-learning:
   persistence:
     cache:
       enabled: true
-      size: 10Gi
+      size: 3Gi
       type: pvc
       accessMode: ReadWriteMany
-      storageClass: qnap-nfs
+      storageClass: longhorn-r2
