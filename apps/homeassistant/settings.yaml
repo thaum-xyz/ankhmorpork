@@ -47,10 +47,10 @@ homeassistant:
       pvcSpec:
         storageClassName: "longhorn-r2"
         accessModes:
-          - ReadWriteMany
+          - ReadWriteOnce
         resources:
           requests:
-            storage: 20Gi
+            storage: 10Gi
 
 postgres:
   name: postgres
