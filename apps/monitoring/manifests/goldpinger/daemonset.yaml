@@ -29,7 +29,7 @@ spec:
         - name: goldpinger
           env:
             - name: HOST
-              value: "0.0.0.0"
+              value: 0.0.0.0
             - name: PORT
               value: "8080"
             # injecting real hostname will make for easier to understand graphs/metrics
@@ -46,14 +46,14 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: LABEL_SELECTOR
-              value: "app.kubernetes.io/name=goldpinger"
+              value: app.kubernetes.io/name=goldpinger
             - name: DISPLAY_NODENAME
               value: "true"
             #- name: HOSTS_TO_RESOLVE
             #  value: "www.google.com"
             - name: HTTP_TARGETS
-              value: "http://www.google.com"
-          image: "docker.io/bloomberg/goldpinger:3.10.1"
+              value: http://www.google.com
+          image: docker.io/bloomberg/goldpinger:3.10.1
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false

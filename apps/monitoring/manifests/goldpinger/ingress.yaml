@@ -15,17 +15,17 @@ metadata:
 spec:
   ingressClassName: private
   rules:
-  - host: goldpinger.ankhmorpork.thaum.xyz
-    http:
-      paths:
-      - backend:
-          service:
-            name: goldpinger
-            port:
-              number: 8080
-        path: /
-        pathType: Prefix
+    - host: goldpinger.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: goldpinger
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix
   tls:
-  - hosts:
-    - goldpinger.ankhmorpork.thaum.xyz
-    secretName: goldpinger-ankhmorpork-thaum-xyz-tls
+    - hosts:
+        - goldpinger.ankhmorpork.thaum.xyz
+      secretName: goldpinger-ankhmorpork-thaum-xyz-tls
