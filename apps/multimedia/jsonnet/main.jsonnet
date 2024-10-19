@@ -1,6 +1,5 @@
 local postgres = import 'apps/cloudnative-pg-cluster.libsonnet';
 local arr = import 'arr.libsonnet';
-local plex = import 'plex.libsonnet';
 
 local externalsecret = (import 'utils/externalsecrets.libsonnet').externalsecret;
 local utils = import 'utils.libsonnet';
@@ -166,53 +165,6 @@ local all = {
               'CREATE DATABASE readarr-cache;',
               'ALTER DATABASE readarr-cache OWNER TO %s;' % config.readarr.postgres.db.user,
             ],
-          },
-        },
-      },
-    },
-  },
-
-  plex: plex(config.plex) + {
-    statefulset+: {
-      spec+: {
-        replicas: 0,
-      },
-    },
-    plexClaim: externalsecret(
-      {
-        name: config.plex.plexClaim.secretName,
-        namespace: config.plex.namespace,
-      },
-      config.plex.externalSecretStoreName,
-      { PLEX_CLAIM: config.plex.plexClaim.remoteRef }
-    ),
-    plexToken: externalsecret(
-      {
-        name: config.plex.exporter.config.secretName,
-        namespace: config.plex.namespace,
-      },
-      config.plex.externalSecretStoreName,
-      { token: config.plex.exporter.config.remoteRef }
-    ) + {
-      spec+: {
-        target: {
-          name: config.plex.exporter.config.secretName,
-          template: {
-            engineVersion: 'v2',
-            data: {
-              'config.json': |||
-                {
-                  "exporter": {
-                    "port": 9594
-                  },
-                  "server": {
-                    "address": "127.0.0.1",
-                    "port": 32400,
-                    "token": "{{ .token }}"
-                  }
-                }
-              |||,
-            },
           },
         },
       },
