@@ -45,7 +45,7 @@ homeassistant:
             storage: 2Gi
     backups:
       pvcSpec:
-        storageClassName: "qnap-nfs"
+        storageClassName: "longhorn-r2"
         accessModes:
           - ReadWriteMany
         resources:
@@ -99,7 +99,7 @@ esphome:
   storage:
     name: "esphome-data"
     pvcSpec:
-      storageClassName: "qnap-nfs"
+      storageClassName: "longhorn-r2"
       accessModes:
         - ReadWriteOnce
       resources:

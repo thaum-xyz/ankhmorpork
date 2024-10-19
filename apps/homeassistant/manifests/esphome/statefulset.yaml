@@ -50,4 +50,4 @@ spec:
         resources:
           requests:
             storage: 300Mi
-        storageClassName: qnap-nfs
+        storageClassName: longhorn-r2
