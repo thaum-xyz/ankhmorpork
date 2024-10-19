@@ -50,4 +50,4 @@ spec:
         resources:
           requests:
             storage: 300Mi
-        storageClassName: longhorn-r2
+        storageClassName: longhorn

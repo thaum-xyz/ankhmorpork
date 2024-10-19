@@ -99,7 +99,7 @@ esphome:
   storage:
     name: "esphome-data"
     pvcSpec:
-      storageClassName: "longhorn-r2"
+      storageClassName: "longhorn"
       accessModes:
         - ReadWriteOnce
       resources:
