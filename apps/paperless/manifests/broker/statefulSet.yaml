@@ -61,13 +61,8 @@ spec:
         kubernetes.io/arch: amd64
       restartPolicy: Always
       serviceAccountName: redis
-  volumeClaimTemplates:
-    - metadata:
-        name: broker-data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 100Mi
-        storageClassName: longhorn
+      volumes:
+      - name: broker-data
+        emptyDir:
+          sizeLimit: 100Mi
+          medium: Memory
