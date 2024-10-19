@@ -65,9 +65,11 @@ spec:
                 - NET_ADMIN
           volumeMounts:
             - mountPath: /config
-              name: config
+              name: transmission-data
+              subPath: config
             - mountPath: /download/incomplete
-              name: incomplete
+              name: transmission-data
+              subPath: incomplete
             - mountPath: /download/completed
               name: completed
       dnsConfig:
@@ -84,12 +86,9 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: metal01
       volumes:
-        - name: config
+        - name: transmission-data
           persistentVolumeClaim:
-            claimName: transmission-appdata
-        - name: incomplete
-          persistentVolumeClaim:
-            claimName: torrents-incomplete
+            claimName: transmission-data
         - name: completed
           persistentVolumeClaim:
             claimName: downloaded
