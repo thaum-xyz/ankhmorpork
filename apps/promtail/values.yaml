@@ -20,6 +20,16 @@ serviceMonitor:
 #    mountPath: /var/log
 #    readOnly: true
 
+extraPorts:
+  syslog:
+    name: tcp-syslog
+    containerPort: 1514
+    protocol: TCP
+    service:
+      type: Loadbalancer
+      port: 1514
+      loadBalancerIP: 192.168.2.82
+
 config:
   logFormat: json
   clients:
@@ -27,3 +37,14 @@ config:
     - url: http://loki-write.datalake-logs.svc:3100/loki/api/v1/push
       external_labels:
         cluster: ankhmorpork
+  extraScrapeConfigs: |
+    - job_name: syslog
+      syslog:
+        listen_address: 0.0.0.0:1514
+        idle_timeout: 60s
+        label_structured_data: yes
+        labels:
+          job: "syslog"
+      relabel_configs:
+        - source_labels: ['__syslog_message_hostname']
+          target_label: 'host'
