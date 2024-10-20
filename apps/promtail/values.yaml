@@ -22,9 +22,9 @@ serviceMonitor:
 
 extraPorts:
   syslog:
-    name: tcp-syslog
+    name: udp-syslog
     containerPort: 1514
-    protocol: TCP
+    protocol: UDP
     service:
       type: LoadBalancer
       port: 1514
@@ -42,6 +42,7 @@ config:
       - job_name: syslog
         syslog:
           listen_address: 0.0.0.0:1514
+          listen_protocol: udp
           idle_timeout: 60s
           label_structured_data: yes
           labels:
