@@ -1,12 +1,14 @@
 # Config reference: https://github.com/grafana/helm-charts/blob/main/charts/promtail/values.yaml
 
-# TODO: Add systemd logs gathering. Starting point - https://community.grafana.com/t/promtail-never-scrapes-journal-logs-using-readme-suggestions-in-official-helm-chart/91436
+image:
+  tag: 3.2.1
 
 priorityClassName: "system-cluster-critical"
 
 serviceMonitor:
   enabled: true
 
+# TODO: Add systemd logs gathering. Starting point - https://community.grafana.com/t/promtail-never-scrapes-journal-logs-using-readme-suggestions-in-official-helm-chart/91436
 
 # Extra volumes to be added in addition to those specified under `defaultVolumes`.
 #extraVolumes:
@@ -48,5 +50,19 @@ config:
           labels:
             job: "syslog"
         relabel_configs:
-          - source_labels: ['__syslog_message_hostname']
-            target_label: 'host'
+          - source_labels: [__syslog_message_severity]
+            target_label: level
+          - source_labels: [__syslog_message_facility]
+            target_label: facility
+          - source_labels: [__syslog_connection_hostname]
+            target_label: host
+          - source_labels: [__syslog_connection_ip_address]
+            target_label: ip
+          - source_labels: [__syslog_message_hostname]
+            target_label: hostname
+          - source_labels: [__syslog_message_app_name]
+            target_label: app
+          - source_labels: [__syslog_message_proc_id]
+            target_label: proc
+          - source_labels: [__syslog_message_msg_id]
+            target_label: msgid
