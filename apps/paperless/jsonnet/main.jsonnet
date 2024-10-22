@@ -10,6 +10,28 @@ local config = std.parseYaml(configYAML)[0];
 
 local all = {
   web: paperless(config.paperless) + {
+    cronjob+: {
+      spec+: {
+        jobTemplate+: {
+          spec+: {
+            template+: {
+              spec+: {
+                initContainers: [{
+                  // init container to change permissions on the backup directory to 0777 due to bug in longhorn RWX support
+                  command: ['sh', '-c', 'chmod 0777 /mnt/backups'],
+                  image: 'busybox',
+                  name: 'permissions',
+                  volumeMounts: [{
+                    mountPath: '/mnt/backups',
+                    name: 'backups',
+                  }],
+                }],
+              },
+            },
+          },
+        },
+      },
+    },
     database+:: {},
     databaseSecret: externalsecret(
       $.web.database.metadata,

@@ -59,6 +59,16 @@ spec:
                   name: consume
                 - mountPath: /mnt/backups
                   name: backups
+          initContainers:
+            - command:
+                - sh
+                - -c
+                - chmod 0777 /mnt/backups
+              image: busybox
+              name: permissions
+              volumeMounts:
+                - mountPath: /mnt/backups
+                  name: backups
           restartPolicy: Never
           serviceAccountName: paperless
           volumes:
