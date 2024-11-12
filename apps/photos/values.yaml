@@ -18,7 +18,6 @@ env:
         name: postgres-user
         key: password
   DB_DATABASE_NAME: "immich"
-  IMMICH_METRICS: "true"  # FIXME: most likely not needed since immich.metrics.enabled is set to true. Left here until chart 0.6.0+ is released
   IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
 immich:
