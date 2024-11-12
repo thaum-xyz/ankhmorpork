@@ -19,10 +19,19 @@ spec:
       namespaceSelector:
         any: true
       relabelingConfigs:
-        - action: keep
-          regex: /
+        - action: replace
+          regex: (.+);(.+);(.+)
+          replacement: ${1}://${2}${3}"
+          separator: ;
           sourceLabels:
-            - __meta_kubernetes_ingress_path
+            - __meta_kubernetes_ingress_scheme
+            - __tmp_ingress_address
+            - __meta_kubernetes_ingress_annotation_probe_uri
+          targetLabel: __param_target
+        - action: replace
+          sourceLabels:
+            - __param_target
+          targetLabel: instance
       selector:
         matchLabels:
           probe: enabled
