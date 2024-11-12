@@ -73,7 +73,7 @@ backend:
   - secretRef:
       name: s3-credentials
   persistence:
-    size: 5Gi
+    size: 2Gi
     storageClass: longhorn
 
 tableManager:
