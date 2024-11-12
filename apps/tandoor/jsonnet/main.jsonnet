@@ -11,7 +11,15 @@ local all = {
   postgres: postgres(config.postgres),
 
   local t = tandoor(config.tandoor),
-  common: t.common,
+  common: t.common {
+    ingress+: {
+      metadata+: {
+        annotations+: {
+          'probe-uri': '/',
+        },
+      },
+    },
+  },
   app: t.app {
     secretKey+:: {},
     secretDjango: externalsecret(
