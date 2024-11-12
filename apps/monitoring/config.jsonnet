@@ -123,7 +123,7 @@
             {
               action: 'replace',
               regex: '(.+);(.+);(.+)',
-              replacement: '${1}://${2}${3}"',
+              replacement: '${1}://${2}${3}',
               separator: ';',
               sourceLabels: [
                 '__meta_kubernetes_ingress_scheme',
