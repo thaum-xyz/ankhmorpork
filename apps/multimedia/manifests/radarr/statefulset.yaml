@@ -65,7 +65,7 @@ spec:
               name: config
             - mountPath: /multimedia
               name: multimedia
-            - mountPath: /download/completed
+            - mountPath: /download
               name: downloads
         - args:
             - radarr

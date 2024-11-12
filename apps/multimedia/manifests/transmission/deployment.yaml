@@ -66,9 +66,7 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: transmission-config
-            - mountPath: /download/incomplete
-              name: data
-            - mountPath: /download/completed
+            - mountPath: /download
               name: data
       dnsConfig:
         nameservers:

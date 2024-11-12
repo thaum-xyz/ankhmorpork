@@ -269,7 +269,7 @@ function(params) {
         name: 'multimedia',
       }] else [],
       local downloadsPVCmount = if std.objectHas(params, 'downloadsPVCName') && std.length(params.downloadsPVCName) > 0 then [{
-        mountPath: '/download/completed',
+        mountPath: '/download',
         name: 'downloads',
       }] else [],
       volumeMounts: [
