@@ -15,6 +15,7 @@ homeassistant:
       reloader.homer/name: HomeAssistant
       reloader.homer/subtitle: "Home automation system"
       reloader.homer/logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png"
+      probe-uri: '/manifest.json'
     labels:
       reloader.homer/enabled: "true"
   hostNetwork: true  # Needed to enable WOL

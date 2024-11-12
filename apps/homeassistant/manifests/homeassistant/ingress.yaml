@@ -5,6 +5,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    probe-uri: '/manifest.json'
     reloader.homer/group: Ankh Cloud
     reloader.homer/logo: https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png
     reloader.homer/name: HomeAssistant
