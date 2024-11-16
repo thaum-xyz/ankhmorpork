@@ -5,7 +5,6 @@ resources:
   - repository.yaml
   - release.yaml
   - bucket-config.yaml
-  - ingress.yaml
   - ingress-middleware-auth.yaml
   - ingress-auth.yaml
   - prometheus-rules.yaml
