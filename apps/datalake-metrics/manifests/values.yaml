@@ -87,7 +87,7 @@ data:
       - --hash-func=SHA256
 
     storegateway:
-      enabled: false
+      enabled: true
       replicaCount: 2
       logFormat: json
       resources:

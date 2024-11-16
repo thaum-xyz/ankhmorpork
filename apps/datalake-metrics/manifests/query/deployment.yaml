@@ -48,6 +48,7 @@ spec:
             - --query.replica-label=prometheus_replica
             - --query.replica-label=rule_replica
             - --endpoint=dnssrv+_grpc._tcp.thanos-store.datalake-metrics.svc.cluster.local:10901
+            - --endpoint=dnssrv+_grpc._tcp.thanos-storegateway.datalake-metrics.svc.cluster.local:10901
             - --endpoint=dnssrv+_grpc._tcp.thanos-receive-ingestor-default.datalake-metrics.svc.cluster.local:10901
             - --query.auto-downsampling
           env:
