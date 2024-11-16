@@ -6,7 +6,10 @@ configuration:
   # Abort drain after this time
   drainTimeout: "2h"
   period: "2h"
-  rebootDays: "mo,we,th"
+  rebootDays:
+  - mo
+  - we
+  - th
   startTime: "07:00:00"
   endTime: "12:00:00"
   lockReleaseDelay: "1h"
