@@ -136,7 +136,7 @@ receive:
       - thanos-receive-2.thanos-receive-headless.datalake-metrics.svc.cluster.local:10901
 
   persistence:
-    storageClass: lvm
+    storageClass: lvm-thin
     size: 35Gi
 
 #receiveDistributor:
