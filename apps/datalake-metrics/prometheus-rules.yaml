@@ -2,7 +2,6 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: thanos-overrides
-  namespace: datalake-metrics
 spec:
   groups:
     - name: thanos-overrides

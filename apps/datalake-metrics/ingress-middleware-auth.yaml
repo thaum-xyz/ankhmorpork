@@ -2,7 +2,6 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: basicauth
-  namespace: datalake-metrics
 spec:
   basicAuth:
     removeHeader: true
