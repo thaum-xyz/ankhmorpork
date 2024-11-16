@@ -16,9 +16,17 @@ spec:
     kind: ClusterSecretStore
     name: doppler-auth-api
   target:
-    name: thanos-objectstorage
     template:
       data:
+        objstore.yml: |-
+          type: S3
+          config:
+            bucket: metrics
+            endpoint: main-minio.minio.svc:9000
+            access_key: {{ .access_key }}
+            secret_key: {{ .secret_key }}
+            insecure: true
+          prefix: thanos
         thanos.yaml: |
           type: S3
           config:
@@ -28,4 +36,3 @@ spec:
             secret_key: {{ .secret_key }}
             insecure: true
           prefix: thanos
-      engineVersion: v2
