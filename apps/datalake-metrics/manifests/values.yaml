@@ -5,6 +5,10 @@ metadata:
   namespace: datalake-metrics
 data:
   values.yaml: |-
+    image:
+      registry: quay.io
+      repository: thanos
+      tag: v0.36.1
     existingObjstoreSecret: thanos-objectstorage
 
     minio:
