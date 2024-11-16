@@ -16,7 +16,7 @@ metrics:
     enabled: true
   prometheusRule:
     default:
-      create: false
+      create: true
       disabled:
         # Disabling alerts that are not relevant
         ThanosSidecarIsDown: true
