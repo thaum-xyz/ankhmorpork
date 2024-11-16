@@ -69,11 +69,8 @@ compactor:
   logFormat: json
   resources:
     requests:
-      cpu: 1
-      #memory: 20Gi
-    limits:
-      cpu: 1
-      #memory: 20Gi
+      cpu: 50m
+      memory: 200Mi
   persistence:
     storageClass: longhorn-r2
     size: 10Gi
@@ -92,8 +89,8 @@ storegateway:
   logFormat: json
   resources:
     requests:
-      cpu: 500m
-      memory: 1Gi
+      cpu: 50m
+      memory: 500Mi
   pdb:
     create: true
   sharded:
@@ -115,8 +112,8 @@ receive:
   tsdbRetention: 2d
   resources:
     requests:
-      cpu: 150m
-      memory: 1100Mi
+      cpu: 50m
+      memory: 100Mi
   extraFlags:
     - --receive.hashrings-algorithm=ketama
   ingress:
