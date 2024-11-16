@@ -1,0 +1,26 @@
+# Reference documentation: https://artifacthub.io/packages/helm/kured/kured
+
+configuration:
+  annotateNodes: true
+  concurrency: 1
+  # Abort drain after this time
+  drainTimeout: "2h"
+  period: "2h"
+  rebootDays: "mo,we,th"
+  startTime: "07:00:00"
+  endTime: "12:00:00"
+  lockReleaseDelay: "1h"
+
+resources:
+  limits:
+    cpu: 10m
+    memory: 128Mi
+  requests:
+    cpu: 3m
+    memory: 64Mi
+
+metrics:
+  create: true
+
+service:
+  create: true

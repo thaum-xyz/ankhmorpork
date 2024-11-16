@@ -1,13 +1,12 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: kured
+  name: system-kured
   namespace: flux-apps
 spec:
   interval: 60m0s
-  path: ./apps/system-update/manifests
+  path: ./apps/system-kured
   prune: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
-

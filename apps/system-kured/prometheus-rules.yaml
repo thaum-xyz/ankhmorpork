@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kured
+spec:
+  groups:
+    - name: kured.rules
+      rules:
+        - record: :kured_reboot_required:sum_over_time1d
+          expr: |
+            sum_over_time(kured_reboot_required[1d])
+        - alert: KuredDrainFailure
+          annotations:
+            description: Kured on cluster {{ $labels.cluster }} left node {{ $labels.node }} in unschedulable state for more than 24h. This most likely indicates failed node drain and requires manual intervention.
+            summary: Kubernetes node drain failure.
+          expr: |
+            kube_node_spec_unschedulable == 1
+            and
+            on (cluster, node) (kured_reboot_required == 1)
+          for: 24h
+          labels:
+            severity: warning

@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: system-kured
+resources:
+  - repository.yaml
+  - release.yaml
+  - prometheus-rules.yaml
+configMapGenerator:
+  - name: values
+    files:
+      - values.yaml=values.yaml
+configurations:
+  - kustomizeconfig.yaml
