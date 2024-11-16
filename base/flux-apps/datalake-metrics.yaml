@@ -5,11 +5,10 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 5m0s
-  path: ./apps/datalake-metrics/manifests
+  path: ./apps/datalake-metrics
   prune: true
   force: true
   suspend: false
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
-
