@@ -121,7 +121,7 @@ receive:
   extraFlags:
     - --receive.hashrings-algorithm=ketama
   ingress:
-    enabled: false  # FIXME: Move ingress to helm chart after migration
+    enabled: true
     hostname: metrics.datalake.ankhmorpork.thaum.xyz
     ingressClassName: public
     annotations:
