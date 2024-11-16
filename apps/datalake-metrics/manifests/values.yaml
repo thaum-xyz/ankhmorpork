@@ -111,7 +111,7 @@ data:
       enabled: false
 
     receive:
-      enabled: false
+      enabled: true
       logFormat: json
       # WARNING: when increasing replica count, remember to update the config section with new endpoints!
       replicaCount: 3
