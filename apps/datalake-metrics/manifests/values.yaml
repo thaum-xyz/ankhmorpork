@@ -33,7 +33,7 @@ data:
             ThanosQueryHttpRequestQueryErrorRateHigh: true
 
     query:
-      enabled: false
+      enabled: true
       logFormat: json
       replicaLabel: [prometheus_replica, replica]
       resources:
