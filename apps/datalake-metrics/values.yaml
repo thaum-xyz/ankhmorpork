@@ -1,0 +1,145 @@
+# Helm values reference: https://artifacthub.io/packages/helm/bitnami/thanos
+
+image:
+  registry: quay.io
+  repository: thanos
+  tag: v0.36.1
+
+existingObjstoreSecret: thanos-objectstorage
+
+minio:
+  enabled: false
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    default:
+      create: false
+      disabled:
+        # Disabling alerts that are not relevant
+        ThanosSidecarIsDown: true
+        ThanosSidecarBucketOperationsFailed: true
+        ThanosSidecarNoConnectionToStartedPrometheus: true
+        ThanosBucketReplicateErrorRate: true
+        ThanosBucketReplicateRunLatency: true
+        ThanosCompactIsDown: true
+        ThanosQueryHttpRequestQueryErrorRateHigh: true
+
+query:
+  enabled: true
+  logFormat: json
+  replicaLabel: [prometheus_replica, replica]
+  resources:
+    requests:
+      cpu: 15m
+      memory: 40Mi
+  replicaCount: 2
+  extraFlags:
+    - --query.auto-downsampling
+  ingress:
+    enabled: false
+
+queryFrontend:
+  enabled: false
+
+#indexCacheConfig: |
+#  type: MEMCACHED
+#  config:
+#    addresses:
+#      - memcached-0.memcached.datalake-metrics.svc.cluster.local:11211
+#      - memcached-1.memcached.datalake-metrics.svc.cluster.local:11211
+#    max_item_size: 10MiB
+
+#bucketCacheConfig: |
+#  type: MEMCACHED
+#  config:
+#    addresses:
+#      - memcached-0.memcached.datalake-metrics.svc.cluster.local:11211
+#      - memcached-1.memcached.datalake-metrics.svc.cluster.local:11211
+#    max_item_size: 10MiB
+
+bucketweb:
+  enabled: false
+
+compactor:
+  enabled: true
+  logFormat: json
+  resources:
+    requests:
+      cpu: 1
+      #memory: 20Gi
+    limits:
+      cpu: 1
+      #memory: 20Gi
+  persistence:
+    storageClass: longhorn-r2
+    # Note: we already know this cannot be lower than 250Gi
+    size: 7Gi
+  retentionResolutionRaw: 33d  # Keep raw samples for 33 days
+  retentionResolution5m: 120d  # Keep samples downsampled to 5m for 99 days (note that 5m downsampling kicks in after 40h)
+  retentionResolution1h: 365d    # Keep samples downsampled to 1h for 1 year (note that 1h downsampling kicks in after 10d)
+  extraFlags:
+  # Thanos cannot deduplicate data on write and it should be deduplicated by compactor
+  # However to do this, compactor needs to know what are the labels attached by thanos receiver and ruler
+  - --deduplication.replica-label=replica
+  - --hash-func=SHA256
+
+storegateway:
+  enabled: true
+  replicaCount: 2
+  logFormat: json
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  pdb:
+    create: true
+  sharded:
+    enabled: false
+  persistence:
+    storageClass: longhorn
+    size: 7Gi
+
+ruler:
+  enabled: false
+
+receive:
+  enabled: true
+  logFormat: json
+  # WARNING: when increasing replica count, remember to update the config section with new endpoints!
+  replicaCount: 3
+  replicaLabel: replica
+  replicationFactor: 2
+  tsdbRetention: 2d
+  resources:
+    requests:
+      cpu: 150m
+      memory: 1100Mi
+  extraFlags:
+    - --receive.hashrings-algorithm=ketama
+  ingress:
+    enabled: false  # FIXME: Move ingress to helm chart after migration
+
+  service:
+    # Due to magic of helm charts, enabling additional headless SVC allows for proper receiver identification
+    # Without this, all receivers identify as "127.0.0.1:10901" which can cause issues with data querying
+    additionalHeadless: true
+
+  config:
+    - hashring: default
+      tenants: []
+      endpoints:
+      - thanos-receive-0.thanos-receive-headless.datalake-metrics.svc.cluster.local:10901
+      - thanos-receive-1.thanos-receive-headless.datalake-metrics.svc.cluster.local:10901
+      - thanos-receive-2.thanos-receive-headless.datalake-metrics.svc.cluster.local:10901
+
+  persistence:
+    storageClass: lvm
+    size: 35Gi
+
+#receiveDistributor:
+#  enabled: true
+#  logFormat: json
+#  replicaCount: 2

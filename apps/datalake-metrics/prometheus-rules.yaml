@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: thanos-overrides
+  namespace: datalake-metrics
+spec:
+  groups:
+    - name: thanos-overrides
+      rules:
+        # Original rule comes from helm chart and is disabled in values.yaml (section .metrics.prometheusRule.default.disabled.ThanosCompactIsDown)
+        - alert: ThanosCompactIsDown
+          annotations:
+            description: ThanosCompact has disappeared. Prometheus target for the component cannot be discovered.
+            runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanoscompactisdown
+            summary: Thanos component has disappeared.
+          expr: absent(up{job=~".*thanos-compactor.*"} == 1)
+          for: 1h
+          labels:
+            severity: warning
+        # Original rule doesn't limit the volume of requests leading to alert when there is a single heavy query
+        - alert: ThanosQueryHttpRequestQueryErrorRateHigh
+          annotations:
+            description: Thanos Query {{ $labels.job }} is failing to handle {{ $value | humanize }}% of "query" requests.
+            runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosqueryhttprequestqueryerrorratehigh
+            summary: Thanos Query is failing to handle requests.
+          expr: |
+            (
+              sum by (job) (rate(http_requests_total{code=~"5..", job=~".*thanos-query.*", handler="query"}[5m]))
+            /
+              sum by (job) (rate(http_requests_total{job=~".*thanos-query.*", handler="query"}[5m]))
+            ) * 100 > 5
+            AND
+            sum by (job) (rate(http_requests_total{handler="query_range",job=~".*thanos-query.*",namespace="obs-central-metrics"}[5m])) > 0.5
+          for: 5m
+          labels:
+            severity: critical

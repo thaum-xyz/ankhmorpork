@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: minio
+resources:
+  - repository.yaml
+  - release.yaml
+  - bucket-config.yaml
+  - ingress.yaml
+  - ingress-middleware-auth.yaml
+  - ingress-auth.yaml
+  - prometheus-rules.yaml
+  - slo-receive-errors.yaml
+  - slo-receive-latency.yaml
+configMapGenerator:
+  - name: values
+    files:
+      - values.yaml=values.yaml
+configurations:
+  - kustomizeconfig.yaml
