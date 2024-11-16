@@ -2,7 +2,7 @@
 
 image:
   registry: quay.io
-  repository: thanos
+  repository: thanos/thanos
   tag: v0.36.1
 
 existingObjstoreSecret: thanos-objectstorage
