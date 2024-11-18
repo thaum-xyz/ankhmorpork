@@ -59,6 +59,8 @@ spec:
               value: "false"
             - name: GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES
               value: "false"
+            - name: GF_INSTALL_PLUGINS
+              value: "yesoreyeram-infinity-datasource"
           image: grafana/grafana:11.3.0
           name: grafana
           ports:

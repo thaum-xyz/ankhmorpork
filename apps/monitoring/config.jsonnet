@@ -247,6 +247,7 @@
       { name: 'GF_ANALYTICS_REPORTING_ENABLED', value: 'false' },
       { name: 'GF_ANALYTICS_CHECK_FOR_UPDATES', value: 'false' },
       { name: 'GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES', value: 'false' },
+      { name: 'GF_INSTALL_PLUGINS', value: 'yesoreyeram-infinity-datasource' },
     ],
   },
   // Following are not in kube-prometheus
