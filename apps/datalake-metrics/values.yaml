@@ -27,6 +27,7 @@ metrics:
         ThanosCompactIsDown: true
         ThanosQueryHttpRequestQueryErrorRateHigh: true
         ThanosRuleIsDown: true
+        ThanosReceiveHttpRequestErrorRateHigh: true
 
 query:
   enabled: true
