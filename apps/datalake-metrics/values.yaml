@@ -149,3 +149,10 @@ receiveDistributor:
   logFormat: json
   replicaCount: 2
   replicationFactor: 2
+  resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 128Mi
