@@ -104,8 +104,7 @@ ruler:
 
 receive:
   enabled: true
-  # mode: dual-mode
-  mode: standalone
+  mode: dual-mode
   logFormat: json
   # WARNING: when increasing replica count, remember to update the config section with new endpoints!
   replicaCount: 3
@@ -145,7 +144,7 @@ receive:
     size: 35Gi
 
 receiveDistributor:
-  enabled: false
+  enabled: true
   logFormat: json
   replicaCount: 2
   replicationFactor: 2
