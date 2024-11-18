@@ -110,7 +110,7 @@ receive:
   # WARNING: when increasing replica count, remember to update the config section with new endpoints!
   replicaCount: 3
   replicaLabel: replica
-  replicationFactor: 2
+  # replicationFactor: 2
   tsdbRetention: 2d
   resources:
     requests:

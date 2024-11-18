@@ -110,7 +110,7 @@ spec:
   externalLabels:
     cluster: ankhmorpork
   externalUrl: https://prometheus.ankhmorpork.thaum.xyz
-  image: quay.io/prometheus/prometheus:v2.47.1
+  image: quay.io/prometheus/prometheus:v3.0.0
   nodeSelector:
     kubernetes.io/os: linux
   podMetadata:
