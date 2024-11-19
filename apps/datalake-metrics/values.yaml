@@ -105,12 +105,13 @@ ruler:
 
 receive:
   enabled: true
-  mode: dual-mode
+  #mode: dual-mode
+  mode: stadalone
   logFormat: json
   # WARNING: when increasing replica count, remember to update the config section with new endpoints!
   replicaCount: 3
   replicaLabel: replica
-  # replicationFactor: 2
+  replicationFactor: 3
   tsdbRetention: 2d
   resources:
     requests:
@@ -145,7 +146,7 @@ receive:
     size: 35Gi
 
 receiveDistributor:
-  enabled: true
+  enabled: false
   logFormat: json
   replicaCount: 2
   replicationFactor: 3
