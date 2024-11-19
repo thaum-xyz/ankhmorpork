@@ -105,7 +105,6 @@ ruler:
 
 receive:
   enabled: true
-  #mode: dual-mode
   mode: stadalone
   logFormat: json
   # WARNING: when increasing replica count, remember to update the config section with new endpoints!
@@ -144,16 +143,3 @@ receive:
   persistence:
     storageClass: lvm-thin
     size: 35Gi
-
-receiveDistributor:
-  enabled: false
-  logFormat: json
-  replicaCount: 2
-  replicationFactor: 3
-  resources:
-    limits:
-      cpu: 1
-      memory: 2Gi
-    requests:
-      cpu: 100m
-      memory: 128Mi
