@@ -148,7 +148,7 @@ receiveDistributor:
   enabled: true
   logFormat: json
   replicaCount: 2
-  replicationFactor: 2
+  replicationFactor: 3
   resources:
     limits:
       cpu: 1
