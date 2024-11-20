@@ -40,6 +40,14 @@ controller:
     podMonitor:
       enabled: true
   priorityClassName: system-cluster-critical
+  affinity: |
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
 
 storageClasses:
   #- name: lvm-main
