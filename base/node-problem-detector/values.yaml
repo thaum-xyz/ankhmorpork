@@ -19,6 +19,5 @@ resources:
 settings:
   log_monitors:
     - /config/kernel-monitor.json
-    - /config/docker-monitor.json
     - /config/readonly-monitor.json
     - /config/health-checker-containerd.json
