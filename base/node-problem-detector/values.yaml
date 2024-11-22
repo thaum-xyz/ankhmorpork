@@ -1,5 +1,8 @@
 # Config reference: https://github.com/deliveryhero/helm-charts/blob/master/stable/node-problem-detector/values.yaml
 
+image:
+  tag: v0.8.20
+
 metrics:
   enabled: true
   serviceMonitor:
