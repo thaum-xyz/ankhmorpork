@@ -15,3 +15,10 @@ resources:
   requests:
     cpu: 3m
     memory: 18Mi
+
+settings:
+  log_monitors:
+    - /config/kernel-monitor.json
+    - /config/docker-monitor.json
+    - /config/readonly-monitor.json
+    - /config/health-checker-containerd.json
