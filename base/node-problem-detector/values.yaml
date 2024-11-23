@@ -24,4 +24,7 @@ settings:
   log_monitors:
     - /config/kernel-monitor.json
     - /config/readonly-monitor.json
+
+  custom_plugin_monitors:
     - /config/health-checker-containerd.json
+    - /config/custom-plugin-monitor.json ## This is NTP monitor
