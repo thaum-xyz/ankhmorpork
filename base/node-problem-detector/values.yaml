@@ -25,16 +25,22 @@ settings:
     - /config/kernel-monitor.json
     - /config/readonly-monitor.json
 
-  custom_plugin_monitors:
-    - /config/health-checker-containerd.json
-    - /config/custom-plugin-monitor.json ## This is NTP monitor
+  #custom_plugin_monitors:
+    # - /config/health-checker-containerd.json
+    # - /config/custom-plugin-monitor.json ## This is NTP monitor. Disabled as it requires systemctl to be present in the container.
 
-extraVolumes:
-  - name: containerd
-    hostPath:
-      path: /run/k3s/containerd/containerd.sock
-      type: Socket
+#extraVolumes:
+#  - name: containerd
+#    hostPath:
+#      path: /run/k3s/containerd/containerd.sock
+#      type: Socket
+#  - name: containerd
+#    hostPath:
+#      path: /var/lib/rancher/rke2/bin/crictl
+#      type: File
 
-extraVolumeMounts:
-  - mountPath: /var/run/containerd/containerd.sock
-    name: containerd
+#extraVolumeMounts:
+#  - mountPath: /var/run/containerd/containerd.sock
+#    name: containerd
+#  - mountPath: /usr/bin/crictl
+#    name: crictl
