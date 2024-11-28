@@ -39,6 +39,7 @@ k3s_server_config:
   kube-scheduler-arg:
   - "bind-address=0.0.0.0"
   etcd-expose-metrics: "true"
+  embedded-registry: true
 
   etcd-s3: "true"
   etcd-s3-access-key: "{{ k3s_etcd_s3_access_key }}"
@@ -70,6 +71,7 @@ k3s_agent_config:
   kube-proxy-arg:
   - "metrics-bind-address=0.0.0.0"
   resolv-conf: "/run/systemd/resolve/resolv.conf"
+  embedded-registry: true
 
 system_mountpoints:
   - description: k3s data
