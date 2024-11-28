@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: transmission
+  name: transmission
+  namespace: multimedia
+spec:
+  ports:
+    - port: 9091
+      protocol: TCP
+      targetPort: http-api
+  selector:
+    app.kubernetes.io/name: transmission
