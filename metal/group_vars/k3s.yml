@@ -71,7 +71,6 @@ k3s_agent_config:
   kube-proxy-arg:
   - "metrics-bind-address=0.0.0.0"
   resolv-conf: "/run/systemd/resolve/resolv.conf"
-  embedded-registry: true
 
 system_mountpoints:
   - description: k3s data
