@@ -298,12 +298,12 @@ data:
       awtrix_notify:
         url: "http://192.168.2.219/api/notify"
         method: "post"
-        payload: "{{ states('input_text.awtrix_custom_payload') }}"
+        payload: "{{ payload }}"
         content_type: "application/json"
       awtrix_app:
         url: "http://192.168.2.219/api/custom"
         method: "post"
-        payload: "{{ states('input_text.awtrix_custom_payload') }}"
+        payload: "{{ payload }}"
         content_type: "application/json"
 
     cover:
