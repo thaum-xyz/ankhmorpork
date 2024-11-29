@@ -59,12 +59,6 @@ data:
     input_number:
     #input_select:  # configured in lower part of the file
     input_text:
-      awtrix_custom_payload:
-        name: AXTRIX Display Custom Command
-        initial: '{}'
-        # Rudimentary regex pattern to somewhat match JSON input
-        pattern: |
-          ((\[[^\}]{3,})?\{s*[^\}\{]{3,}?:.*\}([^\{]+\])?)
     logbook:
     logger:
       default: info
@@ -300,8 +294,18 @@ data:
         method: "post"
         payload: "{{ payload }}"
         content_type: "application/json"
+      awtrix_notify_end:
+        url: "http://192.168.2.219/api/notify/dismiss"
+        method: "post"
+        payload: ""
+        content_type: "application/json"
       awtrix_app:
         url: "http://192.168.2.219/api/custom"
+        method: "post"
+        payload: "{{ payload }}"
+        content_type: "application/json"
+      awtrix_settings:
+        url: "http://192.168.2.219/api/settings"
         method: "post"
         payload: "{{ payload }}"
         content_type: "application/json"
