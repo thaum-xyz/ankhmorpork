@@ -56,6 +56,12 @@ input_datetime:
 input_number:
 #input_select:  # configured in lower part of the file
 input_text:
+  awtrix_custom_payload:
+    name: AXTRIX Display Custom Command
+    initial: '{}'
+    # Rudimentary regex pattern to somewhat match JSON input
+    pattern: |
+      ((\[[^\}]{3,})?\{s*[^\}\{]{3,}?:.*\}([^\{]+\])?)
 logbook:
 logger:
   default: info
@@ -284,6 +290,18 @@ rest:
           - image
           - id
           - name
+
+rest_command:
+  awtrix_notify:
+    url: "http://192.168.2.219/api/notify"
+    method: "post"
+    payload: "{{ states('input_text.awtrix_custom_payload') }}"
+    content_type: "application/json"
+  awtrix_app:
+    url: "http://192.168.2.219/api/custom"
+    method: "post"
+    payload: "{{ states('input_text.awtrix_custom_payload') }}"
+    content_type: "application/json"
 
 cover:
   - platform: template

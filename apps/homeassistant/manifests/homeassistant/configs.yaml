@@ -59,6 +59,12 @@ data:
     input_number:
     #input_select:  # configured in lower part of the file
     input_text:
+      awtrix_custom_payload:
+        name: AXTRIX Display Custom Command
+        initial: '{}'
+        # Rudimentary regex pattern to somewhat match JSON input
+        pattern: |
+          ((\[[^\}]{3,})?\{s*[^\}\{]{3,}?:.*\}([^\{]+\])?)
     logbook:
     logger:
       default: info
@@ -287,6 +293,18 @@ data:
               - image
               - id
               - name
+
+    rest_command:
+      awtrix_notify:
+        url: "http://192.168.2.219/api/notify"
+        method: "post"
+        payload: "{{ states('input_text.awtrix_custom_payload') }}"
+        content_type: "application/json"
+      awtrix_app:
+        url: "http://192.168.2.219/api/custom"
+        method: "post"
+        payload: "{{ states('input_text.awtrix_custom_payload') }}"
+        content_type: "application/json"
 
     cover:
       - platform: template
@@ -553,6 +571,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2024.10.2
+    app.kubernetes.io/version: 2024.11.3
   name: homeassistant-configs
   namespace: homeassistant
