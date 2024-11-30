@@ -27,19 +27,29 @@
   ],
   "packageRules": [
     {
-      "addLabels": ["github_actions"],
+      "addLabels": ["dependensies/ci"],
       "groupName": "github actions",
-      "matchPaths": [".github/**"]
+      "matchPaths": [".github/**"],
+      "automerge": true
     },
     {
-      "addLabels": ["infra"],
-      "groupName": "base infrastructure",
-      "matchPaths": ["base/**", "metal/**"]
+      "addLabels": ["dependensies/hosting"],
+      "groupName": "hosting infrastructure",
+      "matchPaths": ["metal/**"]
     },
     {
-      "addLabels": ["apps"],
+      "addLabels": ["dependensies/base"],
+      "groupName": "hosting infrastructure",
+      "matchPaths": ["base/**"],
+      "minimumReleaseAge": "10 days",
+      "automerge": true
+    },
+    {
+      "addLabels": ["dependensies/apps"],
       "groupName": "applications",
-      "matchPaths": ["apps/**"]
+      "matchPaths": ["apps/**"],
+      "minimumReleaseAge": "20 days",
+      "automerge": true
     }
   ],
   "flux": {
