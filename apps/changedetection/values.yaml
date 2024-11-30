@@ -1,0 +1,35 @@
+# Reference documentation: https://gitlab.com/alexander-chernov/helm/changedetection
+
+ingress:
+  enabled: true
+  className: private
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    reloader.homer/group: Ankh Cloud
+    reloader.homer/logo: https://user-images.githubusercontent.com/275001/231676626-7d768df9-be4c-4187-a573-aba640b826d3.svg
+    reloader.homer/name: Change Detection
+    reloader.homer/subtitle: Website change detection
+    reloader.homer/tag: local
+  labels:
+    reloader.homer/enabled: "true"
+  hosts:
+    - host: change.ankhmorpork.thaum.xyz
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: change-ankhmorpork-thaum-xyz-tls
+      hosts:
+        - change.ankhmorpork.thaum.xyz
+
+resources:
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+persistence:
+  storageClass: "longhorn-r2"
+  size: 1Gi
