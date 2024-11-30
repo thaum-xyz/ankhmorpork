@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playwright
+  labels:
+    app: playwright
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playwright
+  template:
+    metadata:
+      labels:
+        app: playwright
+    spec:
+      containers:
+      - name: playwright
+        image: dgtlmoon/sockpuppetbrowser:latest
+        ports:
+          - containerPort: 3000
+        env:
+          - name: DEFAULT_LAUNCH_ARGS
+            value: '["--window-size=1920,1080"]'
+        resources:
+          limits:
+            memory: "1000Mi"
+            cpu: "1"

@@ -5,8 +5,8 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
-  - selenium-deploy.yaml
-  - selenium-svc.yaml
+  - playwright-deploy.yaml
+  - playwright-svc.yaml
 configMapGenerator:
   - name: values
     files:

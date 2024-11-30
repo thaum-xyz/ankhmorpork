@@ -23,7 +23,8 @@ ingress:
         - change.ankhmorpork.thaum.xyz
 
 env:
-  WEBDRIVER_URL: http://selenium:4444/wd/hub
+  simple:
+    PLAYWRIGHT_DRIVER_URL: "ws://playwright:3000/?stealth=1&--disable-web-security=true"
 
 resources:
   # limits:
