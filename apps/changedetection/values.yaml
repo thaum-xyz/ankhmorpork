@@ -24,6 +24,7 @@ ingress:
 
 env:
   simple:
+    BASE_URL: https://change.ankhmorpork.thaum.xyz
     PLAYWRIGHT_DRIVER_URL: "ws://playwright:3000/?stealth=1&--disable-web-security=true"
 
 resources:
@@ -37,3 +38,4 @@ resources:
 persistence:
   storageClass: "longhorn-r2"
   size: 1Gi
+  accessMode: ReadWriteMany
