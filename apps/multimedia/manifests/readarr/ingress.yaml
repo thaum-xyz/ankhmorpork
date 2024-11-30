@@ -4,7 +4,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
     reloader.homer/group: Multimedia
-    reloader.homer/logo: https://avatars.githubusercontent.com/u/57576474?s=200&v=4
+    reloader.homer/logo: https://github.com/loganmarchione/homelab-svg-assets/blob/main/assets/readarr.svg
     reloader.homer/name: Readarr
     reloader.homer/subtitle: Books collection management
     reloader.homer/tag: local

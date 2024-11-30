@@ -4,7 +4,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
     reloader.homer/group: Multimedia
-    reloader.homer/logo: https://avatars3.githubusercontent.com/u/1082903?s=200&v=4
+    reloader.homer/logo: https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/sonarr.svg
     reloader.homer/name: Sonarr
     reloader.homer/subtitle: TV shows collection management
     reloader.homer/tag: local

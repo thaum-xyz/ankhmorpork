@@ -9,7 +9,7 @@ ingress:
     kubernetes.io/ingress.class: public
     traefik.ingress.kubernetes.io/router.middlewares: jellyfin-deny-metrics-path@kubernetescrd
     reloader.homer/group: Multimedia
-    reloader.homer/logo: https://static-00.iconduck.com/assets.00/jellyfin-icon-2048x2048-tf5ztk6m.png
+    reloader.homer/logo: https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/jellyfin.svg
     reloader.homer/name: Jellyfin
     reloader.homer/subtitle: Video on demand
   labels:

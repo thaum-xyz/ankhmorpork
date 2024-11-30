@@ -14,7 +14,7 @@ homeassistant:
       reloader.homer/group: Ankh Cloud
       reloader.homer/name: HomeAssistant
       reloader.homer/subtitle: "Home automation system"
-      reloader.homer/logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/200px-Home_Assistant_Logo.svg.png"
+      reloader.homer/logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/homeassistant-small.svg"
       probe-uri: '/manifest.json'
     labels:
       reloader.homer/enabled: "true"

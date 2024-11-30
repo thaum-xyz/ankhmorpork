@@ -160,6 +160,6 @@ data:
             <<: *local
             url: "https://unifi.ankhmorpork.thaum.xyz"
           - name: ESPHome
-            logo: "https://esphome.io/_static/favicon-512x512.png"
+            logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/esphome.svg"
             <<: *local
             url: "http://esphome.homeassistant.ankhmorpork.thaum.xyz:6052/"
