@@ -96,16 +96,6 @@ data:
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
             <<: *external
             url: "https://docs.google.com/spreadsheets/d/1-aFb40yjIjdcJNJ3Ngvbw9HWo5r1eGugZBWqSPcU-HU"
-          - name: Pantry
-            subtitle: Tracking pantry content
-            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
-            <<: *external
-            url: "https://docs.google.com/spreadsheets/d/13JSCTEgDHP26carFuHO5j5mfqvI5UBNAu_B9ED3vWbQ"
-          - name: Image Compressor
-            subtitle: "Compress images online"
-            logo: "https://i.pinimg.com/originals/03/26/bb/0326bbd35c1a159796da144f6f949aaa.jpg"
-            <<: *external
-            url: "https://compressor.io/"
 
       - name: Multimedia
         icon: "fa fa-tv"
@@ -119,11 +109,6 @@ data:
             logo: "https://user-images.githubusercontent.com/67451572/160710031-1c69ffdb-918a-474f-a3cf-257313b4c8d6.png"
             <<: *external
             url: "https://trakt.tv"
-          - name: Transmission
-            subtitle: "downloader"
-            logo: "https://avatars3.githubusercontent.com/u/223312?s=200&v=4"
-            <<: *local
-            url: "http://transmission-ui.multimedia.ankhmorpork.thaum.xyz:9091/transmission/web/"
     {{- range . }}
     {{- if eq .Group "Multimedia" }}
           - name: {{ .Name }}
@@ -167,7 +152,7 @@ data:
             <<: *external
             url: "https://dashboard.doppler.com/"
           - name: AdGuard
-            logo: https://upload.wikimedia.org/wikipedia/commons/4/48/AdGuard_Logo.png
+            logo: https://github.com/loganmarchione/homelab-svg-assets/raw/refs/heads/main/assets/adguardhome.svg
             <<: *local
             url: "http://dns.ankhmorpork.thaum.xyz"
           - name: Unifi
