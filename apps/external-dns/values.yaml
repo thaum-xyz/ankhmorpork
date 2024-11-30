@@ -31,7 +31,7 @@ extraArgs:
 
 sidecars:
   - name: adguard-webhook
-    image: ghcr.io/muhlba91/external-dns-provider-adguard:v5.1.2
+    image: ghcr.io/muhlba91/external-dns-provider-adguard:v8.0.0
     ports:
       - containerPort: 8888
         name: http
