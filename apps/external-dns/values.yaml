@@ -27,7 +27,7 @@ metrics:
     honorLabels: true
 
 extraArgs:
-  webhook-provider-url: http://localhost:8888
+  webhook-provider-url: http://127.0.0.1:8888
 
 sidecars:
   - name: adguard-webhook
