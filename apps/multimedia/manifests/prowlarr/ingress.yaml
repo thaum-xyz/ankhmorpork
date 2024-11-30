@@ -4,7 +4,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
     reloader.homer/group: Multimedia
-    reloader.homer/logo: https://github.com/loganmarchione/homelab-svg-assets/blob/main/assets/prowlarr.svg
+    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/prowlarr.svg
     reloader.homer/name: Prowlarr
     reloader.homer/subtitle: Indexer/proxy management
     reloader.homer/tag: local

@@ -4,7 +4,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
     reloader.homer/group: Multimedia
-    reloader.homer/logo: https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/radarr.svg
+    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/radarr.svg
     reloader.homer/name: Radarr
     reloader.homer/subtitle: Movie collection management
     reloader.homer/tag: local
