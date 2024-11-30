@@ -42,6 +42,9 @@ checks {
 }
 
 ci {
-  include = [ "tmp/rules/(.*)" ]
   baseBranch = "master"
+}
+
+parser {
+  include = [ "tmp/rules/(.*)" ]
 }
