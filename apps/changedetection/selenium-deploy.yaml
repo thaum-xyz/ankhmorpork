@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: selenium
+  labels:
+    app: selenium
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: selenium
+  template:
+    metadata:
+      labels:
+        app: selenium
+    spec:
+      containers:
+      - name: selenium
+        image: selenium/standalone-chrome:131.0
+        ports:
+          - containerPort: 4444
+        resources:
+          limits:
+            memory: "1000Mi"
+            cpu: ".5"
+        livenessProbe:
+          httpGet:
+            path: /wd/hub/status
+            port: 4444
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /wd/hub/status
+            port: 4444
+          initialDelaySeconds: 30
+          timeoutSeconds: 5

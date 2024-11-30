@@ -22,6 +22,9 @@ ingress:
       hosts:
         - change.ankhmorpork.thaum.xyz
 
+env:
+  WEBDRIVER_URL: http://selenium:4444/wd/hub
+
 resources:
   # limits:
   #   cpu: 100m

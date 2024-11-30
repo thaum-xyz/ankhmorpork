@@ -5,6 +5,8 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
+  - selenium-deploy.yaml
+  - selenium-svc.yaml
 configMapGenerator:
   - name: values
     files:
