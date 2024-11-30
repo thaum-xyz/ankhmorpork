@@ -30,3 +30,12 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
+  postRenderers:
+    - kustomize:
+        patchesStrategicMerge:
+          - kind: Ingress
+            apiVersion: networking.k8s.io/v1
+            metadata:
+              name: changedetection
+              labels:
+                reloader.homer/enabled: "true"
