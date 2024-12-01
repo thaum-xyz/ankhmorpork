@@ -14,7 +14,7 @@ spec:
   - name: minio-alerts
     rules:
     - alert: MinioNodesOffline
-      expr: sum(minio_cluster_nodes_offline_total{namespace="minio"}[5m]) > 0
+      expr: sum(minio_cluster_nodes_offline_total{namespace="minio"}) > 0
       for: 10m
       labels:
         severity: warning
@@ -23,7 +23,7 @@ spec:
         description: "Minio cluster {{ $labels.instance }} has {{ $value }} node(s) offline for more than 5 minutes"
 
     - alert: MinioDisksOffline
-      expr: sum(minio_cluster_disk_offline_total{namespace="minio"}[5m]) > 0
+      expr: sum(minio_cluster_disk_offline_total{namespace="minio"}) > 0
       for: 10m
       labels:
         severity: warning
