@@ -14,22 +14,22 @@ spec:
   - name: minio-alerts
     rules:
     - alert: MinioNodesOffline
-      expr: avg_over_time(minio_cluster_nodes_offline_total{namespace="minio"}[5m]) > 0
+      expr: sum(minio_cluster_nodes_offline_total{namespace="minio"}[5m]) > 0
       for: 10m
       labels:
         severity: warning
       annotations:
         summary: "Node down in MinIO deployment"
-        description: "Node(s) in cluster {{ $labels.instance }} offline for more than 5 minutes"
+        description: "Minio cluster {{ $labels.instance }} has {{ $value }} node(s) offline for more than 5 minutes"
 
     - alert: MinioDisksOffline
-      expr: avg_over_time(minio_cluster_disk_offline_total{namespace="minio"}[5m]) > 0
+      expr: sum(minio_cluster_disk_offline_total{namespace="minio"}[5m]) > 0
       for: 10m
       labels:
         severity: warning
       annotations:
         summary: "Disks down in MinIO deployment"
-        description: "Disks(s) in cluster {{ $labels.instance }} offline for more than 5 minutes"
+        description: "Minio cluster {{ $labels.instance }} has {{ $value }} disks offline for more than 5 minutes"
 
     - alert: MinioClusterAlmostOutOfSpace
       expr:  (minio_cluster_capacity_usable_free_bytes:sum / minio_cluster_capacity_usable_total_bytes:sum * 100 < 3)
@@ -47,7 +47,7 @@ spec:
       annotations:
         summary: "MinIO cluster has less than 5% space left."
         description: 'MinIO cluster {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.'
-    
+
     - alert: MinioClusterSpaceFillingUp
       expr: |
         minio_cluster_capacity_usable_free_bytes:sum
