@@ -69,6 +69,15 @@ spec:
               volumeMounts:
                 - mountPath: /mnt/backups
                   name: backups
+            - command:
+                - sh
+                - -c
+                - find /mnt/backups -mtime +20 -type f -delete
+              image: busybox
+              name: cleanup
+              volumeMounts:
+                - mountPath: /mnt/backups
+                  name: backups
           restartPolicy: Never
           serviceAccountName: paperless
           volumes:
