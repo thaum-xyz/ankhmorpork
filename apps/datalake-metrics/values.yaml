@@ -83,7 +83,6 @@ compactor:
   # However to do this, compactor needs to know what are the labels attached by thanos receiver and ruler
   - --deduplication.replica-label=replica
   - --hash-func=SHA256
-  - --delete-delay=2h       # FIXME: temporary workaround
 
 storegateway:
   enabled: true
