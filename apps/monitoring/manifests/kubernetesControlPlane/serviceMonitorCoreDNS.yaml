@@ -7,6 +7,8 @@ metadata:
   name: coredns
   namespace: monitoring
 spec:
+  attachMetadata:
+    node: true
   endpoints:
     - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
       interval: 15s
