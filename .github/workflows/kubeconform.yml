@@ -9,7 +9,7 @@ on:
     branches: [master]
 
 env:
-  golang-version: 1.23.3
+  golang-version: 1.23.4
 
 jobs:
   apps:
