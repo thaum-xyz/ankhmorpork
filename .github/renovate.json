@@ -50,6 +50,13 @@
       "matchPaths": ["apps/**"],
       "minimumReleaseAge": "20 days",
       "automerge": true
+    },
+    {
+      "packagePatterns": ["^minio"],
+      "versioning": "regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})",
+      "groupName": "applications",
+      "minimumReleaseAge": "20 days",
+      "automerge": true
     }
   ],
   "flux": {
