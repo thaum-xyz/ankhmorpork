@@ -1,7 +1,7 @@
 # Config reference: https://github.com/minio/minio/tree/master/helm/minio
 
 image:
-  tag: RELEASE.2024-05-10T01-41-38Z
+  tag: RELEASE.2024-11-07T00-52-20Z
 
 ## .data.rootUser and .data.rootPassword are mandatory,
 existingSecret: root-credentials
@@ -50,7 +50,7 @@ resources:
     memory: 560Mi
   limits:
     cpu: 2
-    memory: 3Gi
+    memory: 4Gi
 
 environment:
   MINIO_PROMETHEUS_URL: "http://prometheus-k8s.monitoring.svc:9090"
