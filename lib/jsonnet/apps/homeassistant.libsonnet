@@ -121,6 +121,30 @@ function(params) {
   },
 
   statefulSet: {
+    local health = {
+      name: "healthcheck",
+      image: $._config.image,
+      command: ["sh", "-c", "echo 'OK' > /config/www/healthz"],
+      imagePullPolicy: 'IfNotPresent',
+      resources: {
+        requests: {
+          cpu: "10m",
+          memory: "10Mi",
+        },
+        limits: {
+          cpu: "10m",
+          memory: "10Mi",
+        },
+      },
+      securityContext: {
+        runAsUser: 0,
+      },
+      volumeMounts: [{
+          mountPath: '/config',
+          name: $._metadata.name + '-config',
+      }]
+    },
+
     local c = {
       name: $._config.name,
       image: $._config.image,
@@ -156,6 +180,16 @@ function(params) {
         failureThreshold: 5,
         timeoutSeconds: 10,
       },
+      livenessProbe: {
+        httpGet: {
+          path: '/local/healthz',
+          port: 'http',
+          scheme: 'HTTP',
+        },
+        initialDelaySeconds: 5,
+        failureThreshold: 5,
+        timeoutSeconds: 10,
+      },
       securityContext: {
         privileged: $._config.zwaveSupport,
       },
@@ -183,6 +217,7 @@ function(params) {
           labels: $._config.commonLabels,
         },
         spec: {
+          initContainers: [health],
           containers: [c],
           restartPolicy: 'Always',
           serviceAccountName: $.serviceAccount.metadata.name,

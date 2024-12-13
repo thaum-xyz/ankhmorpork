@@ -32,6 +32,14 @@ spec:
               value: Europe/Berlin
           image: homeassistant/home-assistant:2024.11.3
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /local/healthz
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 10
           name: homeassistant
           ports:
             - containerPort: 8123
@@ -77,6 +85,26 @@ spec:
               readOnly: true
               subPath: scripts.yaml
       hostNetwork: true
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - echo 'OK' > /config/www/healthz
+          image: homeassistant/home-assistant:2024.11.3
+          imagePullPolicy: IfNotPresent
+          name: healthcheck
+          resources:
+            limits:
+              cpu: 10m
+              memory: 10Mi
+            requests:
+              cpu: 10m
+              memory: 10Mi
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - mountPath: /config
+              name: homeassistant-config
       priorityClassName: production-high
       restartPolicy: Always
       serviceAccountName: homeassistant
