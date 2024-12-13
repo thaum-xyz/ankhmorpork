@@ -45,7 +45,7 @@ spec:
             - containerPort: 8123
               name: http
           preStop:
-            sleep: 120
+            sleep: 240
           readinessProbe:
             failureThreshold: 5
             httpGet:
@@ -108,6 +108,7 @@ spec:
       priorityClassName: production-high
       restartPolicy: Always
       serviceAccountName: homeassistant
+      terminationGracePeriodSeconds: 300
       volumes:
         - name: backups
           persistentVolumeClaim:

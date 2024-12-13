@@ -155,7 +155,7 @@ function(params) {
       }],
       preStop: {
         # Time to wait before job downloading new image completes
-        sleep: 120,
+        sleep: 240,
       },
       ports: [{
         containerPort: 8123,
@@ -222,6 +222,7 @@ function(params) {
           restartPolicy: 'Always',
           serviceAccountName: $.serviceAccount.metadata.name,
           hostNetwork: $._config.hostNetwork,
+          terminationGracePeriodSeconds: 300,
           volumes: [
             if std.objectHas(params, 'storage') && std.objectHas(params.storage, 'backups') && std.objectHas(params.storage.backups, 'pvcSpec') && std.length(params.storage.backups.pvcSpec) > 0 then
               {
