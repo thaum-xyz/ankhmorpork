@@ -14,7 +14,6 @@ spec:
         name: minio
         namespace: minio
       interval: 5m
-      valuesFile: values.yaml
   interval: 5m
   timeout: 20m
   install:

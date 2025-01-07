@@ -13,7 +13,6 @@ spec:
         name: ricoberger
         namespace: scripts-mon
       interval: 5m
-      valuesFile: values.yaml
   interval: 5m
   timeout: 20m
   install:

@@ -13,7 +13,6 @@ spec:
         name: node-feature-discovery
         namespace: node-feature-discovery
       interval: 5m
-      valuesFile: values.yaml
   interval: 5m
   timeout: 20m
   install:

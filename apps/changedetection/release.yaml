@@ -13,7 +13,6 @@ spec:
         name: alekc-charts
         namespace: changedetection
       interval: 5m
-      valuesFile: values.yaml
   interval: 5m
   timeout: 2m
   install:
