@@ -6,7 +6,7 @@ metadata:
 spec:
   force: true
   interval: 30m0s
-  path: ./base/cert-manager/manifests
+  path: ./base/cert-manager
   prune: false
   sourceRef:
     kind: GitRepository
