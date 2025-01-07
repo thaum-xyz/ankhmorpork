@@ -45,7 +45,7 @@
   "packageRules": [
     {
       "addLabels": [
-        "dependensies/ci"
+        "dependencies/ci"
       ],
       "groupName": "github actions",
       "matchFileNames": [
@@ -55,7 +55,7 @@
     },
     {
       "addLabels": [
-        "dependensies/hosting"
+        "dependencies/hosting"
       ],
       "groupName": "hosting infrastructure",
       "matchFileNames": [
@@ -64,7 +64,7 @@
     },
     {
       "addLabels": [
-        "dependensies/base"
+        "dependencies/base"
       ],
       "groupName": "hosting infrastructure",
       "matchFileNames": [
@@ -75,7 +75,7 @@
     },
     {
       "addLabels": [
-        "dependensies/apps"
+        "dependencies/apps"
       ],
       "groupName": "applications",
       "matchFileNames": [
