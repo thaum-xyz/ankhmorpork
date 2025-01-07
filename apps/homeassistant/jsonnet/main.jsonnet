@@ -90,6 +90,7 @@ local all = {
   },
 
   homeassistant: homeassistant(config.homeassistant) + {
+    prePull+:: {},
     credentials: externalsecret(
       {
         name: config.homeassistant.apiTokenSecretKeySelector.name,

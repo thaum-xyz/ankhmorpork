@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2024.12.3
+    app.kubernetes.io/version: 2025.1.1
   name: homeassistant
   namespace: homeassistant
 spec:
@@ -24,13 +24,13 @@ spec:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: homeassistant
         app.kubernetes.io/part-of: homeassistant
-        app.kubernetes.io/version: 2024.12.3
+        app.kubernetes.io/version: 2025.1.1
     spec:
       containers:
         - env:
             - name: TZ
               value: Europe/Berlin
-          image: homeassistant/home-assistant:2024.12.3
+          image: homeassistant/home-assistant:2025.1.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 5
@@ -90,7 +90,7 @@ spec:
             - sh
             - -c
             - echo 'OK' > /config/www/healthz
-          image: homeassistant/home-assistant:2024.12.3
+          image: homeassistant/home-assistant:2025.1.1
           imagePullPolicy: IfNotPresent
           name: healthcheck
           resources:
