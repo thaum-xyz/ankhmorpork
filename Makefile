@@ -1,10 +1,6 @@
 SHELL:=/bin/bash
 
 DIRS=\
-	base/cert-manager \
-	base/flux-system \
-	apps/datalake-metrics \
-	apps/dns \
 	apps/homeassistant \
 	apps/homer \
 	apps/monitoring \
@@ -12,17 +8,23 @@ DIRS=\
 	apps/tandoor
 
 HELMDIRS=\
-	apps/authentik \
+	apps/atuin \
+	apps/changedetection \
 	apps/datalake-logs \
+	apps/datalake-metrics \
 	apps/descheduler \
-	apps/opencost \
+	apps/external-dns \
+	apps/jellyfin \
 	apps/minio \
+	apps/opencost \
+	apps/photos \
 	apps/promtail \
-	apps/proxy-docker-io \
-	apps/proxy-ghcr-io \
-	apps/proxy-quay-io \
+	apps/scripts-mon \
+	apps/system-kured \
+	base/cert-manager \
 	base/cnpg-system \
 	base/external-secrets \
+	base/flux-system \
 	base/longhorn-system \
 	base/metallb-system \
 	base/node-feature-discovery \
