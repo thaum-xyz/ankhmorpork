@@ -1,0 +1,73 @@
+# Reference documentation: https://github.com/fluxcd-community/helm-charts/tree/main/charts/flux2
+
+helmController:
+  priorityClassName: system-cluster-critical
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
+
+kustomizeController:
+  priorityClassName: system-cluster-critical
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
+
+sourceController:
+  priorityClassName: system-cluster-critical
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
+
+notificationController:
+  webhookReceiver:
+    ingress:
+      ingressClassName: public
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      create: true
+      hosts:
+        - host: flux.ankhmorpork.thaum.xyz
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+      tls:
+        - secretName: flux-tls
+          hosts:
+            - flux.ankhmorpork.thaum.xyz
+
+imageAutomationController:
+  create: false
+
+imageReflectionController:
+  create: false
+
+prometheus:
+  podMonitor:
+    create: true

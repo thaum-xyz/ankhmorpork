@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: flux-system
+resources:
+  - repository.yaml
+  - namespace.yaml
+  - release.yaml
+  - prometheusRules.yaml
+  - certManagerPolicy.yaml
+  - githubToken.yaml
+  - receiver.yaml
+configMapGenerator:
+  - name: values
+    files:
+      - values.yaml=values.yaml
+configurations:
+  - kustomizeconfig.yaml
