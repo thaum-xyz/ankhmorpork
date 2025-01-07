@@ -1,6 +1,6 @@
 # Reference documentation: https://artifacthub.io/packages/helm/cert-manager/cert-manager
 
-  installCRDs: false
+  installCRDs: true
 
   prometheus:
     enabled: true
