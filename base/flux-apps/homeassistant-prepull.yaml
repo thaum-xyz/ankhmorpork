@@ -5,8 +5,15 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 60m0s
+  retryInterval: 5m0s
   path: ./apps/homeassistant/prepull
   prune: true
+  wait: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
+  healthChecks:
+  - apiVersion: batch/v1
+    kind: Job
+    name: pre-pull-image
+    namespace: homeassistant
