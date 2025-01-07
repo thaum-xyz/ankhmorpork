@@ -1,62 +1,97 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "assignees": ["paulfantom"],
-  "reviewers": ["paulfantom"],
-  "regexManagers": [
+  "assignees": [
+    "paulfantom"
+  ],
+  "reviewers": [
+    "paulfantom"
+  ],
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": "metal/group_vars/k3s.yml",
-      "matchStrings": ["k3s_version: (?<currentValue>.*?)\\n"],
+      "matchStrings": [
+        "k3s_version: (?<currentValue>.*?)\\n"
+      ],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "k3s-io/k3s",
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": ["^\\.github\\/workflows\\/[^/]+\\.ya?ml$"],
-      "matchStrings": ["jsonnet-version:\\s(?<currentValue>.*?)\\n"],
+      "customType": "regex",
+      "fileMatch": [
+        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "jsonnet-version:\\s(?<currentValue>.*?)\\n"
+      ],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "google/jsonnet"
     },
     {
-      "fileMatch": ["^\\.github\\/workflows\\/[^/]+\\.ya?ml$"],
-      "matchStrings": ["golang-version:\\s(?<currentValue>.*?)\\n"],
+      "customType": "regex",
+      "fileMatch": [
+        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "golang-version:\\s(?<currentValue>.*?)\\n"
+      ],
       "datasourceTemplate": "golang-version",
       "depNameTemplate": "golang"
     }
   ],
   "packageRules": [
     {
-      "addLabels": ["dependensies/ci"],
+      "addLabels": [
+        "dependensies/ci"
+      ],
       "groupName": "github actions",
-      "matchPaths": [".github/**"],
+      "matchFileNames": [
+        ".github/**"
+      ],
       "automerge": true
     },
     {
-      "addLabels": ["dependensies/hosting"],
+      "addLabels": [
+        "dependensies/hosting"
+      ],
       "groupName": "hosting infrastructure",
-      "matchPaths": ["metal/**"]
+      "matchFileNames": [
+        "metal/**"
+      ]
     },
     {
-      "addLabels": ["dependensies/base"],
+      "addLabels": [
+        "dependensies/base"
+      ],
       "groupName": "hosting infrastructure",
-      "matchPaths": ["base/**"],
+      "matchFileNames": [
+        "base/**"
+      ],
       "minimumReleaseAge": "10 days",
       "automerge": true
     },
     {
-      "addLabels": ["dependensies/apps"],
+      "addLabels": [
+        "dependensies/apps"
+      ],
       "groupName": "applications",
-      "matchPaths": ["apps/**"],
+      "matchFileNames": [
+        "apps/**"
+      ],
       "minimumReleaseAge": "20 days",
       "automerge": true
     },
     {
-      "packagePatterns": ["^minio"],
       "versioning": "regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})",
       "groupName": "applications",
       "minimumReleaseAge": "20 days",
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": [
+        "/^minio/"
+      ]
     }
   ],
   "flux": {
