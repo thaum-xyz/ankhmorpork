@@ -5,6 +5,27 @@ metadata:
   namespace: monitoring
 spec:
   groups:
+  - name: longhorn-test.rules
+    rules:
+    - alert: LonghornVolumeTrimNeeded
+      annotations:
+        description: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} needs to be trimmed.
+        summary: Longhorn volume needs to be trimmed
+      expr: |
+        (kubelet_volume_stats_capacity_bytes - kubelet_volume_stats_available_bytes)
+        / on(namespace,persistentvolumeclaim) group_left
+        label_replace(
+          label_replace(
+            longhorn_volume_actual_size_bytes, "persistentvolumeclaim", "$1", "pvc", "(.+)"
+          ),
+          "namespace", "$1", "pvc_namespace", "(.+)"
+        )
+        < 0.5
+        AND
+        (kubelet_volume_stats_capacity_bytes - kubelet_volume_stats_available_bytes) > 1024*1024*1024
+      for: 2d
+      labels:
+        severity: warning
   - name: longhorn.rules
     rules:
     - alert: LonghornVolumeActualSpaceUsedWarning
