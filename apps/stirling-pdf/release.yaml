@@ -6,7 +6,7 @@ metadata:
 spec:
   chart:
     spec:
-      chart: stirling-pdf
+      chart: stirling-pdf-chart
       version: "1.5.0"
       sourceRef:
         kind: HelmRepository
