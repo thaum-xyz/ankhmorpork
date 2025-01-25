@@ -1,0 +1,25 @@
+# Config reference: https://github.com/Stirling-Tools/Stirling-PDF-chart/tree/main/charts/stirling-pdf
+
+kind: Deployment
+
+resources:
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    reloader.homer/group: Ankh Cloud
+    reloader.homer/logo: https://stirlingpdf.io/favicon.svg
+    reloader.homer/name: Stirling PDF
+    reloader.homer/subtitle: PDF manipulation tool
+  labels:
+    probe: enabled
+    reloader.homer/enabled: "true"
+  hosts:
+    - name: pdf.krupa.net.pl
+      path: /
+      tls: true
+      tlsSecret: pdf.krupa.net.pl
+
+serviceMonitor:
+  enabled: true

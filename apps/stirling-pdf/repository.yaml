@@ -1,0 +1,7 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: stirling-pdf
+spec:
+  interval: 5m
+  url: https://stirling-tools.github.io/Stirling-PDF-chart
