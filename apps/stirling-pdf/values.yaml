@@ -23,3 +23,17 @@ ingress:
 
 serviceMonitor:
   enabled: true
+
+envs:
+- name: UI_APP_NAME
+  value: "Stirling PDF"
+- name: UI_HOME_DESCRIPTION
+  value: "PDF manipulation tool"
+- name: UI_APP_NAVBAR_NAME
+  value: "PDF manipulation"
+- name: ALLOW_GOOGLE_VISIBILITY
+  value: "false"
+- name: SYSTEM_SHOWUPDATE
+  value: "false"
+- name: METRICS_ENABLED
+  value: "true"
