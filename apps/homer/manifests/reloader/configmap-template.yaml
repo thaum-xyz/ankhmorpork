@@ -96,6 +96,11 @@ data:
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
             <<: *external
             url: "https://docs.google.com/spreadsheets/d/1-aFb40yjIjdcJNJ3Ngvbw9HWo5r1eGugZBWqSPcU-HU"
+          - name: Packing list
+            subtitle: What to pack on each type of trip
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
+            <<: *external
+            url: "https://docs.google.com/spreadsheets/d/1d8LFOxTWqAZuA2OSVuZJV7pGUYlJfNCqAIA8Q5p6ci8/edit?usp=sharing"
 
       - name: Multimedia
         icon: "fa fa-tv"
