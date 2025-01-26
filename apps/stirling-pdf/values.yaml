@@ -37,3 +37,5 @@ envs:
   value: "false"
 - name: METRICS_ENABLED
   value: "true"
+- name: LANGS
+  value: "en-US,pl-PL,de-DE"
