@@ -4,4 +4,4 @@ namespace: mealie
 resources:
   - namespace.yaml
   - app/
-  #- db/
+  - db/

@@ -29,16 +29,22 @@ spec:
           value: https://mealie.ankhmorpork.thaum.xyz
         - name: DB_ENGINE
           value: postgres
-        - name: POSTGRES_USER
-          value: mealie
-        - name: POSTGRES_PASSWORD
-          value: mealie
         - name: POSTGRES_SERVER
-          value: postgres
+          value: postgres-rw
         - name: POSTGRES_PORT
           value: '5432'
         - name: POSTGRES_DB
           value: mealie
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-user
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-user
+              key: password
         ports:
         - containerPort: 9000
           name: http
