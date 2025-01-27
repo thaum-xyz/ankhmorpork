@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mealie
+  labels:
+    app.kubernetes.io/name: mealie
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mealie
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mealie
+    spec:
+      containers:
+      - name: mealie
+        image: ghcr.io/mealie-recipes/mealie:v2.5.0
+        env:
+        - name: ALLOW_SIGNUP
+          value: 'false'
+        - name: PUID
+          value: '1000'
+        - name: PGID
+          value: '1000'
+        - name: TZ
+          value: Europe/Warsaw
+        - name: BASE_URL
+          value: https://mealie.ankhmorpork.thaum.xyz
+        - name: DB_ENGINE
+          value: postgres
+        - name: POSTGRES_USER
+          value: mealie
+        - name: POSTGRES_PASSWORD
+          value: mealie
+        - name: POSTGRES_SERVER
+          value: postgres
+        - name: POSTGRES_PORT
+          value: '5432'
+        - name: POSTGRES_DB
+          value: mealie
+        ports:
+        - containerPort: 9000
+          name: http
+        resources:
+          limits:
+            cpu: 1
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - name: data
+          mountPath: /app/data/
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data
