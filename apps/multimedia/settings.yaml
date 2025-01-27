@@ -6,8 +6,8 @@ common:
 
 prowlarr:
   name: prowlarr
-  version: "1.16.2.4435-ls67"  # application-version-from-github: linuxserver/docker-prowlarr
-  image: "linuxserver/prowlarr:1.16.2.4435-ls67"  # application-image-from-github: linuxserver/docker-prowlarr
+  version: "1.30.2"  # application-version-from-github: linuxserver/docker-prowlarr
+  image: "linuxserver/prowlarr:1.30.2"  # application-image-from-github: linuxserver/docker-prowlarr
   namespace: *namespace
   port: 9696
   domain: "prowlarr.ankhmorpork.thaum.xyz"
@@ -60,8 +60,8 @@ prowlarr:
 
 radarr:
   name: radarr
-  version: "5.4.6.8723-ls216"  # application-version-from-github: linuxserver/docker-radarr
-  image: "lscr.io/linuxserver/radarr:5.4.6.8723-ls216"  # application-image-from-github: linuxserver/docker-radarr
+  version: "5.17.2"  # application-version-from-github: linuxserver/docker-radarr
+  image: "lscr.io/linuxserver/radarr:5.17.2"  # application-image-from-github: linuxserver/docker-radarr
   namespace: *namespace
   port: 7878
   domain: "radarr.ankhmorpork.thaum.xyz"
@@ -114,8 +114,8 @@ radarr:
 
 sonarr:
   name: sonarr
-  version: "4.0.4.1491-ls237"  # application-version-from-github: linuxserver/docker-sonarr
-  image: "lscr.io/linuxserver/sonarr:4.0.4.1491-ls237"  # application-image-from-github: linuxserver/docker-sonarr
+  version: "4.0.12"  # application-version-from-github: linuxserver/docker-sonarr
+  image: "lscr.io/linuxserver/sonarr:4.0.12"  # application-image-from-github: linuxserver/docker-sonarr
   namespace: *namespace
   port: 8989
   domain: "sonarr.ankhmorpork.thaum.xyz"

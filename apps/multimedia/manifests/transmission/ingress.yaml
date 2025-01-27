@@ -8,7 +8,7 @@ metadata:
     reloader.homer/name: Transmission
     reloader.homer/subtitle: Downloader
     reloader.homer/tag: local
-    traefik.http.middlewares.add-foo.addprefix.prefix: "/transmission/web"
+    traefik.http.middlewares.add-foo.addprefix.prefix: /transmission/web
   labels:
     reloader.homer/enabled: "true"
   name: downloader
