@@ -56,7 +56,7 @@ local all = {
         annotations+: {
           'cert-manager.io/cluster-issuer': 'letsencrypt-dns01',
           'reloader.homer/group': 'Multimedia',
-          'reloader.homer/logo': 'https://avatars3.githubusercontent.com/u/1082903?s=200&v=4',
+          'reloader.homer/logo': 'https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/sonarr.svg',
           'reloader.homer/name': 'Sonarr',
           'reloader.homer/subtitle': 'TV shows collection management',
           'reloader.homer/tag': 'local',
@@ -79,7 +79,7 @@ local all = {
         annotations+: {
           'cert-manager.io/cluster-issuer': 'letsencrypt-dns01',
           'reloader.homer/group': 'Multimedia',
-          'reloader.homer/logo': 'https://avatars1.githubusercontent.com/u/25025331?s=200&v=4',
+          'reloader.homer/logo': 'https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/radarr.svg',
           'reloader.homer/name': 'Radarr',
           'reloader.homer/subtitle': 'Movie collection management',
           'reloader.homer/tag': 'local',
@@ -102,7 +102,7 @@ local all = {
         annotations+: {
           'cert-manager.io/cluster-issuer': 'letsencrypt-dns01',
           'reloader.homer/group': 'Multimedia',
-          'reloader.homer/logo': 'https://avatars.githubusercontent.com/u/73049443?s=200&v=4',
+          'reloader.homer/logo': 'https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/prowlarr.svg',
           'reloader.homer/name': 'Prowlarr',
           'reloader.homer/subtitle': 'Indexer/proxy management',
           'reloader.homer/tag': 'local',
@@ -124,52 +124,6 @@ local all = {
   bazarrdb: postgres(config.bazarr.postgres) + {
     cluster+: logsDBInit(config.bazarr.postgres.db.user),
   },*/
-
-  readarr: arr(config.readarr) + {
-    prometheusRule+:: {},
-    service+: lbService {
-      metadata+: {
-        annotations: {
-          'metallb.universe.tf/address-pool': 'default',
-        },
-      },
-      spec+: {
-        loadBalancerIP:: null,
-      },
-    },
-    ingress+: {
-      metadata+: {
-        annotations+: {
-          'cert-manager.io/cluster-issuer': 'letsencrypt-dns01',
-          'reloader.homer/group': 'Multimedia',
-          'reloader.homer/logo': 'https://avatars.githubusercontent.com/u/57576474?s=200&v=4',
-          'reloader.homer/name': 'Readarr',
-          'reloader.homer/subtitle': 'Books collection management',
-          'reloader.homer/tag': 'local',
-        },
-        labels: {
-          'reloader.homer/enabled': 'true',
-          //probe: 'enabled',
-        },
-      },
-    },
-  },
-  readarrdb: postgres(config.readarr.postgres) + {
-    cluster+: {
-      spec+: {
-        bootstrap+: {
-          initdb+: {
-            postInitSQL: [
-              'CREATE DATABASE logs;',
-              'ALTER DATABASE logs OWNER TO %s;' % config.readarr.postgres.db.user,
-              'CREATE DATABASE readarr-cache;',
-              'ALTER DATABASE readarr-cache OWNER TO %s;' % config.readarr.postgres.db.user,
-            ],
-          },
-        },
-      },
-    },
-  },
 
   shared:
     utils.persistentVolume({ name: 'tv', namespace: config.common.namespace }, '4000Gi', 'manual', '192.168.2.29') +
