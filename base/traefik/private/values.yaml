@@ -18,8 +18,8 @@ service:
 logs:
   access:
     enabled: true
-    format: json
-    filePath: "/var/log/traefik/access.log"
+    #format: json
+    #filePath: "/var/log/traefik/access.log"
 
 experimental:
   plugins:
@@ -27,25 +27,25 @@ experimental:
       moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
       version: v1.3.5
 
-additionalVolumeMounts:
-- name: traefik-logs
-  mountPath: /var/log/traefik
+#additionalVolumeMounts:
+#- name: traefik-logs
+#  mountPath: /var/log/traefik
 
-deployment:
-  additionalVolumes:
-  - name: traefik-logs
-    persistentVolumeClaim:
-      claimName: traefik-private-logs
+#deployment:
+#  additionalVolumes:
+#  - name: traefik-logs
+#    persistentVolumeClaim:
+#      claimName: traefik-private-logs
 
-extraObjects:
-  - kind: PersistentVolumeClaim
-    apiVersion: v1
-    metadata:
-      name: traefik-private-logs
-    spec:
-      storageClassName: longhorn-r2
-      accessModes:
-        - ReadWriteMany
-      resources:
-        requests:
-          storage: 1Gi
+#extraObjects:
+#  - kind: PersistentVolumeClaim
+#    apiVersion: v1
+#    metadata:
+#      name: traefik-private-logs
+#    spec:
+#      storageClassName: longhorn-r2
+#      accessModes:
+#        - ReadWriteMany
+#      resources:
+#        requests:
+#          storage: 1Gi
