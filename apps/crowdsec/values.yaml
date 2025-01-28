@@ -1,0 +1,32 @@
+# Config reference: https://github.com/crowdsecurity/helm-charts/tree/main/charts/crowdsec
+
+container_runtime: containerd
+
+agent:
+  # Specify each pod whose logs you want to process
+  acquisition:
+    - namespace: traefik
+      podName: private-traefik-*
+      program: traefik
+    - namespace: traefik
+      podName: public-traefik-*
+      program: traefik
+  env:
+    - name: COLLECTIONS
+      value: "crowdsecurity/traefik"
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+lapi:
+  # replicas: 1
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  persistentVolume:
+    config:
+      enabled: false
+    data:
+      enabled: true

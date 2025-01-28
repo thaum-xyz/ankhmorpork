@@ -25,3 +25,7 @@ experimental:
     crowdsec-bouncer:
       moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
       version: v1.3.5
+
+additionalArguments:
+  - "--entrypoints.web.http.middlewares=crowdsec-crowdsec-bouncer@kubernetescrd"
+  - "--entrypoints.websecure.http.middlewares=crowdsec-crowdsec-bouncer@kubernetescrd"

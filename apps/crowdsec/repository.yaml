@@ -1,0 +1,7 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: crowdsecurity
+spec:
+  interval: 5m
+  url: https://crowdsecurity.github.io/helm-charts
