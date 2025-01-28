@@ -19,4 +19,4 @@ logs:
   access:
     enabled: true
     format: json
-    filePath: "/var/log/traefik/access.log
+    filePath: "/var/log/traefik/access.log"
