@@ -45,8 +45,8 @@ lapi:
       enabled: true
   persistentVolume:
     config:
-      enabled: true
-      storageClassName: longhorn
+      enabled: false
+      #storageClassName: longhorn
     data:
       enabled: true
       storageClassName: longhorn
