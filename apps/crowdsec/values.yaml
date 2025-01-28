@@ -30,3 +30,4 @@ lapi:
       enabled: false
     data:
       enabled: true
+      storageClassName: longhorn
