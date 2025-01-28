@@ -21,6 +21,12 @@ logs:
     format: json
     filePath: "/var/log/traefik/access.log"
 
+experimental:
+  plugins:
+    crowdsec-bouncer:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.3.5
+
 additionalVolumeMounts:
 - name: traefik-logs
   mountPath: /var/log/traefik
