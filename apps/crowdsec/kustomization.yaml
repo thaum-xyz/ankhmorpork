@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - release.yaml
   - bouncer-middleware.yaml
+  - crowdsec-lapi-secrets.yaml
 configMapGenerator:
   - name: values
     files:
