@@ -4,6 +4,11 @@ container_runtime: containerd
 
 config:
   config.yaml.local: |
+    db_config:
+      flush:
+        agents_autodelete:
+          cert: 60m # This is TLS client authentication
+          login_password: 60m # This includes the auto registration token as well
     api:
       server:
         auto_registration:
