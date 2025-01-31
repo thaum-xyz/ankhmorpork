@@ -47,6 +47,9 @@ lapi:
     config:
       enabled: true
       storageClassName: longhorn
+      resources:
+        requests:
+          storage: 300Mi
     data:
       enabled: true
       storageClassName: longhorn
