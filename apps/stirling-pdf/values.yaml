@@ -22,7 +22,9 @@ ingress:
       tlsSecret: pdf.krupa.net.pl
 
 serviceMonitor:
-  enabled: true
+  # Disabled as application actually doesn't expose any metrics
+  # More inhttps://github.com/Stirling-Tools/Stirling-PDF/issues/1887
+  enabled: false
 
 envs:
 - name: UI_APP_NAME
