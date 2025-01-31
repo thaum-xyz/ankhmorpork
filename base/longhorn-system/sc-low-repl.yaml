@@ -13,3 +13,7 @@ provisioner: driver.longhorn.io
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 allowVolumeExpansion: true
+mountOptions:
+  - discard
+  - noatime
+  - nodiratime
