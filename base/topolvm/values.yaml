@@ -70,6 +70,10 @@ storageClasses:
       allowVolumeExpansion: true
       additionalParameters:
         "topolvm.io/device-class": "thin"
+      mountOptions:
+        - discard
+        - noatime
+        - nodiratime
 
 webhook:
   podMutatingWebhook:
