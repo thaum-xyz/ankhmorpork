@@ -2,19 +2,18 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     # probe-uri: /-/healthy
     reloader.homer/group: Ankh Cloud
-    reloader.homer/logo:
+    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/mealie.svg 
     reloader.homer/name: Mealie
-    reloader.homer/tag: testing
   labels:
     app.kubernetes.io/name: mealie
   name: mealie
 spec:
-  ingressClassName: private
+  ingressClassName: public
   rules:
-    - host: mealie.ankhmorpork.thaum.xyz
+    - host: recipes.krupa.net.pl
       http:
         paths:
           - backend:
@@ -26,5 +25,5 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - mealie.ankhmorpork.thaum.xyz
+        - recipes.krupa.net.pl
       secretName: mealie-tls
