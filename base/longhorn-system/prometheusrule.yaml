@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   groups:
-  - name: longhorn.rules
+  - name: longhorn-test.rules
     rules:
     - alert: LonghornVolumeTrimNeeded
       annotations:
@@ -26,6 +26,8 @@ spec:
       for: 2d
       labels:
         severity: warning
+  - name: longhorn.rules
+    rules:
     - alert: LonghornVolumeActualSpaceUsedWarning
       annotations:
         description: The actual space used by Longhorn volume {{$labels.volume}} on {{$labels.node}} is at {{$value}}% capacity for more than 5 minutes.
@@ -52,7 +54,7 @@ spec:
         severity: warning
     - alert: LonghornVolumeOverprovisioned
       annotations:
-        description: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} on node {{$labels.node}} is overprovisioned by a factor of {{$value | humanizePercent}}. Run fstrim if possible.
+        description: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} on node {{$labels.node}} is overprovisioned by a factor of {{$value | humanize}}. Run fstrim if possible.
         summary: Longhorn volume overprovisioned
       expr: |
         sum by (persistentvolumeclaim, namespace, node) (kubelet_volume_stats_used_bytes)
