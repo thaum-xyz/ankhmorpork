@@ -54,7 +54,7 @@ spec:
         severity: warning
     - alert: LonghornVolumeOverprovisioned
       annotations:
-        description: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} on node {{$labels.node}} is overprovisioned by a factor of {{$value | humanize}}. Run fstrim if possible.
+        description: PVC {{$labels.persistentvolumeclaim}} in namespace {{$labels.namespace}} on node {{$labels.node}} is overprovisioned by a factor of {{$value | humanizePercentage}}. Run fstrim if possible.
         summary: Longhorn volume overprovisioned
       expr: |
         sum by (persistentvolumeclaim, namespace, node) (kubelet_volume_stats_used_bytes)
