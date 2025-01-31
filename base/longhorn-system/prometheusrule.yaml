@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   groups:
-  - name: longhorn-test.rules
+  - name: longhorn.rules
     rules:
     - alert: LonghornVolumeTrimNeeded
       annotations:
@@ -22,12 +22,10 @@ spec:
         )
         < 0.5
         AND
-        (kubelet_volume_stats_capacity_bytes - kubelet_volume_stats_available_bytes) > 1024*1024*1024
+        (kubelet_volume_stats_capacity_bytes - kubelet_volume_stats_available_bytes) > 1024 * 1024 * 1024
       for: 2d
       labels:
         severity: warning
-  - name: longhorn.rules
-    rules:
     - alert: LonghornVolumeActualSpaceUsedWarning
       annotations:
         description: The actual space used by Longhorn volume {{$labels.volume}} on {{$labels.node}} is at {{$value}}% capacity for more than 5 minutes.
