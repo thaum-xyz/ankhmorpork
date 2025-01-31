@@ -32,7 +32,7 @@ spec:
   postRenderers:
     - kustomize:
         patches:
-          target:
+        - target:
             group: networking.k8s.io
             version: v1
             kind: Ingress
