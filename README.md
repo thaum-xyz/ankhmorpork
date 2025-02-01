@@ -15,7 +15,7 @@ Project utilizes [Infrastructure as Code](https://en.wikipedia.org/wiki/Infrastr
 
 Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LTS Ubuntu OS using a modified version of [Ansible](https://www.ansible.com/) role [provided by k3s project](https://github.com/k3s-io/k3s-ansible).
 
-🔸 _[Click here](./metal/) to see my Ansible playbooks and roles._
+🔸 _[Click here](./metal/) to see Ansible playbooks and roles._
 
 ### Components
 
@@ -24,11 +24,6 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <th>Logo</th>
     <th>Name</th>
     <th>Description</th>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://jsonnet.org/img/isologo.svg"></td>
-    <td><a href="https://jsonnet.org">Jsonnet</a></td>
-    <td>Data templating language</td>
   </tr>
   <tr>
     <td><img width="32" src="https://avatars.githubusercontent.com/u/44036562?s=200&v=4"></td>
@@ -41,17 +36,17 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Automate bare metal provisioning and configuration</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Logo-ubuntu_cof-orange-hex.svg"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/canonicalubuntu.svg"></td>
     <td><a href="https://ubuntu.com">Ubuntu</a></td>
     <td>Base OS for Kubernetes nodes</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/k3s/icon/color/k3s-icon-color.svg"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/k3s.svg"></td>
     <td><a href="https://k3s.io">K3s</a></td>
     <td>Lightweight distribution of Kubernetes</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/kubernetes/icon/color/kubernetes-icon-color.svg"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/kubernetes.svg"></td>
     <td><a href="https://kubernetes.io">Kubernetes</a></td>
     <td>Container-orchestration system, the backbone of this project</td>
   </tr>
@@ -71,12 +66,12 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Local storage based on LVM</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://github.com/longhorn/website/raw/master/static/img/icon-longhorn.svg"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/longhorn.svg"></td>
     <td><a href="https://longhorn.io/">Longhorn</a></td>
     <td>Distributed block storage</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://min.io/resources/img/logo/MINIO_Bird.png"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/minio.svg"></td>
     <td><a href="https://min.io">Minio</a></td>
     <td>S3 storage</td>
   </tr>
@@ -101,12 +96,12 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Cloud native certificate management</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/314135?s=200&v=4"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/cloudflare.svg"></td>
     <td><a href="https://www.cloudflare.com">Cloudflare</a></td>
     <td>DNS</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://github.com/traefik/traefik/raw/master/docs/content/assets/img/traefik.logo.png"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/traefik-proxy.svg"></td>
     <td><a href="https://github.com/traefik/traefik">Traefik</a></td>
     <td>Kubernetes Ingress Controller</td>
   </tr>
@@ -116,7 +111,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Authentication proxy</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/prometheus/icon/color/prometheus-icon-color.svg"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/prometheus.svg"></td>
     <td><a href="https://prometheus.io">Prometheus</a></td>
     <td>Systems monitoring and alerting toolkit</td>
   </tr>
@@ -126,7 +121,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Metrics datalake</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://grafana.com/static/img/menu/grafana2.svg"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/grafana.svg"></td>
     <td><a href="https://grafana.com">Grafana</a></td>
     <td>Operational dashboards</td>
   </tr>
@@ -135,45 +130,65 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td><a href="https://parca.dev">Parca</a></td>
     <td>Continuous profiling</td>
   </tr>-->
-  <!-- <tr>
-    <td><img width="32" src="https://github.com/grafana/loki/blob/main/docs/sources/logo.png?raw=true"></td>
+  <tr>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/grafanaloki.svg"></td>
     <td><a href="https://grafana.com/oss/loki">Loki</a></td>
     <td>Log aggregation system</td>
-  </tr> -->
+  </tr>
   <tr>
     <td><img width="32" src="https://cloudnative-pg.io/images/hero_image.svg"></td>
     <td><a href="https://cloudnative-pg.io/">Cloudnative-pg</a></td>
     <td>Postgres Controller</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/homer.svg"></td>
     <td><a href="https://github.com/bastienwirtz/homer">Homer</a></td>
     <td>Portal Site</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/homeassistant-small.svg"></td>
     <td><a href="https://www.home-assistant.io/">HomeAssistant</a></td>
     <td>Home Automation System</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://esphome.io/_images/logo.png"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/esphome.svg"></td>
     <td><a href="https://esphome.io/">ESPhome</a></td>
     <td>Microcontrollers Management</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/logo_color.svg"></td>
-    <td><a href="https://tandoor.dev/">Tandoor</a></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/mealie.svg"></td>
+    <td><a href="https://tandoor.dev/">Mealie</a></td>
     <td>Cookbook</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/32436079?s=400&v=4"></td>
-    <td><a href="https://photoprism.app/">Photoprism</a></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/immich.svg"></td>
+    <td><a href="https://photoprism.app/">Immich</a></td>
     <td>Photo Management</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/paperless-ngx-logo.png"></td>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/paperlessng.svg"></td>
     <td><a href="https://paperless-ngx.readthedocs.io/en/latest/">Paperless-ngx</a></td>
     <td>Document Management</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/changedetection.svg"></td>
+    <td><a href="https://changedetection.io">Changedetection</a></td>
+    <td>Monitoring website changes</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/jellyfin.svg"></td>
+    <td><a href="https://jellyfin.org/">Jellyfin</a></td>
+    <td>Multimedia System</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/steam.svg"></td>
+    <td><a href="https://github.com/lloesche/valheim-server-docker">Game Server</a></td>
+    <td>Valheim Game Server</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://avatars.githubusercontent.com/u/122059230?s=200&v=4"></td>
+    <td><a href="https://atuin.sh/">Atuin</a></td>
+    <td>Shell History</td>
   </tr>
   <tr>
     <td>AND</td>
@@ -184,17 +199,13 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
 
 ### GitOps
 
-[Flux](https://github.com/fluxcd/flux2) watches `manifests/` subdirectories in `base` and `apps` top-level directories and makes changes based on YAML manifests. Where possible YAML manifests are generated from [jsonnet](https://jsonnet.org/) code.
+[Flux](https://github.com/fluxcd/flux2) watches `manifests/` subdirectories in `base` and `apps` top-level directories and makes changes based on YAML manifests.
 
 ## 🌐 DNS
 
-### Ingress Controller
-
-Over WAN, I have port-forwarded ports `80` and `443` to the load balancer IP of my ingress controller that's running in my Kubernetes cluster.
-
 ### Internal DNS
 
-[CoreDNS](https://github.com/coredns/coredns) is deployed in a cluster and provides an internal resolution of ingress addresses as well as a proxy to [NextDNS](https://nextdns.io/) used for AdBlocking.
+[AdGuard Home](https://adguard.com/en/adguard-home/overview.html) is deployed out of k8s cluster and provides an internal resolution of ingress addresses as well as ad blocking.
 
 ### Dynamic DNS
 
@@ -202,18 +213,20 @@ My home IP can change at any given time and in order to keep my WAN IP address u
 
 ## 💽 Network Attached Storage
 
-QNAP NAS TS-431DeU is used to manage NFS shares and backup them to B2 cloud using HBS.
+QNAP NAS TS-451DeU is used to manage NFS shares and backup them to B2 cloud using HBS.
 
 ## 🔧 Hardware
 
-| Device                   | Count | RAM   | Storage                          | Connectivity       | Purpose        |
-|--------------------------|-------|-------|----------------------------------|--------------------|----------------|
-| Unifi Dream Machine Pro  | 1     | N/A   | N/A                              | 8x GbE + 2xSFP+    | Router         |
-| Unifi US-16-PoE switch   | 1     | N/A   | N/A                              | 16x GbE + 2xSFP    | Main Switch    |
-| QNAP TS-431DeU           | 1     | 16GB  | 2x240GB NVMe RAID1 + 4x3TB RAID5 | 2x 2.5GbE LACP     | NAS            |
-| HP EliteDesk G2 800 mini | 2     | 32GB  | 240GB M2 SSD + 500GB SSD         | 1x GbE             | K3S Node       |
-| DELL E5440 Laptop        | 1     | 12GB  | 240 SSD + 2x 120GB SSD           | 1x GbE             | K3S Node       |
-| Custom-built Server      | 1     | 64GB  | 240GB NVMe + 1TB SSD             | 2x GbE LACP + 1GbE | K3S Node w/GPU |
+| Device                   | Count | RAM   | Storage                          | Connectivity       | Purpose         |
+|--------------------------|-------|-------|----------------------------------|--------------------|-----------------|
+| Unifi Dream Machine Pro  | 1     | N/A   | N/A                              | 8x GbE + 2xSFP+    | Router          |
+| Unifi US-16-PoE switch   | 1     | N/A   | N/A                              | 16x GbE + 2xSFP    | Main Switch     |
+| QNAP TS-451DeU           | 1     | 16GB  | 2x240GB NVMe RAID1 + 4x6TB RAID5 | 2x 2.5GbE LACP     | NAS             |
+| Raspberry Pi             | 1     | ----- | -----                            | 1x GbE             | DNS Server      |
+| HP EliteDesk G2 800 mini | 2     | 32GB  | 240GB M2 SSD + 500GB SSD         | 1x GbE             | K3S Node        |
+| Lenovo X1 Laptop         | 1     | 48GB  | 480GB NVMe + 1x 480GB SSD        | 1x GbE             | K3S Node        |
+| Custom-built Server      | 1     | 64GB  | 480GB NVMe + 1TB SSD             | 2x GbE LACP + 1GbE | K3S Node w/GPU  |
+| Custom-built Server      | 1     | 64GB  | ???                              | 1x GbE             | K3S Node (spot) |
 
 ## ✨ Features
 
@@ -227,11 +240,13 @@ Project status: **Alpha**
 - [x] Installing and managing applications using GitOps
 - [x] CI/CD platform
 - [x] Distributed storage
-- [ ] Automatically update DNS records for exposed services 🚧
+- [x] Automatically update DNS records for exposed services
+<!--TODO
 - [ ] Automated bare metal provisioning with PXE boot 🚧
 - [ ] Support multiple environments (dev, stag, prod) 🚧
 - [ ] Automated in-cluster offsite backups 🚧
 - [ ] Single sign-on 🚧
+-->
 
 ## 🤝 Contributing
 
@@ -239,11 +254,11 @@ Any contributions you make, either big or small, are greatly appreciated.
 
 ## 🔏 Security
 
-If you find any security issue please ping me using one of following contact mediums:
-- twitter DM (@paulfantom)
-- kubernetes slack (@paulfantom)
-- freenode IRC (@paulfantom)
-- email (paulfantom+security@gmail.com)
+If you find any security issue please ping me using email (paulfantom+security@gmail.com)
+
+## Acknowledgements
+
+- Icons are provided by [homelab-svg-assets](https://github.com/loganmarchione/homelab-svg-assets).
 
 ## 🏛️ License
 
