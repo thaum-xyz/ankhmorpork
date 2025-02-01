@@ -11,6 +11,8 @@ metadata:
 spec:
   endpoints:
     - port: metrics
+      scrapeTimeout: 30s
+      interval: 75s
   selector:
     matchLabels:
       app.kubernetes.io/component: server
