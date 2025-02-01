@@ -152,6 +152,8 @@ function(params) {
     spec: {
       endpoints: [{
         port: $.statefulset.spec.template.spec.containers[1].ports[0].name,
+        scrapeTimeout: '30s',
+        interval: '100s',
       }],
       selector: {
         matchLabels: $._config.selectorLabels,
