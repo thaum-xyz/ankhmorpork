@@ -3,8 +3,8 @@ common:
   namespace: &namespace "homeassistant"
   externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
 homeassistant:
-  version: "2025.1.1"  # application-version-from-github: home-assistant/core
-  image: "homeassistant/home-assistant:2025.1.1"  # application-image-from-github: home-assistant/core
+  version: "2025.2.1"  # application-version-from-github: home-assistant/core
+  image: "homeassistant/home-assistant:2025.2.1"  # application-image-from-github: home-assistant/core
   namespace: *namespace
   ingress:
     domain: "home.ankhmorpork.thaum.xyz"
@@ -82,8 +82,8 @@ postgres:
     size: 7Gi
     storageClass: lvm-thin
 esphome:
-  version: "2024.9.1"  # application-version-from-github: esphome/esphome
-  image: "esphome/esphome:2024.9.1"  # application-image-from-github: esphome/esphome
+  version: "2024.12.4"  # application-version-from-github: esphome/esphome
+  image: "esphome/esphome:2024.12.4"  # application-image-from-github: esphome/esphome
   namespace: *namespace
   resources:
     requests:
@@ -91,7 +91,7 @@ esphome:
       memory: 320Mi
     limits:
       cpu: 1800m
-      memory: 1000Mi
+      memory: 2000Mi
   ingress:
     domain: 'esphome.ankhmorpork.thaum.xyz'
     className: 'private'
