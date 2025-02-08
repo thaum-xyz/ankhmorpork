@@ -575,6 +575,6 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homeassistant
     app.kubernetes.io/part-of: homeassistant
-    app.kubernetes.io/version: 2025.1.1
+    app.kubernetes.io/version: 2025.2.1
   name: homeassistant-configs
   namespace: homeassistant

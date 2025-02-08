@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: esphome
-    app.kubernetes.io/version: 2024.9.1
+    app.kubernetes.io/version: 2024.12.4
   name: esphome
   namespace: homeassistant
 spec:
@@ -16,13 +16,13 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: esphome
-        app.kubernetes.io/version: 2024.9.1
+        app.kubernetes.io/version: 2024.12.4
     spec:
       containers:
         - env:
             - name: ESPHOME_DASHBOARD_USE_PING
               value: "true"
-          image: esphome/esphome:2024.9.1
+          image: esphome/esphome:2024.12.4
           imagePullPolicy: IfNotPresent
           name: esphome
           ports:
@@ -31,7 +31,7 @@ spec:
           resources:
             limits:
               cpu: 1800m
-              memory: 1000Mi
+              memory: 2000Mi
             requests:
               cpu: 400m
               memory: 320Mi
