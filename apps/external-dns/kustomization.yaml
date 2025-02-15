@@ -5,7 +5,7 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
-  - adguard-configuration.yaml
+  - unifi-credentials.yaml
 configMapGenerator:
   - name: values
     files:

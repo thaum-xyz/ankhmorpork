@@ -1,7 +1,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: bitnami
+  name: k8s-sigs-external-dns
 spec:
   interval: 5m
-  url: https://charts.bitnami.com/bitnami
+  url: https://kubernetes-sigs.github.io/external-dns/

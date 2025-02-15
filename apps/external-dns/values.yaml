@@ -1,59 +1,49 @@
-# Reference documentation: https://artifacthub.io/packages/helm/bitnami/external-dns
-
-provider: webhook
-
-sources:
-  - service
-  - ingress
+# Reference documentation: https://github.com/kubernetes-sigs/external-dns/blob/master/charts/external-dns/values.yaml
 
 txtOwnerId: ankhmorpork.thaum.xyz
+txtPrefix: k8s.
+
+policy: sync
 domainFilters:
   - ankhmorpork.thaum.xyz
   - krupa.net.pl
 
-fqdnTemplates:
-  - "{{.Name}}.{{.Namespace}}.ankhmorpork.thaum.xyz"
-
-serviceTypeFilter:
-  - LoadBalancer
-
 registry: txt
 triggerLoopOnEvent: true
 
-metrics:
+serviceMonitor:
   enabled: true
-  serviceMonitor:
-    enabled: true
-    honorLabels: true
 
 extraArgs:
-  webhook-provider-url: http://127.0.0.1:8888
+  - --ignore-ingress-tls-spec
+  - --fqdn-template={{.Name}}.{{.Namespace}}.ankhmorpork.thaum.xyz
+  - --service-type-filter=LoadBalancer
 
-sidecars:
-  - name: adguard-webhook
-    image: ghcr.io/muhlba91/external-dns-provider-adguard:v8.0.0
-    ports:
-      - containerPort: 8080
-        name: http
+provider:
+  name: webhook
+  webhook:
+    image:
+      repository: ghcr.io/kashalls/external-dns-unifi-webhook
+      tag: v0.4.1
     env:
-      - name: LOG_LEVEL
-        value: debug
-      - name: SERVER_HOST
-        value: "0.0.0.0"
-      - name: DRY_RUN
+      - name: UNIFI_HOST
+        value: https://192.168.1.1 # replace with the address to your UniFi router/controller
+      - name: UNIFI_EXTERNAL_CONTROLLER
         value: "false"
-      - name: ADGUARD_URL
+      - name: UNIFI_API_KEY
         valueFrom:
           secretKeyRef:
-            name: adguard-configuration
-            key: url
-      - name: ADGUARD_USER
-        valueFrom:
-          secretKeyRef:
-            name: adguard-configuration
-            key: user
-      - name: ADGUARD_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: adguard-configuration
-            key: password
+            name: unifi-credentials
+            key: UNIFI_API_KEY
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: http-webhook
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: http-webhook
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
