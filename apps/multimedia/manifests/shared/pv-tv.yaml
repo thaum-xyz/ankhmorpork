@@ -7,10 +7,10 @@ spec:
   accessModes:
     - ReadWriteMany
   capacity:
-    storage: 4000Gi
+    storage: 6Ti
   nfs:
-    path: /tv
-    server: 192.168.2.29
+    path: /var/nfs/shared/tvshows
+    server: 192.168.1.48
   persistentVolumeReclaimPolicy: Retain
   storageClassName: manual
   volumeMode: Filesystem
