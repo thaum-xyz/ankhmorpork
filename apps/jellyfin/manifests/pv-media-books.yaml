@@ -8,8 +8,8 @@ spec:
   capacity:
     storage: 4000Gi
   nfs:
-    path: /books
-    server: 192.168.2.29
+    path: /var/nfs/shared/books
+    server: 192.168.1.48
   persistentVolumeReclaimPolicy: Retain
   storageClassName: manual
   volumeMode: Filesystem
