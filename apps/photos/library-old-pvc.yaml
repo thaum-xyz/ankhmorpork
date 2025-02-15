@@ -7,6 +7,6 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 4000Gi
+      storage: 600Gi
   storageClassName: manual
   volumeName: library-old

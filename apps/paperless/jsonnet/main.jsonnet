@@ -97,13 +97,13 @@ local all = {
       kind: 'PersistentVolume',
       metadata: $.web.pvcConsume.metadata,
       spec: {
-        accessModes: ['ReadWriteOnce'],
+        accessModes: ['ReadWriteMany'],
         capacity: {
-          storage: '4Gi',
+          storage: '15Gi',
         },
         nfs: {
-          path: '/Paperless',
-          server: '192.168.2.29',
+          path: '/var/nfs/shared/scans',
+          server: '192.168.1.48',
         },
         persistentVolumeReclaimPolicy: 'Retain',
         storageClassName: 'manual',

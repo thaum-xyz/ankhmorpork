@@ -32,10 +32,10 @@ paperless:
     consume:
       storageClassName: "manual"
       accessModes:
-        - ReadWriteOnce
+        - ReadWriteMany
       resources:
         requests:
-          storage: 1Gi
+          storage: 15Gi
     backups:
       storageClassName: "longhorn-r2"
       accessModes:

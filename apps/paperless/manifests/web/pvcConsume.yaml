@@ -9,8 +9,8 @@ metadata:
   namespace: paperless
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 15Gi
   storageClassName: manual
