@@ -12,7 +12,7 @@ ipam:
     - 10.42.0.0/16
 k8sServiceHost: 192.168.2.30
 k8sServicePort: 6443
-kubeProxyReplacement: false
+kubeProxyReplacement: true
 priorityClassName: system-node-critical
 policyEnforcementMode: never
 routingMode: tunnel

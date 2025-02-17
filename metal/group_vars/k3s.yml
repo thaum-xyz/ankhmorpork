@@ -47,15 +47,13 @@ k3s_server_config:
   etcd-s3-bucket: etcd-thaum-xyz
   etcd-s3-folder: ankhmorpork
 
-  kube-proxy-arg:
-  - "metrics-bind-address=0.0.0.0"
   kube-apiserver-arg:
   - "feature-gates=PDBUnhealthyPodEvictionPolicy=true"
   - "enable-admission-plugins=NamespaceAutoProvision"
   resolv-conf: "/run/systemd/resolve/resolv.conf"
   flannel-backend: none
   disable-network-policy: "true"
-#  disable-kube-proxy: true
+  disable-kube-proxy: true
 
 
 k3s_agent_config:
