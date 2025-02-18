@@ -19,6 +19,11 @@ routingMode: tunnel
 tunnelPort: 6081
 tunnelProtocol: geneve
 
+rollOutCiliumPods: true
+loadBalancer:
+  mode: dsr
+  dsrDispatch: geneve
+
 #ipMasqAgent:
 #  enabled: true
 
