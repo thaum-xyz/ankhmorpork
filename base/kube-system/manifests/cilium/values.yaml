@@ -1,5 +1,5 @@
 bpf:
-  hostLegacyRouting: true
+  hostLegacyRouting: false
   masquerade: false
 cluster:
   name: ankhmorpork
