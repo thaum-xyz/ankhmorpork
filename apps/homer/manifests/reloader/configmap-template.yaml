@@ -156,10 +156,6 @@ data:
             logo: "https://dashboard.doppler.com/imgs/logo.png"
             <<: *external
             url: "https://dashboard.doppler.com/"
-          - name: AdGuard
-            logo: https://github.com/loganmarchione/homelab-svg-assets/raw/refs/heads/main/assets/adguardhome.svg
-            <<: *local
-            url: "http://dns.ankhmorpork.thaum.xyz"
           - name: Unifi
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             <<: *local
