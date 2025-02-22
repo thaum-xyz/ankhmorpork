@@ -3,8 +3,8 @@ common:
   namespace: &namespace "homeassistant"
   externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
 homeassistant:
-  version: "2025.2.1"  # application-version-from-github: home-assistant/core
-  image: "homeassistant/home-assistant:2025.2.1"  # application-image-from-github: home-assistant/core
+  version: "2025.2.5"  # application-version-from-github: home-assistant/core
+  image: "homeassistant/home-assistant:2025.2.5"  # application-image-from-github: home-assistant/core
   namespace: *namespace
   ingress:
     domain: "home.ankhmorpork.thaum.xyz"
