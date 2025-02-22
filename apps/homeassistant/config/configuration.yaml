@@ -326,6 +326,14 @@ cover:
             command: Stop
 
 switch:
+  - platform: wake_on_lan
+    name: pawel-pc
+    host: "192.168.2.51"
+    mac: !secret pawel_pc_mac
+  - platform: wake_on_lan
+    name: adus-pc
+    host: "192.168.2.50"
+    mac: !secret adus_pc_mac
   - platform: template
     switches:
       projector:
@@ -350,16 +358,6 @@ switch:
             hold_secs: 0
           target:
             entity_id: remote.broadlink
-
-#  - platform: wake_on_lan
-#    name: pawel-pc
-#    host: "192.168.2.51"
-#    mac: !secret pawel_pc_mac
-#  - platform: wake_on_lan
-#    name: adus-pc
-#    host: "192.168.2.50"
-#    mac: !secret adus_pc_mac
-
 input_boolean:
   movie_time:
     name: Movie Time
