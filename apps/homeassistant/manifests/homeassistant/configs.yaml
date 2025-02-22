@@ -118,18 +118,6 @@ data:
           arming_time: 60
           delay_time: 30
 
-    climate:
-    - platform: generic_thermostat
-      name: Fridge
-      heater: light.on_off_plug_1
-      target_sensor: sensor.ruuvitag_fridge_temperature
-      ac_mode: true
-      min_temp: 1
-      max_temp: 8
-      target_temp: 4
-      cold_tolerance: 1
-      hot_tolerance: 1
-
     template:
     - trigger:
       - platform: event
@@ -316,6 +304,7 @@ data:
           projector_screen:
             device_class: blind
             friendly_name: "Projector Screen"
+            unique_id: projector_screen
             value_template: "{{ not (states('binary_sensor.projector_screen_sensor') | bool) }}"
             open_cover:
               service: remote.send_command
@@ -365,14 +354,14 @@ data:
               target:
                 entity_id: remote.broadlink
 
-      - platform: wake_on_lan
-        name: pawel-pc
-        host: "192.168.2.51"
-        mac: !secret pawel_pc_mac
-      - platform: wake_on_lan
-        name: adus-pc
-        host: "192.168.2.50"
-        mac: !secret adus_pc_mac
+    #  - platform: wake_on_lan
+    #    name: pawel-pc
+    #    host: "192.168.2.51"
+    #    mac: !secret pawel_pc_mac
+    #  - platform: wake_on_lan
+    #    name: adus-pc
+    #    host: "192.168.2.50"
+    #    mac: !secret adus_pc_mac
 
     input_boolean:
       movie_time:
@@ -389,77 +378,77 @@ data:
         - bt
         initial: opt/coax
 
-    plant:
-      jovita:
-        sensors:
-          moisture: sensor.jovita_moisture
-          temperature: sensor.jovita_temperature
-          conductivity: sensor.jovita_soil_conductivity
-          brightness: sensor.jovita_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 10
-        max_temperature: 32
-        min_brightness: 500
-        max_brightness: 12000
-      svetlana:
-        sensors:
-          moisture: sensor.svetlana_plant_moisture
-          temperature: sensor.svetlana_plant_temperature
-          conductivity: sensor.svetlana_plant_conductivity
-          brightness: sensor.svetlana_plant_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 10
-        max_temperature: 32
-        min_brightness: 500
-        max_brightness: 12000
-      violet:
-        sensors:
-          moisture: sensor.violet_moisture
-          temperature: sensor.violet_temperature
-          conductivity: sensor.violet_soil_conductivity
-          brightness: sensor.violet_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 10
-        max_temperature: 32
-        min_brightness: 600
-        max_brightness: 20000
-      herbs:
-        sensors:
-          moisture: sensor.herbs_moisture
-          temperature: sensor.herbs_temperature
-          conductivity: sensor.herbs_soil_conductivity
-          brightness: sensor.herbs_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 10
-        max_temperature: 32
-        min_brightness: 3700
-        max_brightness: 60000
-      basil:
-        sensors:
-          moisture: sensor.basil_moisture
-          temperature: sensor.basil_temperature
-          conductivity: sensor.basil_soil_conductivity
-          brightness: sensor.basil_illuminance
-        min_moisture: 15
-        max_moisture: 60
-        min_conductivity: 350
-        max_conductivity: 2000
-        min_temperature: 8
-        max_temperature: 32
-        min_brightness: 2500
-        max_brightness: 60000
+    # plant:
+    #   jovita:
+    #     sensors:
+    #       moisture: sensor.jovita_moisture
+    #       temperature: sensor.jovita_temperature
+    #       conductivity: sensor.jovita_soil_conductivity
+    #       brightness: sensor.jovita_illuminance
+    #     min_moisture: 15
+    #     max_moisture: 60
+    #     min_conductivity: 350
+    #     max_conductivity: 2000
+    #     min_temperature: 10
+    #     max_temperature: 32
+    #     min_brightness: 500
+    #     max_brightness: 12000
+    #   svetlana:
+    #     sensors:
+    #       moisture: sensor.svetlana_plant_moisture
+    #       temperature: sensor.svetlana_plant_temperature
+    #       conductivity: sensor.svetlana_plant_conductivity
+    #       brightness: sensor.svetlana_plant_illuminance
+    #     min_moisture: 15
+    #     max_moisture: 60
+    #     min_conductivity: 350
+    #     max_conductivity: 2000
+    #     min_temperature: 10
+    #     max_temperature: 32
+    #     min_brightness: 500
+    #     max_brightness: 12000
+    #   violet:
+    #     sensors:
+    #       moisture: sensor.violet_moisture
+    #       temperature: sensor.violet_temperature
+    #       conductivity: sensor.violet_soil_conductivity
+    #       brightness: sensor.violet_illuminance
+    #     min_moisture: 15
+    #     max_moisture: 60
+    #     min_conductivity: 350
+    #     max_conductivity: 2000
+    #     min_temperature: 10
+    #     max_temperature: 32
+    #     min_brightness: 600
+    #     max_brightness: 20000
+    #   herbs:
+    #     sensors:
+    #       moisture: sensor.herbs_moisture
+    #       temperature: sensor.herbs_temperature
+    #       conductivity: sensor.herbs_soil_conductivity
+    #       brightness: sensor.herbs_illuminance
+    #     min_moisture: 15
+    #     max_moisture: 60
+    #     min_conductivity: 350
+    #     max_conductivity: 2000
+    #     min_temperature: 10
+    #     max_temperature: 32
+    #     min_brightness: 3700
+    #     max_brightness: 60000
+    #   basil:
+    #     sensors:
+    #       moisture: sensor.basil_moisture
+    #       temperature: sensor.basil_temperature
+    #       conductivity: sensor.basil_soil_conductivity
+    #       brightness: sensor.basil_illuminance
+    #     min_moisture: 15
+    #     max_moisture: 60
+    #     min_conductivity: 350
+    #     max_conductivity: 2000
+    #     min_temperature: 8
+    #     max_temperature: 32
+    #     min_brightness: 2500
+    #     max_brightness: 60000
 
     sonoff:
       username: !secret sonoff_username
