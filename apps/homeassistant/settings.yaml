@@ -79,7 +79,7 @@ postgres:
       cpu: 400m
       memory: 420Mi
   storage:
-    size: 7Gi
+    size: 14Gi
     storageClass: lvm-thin
 esphome:
   version: "2024.12.4"  # application-version-from-github: esphome/esphome
