@@ -18,8 +18,10 @@ prometheus:
 
 speaker:
   priorityClassName: system-node-critical
-  nodeSelector:
-    network.infra/type: fast
+  #nodeSelector:
+  #  network.infra/type: fast
+  frr:
+    enabled: false
 
 controller:
   priorityClassName: system-cluster-critical
