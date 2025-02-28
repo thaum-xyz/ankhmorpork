@@ -4,6 +4,8 @@ kind: HelmRelease
 metadata:
   name: crowdsec
 spec:
+  # FIXME: resume when ready
+  suspend: true
   chart:
     spec:
       chart: crowdsec
