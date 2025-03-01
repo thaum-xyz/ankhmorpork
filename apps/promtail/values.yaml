@@ -30,7 +30,7 @@ extraPorts:
     service:
       type: LoadBalancer
       port: 1514
-      loadBalancerIP: 192.168.2.82
+      loadBalancerIP: 192.168.50.132
 
 config:
   logFormat: json

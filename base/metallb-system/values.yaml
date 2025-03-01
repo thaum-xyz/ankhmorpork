@@ -19,8 +19,7 @@ prometheus:
 speaker:
   priorityClassName: system-node-critical
   nodeSelector:
-  #  network.infra/type: fast
-    kubernetes.io/hostname: metal01  # FIXME: Temporary workaround for migration period
+    network.infra/ingress: "true"
   frr:
     enabled: false
 

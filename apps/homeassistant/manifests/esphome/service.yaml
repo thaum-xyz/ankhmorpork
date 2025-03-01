@@ -9,7 +9,7 @@ metadata:
   name: esphome
   namespace: homeassistant
 spec:
-  loadBalancerIP: 192.168.2.94
+  loadBalancerIP: 192.168.50.134
   ports:
     - name: http
       port: 6052

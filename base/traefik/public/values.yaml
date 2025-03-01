@@ -12,7 +12,7 @@ providers:
 
 service:
   spec:
-    loadBalancerIP: "192.168.2.92"
+    loadBalancerIP: "192.168.50.128"
 
 logs:
   access:

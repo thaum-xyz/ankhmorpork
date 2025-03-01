@@ -54,7 +54,7 @@ local all = {
         },
       },
       spec+: {
-        loadBalancerIP: '192.168.2.94',
+        loadBalancerIP: '192.168.50.134',
         type: 'LoadBalancer',
         clusterIP:: null,
       },
@@ -73,7 +73,7 @@ local all = {
       },
       spec: {
         // Needed because HomeAssistant is on host network
-        loadBalancerIP: '192.168.2.93',
+        loadBalancerIP: '192.168.50.135',
         type: 'LoadBalancer',
         ports: [{
           name: 'postgres',
