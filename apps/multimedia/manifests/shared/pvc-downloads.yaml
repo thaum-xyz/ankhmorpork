@@ -8,5 +8,6 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 100Gi
-  storageClassName: longhorn-r2
+      storage: 120Gi
+  storageClassName: manual
+  volumeName: downloads
