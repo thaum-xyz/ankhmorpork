@@ -14,3 +14,4 @@ spec:
     requests:
       storage: 15Gi
   storageClassName: manual
+  volumeName: consume
