@@ -19,7 +19,7 @@ prometheus:
 speaker:
   priorityClassName: system-node-critical
   nodeSelector:
-    network.infra/ingress: "true"
+    network.infra/loadbalancer: "true"
   frr:
     enabled: false
 
