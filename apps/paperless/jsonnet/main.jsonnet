@@ -103,7 +103,7 @@ local all = {
         },
         nfs: {
           path: '/var/nfs/shared/scans',
-          server: '192.168.1.48',
+          server: '192.168.50.10',
         },
         persistentVolumeReclaimPolicy: 'Retain',
         storageClassName: 'manual',
