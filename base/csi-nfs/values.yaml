@@ -1,0 +1,16 @@
+# Config reference: https://github.com/kubernetes-csi/csi-driver-nfs/tree/master/charts
+
+controller:
+  runOnControlPlane: true
+
+storageClass:
+  create: true
+  name: unifi-nas
+  parameters:
+    server: 192.168.50.10
+    share: /var/nfs/shared/k8snfscsi
+    subDir: ${pvc.metadata.namespace}/${pvc.metadata.name}-${pv.metadata.name}
+  reclaimPolicy: Delete
+  volumeBindingMode: Immediate
+  mountOptions:
+    - nfsvers=3
