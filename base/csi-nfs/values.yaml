@@ -18,3 +18,4 @@ storageClass:
   volumeBindingMode: Immediate
   mountOptions:
     - nfsvers=3
+    - nolock
