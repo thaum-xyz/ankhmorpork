@@ -3,6 +3,10 @@
 controller:
   runOnControlPlane: true
 
+node:
+  livenessProbe:
+    healthPort: 29651
+
 storageClass:
   create: true
   name: unifi-nas
