@@ -70,6 +70,8 @@ spec:
               name: media
             - mountPath: /usr/src/paperless/consume
               name: consume
+      securityContext:
+        fsGroup: 1000
       restartPolicy: Always
       serviceAccountName: paperless
       volumes:
