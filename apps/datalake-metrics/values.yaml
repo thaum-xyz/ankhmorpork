@@ -85,7 +85,7 @@ compactor:
   - --hash-func=SHA256
   # FIXME: limit compaction to older blocks to prevent space exhaustion on S3. This is a temporary workaround wchich
   #        should be slowly increased to the full retention period and removed in the end.
-  - --max-time=-16d
+  - --max-time=-12d
 
 storegateway:
   enabled: true
