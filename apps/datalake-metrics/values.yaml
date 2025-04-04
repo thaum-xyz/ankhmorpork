@@ -83,9 +83,6 @@ compactor:
   # However to do this, compactor needs to know what are the labels attached by thanos receiver and ruler
   - --deduplication.replica-label=replica
   - --hash-func=SHA256
-  # FIXME: limit compaction to older blocks to prevent space exhaustion on S3. This is a temporary workaround wchich
-  #        should be slowly increased to the full retention period and removed in the end.
-  - --max-time=-4d
 
 storegateway:
   enabled: true

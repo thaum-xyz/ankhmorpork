@@ -7,8 +7,8 @@
 # - If it doesn't find `meta.json` it also removes the folder and all folder versions from S3 bucket. This is because
 #   without `meta.json` the folder is not used by thanos and it can be safely removed.
 
-#MINIO_ACCESS_KEY=""
-#MINIO_SECRET_KEY=""
+MINIO_ACCESS_KEY="${MINIO_ACCESS_KEY:-""}"
+MINIO_SECRET_KEY="${MINIO_SECRET_KEY:-""}"
 MINIO_BUCKET="${MINIO_BUCKET:-"metrics/thanos"}"
 MINIO_URL="${MINIO_URL:-"http://127.0.0.1:9000"}"
 DRY_RUN="${DRY_RUN:-"true"}"
