@@ -23,6 +23,10 @@ ports:
         to: websecure
         scheme: https
 
+  websecure:
+    http3:
+      enabled: false
+
 deployment:
   replicas: 2
 
