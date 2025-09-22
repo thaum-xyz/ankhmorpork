@@ -10,7 +10,13 @@ spec:
     email: thaumxyz@gmail.com
     privateKeySecretRef:
       name: letsencrypt-prod
+    #solvers:
+    #- http01:
+    #    ingress:
+    #      class: public
     solvers:
-    - http01:
-        ingress:
-          class: public
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: "cloudflare-auth"
+            key: "token"
