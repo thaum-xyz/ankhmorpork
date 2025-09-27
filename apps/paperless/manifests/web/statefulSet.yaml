@@ -13,7 +13,7 @@ spec:
     matchLabels:
       app.kubernetes.io/component: webservice
       app.kubernetes.io/name: paperless
-  serviceName: paperless
+  serviceName: paperless-headless
   template:
     metadata:
       annotations:
