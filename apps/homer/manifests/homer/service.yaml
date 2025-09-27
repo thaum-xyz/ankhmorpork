@@ -9,7 +9,6 @@ metadata:
   name: homer
   namespace: homer
 spec:
-  clusterIP: None
   ports:
     - name: http
       port: 8080

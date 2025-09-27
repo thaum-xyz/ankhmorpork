@@ -55,7 +55,6 @@ function(params) {
         port: 8080,
       }],
       selector: h._config.selectorLabels,
-      clusterIP: 'None',
     },
   },
 
