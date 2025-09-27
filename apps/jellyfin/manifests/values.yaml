@@ -6,12 +6,13 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/ingress.class: public
+    kubernetes.io/ingress.class: private
     traefik.ingress.kubernetes.io/router.middlewares: jellyfin-deny-metrics-path@kubernetescrd
     reloader.homer/group: Multimedia
     reloader.homer/logo: https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/jellyfin.svg
     reloader.homer/name: Jellyfin
     reloader.homer/subtitle: Video on demand
+    reloader.homer/tag: local
   labels:
     reloader.homer/enabled: "true"
     probe: enabled
