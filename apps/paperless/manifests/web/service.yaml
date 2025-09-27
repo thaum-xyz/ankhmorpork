@@ -8,6 +8,7 @@ metadata:
   name: paperless
   namespace: paperless
 spec:
+  clusterIP: None
   ports:
     - name: http
       port: 8000

@@ -114,22 +114,6 @@ function(params) {
     metadata: $._metadata,
   },
 
-  serviceHeadless: {
-    apiVersion: 'v1',
-    kind: 'Service',
-    metadata: $._metadata + {
-      name: $._config.name + '-headless',
-    }
-    spec: {
-      ports: [{
-        name: $.statefulSet.spec.template.spec.containers[0].ports[0].name,
-        targetPort: $.statefulSet.spec.template.spec.containers[0].ports[0].name,
-        port: $.statefulSet.spec.template.spec.containers[0].ports[0].containerPort,
-      }],
-      selector: $._config.selectorLabels,
-    },
-  },
-
   service: {
     apiVersion: 'v1',
     kind: 'Service',
@@ -141,6 +125,7 @@ function(params) {
         port: $.statefulSet.spec.template.spec.containers[0].ports[0].containerPort,
       }],
       selector: $._config.selectorLabels,
+      clusterIP: 'None',
     },
   },
 
@@ -298,7 +283,7 @@ function(params) {
     kind: 'StatefulSet',
     metadata: $._metadata,
     spec: {
-      serviceName: $.serviceHeadless.metadata.name,
+      serviceName: $.service.metadata.name,
       replicas: 1,
       selector: { matchLabels: $._config.selectorLabels },
       template: {
