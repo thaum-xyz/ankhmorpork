@@ -13,7 +13,7 @@ spec:
     matchLabels:
       app.kubernetes.io/component: webservice
       app.kubernetes.io/name: paperless
-  serviceName: paperless
+  serviceName: paperless-headless
   template:
     metadata:
       annotations:
@@ -33,7 +33,9 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: PAPERLESS_ALLOWED_HOSTS
-              value: paperless.paperless.svc,$(POD_IP)
+              value: paperless-headless.paperless.svc,paperless.paperless.svc,$(POD_IP)
+            - name: PAPERLESS_PORT
+              value: "8000"
           envFrom:
             - configMapRef:
                 name: paperless-config

@@ -26,7 +26,8 @@ local all = {
                       mountPath: '/mnt/backups',
                       name: 'backups',
                     }],
-                  },{
+                  },
+                  {
                     // init container to remove old backups
                     command: ['sh', '-c', 'find /mnt/backups -mtime +20 -type f -delete'],
                     image: 'busybox',
@@ -35,7 +36,7 @@ local all = {
                       mountPath: '/mnt/backups',
                       name: 'backups',
                     }],
-                  }
+                  },
                 ],
               },
             },
