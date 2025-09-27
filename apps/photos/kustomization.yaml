@@ -15,7 +15,6 @@ resources:
   - postgres-creds-user.yaml
   - postgres-cluster.yaml
   - server-pdb.yaml
-  - tailscale-ingress.yaml
 configMapGenerator:
   - name: values
     files:
