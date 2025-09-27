@@ -16,7 +16,7 @@ serviceMonitor:
 
 extraArgs:
   - --ignore-ingress-tls-spec
-  - --fqdn-template={{.Name}}.{{.Namespace}}.ankhmorpork.thaum.xyz
+  - --fqdn-template={{`{{`}}.Name{{`}}`}}.{{`{{`}}.Namespace{{`}}`}}.ankhmorpork.thaum.xyz
   - --service-type-filter=LoadBalancer
 
 provider:
