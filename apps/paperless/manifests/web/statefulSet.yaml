@@ -33,7 +33,7 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: PAPERLESS_ALLOWED_HOSTS
-              value: paperless-headless.paperless.svc,paperless.paperless.svc,$(POD_IP)
+              value: paperless-headless.paperless.svc,paperless.paperless.svc,$(POD_IP),paperless.motmot-prometheus.ts.net
             - name: PAPERLESS_PORT
               value: "8000"
           envFrom:

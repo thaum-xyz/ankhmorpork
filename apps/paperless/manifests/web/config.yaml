@@ -3,7 +3,7 @@ data:
   PAPERLESS_CONSUMER_POLLING: "60"
   PAPERLESS_CONSUMER_POLLING_DELAY: "30"
   PAPERLESS_CONSUMER_POLLING_RETRY_COUNT: "10"
-  PAPERLESS_CORS_ALLOWED_HOSTS: http://paperless-headless.paperless.svc,http://paperless.paperless.svc,https://papers.krupa.net.pl
+  PAPERLESS_CORS_ALLOWED_HOSTS: http://paperless-headless.paperless.svc,http://paperless.paperless.svc,https://papers.krupa.net.pl,https://paperless.motmot-prometheus.ts.net
   PAPERLESS_ENABLE_FLOWER: "true"
   PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{asn} - {title}'
   PAPERLESS_OCR_LANGUAGE: eng+deu+pol
