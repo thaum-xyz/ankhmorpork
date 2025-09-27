@@ -1,0 +1,17 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: operator-oauth
+  namespace: tailscale
+spec:
+  data:
+  - remoteRef:
+      key: TAILSCALE_OAUTH_ID
+    secretKey: client_id
+  - remoteRef:
+      key: TAILSCALE_OAUTH_SECRET
+    secretKey: client_secret
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api

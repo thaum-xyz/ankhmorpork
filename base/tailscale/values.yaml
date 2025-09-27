@@ -1,0 +1,5 @@
+# Config reference: https://github.com/tailscale/tailscale/blob/main/cmd/k8s-operator/deploy/chart/values.yaml
+
+# NOTE: Leaving empty will force usage of `operator-oauth` ExternalSecret
+# to populate the OAuth credentials from Doppler.
+oauth: {}
