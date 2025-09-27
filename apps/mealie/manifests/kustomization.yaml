@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: mealie
 resources:
   - namespace.yaml
+  - tailscale-ingress.yaml
   - app/
   - db/

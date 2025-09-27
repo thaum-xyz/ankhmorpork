@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: funnel
+  namespace: paperless
+  annotations:
+    tailscale.com/funnel: "true"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: paperless
+      port:
+        number: 8000
+  tls:
+    - hosts:
+        - paperless
