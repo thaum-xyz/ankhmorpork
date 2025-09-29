@@ -1,4 +1,11 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: webservice
+    app.kubernetes.io/name: paperless
+  name: paperless-config
+  namespace: paperless
 data:
   PAPERLESS_CONSUMER_POLLING: "60"
   PAPERLESS_CONSUMER_POLLING_DELAY: "30"
@@ -12,15 +19,9 @@ data:
   PAPERLESS_OCR_LANGUAGES: pol
   PAPERLESS_REDIS: redis://redis.paperless.svc:6379
   PAPERLESS_TASK_WORKERS: "1"
-  PAPERLESS_TIKA_ENABLED: "0"
+  PAPERLESS_TIKA_ENABLED: "1"
+  PAPERLESS_TIKA_ENDPOINT: "http://tika.paperless.svc:9998"
+  PAPERLESS_TIKA_GOTENBERG_ENDPOINT: "http://gotenberg.paperless.svc:3000"
   PAPERLESS_TIME_ZONE: Europe/Berlin
   PAPERLESS_URL: https://papers.krupa.net.pl
   PAPERLESS_WEBSERVER_WORKERS: "1"
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/component: webservice
-    app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 2.18.4
-  name: paperless-config
-  namespace: paperless

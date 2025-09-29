@@ -4,12 +4,13 @@ metadata:
   labels:
     app.kubernetes.io/component: backup
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 2.18.4
   name: paperless-backup
   namespace: paperless
 spec:
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 2
+  schedule: 36 22 * * *
+  successfulJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
@@ -17,7 +18,6 @@ spec:
           labels:
             app.kubernetes.io/component: backup
             app.kubernetes.io/name: paperless
-            app.kubernetes.io/version: 2.18.4
         spec:
           affinity:
             podAffinity:
@@ -27,6 +27,25 @@ spec:
                       app.kubernetes.io/component: webservice
                       app.kubernetes.io/name: paperless
                   topologyKey: kubernetes.io/hostname
+          initContainers:
+            - command:
+                - sh
+                - -c
+                - chmod 0777 /mnt/backups
+              image: busybox
+              name: permissions
+              volumeMounts:
+                - mountPath: /mnt/backups
+                  name: backups
+            - command:
+                - sh
+                - -c
+                - find /mnt/backups -mtime +20 -type f -delete
+              image: busybox
+              name: cleanup
+              volumeMounts:
+                - mountPath: /mnt/backups
+                  name: backups
           containers:
             - args:
                 - --use-folder-prefix
@@ -59,25 +78,6 @@ spec:
                   name: consume
                 - mountPath: /mnt/backups
                   name: backups
-          initContainers:
-            - command:
-                - sh
-                - -c
-                - chmod 0777 /mnt/backups
-              image: busybox
-              name: permissions
-              volumeMounts:
-                - mountPath: /mnt/backups
-                  name: backups
-            - command:
-                - sh
-                - -c
-                - find /mnt/backups -mtime +20 -type f -delete
-              image: busybox
-              name: cleanup
-              volumeMounts:
-                - mountPath: /mnt/backups
-                  name: backups
           restartPolicy: Never
           serviceAccountName: paperless
           volumes:
@@ -93,5 +93,3 @@ spec:
             - name: backups
               persistentVolumeClaim:
                 claimName: backups
-  schedule: 36 22 * * *
-  successfulJobsHistoryLimit: 1

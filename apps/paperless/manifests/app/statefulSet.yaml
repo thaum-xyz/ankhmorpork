@@ -4,7 +4,6 @@ metadata:
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 2.18.4
   name: paperless
   namespace: paperless
 spec:
@@ -17,14 +16,11 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: 3d727dab278f18461c05de2675e3c65e
-        checksum.database/md5: 6db6072c8167197e4ce44b52219e684f
-        checksum.secrets/md5: 8dea432d03fb648cef21e26577cc0ffb
+        checksum.config/md5: "1"
         kubectl.kubernetes.io/default-container: paperless
       labels:
         app.kubernetes.io/component: webservice
         app.kubernetes.io/name: paperless
-        app.kubernetes.io/version: 2.18.4
     spec:
       containers:
         - env:

@@ -2,16 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: webservice
+    app.kubernetes.io/component: tika
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 2.18.4
-  name: paperless-headless
+  name: tika
   namespace: paperless
 spec:
   ports:
     - name: http
-      port: 8000
+      port: 9998
       targetPort: http
   selector:
-    app.kubernetes.io/component: webservice
+    app.kubernetes.io/component: tika
     app.kubernetes.io/name: paperless
