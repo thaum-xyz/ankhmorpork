@@ -11,7 +11,7 @@ data:
   PAPERLESS_CONSUMER_POLLING_DELAY: "30"
   PAPERLESS_CONSUMER_POLLING_RETRY_COUNT: "20"
   PAPERLESS_CORS_ALLOWED_HOSTS: http://paperless-headless.paperless.svc,http://paperless.paperless.svc,https://papers.krupa.net.pl,https://paperless.motmot-prometheus.ts.net
-  PAPERLESS_DB_POOLSIZE: "5"
+  PAPERLESS_DB_POOLSIZE: "10"
   PAPERLESS_DB_READ_CACHE_ENABLED: "false" # using pgBouncer, so no need for read cache
   PAPERLESS_ENABLE_FLOWER: "true"
   PAPERLESS_FILENAME_FORMAT: '{{created_year}}/{{correspondent}}/{{asn}} - {{title}}'
