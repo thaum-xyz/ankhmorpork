@@ -34,7 +34,7 @@ local defaults = {
     address: 'redis://redis.paperless.svc:6379',
   },
   config: {
-    PAPERLESS_FILENAME_FORMAT: '{created_year}/{correspondent}/{asn} - {title}',
+    PAPERLESS_FILENAME_FORMAT: '{{created_year}}/{{correspondent}}/{{asn}} - {{title}}',
     PAPERLESS_CONSUMER_POLLING: '60',  // This is required for NFS storage types
     PAPERLESS_CONSUMER_POLLING_RETRY_COUNT: '10',
     PAPERLESS_CONSUMER_POLLING_DELAY: '30',
