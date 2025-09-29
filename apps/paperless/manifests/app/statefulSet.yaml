@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: "3"
+        checksum.config/md5: "5"
         kubectl.kubernetes.io/default-container: paperless
       labels:
         app.kubernetes.io/component: webservice
