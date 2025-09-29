@@ -8,6 +8,8 @@ spec:
     name: postgres
   instances: 2
   type: rw
+  monitoring:
+    enablePodMonitor: true
   pgbouncer:
     poolMode: session
     parameters:
