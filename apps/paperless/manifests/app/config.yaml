@@ -24,7 +24,7 @@ data:
   PAPERLESS_TIKA_ENABLED: "1"
   PAPERLESS_TIKA_ENDPOINT: "http://tika.paperless.svc:9998"
   PAPERLESS_TIKA_GOTENBERG_ENDPOINT: "http://gotenberg.paperless.svc:3000"
-  PAPERLESS_TIME_ZONE: Europe/Berlin
+  PAPERLESS_TIME_ZONE: Europe/Warsaw
   PAPERLESS_URL: https://papers.krupa.net.pl
   PAPERLESS_WEBSERVER_WORKERS: "1"
   PAPERLESS_TASK_WORKERS: "1"
