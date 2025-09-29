@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: "1"
+        checksum.config/md5: "2"
         kubectl.kubernetes.io/default-container: paperless
       labels:
         app.kubernetes.io/component: webservice
@@ -54,7 +54,7 @@ spec:
             periodSeconds: 5
           resources:
             limits:
-              cpu: 2
+              cpu: 3
               memory: 4Gi
             requests:
               cpu: 1

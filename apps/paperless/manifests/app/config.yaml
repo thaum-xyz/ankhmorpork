@@ -9,19 +9,23 @@ metadata:
 data:
   PAPERLESS_CONSUMER_POLLING: "60"
   PAPERLESS_CONSUMER_POLLING_DELAY: "30"
-  PAPERLESS_CONSUMER_POLLING_RETRY_COUNT: "10"
+  PAPERLESS_CONSUMER_POLLING_RETRY_COUNT: "20"
   PAPERLESS_CORS_ALLOWED_HOSTS: http://paperless-headless.paperless.svc,http://paperless.paperless.svc,https://papers.krupa.net.pl,https://paperless.motmot-prometheus.ts.net
   PAPERLESS_DB_POOLSIZE: "5"
   PAPERLESS_DB_READ_CACHE_ENABLED: "true"
   PAPERLESS_ENABLE_FLOWER: "true"
   PAPERLESS_FILENAME_FORMAT: '{{created_year}}/{{correspondent}}/{{asn}} - {{title}}'
-  PAPERLESS_OCR_LANGUAGE: eng+deu+pol
+  PAPERLESS_OCR_LANGUAGE: pol+eng+deu
   PAPERLESS_OCR_LANGUAGES: pol
+  PAPERLESS_OCR_IMAGE_DPI: "300"
+  PAPERLESS_DATE_PARSER_LANGUAGES: "pl+en"
   PAPERLESS_REDIS: redis://redis.paperless.svc:6379
-  PAPERLESS_TASK_WORKERS: "1"
   PAPERLESS_TIKA_ENABLED: "1"
   PAPERLESS_TIKA_ENDPOINT: "http://tika.paperless.svc:9998"
   PAPERLESS_TIKA_GOTENBERG_ENDPOINT: "http://gotenberg.paperless.svc:3000"
   PAPERLESS_TIME_ZONE: Europe/Berlin
   PAPERLESS_URL: https://papers.krupa.net.pl
   PAPERLESS_WEBSERVER_WORKERS: "1"
+  PAPERLESS_TASK_WORKERS: "1"
+  PAPERLESS_THREADS_PER_WORKER: "2"
+  # PAPERLESS_ENABLE_COMPRESSION: "0" // TODO: enable compression in traefik and disable in paperless

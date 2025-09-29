@@ -51,8 +51,9 @@ PAPERLESS_ADMIN_MAIL=<REDACTED>
 Docs: https://paperless-ngx.readthedocs.io/en/latest/configuration.html#ocr-settings
 
 ```text
-PAPERLESS_OCR_LANGUAGE=eng+deu+pol
+PAPERLESS_OCR_LANGUAGE=pol+eng+deu
 PAPERLESS_OCR_LANGUAGES=pol  // additional languages
+PAPERLESS_OCR_IMAGE_DPI=300
 ```
 
 ## Tika
@@ -73,5 +74,8 @@ Docs: https://paperless-ngx.readthedocs.io/en/latest/configuration.html#software
 PAPERLESS_TIME_ZONE=Europe/Warsaw
 PAPERLESS_CONSUMER_POLLING=30
 PAPERLESS_TASK_WORKERS=1
+PAPERLESS_THREADS_PER_WORKER: "2"
 PAPERLESS_WEBSERVER_WORKERS=1
+PAPERLESS_DATE_PARSER_LANGUAGES="pl+en"
+PAPERLESS_ENABLE_COMPRESSION="0"
 ```
