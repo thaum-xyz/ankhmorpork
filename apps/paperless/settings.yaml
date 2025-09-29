@@ -3,8 +3,8 @@ common:
   namespace: &namespace "paperless"
   externalSecretStoreName: &externalSecretStoreName "doppler-auth-api"
 paperless:
-  version: "2.7.2"  # application-version-from-github: paperless-ngx/paperless-ngx
-  image: "ghcr.io/paperless-ngx/paperless-ngx:2.7.2"  # application-image-from-github: paperless-ngx/paperless-ngx
+  version: "2.18.4"  # application-version-from-github: paperless-ngx/paperless-ngx
+  image: "ghcr.io/paperless-ngx/paperless-ngx:2.18.4"  # application-image-from-github: paperless-ngx/paperless-ngx
   namespace: *namespace
   resources:
     requests:
@@ -76,6 +76,8 @@ paperless:
     # PAPERLESS_TIKA_ENABLED=1
     # PAPERLESS_TIKA_ENDPOINT=http://tika.paperless.svc:9998
     # PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://gotenberg.paperless.svc:3000
+    PAPERLESS_DB_POOLSIZE: '5'
+    PAPERLESS_DB_READ_CACHE_ENABLED: 'true'
 
 postgres:
   name: postgres
@@ -104,7 +106,7 @@ postgres:
       cpu: 200m
       memory: 800Mi
   storage:
-    size: 7Gi
+    size: 18Gi
     storageClass: "lvm-thin"
 
 broker:

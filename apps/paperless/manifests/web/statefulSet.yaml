@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 2.7.2
+    app.kubernetes.io/version: 2.18.4
   name: paperless
   namespace: paperless
 spec:
@@ -17,14 +17,14 @@ spec:
   template:
     metadata:
       annotations:
-        checksum.config/md5: b94e154fa85c32994aa977a6024ffd2b
+        checksum.config/md5: 3d727dab278f18461c05de2675e3c65d
         checksum.database/md5: 6db6072c8167197e4ce44b52219e684f
         checksum.secrets/md5: 8dea432d03fb648cef21e26577cc0ffb
         kubectl.kubernetes.io/default-container: paperless
       labels:
         app.kubernetes.io/component: webservice
         app.kubernetes.io/name: paperless
-        app.kubernetes.io/version: 2.7.2
+        app.kubernetes.io/version: 2.18.4
     spec:
       containers:
         - env:
@@ -43,7 +43,7 @@ spec:
                 name: paperless-secrets
             - secretRef:
                 name: paperless-db
-          image: ghcr.io/paperless-ngx/paperless-ngx:2.7.2
+          image: ghcr.io/paperless-ngx/paperless-ngx:2.18.4
           name: paperless
           ports:
             - containerPort: 8000
@@ -72,9 +72,9 @@ spec:
               name: media
             - mountPath: /usr/src/paperless/consume
               name: consume
+      restartPolicy: Always
       securityContext:
         fsGroup: 1000
-      restartPolicy: Always
       serviceAccountName: paperless
       volumes:
         - name: data

@@ -319,6 +319,9 @@ function(params) {
           containers: [c],
           restartPolicy: 'Always',
           serviceAccountName: $.serviceAccount.metadata.name,
+          securityContext: {
+            fsGroup: 1000,
+          },
           volumes: [
             {
               name: 'data',

@@ -103,12 +103,18 @@ local all = {
           storage: '15Gi',
         },
         nfs: {
-          path: '/var/nfs/shared/scans',
+          path: '/var/nfs/shared/scans/paperless',
           server: '192.168.50.10',
         },
         persistentVolumeReclaimPolicy: 'Retain',
         storageClassName: 'manual',
         volumeMode: 'Filesystem',
+      },
+    },
+
+    pvcConsume+: {
+      spec+: {
+        volumeName: 'consume',
       },
     },
 

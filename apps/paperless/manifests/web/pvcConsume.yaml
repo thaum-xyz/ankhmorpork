@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 2.7.2
+    app.kubernetes.io/version: 2.18.4
   name: consume
   namespace: paperless
 spec:

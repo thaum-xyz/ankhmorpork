@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: backup
     app.kubernetes.io/name: paperless
-    app.kubernetes.io/version: 2.7.2
+    app.kubernetes.io/version: 2.18.4
   name: paperless-backup
   namespace: paperless
 spec:
@@ -17,7 +17,7 @@ spec:
           labels:
             app.kubernetes.io/component: backup
             app.kubernetes.io/name: paperless
-            app.kubernetes.io/version: 2.7.2
+            app.kubernetes.io/version: 2.18.4
         spec:
           affinity:
             podAffinity:
@@ -44,7 +44,7 @@ spec:
                     name: paperless-secrets
                 - secretRef:
                     name: paperless-db
-              image: ghcr.io/paperless-ngx/paperless-ngx:2.7.2
+              image: ghcr.io/paperless-ngx/paperless-ngx:2.18.4
               name: backup
               ports: []
               resources: {}
