@@ -20,6 +20,10 @@ spec:
       containers:
       - name: gotenberg
         image: docker.io/gotenberg/gotenberg:8.22
+        command:
+        - "gotenberg"
+        - "--chromium-disable-javascript=true"
+        - "--chromium-allow-list=file:///tmp/.*"
         ports:
         - containerPort: 3000
           name: http
