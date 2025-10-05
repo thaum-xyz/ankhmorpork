@@ -24,7 +24,7 @@ provider:
   webhook:
     image:
       repository: ghcr.io/kashalls/external-dns-unifi-webhook
-      tag: v0.6.2
+      tag: v0.7.0
     env:
       - name: UNIFI_HOST
         value: https://192.168.50.1 # replace with the address to your UniFi router/controller
