@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: node-problem-detector
-      version: "2.3.20"
+      version: "2.3.22"
       sourceRef:
         kind: HelmRepository
         name: deliveryhero
