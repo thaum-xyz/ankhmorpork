@@ -1,13 +1,6 @@
 bpf:
   hostLegacyRouting: false
-  masquerade: true
-  datapathMode: netkit
-  distributedLRU:
-    enabled: true
-  mapDynamicSizeRatio: 0.08
-bpfClockProbe: true
-enableIPv4BIGTCP: true
-enableIPv4Masquerade: true
+  masquerade: false
 cluster:
   name: ankhmorpork
 cni:
@@ -22,16 +15,14 @@ k8sServicePort: 6443
 kubeProxyReplacement: true
 priorityClassName: system-node-critical
 policyEnforcementMode: never
-
-routingMode: native
-ipv4NativeRoutingCIDR: 192.168.50.0/24
-autoDirectNodeRoutes: true
+routingMode: tunnel
+tunnelPort: 6081
+tunnelProtocol: geneve
 
 rollOutCiliumPods: true
-loadBalancer:
-  mode: dsr
-  dsrDispatch: opt
-  algorithm: maglev
+#loadBalancer:
+#  mode: dsr
+#  dsrDispatch: geneve
 
 #ipMasqAgent:
 #  enabled: true
