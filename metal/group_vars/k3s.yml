@@ -38,7 +38,7 @@ k3s_server_config:
   kube-scheduler-arg:
   - "bind-address=0.0.0.0"
   etcd-expose-metrics: "true"
-  embedded-registry: "true"
+  #embedded-registry: "true" #TODO: check how it works with k8sServicePort: 6443 in cilium
   tls-san:
   - "{{ k3s_master_ip }}"
 
