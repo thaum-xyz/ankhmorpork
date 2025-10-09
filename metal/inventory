@@ -7,8 +7,8 @@ master01 ansible_host=192.168.50.31
 master02 ansible_host=192.168.50.32
 master03  ansible_host=192.168.50.33
 
-metal01  ansible_host=192.168.2.40
-#metal02  ansible_host=192.168.2.41
+metal01  ansible_host=192.168.50.40
+#metal02  ansible_host=192.168.50.41
 
 [nvidia]
 metal01

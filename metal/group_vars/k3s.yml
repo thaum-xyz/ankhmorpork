@@ -2,7 +2,7 @@
 kube_vip_image: ghcr.io/kube-vip/kube-vip:v0.8.9
 kube_vip_ip: "192.168.50.30"  # VIP IP managed by kube-vip
 
-k3s_version: v1.32.3+k3s1
+k3s_version: v1.33.4+k3s1
 #k3s_master_ip: "{{ hostvars[groups['k3s_control_plane'][0]]['ansible_default_ipv4']['address'] }}"
 k3s_master_ip: "{{ kube_vip_ip }}"
 
@@ -38,7 +38,7 @@ k3s_server_config:
   kube-scheduler-arg:
   - "bind-address=0.0.0.0"
   etcd-expose-metrics: "true"
-  embedded-registry: true
+  embedded-registry: "true"
   tls-san:
   - "{{ k3s_master_ip }}"
 
