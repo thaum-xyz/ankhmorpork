@@ -9,7 +9,7 @@ on:
     branches: [master]
 
 env:
-  golang-version: 1.25.2
+  golang-version: 1.25.3
 
 jobs:
   verify:
