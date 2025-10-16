@@ -5,7 +5,7 @@ controllers:
     containers:
       main:
         image:
-          tag: "v1.132.3"
+          tag: "v2.1.0"
         env:
           TZ: "Europe/Warsaw"
           LOG_LEVEL: "debug"
