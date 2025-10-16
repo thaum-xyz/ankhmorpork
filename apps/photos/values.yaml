@@ -1,24 +1,27 @@
 # Config reference: https://github.com/immich-app/immich-charts/tree/main/charts/immich
 
-image:
-  tag: v1.129.0
-
-env:
-  TZ: "Europe/Warsaw"
-  LOG_LEVEL: "debug"
-  DB_HOSTNAME: "postgres-rw"
-  DB_USERNAME:
-    valueFrom:
-      secretKeyRef:
-        name: postgres-user
-        key: username
-  DB_PASSWORD:
-    valueFrom:
-      secretKeyRef:
-        name: postgres-user
-        key: password
-  DB_DATABASE_NAME: "immich"
-  IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          tag: "v2.1.0"
+        env:
+          TZ: "Europe/Warsaw"
+          LOG_LEVEL: "debug"
+          DB_HOSTNAME: "postgres-rw"
+          DB_USERNAME:
+            valueFrom:
+              secretKeyRef:
+                name: postgres-user
+                key: username
+          DB_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: postgres-user
+                key: password
+          DB_DATABASE_NAME: "immich"
+          IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
 immich:
   metrics:
@@ -27,41 +30,38 @@ immich:
     library:
       existingClaim: immich-library
 
-postgresql:
-  # Postgres is provided by cnpg
-  enabled: false
-
-redis:
+valkey:
   enabled: true
-  architecture: standalone
-  master:
-    persistence:
+  persistence:
+    data:
       enabled: false
-      medium: Memory
-  replica:
-    persistence:
-      enabled: false
-      medium: Memory
+      size: 1Gi
+      type: emptyDir
+      accessMode: ReadWriteOnce
 
 server:
-  controller:
-    replicas: 3
-    strategy: RollingUpdate
-    rollingUpdate:
-      unavailable: 1
-  probes:
-    liveness:
-      spec:
-        initialDelaySeconds: 180
-        failureThreshold: 6
-    readiness:
-      spec:
-        failureThreshold: 2
-        periodSeconds: 5
-  resources:
-    requests:
-      cpu: 100m
-      memory: 160Mi
+  controllers:
+    main:
+      replicas: 3
+      strategy: RollingUpdate
+      rollingUpdate:
+        unavailable: 1
+      containers:
+        main:
+          probes:
+            liveness:
+              spec:
+                initialDelaySeconds: 180
+                failureThreshold: 6
+            readiness:
+              spec:
+                failureThreshold: 2
+                periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 160Mi
+
   ingress:
     main:
       enabled: true
@@ -92,19 +92,25 @@ server:
 
 machine-learning:
   enabled: true
-  controller:
-    replicas: 1
-    strategy: RollingUpdate
-    rollingUpdate:
-      unavailable: 1
-  resources:
-    requests:
-      cpu: 10m
-      memory: 780Mi
+  controllers:
+    main:
+      replicas: 1
+      strategy: RollingUpdate
+      rollingUpdate:
+        unavailable: 1
+      containers:
+        main:
+          env:
+            HF_XET_CACHE: /cache/huggingface-xet
+            MPLCONFIGDIR: /cache/matplotlib-config
+          resources:
+            requests:
+              cpu: 10m
+              memory: 780Mi
   persistence:
     cache:
       enabled: true
       size: 3Gi
-      type: pvc
+      type: persistentVolumeClaim
       accessMode: ReadWriteMany
       storageClass: longhorn-r2
