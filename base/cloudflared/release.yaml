@@ -1,0 +1,34 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cloudflared
+  namespace: cloudflared
+spec:
+  chart:
+    spec:
+      chart: cloudflare-tunnel-ingress-controller
+      version: "0.0.18"
+      sourceRef:
+        kind: HelmRepository
+        name: strrl
+        namespace: cloudflared
+      interval: 5m
+  interval: 5m
+  timeout: 20m
+  install:
+    timeout: 20m
+    disableWait: false
+    crds: CreateReplace
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 20m
+    disableWait: false
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: values
+    - kind: Secret
+      name: credentials

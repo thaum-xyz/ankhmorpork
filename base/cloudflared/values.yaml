@@ -1,0 +1,15 @@
+# Config reference: https://github.com/STRRL/cloudflare-tunnel-ingress-controller
+
+cloudflare:
+# NOTE: Sensitive values are to be provided via the `credentials` Secret,
+#  apiToken: "<cloudflare-api-token>"
+#  accountId: "<cloudflare-account-id>"
+  tunnelName: "ankhmorpork-tunnel"
+
+ingressClass:
+  name: cloudflare
+
+replicaCount: 2
+
+cloudflaredServiceMonitor:
+  create: true
