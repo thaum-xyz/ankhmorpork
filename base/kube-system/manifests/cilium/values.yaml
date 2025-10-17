@@ -17,7 +17,10 @@ ipam:
   operator:
     clusterPoolIPv4PodCIDRList:
     - 10.42.0.0/16
-apiServerURLs: "https://192.168.50.31:6443 https://192.168.50.32:6443 https://192.168.50.33:6443"
+k8sServiceHost: 192.168.50.30
+k8sServicePort: 6443
+# FIXME: This is not yet in upstream Cilium helm chart, but is in cilium itself
+#k8sServerURLs: "https://192.168.50.31:6443 https://192.168.50.32:6443 https://192.168.50.33:6443"
 kubeProxyReplacement: true
 priorityClassName: system-node-critical
 policyEnforcementMode: never
