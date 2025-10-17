@@ -4,6 +4,7 @@ resources:
   - repository.yaml
   - release.yaml
   - secrets.yaml
+  - ingress-cloudflare.yaml
 configMapGenerator:
   - name: values
     files:

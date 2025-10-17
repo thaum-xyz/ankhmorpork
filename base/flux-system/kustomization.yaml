@@ -9,6 +9,7 @@ resources:
   - certManagerPolicy.yaml
   - githubToken.yaml
   - receiver.yaml
+  - ingress-cloudflare.yaml
 configMapGenerator:
   - name: values
     files:

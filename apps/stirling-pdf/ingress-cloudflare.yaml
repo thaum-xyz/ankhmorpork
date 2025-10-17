@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudflare-ingress
+  namespace: stirling-pdf
+spec:
+  ingressClassName: cloudflare
+  rules:
+  - host: pdf.krupa.net.pl
+    http:
+      paths:
+      - backend:
+          service:
+            name: stirling-pdf-stirling-pdf-chart
+            port:
+              number: 8080
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - pdf.krupa.net.pl
+    secretName: pdf.krupa.net.pl

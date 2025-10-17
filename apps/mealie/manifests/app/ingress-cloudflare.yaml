@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudflare-ingress
+  namespace: mealie
+spec:
+  ingressClassName: cloudflare
+  rules:
+    - host: recipes.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: mealie
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - recipes.krupa.net.pl
+      secretName: mealie-tls
