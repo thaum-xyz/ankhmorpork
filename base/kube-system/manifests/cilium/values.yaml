@@ -32,6 +32,15 @@ loadBalancer:
   dsrDispatch: opt
   algorithm: maglev
 
+#l2announcements:
+#  enabled: true
+#  leaseDuration: 60s
+#  leaseRenewDeadline: 3s
+
+#k8sClientRateLimit:
+#  qps: 2
+#  burst: 6
+
 #ipMasqAgent:
 #  enabled: true
 
@@ -50,8 +59,14 @@ prometheus:
   serviceMonitor:
     enabled: true
 
-#hubble:
-#  metrics:
-#    enabled: true
-#    serviceMonitor:
-#      enabled: false
+hubble:
+  metrics:
+    enabled:
+      - dns:query;ignoreAAAA
+      - drop
+      - tcp
+      - flow
+      - icmp
+      - http
+    serviceMonitor:
+      enabled: true
