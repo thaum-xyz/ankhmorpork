@@ -68,7 +68,7 @@ server:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         reloader.homer/group: Ankh Cloud
-        reloader.homer/logo: https://immich.app/img/immich-logo.svg
+        reloader.homer/logo: https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/immich.svg
         reloader.homer/name: Immich
         reloader.homer/subtitle: Photo & Video Library
       labels:
