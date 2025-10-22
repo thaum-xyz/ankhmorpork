@@ -13,7 +13,7 @@ spec:
               service:
                 name: mealie
                 port:
-                  name: http
+                  number: 9000
             path: /
             pathType: Prefix
   tls:

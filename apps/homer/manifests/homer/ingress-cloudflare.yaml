@@ -13,7 +13,7 @@ spec:
               service:
                 name: homer
                 port:
-                  name: http
+                  number: 8080
             path: /
             pathType: Prefix
   tls:

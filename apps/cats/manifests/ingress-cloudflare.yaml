@@ -13,7 +13,7 @@ spec:
           service:
             name: cats
             port:
-              name: http
+              number: 8080
         path: /
         pathType: Prefix
   tls:

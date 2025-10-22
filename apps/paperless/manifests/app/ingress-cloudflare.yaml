@@ -13,7 +13,7 @@ spec:
               service:
                 name: paperless
                 port:
-                  name: http
+                  number: 8000
             path: /
             pathType: Prefix
   tls:
