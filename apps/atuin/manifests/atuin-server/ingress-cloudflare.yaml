@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: cloudflare
   rules:
-  - host: atuin.ankhmorpork.thaum.xyz
+  - host: atuin.thaum.xyz
     http:
       paths:
       - backend:
@@ -16,7 +16,3 @@ spec:
               number: 80
         path: /
         pathType: ImplementationSpecific
-  tls:
-  - hosts:
-    - atuin.ankhmorpork.thaum.xyz
-    secretName: atuin-tls
