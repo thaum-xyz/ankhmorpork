@@ -17,7 +17,7 @@ metadata:
 spec:
   ingressClassName: public
   rules:
-  - host: cats.ankhmorpork.thaum.xyz
+  - host: cats.thaum.xyz
     http:
       paths:
       - backend:
@@ -29,5 +29,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - cats.ankhmorpork.thaum.xyz
+    - cats.thaum.xyz
     secretName: cats-tls
