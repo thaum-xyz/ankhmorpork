@@ -1,11 +1,11 @@
 # Reference documentation: https://github.com/kubernetes-sigs/external-dns/blob/master/charts/external-dns/values.yaml
 
-txtOwnerId: ankhmorpork.thaum.xyz
+txtOwnerId: thaum.xyz
 txtPrefix: k8s.
 
 policy: sync
 domainFilters:
-  - ankhmorpork.thaum.xyz
+  - thaum.xyz
   - krupa.net.pl
 
 registry: txt
