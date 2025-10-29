@@ -19,14 +19,14 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
   className: "public"
   hosts:
-    - host: atuin.ankhmorpork.thaum.xyz
+    - host: atuin.thaum.xyz
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: atuin-tls
       hosts:
-      - atuin.ankhmorpork.thaum.xyz
+      - atuin.thaum.xyz
 
 autoscaling:
   enabled: false
