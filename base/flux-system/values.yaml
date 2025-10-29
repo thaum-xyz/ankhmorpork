@@ -53,14 +53,14 @@ notificationController:
         cert-manager.io/cluster-issuer: letsencrypt-prod
       create: true
       hosts:
-        - host: flux.ankhmorpork.thaum.xyz
+        - host: flux.thaum.xyz
           paths:
             - path: /
               pathType: ImplementationSpecific
       tls:
         - secretName: flux-tls
           hosts:
-            - flux.ankhmorpork.thaum.xyz
+            - flux.thaum.xyz
 
 imageAutomationController:
   create: false
