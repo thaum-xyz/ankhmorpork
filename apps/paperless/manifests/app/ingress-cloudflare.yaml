@@ -16,7 +16,3 @@ spec:
                   number: 8000
             path: /
             pathType: Prefix
-  tls:
-    - hosts:
-        - papers.krupa.net.pl
-      secretName: paperless-tls

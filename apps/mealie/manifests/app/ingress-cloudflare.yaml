@@ -16,7 +16,3 @@ spec:
                   number: 9000
             path: /
             pathType: Prefix
-  tls:
-    - hosts:
-        - recipes.krupa.net.pl
-      secretName: mealie-tls

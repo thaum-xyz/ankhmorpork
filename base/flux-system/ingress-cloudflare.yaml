@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: cloudflare
   rules:
-  - host: flux.ankhmorpork.thaum.xyz
+  - host: flux.thaum.xyz
     http:
       paths:
       - backend:
@@ -16,7 +16,3 @@ spec:
               number: 80
         path: /
         pathType: ImplementationSpecific
-  tls:
-  - hosts:
-    - flux.ankhmorpork.thaum.xyz
-    secretName: flux-tls

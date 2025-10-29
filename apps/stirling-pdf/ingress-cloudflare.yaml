@@ -16,7 +16,3 @@ spec:
               number: 8080
         path: /
         pathType: ImplementationSpecific
-  tls:
-  - hosts:
-    - pdf.krupa.net.pl
-    secretName: pdf.krupa.net.pl

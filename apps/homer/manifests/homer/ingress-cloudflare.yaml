@@ -16,7 +16,3 @@ spec:
                   number: 8080
             path: /
             pathType: Prefix
-  tls:
-    - hosts:
-        - ankhmorpork.thaum.xyz
-      secretName: homer-tls

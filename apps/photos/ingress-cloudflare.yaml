@@ -16,7 +16,3 @@ spec:
               number: 2283
         path: /
         pathType: Prefix
-  tls:
-  - hosts:
-    - photos.krupa.net.pl
-    secretName: immich-tls
