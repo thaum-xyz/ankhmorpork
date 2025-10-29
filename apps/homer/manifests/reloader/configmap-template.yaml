@@ -43,14 +43,6 @@ data:
         card-shadow: rgba(0, 0, 0, 0.4)
         link-hover: "#ffdd57"
 
-    # Optional message
-    #message:
-    #  #url: https://b4bz.io
-    #  style: "is-dark" # See https://bulma.io/documentation/components/message/#colors for styling options.
-    #  title: "Demo !"
-    #  icon: "fa fa-grin"
-    #  content: "This is a dummy homepage demo. <br /> Find more information on <a href='https://github.com/bastienwirtz/homer'>github.com/bastienwirtz/homer</a>"
-
     # Optional navbar
     # links: [] # Allows for navbar (dark mode, layout, and search) without any links
     links:
@@ -91,11 +83,6 @@ data:
             {{- end }}
     {{- end }}
     {{- end }}
-          - name: Storage Unit
-            subtitle: Tracking content stored remotely
-            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
-            <<: *external
-            url: "https://docs.google.com/spreadsheets/d/1-aFb40yjIjdcJNJ3Ngvbw9HWo5r1eGugZBWqSPcU-HU"
           - name: Packing list
             subtitle: What to pack on each type of trip
             logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
@@ -105,10 +92,9 @@ data:
       - name: Multimedia
         icon: "fa fa-tv"
         items:
-          - name: Qnap
-            logo: "https://iconape.com/wp-content/files/pm/364831/svg/364831.svg"
-            <<: *local
-            url: "https://qnap.ankhmorpork.thaum.xyz"
+          - name: Unifi Drive
+            logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
+            url: "https://unifi.ui.com"
           - name: Trakt
             subtitle: "Movie and TV series tracking"
             logo: "https://user-images.githubusercontent.com/67451572/160710031-1c69ffdb-918a-474f-a3cf-257313b4c8d6.png"
@@ -156,10 +142,6 @@ data:
             logo: "https://dashboard.doppler.com/imgs/logo.png"
             <<: *external
             url: "https://dashboard.doppler.com/"
-          - name: Unifi
-            logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
-            <<: *local
-            url: "https://unifi.ankhmorpork.thaum.xyz"
           - name: ESPHome
             logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/esphome.svg"
             <<: *local
