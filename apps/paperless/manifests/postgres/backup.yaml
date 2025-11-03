@@ -11,3 +11,6 @@ spec:
     name: postgres
   schedule: 0 36 22 * * *
   suspend: false
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io

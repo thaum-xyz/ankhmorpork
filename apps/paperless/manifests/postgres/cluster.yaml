@@ -10,20 +10,11 @@ spec:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
     topologyKey: kubernetes.io/hostname
-  backup:
-    barmanObjectStore:
-      destinationPath: s3://postgres/paperless
-      endpointURL: http://main-minio.minio.svc:9000
-      s3Credentials:
-        accessKeyId:
-          key: S3_ACCESS_KEY
-          name: postgres-backup
-        secretAccessKey:
-          key: S3_SECRET_KEY
-          name: postgres-backup
-      wal:
-        compression: gzip
-    retentionPolicy: 14d
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: minio
   bootstrap:
     initdb:
       database: paperless
