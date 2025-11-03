@@ -10,6 +10,7 @@ resources:
   - library-pv.yaml
   - library-pvc.yaml
   - postgres-backup.yaml
+  - postgres-object-store.yaml
   - postgres-creds-admin.yaml
   - postgres-creds-backup.yaml
   - postgres-creds-user.yaml
