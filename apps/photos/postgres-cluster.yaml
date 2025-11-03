@@ -32,6 +32,7 @@ spec:
     shared_preload_libraries:
       - "vectors.so"
   instances: 3
+  primaryUpdateMethod: switchover
   monitoring:
     enablePodMonitor: true
   resources:
