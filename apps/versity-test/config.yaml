@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: envs
+  labels:
+    app.kubernetes.io/name: versitygw
+    app.kubernetes.io/instance: test
+stringData:
+  ROOT_ACCESS_KEY: demo-root-access-key
+  ROOT_SECRET_KEY: demo-root-secret-key

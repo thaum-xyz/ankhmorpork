@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: versitygw
+  labels:
+    app.kubernetes.io/name: versitygw
+    app.kubernetes.io/instance: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: versitygw
+      app.kubernetes.io/instance: test
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: versitygw
+        app.kubernetes.io/instance: test
+    spec:
+      containers:
+        - name: versitygw
+          envFrom:
+            - secretRef:
+                name: envs
+          image: "versity/versitygw"
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          args:
+          - "posix"
+          - "--port"
+          - ":80"
+          - "--sidecar"
+          - "/var/vgw/metadata"
+          - "/var/vgw/data"
+          volumeMounts:
+          - name: data
+            mountPath: /var/vgw/data
+          - name: metadata
+            mountPath: /var/vgw/metadata
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: metadata
+          persistentVolumeClaim:
+            claimName: metadata
