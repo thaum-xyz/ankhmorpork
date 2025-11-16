@@ -54,6 +54,7 @@ k3s_server_config:
   flannel-backend: none
   disable-network-policy: "true"
   disable-kube-proxy: true
+  # egress-selector-mode: disabled
 
 k3s_agent_config:
   kubelet-arg:
