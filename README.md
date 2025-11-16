@@ -51,6 +51,11 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Container-orchestration system, the backbone of this project</td>
   </tr>
   <tr>
+    <td><img width="32" src="https://avatars.githubusercontent.com/u/21054566?s=200&v=4"></td>
+    <td><a href="https://cilium.io">Cilium</a></td>
+    <td>Kubernetes Networking</td>
+  </tr>
+  <tr>
     <td><img width="32" src="https://kured.dev/img/kured.png"></td>
     <td><a href="https://github.com/weaveworks/kured">kured</a></td>
     <td>Kubernetes Reboot Daemon</td>
@@ -84,11 +89,6 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td><img width="32" src="https://raw.githubusercontent.com/external-secrets/external-secrets/main/assets/eso-logo-medium.png"></td>
     <td><a href="https://external-secrets.io/">ExternalSecrets</a></td>
     <td>Secrets and encryption management system</td>
-  </tr>
-  <tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/60239468?s=200&v=4"></td>
-    <td><a href="https://metallb.org">MetalLB</a></td>
-    <td>Bare metal load-balancer for Kubernetes</td>
   </tr>
   <tr>
     <td><img width="32" src="https://github.com/jetstack/cert-manager/raw/master/logo/logo.png"></td>
