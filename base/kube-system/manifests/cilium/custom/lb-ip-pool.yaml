@@ -1,0 +1,13 @@
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: lb-ip-pool
+spec:
+  blocks:
+    # 192.168.50.112/28
+    - start: "192.168.50.112"
+      stop: "192.168.50.127"
+  serviceSelector:
+    matchLabels:
+      ciliumLB: "true"

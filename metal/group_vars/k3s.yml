@@ -62,6 +62,7 @@ k3s_agent_config:
   - "kube-reserved=cpu=200m,memory=150Mi"
   - "allowed-unsafe-sysctls=net.ipv4.tcp_adv_win_scale"
   node-label:
+  - "network.infra/bgp=65020"
   - "network.infra/type={{ network | default('fast') }}"
   - "storage.infra/local={{ 'false' if k3s_no_local_storage is defined else 'true' }}"
   kube-proxy-arg:

@@ -4,6 +4,7 @@ namespace: kube-system
 resources:
   - repository.yaml
   - release.yaml
+  - custom/
 configMapGenerator:
   - name: values
     files:
