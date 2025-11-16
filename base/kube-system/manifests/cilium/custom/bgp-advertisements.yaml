@@ -11,6 +11,3 @@ spec:
       service:
         addresses:
           - LoadBalancerIP
-      selector:
-        matchLabels:
-          ciliumLB: "true"

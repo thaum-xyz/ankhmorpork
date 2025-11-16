@@ -48,9 +48,6 @@ securityContext:
       # Added to allow BGP peering on port 179
       - "CAP_NET_BIND_SERVICE"
 
-# Do not assign LB IPs automatically for all SVC as this will conflict with MetalLB
-# https://docs.cilium.io/en/stable/network/lb-ipam/#loadbalancerclass
-defaultLBServiceIPAM: none
 bgpControlPlane:
   enabled: true
 

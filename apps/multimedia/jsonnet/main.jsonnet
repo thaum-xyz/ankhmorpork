@@ -12,8 +12,7 @@ local config = std.parseYaml(configYAML)[0];
 local lbService = {
   metadata+: {
     annotations+: {
-      'metallb.universe.tf/address-pool': 'default',
-      'metallb.universe.tf/allow-shared-ip': 'multimedia-svc',
+      'lbipam.cilium.io/sharing-key': 'multimedia-svc',
     },
   },
   spec+: {

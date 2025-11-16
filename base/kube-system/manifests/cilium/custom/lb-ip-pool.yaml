@@ -4,10 +4,7 @@ kind: CiliumLoadBalancerIPPool
 metadata:
   name: lb-ip-pool
 spec:
+  allowFirstLastIPs: "Yes"
   blocks:
-    # 192.168.50.112/28
-    - start: "192.168.50.112"
-      stop: "192.168.50.127"
-  serviceSelector:
-    matchLabels:
-      ciliumLB: "true"
+    - start: "192.168.50.128"
+      stop: "192.168.50.254"
