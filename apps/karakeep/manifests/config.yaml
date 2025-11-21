@@ -6,3 +6,4 @@ metadata:
 data:
   NEXTAUTH_URL: "http://keep.krupa.net.pl"
   OCR_LANGS: "pol+eng"
+  DISABLE_SIGNUPS: "true"
