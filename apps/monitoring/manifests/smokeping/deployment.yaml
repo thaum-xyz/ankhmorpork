@@ -39,8 +39,7 @@ spec:
             - 8.8.8.8
             - 1.1.1.1
             - lancre.thaum.xyz
-            - krupa.net.pl
-            - pawel.krupa.net.pl
+            - ankhmorpork.thaum.xyz
           image: quay.io/superq/smokeping-prober:v0.7.1
           name: smokeping
           ports:
