@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: karakeep-web
+  namespace: karakeep
+spec:
+  selector:
+    matchLabels:
+      app: karakeep-web
+  endpoints:
+    - port: web
+      interval: 30s
+      bearerTokenSecret:
+        name: karakeep-secrets
+        key: PROMETHEUS_AUTH_TOKEN

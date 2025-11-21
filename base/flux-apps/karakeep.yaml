@@ -1,0 +1,12 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: karakeep
+  namespace: flux-apps
+spec:
+  interval: 60m0s
+  path: ./apps/karakeep/manifests
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

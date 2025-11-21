@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: karakeep
+spec:
+  selector:
+    app: karakeep-web
+  ports:
+    - protocol: TCP
+      name: web
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
