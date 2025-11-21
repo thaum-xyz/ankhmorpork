@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./apps/verstity-test
+  path: ./apps/versity-test
   prune: true
   sourceRef:
     kind: GitRepository
