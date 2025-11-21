@@ -6,6 +6,7 @@ metadata:
 spec:
   interval: 15m0s
   path: ./apps/opencost
+  suspend: true
   prune: true
   sourceRef:
     kind: GitRepository
