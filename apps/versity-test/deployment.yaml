@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: versitygw
+  namespace: versity-test
   labels:
     app.kubernetes.io/name: versitygw
     app.kubernetes.io/instance: test

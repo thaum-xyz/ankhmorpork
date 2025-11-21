@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data
+  namespace: versity-test
   labels:
     app.kubernetes.io/name: versitygw
     app.kubernetes.io/instance: test
