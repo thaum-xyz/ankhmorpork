@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: stirling-pdf-chart
-      version: "1.5.0"
+      version: "2.2.0"
       sourceRef:
         kind: HelmRepository
         name: stirling-pdf
