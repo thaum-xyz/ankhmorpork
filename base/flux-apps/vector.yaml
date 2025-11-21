@@ -1,0 +1,12 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: vector
+  namespace: flux-apps
+spec:
+  interval: 15m0s
+  path: ./apps/vector
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

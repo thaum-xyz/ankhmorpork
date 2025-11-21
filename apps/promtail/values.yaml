@@ -8,6 +8,9 @@ priorityClassName: "system-cluster-critical"
 serviceMonitor:
   enabled: true
 
+nodeSelector:
+  promtail: "true"
+
 # TODO: Add systemd logs gathering. Starting point - https://community.grafana.com/t/promtail-never-scrapes-journal-logs-using-readme-suggestions-in-official-helm-chart/91436
 
 # Extra volumes to be added in addition to those specified under `defaultVolumes`.

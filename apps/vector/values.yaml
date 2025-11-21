@@ -1,0 +1,111 @@
+# Config reference: https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector
+
+role: Agent
+
+podPriorityClassName: "system-cluster-critical"
+
+podMonitor:
+  enabled: true
+
+nodeSelector:
+  promtail: "false"
+
+service:
+  enabled: true
+  type: LoadBalancer
+  ports:
+    - name: syslog-udp
+      port: 1514
+      protocol: UDP
+      targetPort: 1514
+
+containerPorts:
+  - name: syslog-udp
+    containerPort: 1514
+    protocol: UDP
+
+customConfig:
+  # Where kubernetes_logs & Loki sink will store checkpoints/buffers
+  data_dir: /vector-data-dir
+
+  # --- SOURCES ---
+  sources:
+    internal_metrics:
+      type: internal_metrics
+    k8s_logs:
+      type: kubernetes_logs
+      # Reads /var/log/pods via the default hostPath mounts from the Helm chart.  [oai_citation:0‡vector.dev](https://vector.dev/docs/reference/configuration/sources/kubernetes_logs/)
+      # Some knobs that roughly match "typical promtail" behavior:
+      auto_partial_merge: true
+      # Start at the end of new files like promtail usually does
+      read_from: beginning  # change to "end" if you want tail-only behavior
+      # Reduce API server pressure in big clusters if needed:
+      # insert_namespace_fields: false
+    syslog_udp:
+      type: syslog
+      address: "0.0.0.0:1514"
+      mode: udp
+
+  # --- (OPTIONAL) TRANSFORMS ---
+  # Here you could parse log levels, unify formats, etc.
+  # transforms: {}
+
+  # --- SINKS ---
+  sinks:
+    prom_exporter:
+      type: prometheus_exporter
+      inputs: [host_metrics, internal_metrics]
+      address: 0.0.0.0:9090
+
+    loki_syslog:
+      type: loki
+      inputs:
+        - syslog_udp
+      endpoint: http://loki-write.datalake-logs.svc:3100
+      path: /loki/api/v1/push
+      compression: snappy
+      out_of_order_action: accept
+      encoding:
+        codec: json
+      labels:
+        cluster: "ankhmorpork"
+        job: "syslog"
+        level: "{{ severity }}"
+        facility: "{{ facility }}"
+        host: "{{ host }}"
+        ip: "{{ host_ip }}"
+        hostname: "{{ hostname }}"
+        app: "{{ appname }}"
+        proc: "{{ procid }}"
+        msgid: "{{ msgid }}"
+
+    loki:
+      type: loki
+      inputs:
+        - k8s_logs
+      endpoint: http://loki-write.datalake-logs.svc:3100
+      path: /loki/api/v1/push
+      # Reasonable defaults
+      compression: snappy
+      out_of_order_action: accept
+      encoding:
+        codec: json
+      # Map k8s metadata to Loki labels (similar to promtail)
+      labels:
+        cluster: ankhmorpork
+        job: "kubernetes-logs"
+        namespace: "{{ kubernetes.pod_namespace }}"
+        pod: "{{ kubernetes.pod_name }}"
+        container: "{{ kubernetes.container_name }}"
+        node: "{{ kubernetes.pod_node_name }}"
+
+      # If you use multi-tenant Loki (e.g. Grafana Cloud), set tenant_id
+      # tenant_id: "my-tenant"
+
+      # Example auth for Grafana Cloud / secured Loki:
+      # auth:
+      #   strategy: basic
+      #   user: "${LOKI_USERNAME}"
+      #   password: "${LOKI_PASSWORD}"
+      # tls:
+      #   ca_file: /etc/ssl/certs/ca-certificates.crt
