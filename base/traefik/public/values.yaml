@@ -18,9 +18,3 @@ logs:
   access:
     enabled: true
     format: common
-
-experimental:
-  plugins:
-    bouncer:
-      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
-      version: v1.3.5

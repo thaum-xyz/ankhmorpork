@@ -67,3 +67,12 @@ metrics:
       enabled: true
     serviceMonitor:
       honorLabels: true
+
+experimental:
+  plugins:
+    bouncer:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.3.5
+    oidc:
+      moduleName: github.com/sevensolutions/traefik-oidc-auth
+      version: v0.17.0
