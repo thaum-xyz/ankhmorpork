@@ -14,4 +14,4 @@ spec:
   target:
     template:
       data:
-        connectionString: "postgresql://pocketid:{{ .password }}@postgres:5432/pocketid"
+        connectionString: "postgresql://pocketid:{{ .password }}@postgres-rw:5432/pocketid"
