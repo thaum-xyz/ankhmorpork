@@ -38,19 +38,29 @@ spec:
             - name: GF_AUTH_DISABLE_LOGIN_FORM
               value: "true"
             - name: GF_AUTH_SIGNOUT_REDIRECT_URL
-              value: https://auth.ankhmorpork.thaum.xyz/_oauth2/logout
+              value: https://login.krupa.net.pl/api/oidc/end-session
             - name: GF_AUTH_BASIC_ENABLED
+              value: "false"
+
+            - name: GF_AUTH_GENERIC_OAUTH_ENABLED
               value: "true"
-            - name: GF_AUTH_PROXY_AUTO_SIGN_UP
-              value: "false"
-            - name: GF_AUTH_PROXY_ENABLED
-              value: "false"
-            - name: GF_AUTH_PROXY_HEADER_NAME
-              value: X-Forwarded-User
-            - name: GF_AUTH_PROXY_HEADER_PROPERTY
-              value: username
-            - name: GF_AUTH_PROXY_HEADERS
-              value: Email:X-Forwarded-User
+            - name: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: clientId
+                  name: grafana-oidc
+            - name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: clientSecret
+                  name: grafana-oidc
+            - name: GF_AUTH_GENERIC_OAUTH_AUTH_URL
+              value: https://login.krupa.net.pl/authorize
+            - name: GF_AUTH_GENERIC_OAUTH_TOKEN_URL
+              value: https://login.krupa.net.pl/api/oidc/token
+            - name: GF_AUTH_GENERIC_OAUTH_API_URL
+              value: https://login.krupa.net.pl/api/oidc/userinfo
+
             - name: GF_SNAPSHOTS_EXTERNAL_ENABLED
               value: "false"
             - name: GF_ANALYTICS_REPORTING_ENABLED
