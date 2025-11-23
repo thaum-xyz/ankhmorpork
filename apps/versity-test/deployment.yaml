@@ -33,9 +33,9 @@ spec:
               path: /
               port: http
           args:
-          - "posix"
           - "--port"
           - ":80"
+          - "posix"
           - "--sidecar"
           - "/var/vgw/metadata"
           - "/var/vgw/data"
