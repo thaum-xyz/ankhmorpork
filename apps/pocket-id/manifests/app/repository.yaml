@@ -1,0 +1,7 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: anza-labs
+spec:
+  interval: 15m
+  url: https://anza-labs.github.io/charts

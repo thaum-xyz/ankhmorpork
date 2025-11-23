@@ -1,0 +1,17 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: pg-connection
+spec:
+  data:
+    - remoteRef:
+        key: POCKET_ID_DB_PASS
+      secretKey: password
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
+  target:
+    template:
+      data:
+        connectionString: "postgresql://pocketid:{{ .password }}@postgres:5432/pocketid"

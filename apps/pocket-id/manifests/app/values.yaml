@@ -1,0 +1,53 @@
+# Config reference: https://github.com/hobbit44/pocket-id-helm/blob/main/values.yaml
+
+replicaCount: 2
+
+host: login.krupa.net.pl
+
+database:
+  provider: "postgres"
+  # connectionString: # overridden by pg-connection secret
+
+updateStrategy:
+  # -- The deployment strategy to use to replace existing pods with new ones. Options: "RollingUpdate" or "OnDelete".
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 50%
+    partition: 0
+
+backup:
+  enabled: false
+
+config:
+  metricsEnabled: true
+  otel:
+    OTEL_METRICS_EXPORTER: prometheus
+  ui:
+    settings:
+      app:
+        appName: "Krupa Login"
+      ldap:
+        enabled: false
+
+persistence:
+  data:
+    enabled: false
+
+ingress:
+  enabled: true
+  className: cloudflare
+  host: login.krupa.net.pl
+  tls:
+    - hosts:
+        - login.krupa.net.pl
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - pocket-id
+        topologyKey: "kubernetes.io/hostname"
