@@ -28,10 +28,10 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          #readinessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: http
           args:
           - "--port"
           - ":80"
