@@ -40,7 +40,7 @@ spec:
             - name: GF_AUTH_SIGNOUT_REDIRECT_URL
               value: https://auth.ankhmorpork.thaum.xyz/_oauth2/logout
             - name: GF_AUTH_BASIC_ENABLED
-              value: "false"
+              value: "true"
             - name: GF_AUTH_PROXY_AUTO_SIGN_UP
               value: "false"
             - name: GF_AUTH_PROXY_ENABLED
