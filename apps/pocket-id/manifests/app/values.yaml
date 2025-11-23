@@ -26,6 +26,7 @@ config:
     settings:
       app:
         appName: "Krupa Login"
+        sessionDuration: 180 # in minutes
       ldap:
         enabled: false
 
