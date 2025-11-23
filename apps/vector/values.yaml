@@ -70,14 +70,14 @@ customConfig:
       labels:
         cluster: "ankhmorpork"
         job: "syslog"
-        level: "{{ severity }}"
-        facility: "{{ facility }}"
-        host: "{{ host }}"
-        ip: "{{ host_ip }}"
-        hostname: "{{ hostname }}"
-        app: "{{ appname }}"
-        proc: "{{ procid }}"
-        msgid: "{{ msgid }}"
+        level: "{{ `{{` }} severity {{ `}}` }}"
+        facility: "{{ `{{` }} facility {{ `}}` }}"
+        host: "{{ `{{` }} host {{ `}}` }}"
+        ip: "{{ `{{` }} host_ip {{ `}}` }}"
+        hostname: "{{ `{{` }} hostname {{ `}}` }}"
+        app: "{{ `{{` }} appname {{ `}}` }}"
+        proc: "{{ `{{` }} procid {{ `}}` }}"
+        msgid: "{{ `{{` }} msgid {{ `}}` }}"
 
     loki:
       type: loki
@@ -94,10 +94,10 @@ customConfig:
       labels:
         cluster: ankhmorpork
         job: "kubernetes-logs"
-        namespace: "{{ kubernetes.pod_namespace }}"
-        pod: "{{ kubernetes.pod_name }}"
-        container: "{{ kubernetes.container_name }}"
-        node: "{{ kubernetes.pod_node_name }}"
+        namespace: "{{ `{{` }} kubernetes.pod_namespace {{ `}}` }}"
+        pod: "{{ `{{` }} kubernetes.pod_name {{ `}}` }}"
+        container: "{{ `{{` }} kubernetes.container_name {{ `}}` }}"
+        node: "{{ `{{` }} kubernetes.pod_node_name {{ `}}` }}"
 
       # If you use multi-tenant Loki (e.g. Grafana Cloud), set tenant_id
       # tenant_id: "my-tenant"
