@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: grafana
     app.kubernetes.io/name: grafana
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 11.3.0
+    app.kubernetes.io/version: 12.3.0
   name: grafana
   namespace: monitoring
 spec:
@@ -26,7 +26,7 @@ spec:
         app.kubernetes.io/component: grafana
         app.kubernetes.io/name: grafana
         app.kubernetes.io/part-of: kube-prometheus
-        app.kubernetes.io/version: 11.3.0
+        app.kubernetes.io/version: 12.3.0
     spec:
       automountServiceAccountToken: false
       containers:
@@ -71,7 +71,7 @@ spec:
               value: "false"
             - name: GF_INSTALL_PLUGINS
               value: "yesoreyeram-infinity-datasource"
-          image: grafana/grafana:11.3.0
+          image: grafana/grafana:12.3.0
           name: grafana
           ports:
             - containerPort: 3000
