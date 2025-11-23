@@ -1,6 +1,7 @@
 # Config reference: https://github.com/hobbit44/pocket-id-helm/blob/main/values.yaml
 
-replicaCount: 2
+# NOTE: scaled to 1 instance to wokr around issue with session stickiness
+replicaCount: 1
 
 host: login.krupa.net.pl
 
