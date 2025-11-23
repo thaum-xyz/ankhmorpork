@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: versitygw
     app.kubernetes.io/instance: test
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: versitygw
