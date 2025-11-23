@@ -36,11 +36,11 @@ spec:
             - name: GF_AUTH_ANONYMOUS_ENABLED
               value: "true"
             - name: GF_AUTH_DISABLE_LOGIN_FORM
-              value: "true"
+              value: "false"
             - name: GF_AUTH_SIGNOUT_REDIRECT_URL
               value: https://login.krupa.net.pl/api/oidc/end-session
             - name: GF_AUTH_BASIC_ENABLED
-              value: "false"
+              value: "true"
 
             - name: GF_AUTH_GENERIC_OAUTH_ENABLED
               value: "true"
