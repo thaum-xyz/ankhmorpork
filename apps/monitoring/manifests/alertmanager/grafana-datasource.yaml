@@ -5,6 +5,7 @@ metadata:
   labels:
     grafana_datasource: "1"
   name: alerts-grafana-datasource
+  namespace: monitoring
 data:
   alerts-datasource.yaml: |
     apiVersion: 1
