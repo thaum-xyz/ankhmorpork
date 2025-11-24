@@ -1,0 +1,133 @@
+# Helm chart values reference https://github.com/grafana/helm-charts/tree/main/charts/grafana
+
+replicas: 1
+headlessService: true
+
+podDisruptionBudget:
+  maxUnavailable: 1
+
+ingress:
+  enabled: true
+  #ingressClassName: public
+  ingressClassName: cloudflare
+  annotations:
+    #cert-manager.io/cluster-issuer: letsencrypt-prod
+    #probe-uri: /-/healthy
+    reloader.homer/group: Administration
+    reloader.homer/logo: https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg
+    reloader.homer/name: grafana
+  labels:
+    reloader.homer/enabled: "true"
+  hosts:
+    - "grafana.krupa.net.pl"
+  #tls:
+  #  - hosts:
+  #    - grafana.krupa.net.pl
+  #    secretName: ingress-grafana-tls
+
+resources:
+  requests:
+    cpu: 80m
+    memory: 512Mi
+  limits:
+    cpu: 800m
+    memory: 4096Mi
+
+service:
+  annotations:
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.name: "grafana-server"
+
+persistence:
+  enabled: false
+
+sidecar:
+  enableUniqueFilenames: true
+  resources:
+    requests:
+      cpu: 6m
+      memory: 192Mi
+    limits:
+      cpu: 50m
+      memory: 384Mi
+  alerts:
+    enabled: false
+  dashboards:
+    enabled: true
+
+  datasources:
+    enabled: true
+    label: "grafana_datasource"
+
+#datasources:
+
+#plugins: []
+
+imageRenderer:
+  # Note: This will take considerable amount of memory.
+  enabled: false
+
+admin:
+  existingSecret: grafana-admin-creds
+  userKey: admin-user
+  passwordKey: admin-password
+
+serviceMonitor:
+  enabled: true
+
+testFramework:
+  enabled: false
+
+env:
+  GF_FEATURE_TOGGLES_ENABLE: "publicDashboards,prometheusResourceBrowserCache"
+
+extraSecretMounts:
+  - name: postgres-user-pass
+    secretName: postgres-user-pass
+    defaultMode: 0440
+    mountPath: /etc/secrets/database
+    readOnly: true
+  - name: pocket-id-oauth
+    secretName: grafana-oidc
+    defaultMode: 0440
+    mountPath: /etc/secrets/oauth
+    readOnly: true
+
+grafana.ini:
+  # Config reference - https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/
+  analytics:
+    check_for_updates: false
+  news:
+    news_feed_enabled: false
+  server:
+    domain: grafana.krupa.net.pl
+    root_url: "https://grafana.krupa.net.pl"
+  auth.basic:
+    # Enable basic auth as reloaders are using this method to authenticate
+    enabled: true
+  auth.oauth_generic:
+    enabled: true
+    name: "pocketID"
+    client_id: "$__file{/etc/secrets/oauth/clientID}"
+    client_secret: "$__file{/etc/secrets/oauth/clientSecret}"
+    auth_url: "https://login.krupa.net.pl/authorize"
+    token_url: "https://login.krupa.net.pl/api/oidc/token"
+    #scopes: "openid email profile groups"
+    scopes: "openid email profile"
+    email_attribute_name: "email:primary"
+    #groups_attribute_path: "groups"
+    #allowed_groups: "monitoring admin"
+    skip_org_role_sync: true
+  database:
+    type: postgres
+    host: postgres-rw:5432
+    name: grafana
+    # Secrets are mounted from a file in /etc/secrets/database mounted by extraSecretMounts
+    # more about this in grafana helm-chart doc:
+    # https://github.com/grafana/helm-charts/blob/main/charts/grafana/README.md#how-to-securely-reference-secrets-in-grafanaini
+    user: $__file{/etc/secrets/database/username}
+    password: $__file{/etc/secrets/database/password}
+    # ssl_mode: require
+  unified_alerting:
+    enabled: true
+    execute_alerts: false  # Alerts should be evaluated/excuted by prometheus/thanos. Otherwise grafana will become a critical part of the observability stack which is unnnecessary.

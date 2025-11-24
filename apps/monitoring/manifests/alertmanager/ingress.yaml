@@ -8,7 +8,6 @@ metadata:
     reloader.homer/group: Administration
     reloader.homer/logo: https://github.com/cncf/artwork/blob/main/projects/prometheus/icon/color/prometheus-icon-color.png?raw=true
     reloader.homer/name: alertmanager
-    traefik.ingress.kubernetes.io/router.middlewares: auth-traefik-forward-auth@kubernetescrd
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
   labels:
     app.kubernetes.io/component: alert-router
@@ -20,7 +19,7 @@ metadata:
   name: alertmanager
   namespace: monitoring
 spec:
-  ingressClassName: public
+  ingressClassName: private
   rules:
     - host: alertmanager.ankhmorpork.thaum.xyz
       http:
