@@ -54,10 +54,12 @@ sidecar:
     enabled: false
   dashboards:
     enabled: true
+    searchNamespace: ALL
 
   datasources:
     enabled: true
     label: "grafana_datasource"
+    searchNamespace: ALL
 
 #datasources:
 
@@ -102,12 +104,15 @@ grafana.ini:
   server:
     domain: grafana.krupa.net.pl
     root_url: "https://grafana.krupa.net.pl"
+  auth:
+    disable_login_form: true
+    #disable_signout_menu: false
   auth.basic:
     # Enable basic auth as reloaders are using this method to authenticate
     enabled: true
   auth.generic_oauth:
     enabled: true
-    name: "pocketID"
+    name: "Pocket ID"
     client_id: "$__file{/etc/secrets/oauth/clientID}"
     client_secret: "$__file{/etc/secrets/oauth/clientSecret}"
     auth_url: "https://login.krupa.net.pl/authorize"
