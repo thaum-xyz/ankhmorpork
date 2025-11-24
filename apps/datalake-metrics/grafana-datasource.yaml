@@ -7,6 +7,8 @@ metadata:
 data:
   thanos-datasource.yaml: |
     apiVersion: 1
+    prune: true
+    datasources:
     - name: Datalake
       type: prometheus
       orgId: 1
