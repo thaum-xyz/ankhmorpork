@@ -6,6 +6,7 @@ resources:
   - release.yaml
   - pg-connection.yaml
   - serviceMonitor.yaml
+  - ingess-cloudflare.yaml
 configMapGenerator:
   - name: values
     files:

@@ -37,10 +37,13 @@ persistence:
 
 ingress:
   enabled: true
-  className: cloudflare
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+  className: private
   host: login.krupa.net.pl
   tls:
-    - hosts:
+    - secretName: login-krupa-net-pl-tls
+      hosts:
         - login.krupa.net.pl
 
 affinity:
