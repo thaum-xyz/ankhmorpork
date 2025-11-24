@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: mealie
-        image: ghcr.io/mealie-recipes/mealie:v2.5.0
+        image: ghcr.io/mealie-recipes/mealie:v3.5.0
         env:
         - name: ALLOW_SIGNUP
           value: 'false'
@@ -27,6 +27,8 @@ spec:
           value: Europe/Warsaw
         - name: BASE_URL
           value: https://recipes.krupa.net.pl
+        #- NAME: ALLOW_PASSWORD_LOGIN
+        #  value: 'True'
         - name: OIDC_AUTH_ENABLED
           value: 'True'
         - name: OIDC_SIGNUP_ENABLED
