@@ -1,5 +1,9 @@
 # Reference - https://docs.cilium.io/en/stable/helm-reference/#id1
 
+# Setting to default 1500 as 9000 yields insignificant performance improvement while causing unnecessary complexity
+# By default cilium will set MTU to 1280 due to tailscale0 interface presence
+MTU: 1500
+
 bpf:
   hostLegacyRouting: false
   masquerade: true
