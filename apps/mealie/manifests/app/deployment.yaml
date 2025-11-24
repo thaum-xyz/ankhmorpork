@@ -27,6 +27,22 @@ spec:
           value: Europe/Warsaw
         - name: BASE_URL
           value: https://recipes.krupa.net.pl
+        - name: OIDC_AUTH_ENABLED
+          value: 'True'
+        - name: OIDC_SIGNUP_ENABLED
+          value: 'True'
+        - name: OIDC_CONFIGURATION_URL
+          value: https://login.krupa.net.pl/.well-known/openid-configuration
+        - name: OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: oidc-client
+              key: clientID
+        - name: OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oidc-client
+              key: clientSecret
         - name: DB_ENGINE
           value: postgres
         - name: POSTGRES_SERVER

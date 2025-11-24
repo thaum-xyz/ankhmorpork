@@ -6,3 +6,4 @@ resources:
   - pvc.yaml
   - deployment.yaml
   - ingress-cloudflare.yaml
+  - oidc-secret.yaml
