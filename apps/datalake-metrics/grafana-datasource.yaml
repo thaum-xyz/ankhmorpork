@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    grafana_datasource: "1"
+  name: thanos-grafana-datasource
+data:
+  thanos-datasource.yaml: |
+    apiVersion: 1
+    - name: Datalake
+      type: prometheus
+      orgId: 1
+      uid: thanos-datasource
+      url: http://thanos-query.datalake-metrics.svc:9090/
+      access: proxy
+      jsonData:
+        prometheusType: Thanos
+        incrementalQuerying: true
+        cacheLevel: High
+        manageAlerts: false
+        maxLines: 1000
+        customQueryParameters: "max_source_resolution=auto"
