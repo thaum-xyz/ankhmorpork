@@ -43,6 +43,10 @@ spec:
             secretKeyRef:
               name: oidc-client
               key: clientSecret
+        - name: OIDC_ADMIN_GROUP
+          value: admin
+        - name: OIDC_USER_GROUP
+          value: mealie
         - name: DB_ENGINE
           value: postgres
         - name: POSTGRES_SERVER
