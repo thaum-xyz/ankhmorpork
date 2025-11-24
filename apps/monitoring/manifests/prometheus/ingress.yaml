@@ -15,7 +15,6 @@ metadata:
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 2.47.1
-    reloader.homer/enabled: "true"
   name: prometheus-k8s
   namespace: monitoring
 spec:

@@ -15,7 +15,6 @@ metadata:
     app.kubernetes.io/name: alertmanager
     app.kubernetes.io/part-of: kube-prometheus
     app.kubernetes.io/version: 0.27.0
-    reloader.homer/enabled: "true"
   name: alertmanager
   namespace: monitoring
 spec:
