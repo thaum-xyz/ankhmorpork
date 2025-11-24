@@ -105,7 +105,7 @@ grafana.ini:
   auth.basic:
     # Enable basic auth as reloaders are using this method to authenticate
     enabled: true
-  auth.oauth_generic:
+  auth.generic_oauth:
     enabled: true
     name: "pocketID"
     client_id: "$__file{/etc/secrets/oauth/clientID}"
