@@ -31,30 +31,27 @@ spec:
             - command:
                 - sh
                 - -c
-                - chmod 0777 /mnt/backups
+                - chmod 0777 /export
               image: busybox
               name: permissions
               volumeMounts:
-                - mountPath: /mnt/backups
+                - mountPath: /export
                   name: backups
             - command:
                 - sh
                 - -c
-                - find /mnt/backups -mtime +20 -type f -delete
+                - find /export -mtime +20 -type f -delete
               image: busybox
               name: cleanup
               volumeMounts:
-                - mountPath: /mnt/backups
+                - mountPath: /export
                   name: backups
           containers:
-            - args:
-                - --use-folder-prefix
-                - --zip
-                - --no-color
-                - --skip-checks
-                - /mnt/backups
-              command:
-                - /usr/local/bin/document_exporter
+            - args: []
+              #  - --use-folder-prefix
+              #  - --zip
+              #  - --no-color
+              #  - --skip-checks
               env: []
               envFrom:
                 - configMapRef:
@@ -76,7 +73,7 @@ spec:
                   name: media
                 - mountPath: /usr/src/paperless/consume
                   name: consume
-                - mountPath: /mnt/backups
+                - mountPath: /export
                   name: backups
           restartPolicy: Never
           serviceAccountName: paperless
