@@ -9,4 +9,5 @@ data:
   DISABLE_SIGNUPS: "true"
   OAUTH_WELLKNOWN_URL: "https://login.krupa.net.pl/.well-known/openid-configuration"
   OAUTH_PROVIDER_NAME: "Pocket ID"
+  OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: "true"
   #DISABLE_PASSWORD_AUTH: "true"
