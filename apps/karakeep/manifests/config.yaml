@@ -4,7 +4,7 @@ metadata:
   name: karakeep-configuration
   namespace: karakeep
 data:
-  NEXTAUTH_URL: "http://keep.krupa.net.pl"
+  NEXTAUTH_URL: "https://keep.krupa.net.pl"
   OCR_LANGS: "pol+eng"
   DISABLE_SIGNUPS: "true"
   OAUTH_WELLKNOWN_URL: "https://login.krupa.net.pl/.well-known/openid-configuration"
