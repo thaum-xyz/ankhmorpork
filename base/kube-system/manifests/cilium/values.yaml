@@ -57,7 +57,8 @@ bgpControlPlane:
 
 rollOutCiliumPods: true
 loadBalancer:
-  mode: dsr
+  # FIXME: enable 'dsr' after testing using annotation based SVCs - https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#annotation-based-dsr-and-snat-mode
+  mode: snat
   dsrDispatch: opt
   algorithm: maglev
 
