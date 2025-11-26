@@ -9,7 +9,7 @@ persistence:
 defaultSettings:
   defaultDataPath: "/var/lib/rancher/longhorn"
   snapshotDataIntegrity: "fast-check"
-  backupTarget: "nfs://192.168.2.29:/nfsshare/longhorn-backups"
+  #backupTarget: "nfs://192.168.50.10:/nfsshare/longhorn-backups"
   upgradeChecker: false
   concurrentAutomaticEngineUpgradePerNodeLimit: "3"
 
