@@ -4,4 +4,4 @@ resources:
   - bgp-cluster-config.yaml
   - bgp-peer-config.yaml
   - bgp-advertisements.yaml
-  - lb-ip-pool.yaml
+  - bgp-lb-ip-pool.yaml
