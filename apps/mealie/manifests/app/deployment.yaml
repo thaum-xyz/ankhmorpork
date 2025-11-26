@@ -29,6 +29,8 @@ spec:
           value: https://recipes.krupa.net.pl
         - name: ALLOW_PASSWORD_LOGIN
           value: 'False'
+        - name: OIDC_AUTO_REDIRECT
+          value: 'True'
         - name: OIDC_AUTH_ENABLED
           value: 'True'
         - name: OIDC_SIGNUP_ENABLED
