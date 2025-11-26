@@ -15,7 +15,7 @@ data:
   PAPERLESS_DB_READ_CACHE_ENABLED: "false" # using pgBouncer, so no need for read cache
   PAPERLESS_ENABLE_FLOWER: "true"
   PAPERLESS_FILENAME_FORMAT: '{{created_year}}/{{correspondent}}/{{asn}} - {{title}}'
-  PAPERLESS_OCR_LANGUAGE: pol+eng+deu
+  PAPERLESS_OCR_LANGUAGE: pol+eng
   PAPERLESS_OCR_LANGUAGES: pol
   PAPERLESS_OCR_IMAGE_DPI: "300"
   PAPERLESS_OCR_PAGES: "10"
@@ -39,3 +39,4 @@ data:
   PAPERLESS_CONSUMER_BARCODE_DPI: "600"
   PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
   PAPERLESS_DISABLE_REGULAR_LOGIN: "true"
+  PAPERLESS_REDIRECT_LOGIN_TO_SSO: "true"
