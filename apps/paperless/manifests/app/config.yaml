@@ -38,3 +38,4 @@ data:
   PAPERLESS_CONSUMER_BARCODE_UPSCALE: "2.0"
   PAPERLESS_CONSUMER_BARCODE_DPI: "600"
   PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
+  PAPERLESS_DISABLE_REGULAR_LOGIN: "true"
