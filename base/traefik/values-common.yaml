@@ -12,10 +12,6 @@ ingressRoute:
   dashboard:
     enabled: true
 
-service:
-  annotations:
-    metallb.universe.tf/address-pool: default
-
 ports:
   web:
     redirections:
