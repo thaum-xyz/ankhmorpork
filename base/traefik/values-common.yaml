@@ -68,6 +68,11 @@ metrics:
     serviceMonitor:
       honorLabels: true
 
+logs:
+  access:
+    enabled: true
+    format: common
+
 experimental:
   plugins:
     bouncer:
