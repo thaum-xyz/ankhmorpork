@@ -27,8 +27,8 @@ spec:
           value: Europe/Warsaw
         - name: BASE_URL
           value: https://recipes.krupa.net.pl
-        #- NAME: ALLOW_PASSWORD_LOGIN
-        #  value: 'True'
+        - name: ALLOW_PASSWORD_LOGIN
+          value: 'False'
         - name: OIDC_AUTH_ENABLED
           value: 'True'
         - name: OIDC_SIGNUP_ENABLED

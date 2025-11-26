@@ -3,7 +3,6 @@
 providers:
   kubernetesCRD:
     enabled: true
-    allowCrossNamespace: true  # Required by current oauth2-proxy setup
   kubernetesIngress:
     publishedService:
       enabled: true
