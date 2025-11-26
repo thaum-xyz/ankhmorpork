@@ -35,7 +35,7 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
-    traefik.ingress.kubernetes.io/router.middlewares: auth-traefik-forward-auth@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: longhorn-system-oidc@kubernetescrd
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
   ingressClassName: private
   tls: true
