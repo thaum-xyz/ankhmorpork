@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: external-dns
-      version: "1.15.2"
+      version: "1.19.0"
       sourceRef:
         kind: HelmRepository
         name: k8s-sigs-external-dns
