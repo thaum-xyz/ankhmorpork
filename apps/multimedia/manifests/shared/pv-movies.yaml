@@ -10,7 +10,7 @@ spec:
     storage: 8Ti
   nfs:
     path: /var/nfs/shared/movies
-    server: 192.168.50.10
+    server: 192.168.40.10
   persistentVolumeReclaimPolicy: Retain
   storageClassName: manual
   volumeMode: Filesystem
