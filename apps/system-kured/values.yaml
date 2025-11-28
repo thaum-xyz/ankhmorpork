@@ -22,6 +22,9 @@ resources:
     cpu: 3m
     memory: 64Mi
 
+nodeSelector:
+  kured: enabled
+
 metrics:
   create: true
 
