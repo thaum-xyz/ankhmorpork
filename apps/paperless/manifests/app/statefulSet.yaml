@@ -23,7 +23,9 @@ spec:
         app.kubernetes.io/name: paperless
     spec:
       containers:
-        - env:
+        - image: ghcr.io/paperless-ngx/paperless-ngx:2.20.0
+          name: paperless
+          env:
             - name: POD_IP
               valueFrom:
                 fieldRef:
@@ -39,8 +41,6 @@ spec:
                 name: paperless-secrets
             - secretRef:
                 name: paperless-db
-          image: ghcr.io/paperless-ngx/paperless-ngx:2.18.4
-          name: paperless
           ports:
             - containerPort: 8000
               name: http
