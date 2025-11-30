@@ -45,7 +45,8 @@
   "packageRules": [
     {
       "addLabels": [
-        "dependencies/ci"
+        "dependencies/ci",
+        "dependencies/automerge"
       ],
       "groupName": "github actions",
       "matchFileNames": [
@@ -64,7 +65,8 @@
     },
     {
       "addLabels": [
-        "dependencies/base"
+        "dependencies/base",
+        "dependencies/automerge"
       ],
       "groupName": "hosting infrastructure",
       "matchFileNames": [
@@ -75,7 +77,8 @@
     },
     {
       "addLabels": [
-        "dependencies/apps"
+        "dependencies/apps",
+        "dependencies/automerge"
       ],
       "groupName": "applications",
       "matchFileNames": [
@@ -86,6 +89,10 @@
     },
     {
       "versioning": "regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})",
+      "addLabels": [
+        "dependencies/apps",
+        "dependencies/automerge"
+      ],
       "groupName": "applications",
       "minimumReleaseAge": "20 days",
       "automerge": true,
