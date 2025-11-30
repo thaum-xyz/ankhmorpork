@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/version: "6.0"
     spec:
       containers:
-        - image: redis:6.0
+        - image: redis:7.0
           name: redis
           ports:
             - containerPort: 6379
