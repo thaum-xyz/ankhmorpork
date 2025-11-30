@@ -53,7 +53,7 @@ spec:
             #  value: "www.google.com"
             - name: HTTP_TARGETS
               value: http://www.google.com
-          image: docker.io/bloomberg/goldpinger:3.10.1
+          image: docker.io/bloomberg/goldpinger:3.10.2
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
