@@ -10,6 +10,7 @@ domainFilters:
 
 registry: txt
 triggerLoopOnEvent: true
+logLevel: &logLevel debug
 
 serviceMonitor:
   enabled: true
@@ -26,8 +27,10 @@ provider:
       repository: ghcr.io/kashalls/external-dns-unifi-webhook
       tag: v0.7.0
     env:
+      - name: LOG_LEVEL
+        value: *logLevel
       - name: UNIFI_HOST
-        value: https://192.168.50.1 # replace with the address to your UniFi router/controller
+        value: https://192.168.1.1 # replace with the address to your UniFi router/controller
       - name: UNIFI_EXTERNAL_CONTROLLER
         value: "false"
       - name: UNIFI_API_KEY
