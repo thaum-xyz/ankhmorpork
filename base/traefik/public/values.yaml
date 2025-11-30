@@ -12,4 +12,4 @@ providers:
 
 service:
   spec:
-    loadBalancerIP: "192.168.50.128"
+    loadBalancerIP: "192.168.50.129"
