@@ -94,6 +94,12 @@
       ]
     }
   ],
+  "kubernetes": {
+    "managerFilePatterns": [
+      "base/**",
+      "apps/**"
+    ]
+  },
   "flux": {
     "fileMatch": [
       "(?:^|/)release\\.ya?ml$",
