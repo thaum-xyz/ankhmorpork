@@ -132,7 +132,7 @@ spec:
               value: prowlarr
             - name: POSTGRES_LOG_DB
               value: logs
-          image: mikefarah/yq:4.48.1
+          image: mikefarah/yq:4.48.2
           name: postgres-setup
           volumeMounts:
             - mountPath: /config

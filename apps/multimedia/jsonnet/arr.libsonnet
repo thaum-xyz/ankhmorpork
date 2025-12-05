@@ -352,7 +352,7 @@ function(params) {
           value: $._config.database.logDB,
         },
       ],
-      image: 'mikefarah/yq:4.48.1',
+      image: 'mikefarah/yq:4.48.2',
       name: 'postgres-setup',
       command: ['sh', '-c'],
       args: [
