@@ -6,7 +6,7 @@ metadata:
 spec:
   force: true
   interval: 30m0s
-  path: ./base/topolvm
+  path: ./base/topolvm-system
   prune: false
   sourceRef:
     kind: GitRepository

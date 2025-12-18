@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: topolvm-system
 resources:
   - repository.yaml
-  - namespace.yaml
   - release.yaml
   - prometheusrules.yaml
 configMapGenerator:

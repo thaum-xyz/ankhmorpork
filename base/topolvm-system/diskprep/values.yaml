@@ -1,0 +1,15 @@
+# Config reference: https://github.com/thaum-xyz/helm-charts/blob/main/charts/lvm-diskprep/values.yaml
+
+nodeSelector:
+  storage.topolvm.io/enabled: "true"
+
+lvm:
+  pvDev: /dev/disk/by-partlabel/r-topolvm
+  vgName: topolvm
+
+metrics:
+  metricsFile: topolvm_lvm.prom
+
+# TODO: enable alerting rules
+prometheusRule:
+  enabled: false
