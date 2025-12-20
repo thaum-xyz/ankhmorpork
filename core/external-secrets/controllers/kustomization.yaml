@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: external-secrets
 resources:
   - repository.yaml
-  - namespace.yaml
   - release.yaml
 configMapGenerator:
   - name: values
