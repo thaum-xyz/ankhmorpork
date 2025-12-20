@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: flux-system
 resources:
-  - recevier.yaml
+  - receiver.yaml
   - github-repo.yaml
   - group-core.yaml
   #- group-infra.yaml
