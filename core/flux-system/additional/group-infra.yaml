@@ -6,7 +6,9 @@ metadata:
 spec:
   interval: 15m0s
   path: ./infra
-  prune: false
+  prune: true
+  dependsOn:
+  - name: core
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
