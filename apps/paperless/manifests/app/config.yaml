@@ -7,6 +7,7 @@ metadata:
   name: paperless-config
   namespace: paperless
 data:
+  PAPERLESS_BIND_ADDR: "0.0.0.0"
   PAPERLESS_CONSUMER_POLLING: "60"
   PAPERLESS_CONSUMER_POLLING_DELAY: "30"
   PAPERLESS_CONSUMER_POLLING_RETRY_COUNT: "20"
