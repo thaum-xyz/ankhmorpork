@@ -19,15 +19,24 @@ cluster:
 cni:
   uninstall: false
 ipam:
-  mode: cluster-pool
-  operator:
-    clusterPoolIPv4PodCIDRList:
-    - 10.42.0.0/16
-k8s:
-  apiServerURLs: "https://192.168.50.31:6443 https://192.168.50.32:6443 https://192.168.50.33:6443"
+  mode: kubernetes
+# FIXME: set correct API server URLs
+#k8s:
+#  apiServerURLs: "https://192.168.50.31:6443 https://192.168.50.32:6443 https://192.168.50.33:6443"
+k8sServiceHost: localhost
+k8sServicePort: 7445
+
 kubeProxyReplacement: true
 priorityClassName: system-node-critical
 policyEnforcementMode: never
+
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+
+gatewayAPI:
+  enabled: false
 
 routingMode: native
 ipv4NativeRoutingCIDR: 192.168.50.0/24
@@ -35,14 +44,18 @@ autoDirectNodeRoutes: true
 
 securityContext:
   capabilities:
+    cleanCiliumState:
+      - "NET_ADMIN"
+      - "SYS_ADMIN"
+      - "SYS_RESOURCE"
     ciliumAgent:
-      # Defaults redefined due to how helm merges lists
+      # Defaults redefined to align with talos
       - "CHOWN"
       - "KILL"
       - "NET_ADMIN"
       - "NET_RAW"
       - "IPC_LOCK"
-      - "SYS_MODULE"
+      # - "SYS_MODULE"
       - "SYS_ADMIN"
       - "SYS_RESOURCE"
       - "DAC_OVERRIDE"
