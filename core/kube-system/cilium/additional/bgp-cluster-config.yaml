@@ -1,0 +1,18 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumBGPClusterConfig
+metadata:
+  name: cilium-bgp
+spec:
+  nodeSelector:
+    matchLabels:
+      network.infra/bgp: "65020"
+  bgpInstances:
+    - name: "65020"
+      localASN: 65020
+      peers:
+        - name: "udm-pro-65000"
+          peerASN: 65000
+          peerAddress: 192.168.1.1
+          peerConfigRef:
+            name: "cilium-peer"

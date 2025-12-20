@@ -1,0 +1,115 @@
+# Reference - https://docs.cilium.io/en/stable/helm-reference/#id1
+
+# Setting to default 1500 as 9000 yields insignificant performance improvement while causing unnecessary complexity
+# By default cilium will set MTU to 1280 due to tailscale0 interface presence
+MTU: 1500
+
+bpf:
+  hostLegacyRouting: false
+  masquerade: true
+  datapathMode: netkit
+  distributedLRU:
+    enabled: true
+  mapDynamicSizeRatio: 0.08
+bpfClockProbe: true
+enableIPv4BIGTCP: true
+enableIPv4Masquerade: true
+cluster:
+  name: ankhmorpork
+cni:
+  uninstall: false
+ipam:
+  mode: kubernetes
+# FIXME: set correct API server URLs
+#k8s:
+#  apiServerURLs: "https://192.168.50.31:6443 https://192.168.50.32:6443 https://192.168.50.33:6443"
+k8sServiceHost: localhost
+k8sServicePort: 7445
+
+kubeProxyReplacement: true
+priorityClassName: system-node-critical
+policyEnforcementMode: never
+
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+
+gatewayAPI:
+  enabled: false
+
+routingMode: native
+ipv4NativeRoutingCIDR: 192.168.50.0/24
+autoDirectNodeRoutes: true
+
+securityContext:
+  capabilities:
+    cleanCiliumState:
+      - "NET_ADMIN"
+      - "SYS_ADMIN"
+      - "SYS_RESOURCE"
+    ciliumAgent:
+      # Defaults redefined to align with talos
+      - "CHOWN"
+      - "KILL"
+      - "NET_ADMIN"
+      - "NET_RAW"
+      - "IPC_LOCK"
+      # - "SYS_MODULE"
+      - "SYS_ADMIN"
+      - "SYS_RESOURCE"
+      - "DAC_OVERRIDE"
+      - "FOWNER"
+      - "SETGID"
+      - "SETUID"
+      # Added to allow BGP peering on port 179
+      - "CAP_NET_BIND_SERVICE"
+
+bgpControlPlane:
+  enabled: true
+
+rollOutCiliumPods: true
+loadBalancer:
+  # FIXME: enable 'dsr' after testing using annotation based SVCs - https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#annotation-based-dsr-and-snat-mode
+  mode: snat
+  dsrDispatch: opt
+  algorithm: maglev
+
+#l2announcements:
+#  enabled: true
+#  leaseDuration: 60s
+#  leaseRenewDeadline: 3s
+
+#k8sClientRateLimit:
+#  qps: 2
+#  burst: 6
+
+#ipMasqAgent:
+#  enabled: true
+
+operator:
+  replicas: 1
+  priorityClassName: system-cluster-critical
+  unmanagedPodWatcher:
+    restart: false
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
+hubble:
+  metrics:
+    enabled:
+      - dns:query;ignoreAAAA
+      - drop
+      - tcp
+      - flow
+      - icmp
+      - http
+    serviceMonitor:
+      enabled: true

@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: ankhmorpork
+  namespace: flux-system
+spec:
+  interval: 60s
+  ref:
+    branch: master
+  url: https://github.com/thaum-xyz/ankhmorpork

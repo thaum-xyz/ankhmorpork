@@ -1,0 +1,14 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: github-webhook-token
+  namespace: flux-system
+spec:
+  data:
+    - remoteRef:
+        key: FLUX_GITHUB_TOKEN
+      secretKey: token
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api
