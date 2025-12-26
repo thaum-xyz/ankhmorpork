@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bootstrap-bucket
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: mc
+        image: minio/mc:latest
+        envFrom:
+        - secretRef:
+            name: envs
+        env:
+        - name: BUCKET_NAME
+          value: thanos
+        - name: VGW_ENDPOINT
+          value: http://versitygw:80
+        command: ["/bin/sh","-lc"]
+        args:
+          - |
+            mc alias set vgw "$VGW_ENDPOINT" "$ROOT_ACCESS_KEY" "$ROOT_SECRET_KEY" --api S3v4
+            mc mb --ignore-existing vgw/$BUCKET_NAME
