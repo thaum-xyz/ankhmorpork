@@ -139,7 +139,7 @@ spec:
               value: sonarr
             - name: POSTGRES_LOG_DB
               value: logs
-          image: mikefarah/yq:4.49.2
+          image: mikefarah/yq:4.50.1
           name: postgres-setup
           volumeMounts:
             - mountPath: /config
