@@ -1,0 +1,75 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mc-mirror
+  labels:
+    app.kubernetes.io/name: mirror
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mirror
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mirror
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: mirror
+              topologyKey:  kubernetes.io/hostname
+      containers:
+      - name: mirror-postgres
+        image: minio/mc
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c"]
+        args:
+        - |
+          mc alias set --insecure sourceSite http://main-minio.minio.svc:9000 $(SITE_SOURCE_ACCESS_KEY) $(SITE_SOURCE_SECRET_KEY) && \
+          mc alias set targetSite https://s3.eu-central-003.backblazeb2.com $(SITE_TARGET_ACCESS_KEY) $(SITE_TARGET_SECRET_KEY) && \
+          mc mirror --insecure \
+            --monitoring-address 0.0.0.0:8081 \
+            --watch \
+            --retry \
+            --preserve \
+            --overwrite \
+            --remove \
+            --disable-multipart \
+            sourceSite/postgres \
+            targetSite/minio-ankhmorpork-thaum-xyz/postgres
+        envFrom:
+        - secretRef:
+            name: mc-mirror-credentials
+        ports:
+        - containerPort: 8081
+          name: metrics-postgres
+      - name: mirror-thanos
+        image: minio/mc
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c"]
+        args:
+        - |
+          mc alias set --insecure sourceSite http://main-minio.minio.svc:9000 $(SITE_SOURCE_ACCESS_KEY) $(SITE_SOURCE_SECRET_KEY) && \
+          mc alias set targetSite https://s3.eu-central-003.backblazeb2.com $(SITE_TARGET_ACCESS_KEY) $(SITE_TARGET_SECRET_KEY) && \
+          mc mirror --insecure \
+            --monitoring-address 0.0.0.0:8082 \
+            --watch \
+            --retry \
+            --preserve \
+            --overwrite \
+            --remove \
+            --disable-multipart \
+            sourceSite/metrics \
+            targetSite/minio-ankhmorpork-thaum-xyz/thanos
+        envFrom:
+        - secretRef:
+            name: mc-mirror-credentials
+        ports:
+        - containerPort: 8082
+          name: metrics-thanos
