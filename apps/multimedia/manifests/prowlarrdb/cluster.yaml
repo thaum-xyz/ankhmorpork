@@ -12,8 +12,8 @@ spec:
     topologyKey: kubernetes.io/hostname
   backup:
     barmanObjectStore:
-      destinationPath: s3://postgres/multimedia/prowlarr
-      endpointURL: http://main-minio.minio.svc:9000
+      destinationPath: s3://minio-ankhmorpork-thaum-xyz/postgres/prowlarr
+      endpointURL: https://s3.eu-central-003.backblazeb2.com
       s3Credentials:
         accessKeyId:
           key: S3_ACCESS_KEY
@@ -41,7 +41,7 @@ spec:
       cpu: 130m
       memory: 300Mi
   storage:
-    size: 7Gi
+    size: 10Gi
     storageClass: lvm-thin
   superuserSecret:
     name: postgres-prowlarr-admin

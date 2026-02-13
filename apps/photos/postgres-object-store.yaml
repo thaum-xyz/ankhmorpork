@@ -1,12 +1,12 @@
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: minio
+  name: backblaze
 spec:
   retentionPolicy: 14d
   configuration:
-    destinationPath: s3://postgres/photos
-    endpointURL: http://main-minio.minio.svc:9000
+    destinationPath: s3://minio-ankhmorpork-thaum-xyz/postgres/photos
+    endpointURL: https://s3.eu-central-003.backblazeb2.com
     s3Credentials:
       accessKeyId:
         key: S3_ACCESS_KEY

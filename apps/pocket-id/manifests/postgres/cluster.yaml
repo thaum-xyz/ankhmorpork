@@ -11,8 +11,8 @@ spec:
     topologyKey: kubernetes.io/hostname
   backup:
     barmanObjectStore:
-      destinationPath: s3://postgres/pocketid
-      endpointURL: http://main-minio.minio.svc:9000
+      destinationPath: s3://minio-ankhmorpork-thaum-xyz/postgres/pocketid
+      endpointURL: https://s3.eu-central-003.backblazeb2.com
       s3Credentials:
         accessKeyId:
           key: S3_ACCESS_KEY
