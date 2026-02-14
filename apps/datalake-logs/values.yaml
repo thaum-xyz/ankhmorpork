@@ -109,12 +109,11 @@ loki:
     retention_period: 122d
   storage:
     bucketNames:
-      chunks: logs-chunks
-      ruler: logs-ruler
+      chunks: minio-ankhmorpork-thaum-xyz
+      ruler: minio-ankhmorpork-thaum-xyz
     type: s3
     s3:
-      endpoint: http://main-minio.minio.svc:9000
-      insecure: true
+      endpoint: https://s3.eu-central-003.backblazeb2.com
       s3ForcePathStyle: true
       secretAccessKey: "${S3_SECRET_KEY}"
       accessKeyId: "${S3_ACCESS_KEY}"
