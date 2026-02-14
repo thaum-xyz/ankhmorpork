@@ -20,8 +20,8 @@ spec:
         objstore.yml: |-
           type: S3
           config:
-            bucket: metrics
-            endpoint: main-minio.minio.svc:9000
+            bucket: minio-ankhmorpork-thaum-xyz
+            endpoint: s3.eu-central-003.backblazeb2.com
             access_key: {{ .access_key }}
             secret_key: {{ .secret_key }}
             insecure: true
