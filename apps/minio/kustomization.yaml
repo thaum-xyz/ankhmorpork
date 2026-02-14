@@ -10,7 +10,6 @@ resources:
   - secret-postgres-sa-creds.yaml
   - prometheus-rules.yaml
   - minio-slo-requests-s3.yaml
-  - mirror/
 configMapGenerator:
   - name: values
     files:
