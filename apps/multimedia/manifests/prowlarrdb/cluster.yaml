@@ -10,20 +10,11 @@ spec:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
     topologyKey: kubernetes.io/hostname
-  backup:
-    barmanObjectStore:
-      destinationPath: s3://minio-ankhmorpork-thaum-xyz/postgres/prowlarr
-      endpointURL: https://s3.eu-central-003.backblazeb2.com
-      s3Credentials:
-        accessKeyId:
-          key: S3_ACCESS_KEY
-          name: postgres-prowlarr-backup
-        secretAccessKey:
-          key: S3_SECRET_KEY
-          name: postgres-prowlarr-backup
-      wal:
-        compression: gzip
-    retentionPolicy: 7d
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: backblaze-prowlarr
   bootstrap:
     initdb:
       database: prowlarr
