@@ -41,6 +41,9 @@ spec:
         - image: ghcr.io/bastienwirtz/homer:v23.10.1
           imagePullPolicy: IfNotPresent
           name: homer
+          env:
+            - name: "IPV6_DISABLE"
+              value: "1"
           ports:
             - containerPort: 8080
               name: http
