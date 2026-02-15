@@ -6,3 +6,4 @@ resources:
   - credentialsAdmin.yaml
   - credentialsUser.yaml
   - credentialsBackup.yaml
+  - objectStore.yaml
