@@ -76,11 +76,6 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Distributed block storage</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/minio.svg"></td>
-    <td><a href="https://min.io">Minio</a></td>
-    <td>S3 storage</td>
-  </tr>
-  <tr>
     <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/flux/icon/color/flux-icon-color.svg"></td>
     <td><a href="https://fluxcd.io/">Flux</a></td>
     <td>GitOps tool built to deploy applications to Kubernetes</td>
