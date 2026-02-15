@@ -3,7 +3,7 @@ kind: ObjectStore
 metadata:
   name: backblaze
 spec:
-  retentionPolicy: 3d
+  retentionPolicy: 30d
   configuration:
     destinationPath: s3://minio-ankhmorpork-thaum-xyz/postgres/pocketid
     endpointURL: https://s3.eu-central-003.backblazeb2.com
