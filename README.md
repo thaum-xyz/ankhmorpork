@@ -198,10 +198,6 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
 
 ## 🌐 DNS
 
-### Internal DNS
-
-[AdGuard Home](https://adguard.com/en/adguard-home/overview.html) is deployed out of k8s cluster and provides an internal resolution of ingress addresses as well as ad blocking.
-
 ### Dynamic DNS
 
 My home IP can change at any given time and in order to keep my WAN IP address up to date on Cloudflare I have configured DDNS on Unifi Dream Machine Pro.
