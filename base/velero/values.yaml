@@ -1,0 +1,109 @@
+# Velero Configuration Reference: https://github.com/vmware-tanzu/helm-charts/blob/main/charts/velero/values.yaml
+fullnameOverride: velero
+
+upgradeCRDs: true
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    relabelings:
+      - action: replace
+        sourceLabels:
+        - __meta_kubernetes_pod_node_name
+        targetLabel: node
+  nodeAgentPodMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
+
+credentials:
+  useSecret: true
+  existingSecret: credentials-velero
+
+initContainers:
+- name: velero-plugin-for-aws
+  image: velero/velero-plugin-for-aws:v1.13.1
+  imagePullPolicy: IfNotPresent
+  volumeMounts:
+    - mountPath: /target
+      name: plugins
+
+configuration:
+  backupSyncPeriod: 10m
+  defaultBackupTTL: 720h # 30 days
+  logLevel: warning
+  features: EnableCSI
+
+  backupStorageLocation:
+  - name: default
+    provider: "velero.io/aws"
+    bucket: "velero-ankhmorpork-thaum-xyz"
+    default: true
+    accessMode: ReadWrite
+    credential:
+      name: credentials-velero
+      key: cloud
+    config:
+      region: "eu-central-003"
+      s3ForcePathStyle: "true"
+      s3Url:     "https://s3.eu-central-003.backblazeb2.com"
+      publicUrl: "https://s3.eu-central-003.backblazeb2.com"
+
+backupsEnabled: true
+snapshotsEnabled: false
+
+schedules:
+  daily:
+    disabled: true
+    schedule: "0 0 * * *"
+    useOwnerReferencesInBackup: false
+    template:
+      ttl: "720h"
+      storageLocation: default
+      excludedNamespaces:
+      - default
+      - kube-public
+      - kube-system
+
+      - cloudflared
+      - cnpg-system
+      - csi-nfs
+      - flux-apps
+      - flux-system
+      - longhorn-system
+      - node-feature-discovery
+      - node-problem-detector
+      - storage-system
+      - traefik
+      - velero
+
+      - descheduler
+      - external-dns
+      - monitoring
+      - nut
+      - scripts-mon
+      - system-kured
+      - vector
+      - versity-test
+
+deployNodeAgent: true
+
+nodeAgent:
+  podVolumePath: /var/lib/kubelet/pods
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+  tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"

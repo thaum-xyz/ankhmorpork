@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: velero
+  labels:
+    velero.io/exclude-from-backup: "true"
