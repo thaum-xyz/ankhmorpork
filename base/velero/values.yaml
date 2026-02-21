@@ -1,7 +1,8 @@
 # Velero Configuration Reference: https://github.com/vmware-tanzu/helm-charts/blob/main/charts/velero/values.yaml
 fullnameOverride: velero
 
-upgradeCRDs: true
+# NOTE: FluxCD should upgrade CRDs
+upgradeCRDs: false
 
 resources:
   requests:
