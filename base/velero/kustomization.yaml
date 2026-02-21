@@ -6,6 +6,7 @@ resources:
   - release.yaml
   - repository.yaml
   - s3-credentials.yaml
+  - repo-encryption.yaml
 configMapGenerator:
   - name: values
     files:
