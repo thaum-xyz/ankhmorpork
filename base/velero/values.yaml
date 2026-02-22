@@ -61,7 +61,7 @@ snapshotsEnabled: false
 
 schedules:
   daily:
-    disabled: true
+    disabled: false
     schedule: "0 0 * * *"
     useOwnerReferencesInBackup: false
     template:
