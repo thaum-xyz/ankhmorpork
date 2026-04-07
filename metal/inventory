@@ -6,19 +6,23 @@
 master01 ansible_host=192.168.50.31
 master02 ansible_host=192.168.50.32
 master03  ansible_host=192.168.50.33
+beelink01  ansible_host=192.168.50.35 #cp01
+beelink02  ansible_host=192.168.50.37 #cp02
 
-metal01  ansible_host=192.168.50.40
+#metal01  ansible_host=192.168.50.40
 #metal02  ansible_host=192.168.50.41
 
 [nvidia]
-metal01
+#metal01
 #metal02
 
 [k3s_control_plane]
 master0[1:3]
 
 [k3s_nodes]
-metal01
+#beelink01
+beelink02
+#metal01
 #metal02
 
 [k3s:children]
