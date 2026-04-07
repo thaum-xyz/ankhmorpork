@@ -8,8 +8,7 @@ resources:
     cpu: 7m
     memory: 58Mi
   limits:
-    cpu: 28m
-    memory: 120Mi
+    memory: 240Mi
 
 nodeSelector: {}
 
