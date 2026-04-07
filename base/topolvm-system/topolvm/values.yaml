@@ -7,6 +7,8 @@ lvmd:
   # lvmd.managed -- If true, set up lvmd service with DaemonSet.
   managed: true
   deviceClasses: []
+  nodeSelector:
+    devices.topolvm.io/vg: main-vg
   additionalConfigs:
     - tolerations: []
       nodeSelector:
