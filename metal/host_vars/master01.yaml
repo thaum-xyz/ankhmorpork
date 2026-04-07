@@ -7,6 +7,6 @@ system_mountpoints:
   - description: longhorn storage
     after: "var-lib-rancher.mount"
     before: "k3s.service"
-    device: "/dev/ubuntu-vg/longhorn"
+    device: "/dev/secondary-vg/longhorn"
     mountpoint: "/var/lib/rancher/longhorn"
     type: "xfs"
