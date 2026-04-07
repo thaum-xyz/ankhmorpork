@@ -9,5 +9,8 @@ spec:
   backupOwnerReference: self
   cluster:
     name: postgres-prowlarr
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
   schedule: 0 7 3 * * *
   suspend: false

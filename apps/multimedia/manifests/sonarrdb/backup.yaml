@@ -9,5 +9,8 @@ spec:
   backupOwnerReference: self
   cluster:
     name: postgres-sonarr
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
   schedule: 0 27 3 * * *
   suspend: false

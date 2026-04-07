@@ -6,6 +6,9 @@ metadata:
   name: postgres
 spec:
   backupOwnerReference: self
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
   cluster:
     name: postgres
   schedule: 0 17 23 * * *

@@ -8,5 +8,8 @@ spec:
   backupOwnerReference: self
   cluster:
     name: postgres
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
   schedule: 0 17 23 * * *
   suspend: false
