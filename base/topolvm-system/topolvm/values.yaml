@@ -17,7 +17,14 @@ lvmd:
       type: thin
       thin-pool:
         name: thin-pool0
-        overprovision-ratio: 5.0
+        overprovision-ratio: 20.0
+    - name: thin-beelink
+      volume-group: ubuntu-vg
+      spare-gb: 1
+      type: thin
+      thin-pool:
+        name: thin-pool0
+        overprovision-ratio: 20.0
 
 node:
   lvmdEmbedded: true
