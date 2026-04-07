@@ -5,29 +5,34 @@ scheduler:
 
 lvmd:
   # lvmd.managed -- If true, set up lvmd service with DaemonSet.
-  managed: false
-  deviceClasses:
-    #- name: main
-    #  volume-group: ubuntu-vg
-    #  spare-gb: 20
-    - name: thin
-      volume-group: secondary-vg
-      default: true
-      spare-gb: 1
-      type: thin
-      thin-pool:
-        name: thin-pool0
-        overprovision-ratio: 20.0
-    - name: thin
-      volume-group: ubuntu-vg
-      spare-gb: 1
-      type: thin
-      thin-pool:
-        name: thin-pool0
-        overprovision-ratio: 20.0
+  managed: true
+  deviceClasses: []
+  additionalConfigs:
+    - tolerations: []
+      nodeSelector:
+        devices.topolvm.io/vg: secondary-vg
+      deviceClasses:
+      - name: thin
+        volume-group: secondary-vg
+        spare-gb: 1
+        type: thin
+        thin-pool:
+          name: thin-pool0
+          overprovision-ratio: 20.0
+    - tolerations: []
+      nodeSelector:
+        devices.topolvm.io/vg: ubuntu-vg
+      deviceClasses:
+      - name: thin
+        volume-group: ubuntu-vg
+        spare-gb: 1
+        type: thin
+        thin-pool:
+          name: thin-pool0
+          overprovision-ratio: 20.0
 
 node:
-  lvmdEmbedded: true
+  lvmdEmbedded: false
   metrics:
     enabled: true
   prometheus:
