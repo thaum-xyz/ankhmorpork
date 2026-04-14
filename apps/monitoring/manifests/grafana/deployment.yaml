@@ -71,7 +71,7 @@ spec:
               value: "false"
             - name: GF_INSTALL_PLUGINS
               value: "yesoreyeram-infinity-datasource"
-          image: grafana/grafana:12.4.1
+          image: grafana/grafana:12.4.2
           name: grafana
           ports:
             - containerPort: 3000
