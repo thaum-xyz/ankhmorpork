@@ -1,0 +1,60 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mended-drum-tools
+  labels:
+    app.kubernetes.io/name: mended-drum-tools
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mended-drum-tools
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mended-drum-tools
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+      containers:
+        - name: tools
+          image: ghcr.io/thaum-xyz/mended-drum:2026.25.1
+          env:
+            - name: MEALIE_BASE_URL
+              value: http://mealie.mealie:9000
+            - name: DB_PATH
+              value: /data/mended-drum.db
+          envFrom:
+            - secretRef:
+                name: mended-drum-tools-secrets
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mended-drum-tools-data

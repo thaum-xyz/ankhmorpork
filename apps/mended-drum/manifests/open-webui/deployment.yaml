@@ -26,6 +26,8 @@ spec:
               value: https://drum.krupa.net.pl
             - name: ENABLE_OLLAMA_API
               value: "false"
+            - name: ENABLE_EVALUATION_ARENA_MODELS
+              value: "false"
             - name: OPENAI_API_BASE_URL
               value: http://litellm:4000/v1
             - name: ENABLE_LOGIN_FORM
