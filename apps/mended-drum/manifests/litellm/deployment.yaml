@@ -43,10 +43,10 @@ spec:
           resources:
             limits:
               cpu: 1
-              memory: 512Mi
+              memory: 1Gi
             requests:
               cpu: 50m
-              memory: 256Mi
+              memory: 512Mi
           volumeMounts:
             - name: config
               mountPath: /etc/litellm
