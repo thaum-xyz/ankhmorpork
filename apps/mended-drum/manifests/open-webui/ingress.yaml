@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    probe-uri: /health
+    reloader.homer/group: Ankh Cloud
+    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/open-webui.svg
+    reloader.homer/name: Mended Drum
+    reloader.homer/subtitle: Bar assistant
+  labels:
+    probe: enabled
+    app.kubernetes.io/name: open-webui
+  name: open-webui
+spec:
+  ingressClassName: public
+  rules:
+    - host: drum.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: open-webui
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - drum.krupa.net.pl
+      secretName: open-webui-tls

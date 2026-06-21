@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudflare-ingress
+  namespace: mended-drum
+spec:
+  ingressClassName: cloudflare
+  rules:
+    - host: drum.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: open-webui
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix

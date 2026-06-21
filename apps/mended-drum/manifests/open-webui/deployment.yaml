@@ -1,0 +1,76 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: open-webui
+  labels:
+    app.kubernetes.io/name: open-webui
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: open-webui
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: open-webui
+    spec:
+      containers:
+        - name: open-webui
+          image: ghcr.io/open-webui/open-webui:v0.9.6
+          env:
+            - name: WEBUI_NAME
+              value: Mended Drum
+            - name: WEBUI_URL
+              value: https://drum.krupa.net.pl
+            - name: ENABLE_OLLAMA_API
+              value: "false"
+            - name: OPENAI_API_BASE_URL
+              value: http://litellm:4000/v1
+            - name: ENABLE_LOGIN_FORM
+              value: "false"
+            - name: ENABLE_OAUTH_SIGNUP
+              value: "true"
+            - name: OAUTH_PROVIDER_NAME
+              value: PocketID
+            - name: OPENID_PROVIDER_URL
+              value: https://login.krupa.net.pl/.well-known/openid-configuration
+            - name: OPENID_REDIRECT_URI
+              value: https://drum.krupa.net.pl/oauth/oidc/callback
+            - name: OAUTH_SCOPES
+              value: openid email profile groups
+          envFrom:
+            - secretRef:
+                name: open-webui-secrets
+            - secretRef:
+                name: open-webui-oidc
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 384Mi
+          volumeMounts:
+            - name: data
+              mountPath: /app/backend/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: open-webui-data
