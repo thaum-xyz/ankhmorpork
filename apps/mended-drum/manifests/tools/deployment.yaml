@@ -26,7 +26,7 @@ spec:
           image: ghcr.io/thaum-xyz/mended-drum:2026.25.1
           env:
             - name: MEALIE_BASE_URL
-              value: http://mealie.mealie:9000
+              value: http://mealie.mealie.svc:9000
             - name: DB_PATH
               value: /data/mended-drum.db
           envFrom:
