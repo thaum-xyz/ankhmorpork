@@ -23,13 +23,15 @@ spec:
         fsGroup: 65532
       containers:
         - name: tools
-          image: ghcr.io/thaum-xyz/mended-drum:2026.25.1
+          image: ghcr.io/thaum-xyz/mended-drum:git-96f1ad4a7d44
           imagePullPolicy: Always
           env:
             - name: MEALIE_BASE_URL
               value: http://mealie.mealie.svc:9000
             - name: DB_PATH
               value: /data/mended-drum.db
+            - name: CORS_ALLOW_ORIGIN
+              value: https://drum.krupa.net.pl
           envFrom:
             - secretRef:
                 name: mended-drum-tools-secrets

@@ -5,3 +5,5 @@ resources:
   - pvc.yaml
   - service.yaml
   - deployment.yaml
+  - ingress.yaml
+  - ingress-cloudflare.yaml
