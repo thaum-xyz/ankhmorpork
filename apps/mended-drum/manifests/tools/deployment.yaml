@@ -23,7 +23,7 @@ spec:
         fsGroup: 65532
       containers:
         - name: tools
-          image: ghcr.io/thaum-xyz/mended-drum:git-0ef952c1e70b
+          image: ghcr.io/thaum-xyz/mended-drum:git-4c440aa9cb33
           imagePullPolicy: Always
           env:
             - name: MEALIE_BASE_URL
