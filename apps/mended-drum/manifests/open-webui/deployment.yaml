@@ -48,25 +48,26 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            failureThreshold: 60
           livenessProbe:
             httpGet:
               path: /health
               port: http
-            initialDelaySeconds: 30
             periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /health
               port: http
-            initialDelaySeconds: 15
             periodSeconds: 15
           resources:
-            limits:
-              cpu: 1
-              memory: 1Gi
             requests:
               cpu: 100m
-              memory: 384Mi
+              memory: 1Gi
           volumeMounts:
             - name: data
               mountPath: /app/backend/data

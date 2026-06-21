@@ -41,9 +41,6 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 15
           resources:
-            limits:
-              cpu: 1
-              memory: 1Gi
             requests:
               cpu: 50m
               memory: 512Mi
