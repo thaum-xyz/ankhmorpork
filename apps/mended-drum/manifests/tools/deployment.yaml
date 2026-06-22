@@ -21,15 +21,18 @@ spec:
         fsGroup: 65532
       containers:
         - name: tools
-          image: ghcr.io/thaum-xyz/mended-drum:git-79e309ff605a
+          image: ghcr.io/thaum-xyz/mended-drum:git-81a528bb96f5
           imagePullPolicy: Always
           env:
             - name: MEALIE_BASE_URL
               value: http://mealie.mealie.svc:9000
-            - name: DB_PATH
-              value: /data/mended-drum.db
             - name: CORS_ALLOW_ORIGIN
               value: "*"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mended-drum-tools-db
+                  key: DATABASE_URL
           envFrom:
             - secretRef:
                 name: mended-drum-tools-secrets
@@ -52,10 +55,3 @@ spec:
             requests:
               cpu: 25m
               memory: 64Mi
-          volumeMounts:
-            - name: data
-              mountPath: /data
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: mended-drum-tools-data
