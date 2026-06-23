@@ -39,18 +39,12 @@ proxy_config:
     master_key: os.environ/PROXY_MASTER_KEY
 ingress:
   enabled: true
-  className: private
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-dns01
+  className: cloudflare
   hosts:
     - host: ai-gateway.krupa.net.pl
       paths:
         - path: /
           pathType: Prefix
-  tls:
-    - secretName: ai-gateway-krupa-net-pl-tls
-      hosts:
-        - ai-gateway.krupa.net.pl
 resources:
   requests:
     cpu: 100m
