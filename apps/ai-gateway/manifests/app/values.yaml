@@ -60,6 +60,17 @@ resources:
   requests:
     cpu: 100m
     memory: 512Mi
+extraEnvVars:
+  - name: PROXY_BASE_URL
+    value: https://ai-gateway.krupa.net.pl
+  - name: GENERIC_AUTHORIZATION_ENDPOINT
+    value: https://login.krupa.net.pl/authorize
+  - name: GENERIC_TOKEN_ENDPOINT
+    value: https://login.krupa.net.pl/api/oidc/token
+  - name: GENERIC_USERINFO_ENDPOINT
+    value: https://login.krupa.net.pl/api/oidc/userinfo
+  - name: GENERIC_SCOPE
+    value: "openid email profile"
 pdb:
   enabled: true
   minAvailable: 1
