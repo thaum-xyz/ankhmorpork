@@ -1,0 +1,70 @@
+replicaCount: 2
+# image left to chart default: ghcr.io/berriai/litellm-database @ appVersion
+# master key: chart injects PROXY_MASTER_KEY env from this secret
+masterkeySecretName: litellm-secrets
+masterkeySecretKey: PROXY_MASTER_KEY
+# provider keys: env-injected (envFrom) for proxy_config os.environ refs
+environmentSecrets:
+  - litellm-secrets
+db:
+  deployStandalone: false
+  useExisting: true
+  endpoint: postgres-rw
+  database: litellm
+  secret:
+    name: postgres-user
+    usernameKey: username
+    passwordKey: password
+proxy_config:
+  model_list:
+    - model_name: claude-sonnet
+      litellm_params:
+        model: anthropic/claude-sonnet-4-6
+        api_key: os.environ/ANTHROPIC_API_KEY
+    - model_name: claude-haiku
+      litellm_params:
+        model: anthropic/claude-haiku-4-5-20251001
+        api_key: os.environ/ANTHROPIC_API_KEY
+    - model_name: local
+      litellm_params:
+        model: ollama/llama3.1
+        api_base: http://ollama.ai-gateway:11434
+  litellm_settings:
+    drop_params: true
+    num_retries: 2
+    request_timeout: 120
+    fallbacks:
+      - claude-sonnet: [claude-haiku]
+  general_settings:
+    master_key: os.environ/PROXY_MASTER_KEY
+ingress:
+  enabled: true
+  className: private
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+  hosts:
+    - host: ai-gateway.krupa.net.pl
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ai-gateway-krupa-net-pl-tls
+      hosts:
+        - ai-gateway.krupa.net.pl
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+pdb:
+  enabled: true
+  minAvailable: 1
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - litellm
+        topologyKey: kubernetes.io/hostname

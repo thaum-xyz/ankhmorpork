@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: litellm
+spec:
+  chart:
+    spec:
+      chart: litellm-helm
+      sourceRef:
+        kind: HelmRepository
+        name: litellm
+      # chart is published to OCI versioned by appVersion; 1.89.3 == litellm app v1.89.3
+      version: "1.89.3"
+      interval: 30m
+  interval: 10m
+  timeout: 15m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  valuesFrom:
+    - kind: ConfigMap
+      name: values
