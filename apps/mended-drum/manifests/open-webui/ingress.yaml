@@ -5,7 +5,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     probe-uri: /health
     reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/open-webui.svg
+    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg
     reloader.homer/name: Mended Drum
     reloader.homer/subtitle: Bar assistant
   labels:

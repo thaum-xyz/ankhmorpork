@@ -9,7 +9,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://stirling.com/app/logo192.png
+    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg
     reloader.homer/name: Stirling PDF
     reloader.homer/subtitle: PDF manipulation tool
   labels:

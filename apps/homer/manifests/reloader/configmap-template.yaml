@@ -85,7 +85,7 @@ data:
     {{- end }}
           - name: Packing list
             subtitle: What to pack on each type of trip
-            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/562px-Google_Sheets_logo_%282014-2020%29.svg.png"
+            logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/googledrive.svg"
             <<: *external
             url: "https://docs.google.com/spreadsheets/d/1d8LFOxTWqAZuA2OSVuZJV7pGUYlJfNCqAIA8Q5p6ci8/edit?usp=sharing"
 
@@ -97,7 +97,7 @@ data:
             url: "https://unifi.ui.com"
           - name: Trakt
             subtitle: "Movie and TV series tracking"
-            logo: "https://user-images.githubusercontent.com/67451572/160710031-1c69ffdb-918a-474f-a3cf-257313b4c8d6.png"
+            logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/trakt.svg"
             <<: *external
             url: "https://trakt.tv"
     {{- range . }}
@@ -142,7 +142,3 @@ data:
             logo: "https://dashboard.doppler.com/imgs/logo.png"
             <<: *external
             url: "https://dashboard.doppler.com/"
-          - name: ESPHome
-            logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/esphome.svg"
-            <<: *local
-            url: "http://esphome.homeassistant.ankhmorpork.thaum.xyz:6052/"

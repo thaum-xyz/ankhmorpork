@@ -42,6 +42,11 @@ ingress:
   className: public
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    #cert-manager.io/cluster-issuer: letsencrypt-prod
+    #probe-uri: /-/healthy
+    reloader.homer/group: Administration
+    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg
+    reloader.homer/name: litellm
   hosts:
     - host: ai-gateway.krupa.net.pl
       paths:
