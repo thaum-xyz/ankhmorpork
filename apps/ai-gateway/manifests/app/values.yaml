@@ -71,8 +71,8 @@ extraEnvVars:
     value: https://login.krupa.net.pl/api/oidc/userinfo
   - name: GENERIC_SCOPE
     value: "openid email profile"
-  #- name: AUTO_REDIRECT_UI_LOGIN_TO_SSO
-  #  value: "true"
+  - name: AUTO_REDIRECT_UI_LOGIN_TO_SSO
+    value: "true"
   - name: DOCS_URL
     value: "/docs"
   - name: ROOT_REDIRECT_URL
