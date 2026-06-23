@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudflare-ingress
+spec:
+  ingressClassName: cloudflare
+  rules:
+    - host: ai-gateway.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: litellm
+                port:
+                  number: 4000
+            path: /
+            pathType: Prefix
