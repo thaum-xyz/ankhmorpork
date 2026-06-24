@@ -99,6 +99,19 @@
       "matchPackageNames": [
         "/^minio/"
       ]
+    },
+    {
+      "description": "Own images (ghcr.io/thaum-xyz/*): skip the 20-day apps soak so CalVer bumps deploy fast (interim until Flux Image Automation)",
+      "matchPackageNames": [
+        "/^ghcr\\.io\\/thaum-xyz\\//"
+      ],
+      "addLabels": [
+        "dependencies/apps",
+        "dependencies/automerge"
+      ],
+      "groupName": "applications",
+      "minimumReleaseAge": "0",
+      "automerge": true
     }
   ],
   "kubernetes": {
