@@ -19,7 +19,7 @@ proxy_config:
   model_list:
     - model_name: claude-sonnet
       litellm_params:
-        model: anthropic/claude-sonnet-4-6
+        model: anthropic/claude-sonnet-5
         api_key: os.environ/ANTHROPIC_API_KEY
     - model_name: claude-haiku
       litellm_params:
