@@ -9,8 +9,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: litellm
-      # chart is published to OCI versioned by appVersion; 1.89.3 == litellm app v1.89.3
-      version: "1.89.3"
+      version: "1.93.0"
       interval: 30m
   interval: 10m
   timeout: 15m
