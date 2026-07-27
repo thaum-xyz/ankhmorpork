@@ -38,7 +38,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
               weight: 100
       containers:
-        - image: ghcr.io/bastienwirtz/homer:v23.10.1
+        - image: ghcr.io/bastienwirtz/homer:v26.4.2
           imagePullPolicy: IfNotPresent
           name: homer
           env:
