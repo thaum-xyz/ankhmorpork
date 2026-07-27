@@ -2,6 +2,7 @@
   "extends": [
     "config:recommended"
   ],
+  "prCreation": "immediate",
   "assignees": [
     "paulfantom"
   ],
