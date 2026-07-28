@@ -7,4 +7,3 @@ resources:
   - credentialsUser.yaml
   - credentialsBackup.yaml
   - objectStore.yaml
-  - prune-test.yaml
