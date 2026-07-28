@@ -1,0 +1,31 @@
+database: pocketid
+owner: pocketid
+
+cluster:
+  instances: 3
+  storage:
+    size: 7Gi
+  resources:
+    limits:
+      cpu: 400m
+      memory: 420Mi
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  annotations:
+    # Keeps the Cluster out of the Kustomization's prune inventory while the old
+    # manifests are removed. Dropped once adoption is confirmed.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+backup:
+  schedule: "0 17 23 * * *"
+  objectStore:
+    retentionPolicy: 30d
+    # Not the namespace name.
+    pathSuffix: pocketid
+
+externalSecrets:
+  admin:
+    remoteKey: POCKET_ID_DB_ADMIN_PASS
+  user:
+    remoteKey: POCKET_ID_DB_PASS
