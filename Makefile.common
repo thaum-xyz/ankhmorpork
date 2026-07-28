@@ -5,7 +5,6 @@ JSONNET_VENDOR=jsonnet/vendor
 JSONNETFMT_ARGS=-n 2 --max-blank-lines 2 --string-style s --comment-style s
 
 TLD=$(shell git rev-parse --show-toplevel)
-SCHEMAS_DIR=$(TLD)/tmp/schemas
 
 KUBESCAPE_THRESHOLD=10
 
@@ -43,22 +42,9 @@ update:  ## Update jsonnet dependencies
 	rm -rf $(JSONNET_VENDOR)
 	$(MAKE) generate
 
-.PHONY: version-update
-version-update:  ## Upgrade component version and image
-	$(TLD)/hack/version-update.sh .
-	if ! git diff-index --quiet HEAD .; then $(MAKE) generate; fi
-
-$(SCHEMAS_DIR):
-	$(TLD)/hack/generate-schemas.sh
-
 .PHONY: validate
-validate: $(MANIFESTS_DIR) $(SCHEMAS_DIR)
-	kubeconform \
-	-schema-location 'https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/{{ .NormalizedKubernetesVersion }}-standalone{{ .StrictSuffix }}/{{ .ResourceKind }}.json' \
-	-schema-location '$(SCHEMAS_DIR)/{{ .ResourceKind }}.json' \
-	-skip CustomResourceDefinition,SealedSecret,Kustomization,Provider,Alert,Receiver \
-	-summary \
-	$(MANIFESTS_DIR)
+validate:  ## Validate this component's rendered manifests
+	$(TLD)/hack/validate-manifests.sh $(CURDIR)
 
 .PHONY: sec-scan
 sec-scan:  ## Security scanning of manifests

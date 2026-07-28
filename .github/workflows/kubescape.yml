@@ -8,11 +8,21 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  kubescape-version: v4.0.11
+
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: Download latest kubescape
-        run: curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash
-      - run: PATH=$PATH:/home/runner/.kubescape/bin make kubescape
+      - name: Download kubescape
+        env:
+          VERSION: ${{ env.kubescape-version }}
+        run: |
+          curl -sSL --fail \
+            "https://github.com/kubescape/kubescape/releases/download/${VERSION}/kubescape_${VERSION#v}_linux_amd64" \
+            -o /usr/local/bin/kubescape
+          chmod +x /usr/local/bin/kubescape
+          kubescape version
+      - run: make kubescape
