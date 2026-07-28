@@ -3,6 +3,13 @@ kind: ObjectStore
 metadata:
   name: backblaze
   namespace: mended-drum
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: postgres
+    meta.helm.sh/release-namespace: mended-drum
+    kustomize.toolkit.fluxcd.io/prune: disabled
+    helm.sh/resource-policy: keep
 spec:
   retentionPolicy: 30d
   configuration:
