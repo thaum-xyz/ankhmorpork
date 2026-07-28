@@ -1,18 +1,16 @@
 SHELL:=/bin/bash
 
-# Directories whose manifests are generated from jsonnet.
-DIRS=\
-	apps/monitoring
-
-MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
+# apps/monitoring is the only component still generated from jsonnet, and it is
+# excluded from the CI checks below until it gets refactored.
+JSONNET_DIR=apps/monitoring
 
 .PHONY: help
 help: ## Display help
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
 .PHONY: generate
-generate:  ## Generate all manifests
-	for d in $(DIRS); do $(MAKE) -C $$d generate || exit 1; done
+generate:  ## Generate manifests from jsonnet
+	$(MAKE) -C $(JSONNET_DIR) generate
 
 .PHONY: validate
 validate:  ## Render every kustomization and validate it against schemas
@@ -23,8 +21,8 @@ validate-flux:  ## Check that Flux Kustomization paths exist
 	./hack/validate-flux-paths.sh
 
 .PHONY: kubescape
-kubescape:  ## Validate kubernetes manifests
-	kubescape scan --compliance-threshold 70 --exceptions './kubescape-exceptions.json' $$(find apps base -name "*.yaml" -not -path "*/jsonnet/*" -not -path "*/vendor/*" -not -name "settings.yaml")
+kubescape:  ## Security scanning of manifests
+	kubescape scan --compliance-threshold 70 --exceptions './kubescape-exceptions.json' $$(find apps base core -name "*.yaml" -not -path "$(JSONNET_DIR)/*" -not -path "*/jsonnet/*" -not -path "*/vendor/*")
 
 .PHONY: prometheusrules
 prometheusrules:  ## Validate prometheus rules
