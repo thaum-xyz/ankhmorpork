@@ -78,7 +78,16 @@ Sequence, as separate PRs — one state per merge:
 3. Replace the manifests with `release.yaml` + `values.yaml`. Never copy
    `install.remediation` from another release — its strategy is *uninstall*, which
    on an adopted Cluster deletes it and its PVCs.
-4. Drop the prune annotation via a values change.
+4. Drop the prune annotation from `values.yaml`, then **remove it from the live
+   objects by hand** — `kubectl annotate <kind> <name> kustomize.toolkit.fluxcd.io/prune-`
+   on all six. A values change alone does not do it. The chart only ever rendered
+   the annotation on the Cluster, so Helm has nothing to strip from the other
+   five; and even on the Cluster, kustomize-controller still holds server-side
+   apply ownership of that field from before the cutover. Under SSA a field lives
+   as long as any manager claims it, and kustomize-controller never applies the
+   object again — it is gone from the Kustomization's inventory — so its claim is
+   a fossil that never expires. Verify with
+   `kubectl get ... -o json --show-managed-fields=true`.
 
 Helm adopts existing objects without ownership metadata: `disableTakeOwnership`
 defaults to false. Rendered resource names must match what's live — `postgres-rw`
