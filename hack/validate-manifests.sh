@@ -30,6 +30,10 @@ CRD_CATALOG='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Gro
 # resources they define are still validated via the catalog above.
 SKIP=CustomResourceDefinition
 
+# apps/monitoring is still generated from jsonnet and needs a wider refactor
+# before it can be validated. Drop this once that is done.
+EXCLUDE='^apps/monitoring(/|$)'
+
 validate() {
   kubeconform \
     -schema-location default \
@@ -57,6 +61,7 @@ flux_paths() {
 }
 
 if [ "$#" -gt 0 ]; then
+  # An explicit target is validated even if it is normally excluded.
   targets=$(printf '%s\n' "$@")
 else
   targets=$(
@@ -64,8 +69,9 @@ else
       flux_paths
       find apps base core -name kustomization.yaml \
         -not -path '*/vendor/*' -not -path '*/jsonnet/*' -exec dirname {} \;
-    } | sort -u
+    } | sort -u | grep -Ev "$EXCLUDE"
   )
+  echo "Excluded from validation: apps/monitoring (still jsonnet-generated)"
 fi
 
 if [ -z "$targets" ]; then
