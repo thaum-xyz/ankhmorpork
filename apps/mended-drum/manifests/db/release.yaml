@@ -29,31 +29,6 @@ spec:
   # warn, not enabled: enabled would fight CNPG's own defaulted fields forever.
   driftDetection:
     mode: warn
-  values:
-    database: drum
-    owner: drum
-    cluster:
-      instances: 2
-      storage:
-        size: 1Gi
-      resources:
-        limits:
-          cpu: 400m
-          memory: 420Mi
-        requests:
-          cpu: 100m
-          memory: 256Mi
-      annotations:
-        # Carried through Helm so a later values change removes it via three-way
-        # merge. Dropped once adoption is confirmed.
-        kustomize.toolkit.fluxcd.io/prune: disabled
-    backup:
-      schedule: "0 30 23 * * *"
-      objectStore:
-        retentionPolicy: 30d
-        pathSuffix: mended-drum
-    externalSecrets:
-      admin:
-        remoteKey: MENDED_DRUM_DB_ADMIN_PASS
-      user:
-        remoteKey: MENDED_DRUM_DB_PASS
+  valuesFrom:
+    - kind: ConfigMap
+      name: postgres-values

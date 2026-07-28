@@ -1,0 +1,30 @@
+database: drum
+owner: drum
+
+cluster:
+  instances: 2
+  storage:
+    size: 1Gi
+  resources:
+    limits:
+      cpu: 400m
+      memory: 420Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  annotations:
+    # Detaches the Cluster from the Kustomization's prune inventory during the
+    # cutover. Dropped once adoption is confirmed.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+backup:
+  schedule: "0 30 23 * * *"
+  objectStore:
+    retentionPolicy: 30d
+    pathSuffix: mended-drum
+
+externalSecrets:
+  admin:
+    remoteKey: MENDED_DRUM_DB_ADMIN_PASS
+  user:
+    remoteKey: MENDED_DRUM_DB_PASS
