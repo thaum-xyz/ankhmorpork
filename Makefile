@@ -1,16 +1,8 @@
 SHELL:=/bin/bash
 
-# apps/monitoring is the only component still generated from jsonnet, and it is
-# excluded from the CI checks below until it gets refactored.
-JSONNET_DIR=apps/monitoring
-
 .PHONY: help
 help: ## Display help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
-
-.PHONY: generate
-generate:  ## Generate manifests from jsonnet
-	$(MAKE) -C $(JSONNET_DIR) generate
 
 .PHONY: validate
 validate:  ## Render every kustomization and validate it against schemas
@@ -22,7 +14,7 @@ validate-flux:  ## Check that Flux Kustomization paths exist
 
 .PHONY: kubescape
 kubescape:  ## Security scanning of manifests
-	kubescape scan --compliance-threshold 70 --exceptions './kubescape-exceptions.json' $$(find apps base core -name "*.yaml" -not -path "$(JSONNET_DIR)/*" -not -path "*/jsonnet/*" -not -path "*/vendor/*")
+	kubescape scan --compliance-threshold 70 --exceptions './kubescape-exceptions.json' $$(find apps base core -name "*.yaml")
 
 .PHONY: prometheusrules
 prometheusrules:  ## Validate prometheus rules

@@ -9,8 +9,8 @@
 #     and the result validated, which also catches broken patches and
 #     references,
 #   - a directory without one has its manifests validated in place, because
-#     Flux applies every yaml it finds there (base/flux-apps and the
-#     jsonnet-generated apps/*/manifests work this way).
+#     Flux applies every yaml it finds there (base/flux-apps and several
+#     apps/*/manifests work this way).
 #
 # Usage: ./hack/validate-manifests.sh [dir...]
 # With no arguments every live Flux Kustomization path and every kustomization
@@ -30,18 +30,12 @@ CRD_CATALOG='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Gro
 # resources they define are still validated via the catalog above.
 SKIP=CustomResourceDefinition
 
-# apps/monitoring is still generated from jsonnet and needs a wider refactor
-# before it can be validated. Drop this once that is done.
-EXCLUDE='^apps/monitoring(/|$)'
-
 validate() {
   kubeconform \
     -schema-location default \
     -schema-location "$CRD_CATALOG" \
     -cache "$CACHE_DIR" \
     -skip "$SKIP" \
-    -ignore-filename-pattern 'vendor/.*' \
-    -ignore-filename-pattern 'jsonnet/.*' \
     -strict \
     "$@"
 }
@@ -61,17 +55,14 @@ flux_paths() {
 }
 
 if [ "$#" -gt 0 ]; then
-  # An explicit target is validated even if it is normally excluded.
   targets=$(printf '%s\n' "$@")
 else
   targets=$(
     {
       flux_paths
-      find apps base core -name kustomization.yaml \
-        -not -path '*/vendor/*' -not -path '*/jsonnet/*' -exec dirname {} \;
-    } | sort -u | grep -Ev "$EXCLUDE"
+      find apps base core -name kustomization.yaml -exec dirname {} \;
+    } | sort -u
   )
-  echo "Excluded from validation: apps/monitoring (still jsonnet-generated)"
 fi
 
 if [ -z "$targets" ]; then
