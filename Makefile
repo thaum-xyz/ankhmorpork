@@ -2,7 +2,6 @@ SHELL:=/bin/bash
 
 # Directories whose manifests are generated from jsonnet.
 DIRS=\
-	apps/homer \
 	apps/monitoring \
 	apps/multimedia
 
