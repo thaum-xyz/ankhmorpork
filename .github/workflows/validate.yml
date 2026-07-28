@@ -1,0 +1,37 @@
+---
+name: validate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  golang-version: 1.26.5
+  kubeconform-version: v0.8.0
+  kustomize-version: v5.8.1
+  yq-version: v4.53.3
+
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '${{ env.golang-version }}'
+      - run: go install github.com/yannh/kubeconform/cmd/kubeconform@${{ env.kubeconform-version }}
+      - run: go install sigs.k8s.io/kustomize/kustomize/v5@${{ env.kustomize-version }}
+      - run: ./hack/validate-manifests.sh
+
+  flux-paths:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '${{ env.golang-version }}'
+      - run: go install github.com/mikefarah/yq/v4@${{ env.yq-version }}
+      - run: ./hack/validate-flux-paths.sh

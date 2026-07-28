@@ -26,10 +26,10 @@
         "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
       ],
       "matchStrings": [
-        "jsonnet-version:\\s(?<currentValue>.*?)\\n"
+        "golang-version:\\s(?<currentValue>.*?)\\n"
       ],
-      "datasourceTemplate": "github-tags",
-      "depNameTemplate": "google/jsonnet"
+      "datasourceTemplate": "golang-version",
+      "depNameTemplate": "golang"
     },
     {
       "customType": "regex",
@@ -37,10 +37,44 @@
         "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
       ],
       "matchStrings": [
-        "golang-version:\\s(?<currentValue>.*?)\\n"
+        "kubeconform-version:\\s(?<currentValue>.*?)\\n"
       ],
-      "datasourceTemplate": "golang-version",
-      "depNameTemplate": "golang"
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "yannh/kubeconform"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "kustomize-version:\\s(?<currentValue>.*?)\\n"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kubernetes-sigs/kustomize",
+      "extractVersionTemplate": "^kustomize\\/(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "kubescape-version:\\s(?<currentValue>.*?)\\n"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kubescape/kubescape"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "yq-version:\\s(?<currentValue>.*?)\\n"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "mikefarah/yq"
     }
   ],
   "packageRules": [

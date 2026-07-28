@@ -1,36 +1,12 @@
 SHELL:=/bin/bash
 
+# Directories whose manifests are generated from jsonnet.
 DIRS=\
-	apps/homeassistant \
 	apps/homer \
 	apps/monitoring \
-	apps/unifi \
-	apps/tandoor
-
-HELMDIRS=\
-	apps/atuin \
-	apps/changedetection \
-	apps/datalake-logs \
-	apps/datalake-metrics \
-	apps/descheduler \
-	apps/external-dns \
-	apps/jellyfin \
-	apps/minio \
-	apps/opencost \
-	apps/photos \
-	apps/promtail \
-	apps/scripts-mon \
-	apps/system-kured \
-	base/cert-manager \
-	base/cnpg-system \
-	base/external-secrets \
-	base/flux-system \
-	base/longhorn-system \
-	base/metallb-system \
-	base/node-feature-discovery \
-	base/node-problem-detector \
-	base/topolvm \
-	base/traefik
+	apps/multimedia \
+	apps/nut \
+	apps/unifi
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 
@@ -42,14 +18,13 @@ help: ## Display help
 generate:  ## Generate all manifests
 	for d in $(DIRS); do $(MAKE) -C $$d generate || exit 1; done
 
-.PHONY: upgrade
-upgrade:  ## Update all components and their versions
-	for d in $(DIRS); do $(MAKE) -C $$d version-update || exit 1; done
-	for d in $(HELMDIRS); do hack/helm-updater.sh "$$d" || exit 1; done
-
 .PHONY: validate
-validate:  ## Validate kubernetes manifests
-	for d in $(DIRS); do $(MAKE) -C $$d validate || exit 1; done
+validate:  ## Render every kustomization and validate it against schemas
+	./hack/validate-manifests.sh
+
+.PHONY: validate-flux
+validate-flux:  ## Check that Flux Kustomization paths exist
+	./hack/validate-flux-paths.sh
 
 .PHONY: kubescape
 kubescape:  ## Validate kubernetes manifests
