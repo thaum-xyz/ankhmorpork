@@ -34,3 +34,4 @@ spec:
       name: values-common
     - kind: ConfigMap
       name: values-public
+  suspend: true
