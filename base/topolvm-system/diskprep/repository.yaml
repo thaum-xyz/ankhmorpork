@@ -1,8 +1,9 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: thaum-charts
   namespace: topolvm-system
 spec:
+  type: oci
   interval: 5m
   url: oci://ghcr.io/thaum-xyz/helm-charts
