@@ -43,7 +43,10 @@ valkey:
 server:
   controllers:
     main:
-      replicas: 3
+      # Matches what has actually been running since before 2025-11-30. git said
+      # 3, the cluster ran 2, and no field manager claimed the field, so an
+      # upgrade might or might not have scaled up. Declaring 2 settles it.
+      replicas: 2
       strategy: RollingUpdate
       rollingUpdate:
         unavailable: 1
@@ -62,6 +65,14 @@ server:
             requests:
               cpu: 100m
               memory: 160Mi
+
+  serviceMonitor:
+    main:
+      # Chart 0.12.0 switched the default to app.kubernetes.io/name, whose value
+      # here is "server" -- a label that says nothing and collides with anything
+      # else generic. app.kubernetes.io/service carries "immich-server", so this
+      # keeps job="immich-server" and existing series stay continuous.
+      jobLabel: app.kubernetes.io/service
 
   ingress:
     main:
