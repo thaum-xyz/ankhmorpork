@@ -30,3 +30,4 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
+  suspend: true

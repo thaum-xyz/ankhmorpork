@@ -32,3 +32,4 @@ spec:
       name: values
     - kind: Secret
       name: credentials
+  suspend: true

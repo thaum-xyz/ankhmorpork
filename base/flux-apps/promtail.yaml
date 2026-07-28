@@ -10,4 +10,5 @@ spec:
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
+  suspend: true
 
