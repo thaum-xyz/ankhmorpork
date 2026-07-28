@@ -1,0 +1,12 @@
+# TEMPORARY probe. Verifies that kustomize.toolkit.fluxcd.io/prune: disabled
+# actually protects an object from garbage collection in this Flux version,
+# before relying on it to protect a production database during the chart cutover.
+# Removed again in the follow-up commit.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prune-disabled-probe
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+data:
+  purpose: "prune behaviour probe; safe to delete"
