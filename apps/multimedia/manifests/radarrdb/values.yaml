@@ -1,0 +1,38 @@
+database: radarr
+owner: radarr
+
+cluster:
+  instances: 2
+  storage:
+    size: 10Gi
+  # Requests only, no limits, matching the live spec.
+  resources:
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  # Only cluster in the fleet that caps WAL kept for replication slots.
+  postgresql:
+    parameters:
+      max_slot_wal_keep_size: 3GB
+  bootstrap:
+    postInitSQL:
+      - CREATE DATABASE logs;
+      - ALTER DATABASE logs OWNER TO radarr;
+  annotations:
+    # Keeps the Cluster out of the Kustomization's prune inventory while the old
+    # manifests are removed. Dropped once adoption is confirmed.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+backup:
+  schedule: "0 17 3 * * *"
+  objectStore:
+    # Three clusters share this namespace, so each needs its own store.
+    name: backblaze-radarr
+    retentionPolicy: 14d
+    pathSuffix: radarr
+
+externalSecrets:
+  admin:
+    remoteKey: RADARR_DB_ADMIN_PASS
+  user:
+    remoteKey: RADARR_DB_PASS
