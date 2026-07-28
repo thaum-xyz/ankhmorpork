@@ -1,0 +1,38 @@
+# No `database`, and bootstrap disabled below. The hand-written manifest declared
+# no bootstrap stanza -- it was dropped in c5c5ab63 when this cluster was
+# recovered from backup -- so what is live is CloudNativePG's own default,
+# initdb with database and owner "app". Rendering the chart's bootstrap would
+# rewrite that to "atuin" on an already-initialised cluster. `owner` is still
+# required: it supplies the username in the user ExternalSecret.
+owner: atuin
+
+cluster:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.11
+  storage:
+    size: 7Gi
+  resources:
+    limits:
+      cpu: 400m
+      memory: 420Mi
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  bootstrap:
+    enabled: false
+  annotations:
+    # Keeps the Cluster out of the Kustomization's prune inventory while the old
+    # manifests are removed. Dropped once adoption is confirmed.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+backup:
+  schedule: "0 17 23 * * *"
+  objectStore:
+    retentionPolicy: 14d
+    pathSuffix: atuin
+
+externalSecrets:
+  admin:
+    remoteKey: ATUIN_DB_ADMIN_PASS
+  user:
+    remoteKey: ATUIN_DB_PASS
