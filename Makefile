@@ -4,8 +4,7 @@ SHELL:=/bin/bash
 DIRS=\
 	apps/homer \
 	apps/monitoring \
-	apps/multimedia \
-	apps/nut
+	apps/multimedia
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 
