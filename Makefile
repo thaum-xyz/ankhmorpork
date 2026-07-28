@@ -5,8 +5,7 @@ DIRS=\
 	apps/homer \
 	apps/monitoring \
 	apps/multimedia \
-	apps/nut \
-	apps/unifi
+	apps/nut
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 
