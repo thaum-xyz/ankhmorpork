@@ -12,7 +12,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": "metal/group_vars/k3s.yml",
+      "managerFilePatterns": [
+        "/metal/group_vars/k3s.yml/"
+      ],
       "matchStrings": [
         "k3s_version: (?<currentValue>.*?)\\n"
       ],
@@ -22,8 +24,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"
       ],
       "matchStrings": [
         "jsonnet-version:\\s(?<currentValue>.*?)\\n"
@@ -33,8 +35,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"
       ],
       "matchStrings": [
         "golang-version:\\s(?<currentValue>.*?)\\n"
@@ -122,9 +124,9 @@
     ]
   },
   "flux": {
-    "fileMatch": [
-      "(?:^|/)release\\.ya?ml$",
-      "(?:^|/)repository\\.ya?ml$"
+    "managerFilePatterns": [
+      "/(?:^|/)release\\.ya?ml$/",
+      "/(?:^|/)repository\\.ya?ml$/"
     ]
   }
 }
