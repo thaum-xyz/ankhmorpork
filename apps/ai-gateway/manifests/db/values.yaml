@@ -1,0 +1,30 @@
+database: litellm
+owner: litellm
+
+cluster:
+  instances: 2
+  storage:
+    size: 2Gi
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  annotations:
+    # Keeps the Cluster out of the Kustomization's prune inventory while the old
+    # manifests are removed. Dropped once adoption is confirmed.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+backup:
+  schedule: "0 30 23 * * *"
+  objectStore:
+    retentionPolicy: 30d
+    pathSuffix: ai-gateway
+
+externalSecrets:
+  admin:
+    remoteKey: AI_GATEWAY_DB_ADMIN_PASS
+  user:
+    remoteKey: AI_GATEWAY_DB_PASS
