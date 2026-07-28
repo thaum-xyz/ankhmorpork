@@ -1,0 +1,43 @@
+database: immich
+owner: immich
+
+cluster:
+  instances: 3
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16-v0.2.1
+  primaryUpdateMethod: switchover
+  storage:
+    size: 20Gi
+  # Requests only, no limits, matching the live spec.
+  resources:
+    requests:
+      cpu: 50m
+      memory: 500Mi
+  postgresql:
+    shared_preload_libraries:
+      - vectors.so
+  bootstrap:
+    postInitApplicationSQL:
+      - 'ALTER SYSTEM SET search_path TO "immich", public, vectors;'
+      - 'CREATE EXTENSION IF NOT EXISTS "vectors";'
+      - 'CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;'
+      - 'CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;'
+      - 'ALTER SCHEMA vectors OWNER TO immich;'
+  annotations:
+    # Keeps the Cluster out of the Kustomization's prune inventory while the old
+    # manifests are removed. Dropped once adoption is confirmed.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+backup:
+  schedule: "0 13 2 * * *"
+  objectStore:
+    retentionPolicy: 14d
+    pathSuffix: photos
+
+externalSecrets:
+  # null, not {}: Helm deep-merges maps, so {} would leave the chart's default
+  # cnpg.io/reload in place. These three ExternalSecrets carry none live.
+  annotations: null
+  admin:
+    remoteKey: IMMICH_POSTGRES_ADMIN_PASS
+  user:
+    remoteKey: IMMICH_POSTGRES_PASS
