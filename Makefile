@@ -2,8 +2,7 @@ SHELL:=/bin/bash
 
 # Directories whose manifests are generated from jsonnet.
 DIRS=\
-	apps/monitoring \
-	apps/multimedia
+	apps/monitoring
 
 MAKEFILES=$(shell find . -name "Makefile" -not -path "*/vendor/*" -not -path "./Makefile")
 
