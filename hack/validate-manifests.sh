@@ -40,6 +40,31 @@ validate() {
     "$@"
 }
 
+# Flux APIs that are deprecated upstream and removed in newer Flux versions.
+# Everything is on helm.toolkit.fluxcd.io/v2 and source.toolkit.fluxcd.io/v1;
+# this stops an old one creeping back in via a copied-and-pasted manifest.
+#
+# This is a source-level grep rather than kubeconform's -reject because -reject
+# matches on kind only, not group/version -- `-reject HelmRelease` would reject
+# every HelmRelease regardless of apiVersion, which is not what we want.
+#
+# image.toolkit.fluxcd.io/v1beta2 is deliberately not listed: that is still the
+# current storage version for ImagePolicy and ImageRepository.
+DEPRECATED_APIS='^apiVersion: (helm\.toolkit\.fluxcd\.io/v2beta[12]|source\.toolkit\.fluxcd\.io/v1beta[12]|kustomize\.toolkit\.fluxcd\.io/v1beta[12]|notification\.toolkit\.fluxcd\.io/v1beta[12])$'
+
+check_deprecated_apis() {
+  local hits
+  hits=$(git ls-files '*.yaml' '*.yml' | xargs grep -nE "$DEPRECATED_APIS" 2>/dev/null)
+  if [ -n "$hits" ]; then
+    echo "Deprecated Flux API versions found -- migrate to the GA versions:"
+    echo "$hits" | while IFS=: read -r f l rest; do
+      echo "::error file=$f,line=$l::deprecated Flux API: ${rest# }"
+    done
+    return 1
+  fi
+  echo "No deprecated Flux API versions."
+}
+
 flux_paths() {
   local query='select(.kind == "Kustomization" and (.apiVersion | test("^kustomize.toolkit.fluxcd.io/"))) | .spec.path'
   while IFS= read -r f; do
@@ -68,6 +93,12 @@ fi
 if [ -z "$targets" ]; then
   echo "Nothing to validate" >&2
   exit 1
+fi
+
+# Repo-wide policy check; only meaningful on a full run.
+api_check=0
+if [ "$#" -eq 0 ]; then
+  check_deprecated_apis || api_check=1
 fi
 
 total=0
@@ -108,5 +139,7 @@ if [ -n "$failed" ]; then
   for d in $failed; do echo "  - $d"; done
   exit 1
 fi
+
+[ "$api_check" -ne 0 ] && exit 1
 
 echo "All $total targets render and validate cleanly."
