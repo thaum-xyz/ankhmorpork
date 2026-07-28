@@ -63,6 +63,14 @@ server:
               cpu: 100m
               memory: 160Mi
 
+  serviceMonitor:
+    main:
+      # Chart 0.12.0 switched the default to app.kubernetes.io/name, whose value
+      # here is "server" -- a label that says nothing and collides with anything
+      # else generic. app.kubernetes.io/service carries "immich-server", so this
+      # keeps job="immich-server" and existing series stay continuous.
+      jobLabel: app.kubernetes.io/service
+
   ingress:
     main:
       enabled: true
