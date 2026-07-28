@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: plugin-barman-cloud
-      version: "0.3.1"
+      version: "0.7.0"
       sourceRef:
         kind: HelmRepository
         name: cnpg
@@ -27,4 +27,3 @@ spec:
     timeout: 20m
     disableWait: false
     crds: CreateReplace
-  suspend: true

@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: cloudnative-pg
-      version: "0.27.0"
+      version: "0.29.0"
       sourceRef:
         kind: HelmRepository
         name: cnpg
@@ -30,4 +30,3 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
-  suspend: true
