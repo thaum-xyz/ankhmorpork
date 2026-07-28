@@ -1,6 +1,8 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
 metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
   name: pooler
   namespace: paperless
 spec:

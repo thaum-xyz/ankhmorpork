@@ -1,6 +1,8 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
     app.kubernetes.io/name: postgres
   name: postgres-user

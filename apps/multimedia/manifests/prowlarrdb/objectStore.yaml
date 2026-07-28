@@ -1,6 +1,9 @@
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+    helm.sh/resource-policy: keep
   name: backblaze-prowlarr
   namespace: multimedia
 spec:
