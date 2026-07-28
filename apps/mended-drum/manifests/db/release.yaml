@@ -1,0 +1,34 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: postgres
+spec:
+  # Pinned: resource names derive from the release name, and postgres-rw is
+  # hardcoded by this app's consumers.
+  releaseName: postgres
+  chart:
+    spec:
+      chart: cnpg-database
+      version: "0.1.0"
+      sourceRef:
+        kind: HelmRepository
+        name: thaum-charts
+      interval: 5m
+  interval: 30m
+  timeout: 10m
+  install:
+    # Helm's waiter cannot judge a CNPG Cluster, and install remediation would
+    # uninstall the release -- deleting the adopted Cluster and its PVCs.
+    disableWait: true
+  upgrade:
+    disableWait: true
+    remediation:
+      retries: 0
+  uninstall:
+    deletionPropagation: orphan
+  # warn, not enabled: enabled would fight CNPG's own defaulted fields forever.
+  driftDetection:
+    mode: warn
+  valuesFrom:
+    - kind: ConfigMap
+      name: postgres-values
