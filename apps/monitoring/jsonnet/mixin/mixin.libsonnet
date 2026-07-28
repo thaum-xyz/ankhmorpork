@@ -1,1 +1,0 @@
-(import 'alerts/alerts.libsonnet')
