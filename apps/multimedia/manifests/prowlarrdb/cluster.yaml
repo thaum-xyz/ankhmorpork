@@ -1,6 +1,9 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+    helm.sh/resource-policy: keep
   labels:
     app.kubernetes.io/name: postgres
   name: postgres-prowlarr
