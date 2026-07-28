@@ -1,0 +1,32 @@
+database: grafana
+owner: grafana
+
+cluster:
+  instances: 2
+  storage:
+    size: 15Gi
+  resources:
+    limits:
+      cpu: 400m
+      memory: 420Mi
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  annotations:
+    # Keeps the Cluster out of the Kustomization's prune inventory while the old
+    # manifests are removed. Dropped once adoption is confirmed.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+backup:
+  schedule: "0 17 23 * * *"
+  objectStore:
+    # Shortest window in the fleet: a run of missed backups expires the base
+    # backup within days rather than weeks.
+    retentionPolicy: 3d
+    pathSuffix: grafana
+
+externalSecrets:
+  admin:
+    remoteKey: GRAFANA_DB_ADMIN_PASS
+  user:
+    remoteKey: GRAFANA_DB_PASS
