@@ -43,7 +43,10 @@ valkey:
 server:
   controllers:
     main:
-      replicas: 3
+      # Matches what has actually been running since before 2025-11-30. git said
+      # 3, the cluster ran 2, and no field manager claimed the field, so an
+      # upgrade might or might not have scaled up. Declaring 2 settles it.
+      replicas: 2
       strategy: RollingUpdate
       rollingUpdate:
         unavailable: 1
