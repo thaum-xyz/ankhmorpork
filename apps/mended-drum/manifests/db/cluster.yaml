@@ -3,7 +3,13 @@ kind: Cluster
 metadata:
   labels:
     app.kubernetes.io/name: postgres
+    app.kubernetes.io/managed-by: Helm
   name: postgres
+  annotations:
+    meta.helm.sh/release-name: postgres
+    meta.helm.sh/release-namespace: mended-drum
+    kustomize.toolkit.fluxcd.io/prune: disabled
+    helm.sh/resource-policy: keep
 spec:
   affinity:
     enablePodAntiAffinity: true
