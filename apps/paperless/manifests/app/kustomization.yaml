@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - config.yaml
+  - databaseSecret.yaml
+  - ingress-cloudflare.yaml
+  - ingress.yaml
+  - middleware.yaml
+  - podMonitor.yaml
+  - prometheusRules.yaml
+  - pvConsume.yaml
+  - pvcBackups.yaml
+  - pvcConsume.yaml
+  - pvcData.yaml
+  - pvcMedia.yaml
+  - secretsExternal.yaml
+  - service.yaml
+  - serviceAccount.yaml
+  - serviceHeadless.yaml
+  - statefulSet.yaml
