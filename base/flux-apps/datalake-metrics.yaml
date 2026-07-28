@@ -8,7 +8,7 @@ spec:
   path: ./apps/datalake-metrics
   prune: true
   force: true
-  suspend: false
+  suspend: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

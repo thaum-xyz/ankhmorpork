@@ -4,6 +4,7 @@ kind: HelmRelease
 metadata:
   name: changedetection
 spec:
+  suspend: true
   chart:
     spec:
       chart: changedetection
