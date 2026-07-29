@@ -16,7 +16,10 @@ spec:
     spec:
       containers:
       - name: playwright
-        image: dgtlmoon/sockpuppetbrowser:latest
+        # Upstream publishes no moving semver tag -- :latest is ahead of the
+        # newest release tag -- so pin the digest to keep restarts reproducible
+        # and give Renovate something to bump.
+        image: dgtlmoon/sockpuppetbrowser:latest@sha256:7116c61ef9cfce3d48a7efd9355d2fbe19f593ea3cfb52a5ded40ecbcb0a3f9d
         ports:
           - containerPort: 3000
         env:

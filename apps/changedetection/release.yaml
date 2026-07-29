@@ -4,11 +4,10 @@ kind: HelmRelease
 metadata:
   name: changedetection
 spec:
-  suspend: true
   chart:
     spec:
       chart: changedetection
-      version: "0.6.1"
+      version: "0.12.5"
       sourceRef:
         kind: HelmRepository
         name: alekc-charts
@@ -30,6 +29,9 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
+  # The chart has no ingress.labels value -- only annotations -- so this patch is
+  # the only thing labelling the Ingress for homer discovery. Do not drop it in
+  # favour of a values key without checking `helm show values` first.
   postRenderers:
     - kustomize:
         patches:
@@ -42,3 +44,21 @@ spec:
             - op: add
               path: /metadata/labels/reloader.homer~1enabled
               value: "true"
+        # The chart hardcodes both probes with no values knob, so liveness would
+        # kill the pod ~30s in. 0.53.x rewrites the datastore on first boot and a
+        # restart loop mid-rewrite is the one failure worth ruling out; a
+        # startupProbe holds liveness off until the app actually serves.
+        - target:
+            group: apps
+            version: v1
+            kind: Deployment
+            name: changedetection
+          patch: |-
+            - op: add
+              path: /spec/template/spec/containers/0/startupProbe
+              value:
+                httpGet:
+                  path: /
+                  port: http
+                periodSeconds: 5
+                failureThreshold: 36

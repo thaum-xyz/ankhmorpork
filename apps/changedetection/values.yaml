@@ -10,8 +10,8 @@ ingress:
     reloader.homer/name: Change Detection
     reloader.homer/subtitle: Website change detection
     reloader.homer/tag: local
-  labels:
-    reloader.homer/enabled: "true"
+  # No ingress.labels key exists in this chart; the reloader.homer/enabled label
+  # is applied by the postRenderer in release.yaml instead.
   hosts:
     - host: change.ankhmorpork.thaum.xyz
       paths:
