@@ -85,6 +85,31 @@ deployment:
           cpu: 200m
           memory: 128Mi
 
+# The chart defaults to initialDelaySeconds 5 with failureThreshold 3 on a
+# 10s period, giving the app 25s to answer before liveness restarts it. Stirling
+# takes ~12s to boot on an idle node, so the margin is thin enough that a busy
+# node turns a slow start into a restart loop. The chart exposes no startupProbe,
+# so the budget is widened here instead.
+#
+# Note these are on the stirling container and kubelet dials it directly, so the
+# oauth2-proxy sidecar is not in the path -- probe failures are never an auth
+# problem.
+probes:
+  liveness:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 6
+  readiness:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 12
+
 serviceMonitor:
   # Stays disabled on v2, but for a different reason than before. The metrics do
   # exist now -- Spring MeterRegistry, plus ClusterMetrics -- but the scrape
