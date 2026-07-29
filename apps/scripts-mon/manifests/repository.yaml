@@ -1,7 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: ricoberger
-spec:
-  interval: 15m
-  url: https://ricoberger.github.io/helm-charts
