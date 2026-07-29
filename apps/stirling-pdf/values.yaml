@@ -56,6 +56,8 @@ deployment:
         # allowing nothing and would reject every address.
         - --email-domain=*
         - --scope=openid email profile
+        # pocket-id advertises S256 and oauth2-proxy warns when it is left off.
+        - --code-challenge-method=S256
         # Behind an ingress, so trust X-Forwarded-* for redirect construction.
         - --reverse-proxy=true
         - --cookie-secure=true
