@@ -31,6 +31,14 @@ Secret (pocket-id, cloudflared); fall back to `helm template` against the chart.
   field and no longer applies the object, its claim is a fossil that never expires.
   Finish with `kubectl annotate <kind> <name> <key>-`. Check with
   `kubectl get ... -o json --show-managed-fields=true`.
+- **Deleting `suspend: true` from git does not resume anything.** On the older
+  components `spec.suspend` is owned by the synthetic `before-first-apply`
+  manager, which kustomize-controller never took over, so the field survives the
+  apply — the Kustomization reports the new revision applied and the release stays
+  suspended. Everything kustomize-controller *does* own (chart version, values)
+  updates normally, which makes it look like the resume worked. Finish with
+  `kubectl patch <kind> <name> -n <ns> --type=json -p '[{"op":"remove","path":"/spec/suspend"}]'`.
+  Expect this on every component suspended before the Dec 2025 emergency.
 - **`kubectl get backup` resolves to `backups.longhorn.io`.** Always
   `backups.postgresql.cnpg.io`. This has produced false "no phase" readings twice.
 - **`generation` unchanged is the adoption test, not `generation == 1`.** Across
