@@ -22,8 +22,13 @@ ingress:
       tlsSecret: pdf.krupa.net.pl
 
 serviceMonitor:
-  # Disabled as application actually doesn't expose any metrics
-  # More inhttps://github.com/Stirling-Tools/Stirling-PDF/issues/1887
+  # Stays disabled on v2, but for a different reason than before. The metrics do
+  # exist now -- Spring MeterRegistry, plus ClusterMetrics -- but the scrape
+  # endpoint is gated behind the paid tier. EnterpriseEndpointFilter returns 404
+  # for any /actuator/ path except health checks unless the instance is running
+  # Pro or higher, so enabling this would scrape a 404.
+  # METRICS_ENABLED below drives internal usage recording only, not the endpoint.
+  # https://github.com/Stirling-Tools/Stirling-PDF/issues/1887
   enabled: false
 
 envs:
