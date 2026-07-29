@@ -1,0 +1,35 @@
+database: paperless
+owner: paperless
+
+cluster:
+  instances: 3
+  primaryUpdateMethod: switchover
+  storage:
+    size: 30Gi
+  # A cpu limit and no memory limit, matching the live spec.
+  resources:
+    limits:
+      cpu: 200m
+    requests:
+      cpu: 100m
+      memory: 400Mi
+  annotations:
+    # Keeps the Cluster out of the Kustomization's prune inventory while the old
+    # manifests are removed. Dropped once adoption is confirmed.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+backup:
+  schedule: "0 36 22 * * *"
+  objectStore:
+    retentionPolicy: 14d
+    pathSuffix: paperless
+
+# The only database in the fleet fronted by pgbouncer.
+pooler:
+  enabled: true
+
+externalSecrets:
+  admin:
+    remoteKey: PAPERLESS_DB_ADMIN_PASS
+  user:
+    remoteKey: PAPERLESS_DB_PASS
