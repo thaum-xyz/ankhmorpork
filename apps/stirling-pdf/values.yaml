@@ -35,13 +35,6 @@ service:
   targetPort: oauth2
 
 deployment:
-  extraVolumes:
-    - name: oauth2-emails
-      secret:
-        secretName: stirling-pdf-oidc
-        items:
-          - key: emails
-            path: emails
   sidecarContainers:
     oauth2:
       image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.3
@@ -55,10 +48,12 @@ deployment:
         - --http-address=0.0.0.0:4180
         # Stirling listens on localhost in this pod; it is never published.
         - --upstream=http://127.0.0.1:8080
-        # Allow-list comes from Doppler, one address per line.
-        - --authenticated-emails-file=/etc/oauth2-proxy/emails
-        # email_domains defaults to nothing, which would reject everyone even
-        # when the address is on the list above.
+        # Authorisation lives in pocket-id: the client is group-restricted, so
+        # IsUserGroupAllowedToAuthorize refuses to issue a token for anyone
+        # outside the allowed groups and this proxy never sees them. Keeping a
+        # second allow-list here would only be one more thing to drift.
+        # email_domain must still be set to something -- unset it defaults to
+        # allowing nothing and would reject every address.
         - --email-domain=*
         - --scope=openid email profile
         # Behind an ingress, so trust X-Forwarded-* for redirect construction.
@@ -82,10 +77,6 @@ deployment:
             secretKeyRef:
               name: stirling-pdf-oauth2-cookie
               key: password
-      volumeMounts:
-        - name: oauth2-emails
-          readOnly: true
-          mountPath: /etc/oauth2-proxy
       resources:
         requests:
           cpu: 10m
