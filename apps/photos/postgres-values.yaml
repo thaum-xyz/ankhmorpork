@@ -22,10 +22,6 @@ cluster:
       - 'CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;'
       - 'CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;'
       - 'ALTER SCHEMA vectors OWNER TO immich;'
-  annotations:
-    # Keeps the Cluster out of the Kustomization's prune inventory while the old
-    # manifests are removed. Dropped once adoption is confirmed.
-    kustomize.toolkit.fluxcd.io/prune: disabled
 
 backup:
   schedule: "0 13 2 * * *"
