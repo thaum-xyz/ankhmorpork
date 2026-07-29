@@ -1,0 +1,37 @@
+# Owned here rather than rendered by the chart: the chart's Ingress always
+# targets its own Service, which would bypass the proxy. chart values set
+# ingress.enabled: false for the same reason.
+#
+# Deliberately not named "changedetection": that is the chart's own Ingress name,
+# and the same upgrade that sets ingress.enabled: false makes Helm delete an
+# Ingress by that name -- which would take this one with it.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: changedetection-public
+  labels:
+    app.kubernetes.io/name: changedetection
+    reloader.homer/enabled: "true"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    reloader.homer/group: Ankh Cloud
+    reloader.homer/logo: https://user-images.githubusercontent.com/275001/231676626-7d768df9-be4c-4187-a573-aba640b826d3.svg
+    reloader.homer/name: Change Detection
+    reloader.homer/subtitle: Website change detection
+spec:
+  ingressClassName: public
+  rules:
+    - host: change.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: oauth2-proxy
+                port:
+                  name: oauth2
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - change.krupa.net.pl
+      secretName: change-krupa-net-pl-tls

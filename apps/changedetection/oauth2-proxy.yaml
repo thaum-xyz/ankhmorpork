@@ -1,0 +1,99 @@
+# Authentication boundary for changedetection, which has no login of its own.
+# Both ingresses point here, never at the changedetection Service directly.
+#
+# A standalone Deployment rather than a sidecar: the alekc chart exposes no
+# extraContainers value and hardcodes `targetPort: http` on its Service, so a
+# sidecar would need two JSON patches into chart-rendered objects and would
+# break on the next chart bump.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth2-proxy
+  labels:
+    app.kubernetes.io/name: oauth2-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: oauth2-proxy
+    spec:
+      containers:
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.3
+          args:
+            - --provider=oidc
+            - --oidc-issuer-url=https://login.krupa.net.pl
+            - --redirect-url=https://change.krupa.net.pl/oauth2/callback
+            - --http-address=0.0.0.0:4180
+            - --upstream=http://changedetection:5000
+            # Authorisation lives in pocket-id: the client is group-restricted,
+            # so it never issues a token for anyone outside the allowed groups
+            # and this proxy never sees them. A second allow-list here would
+            # only be one more thing to drift.
+            # email_domain must still be set to something -- left unset it
+            # defaults to allowing nothing and rejects every address.
+            - --email-domain=*
+            - --scope=openid email profile
+            # pocket-id advertises S256 and oauth2-proxy warns when it is off.
+            - --code-challenge-method=S256
+            # Behind traefik/cloudflared, so trust X-Forwarded-* for redirects.
+            - --reverse-proxy=true
+            - --cookie-secure=true
+            # Straight to pocket-id rather than an interstitial sign-in page.
+            - --skip-provider-button=true
+          env:
+            - name: OAUTH2_PROXY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: changedetection-oidc
+                  key: clientID
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: changedetection-oidc
+                  key: clientSecret
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: changedetection-oauth2-cookie
+                  key: password
+          ports:
+            - name: oauth2
+              containerPort: 4180
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: oauth2
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: oauth2
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 48Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oauth2-proxy
+  labels:
+    app.kubernetes.io/name: oauth2-proxy
+spec:
+  ports:
+    - name: oauth2
+      port: 4180
+      protocol: TCP
+      targetPort: oauth2
+  selector:
+    app.kubernetes.io/name: oauth2-proxy

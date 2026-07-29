@@ -1,30 +1,14 @@
 # Reference documentation: https://gitlab.com/alexander-chernov/helm/changedetection
 
+# The chart's Ingress always points at its own Service, which would route around
+# the oauth2-proxy. Both ingresses are defined alongside this file instead and
+# target the proxy.
 ingress:
-  enabled: true
-  className: private
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-dns01
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://user-images.githubusercontent.com/275001/231676626-7d768df9-be4c-4187-a573-aba640b826d3.svg
-    reloader.homer/name: Change Detection
-    reloader.homer/subtitle: Website change detection
-    reloader.homer/tag: local
-  # No ingress.labels key exists in this chart; the reloader.homer/enabled label
-  # is applied by the postRenderer in release.yaml instead.
-  hosts:
-    - host: change.ankhmorpork.thaum.xyz
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls:
-    - secretName: change-ankhmorpork-thaum-xyz-tls
-      hosts:
-        - change.ankhmorpork.thaum.xyz
+  enabled: false
 
 env:
   simple:
-    BASE_URL: https://change.ankhmorpork.thaum.xyz
+    BASE_URL: https://change.krupa.net.pl
     PLAYWRIGHT_DRIVER_URL: "ws://playwright:3000/?stealth=1&--disable-web-security=true"
 
 resources:

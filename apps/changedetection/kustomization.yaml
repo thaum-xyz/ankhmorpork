@@ -7,6 +7,10 @@ resources:
   - release.yaml
   - playwright-deploy.yaml
   - playwright-svc.yaml
+  - oauth2-proxy.yaml
+  - oidc-secret.yaml
+  - ingress.yaml
+  - ingress-cloudflare.yaml
 configMapGenerator:
   - name: values
     files:
