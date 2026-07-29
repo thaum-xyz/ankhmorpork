@@ -6,7 +6,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/immich-app/immich-server
-          tag: "v2.3.1"
+          tag: "v3.0.3"
         env:
           TZ: "Europe/Warsaw"
           LOG_LEVEL: "debug"

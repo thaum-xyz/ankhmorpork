@@ -27,7 +27,7 @@ spec:
         envFrom:
         - secretRef:
             name: exporter
-        image: ghcr.io/druggeri/nut_exporter:2.5.3
+        image: ghcr.io/druggeri/nut_exporter:3.3.0
         name: exporter
         ports:
         - containerPort: 9199
