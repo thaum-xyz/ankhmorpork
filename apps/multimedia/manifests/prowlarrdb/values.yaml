@@ -14,10 +14,6 @@ cluster:
     postInitSQL:
       - CREATE DATABASE logs;
       - ALTER DATABASE logs OWNER TO prowlarr;
-  annotations:
-    # Keeps the Cluster out of the Kustomization's prune inventory while the old
-    # manifests are removed. Dropped once adoption is confirmed.
-    kustomize.toolkit.fluxcd.io/prune: disabled
 
 backup:
   schedule: "0 7 3 * * *"
