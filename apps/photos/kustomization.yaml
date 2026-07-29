@@ -3,25 +3,5 @@ kind: Kustomization
 namespace: photos
 resources:
   - namespace.yaml
-  - repository.yaml
-  - release.yaml
-  - postgres-repository.yaml
-  - postgres-release.yaml
-  - library-old-pv.yaml
-  - library-old-pvc.yaml
-  - library-pv.yaml
-  - library-pvc.yaml
-  - server-pdb.yaml
-  - ingress-cloudflare.yaml
-configMapGenerator:
-  - name: values
-    files:
-      - values.yaml=values.yaml
-  - name: postgres-values
-    files:
-      - values.yaml=postgres-values.yaml
-    # Per-generator, so immich's hashed ConfigMap above is unaffected.
-    options:
-      disableNameSuffixHash: true
-configurations:
-  - kustomizeconfig.yaml
+  - app/
+  - db/

@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - repository.yaml
+  - release.yaml
+  - library-old-pv.yaml
+  - library-old-pvc.yaml
+  - library-pv.yaml
+  - library-pvc.yaml
+  - server-pdb.yaml
+  - ingress-cloudflare.yaml
+configMapGenerator:
+  - name: values
+    files:
+      - values.yaml=values.yaml
+# Stable ConfigMap name: helm-controller tracks values through
+# status.lastAttemptedConfigDigest, so the hash suffix is not needed to detect
+# changes, and without it there is no generated name for nameReference to
+# rewrite -- which is all kustomizeconfig.yaml did.
+generatorOptions:
+  disableNameSuffixHash: true
