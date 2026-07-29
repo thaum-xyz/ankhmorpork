@@ -2,16 +2,28 @@
 
 kind: Deployment
 
+# The chart's newest release (3.1.0, Feb 2026) still pins appVersion 2.5.1, so the
+# app is pinned here instead of waiting for the chart to catch up.
+image:
+  tag: "2.14.2"
+
 resources:
 
 ingress:
   enabled: true
+  # Internal only. The cloudflared tunnel is gone and this no longer sits on the
+  # "public" class, because with login disabled anything reachable from outside
+  # would be an unauthenticated PDF processor open to the internet.
+  ingressClassName: private
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    # dns01, not the http01-backed letsencrypt-prod: an internally reachable host
+    # cannot satisfy an HTTP-01 challenge, so renewals would fail.
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
     reloader.homer/group: Ankh Cloud
     reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg
     reloader.homer/name: Stirling PDF
     reloader.homer/subtitle: PDF manipulation tool
+    reloader.homer/tag: local
   labels:
     probe: enabled
     reloader.homer/enabled: "true"
@@ -32,51 +44,28 @@ serviceMonitor:
   enabled: false
 
 envs:
-# --- SSO through pocket-id -------------------------------------------------
-# loginMethod stays "all" for now. Tightening it to "oauth2" disables password
-# login entirely, which is the goal -- but only once an SSO login has been shown
-# to come back with ROLE_ADMIN. Setting it before that verification risks locking
-# admin out with no local fallback.
+# Login is off, which makes every endpoint public: SecurityConfiguration falls
+# through to `anyRequest().permitAll()` and installs no authentication filter. It
+# also disables X-Frame-Options automatically.
+#
+# That is only acceptable because this ingress is on the private class. Do NOT
+# re-enable login expecting SSO to protect it: OAuth2 is licence-gated in v2 --
+# isOAuthEligible blocks both non-grandfathered users and auto-creation -- so the
+# route to authenticated access is a forwardAuth / oauth2-proxy layer in front,
+# with this staying false.
 - name: SECURITY_ENABLELOGIN
-  value: "true"
-- name: SECURITY_LOGINMETHOD
-  value: "all"
-- name: SECURITY_OAUTH2_ENABLED
-  value: "true"
-- name: SECURITY_OAUTH2_ISSUER
-  value: "https://login.krupa.net.pl"
-# Becomes the Spring registrationId, so the redirect URI is
-# https://pdf.krupa.net.pl/login/oauth2/code/pocket-id and must match pocket-id.
-- name: SECURITY_OAUTH2_PROVIDER
-  value: "pocket-id"
-- name: SECURITY_OAUTH2_SCOPES
-  value: "openid,profile,email"
-# Must match the seeded admin username, or SSO creates a second, non-admin user.
-- name: SECURITY_OAUTH2_USEASUSERNAME
-  value: "email"
-- name: SECURITY_OAUTH2_AUTOCREATEUSER
-  value: "true"
-- name: SECURITY_OAUTH2_CLIENTID
-  valueFrom:
-    secretKeyRef:
-      name: stirling-pdf-oidc
-      key: clientID
-- name: SECURITY_OAUTH2_CLIENTSECRET
-  valueFrom:
-    secretKeyRef:
-      name: stirling-pdf-oidc
-      key: clientSecret
-- name: SECURITY_INITIALLOGIN_USERNAME
-  valueFrom:
-    secretKeyRef:
-      name: stirling-pdf-admin
-      key: username
-- name: SECURITY_INITIALLOGIN_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: stirling-pdf-admin
-      key: password
-# ---------------------------------------------------------------------------
+  value: "false"
+# Hides the settings button while login is disabled, so anonymous users are not
+# offered an admin surface.
+- name: SYSTEM_SHOWSETTINGSWHENNOLOGIN
+  value: "false"
+# Suppresses the first-launch analytics prompt and the desktop-app slide, which
+# together are the onboarding flow. Left null, the analytics toggle re-prompts on
+# every start, because the config lives on an emptyDir.
+- name: SYSTEM_ENABLEANALYTICS
+  value: "false"
+- name: SYSTEM_ENABLEDESKTOPINSTALLSLIDE
+  value: "false"
 - name: UI_APP_NAME
   value: "Stirling PDF"
 - name: UI_HOME_DESCRIPTION
