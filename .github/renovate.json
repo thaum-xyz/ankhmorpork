@@ -46,8 +46,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"
       ],
       "matchStrings": [
         "kustomize-version:\\s(?<currentValue>.*?)\\n"
@@ -58,8 +58,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"
       ],
       "matchStrings": [
         "kubescape-version:\\s(?<currentValue>.*?)\\n"
@@ -69,8 +69,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^\\.github\\/workflows\\/[^/]+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"
       ],
       "matchStrings": [
         "yq-version:\\s(?<currentValue>.*?)\\n"
@@ -92,13 +92,25 @@
       "automerge": true
     },
     {
+      "description": "Bare metal: its own group, deliberately never automerged. Sharing a groupName with base/** put these in the same PR, which inherited automerge and defeated the point.",
       "addLabels": [
         "dependencies/hosting"
       ],
-      "groupName": "hosting infrastructure",
+      "groupName": "bare metal",
       "matchFileNames": [
         "metal/**"
       ]
+    },
+    {
+      "description": "core/ bootstraps the cluster (cert-manager, external-secrets, flux2). Soaked and labelled, deliberately not automerged: a bad flux2 or cert-manager bump takes everything else with it.",
+      "addLabels": [
+        "dependencies/core"
+      ],
+      "groupName": "core infrastructure",
+      "matchFileNames": [
+        "core/**"
+      ],
+      "minimumReleaseAge": "10 days"
     },
     {
       "addLabels": [
@@ -125,19 +137,6 @@
       "automerge": true
     },
     {
-      "versioning": "regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})",
-      "addLabels": [
-        "dependencies/apps",
-        "dependencies/automerge"
-      ],
-      "groupName": "applications",
-      "minimumReleaseAge": "20 days",
-      "automerge": true,
-      "matchPackageNames": [
-        "/^minio/"
-      ]
-    },
-    {
       "description": "Own images (ghcr.io/thaum-xyz/*): skip the 20-day apps soak so CalVer bumps deploy fast (interim until Flux Image Automation)",
       "matchPackageNames": [
         "/^ghcr\\.io\\/thaum-xyz\\//"
@@ -154,13 +153,14 @@
   "kubernetes": {
     "managerFilePatterns": [
       "base/**",
-      "apps/**"
+      "apps/**",
+      "core/**"
     ]
   },
   "flux": {
     "managerFilePatterns": [
-      "/(?:^|/)release\\.ya?ml$/",
-      "/(?:^|/)repository\\.ya?ml$/"
+      "/(?:^|/)[^/]*release\\.ya?ml$/",
+      "/(?:^|/)[^/]*repository\\.ya?ml$/"
     ]
   }
 }
