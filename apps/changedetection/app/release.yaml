@@ -29,21 +29,9 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
-  # The chart has no ingress.labels value -- only annotations -- so this patch is
-  # the only thing labelling the Ingress for homer discovery. Do not drop it in
-  # favour of a values key without checking `helm show values` first.
   postRenderers:
     - kustomize:
         patches:
-        - target:
-            group: networking.k8s.io
-            version: v1
-            kind: Ingress
-            name: changedetection
-          patch: |-
-            - op: add
-              path: /metadata/labels/reloader.homer~1enabled
-              value: "true"
         # The chart hardcodes both probes with no values knob, so liveness would
         # kill the pod ~30s in. 0.53.x rewrites the datastore on first boot and a
         # restart loop mid-rewrite is the one failure worth ruling out; a

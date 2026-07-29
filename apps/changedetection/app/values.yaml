@@ -1,0 +1,25 @@
+# Reference documentation: https://gitlab.com/alexander-chernov/helm/changedetection
+
+# The chart's Ingress always points at its own Service, which would route around
+# the oauth2-proxy. Both ingresses are defined alongside this file instead and
+# target the proxy.
+ingress:
+  enabled: false
+
+env:
+  simple:
+    BASE_URL: https://change.krupa.net.pl
+    PLAYWRIGHT_DRIVER_URL: "ws://playwright:3000/?stealth=1&--disable-web-security=true"
+
+resources:
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+persistence:
+  storageClass: "longhorn-r2"
+  size: 1Gi
+  accessMode: ReadWriteMany
