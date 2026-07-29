@@ -30,9 +30,6 @@ backup:
     pathSuffix: photos
 
 externalSecrets:
-  # null, not {}: Helm deep-merges maps, so {} would leave the chart's default
-  # cnpg.io/reload in place. These three ExternalSecrets carry none live.
-  annotations: null
   admin:
     remoteKey: IMMICH_POSTGRES_ADMIN_PASS
   user:
