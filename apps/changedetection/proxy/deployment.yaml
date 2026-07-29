@@ -82,18 +82,3 @@ spec:
             requests:
               cpu: 10m
               memory: 48Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: oauth2-proxy
-  labels:
-    app.kubernetes.io/name: oauth2-proxy
-spec:
-  ports:
-    - name: oauth2
-      port: 4180
-      protocol: TCP
-      targetPort: oauth2
-  selector:
-    app.kubernetes.io/name: oauth2-proxy
