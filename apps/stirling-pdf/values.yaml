@@ -32,6 +32,51 @@ serviceMonitor:
   enabled: false
 
 envs:
+# --- SSO through pocket-id -------------------------------------------------
+# loginMethod stays "all" for now. Tightening it to "oauth2" disables password
+# login entirely, which is the goal -- but only once an SSO login has been shown
+# to come back with ROLE_ADMIN. Setting it before that verification risks locking
+# admin out with no local fallback.
+- name: SECURITY_ENABLELOGIN
+  value: "true"
+- name: SECURITY_LOGINMETHOD
+  value: "all"
+- name: SECURITY_OAUTH2_ENABLED
+  value: "true"
+- name: SECURITY_OAUTH2_ISSUER
+  value: "https://login.krupa.net.pl"
+# Becomes the Spring registrationId, so the redirect URI is
+# https://pdf.krupa.net.pl/login/oauth2/code/pocket-id and must match pocket-id.
+- name: SECURITY_OAUTH2_PROVIDER
+  value: "pocket-id"
+- name: SECURITY_OAUTH2_SCOPES
+  value: "openid,profile,email"
+# Must match the seeded admin username, or SSO creates a second, non-admin user.
+- name: SECURITY_OAUTH2_USEASUSERNAME
+  value: "email"
+- name: SECURITY_OAUTH2_AUTOCREATEUSER
+  value: "true"
+- name: SECURITY_OAUTH2_CLIENTID
+  valueFrom:
+    secretKeyRef:
+      name: stirling-pdf-oidc
+      key: clientID
+- name: SECURITY_OAUTH2_CLIENTSECRET
+  valueFrom:
+    secretKeyRef:
+      name: stirling-pdf-oidc
+      key: clientSecret
+- name: SECURITY_INITIALLOGIN_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: stirling-pdf-admin
+      key: username
+- name: SECURITY_INITIALLOGIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: stirling-pdf-admin
+      key: password
+# ---------------------------------------------------------------------------
 - name: UI_APP_NAME
   value: "Stirling PDF"
 - name: UI_HOME_DESCRIPTION
