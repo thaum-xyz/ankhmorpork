@@ -11,19 +11,15 @@ resources:
 
 ingress:
   enabled: true
-  # Internal only. The cloudflared tunnel is gone and this no longer sits on the
-  # "public" class, because with login disabled anything reachable from outside
-  # would be an unauthenticated PDF processor open to the internet.
-  ingressClassName: private
+  # External again, but every request terminates at the oauth2-proxy sidecar first
+  # (see service.targetPort), so Stirling is never reached unauthenticated.
+  ingressClassName: public
   annotations:
-    # dns01, not the http01-backed letsencrypt-prod: an internally reachable host
-    # cannot satisfy an HTTP-01 challenge, so renewals would fail.
-    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     reloader.homer/group: Ankh Cloud
     reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg
     reloader.homer/name: Stirling PDF
     reloader.homer/subtitle: PDF manipulation tool
-    reloader.homer/tag: local
   labels:
     probe: enabled
     reloader.homer/enabled: "true"
@@ -32,6 +28,71 @@ ingress:
       path: /
       tls: true
       tlsSecret: pdf.krupa.net.pl
+
+service:
+  # Named port on the oauth2-proxy sidecar rather than Stirling's own http port.
+  # Without this the Service would bypass the proxy entirely.
+  targetPort: oauth2
+
+deployment:
+  extraVolumes:
+    - name: oauth2-emails
+      secret:
+        secretName: stirling-pdf-oidc
+        items:
+          - key: emails
+            path: emails
+  sidecarContainers:
+    oauth2:
+      image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.3
+      ports:
+        - name: oauth2
+          containerPort: 4180
+      args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://login.krupa.net.pl
+        - --redirect-url=https://pdf.krupa.net.pl/oauth2/callback
+        - --http-address=0.0.0.0:4180
+        # Stirling listens on localhost in this pod; it is never published.
+        - --upstream=http://127.0.0.1:8080
+        # Allow-list comes from Doppler, one address per line.
+        - --authenticated-emails-file=/etc/oauth2-proxy/emails
+        # email_domains defaults to nothing, which would reject everyone even
+        # when the address is on the list above.
+        - --email-domain=*
+        - --scope=openid email profile
+        # Behind an ingress, so trust X-Forwarded-* for redirect construction.
+        - --reverse-proxy=true
+        - --cookie-secure=true
+        # Straight to pocket-id rather than showing an interstitial sign-in page.
+        - --skip-provider-button=true
+      env:
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: stirling-pdf-oidc
+              key: clientID
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: stirling-pdf-oidc
+              key: clientSecret
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: stirling-pdf-oauth2-cookie
+              key: password
+      volumeMounts:
+        - name: oauth2-emails
+          readOnly: true
+          mountPath: /etc/oauth2-proxy
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
 
 serviceMonitor:
   # Stays disabled on v2, but for a different reason than before. The metrics do
@@ -48,11 +109,11 @@ envs:
 # through to `anyRequest().permitAll()` and installs no authentication filter. It
 # also disables X-Frame-Options automatically.
 #
-# That is only acceptable because this ingress is on the private class. Do NOT
-# re-enable login expecting SSO to protect it: OAuth2 is licence-gated in v2 --
-# isOAuthEligible blocks both non-grandfathered users and auto-creation -- so the
-# route to authenticated access is a forwardAuth / oauth2-proxy layer in front,
-# with this staying false.
+# That is safe only because the oauth2-proxy sidecar terminates every request
+# first and the Service points at it, not at Stirling. Do NOT re-enable login
+# expecting SSO from it: OAuth2 is licence-gated in v2 -- isOAuthEligible blocks
+# both non-grandfathered users and auto-creation -- which is exactly why
+# authentication lives in the proxy instead.
 - name: SECURITY_ENABLELOGIN
   value: "false"
 # Hides the settings button while login is disabled, so anonymous users are not
