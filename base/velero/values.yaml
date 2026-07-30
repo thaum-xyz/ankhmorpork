@@ -86,7 +86,6 @@ schedules:
       - descheduler
       - external-dns
       - monitoring
-      - nut
       - scripts-mon
       - system-kured
       - vector
