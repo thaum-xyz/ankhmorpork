@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./apps/mealie/manifests
+  path: ./apps/mealie
   prune: true
   sourceRef:
     kind: GitRepository

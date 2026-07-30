@@ -15,7 +15,13 @@ spec:
     spec:
       containers:
       - name: mealie
-        image: ghcr.io/mealie-recipes/mealie:v3.21.0
+        # OIDC note, inherited from v3.21.0 rather than introduced here: mealie
+        # refuses a login unless the provider asserts email_verified. It works
+        # because pocket-id runs with EMAILS_VERIFIED=true. If that is ever
+        # turned off, logins here break, and OIDC_REQUIRES_EMAIL_VERIFICATION
+        # false is the escape hatch -- at the cost of trusting an unverified,
+        # self-asserted address to match an existing account.
+        image: ghcr.io/mealie-recipes/mealie:v3.22.0
         env:
         - name: ALLOW_SIGNUP
           value: 'false'
