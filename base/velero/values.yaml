@@ -89,7 +89,6 @@ schedules:
       - scripts-mon
       - system-kured
       - vector
-      - versity-test
 
 deployNodeAgent: true
 
