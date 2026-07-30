@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    lbipam.cilium.io/sharing-key: multimedia-svc
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: sonarr
+    app.kubernetes.io/version: 4.0.12
+  name: sonarr
+spec:
+  externalTrafficPolicy: Cluster
+  loadBalancerIP: 192.168.50.133
+  ports:
+    - name: http
+      port: 8989
+      protocol: TCP
+      targetPort: http
+    - name: metrics
+      port: 9707
+      protocol: TCP
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: sonarr
+  sessionAffinity: None
+  type: LoadBalancer

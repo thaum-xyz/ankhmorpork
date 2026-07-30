@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    reloader.homer/group: Multimedia
+    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/sonarr.svg
+    reloader.homer/name: Sonarr
+    reloader.homer/subtitle: TV shows collection management
+    reloader.homer/tag: local
+  labels:
+    reloader.homer/enabled: "true"
+  name: sonarr
+spec:
+  ingressClassName: private
+  rules:
+    - host: sonarr.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: sonarr
+                port:
+                  number: 8989
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - sonarr.ankhmorpork.thaum.xyz
+      secretName: sonarr-ankhmorpork-thaum-xyz-tls
