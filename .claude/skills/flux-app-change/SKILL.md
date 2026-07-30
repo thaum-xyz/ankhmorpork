@@ -45,6 +45,23 @@ Secret (pocket-id, cloudflared); fall back to `helm template` against the chart.
   this fleet they sit anywhere from 1 to 26. Snapshot before, compare after.
 - **Helm deep-merges maps.** `{}` in a values file does not clear a chart default;
   only an explicit `null` does.
+- **A value at a path the chart does not read is silently inert.** Helm neither
+  warns nor fails, so the values file reads as the app's configuration while the
+  app runs on defaults. pocket-id had three at once — `config.metricsEnabled` and
+  `config.otel` (the chart reads `config.telemetry.*`) plus a whole
+  `config.ui.settings` block that needed `useDefaults: false` to be emitted at
+  all, so a `sessionDuration` and an `appName` sat in git for months doing
+  nothing. Read intent off the *rendered* ConfigMap/Secret, never off the values
+  file: `helm template <chart> -f values.yaml` and diff the env against the live
+  ConfigMap. Expect this after every chart major, where paths get reorganised.
+- **A misdirected ServiceMonitor reports `down`, not missing.** Scraping an app
+  port that serves an SPA returns HTTP 200 with `text/html`, which Prometheus
+  rejects — and the app's own request log shows a clean 200, which reads as
+  success. Confirm through `/api/v1/targets` (`health`, `lastError`), not the
+  workload's logs. Exporters on a separate listener need the port declared as a
+  container port before a PodMonitor can select it by name; `targetPort` is
+  deprecated and wants a declared port anyway, so add one with a postRenderer
+  when the chart offers no knob.
 - Homebrew's `python3` lacks pyyaml here — use `/usr/bin/python3`.
 
 ## Removing a kustomizeconfig.yaml
