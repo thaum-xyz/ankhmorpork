@@ -80,7 +80,6 @@ schedules:
       - longhorn-system
       - node-feature-discovery
       - node-problem-detector
-      - storage-system
       - traefik
       - velero
 
