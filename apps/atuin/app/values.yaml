@@ -1,5 +1,16 @@
 # Config reference: https://github.com/atuinsh/helm-charts/blob/main/charts/atuin/values.yaml
 
+# 0.4.1 is the newest chart, and it still pins appVersion 18.3.0 -- fifteen
+# minor releases behind upstream. The tag is overridden here rather than waiting
+# for a chart that may never come. Note this drags in the v18.12.0 split, where
+# the server became its own binary: the image no longer ships `atuin` at all,
+# only `atuin-server`, so the chart's hardcoded `server start` args are patched
+# in release.yaml. Verified against the live env before rollout -- 18.18.1
+# accepts every ATUIN_* variable the chart sets, including the
+# MAX_HISTORY_LENGTH and PAGE_SIZE ones that its own default-config omits.
+image:
+  tag: "18.18.1"
+
 serviceMonitor:
   enabled: true
 
