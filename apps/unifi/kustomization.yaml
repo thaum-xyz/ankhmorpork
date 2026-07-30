@@ -3,5 +3,7 @@ kind: Kustomization
 namespace: unifi
 resources:
   - namespace.yaml
-  - poller/
-  - restarter/
+  - serviceaccount.yaml
+  - configuration.yaml
+  - deployment.yaml
+  - podmonitor.yaml
