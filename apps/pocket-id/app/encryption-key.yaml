@@ -1,0 +1,18 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: encryption-key
+spec:
+  # Mandatory from v2 on, and it must never change: it encrypts the JWKs and
+  # the other sensitive columns at rest, so a new key orphans everything signed
+  # under the old one and forces all clients to re-authenticate. Kept in Doppler
+  # rather than minted by a generator for exactly that reason -- a generated
+  # Secret would be regenerated if the namespace were ever rebuilt.
+  data:
+    - remoteRef:
+        key: POCKET_ID_ENCRYPTION_KEY
+      secretKey: encryptionKey
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: doppler-auth-api

@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./apps/pocket-id/manifests
+  path: ./apps/pocket-id
   prune: true
   sourceRef:
     kind: GitRepository
