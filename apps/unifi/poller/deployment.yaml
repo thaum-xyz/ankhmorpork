@@ -5,7 +5,6 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: unifi-poller
   name: poller
-  namespace: unifi
 spec:
   replicas: 1
   selector:
@@ -14,14 +13,16 @@ spec:
       app.kubernetes.io/name: unifi-poller
   template:
     metadata:
-      annotations:
-        checksum.config/md5: 55923d20e1fadcf735c826cce4cb847f
-        checksum.credentials/md5: 985702d46b91fbbe23caedf6f32467cc
+      # The config arrives as a Secret mounted with subPath, which kubelet never
+      # updates in place -- so a credential or URL change does not reach the
+      # running pod until it is replaced. Two checksum annotations used to stand
+      # in for that, left over from the jsonnet build; they were hardcoded and
+      # so had stopped tracking anything. Dropped rather than kept as decoration:
+      # a config change needs a `kubectl rollout restart` either way.
       labels:
         app.kubernetes.io/component: exporter
         app.kubernetes.io/name: unifi-poller
       name: poller
-      namespace: unifi
     spec:
       containers:
         - image: ghcr.io/unpoller/unpoller:v2.9.5

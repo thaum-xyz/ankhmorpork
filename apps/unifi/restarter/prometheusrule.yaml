@@ -3,7 +3,6 @@ kind: PrometheusRule
 metadata:
   labels: {}
   name: restarter
-  namespace: unifi
 spec:
   groups:
     - name: unifi-restarter
