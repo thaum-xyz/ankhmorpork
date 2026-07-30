@@ -5,7 +5,6 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/name: unifi-poller
   name: poller
-  namespace: unifi
 spec:
   data:
     - remoteRef:
@@ -36,7 +35,10 @@ spec:
           [webserver]
               enable = false
           [unifi.defaults]
-              url = "https://192.168.2.1"
+              # The UDM Pro SE. Was 192.168.2.1, on the subnet the LAN was
+              # renumbered off: the poller had been re-authenticating and timing
+              # out every ~15s ever since, 510 restarts deep and reporting up=0.
+              url = "https://192.168.1.1"
               user = "{{ .user }}"
               pass = "{{ .pass }}"
               sites = ["all"]

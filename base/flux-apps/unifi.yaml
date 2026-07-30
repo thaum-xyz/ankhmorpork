@@ -5,10 +5,9 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 120m0s
-  path: ./apps/unifi/manifests
+  path: ./apps/unifi
   prune: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
-  suspend: true
 
