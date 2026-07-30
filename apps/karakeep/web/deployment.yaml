@@ -23,8 +23,18 @@ spec:
         - name: web
           image: ghcr.io/karakeep-app/karakeep:0.32.0
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
+            - name: metrics
+              containerPort: 3001
           env:
+            # The workers process serves prometheus metrics on WORKERS_PORT,
+            # which otherwise picks a random port and binds it to 127.0.0.1 --
+            # reachable by nothing. Pin it so podmonitor.yaml has a named port.
+            - name: WORKERS_PORT
+              value: "3001"
+            - name: WORKERS_HOST
+              value: "0.0.0.0"
             # Only cosmetic -- shown in the UI footer -- but it is read from the
             # environment rather than the binary, so it has to track the tag.
             - name: KARAKEEP_VERSION

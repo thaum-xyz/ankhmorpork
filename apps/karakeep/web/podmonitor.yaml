@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: karakeep-web
+  labels:
+    app: karakeep-web
+spec:
+  # Replaces a ServiceMonitor that never collected anything. It selected on
+  # `app: karakeep-web`, which is the Service's *selector* rather than a label
+  # it carries, so it matched no Service at all -- and had it matched, port 3000
+  # serves the app, not metrics. Those come from the workers process on
+  # WORKERS_PORT, which defaults to a random port bound to 127.0.0.1; the
+  # deployment now fixes it to 3001 on 0.0.0.0 so there is something to scrape.
+  podMetricsEndpoints:
+    - port: metrics
+      interval: 30s
+      bearerTokenSecret:
+        name: karakeep-secrets
+        key: PROMETHEUS_AUTH_TOKEN
+  selector:
+    matchLabels:
+      app: karakeep-web
