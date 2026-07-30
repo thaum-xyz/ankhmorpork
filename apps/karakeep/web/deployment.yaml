@@ -2,9 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web
-  namespace: karakeep
 spec:
   replicas: 1
+  # data-pvc is ReadWriteOnce, so a rolling update deadlocks: the replacement
+  # is scheduled before the old pod releases the volume, and if it lands on a
+  # different node it sits in ContainerCreating forever while the old pod waits
+  # for it to become ready. That is exactly how the meilisearch bump stalled for
+  # four days. Recreate takes the old pod down first.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: karakeep-web
@@ -15,13 +21,14 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/karakeep-app/karakeep:0.28.0
-          imagePullPolicy: Always
+          image: ghcr.io/karakeep-app/karakeep:0.32.0
           ports:
             - containerPort: 3000
           env:
+            # Only cosmetic -- shown in the UI footer -- but it is read from the
+            # environment rather than the binary, so it has to track the tag.
             - name: KARAKEEP_VERSION
-              value: "0.28.0"
+              value: "0.32.0"
             - name: MEILI_ADDR
               value: http://meilisearch:7700
             - name: BROWSER_WEB_URL
