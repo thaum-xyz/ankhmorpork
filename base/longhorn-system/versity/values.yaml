@@ -1,0 +1,40 @@
+# Config reference: https://github.com/versity/versitygw/blob/main/chart/values.yaml
+#
+# An S3 gateway sitting next to its consumer, the way a cnpg-database sits next
+# to the app that needs postgres. This one exists to become Longhorn's backup
+# target: the current one is nfs://192.168.40.10/var/nfs/shared/longhornbackups,
+# which has been unavailable since 2025-02-11 and is why every Longhorn backup
+# errors. Wiring the BackupTarget CR to it is a separate step.
+
+# Pinned. The chart defaults to :latest.
+image:
+  tag: "v1.7.0"
+
+auth:
+  existingSecret: versitygw-credentials
+
+gateway:
+  backend:
+    type: posix
+    args: "/mnt/data"
+    # Keeps object metadata as ordinary files rather than extended attributes,
+    # which is what lets the whole thing live on an NFSv3 share.
+    sidecarDir: "/mnt/metadata"
+
+# One claim, with the chart mounting data/, metadata/ and iam/ from it as
+# subPaths. 200Gi against 31.8GiB of actual Longhorn data today, on a share with
+# 8.8T free -- and nfs.csi.k8s.io does not enforce the request anyway, so this
+# is a label rather than a reservation.
+persistence:
+  enabled: true
+  create: true
+  size: 200Gi
+  storageClassName: unifi-nas
+  accessMode: ReadWriteMany
+
+resources:
+  limits:
+    memory: 1Gi
+  requests:
+    cpu: 50m
+    memory: 128Mi

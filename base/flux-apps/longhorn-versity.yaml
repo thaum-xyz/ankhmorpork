@@ -1,0 +1,18 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: longhorn-versity
+  namespace: flux-apps
+spec:
+  # Deliberately separate from the longhorn-system Kustomization, which is
+  # suspended because its HelmRelease fails its pre-upgrade hooks. Folding this
+  # in would mean unsuspending that to deploy this, retrying the broken 1.10.1
+  # -> 1.12.0 upgrade as a side effect. The manifests still live under
+  # base/longhorn-system/versity so they sit next to what they serve; that
+  # directory is not in the parent kustomization's resources.
+  interval: 30m0s
+  path: ./base/longhorn-system/versity
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork
