@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 60m0s
-  path: ./apps/karakeep/manifests
+  path: ./apps/karakeep
   prune: true
   sourceRef:
     kind: GitRepository

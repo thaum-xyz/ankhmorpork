@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meilisearch
+spec:
+  replicas: 1
+  # meilisearch-pvc is ReadWriteOnce -- see web/deployment.yaml for why a
+  # rolling update cannot work here.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: meilisearch
+  template:
+    metadata:
+      labels:
+        app: meilisearch
+    spec:
+      containers:
+        - name: meilisearch
+          image: getmeili/meilisearch:v1.51.0
+          env:
+            - name: MEILI_NO_ANALYTICS
+              value: "true"
+            # Was envFrom over the whole karakeep-secrets Secret, which handed
+            # meilisearch the OpenAI key and the OIDC client secret it has no
+            # use for. It only ever reads MEILI_*.
+            - name: MEILI_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: karakeep-secrets
+                  key: MEILI_MASTER_KEY
+          volumeMounts:
+            - mountPath: /meili_data
+              name: meilisearch
+      volumes:
+        - name: meilisearch
+          persistentVolumeClaim:
+            claimName: meilisearch-pvc
