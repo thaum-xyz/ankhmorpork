@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./apps/mended-drum/manifests
+  path: ./apps/mended-drum
   prune: true
   sourceRef:
     kind: GitRepository

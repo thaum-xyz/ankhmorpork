@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./apps/ai-gateway/manifests
+  path: ./apps/ai-gateway
   prune: true
   sourceRef:
     kind: GitRepository
