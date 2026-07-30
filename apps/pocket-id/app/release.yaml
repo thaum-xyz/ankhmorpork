@@ -1,0 +1,58 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pocket-id
+spec:
+  chart:
+    spec:
+      chart: pocket-id
+      sourceRef:
+        kind: HelmRepository
+        name: anza-labs
+        namespace: pocket-id
+      version: "2.2.1"
+      interval: 5m
+  interval: 5m
+  timeout: 20m
+  install:
+    timeout: 20m
+    disableWait: false
+    crds: CreateReplace
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 20m
+    disableWait: false
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: values
+    - kind: Secret
+      name: pg-connection
+      valuesKey: connectionString
+      targetPath: database.connectionString
+    - kind: Secret
+      name: encryption-key
+      valuesKey: encryptionKey
+      targetPath: encryptionKey
+  postRenderers:
+    - kustomize:
+        patches:
+          # The chart declares only the app port and offers no knob for extra
+          # ones, so the OTel Prometheus listener has nothing the PodMonitor can
+          # select by name -- and PodMonitor's targetPort escape hatch is
+          # deprecated and wants a declared container port anyway.
+          - target:
+              group: apps
+              version: v1
+              kind: StatefulSet
+              name: pocket-id
+            patch: |-
+              - op: add
+                path: /spec/template/spec/containers/0/ports/-
+                value:
+                  name: metrics
+                  containerPort: 9464
+                  protocol: TCP

@@ -1,0 +1,84 @@
+# Config reference: https://github.com/anza-labs/charts/blob/main/charts/pocket-id/values.yaml
+# v1 -> v2 migration: https://pocket-id.org/docs/setup/major-releases/migrate-v2
+
+host: login.krupa.net.pl
+
+# Behind traefik and the cloudflare tunnel, so the client IP has to come from
+# the forwarded headers -- the audit log and rate limiting both key off it.
+trustProxy: true
+
+# database.connectionString comes from the pg-connection Secret, and
+# encryptionKey from the encryption-key Secret; both through valuesFrom in
+# release.yaml, so neither lands in git. encryptionKey is mandatory in v2 -- it
+# encrypts the JWKs and other sensitive columns at rest.
+#
+# replicaCount and database.provider are gone: the chart hardcodes one replica
+# (v2 takes a database lock and refuses to run twice), and DB_PROVIDER is now
+# inferred from the connection string.
+
+# There is no PVC here, so anything under /app/data lives on an emptyDir and is
+# lost on every restart. In v1 that silently took the JWT signing key with it --
+# jwt_private_key.json was recreated at each pod start, invalidating every token
+# already issued. v2 keeps JWKs in the database instead, and the file backend
+# below moves uploads there too, which leaves nothing on disk worth persisting.
+persistence:
+  data:
+    enabled: false
+
+# Uploads (branding, profile pictures) were on that same emptyDir and had
+# already reverted to the image defaults. The database is the only durable
+# store available here.
+fileBackend:
+  type: database
+
+config:
+  core:
+    logLevel: info
+  telemetry:
+    metricsEnabled: true
+    otel:
+      # Metrics come from the OTel autoexport Prometheus reader, which listens
+      # on its own socket rather than the app port -- so the previous
+      # config.metricsEnabled/config.otel pair was doubly inert: not a path the
+      # chart reads, and aimed at the wrong port. It defaults to localhost:9464,
+      # which nothing outside the pod can reach, hence the explicit bind
+      # address. podmonitor.yaml scrapes it.
+      OTEL_METRICS_EXPORTER: prometheus
+      OTEL_EXPORTER_PROMETHEUS_HOST: "0.0.0.0"
+      OTEL_EXPORTER_PROMETHEUS_PORT: "9464"
+  ui:
+    # false makes the values below authoritative and turns the settings
+    # read-only in the admin UI. They mirror what was already in the
+    # app_config_variables table, so flipping it changes nothing -- except
+    # appName, which git has asked for all along without effect, because until
+    # now these settings were only reachable through the UI.
+    useDefaults: false
+    settings:
+      app:
+        appName: "Krupa Login"
+        sessionDuration: 180 # in minutes
+        emailsVerified: true
+        allowUserSignups: disabled
+        allowOwnAccountEdit: true
+        disableAnimations: false
+        accentColor: default
+      ldap:
+        enabled: false
+        # Chart default is false; the database has always had it true.
+        softDeleteUsers: true
+
+# This is litestream, which only makes sense for the sqlite backend. The CNPG
+# cluster in postgres/ is the actual backup path.
+backup:
+  enabled: false
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+  className: private
+  host: login.krupa.net.pl
+  tls:
+    - secretName: login-krupa-net-pl-tls
+      hosts:
+        - login.krupa.net.pl
