@@ -6,7 +6,6 @@ metadata:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/part-of: valheim
   name: valheim
-  namespace: valheim
 spec:
   replicas: 0
   selector:
@@ -37,10 +36,13 @@ spec:
         - name: SUPERVISOR_HTTP
           value: "true"
         envFrom:
-        #- secretRef:
-        #    name: valheim-pass
         - configMapRef:
             name: valheim-config
+        # Deliberately unpinned. :latest with pullPolicy Always means a fresh
+        # build is picked up whenever the pod starts -- which, given the server
+        # runs on demand from 0 replicas, is every session -- and the restarter
+        # CronJob covers the case where it stays up for days. Pinning here would
+        # replace that with manual bumps for no gain.
         image: lloesche/valheim-server:latest
         imagePullPolicy: Always
         name: valheim
@@ -70,7 +72,7 @@ spec:
       - args:
         - --collector.disable-defaults
         - --collector.supervisord
-        image: quay.io/prometheus/node-exporter:v1.5.0
+        image: quay.io/prometheus/node-exporter:v1.12.1
         name: node-exporter
         ports:
         - containerPort: 9100

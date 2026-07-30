@@ -10,7 +10,6 @@ metadata:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/part-of: valheim
   name: valheim
-  namespace: valheim
 spec:
   ports:
   - name: gameport

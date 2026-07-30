@@ -6,7 +6,6 @@ metadata:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/part-of: valheim
   name: valheim
-  namespace: valheim
 spec:
   podMetricsEndpoints:
   - port: metrics

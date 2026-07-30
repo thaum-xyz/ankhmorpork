@@ -1,0 +1,36 @@
+# Restarts the server daily. The valheim image is tracked as :latest with
+# imagePullPolicy: Always, so this restart is also how a running server picks up
+# a new build -- and the game server leaks memory over long uptimes.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: podrestarter
+spec:
+  # Suspended because the StatefulSet sits at 0 replicas: the server is started
+  # on demand, so this was restarting nothing every night and leaving a trail of
+  # completed Jobs behind it. Unsuspend alongside scaling the server up.
+  #
+  # Nothing enforces that those two stay in step. A Kyverno policy tying this
+  # flag to the StatefulSet's replica count would be the right home for it.
+  suspend: true
+  concurrencyPolicy: Forbid
+  schedule: "0 4 * * *"
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        spec:
+          serviceAccountName: podrestarter
+          restartPolicy: Never
+          containers:
+            - name: kubectl
+              # Was bitnami/kubectl, unpinned -- Bitnami retired their public
+              # image catalogue, so that tag is a liability. This is the
+              # upstream Kubernetes build, pinned to the cluster's minor.
+              image: registry.k8s.io/kubectl:v1.34.10
+              command:
+                - kubectl
+                - rollout
+                - restart
+                - statefulset/valheim
