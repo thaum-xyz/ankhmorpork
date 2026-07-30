@@ -2,6 +2,14 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: karakeep-web-ingress
+  annotations:
+    reloader.homer/group: Ankh Cloud
+    reloader.homer/logo: https://avatars.githubusercontent.com/u/202258986?s=60&v=4
+    reloader.homer/name: Karakeep
+    reloader.homer/subtitle: Bookmarks hoarder
+  labels:
+    reloader.homer/enabled: "true"
+    probe: enabled
 spec:
   ingressClassName: cloudflare
   rules:
