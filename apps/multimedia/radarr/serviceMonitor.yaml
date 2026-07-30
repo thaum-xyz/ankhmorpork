@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/part-of: radarr
+    app.kubernetes.io/version: 5.17.2
+  name: radarr
+spec:
+  endpoints:
+    - interval: 100s
+      port: metrics
+      scrapeTimeout: 30s
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: radarr
+      app.kubernetes.io/part-of: radarr
