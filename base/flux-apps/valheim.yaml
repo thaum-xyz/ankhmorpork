@@ -5,9 +5,8 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./apps/valheim/manifests
+  path: ./apps/valheim
   prune: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
-  suspend: true
