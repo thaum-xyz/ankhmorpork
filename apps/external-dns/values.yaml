@@ -20,19 +20,29 @@ extraArgs:
   - --fqdn-template={{`{{`}}.Name{{`}}`}}.{{`{{`}}.Namespace{{`}}`}}.ankhmorpork.thaum.xyz
   - --service-type-filter=LoadBalancer
 
+# The webhook moved from kashalls/ to home-operations/; the old repository is a
+# redirect and its image stops at v0.9.0, so the tag also loses its `v` prefix.
+#
+# From 0.10.x it talks to UniFi's official Integration API
+# (/proxy/network/integration/v1/sites/{id}/dns/policies) instead of the
+# undocumented /proxy/network/v2/api/site/{site}/static-dns, which needs Network
+# 10.3.58+ and external-dns 0.21.0 -- hence the chart bump alongside it. Both
+# API paths are two views of one store, verified by reading the same 82 records
+# through each, so there is nothing to migrate and no duplicates to expect.
+#
+# UNIFI_EXTERNAL_CONTROLLER went away with that move: UNIFI_HOST now points at
+# the controller directly, and remote consoles use UNIFI_CONSOLE_ID instead.
 provider:
   name: webhook
   webhook:
     image:
-      repository: ghcr.io/kashalls/external-dns-unifi-webhook
-      tag: v0.7.0
+      repository: ghcr.io/home-operations/external-dns-unifi-webhook
+      tag: "0.10.9"
     env:
       - name: LOG_LEVEL
         value: *logLevel
       - name: UNIFI_HOST
         value: https://192.168.1.1 # replace with the address to your UniFi router/controller
-      - name: UNIFI_EXTERNAL_CONTROLLER
-        value: "false"
       - name: UNIFI_API_KEY
         valueFrom:
           secretKeyRef:
