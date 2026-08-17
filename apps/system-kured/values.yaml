@@ -22,6 +22,17 @@ resources:
     cpu: 3m
     memory: 64Mi
 
+# kured is deliberately scheduled onto nothing: every node is labelled
+# kured=disabled, so this selector matches no node and the DaemonSet runs zero
+# pods. Node reboots are therefore a manual job, and all four nodes currently
+# report kured_reboot_required=1.
+#
+# This replaces an earlier stop-gap that held kured's own lock by hand, with
+# weave.works/kured-node-lock='{"nodeID":"manual"}' annotated onto the
+# DaemonSet. That lock is left in place as a backstop: without it, relabelling a
+# node back to kured=enabled would start a pod that immediately drains and
+# reboots, and then works through the rest one at a time. Re-enabling reboots
+# means relabelling *and* clearing that annotation, in that order.
 nodeSelector:
   kured: enabled
 
