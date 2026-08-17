@@ -124,7 +124,7 @@ spec:
               type: RuntimeDefault
       dnsConfig:
         nameservers:
-          - 192.168.2.4
+          - 192.168.1.1
         searches:
           - thaum.xyz
       dnsPolicy: None
