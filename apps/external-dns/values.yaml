@@ -20,18 +20,7 @@ extraArgs:
   - --fqdn-template={{`{{`}}.Name{{`}}`}}.{{`{{`}}.Namespace{{`}}`}}.ankhmorpork.thaum.xyz
   - --service-type-filter=LoadBalancer
 
-# The webhook moved from kashalls/ to home-operations/; the old repository is a
-# redirect and its image stops at v0.9.0, so the tag also loses its `v` prefix.
-#
-# From 0.10.x it talks to UniFi's official Integration API
-# (/proxy/network/integration/v1/sites/{id}/dns/policies) instead of the
-# undocumented /proxy/network/v2/api/site/{site}/static-dns, which needs Network
-# 10.3.58+ and external-dns 0.21.0 -- hence the chart bump alongside it. Both
-# API paths are two views of one store, verified by reading the same 82 records
-# through each, so there is nothing to migrate and no duplicates to expect.
-#
-# UNIFI_EXTERNAL_CONTROLLER went away with that move: UNIFI_HOST now points at
-# the controller directly, and remote consoles use UNIFI_CONSOLE_ID instead.
+# Uses UniFi's Integration API; requires Network 10.3.58+ and external-dns 0.21.0.
 provider:
   name: webhook
   webhook:
