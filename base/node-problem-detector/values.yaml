@@ -7,6 +7,37 @@ metrics:
 
   prometheusRule:
     enabled: true
+    defaultRules:
+      disabled:
+        # Docker reasons: k3s runs containerd and only kernel/readonly monitors
+        # are loaded, so these never fire.
+        - NodeProblemDockerHung
+        - NodeProblemDockerContainerStartupFailure
+        - NodeProblemCorruptDockerOverlay2
+        - NodeProblemCorruptDockerImage
+        - NodeProblemGaugeCorruptDockerOverlay2
+        - NodeProblemGaugeDockerHung
+        # Replaced below; defaults are increase[2m] with for=1s, which resolves
+        # before it can be routed.
+        - NodeProblemIOError
+        - NodeProblemTaskHung
+    additionalRules:
+      - alert: NodeProblemIOError
+        expr: increase(problem_counter{reason="IOError"}[1h]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Kernel I/O errors
+          description: '{{ $value | printf "%.0f" }} kernel I/O errors in the last hour on node {{ $labels.node }}'
+      - alert: NodeProblemTaskHung
+        expr: increase(problem_counter{reason="TaskHung"}[1h]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Task hung
+          description: '{{ $value | printf "%.0f" }} hung tasks in the last hour on node {{ $labels.node }}'
 
 resources:
   limits:
