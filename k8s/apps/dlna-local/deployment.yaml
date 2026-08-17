@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minidlna
+  namespace: dlna-local
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: minidlna
+  template:
+    metadata:
+      labels:
+        app: minidlna
+    spec:
+      # using hotNetwork for SSDP multicast discovery.
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: dlna-preferred
+                    operator: In
+                    values:
+                      - "true"
+      containers:
+        - name: minidlna
+          image: vladgh/minidlna:1.3.10
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: Europe/Warsaw
+            - name: MINIDLNA_FRIENDLY_NAME
+              value: "Zdjecia"
+            - name: MINIDLNA_MEDIA_DIR
+              value: "P,/media/photos"
+            - name: MINIDLNA_NOTIFY_INTERVAL
+              value: "30"
+            - name: MINIDLNA_INOTIFY
+              value: "yes"
+          ports:
+            - name: http
+              containerPort: 8200
+              protocol: TCP
+            - name: ssdp
+              containerPort: 1900
+              protocol: UDP
+          volumeMounts:
+            - name: photos
+              mountPath: /media/photos
+              readOnly: true
+            - name: cache
+              mountPath: /minidlna/cache
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8200
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8200
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+      volumes:
+        - name: cache
+          emptyDir: {}
+        - name: photos
+          persistentVolumeClaim:
+            claimName: photos
+            readOnly: true
