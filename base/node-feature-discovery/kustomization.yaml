@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: node-feature-discovery 
+namespace: node-feature-discovery
 resources:
   - repository.yaml
   - namespace.yaml
@@ -9,5 +9,6 @@ configMapGenerator:
   - name: values
     files:
       - values.yaml=values.yaml
-configurations:
-  - kustomizeconfig.yaml
+# Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.
+generatorOptions:
+  disableNameSuffixHash: true
