@@ -1,25 +1,46 @@
+# The default route, served by traefik. ingress-cloudflare.yaml carries the same
+# host for outside access.
+#
+# karakeep previously had only the cloudflare one, which left keep.krupa.net.pl
+# with no internal A record: external-dns published just the tunnel CNAME, and
+# *.cfargotunnel.com resolves nowhere outside Cloudflare's edge. Anything on the
+# internal resolver got a name with no address and concluded karakeep was down
+# while it was serving fine on its Service. With both, external-dns keeps the A
+# record internally and discards the CNAME, as it already does for the other ten
+# cloudflare-exposed hosts.
+#
+# The probe label belongs here rather than on the cloudflare twin: blackbox
+# derives its scheme from whether the Ingress declares TLS, so probing that one
+# built an http:// target the tunnel never answers.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: karakeep-web-ingress
+  name: karakeep
+  labels:
+    app.kubernetes.io/name: karakeep
+    probe: enabled
+    reloader.homer/enabled: "true"
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    probe-uri: /
     reloader.homer/group: Ankh Cloud
     reloader.homer/logo: https://avatars.githubusercontent.com/u/202258986?s=60&v=4
     reloader.homer/name: Karakeep
     reloader.homer/subtitle: Bookmarks hoarder
-  labels:
-    reloader.homer/enabled: "true"
-    probe: enabled
 spec:
-  ingressClassName: cloudflare
+  ingressClassName: public
   rules:
-  - host: "keep.krupa.net.pl"
-    http:
-      paths:
-      - path: "/"
-        pathType: Prefix
-        backend:
-          service:
-            name: "web"
-            port:
-              number: 3000
+    - host: keep.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: web
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - keep.krupa.net.pl
+      secretName: karakeep-tls
