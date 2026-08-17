@@ -6,24 +6,37 @@ headlessService: true
 podDisruptionBudget:
   maxUnavailable: 1
 
+# The chart renders the traefik route; ingress-cloudflare.yaml carries the same
+# host for outside access.
+#
+# This was cloudflare-only, which left grafana.krupa.net.pl with no internal A
+# record -- external-dns published just the tunnel CNAME, and
+# *.cfargotunnel.com resolves nowhere outside Cloudflare's edge, so the host was
+# unreachable from the tailnet. Note the grafana at grafana.ankhmorpork.thaum.xyz
+# is a different instance, kube-prometheus's in the monitoring namespace, so it
+# was not covering for this one.
+#
+# probe-uri and the probe label are restored along with it: blackbox takes its
+# scheme from whether the Ingress declares TLS, so only the traefik route is
+# probeable.
 ingress:
   enabled: true
-  #ingressClassName: public
-  ingressClassName: cloudflare
+  ingressClassName: public
   annotations:
-    #cert-manager.io/cluster-issuer: letsencrypt-prod
-    #probe-uri: /-/healthy
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    probe-uri: /-/healthy
     reloader.homer/group: Administration
     reloader.homer/logo: https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg
     reloader.homer/name: grafana
   labels:
     reloader.homer/enabled: "true"
+    probe: enabled
   hosts:
     - "grafana.krupa.net.pl"
-  #tls:
-  #  - hosts:
-  #    - grafana.krupa.net.pl
-  #    secretName: ingress-grafana-tls
+  tls:
+    - hosts:
+        - grafana.krupa.net.pl
+      secretName: ingress-grafana-tls
 
 resources:
   requests:

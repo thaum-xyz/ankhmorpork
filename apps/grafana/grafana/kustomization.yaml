@@ -5,6 +5,7 @@ resources:
   - release.yaml
   - admin-creds.yaml
   - oidc-secret.yaml
+  - ingress-cloudflare.yaml
 configMapGenerator:
   - name: values
     files:
