@@ -11,5 +11,32 @@ ingressClass:
 
 replicaCount: 2
 
-cloudflaredServiceMonitor:
+# 0.1.0 merged the two ServiceMonitor value groups into one. This single switch
+# now creates ServiceMonitors for both the controller and the cloudflared
+# connectors, replacing cloudflaredServiceMonitor, which 0.1.0 no longer reads --
+# carrying the old key over would have gone silently inert and taken the
+# connector metrics with it.
+#
+# It is also a net gain: until now only the connector was scraped and the
+# controller had no metrics endpoint at all. The controller endpoint adds
+# controller-runtime reconcile and workqueue metrics plus
+# cloudflare_tunnel_ingress_controller_last_successful_sync_timestamp_seconds,
+# which is the signal for "tunnel configuration has stopped being updated" --
+# the failure that would otherwise silently strand every external hostname on a
+# stale config.
+serviceMonitor:
   create: true
+
+# Pinned so Renovate tracks it. The chart otherwise carries this tag as a
+# default, which would move under us on any chart bump without showing up as a
+# reviewable change.
+#
+# 0.1.0 moves the connector off cloudflare/cloudflared onto the maintainer's
+# fork, which is what exposes the host metrics the connector ServiceMonitor
+# scrapes. Worth knowing: that fork publishes exactly one tag today and it
+# trails the official image, so Renovate has nothing to bump to until the
+# maintainer rebuilds.
+cloudflared:
+  image:
+    repository: ghcr.io/strrl/cloudflared
+    tag: "2026.7.3-host-metrics.1"
