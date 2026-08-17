@@ -4,5 +4,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
+  - ingress-cloudflare.yaml
   - pvc.yaml
   - podmonitor.yaml
