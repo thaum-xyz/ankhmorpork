@@ -122,9 +122,20 @@ spec:
             runAsUser: 65532
             seccompProfile:
               type: RuntimeDefault
+      # dnsPolicy None on purpose: the probes should resolve the way a LAN
+      # client does, so split-horizon sends the internal hostnames to traefik
+      # instead of out and back through the tunnel.
+      #
+      # The nameserver was 192.168.2.4, on the subnet the LAN was renumbered off.
+      # It had been unreachable long enough that every probe was failing on DNS
+      # before it ever opened a connection -- probe_success was 0 across all 11
+      # targets, so there was no working uptime monitoring at all, while the
+      # dashboards still looked configured. 192.168.1.1 is the UDM, and resolves
+      # every current probe target: internal hosts to 192.168.50.129/130,
+      # keep.krupa.net.pl to the cloudflare tunnel, and external names normally.
       dnsConfig:
         nameservers:
-          - 192.168.2.4
+          - 192.168.1.1
         searches:
           - thaum.xyz
       dnsPolicy: None
