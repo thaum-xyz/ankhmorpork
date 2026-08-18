@@ -11,5 +11,6 @@ configMapGenerator:
   - name: values
     files:
       - values.yaml=values.yaml
-configurations:
-  - kustomizeconfig.yaml
+# Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.
+generatorOptions:
+  disableNameSuffixHash: true
