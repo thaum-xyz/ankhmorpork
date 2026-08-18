@@ -47,11 +47,13 @@ spec:
                 - mountPath: /export
                   name: backups
           containers:
-            - args: []
+            - args:
+                # paperless-config sets OCR languages the export image does not
+                # ship; the exporter never OCRs, so skip the django checks.
+                - --skip-checks
               #  - --use-folder-prefix
               #  - --zip
               #  - --no-color
-              #  - --skip-checks
               env: []
               envFrom:
                 - configMapRef:
