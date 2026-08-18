@@ -5,6 +5,8 @@ resources:
   - public/release.yaml
   - private/release.yaml
   - repository.yaml
+generatorOptions:
+  disableNameSuffixHash: true
 configMapGenerator:
   - name: values-public
     files:
@@ -15,5 +17,3 @@ configMapGenerator:
   - name: values-common
     files:
       - values.yaml=values-common.yaml
-configurations:
-  - kustomizeconfig.yaml
