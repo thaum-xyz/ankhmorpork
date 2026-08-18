@@ -4,9 +4,9 @@ namespace: topolvm-system
 resources:
   - repository.yaml
   - release.yaml
+generatorOptions:
+  disableNameSuffixHash: true
 configMapGenerator:
   - name: values
     files:
       - values.yaml=values.yaml
-configurations:
-  - kustomizeconfig.yaml
