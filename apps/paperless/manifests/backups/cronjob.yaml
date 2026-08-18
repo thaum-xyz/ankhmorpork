@@ -48,8 +48,10 @@ spec:
                   name: backups
           containers:
             - args:
-                # paperless-config sets OCR languages the export image does not
-                # ship; the exporter never OCRs, so skip the django checks.
+                # The wrapper script hardcodes "document_exporter /export" and
+                # drops arguments, so hand s6 the whole command instead.
+                - /usr/local/bin/document_exporter
+                - /export
                 - --skip-checks
               #  - --use-folder-prefix
               #  - --zip
