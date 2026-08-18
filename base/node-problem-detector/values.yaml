@@ -62,9 +62,53 @@ settings:
     - /config/kernel-monitor.json
     - /config/readonly-monitor.json
 
+  # All four nodes run k3s.service; on agents the process is k3s-agent but the
+  # unit name is the same. The shipped systemd-monitor-counter.json matches
+  # kubelet/docker/containerd units, none of which exist here.
+  custom_monitor_definitions:
+    k3s-monitor-counter.json: |
+      {
+        "plugin": "custom",
+        "pluginConfig": {
+          "invoke_interval": "5m",
+          "timeout": "1m",
+          "max_output_length": 80,
+          "concurrency": 1
+        },
+        "source": "systemd-monitor",
+        "metricsReporting": true,
+        "conditions": [
+          {
+            "type": "FrequentK3sRestart",
+            "reason": "NoFrequentK3sRestart",
+            "message": "k3s is functioning properly"
+          }
+        ],
+        "rules": [
+          {
+            "type": "permanent",
+            "condition": "FrequentK3sRestart",
+            "reason": "FrequentK3sRestart",
+            "path": "/home/kubernetes/bin/log-counter",
+            "args": [
+              "--journald-source=systemd",
+              "--log-path=/var/log/journal",
+              "--lookback=20m",
+              "--delay=5m",
+              "--count=5",
+              "--pattern=Started k3s\\.service.*",
+              "--revert-pattern=Stopping k3s\\.service.*"
+            ],
+            "timeout": "1m"
+          }
+        ]
+      }
+
   custom_plugin_monitors:
     # FrequentUnregisterNetDevice node condition, counted from journald.
     - /config/kernel-monitor-counter.json
+    # FrequentK3sRestart node condition; definition above.
+    - /custom-config/k3s-monitor-counter.json
     # ConntrackFull and DNSUnreachable events.
     - /config/network-problem-monitor.json
     # - /config/health-checker-containerd.json
