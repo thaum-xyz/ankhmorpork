@@ -14,7 +14,3 @@ service:
   spec:
     loadBalancerIP: "192.168.50.130"
     #externalTrafficPolicy: Local
-
-#additionalArguments:
-#  - "--entrypoints.web.http.middlewares=crowdsec-crowdsec-bouncer@kubernetescrd"
-#  - "--entrypoints.websecure.http.middlewares=crowdsec-crowdsec-bouncer@kubernetescrd"
