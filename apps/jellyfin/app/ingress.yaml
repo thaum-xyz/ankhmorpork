@@ -1,0 +1,35 @@
+# Chart 3.x dropped ingress.labels, so this is carried outside the chart --
+# homer discovery and blackbox probing both key off the labels.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyfin
+  labels:
+    app.kubernetes.io/name: jellyfin
+    probe: enabled
+    reloader.homer/enabled: "true"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: jellyfin-deny-metrics-path@kubernetescrd
+    reloader.homer/group: Multimedia
+    reloader.homer/logo: https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/jellyfin.svg
+    reloader.homer/name: Jellyfin
+    reloader.homer/subtitle: Video on demand
+    reloader.homer/tag: local
+spec:
+  ingressClassName: private
+  rules:
+    - host: vod.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: jellyfin
+                port:
+                  number: 8096
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - vod.krupa.net.pl
+      secretName: vod-krupa-net-pl-tls
