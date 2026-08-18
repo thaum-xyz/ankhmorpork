@@ -1,0 +1,148 @@
+# Config reference: https://github.com/grafana/alloy/tree/main/operations/helm/charts/alloy
+#
+# Replaces promtail and vector. Those were split by the `promtail` node label:
+# promtail on nodes labelled true, vector on `false`. No node carried `false`,
+# so vector ran nowhere and beelink01/02 pod logs were never collected.
+
+controller:
+  type: daemonset
+  # Everywhere, regardless of labels or taints.
+  tolerations:
+    - operator: Exists
+
+alloy:
+  # /var/log/pods
+  mounts:
+    varlog: true
+  extraPorts:
+    - name: syslog-udp
+      port: 1514
+      targetPort: 1514
+      protocol: UDP
+  configMap:
+    content: |-
+      // Monolithic Loki exposes one Service; loki-write no longer exists.
+      loki.write "default" {
+        endpoint {
+          url = "http://loki.datalake-logs.svc.cluster.local:3100/loki/api/v1/push"
+        }
+        external_labels = {
+          cluster = "ankhmorpork",
+        }
+      }
+
+      discovery.kubernetes "pods" {
+        role = "pod"
+      }
+
+      // Read files from /var/log/pods rather than tailing via the API server,
+      // which is what promtail did and keeps load off the control plane.
+      discovery.relabel "pod_logs" {
+        targets = discovery.kubernetes.pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_node_name"]
+          regex         = sys.env("K8S_NODE_NAME")  // set by the chart
+          action        = "keep"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_node_name"]
+          target_label  = "node"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+          target_label  = "app"
+        }
+        rule {
+          replacement  = "kubernetes-pods"
+          target_label = "job"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+          separator     = "/"
+          replacement   = "/var/log/pods/*$1/*.log"
+          target_label  = "__path__"
+        }
+      }
+
+      local.file_match "pod_logs" {
+        path_targets = discovery.relabel.pod_logs.output
+      }
+
+      loki.source.file "pod_logs" {
+        targets    = local.file_match.pod_logs.targets
+        forward_to = [loki.process.pod_logs.receiver]
+      }
+
+      loki.process "pod_logs" {
+        // containerd writes CRI-format lines.
+        stage.cri {}
+        forward_to = [loki.write.default.receiver]
+      }
+
+      // Syslog from network devices, on the address promtail used.
+      loki.relabel "syslog" {
+        forward_to = []
+
+        rule {
+          source_labels = ["__syslog_message_severity"]
+          target_label  = "level"
+        }
+        rule {
+          source_labels = ["__syslog_message_facility"]
+          target_label  = "facility"
+        }
+        rule {
+          source_labels = ["__syslog_connection_hostname"]
+          target_label  = "host"
+        }
+        rule {
+          source_labels = ["__syslog_connection_ip_address"]
+          target_label  = "ip"
+        }
+        rule {
+          source_labels = ["__syslog_message_hostname"]
+          target_label  = "hostname"
+        }
+        rule {
+          source_labels = ["__syslog_message_app_name"]
+          target_label  = "app"
+        }
+        rule {
+          source_labels = ["__syslog_message_proc_id"]
+          target_label  = "proc"
+        }
+        rule {
+          source_labels = ["__syslog_message_msg_id"]
+          target_label  = "msgid"
+        }
+      }
+
+      loki.source.syslog "udp" {
+        listener {
+          address               = "0.0.0.0:1514"
+          protocol              = "udp"
+          idle_timeout          = "60s"
+          label_structured_data = true
+          labels                = {
+            job = "syslog",
+          }
+        }
+        relabel_rules = loki.relabel.syslog.rules
+        forward_to    = [loki.write.default.receiver]
+      }
+
+serviceMonitor:
+  enabled: true
