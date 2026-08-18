@@ -10,6 +10,9 @@ metadata:
   namespace: monitoring
 spec:
   replicas: 1
+  # RWO PVC: RollingUpdate deadlocks on multi-attach across nodes.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/component: grafana

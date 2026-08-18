@@ -3,6 +3,10 @@
 jellyfin:
   enableDLNA: false
 
+# RWO config PVC: RollingUpdate deadlocks on multi-attach across nodes.
+deploymentStrategy:
+  type: Recreate
+
 # Ingress is carried outside the chart, see ingress.yaml
 ingress:
   enabled: false
