@@ -6,7 +6,7 @@ metadata:
   namespace: longhorn-system
 spec:
   plugin:
-    traefik-oidc-auth: # same key as in the static configuration
+    oidc: # same key as in the static configuration
       Secret: "urn:k8s:secret:oidc-secret:pluginSecret"
       Provider:
         # You could just write strings here for the values.
