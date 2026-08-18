@@ -6,12 +6,10 @@ metadata:
   namespace: longhorn-system
 spec:
   plugin:
-    oidc: # same key as in the static configuration
+    # Key must match experimental.plugins in the traefik values, not the module name.
+    oidc:
       Secret: "urn:k8s:secret:oidc-secret:pluginSecret"
       Provider:
-        # You could just write strings here for the values.
+        Url: "https://login.krupa.net.pl"
         ClientId: "urn:k8s:secret:oidc-secret:providerClientId"
-        # Or you can reference a Secret in the same namespace as the Middleware.
-        # This will resolve to the value of the providerClientSecret key
-        # in the secret named oidc-secret.
         ClientSecret: "urn:k8s:secret:oidc-secret:providerClientSecret"
