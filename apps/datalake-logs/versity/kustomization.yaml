@@ -3,6 +3,7 @@ kind: Kustomization
 # Namespace is created and owned by the parent.
 namespace: datalake-logs
 resources:
+  - repository.yaml
   - release.yaml
   - credentials-generator.yaml
   - credentials-secret.yaml

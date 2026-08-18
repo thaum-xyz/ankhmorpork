@@ -7,12 +7,3 @@ metadata:
 spec:
   interval: 5m
   url: https://grafana-community.github.io/helm-charts
----
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: versity
-spec:
-  type: oci
-  interval: 15m
-  url: oci://ghcr.io/versity/versitygw/charts
