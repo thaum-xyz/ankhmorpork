@@ -1,11 +1,40 @@
 # Config reference: https://github.com/kubernetes-sigs/descheduler/blob/master/charts/descheduler/values.yaml
 
 kind: Deployment
+replicas: 1
 
 resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    memory: 256Mi
 
 service:
   enabled: true
 
 serviceMonitor:
   enabled: true
+
+# Only RemovePodsViolatingNodeTaints. The chart default enables eight plugins
+# including LowNodeUtilization and RemoveDuplicates, which rebalance by evicting
+# and would churn pods across the four nodes.
+#
+# No node carries a taint today, so this evicts nothing. It is here for
+# NoSchedule taints: those stop new pods but leave running ones, and this is
+# what migrates them off.
+deschedulerPolicyAPIVersion: descheduler/v1alpha2
+deschedulerPolicy:
+  profiles:
+    - name: default
+      pluginConfig:
+        - name: DefaultEvictor
+          args:
+            podProtections:
+              extraEnabled:
+                - PodsWithPVC
+        - name: RemovePodsViolatingNodeTaints
+      plugins:
+        deschedule:
+          enabled:
+            - RemovePodsViolatingNodeTaints
