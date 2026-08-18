@@ -47,6 +47,12 @@ resources:
     cpu: 3m
     memory: 18Mi
 
+# hostNetwork so network_problem.sh sees the host conntrack table; in the pod
+# netns nf_conntrack_count reads 0. ClusterFirstWithHostNet keeps cluster DNS,
+# which dns_problem.sh needs to resolve kubernetes.default.
+hostNetwork: true
+dnsPolicy: ClusterFirstWithHostNet
+
 settings:
   #log_monitors:
   #  - /config/kernel-monitor.json
@@ -56,7 +62,11 @@ settings:
     - /config/kernel-monitor.json
     - /config/readonly-monitor.json
 
-  #custom_plugin_monitors:
+  custom_plugin_monitors:
+    # FrequentUnregisterNetDevice node condition, counted from journald.
+    - /config/kernel-monitor-counter.json
+    # ConntrackFull and DNSUnreachable events.
+    - /config/network-problem-monitor.json
     # - /config/health-checker-containerd.json
     # - /config/custom-plugin-monitor.json ## This is NTP monitor. Disabled as it requires systemctl to be present in the container.
 
