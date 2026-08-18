@@ -1,0 +1,18 @@
+# Separate from the chart's Service so only syslog is exposed on the LAN; the
+# chart Service has no loadBalancerIP field and carries Alloy's HTTP/UI port.
+# Address preserved from promtail, which network devices already point at.
+apiVersion: v1
+kind: Service
+metadata:
+  name: alloy-syslog
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.50.132
+  selector:
+    app.kubernetes.io/name: alloy
+    app.kubernetes.io/instance: alloy
+  ports:
+    - name: syslog-udp
+      port: 1514
+      targetPort: 1514
+      protocol: UDP
