@@ -25,6 +25,14 @@ singleBinary:
     # when a node reboots.
     storageClass: longhorn
 
+# The memberlist Service is headless and, by default, only publishes ready
+# endpoints. With one replica that deadlocks at startup: the pod is not ready
+# until it joins, it cannot join until the name resolves, and the name does not
+# resolve until it is an endpoint. abort_if_cluster_join_fails then crashloops it.
+memberlist:
+  service:
+    publishNotReadyAddresses: true
+
 # Not used in monolithic mode.
 write:
   replicas: 0
@@ -67,6 +75,9 @@ monitoring:
 
 loki:
   auth_enabled: false
+  commonConfig:
+    # Chart default is 3, which cannot be satisfied by a single ingester.
+    replication_factor: 1
   analytics:
     reporting_enabled: false
 
