@@ -13,10 +13,11 @@ ingressRoute:
 
 ports:
   web:
-    redirections:
-      entryPoint:
-        to: websecure
-        scheme: https
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
 
   websecure:
     http3:
@@ -63,10 +64,9 @@ metrics:
     serviceMonitor:
       honorLabels: true
 
-logs:
-  access:
-    enabled: true
-    format: common
+accessLog:
+  enabled: true
+  format: common
 
 experimental:
   plugins:
