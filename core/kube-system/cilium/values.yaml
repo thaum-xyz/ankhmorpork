@@ -24,7 +24,7 @@ ipam:
     clusterPoolIPv4PodCIDRList:
     - 10.42.0.0/16
 k8s:
-  apiServerURLs: "https://192.168.50.31:6443 https://192.168.50.32:6443 https://192.168.50.33:6443"
+  apiServerURLs: "https://192.168.50.31:6443 https://192.168.50.32:6443 https://192.168.50.35:6443"
 kubeProxyReplacement: true
 priorityClassName: system-node-critical
 policyEnforcementMode: never
