@@ -94,15 +94,25 @@ alloy:
         // containerd writes CRI-format lines.
         stage.cri {}
 
-        // pod changes on every restart and filename is unique per container
-        // instance, so as stream labels they multiply cardinality for no query
-        // benefit. As structured metadata they stay queryable without being
-        // indexed. Naming a label here removes it from the label set.
+        // pod changes on every restart, so as a stream label it multiplies
+        // cardinality. Keep it queryable as structured metadata instead.
+        //
+        // stage.structured_metadata reads the extracted map, and pod is a
+        // stream label, which never lands there -- naming it directly is a
+        // no-op. stage.template does resolve stream labels though (undocumented
+        // but verified with loki.echo), so it bridges the two.
+        stage.template {
+          source   = "pod_sm"
+          template = "{{ .pod }}"
+        }
         stage.structured_metadata {
-          values = {
-            pod      = "",
-            filename = "",
-          }
+          values = { pod = "pod_sm" }
+        }
+
+        // filename is dropped rather than kept: namespace, pod and container
+        // already identify the source, so the path adds nothing queryable.
+        stage.label_drop {
+          values = ["pod", "filename"]
         }
 
         forward_to = [loki.write.default.receiver]
