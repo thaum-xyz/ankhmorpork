@@ -5,9 +5,9 @@ resources:
   - repository.yaml
   - release.yaml
   - prometheusrules.yaml
+generatorOptions:
+  disableNameSuffixHash: true
 configMapGenerator:
   - name: values
     files:
       - values.yaml=values.yaml
-configurations:
-  - kustomizeconfig.yaml
