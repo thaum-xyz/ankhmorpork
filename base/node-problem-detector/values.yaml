@@ -104,11 +104,69 @@ settings:
         ]
       }
 
+    apt-monitor.json: |
+      {
+        "plugin": "custom",
+        "pluginConfig": {
+          "invoke_interval": "10m",
+          "timeout": "1m",
+          "max_output_length": 80,
+          "concurrency": 1
+        },
+        "source": "apt-monitor",
+        "metricsReporting": true,
+        "conditions": [
+          {
+            "type": "UnattendedUpgradeUnhealthy",
+            "reason": "UnattendedUpgradeIsHealthy",
+            "message": "unattended-upgrades is functioning properly"
+          },
+          {
+            "type": "APTLongRunning",
+            "reason": "APTNotLongRunning",
+            "message": "no apt job has been running for an unusual length of time"
+          }
+        ],
+        "rules": [
+          {
+            "type": "permanent",
+            "condition": "UnattendedUpgradeUnhealthy",
+            "reason": "UnattendedUpgradeFailed",
+            "path": "/home/kubernetes/bin/log-counter",
+            "args": [
+              "--journald-source=systemd",
+              "--log-path=/var/log/journal",
+              "--lookback=24h",
+              "--count=1",
+              "--pattern=apt-daily[a-z-]*\\.service: Failed with result.*"
+            ],
+            "timeout": "1m"
+          },
+          {
+            "type": "permanent",
+            "condition": "APTLongRunning",
+            "reason": "APTLongRunning",
+            "path": "/home/kubernetes/bin/log-counter",
+            "args": [
+              "--journald-source=systemd",
+              "--log-path=/var/log/journal",
+              "--lookback=6h",
+              "--count=1",
+              "--pattern=Starting apt-daily[a-z-]*\\..*",
+              "--revert-pattern=Finished apt-daily[a-z-]*\\..*"
+            ],
+            "timeout": "1m"
+          }
+        ]
+      }
+
   custom_plugin_monitors:
     # FrequentUnregisterNetDevice node condition, counted from journald.
     - /config/kernel-monitor-counter.json
     # FrequentK3sRestart node condition; definition above.
     - /custom-config/k3s-monitor-counter.json
+    # UnattendedUpgradeUnhealthy node condition; definition above.
+    - /custom-config/apt-monitor.json
     # ConntrackFull and DNSUnreachable events.
     - /config/network-problem-monitor.json
     # - /config/health-checker-containerd.json
