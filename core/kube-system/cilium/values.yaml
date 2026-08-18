@@ -23,8 +23,9 @@ ipam:
   operator:
     clusterPoolIPv4PodCIDRList:
     - 10.42.0.0/16
-k8s:
-  apiServerURLs: "https://192.168.50.31:6443 https://192.168.50.32:6443 https://192.168.50.35:6443"
+# k3s loopback apiserver LB. 6444, not 6443 -- agents have no 6443 on loopback.
+k8sServiceHost: 127.0.0.1
+k8sServicePort: 6444
 kubeProxyReplacement: true
 priorityClassName: system-node-critical
 policyEnforcementMode: never
