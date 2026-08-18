@@ -34,13 +34,6 @@ resources:
   limits:
     gpu.intel.com/i915: "1"
 
-securityContext:
-  privileged: true
-
-podSecurityContext:
-  supplementalGroups:
-    - 109
-
 persistence:
   config:
     enabled: true
@@ -68,9 +61,6 @@ volumes:
     emptyDir:
       medium: Memory
       sizeLimit: 2Gi
-  - name: render-device
-    hostPath:
-      path: /dev/dri/renderD128
 
 volumeMounts:
   - name: media-tv
@@ -81,8 +71,6 @@ volumeMounts:
     mountPath: /media/books
   - name: transcodes
     mountPath: /cache/transcodes
-  - name: render-device
-    mountPath: /dev/dri/renderD128
 
 # postStart hook flips EnableMetrics in system.xml, so it survives a config reset.
 metrics:
