@@ -81,11 +81,15 @@ loki:
   analytics:
     reporting_enabled: false
 
-  # Required from chart 6.x: no schema is assumed. Single entry from the
-  # cutover, since the old data is not being carried over.
+  # Required from chart 6.x: no schema is assumed.
+  #
+  # Backdated deliberately. Dating this at the cutover rejected every log line
+  # older than the install with "no schema config found for time ...", and pod
+  # log files on disk go back days. A schema boundary at install time is a trap;
+  # there is no data before this either way.
   schemaConfig:
     configs:
-      - from: "2026-08-18"
+      - from: "2024-01-01"
         store: tsdb
         object_store: s3
         schema: v13

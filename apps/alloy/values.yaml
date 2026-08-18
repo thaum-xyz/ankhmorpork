@@ -84,6 +84,10 @@ alloy:
       loki.source.file "pod_logs" {
         targets    = local.file_match.pod_logs.targets
         forward_to = [loki.process.pod_logs.receiver]
+        // Start at the end on first sight of a file. Otherwise every existing
+        // pod log is replayed, and anything past Loki's 7 day
+        // reject_old_samples_max_age is dropped anyway.
+        tail_from_end = true
       }
 
       loki.process "pod_logs" {
