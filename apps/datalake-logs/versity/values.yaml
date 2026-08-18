@@ -1,0 +1,35 @@
+# Config reference: https://github.com/versity/versitygw/blob/main/chart/values.yaml
+#
+# S3 backend for Loki, sitting next to it. Replaces Backblaze B2, so log chunks
+# no longer leave the network.
+
+# Pinned. The chart defaults to :latest.
+image:
+  tag: "v1.7.0"
+
+auth:
+  existingSecret: versitygw-credentials
+
+gateway:
+  backend:
+    type: posix
+    args: "/mnt/data"
+    # Object metadata as ordinary files rather than xattrs, which is what lets
+    # this sit on an NFSv3 share.
+    sidecarDir: "/mnt/metadata"
+
+# Sized for 6 months of retention. nfs.csi.k8s.io does not enforce the request,
+# so this is a label rather than a reservation.
+persistence:
+  enabled: true
+  create: true
+  size: 100Gi
+  storageClassName: unifi-nas
+  accessMode: ReadWriteMany
+
+resources:
+  limits:
+    memory: 1Gi
+  requests:
+    cpu: 50m
+    memory: 128Mi

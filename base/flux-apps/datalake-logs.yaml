@@ -8,7 +8,6 @@ spec:
   path: ./apps/datalake-logs
   prune: true
   force: true
-  suspend: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

@@ -1,7 +1,18 @@
+# The loki chart in grafana/helm-charts became the Grafana Enterprise Logs
+# chart; the community one lives here.
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: grafana
+  name: grafana-community
 spec:
   interval: 5m
-  url: https://grafana.github.io/helm-charts
+  url: https://grafana-community.github.io/helm-charts
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: versity
+spec:
+  type: oci
+  interval: 15m
+  url: oci://ghcr.io/versity/versitygw/charts

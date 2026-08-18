@@ -1,53 +1,35 @@
-# helm chart values reference: https://github.com/grafana/loki/blob/main/production/helm/loki/values.yaml
+# Chart reference: https://github.com/grafana-community/helm-charts/tree/main/charts/loki
+
+# Chart 18.x defaults to Monolithic; keep the existing write/read/backend split.
+deploymentMode: SimpleScalable
+
+# No ingress. Alloy ships logs in-cluster and Grafana reads over the internal
+# Service, so nothing needs to reach Loki from outside.
+ingress:
+  enabled: false
+gateway:
+  enabled: false
 
 minio:
-  # Using dedicated external Minio Cluster
   enabled: false
-
-# TODO: Enable when we have tracing
-#tracing:
-#  jaegerAgentHost: ""
-
-# TODO: Enable when locking down cluster
+test:
+  enabled: false
+lokiCanary:
+  enabled: false
+tableManager:
+  enabled: false
 networkPolicy:
-  # -- Specifies whether Network Policies should be created
   enabled: false
-
-# This is not a loki `index_gateway`!
-gateway:
-  # Disable gateway component as we are handling routing and auth on traefik level
-  enabled: false
-
-ingress:
-  enabled: true
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.middlewares: datalake-logs-basicauth@kubernetescrd
-  ingressClassName: public
-  paths:
-    write:
-      - /loki/api/v1/push
-    read: null
-    singleBinary: null
-  hosts:
-  - logs.datalake.ankhmorpork.thaum.xyz
-  tls:
-  - hosts:
-    - logs.datalake.ankhmorpork.thaum.xyz
-    secretName: ingress-logs-tls
 
 write:
   replicas: 3
   autoscaling:
     enabled: false
   extraArgs:
-  - -config.expand-env=true
-  #- -log.level=debug
+    - -config.expand-env=true
   extraEnvFrom:
-  - secretRef:
-      name: s3-credentials
+    - secretRef:
+        name: versitygw-credentials
   persistence:
     size: 20Gi
     storageClass: lvm-thin
@@ -57,63 +39,71 @@ read:
   autoscaling:
     enabled: false
   extraArgs:
-  - -config.expand-env=true
-  #- -log.level=debug
+    - -config.expand-env=true
   extraEnvFrom:
-  - secretRef:
-      name: s3-credentials
+    - secretRef:
+        name: versitygw-credentials
 
 backend:
   replicas: 2
   autoscaling:
     enabled: false
   extraArgs:
-  - -config.expand-env=true
+    - -config.expand-env=true
   extraEnvFrom:
-  - secretRef:
-      name: s3-credentials
+    - secretRef:
+        name: versitygw-credentials
   persistence:
     size: 2Gi
     storageClass: longhorn
 
-tableManager:
-  enabled: false
-
-test:
-  enabled: false
+# Chart defaults are 8Gi and 1Gi of memcached, which is not sensible on four
+# nodes. These only trade memory for query speed.
+chunksCache:
+  allocatedMemory: 512
+resultsCache:
+  allocatedMemory: 128
 
 monitoring:
   serviceMonitor:
     enabled: true
-    metricsInstance:
-      enabled: false
   rules:
     enabled: true
   dashboards:
     enabled: true
-  selfMonitoring:
-    enabled: false
-    grafanaAgent:
-      installOperator: false
-  lokiCanary:
-    enabled: false  # It is using loki-gateway SVC which is disabled
 
-# configStorageType: ConfigMap
 loki:
-  auth_enabled: false  # Disable multi-tenancy
+  auth_enabled: false
   analytics:
     reporting_enabled: false
+
+  # Required from chart 6.x: no schema is assumed. Single entry from the
+  # cutover, since the old data is not being carried over.
+  schemaConfig:
+    configs:
+      - from: "2026-08-18"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  limits_config:
+    retention_period: 4320h  # 6 months
   compactor:
     retention_enabled: true
-  limits_config:
-    retention_period: 122d
+    # Loki 3.x requires this once retention is on.
+    delete_request_store: s3
+
   storage:
-    bucketNames:
-      chunks: minio-ankhmorpork-thaum-xyz
-      ruler: minio-ankhmorpork-thaum-xyz
     type: s3
+    bucketNames:
+      chunks: loki
+      ruler: loki
     s3:
-      endpoint: https://s3.eu-central-003.backblazeb2.com
+      endpoint: http://versitygw.datalake-logs.svc.cluster.local:7070
       s3ForcePathStyle: true
-      secretAccessKey: "${S3_SECRET_KEY}"
+      insecure: true
       accessKeyId: "${S3_ACCESS_KEY}"
+      secretAccessKey: "${S3_SECRET_KEY}"
