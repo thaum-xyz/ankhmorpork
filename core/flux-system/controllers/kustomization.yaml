@@ -7,9 +7,9 @@ resources:
   - prometheusRules.yaml
   - certManagerPolicy.yaml
   - githubToken.yaml
+generatorOptions:
+  disableNameSuffixHash: true
 configMapGenerator:
   - name: values
     files:
       - values.yaml=values.yaml
-configurations:
-  - kustomizeconfig.yaml
