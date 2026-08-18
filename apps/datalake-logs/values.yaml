@@ -1,13 +1,49 @@
 # Chart reference: https://github.com/grafana-community/helm-charts/tree/main/charts/loki
 
-# Chart 18.x defaults to Monolithic; keep the existing write/read/backend split.
-deploymentMode: SimpleScalable
+# Monolithic: every component in one process. Memberlist is still configured,
+# but with a single replica the ring is single-member and self-consistent, which
+# is what removes the failure that broke the previous simple-scalable install
+# (index gateway reporting unhealthy instances, backend asking for 2 replicas
+# with 1 running). Upstream rates this for a few tens of GB/day; this cluster
+# holds roughly 400MB of on-disk pod logs per node. Simple-scalable is also
+# deprecated and removed in Loki 4.
+#
+# Deliberately one replica: more than one reintroduces the memberlist ring and
+# gives back the simplicity. Alloy buffers and retries while this restarts.
+deploymentMode: Monolithic
+
+singleBinary:
+  replicas: 1
+  # The chart already passes -config.expand-env=true.
+  extraEnvFrom:
+    - secretRef:
+        name: versitygw-credentials
+  persistence:
+    enabled: true
+    size: 10Gi
+    # Replicated rather than node-local, so the single replica can reschedule
+    # when a node reboots.
+    storageClass: longhorn
+
+# Not used in monolithic mode.
+write:
+  replicas: 0
+read:
+  replicas: 0
+backend:
+  replicas: 0
 
 # No ingress. Alloy ships logs in-cluster and Grafana reads over the internal
 # Service, so nothing needs to reach Loki from outside.
 ingress:
   enabled: false
 gateway:
+  enabled: false
+
+# Chunks live in S3; at this query volume memcached earns nothing.
+chunksCache:
+  enabled: false
+resultsCache:
   enabled: false
 
 minio:
@@ -20,49 +56,6 @@ tableManager:
   enabled: false
 networkPolicy:
   enabled: false
-
-write:
-  replicas: 3
-  autoscaling:
-    enabled: false
-  extraArgs:
-    - -config.expand-env=true
-  extraEnvFrom:
-    - secretRef:
-        name: versitygw-credentials
-  persistence:
-    size: 20Gi
-    storageClass: lvm-thin
-
-read:
-  replicas: 2
-  autoscaling:
-    enabled: false
-  extraArgs:
-    - -config.expand-env=true
-  extraEnvFrom:
-    - secretRef:
-        name: versitygw-credentials
-
-backend:
-  replicas: 2
-  autoscaling:
-    enabled: false
-  extraArgs:
-    - -config.expand-env=true
-  extraEnvFrom:
-    - secretRef:
-        name: versitygw-credentials
-  persistence:
-    size: 2Gi
-    storageClass: longhorn
-
-# Chart defaults are 8Gi and 1Gi of memcached, which is not sensible on four
-# nodes. These only trade memory for query speed.
-chunksCache:
-  allocatedMemory: 512
-resultsCache:
-  allocatedMemory: 128
 
 monitoring:
   serviceMonitor:
