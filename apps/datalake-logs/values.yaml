@@ -1,119 +1,102 @@
-# helm chart values reference: https://github.com/grafana/loki/blob/main/production/helm/loki/values.yaml
+# Chart reference: https://github.com/grafana-community/helm-charts/tree/main/charts/loki
 
-minio:
-  # Using dedicated external Minio Cluster
-  enabled: false
+# Monolithic: every component in one process. Memberlist is still configured,
+# but with a single replica the ring is single-member and self-consistent, which
+# is what removes the failure that broke the previous simple-scalable install
+# (index gateway reporting unhealthy instances, backend asking for 2 replicas
+# with 1 running). Upstream rates this for a few tens of GB/day; this cluster
+# holds roughly 400MB of on-disk pod logs per node. Simple-scalable is also
+# deprecated and removed in Loki 4.
+#
+# Deliberately one replica: more than one reintroduces the memberlist ring and
+# gives back the simplicity. Alloy buffers and retries while this restarts.
+deploymentMode: Monolithic
 
-# TODO: Enable when we have tracing
-#tracing:
-#  jaegerAgentHost: ""
-
-# TODO: Enable when locking down cluster
-networkPolicy:
-  # -- Specifies whether Network Policies should be created
-  enabled: false
-
-# This is not a loki `index_gateway`!
-gateway:
-  # Disable gateway component as we are handling routing and auth on traefik level
-  enabled: false
-
-ingress:
-  enabled: true
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.middlewares: datalake-logs-basicauth@kubernetescrd
-  ingressClassName: public
-  paths:
-    write:
-      - /loki/api/v1/push
-    read: null
-    singleBinary: null
-  hosts:
-  - logs.datalake.ankhmorpork.thaum.xyz
-  tls:
-  - hosts:
-    - logs.datalake.ankhmorpork.thaum.xyz
-    secretName: ingress-logs-tls
-
-write:
-  replicas: 3
-  autoscaling:
-    enabled: false
-  extraArgs:
-  - -config.expand-env=true
-  #- -log.level=debug
+singleBinary:
+  replicas: 1
+  # The chart already passes -config.expand-env=true.
   extraEnvFrom:
-  - secretRef:
-      name: s3-credentials
+    - secretRef:
+        name: versitygw-credentials
   persistence:
-    size: 20Gi
-    storageClass: lvm-thin
-
-read:
-  replicas: 2
-  autoscaling:
-    enabled: false
-  extraArgs:
-  - -config.expand-env=true
-  #- -log.level=debug
-  extraEnvFrom:
-  - secretRef:
-      name: s3-credentials
-
-backend:
-  replicas: 2
-  autoscaling:
-    enabled: false
-  extraArgs:
-  - -config.expand-env=true
-  extraEnvFrom:
-  - secretRef:
-      name: s3-credentials
-  persistence:
-    size: 2Gi
+    enabled: true
+    size: 10Gi
+    # Replicated rather than node-local, so the single replica can reschedule
+    # when a node reboots.
     storageClass: longhorn
 
-tableManager:
+# Not used in monolithic mode.
+write:
+  replicas: 0
+read:
+  replicas: 0
+backend:
+  replicas: 0
+
+# No ingress. Alloy ships logs in-cluster and Grafana reads over the internal
+# Service, so nothing needs to reach Loki from outside.
+ingress:
+  enabled: false
+gateway:
   enabled: false
 
+# Chunks live in S3; at this query volume memcached earns nothing.
+chunksCache:
+  enabled: false
+resultsCache:
+  enabled: false
+
+minio:
+  enabled: false
 test:
+  enabled: false
+lokiCanary:
+  enabled: false
+tableManager:
+  enabled: false
+networkPolicy:
   enabled: false
 
 monitoring:
   serviceMonitor:
     enabled: true
-    metricsInstance:
-      enabled: false
   rules:
     enabled: true
   dashboards:
     enabled: true
-  selfMonitoring:
-    enabled: false
-    grafanaAgent:
-      installOperator: false
-  lokiCanary:
-    enabled: false  # It is using loki-gateway SVC which is disabled
 
-# configStorageType: ConfigMap
 loki:
-  auth_enabled: false  # Disable multi-tenancy
+  auth_enabled: false
   analytics:
     reporting_enabled: false
+
+  # Required from chart 6.x: no schema is assumed. Single entry from the
+  # cutover, since the old data is not being carried over.
+  schemaConfig:
+    configs:
+      - from: "2026-08-18"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  limits_config:
+    retention_period: 4320h  # 6 months
   compactor:
     retention_enabled: true
-  limits_config:
-    retention_period: 122d
+    # Loki 3.x requires this once retention is on.
+    delete_request_store: s3
+
   storage:
-    bucketNames:
-      chunks: minio-ankhmorpork-thaum-xyz
-      ruler: minio-ankhmorpork-thaum-xyz
     type: s3
+    bucketNames:
+      chunks: loki
+      ruler: loki
     s3:
-      endpoint: https://s3.eu-central-003.backblazeb2.com
+      endpoint: http://versitygw.datalake-logs.svc.cluster.local:7070
       s3ForcePathStyle: true
-      secretAccessKey: "${S3_SECRET_KEY}"
+      insecure: true
       accessKeyId: "${S3_ACCESS_KEY}"
+      secretAccessKey: "${S3_SECRET_KEY}"
