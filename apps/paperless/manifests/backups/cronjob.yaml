@@ -31,7 +31,8 @@ spec:
             - command:
                 - sh
                 - -c
-                - chmod 0777 /export
+                # best effort: the NAS refuses mode changes over NFS
+                - chmod 0777 /export || true
               image: busybox
               name: permissions
               volumeMounts:
