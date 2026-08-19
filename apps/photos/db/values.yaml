@@ -12,14 +12,24 @@ cluster:
     requests:
       cpu: 50m
       memory: 500Mi
+  # Bumping imageName to a release carrying a newer vchord leaves the extension
+  # behind at the old version. immich notices and tries to fix it itself, but
+  # postgres owns the extension so it cannot, and the workers crashloop with
+  # "must be owner of extension vchord". Follow an image bump with:
+  #   ALTER EXTENSION vchord UPDATE;
+  # run as postgres against the immich database.
   postgresql:
     shared_preload_libraries:
       - vchord.so
+    parameters:
+      search_path: '"$user", public'
   bootstrap:
     postInitApplicationSQL:
       - 'CREATE EXTENSION IF NOT EXISTS vchord CASCADE;'
-      - 'CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;'
-      - 'CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;'
+      # public, not pg_catalog: immich resolves these as public.earth and
+      # public.ll_to_earth, and that is where the live cluster has them.
+      - 'CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA public;'
+      - 'CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA public;'
 
 backup:
   schedule: "0 13 2 * * *"
