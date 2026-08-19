@@ -47,15 +47,19 @@ spec:
                 - mountPath: /export
                   name: backups
           containers:
-            - args:
-                # The wrapper script hardcodes "document_exporter /export" and
-                # drops arguments, so hand s6 the whole command instead.
-                - /usr/local/bin/document_exporter
+            # Calling manage.py directly bypasses s6, so none of the paperless
+            # services start. The document_exporter wrapper is not usable here:
+            # it is with-contenv and needs an environment only s6 assembles.
+            # --skip-checks because init-tesseract-langs, which installs the pol
+            # pack that paperless-config asks for, is part of that same init.
+            - command:
+                - python3
+                - manage.py
+                - document_exporter
                 - /export
                 - --skip-checks
-              #  - --use-folder-prefix
-              #  - --zip
-              #  - --no-color
+              workingDir: /usr/src/paperless/src
+              args: []
               env: []
               envFrom:
                 - configMapRef:
@@ -64,12 +68,14 @@ spec:
                     name: paperless-secrets
                 - secretRef:
                     name: paperless-db
-              image: ghcr.io/community-tooling/oci-images/paperless-export:1.4.0
+              image: ghcr.io/paperless-ngx/paperless-ngx:2.20.0
               name: backup
               ports: []
               resources: {}
               securityContext:
                 privileged: false
+                runAsUser: 1000
+                runAsGroup: 1000
               volumeMounts:
                 - mountPath: /usr/src/paperless/data
                   name: data
