@@ -31,8 +31,9 @@ spec:
             - command:
                 - sh
                 - -c
-                # best effort: the NAS refuses mode changes over NFS
-                - chmod 0777 /export || true
+                # csi-nfs creates the subdir 0755 owned by uid 977; the export
+                # runs as 1000 and cannot write without this.
+                - chmod 0777 /export
               image: busybox
               name: permissions
               volumeMounts:
