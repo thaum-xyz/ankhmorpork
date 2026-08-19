@@ -68,7 +68,7 @@ spec:
                     name: paperless-secrets
                 - secretRef:
                     name: paperless-db
-              image: ghcr.io/paperless-ngx/paperless-ngx:2.20.0
+              image: ghcr.io/paperless-ngx/paperless-ngx:3.0.5
               name: backup
               ports: []
               resources: {}
