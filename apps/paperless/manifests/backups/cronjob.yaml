@@ -19,6 +19,13 @@ spec:
             app.kubernetes.io/component: backup
             app.kubernetes.io/name: paperless
         spec:
+          # Let the kubelet own the volume instead of chmod-ing it. Only takes
+          # effect if the nfs CSIDriver declares fsGroupPolicy: File -- with the
+          # default ReadWriteOnceWithFSType it is skipped on an RWX volume with
+          # no fsType. The chmod below stays until that is confirmed.
+          securityContext:
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
           affinity:
             podAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
