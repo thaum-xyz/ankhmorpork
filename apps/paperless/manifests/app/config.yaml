@@ -8,12 +8,14 @@ metadata:
   namespace: paperless
 data:
   PAPERLESS_BIND_ADDR: "0.0.0.0"
-  PAPERLESS_CONSUMER_POLLING: "60"
-  PAPERLESS_CONSUMER_POLLING_DELAY: "30"
-  PAPERLESS_CONSUMER_POLLING_RETRY_COUNT: "20"
+  # watchfiles replaced the old polling settings in 3.x. Kept explicit because
+  # the consume dir is NFS, where inotify is unreliable.
+  PAPERLESS_CONSUMER_POLLING_INTERVAL: "60"
+  PAPERLESS_CONSUMER_STABILITY_DELAY: "30"
   PAPERLESS_CORS_ALLOWED_HOSTS: http://paperless-headless.paperless.svc,http://paperless.paperless.svc,https://papers.krupa.net.pl,https://paperless.motmot-prometheus.ts.net
-  PAPERLESS_DB_POOLSIZE: "10"
   PAPERLESS_DB_READ_CACHE_ENABLED: "false" # using pgBouncer, so no need for read cache
+  # 3.x defaults to sqlite and requires this to be explicit for postgres.
+  PAPERLESS_DBENGINE: postgresql
   PAPERLESS_ENABLE_FLOWER: "true"
   PAPERLESS_FILENAME_FORMAT: '{{created_year}}/{{correspondent}}/{{asn}} - {{title}}'
   PAPERLESS_OCR_LANGUAGE: pol+eng
