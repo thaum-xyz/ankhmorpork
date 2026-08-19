@@ -4,3 +4,4 @@ resources:
   - namespace.yaml
   - operator/
   - barman/
+  - versity/
