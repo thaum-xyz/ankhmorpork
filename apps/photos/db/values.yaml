@@ -15,8 +15,6 @@ cluster:
   postgresql:
     shared_preload_libraries:
       - vchord.so
-    parameters:
-      search_path: '"$user", public'
   bootstrap:
     postInitApplicationSQL:
       - 'CREATE EXTENSION IF NOT EXISTS vchord CASCADE;'
