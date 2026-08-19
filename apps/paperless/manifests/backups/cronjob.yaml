@@ -19,13 +19,6 @@ spec:
             app.kubernetes.io/component: backup
             app.kubernetes.io/name: paperless
         spec:
-          # Let the kubelet own the volume instead of chmod-ing it. Only takes
-          # effect if the nfs CSIDriver declares fsGroupPolicy: File -- with the
-          # default ReadWriteOnceWithFSType it is skipped on an RWX volume with
-          # no fsType. The chmod below stays until that is confirmed.
-          securityContext:
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
           affinity:
             podAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -38,8 +31,10 @@ spec:
             - command:
                 - sh
                 - -c
-                # csi-nfs creates the subdir 0755 owned by uid 977; the export
-                # runs as 1000 and cannot write without this.
+                # csi-nfs creates the subdir 0755 owned by uid 977 and the
+                # export runs as 1000. fsGroup cannot fix it: this NAS refuses
+                # chown, so the kubelet's ownership change is dropped. It does
+                # allow chmod, which is enough for the client-side access check.
                 - chmod 0777 /export
               image: busybox
               name: permissions
