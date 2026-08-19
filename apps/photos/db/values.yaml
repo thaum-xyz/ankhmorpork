@@ -3,7 +3,7 @@ owner: immich
 
 cluster:
   instances: 3
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16-v0.2.1
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:17.5-0.4.3
   primaryUpdateMethod: switchover
   storage:
     size: 20Gi
@@ -14,14 +14,14 @@ cluster:
       memory: 500Mi
   postgresql:
     shared_preload_libraries:
-      - vectors.so
+      - vchord.so
+    parameters:
+      search_path: '"$user", public'
   bootstrap:
     postInitApplicationSQL:
-      - 'ALTER SYSTEM SET search_path TO "immich", public, vectors;'
-      - 'CREATE EXTENSION IF NOT EXISTS "vectors";'
+      - 'CREATE EXTENSION IF NOT EXISTS vchord CASCADE;'
       - 'CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;'
       - 'CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;'
-      - 'ALTER SCHEMA vectors OWNER TO immich;'
 
 backup:
   schedule: "0 13 2 * * *"
