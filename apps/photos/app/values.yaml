@@ -22,6 +22,9 @@ controllers:
                 name: postgres-user
                 key: password
           DB_DATABASE_NAME: "immich"
+          # Auto-detection would pick it anyway, but be explicit now that the
+          # cluster carries both vchord and vector.
+          DB_VECTOR_EXTENSION: "vectorchord"
           IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
 immich:
