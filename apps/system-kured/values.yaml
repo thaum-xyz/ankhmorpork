@@ -5,16 +5,18 @@ configuration:
   concurrency: 1
   # Abort drain after this time
   drainTimeout: "2h"
-  # TEMPORARY: 2h/1h cannot clear a 4-node backlog inside the 5h window.
-  # Revert to period 2h / lockReleaseDelay 1h once every node is rebooted.
-  period: "1m"
+  period: "2h"
   rebootDays:
   - mo
   - we
   - th
   startTime: "07:00:00"
   endTime: "12:00:00"
-  lockReleaseDelay: "5m"
+  lockReleaseDelay: "1h"
+  # Without a TTL an interrupted holder strands the lock forever -- restarting
+  # the daemonset mid-reboot does exactly that, since the release delay is
+  # only held in memory. Longer than a real cycle (drain + reboot + delay).
+  lockTtl: "3h"
 
 resources:
   limits:
