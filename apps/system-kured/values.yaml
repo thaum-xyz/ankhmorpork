@@ -22,9 +22,9 @@ resources:
     cpu: 3m
     memory: 64Mi
 
-# Nodes are labelled kured=disabled, so this matches nothing and kured runs 0 pods.
-# To re-enable: relabel kured=enabled, THEN clear the DaemonSet's
-# weave.works/kured-node-lock annotation -- that order, or it reboots immediately.
+# Per-node kill switch: relabel a node kured=disabled to stop it rebooting.
+# Turning one back on: relabel first, then clear the DaemonSet's
+# weave.works/kured-node-lock annotation -- that order, or it reboots at once.
 nodeSelector:
   kured: enabled
 
