@@ -7,9 +7,11 @@ metadata:
   name: backups
   namespace: paperless
 spec:
+  # Exports land on the NAS directly. Longhorn was keeping two replicas of a
+  # backup and then shipping them to that same NAS via its backup target.
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
-  storageClassName: longhorn-r2
+  storageClassName: unifi-nas
