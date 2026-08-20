@@ -1,0 +1,31 @@
+apiVersion: policies.kyverno.io/v1
+kind: DeletingPolicy
+metadata:
+  name: cleanup-cnpg-backups
+spec:
+  schedule: "17 3 * * *"
+  deletionPropagationPolicy: Background
+  matchConstraints:
+    resourceRules:
+      - apiGroups:
+          - postgresql.cnpg.io
+        apiVersions:
+          - v1
+        resources:
+          - backups
+  conditions:
+    # Manual backups are preserved; this policy only bounds the CR history
+    # created by long-lived ScheduledBackup objects.
+    - name: scheduled-backup
+      expression: >-
+        has(object.metadata.labels) &&
+        "cnpg.io/scheduled-backup" in object.metadata.labels
+    - name: terminal-phase
+      expression: >-
+        has(object.status) && has(object.status.phase) &&
+        object.status.phase in ["completed", "failed"]
+    # Object-store retention is at most 30 days. Keep five extra days of CR
+    # history so the policy cannot race the backup plugin's retention window.
+    - name: older-than-retention-window
+      expression: >-
+        time.now() - timestamp(object.metadata.creationTimestamp) > duration("840h")

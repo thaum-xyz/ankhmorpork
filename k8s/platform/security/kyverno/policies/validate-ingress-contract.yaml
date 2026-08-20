@@ -1,0 +1,50 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: validate-ingress-contract
+spec:
+  evaluation:
+    background:
+      enabled: false
+  failurePolicy: Fail
+  validationActions:
+    - Deny
+  matchConstraints:
+    resourceRules:
+      - apiGroups:
+          - networking.k8s.io
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - ingresses
+  variables:
+    - name: ingressClass
+      expression: object.spec.?ingressClassName.orValue("")
+    - name: annotations
+      expression: object.metadata.?annotations.orValue({})
+    - name: tls
+      expression: object.spec.?tls.orValue([])
+  validations:
+    - expression: variables.ingressClass in ["public", "private", "cloudflare"]
+      message: Ingress class must be public, private, or cloudflare.
+    - expression: '! ("kubernetes.io/ingress.class" in variables.annotations)'
+      message: >-
+        The deprecated kubernetes.io/ingress.class annotation is not allowed;
+        use spec.ingressClassName.
+    - expression: variables.ingressClass == "cloudflare" || variables.tls.size() > 0
+      message: Public and private Ingresses must configure TLS.
+    - expression: >-
+        variables.ingressClass == "cloudflare" ||
+        ("cert-manager.io/cluster-issuer" in variables.annotations &&
+        variables.annotations["cert-manager.io/cluster-issuer"] in
+        ["letsencrypt-prod", "letsencrypt-dns01"])
+      message: >-
+        Public and private Ingresses must use an approved cert-manager
+        ClusterIssuer.
+    - expression: >-
+        variables.ingressClass == "cloudflare" ||
+        variables.tls.all(entry, has(entry.secretName) && entry.secretName != "")
+      message: Every Ingress TLS entry must specify a Secret name.

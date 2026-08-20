@@ -1,0 +1,46 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: require-resource-requests
+spec:
+  evaluation:
+    background:
+      enabled: false
+  failurePolicy: Fail
+  validationActions:
+    - Warn
+  matchConstraints:
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - longhorn-system
+    resourceRules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+        resources:
+          - pods
+  variables:
+    - name: containers
+      expression: object.spec.containers
+    - name: initContainers
+      expression: object.spec.?initContainers.orValue([])
+  validations:
+    - expression: >-
+        variables.containers.all(container,
+          has(container.resources) &&
+          has(container.resources.requests) &&
+          "cpu" in container.resources.requests &&
+          "memory" in container.resources.requests) &&
+        variables.initContainers.all(container,
+          has(container.resources) &&
+          has(container.resources.requests) &&
+          "cpu" in container.resources.requests &&
+          "memory" in container.resources.requests)
+      message: All regular and init containers should set CPU and memory requests.

@@ -1,8 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml
-  - operator/
-  - barman/
-  - versity/
-  - policies/
+  - cleanup-backups.yaml
+  - cleanup-controller-rbac.yaml
