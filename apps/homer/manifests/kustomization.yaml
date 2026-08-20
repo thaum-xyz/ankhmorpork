@@ -4,7 +4,6 @@ namespace: homer
 resources:
   - repository.yaml
   - release.yaml
-  - homerservices.yaml
   - homer/ingress.yaml
   - homer/ingress-cloudflare.yaml
 generatorOptions:
