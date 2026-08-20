@@ -1,0 +1,14 @@
+apiVersion: homer.bananaops.io/v1alpha1
+kind: HomerServices
+metadata:
+  name: paperless
+  namespace: paperless
+spec:
+  groups:
+    - name: Ankh Cloud
+      icon: "fa fa-cloud"
+      items:
+        - name: Paperless
+          url: "https://papers.krupa.net.pl"
+          subtitle: "Document management system"
+          logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/paperlessng.svg"

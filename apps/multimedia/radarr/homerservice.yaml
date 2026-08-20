@@ -1,0 +1,15 @@
+apiVersion: homer.bananaops.io/v1alpha1
+kind: HomerServices
+metadata:
+  name: radarr
+spec:
+  groups:
+    - name: Multimedia
+      icon: "fa fa-tv"
+      items:
+        - name: Radarr
+          url: "https://radarr.ankhmorpork.thaum.xyz"
+          subtitle: "Movie collection management"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/radarr.svg"
+          tag: local
+          tagstyle: "is-success"

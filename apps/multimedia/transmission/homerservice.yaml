@@ -1,0 +1,15 @@
+apiVersion: homer.bananaops.io/v1alpha1
+kind: HomerServices
+metadata:
+  name: transmission
+spec:
+  groups:
+    - name: Multimedia
+      icon: "fa fa-tv"
+      items:
+        - name: Transmission
+          url: "https://downloader.ankhmorpork.thaum.xyz"
+          subtitle: "Downloader"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/transmission.svg"
+          tag: local
+          tagstyle: "is-success"

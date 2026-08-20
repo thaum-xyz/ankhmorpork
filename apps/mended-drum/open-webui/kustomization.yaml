@@ -8,3 +8,4 @@ resources:
   - ingress.yaml
   - ingress-cloudflare.yaml
   - deployment.yaml
+  - homerservice.yaml

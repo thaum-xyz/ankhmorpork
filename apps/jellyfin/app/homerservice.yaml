@@ -1,0 +1,15 @@
+apiVersion: homer.bananaops.io/v1alpha1
+kind: HomerServices
+metadata:
+  name: jellyfin
+spec:
+  groups:
+    - name: Multimedia
+      icon: "fa fa-tv"
+      items:
+        - name: Jellyfin
+          url: "https://vod.krupa.net.pl"
+          subtitle: "Video on demand"
+          logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/jellyfin.svg"
+          tag: local
+          tagstyle: "is-success"

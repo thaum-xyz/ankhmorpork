@@ -1,0 +1,14 @@
+apiVersion: homer.bananaops.io/v1alpha1
+kind: HomerServices
+metadata:
+  name: immich
+  namespace: photos
+spec:
+  groups:
+    - name: Ankh Cloud
+      icon: "fa fa-cloud"
+      items:
+        - name: Immich
+          url: "https://photos.krupa.net.pl"
+          subtitle: "Photo & Video Library"
+          logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/immich.svg"
