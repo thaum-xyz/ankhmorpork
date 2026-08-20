@@ -11,7 +11,7 @@ spec:
   # base/longhorn-system/versity so they sit next to what they serve; that
   # directory is not in the parent kustomization's resources.
   interval: 30m0s
-  path: ./base/longhorn-system/versity
+  path: ./k8s/platform/storage/longhorn-system/versity
   prune: true
   sourceRef:
     kind: GitRepository
