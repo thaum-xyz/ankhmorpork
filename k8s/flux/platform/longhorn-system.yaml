@@ -1,0 +1,13 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: longhorn-system
+  namespace: flux-system
+spec:
+  force: true
+  interval: 30m0s
+  path: ./k8s/platform/storage/longhorn-system
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

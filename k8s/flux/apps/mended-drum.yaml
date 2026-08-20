@@ -1,0 +1,12 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: mended-drum
+  namespace: flux-system
+spec:
+  interval: 15m0s
+  path: ./k8s/apps/mended-drum
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

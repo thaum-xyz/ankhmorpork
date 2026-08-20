@@ -1,0 +1,12 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: unifi
+  namespace: flux-system
+spec:
+  interval: 120m0s
+  path: ./k8s/apps/unifi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork
