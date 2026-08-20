@@ -9,6 +9,7 @@ resources:
   - library-pvc.yaml
   - server-pdb.yaml
   - ingress-cloudflare.yaml
+  - homerservice.yaml
 configMapGenerator:
   - name: values
     files:

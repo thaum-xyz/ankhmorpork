@@ -5,6 +5,7 @@ resources:
   - release.yaml
   - ingress.yaml
   - middlewares.yaml
+  - homerservice.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:

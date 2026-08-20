@@ -1,0 +1,14 @@
+apiVersion: homer.bananaops.io/v1alpha1
+kind: HomerServices
+metadata:
+  name: mended-drum
+  namespace: mended-drum
+spec:
+  groups:
+    - name: Ankh Cloud
+      icon: "fa fa-cloud"
+      items:
+        - name: Mended Drum
+          url: "https://drum.krupa.net.pl"
+          subtitle: "Bar assistant"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"

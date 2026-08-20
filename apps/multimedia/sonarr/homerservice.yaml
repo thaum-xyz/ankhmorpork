@@ -1,0 +1,15 @@
+apiVersion: homer.bananaops.io/v1alpha1
+kind: HomerServices
+metadata:
+  name: sonarr
+spec:
+  groups:
+    - name: Multimedia
+      icon: "fa fa-tv"
+      items:
+        - name: Sonarr
+          url: "https://sonarr.ankhmorpork.thaum.xyz"
+          subtitle: "TV shows collection management"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/sonarr.svg"
+          tag: local
+          tagstyle: "is-success"

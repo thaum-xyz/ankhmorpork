@@ -7,3 +7,4 @@ resources:
   - pvc-config.yaml
   - service.yaml
   - vpn-credentials.yaml
+  - homerservice.yaml

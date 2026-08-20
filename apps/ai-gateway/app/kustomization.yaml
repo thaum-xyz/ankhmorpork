@@ -5,6 +5,7 @@ resources:
   - release.yaml
   - credentials.yaml
   - ingress-cloudflare.yaml
+  - homerservice.yaml
 configMapGenerator:
   - name: values
     files:

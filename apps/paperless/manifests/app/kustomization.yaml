@@ -18,3 +18,4 @@ resources:
   - serviceAccount.yaml
   - serviceHeadless.yaml
   - statefulSet.yaml
+  - homerservice.yaml
