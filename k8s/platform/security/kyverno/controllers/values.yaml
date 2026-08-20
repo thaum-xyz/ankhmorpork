@@ -1,0 +1,80 @@
+# Config reference: https://github.com/kyverno/kyverno/blob/main/charts/kyverno/values.yaml
+
+# Admission reports require the reports controller. Enforcement still happens
+# synchronously and is observable through controller metrics and events.
+features:
+  admissionReports:
+    enabled: false
+  aggregateReports:
+    enabled: false
+  policyReports:
+    enabled: false
+  validatingAdmissionPolicyReports:
+    enabled: false
+  backgroundScan:
+    enabled: false
+
+admissionController:
+  # Admission is on the API write path, so keep one replica on each of the
+  # cluster's three control-plane nodes.
+  replicas: 3
+  priorityClassName: system-cluster-critical
+  podDisruptionBudget:
+    minAvailable: 2
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+  initContainer:
+    resources:
+      limits: null
+      requests:
+        cpu: 10m
+        memory: 64Mi
+  container:
+    resources:
+      limits: null
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  serviceMonitor:
+    enabled: true
+
+# Generate rules and mutate-existing rules are not part of the initial use case.
+backgroundController:
+  enabled: false
+
+cleanupController:
+  enabled: true
+  replicas: 1
+  priorityClassName: system-cluster-critical
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+  resources:
+    limits: null
+    requests:
+      cpu: 100m
+      memory: 64Mi
+  serviceMonitor:
+    enabled: true
+
+# PolicyReport generation and background auditing can be added independently if
+# reports become useful; neither is needed for admission or cleanup enforcement.
+reportsController:
+  enabled: false
