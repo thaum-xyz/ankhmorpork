@@ -8,4 +8,3 @@ resources:
   - cookie-secret.yaml
   - ingress.yaml
   - ingress-cloudflare.yaml
-  - homerservice.yaml

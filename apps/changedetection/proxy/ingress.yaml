@@ -11,13 +11,16 @@ metadata:
   name: changedetection-public
   labels:
     app.kubernetes.io/name: changedetection
-    reloader.homer/enabled: "true"
+    homer.rajsingh.info/enabled: "true"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://user-images.githubusercontent.com/275001/231676626-7d768df9-be4c-4187-a573-aba640b826d3.svg
-    reloader.homer/name: Change Detection
-    reloader.homer/subtitle: Website change detection
+    item.homer.rajsingh.info/name: "Change Detection"
+    item.homer.rajsingh.info/subtitle: "Website change detection"
+    item.homer.rajsingh.info/logo: "https://user-images.githubusercontent.com/275001/231676626-7d768df9-be4c-4187-a573-aba640b826d3.svg"
+    item.homer.rajsingh.info/order: "80"
+    service.homer.rajsingh.info/name: "Ankh Cloud"
+    service.homer.rajsingh.info/icon: "fa fa-cloud"
+    service.homer.rajsingh.info/order: "30"
 spec:
   ingressClassName: public
   rules:

@@ -3,14 +3,18 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
-    reloader.homer/group: Multimedia
-    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/transmission.svg
-    reloader.homer/name: Transmission
-    reloader.homer/subtitle: Downloader
-    reloader.homer/tag: local
+    item.homer.rajsingh.info/name: "Transmission"
+    item.homer.rajsingh.info/subtitle: "Downloader"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/transmission.svg"
+    item.homer.rajsingh.info/tag: "local"
+    item.homer.rajsingh.info/tagstyle: "is-success"
+    item.homer.rajsingh.info/order: "10"
+    service.homer.rajsingh.info/name: "Multimedia"
+    service.homer.rajsingh.info/icon: "fa fa-tv"
+    service.homer.rajsingh.info/order: "20"
     traefik.http.middlewares.add-foo.addprefix.prefix: /transmission/web
   labels:
-    reloader.homer/enabled: "true"
+    homer.rajsingh.info/enabled: "true"
   name: downloader
 spec:
   ingressClassName: private

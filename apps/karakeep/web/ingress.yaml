@@ -19,14 +19,17 @@ metadata:
   labels:
     app.kubernetes.io/name: karakeep
     probe: enabled
-    reloader.homer/enabled: "true"
+    homer.rajsingh.info/enabled: "true"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     probe-uri: /
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://avatars.githubusercontent.com/u/202258986?s=60&v=4
-    reloader.homer/name: Karakeep
-    reloader.homer/subtitle: Bookmarks hoarder
+    item.homer.rajsingh.info/name: "Karakeep"
+    item.homer.rajsingh.info/subtitle: "Bookmarks hoarder"
+    item.homer.rajsingh.info/logo: "https://avatars.githubusercontent.com/u/202258986?s=60&v=4"
+    item.homer.rajsingh.info/order: "60"
+    service.homer.rajsingh.info/name: "Ankh Cloud"
+    service.homer.rajsingh.info/icon: "fa fa-cloud"
+    service.homer.rajsingh.info/order: "30"
 spec:
   ingressClassName: public
   rules:

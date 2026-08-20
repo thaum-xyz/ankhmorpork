@@ -3,13 +3,17 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
-    reloader.homer/group: Multimedia
-    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/sonarr.svg
-    reloader.homer/name: Sonarr
-    reloader.homer/subtitle: TV shows collection management
-    reloader.homer/tag: local
+    item.homer.rajsingh.info/name: "Sonarr"
+    item.homer.rajsingh.info/subtitle: "TV shows collection management"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/sonarr.svg"
+    item.homer.rajsingh.info/tag: "local"
+    item.homer.rajsingh.info/tagstyle: "is-success"
+    item.homer.rajsingh.info/order: "20"
+    service.homer.rajsingh.info/name: "Multimedia"
+    service.homer.rajsingh.info/icon: "fa fa-tv"
+    service.homer.rajsingh.info/order: "20"
   labels:
-    reloader.homer/enabled: "true"
+    homer.rajsingh.info/enabled: "true"
   name: sonarr
 spec:
   ingressClassName: private

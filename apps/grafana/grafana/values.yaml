@@ -25,11 +25,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     probe-uri: /-/healthy
-    reloader.homer/group: Administration
-    reloader.homer/logo: https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg
-    reloader.homer/name: grafana
+    item.homer.rajsingh.info/name: "Grafana"
+    item.homer.rajsingh.info/logo: "https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg"
+    item.homer.rajsingh.info/order: "50"
+    service.homer.rajsingh.info/name: "Administration"
+    service.homer.rajsingh.info/icon: "fa fa-user-shield"
+    service.homer.rajsingh.info/order: "10"
   labels:
-    reloader.homer/enabled: "true"
+    homer.rajsingh.info/enabled: "true"
     probe: enabled
   hosts:
     - "grafana.krupa.net.pl"

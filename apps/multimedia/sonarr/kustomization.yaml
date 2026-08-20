@@ -7,4 +7,3 @@ resources:
   - serviceAccount.yaml
   - serviceMonitor.yaml
   - statefulset.yaml
-  - homerservice.yaml

@@ -1,0 +1,106 @@
+# Ingress-backed entries are discovered from item.homer.rajsingh.info/*
+# annotations on the Ingress itself. Only Ingresses carrying the label in
+# ingressSelector are considered, so the cluster's other ~23 Ingresses stay off
+# the portal. The services below are the entries with no Ingress here.
+#
+# order sorts descending; ties fall back to name.
+apiVersion: homer.rajsingh.info/v1alpha1
+kind: Dashboard
+metadata:
+  name: ankhmorpork
+  namespace: homer
+spec:
+  replicas: 2
+  ingressSelector:
+    matchLabels:
+      homer.rajsingh.info/enabled: "true"
+  homerConfig:
+    title: "Ankhmorpork portal"
+    subtitle: "thaum"
+    icon: "fas fa-sitemap"
+    header: true
+    footer: false
+    theme: default
+    colors:
+      light:
+        highlight-primary: "#3367d6"
+        highlight-secondary: "#4285f4"
+        highlight-hover: "#5a95f5"
+        background: "#f5f5f5"
+        card-background: "#ffffff"
+        text: "#363636"
+        text-header: "#ffffff"
+        text-title: "#303030"
+        text-subtitle: "#424242"
+        card-shadow: rgba(0, 0, 0, 0.1)
+        link-hover: "#363636"
+      dark:
+        highlight-primary: "#3367d6"
+        highlight-secondary: "#4285f4"
+        highlight-hover: "#5a95f5"
+        background: "#131313"
+        card-background: "#2b2b2b"
+        text: "#eaeaea"
+        text-header: "#ffffff"
+        text-title: "#fafafa"
+        text-subtitle: "#f5f5f5"
+        card-shadow: rgba(0, 0, 0, 0.4)
+        link-hover: "#ffdd57"
+    links:
+      - name: Status Page
+        icon: "fa fa-question"
+        url: "https://thaum.statuspage.io/"
+      - name: Passwords
+        icon: "fa fa-key"
+        url: "https://vault.bitwarden.com/"
+    services:
+      - name: Ankh Cloud
+        icon: "fa fa-cloud"
+        parameters:
+          order: "30"
+        items:
+          - name: Packing list
+            url: "https://docs.google.com/spreadsheets/d/1d8LFOxTWqAZuA2OSVuZJV7pGUYlJfNCqAIA8Q5p6ci8/edit?usp=sharing"
+            subtitle: "What to pack on each type of trip"
+            logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/googledrive.svg"
+            tag: "3rd party"
+            tagstyle: "is-info"
+            parameters:
+              order: "10"
+      - name: Multimedia
+        icon: "fa fa-tv"
+        parameters:
+          order: "20"
+        items:
+          - name: Unifi Drive
+            url: "https://unifi.ui.com"
+            logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
+            parameters:
+              order: "70"
+          - name: Trakt
+            url: "https://trakt.tv"
+            subtitle: "Movie and TV series tracking"
+            logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/trakt.svg"
+            tag: "3rd party"
+            tagstyle: "is-info"
+            parameters:
+              order: "60"
+      - name: Administration
+        icon: "fa fa-user-shield"
+        parameters:
+          order: "10"
+        items:
+          - name: UptimeRobot
+            url: "https://dashboard.uptimerobot.com"
+            logo: "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"
+            tag: "3rd party"
+            tagstyle: "is-info"
+            parameters:
+              order: "20"
+          - name: Doppler
+            url: "https://dashboard.doppler.com/"
+            logo: "https://dashboard.doppler.com/imgs/logo.png"
+            tag: "3rd party"
+            tagstyle: "is-info"
+            parameters:
+              order: "10"

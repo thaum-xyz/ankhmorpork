@@ -6,7 +6,6 @@ resources:
   - admin-creds.yaml
   - oidc-secret.yaml
   - ingress-cloudflare.yaml
-  - homerservice.yaml
 configMapGenerator:
   - name: values
     files:

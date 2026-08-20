@@ -7,4 +7,3 @@ resources:
   - ingress-cloudflare.yaml
   - pvc.yaml
   - podmonitor.yaml
-  - homerservice.yaml

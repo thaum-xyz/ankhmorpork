@@ -4,11 +4,15 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     probe-uri: /health
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg
-    reloader.homer/name: Mended Drum
-    reloader.homer/subtitle: Bar assistant
+    item.homer.rajsingh.info/name: "Mended Drum"
+    item.homer.rajsingh.info/subtitle: "Bar assistant"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"
+    item.homer.rajsingh.info/order: "40"
+    service.homer.rajsingh.info/name: "Ankh Cloud"
+    service.homer.rajsingh.info/icon: "fa fa-cloud"
+    service.homer.rajsingh.info/order: "30"
   labels:
+    homer.rajsingh.info/enabled: "true"
     probe: enabled
     app.kubernetes.io/name: open-webui
   name: open-webui
