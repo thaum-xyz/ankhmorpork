@@ -9,3 +9,10 @@ resources:
   requests:
     cpu: 10m
     memory: 64Mi
+
+highAvailability:
+  podDisruptionBudget:
+    # The chart does not yet expose unhealthyPodEvictionPolicy; the Kyverno PDB
+    # policy will keep warning about that remaining drain-safety gap.
+    minAvailable: null
+    maxUnavailable: 1

@@ -82,7 +82,9 @@ extraEnvVars:
     value: "/ui"
 pdb:
   enabled: true
-  minAvailable: 1
+  # The chart does not yet expose unhealthyPodEvictionPolicy; the Kyverno PDB
+  # policy will keep warning about that remaining drain-safety gap.
+  maxUnavailable: 1
 affinity:
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:

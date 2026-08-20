@@ -1,0 +1,61 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: validate-pdb-drain-safety
+spec:
+  evaluation:
+    background:
+      enabled: false
+  failurePolicy: Fail
+  validationActions:
+    - Warn
+  matchConstraints:
+    namespaceSelector:
+      matchExpressions:
+        # Longhorn manages its own instance-manager and CSI PDBs.
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - longhorn-system
+    resourceRules:
+      - apiGroups:
+          - policy
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - poddisruptionbudgets
+  matchConditions:
+    # CNPG creates role-specific PDBs whose lifecycle and failover semantics are
+    # managed by the operator rather than by application owners.
+    - name: exclude-cnpg-managed-pdbs
+      expression: >-
+        !object.metadata.?ownerReferences.orValue([]).exists(
+          owner,
+          owner.kind == "Cluster" &&
+          owner.apiVersion.startsWith("postgresql.cnpg.io/")
+        )
+  validations:
+    - expression: has(object.spec.maxUnavailable)
+      message: >-
+        PodDisruptionBudgets must use maxUnavailable so the disruption allowance
+        follows changes to the workload replica count.
+    - expression: >-
+        !has(object.spec.maxUnavailable) ||
+        (string(object.spec.maxUnavailable) != "0" &&
+        string(object.spec.maxUnavailable) != "0%")
+      message: maxUnavailable must permit at least one voluntary disruption.
+    - expression: >-
+        object.spec.?unhealthyPodEvictionPolicy.orValue("") == "AlwaysAllow"
+      message: >-
+        unhealthyPodEvictionPolicy must be AlwaysAllow so an unhealthy Pod does
+        not indefinitely block a node drain.
+    - expression: >-
+        has(object.spec.selector) &&
+        (object.spec.selector.?matchLabels.orValue({}).size() > 0 ||
+        object.spec.selector.?matchExpressions.orValue([]).size() > 0)
+      message: >-
+        PodDisruptionBudget selectors must not be empty because policy/v1 empty
+        selectors match every Pod in the namespace.
