@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./apps/external-dns
+  path: ./base/external-dns
   prune: true
   sourceRef:
     kind: GitRepository
