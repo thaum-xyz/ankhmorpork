@@ -6,7 +6,8 @@ metadata:
     app.kubernetes.io/name: server
   name: immich-server
 spec:
-  minAvailable: 1
+  maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app.kubernetes.io/instance: immich

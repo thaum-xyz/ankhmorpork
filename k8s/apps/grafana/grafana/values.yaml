@@ -5,6 +5,7 @@ headlessService: true
 
 podDisruptionBudget:
   maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
 
 # The chart renders the traefik route; ingress-cloudflare.yaml carries the same
 # host for outside access.
