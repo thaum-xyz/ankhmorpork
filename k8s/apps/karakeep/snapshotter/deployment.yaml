@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: chrome
-          image: zenika-hub/alpine-chrome:124
+          image: zenika/alpine-chrome:124
           command:
             - chromium-browser
             - --headless
