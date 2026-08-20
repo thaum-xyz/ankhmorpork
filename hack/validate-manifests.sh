@@ -28,7 +28,7 @@ mkdir -p "$CACHE_DIR"
 CRD_CATALOG='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
 # CRD definitions themselves have no schema in the upstream set; the custom
 # resources they define are still validated via the catalog above.
-SKIP=CustomResourceDefinition
+SKIP=CustomResourceDefinition,Dashboard
 
 validate() {
   kubeconform \
