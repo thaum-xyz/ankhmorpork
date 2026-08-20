@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./base/kube-system/manifests
+  path: ./k8s/platform/cluster/device-plugins
   prune: true
   sourceRef:
     kind: GitRepository
