@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: cnpg-database
-      version: "0.2.0"
+      version: "0.2.1"
       sourceRef:
         kind: HelmRepository
         name: thaum-charts
@@ -32,23 +32,3 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: postgres-values
-  postRenderers:
-    - kustomize:
-        patches:
-          # The cnpg-database chart intentionally leaves the Pooler container
-          # list empty for the operator to populate. Naming pgbouncer here lets
-          # CNPG merge the measured requests into that generated container.
-          - target:
-              group: postgresql.cnpg.io
-              version: v1
-              kind: Pooler
-              name: pooler
-            patch: |-
-              - op: replace
-                path: /spec/template/spec/containers
-                value:
-                  - name: pgbouncer
-                    resources:
-                      requests:
-                        cpu: 10m
-                        memory: 64Mi
