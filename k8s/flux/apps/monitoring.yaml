@@ -4,7 +4,6 @@ metadata:
   name: monitoring
   namespace: flux-system
 spec:
-  suspend: true # FIXME(paulfantom): Temporary measure to prevent re-sync of all apps
   interval: 5m0s
   path: ./k8s/apps/monitoring/manifests
   prune: true
