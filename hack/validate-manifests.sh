@@ -85,7 +85,7 @@ else
   targets=$(
     {
       flux_paths
-      find apps base core -name kustomization.yaml -exec dirname {} \;
+      find k8s -name kustomization.yaml -exec dirname {} \;
     } | sort -u
   )
 fi

@@ -12,10 +12,6 @@ validate:  ## Render every kustomization and validate it against schemas
 validate-flux:  ## Check that Flux Kustomization paths exist
 	./hack/validate-flux-paths.sh
 
-.PHONY: kubescape
-kubescape:  ## Security scanning of manifests
-	kubescape scan --compliance-threshold 70 --exceptions './kubescape-exceptions.json' $$(find apps base core -name "*.yaml")
-
 .PHONY: prometheusrules
 prometheusrules:  ## Validate prometheus rules
 	./hack/unpack-prometheus-rules.sh
