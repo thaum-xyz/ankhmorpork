@@ -4,11 +4,11 @@ namespace: homer
 resources:
   - repository.yaml
   - release.yaml
-  - homer/ingress.yaml
-  - homer/ingress-cloudflare.yaml
+  - ingress.yaml
+  - ingress-cloudflare.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
-  - name: homer-values
+  - name: values-homer-operator
     files:
       - values.yaml=values.yaml
