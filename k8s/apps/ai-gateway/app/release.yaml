@@ -9,7 +9,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: litellm
-      version: "1.93.0"
+      version: "1.97.0"
       interval: 30m
   interval: 10m
   timeout: 15m
