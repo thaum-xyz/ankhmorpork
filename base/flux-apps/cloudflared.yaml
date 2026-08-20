@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./base/cloudflared
+  path: ./k8s/platform/networking/cloudflared
   prune: true
   sourceRef:
     kind: GitRepository
