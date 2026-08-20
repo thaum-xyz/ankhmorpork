@@ -1,8 +1,8 @@
 # Working in this repo
 
-Flux-managed k3s homelab. `core/` bootstraps the cluster, `base/` is infrastructure,
-`apps/` is workloads. Every component has a Flux Kustomization in
-`base/flux-apps/<name>.yaml`.
+Flux-managed k3s homelab. `k8s/bootstrap/` creates the umbrella Flux resources,
+`k8s/platform/` contains infrastructure, and `k8s/apps/` contains workloads.
+Component Flux Kustomizations live in `k8s/flux/platform/` and `k8s/flux/apps/`.
 
 Changing anything Flux applies: see the `flux-app-change` skill in
 `.claude/skills/`. It covers proving the render, the traps that have bitten, and
@@ -28,11 +28,9 @@ but cannot see inside a HelmRelease.
 
 ## Suspended components
 
-Roughly half the fleet is suspended, declared in git — leftovers from emergency
-work in Dec 2025 when nodes failed and reconciliation was stopped to allow manual
-edits. Some were *already failing* before suspension, so **don't resume one
-without reading why it stopped**. `flux-apps` is the exception: never declare
-`suspend` on it, since it manages its own definition and would re-suspend itself.
+No Flux Kustomizations are currently declared suspended in Git. Check both the
+repository and live Flux state before changing suspension because live state can
+temporarily diverge during maintenance.
 
 ## Postgres (CloudNativePG)
 
@@ -50,5 +48,5 @@ backups, so anything built on it is worthless.
 
 ## Out of scope unless asked
 
-`apps/monitoring` — still hand-maintained kube-prometheus manifests with the
+`k8s/apps/monitoring` — still hand-maintained kube-prometheus manifests with the
 largest upgrade backlog in the repo. Excluded from routine upgrade work.
