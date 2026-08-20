@@ -32,6 +32,10 @@ spec:
                 fieldPath: status.hostIP
         image: intel/intel-gpu-plugin:0.36.0
         imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
         securityContext:
           seLinuxOptions:
             type: "container_device_plugin_t"

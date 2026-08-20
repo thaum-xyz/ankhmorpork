@@ -29,3 +29,20 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
+  postRenderers:
+    - kustomize:
+        patches:
+          # Chart 3.1.0 emits top-level resources on the final sidecar when
+          # sidecarContainers is non-empty. Patch the main container directly.
+          - target:
+              group: apps
+              version: v1
+              kind: Deployment
+              name: stirling-pdf-stirling-pdf-chart
+            patch: |-
+              - op: add
+                path: /spec/template/spec/containers/0/resources
+                value:
+                  requests:
+                    cpu: 20m
+                    memory: 1520Mi

@@ -14,6 +14,10 @@ deploymentMode: Monolithic
 
 singleBinary:
   replicas: 1
+  resources:
+    requests:
+      cpu: 40m
+      memory: 240Mi
   # The chart already passes -config.expand-env=true.
   extraEnvFrom:
     - secretRef:
@@ -72,6 +76,12 @@ monitoring:
     enabled: true
   dashboards:
     enabled: true
+
+sidecar:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 96Mi
 
 loki:
   auth_enabled: false

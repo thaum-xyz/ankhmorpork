@@ -25,6 +25,12 @@ persistence:
   data:
     enabled: false
 
+pocketID:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 112Mi
+
 # Uploads (branding, profile pictures) were on that same emptyDir and had
 # already reverted to the image defaults. The database is the only durable
 # store available here.

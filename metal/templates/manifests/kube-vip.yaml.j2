@@ -88,7 +88,10 @@ spec:
         image: "{{ kube_vip_image }}"
         imagePullPolicy: Always
         name: kube-vip
-        resources: {}
+        resources:
+          requests:
+            cpu: 10m
+            memory: 80Mi
         securityContext:
           capabilities:
             add:

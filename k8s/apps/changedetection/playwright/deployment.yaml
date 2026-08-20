@@ -26,6 +26,9 @@ spec:
           - name: DEFAULT_LAUNCH_ARGS
             value: '["--window-size=1920,1080"]'
         resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
           limits:
             memory: "1000Mi"
             cpu: "1"

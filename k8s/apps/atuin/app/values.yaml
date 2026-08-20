@@ -42,6 +42,11 @@ ingress:
 autoscaling:
   enabled: false
 
+resources:
+  requests:
+    cpu: 10m
+    memory: 80Mi
+
 atuin:
   openRegistration: false
   maxHistoryLength: 0

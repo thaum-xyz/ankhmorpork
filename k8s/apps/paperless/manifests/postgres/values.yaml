@@ -23,6 +23,10 @@ backup:
 # The only database in the fleet fronted by pgbouncer.
 pooler:
   enabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
 
 externalSecrets:
   admin:

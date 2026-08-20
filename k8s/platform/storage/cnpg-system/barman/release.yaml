@@ -27,3 +27,6 @@ spec:
     timeout: 20m
     disableWait: false
     crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: barman-values

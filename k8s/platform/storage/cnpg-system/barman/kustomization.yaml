@@ -3,3 +3,9 @@ kind: Kustomization
 namespace: cnpg-system
 resources:
   - release.yaml
+configMapGenerator:
+  - name: barman-values
+    files:
+      - values.yaml=values.yaml
+generatorOptions:
+  disableNameSuffixHash: true
