@@ -9,10 +9,10 @@ on:
     branches: [master]
 
 env:
-  golang-version: 1.26.5
+  golang-version: 1.27.0
   kubeconform-version: v0.8.0
   kustomize-version: v5.8.1
-  yq-version: v4.53.3
+  yq-version: v4.53.6
 
 jobs:
   manifests:
