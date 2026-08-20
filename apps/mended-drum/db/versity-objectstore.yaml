@@ -1,0 +1,22 @@
+# Second backup destination, running alongside backblaze during the migration.
+# Not chart-provisioned: cnpg-database renders a single ObjectStore from
+# backup.objectStore, and teaching it about a second one is not worth it for a
+# transitional state.
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: versity
+spec:
+  configuration:
+    destinationPath: s3://cnpg/postgres/mended-drum
+    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
+    s3Credentials:
+      accessKeyId:
+        name: postgres-backup
+        key: S3_ACCESS_KEY
+      secretAccessKey:
+        name: postgres-backup
+        key: S3_SECRET_KEY
+    wal:
+      compression: gzip
+  retentionPolicy: 30d

@@ -1,0 +1,20 @@
+# Base backups only. WAL archiving stays on backblaze for now: CNPG rejects a
+# second plugin entry with isWALArchiver true -- "Cannot enable more than one
+# WAL archiver plugin" -- because postgres has a single archive_command.
+#
+# So until the archiver is switched, versity can restore to a backup time but
+# not to an arbitrary point; backblaze remains the complete copy.
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: postgres-versity
+spec:
+  schedule: "0 45 23 * * *"
+  backupOwnerReference: self
+  cluster:
+    name: postgres
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+    parameters:
+      barmanObjectName: versity
