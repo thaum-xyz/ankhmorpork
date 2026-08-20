@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 60m0s
-  path: ./base/system-kured
+  path: ./k8s/platform/cluster/system-kured
   prune: true
   sourceRef:
     kind: GitRepository

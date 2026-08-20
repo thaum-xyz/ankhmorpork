@@ -6,7 +6,7 @@ metadata:
 spec:
   force: true
   interval: 30m0s
-  path: ./base/node-problem-detector
+  path: ./k8s/platform/cluster/node-problem-detector
   prune: true
   sourceRef:
     kind: GitRepository

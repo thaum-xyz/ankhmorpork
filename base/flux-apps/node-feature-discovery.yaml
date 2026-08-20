@@ -5,7 +5,7 @@ metadata:
   namespace: flux-apps
 spec:
   interval: 15m0s
-  path: ./base/node-feature-discovery
+  path: ./k8s/platform/cluster/node-feature-discovery
   prune: true
   suspend: false
   sourceRef:
