@@ -92,7 +92,7 @@
       "automerge": true
     },
     {
-      "description": "Bare metal: its own group, deliberately never automerged. Sharing a groupName with base/** put these in the same PR, which inherited automerge and defeated the point.",
+      "description": "Bare metal: its own group, deliberately never automerged.",
       "addLabels": [
         "dependencies/hosting"
       ],
@@ -102,13 +102,16 @@
       ]
     },
     {
-      "description": "core/ bootstraps the cluster (cert-manager, external-secrets, flux2). Soaked and labelled, deliberately not automerged: a bad flux2 or cert-manager bump takes everything else with it.",
+      "description": "Cluster bootstrap controllers are soaked and deliberately not automerged: a bad flux2, cert-manager, or external-secrets bump takes everything else with it.",
       "addLabels": [
         "dependencies/core"
       ],
       "groupName": "core infrastructure",
       "matchFileNames": [
-        "core/**"
+        "k8s/bootstrap/**",
+        "k8s/platform/cluster/flux-system/**",
+        "k8s/platform/security/cert-manager/**",
+        "k8s/platform/security/external-secrets/**"
       ],
       "minimumReleaseAge": "10 days"
     },
@@ -119,7 +122,10 @@
       ],
       "groupName": "hosting infrastructure",
       "matchFileNames": [
-        "base/**"
+        "k8s/platform/**",
+        "!k8s/platform/cluster/flux-system/**",
+        "!k8s/platform/security/cert-manager/**",
+        "!k8s/platform/security/external-secrets/**"
       ],
       "minimumReleaseAge": "10 days",
       "automerge": true
@@ -131,7 +137,7 @@
       ],
       "groupName": "applications",
       "matchFileNames": [
-        "apps/**"
+        "k8s/apps/**"
       ],
       "minimumReleaseAge": "20 days",
       "automerge": true
@@ -152,9 +158,7 @@
   ],
   "kubernetes": {
     "managerFilePatterns": [
-      "base/**",
-      "apps/**",
-      "core/**"
+      "k8s/**"
     ]
   },
   "flux": {

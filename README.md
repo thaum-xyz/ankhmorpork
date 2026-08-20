@@ -194,7 +194,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
 
 ### GitOps
 
-[Flux](https://github.com/fluxcd/flux2) watches `manifests/` subdirectories in `base` and `apps` top-level directories and makes changes based on YAML manifests.
+[Flux](https://github.com/fluxcd/flux2) bootstraps from `k8s/bootstrap/`, loads component definitions from `k8s/flux/platform/` and `k8s/flux/apps/`, and reconciles the manifests in `k8s/platform/` and `k8s/apps/`.
 
 ## 🌐 DNS
 

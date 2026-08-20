@@ -1,10 +1,8 @@
 # Config reference: https://github.com/versity/versitygw/blob/main/chart/values.yaml
 #
 # An S3 gateway sitting next to its consumer, the way a cnpg-database sits next
-# to the app that needs postgres. This one exists to become Longhorn's backup
-# target: the current one is nfs://192.168.40.10/var/nfs/shared/longhornbackups,
-# which has been unavailable since 2025-02-11 and is why every Longhorn backup
-# errors. Wiring the BackupTarget CR to it is a separate step.
+# to the app that needs postgres. Longhorn's default backup target points here
+# through the defaultBackupStore values in the parent Longhorn release.
 
 # Pinned. The chart defaults to :latest.
 image:

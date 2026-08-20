@@ -9,9 +9,16 @@ persistence:
 defaultSettings:
   defaultDataPath: "/var/lib/rancher/longhorn"
   snapshotDataIntegrity: "fast-check"
-  #backupTarget: "nfs://192.168.40.10:/nfsshare/longhorn-backups"
   upgradeChecker: false
   concurrentAutomaticEngineUpgradePerNodeLimit: "3"
+
+# Keep the live default target reproducible. The credentials Secret is generated
+# alongside the in-cluster Versity gateway and contains both the gateway and
+# Longhorn key names.
+defaultBackupStore:
+  backupTarget: "s3://longhorn@us-east-1/"
+  backupTargetCredentialSecret: versitygw-credentials
+  pollInterval: 300
 
 longhornUI:
   replicas: 1

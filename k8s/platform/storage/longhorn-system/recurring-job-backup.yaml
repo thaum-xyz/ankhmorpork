@@ -1,0 +1,16 @@
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  # Preserve the identity of the existing UI-created job so Flux adopts it
+  # instead of creating a second daily backup schedule.
+  name: c-gvgagj
+spec:
+  concurrency: 1
+  cron: "19 4 * * *"
+  groups:
+    - default
+  labels: {}
+  name: c-gvgagj
+  parameters: {}
+  retain: 3
+  task: backup
