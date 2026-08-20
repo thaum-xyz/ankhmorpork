@@ -18,8 +18,6 @@ backup:
   objectStore:
     retentionPolicy: 30d
     pathSuffix: mended-drum
-    bucketPrefix: s3://cnpg/postgres
-    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
 
 externalSecrets:
   admin:
