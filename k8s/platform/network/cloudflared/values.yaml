@@ -20,3 +20,7 @@ cloudflared:
   image:
     repository: ghcr.io/strrl/cloudflared
     tag: "2026.7.3-host-metrics.1"
+  resources:
+    requests:
+      cpu: 20m
+      memory: 80Mi

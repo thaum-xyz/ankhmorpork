@@ -98,3 +98,39 @@ cert-manager:
 
 priorityClass:
   enabled: false
+
+resources:
+  topolvm_node:
+    requests:
+      cpu: 10m
+      memory: 80Mi
+  csi_registrar:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+  liveness_probe:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+  topolvm_controller:
+    requests:
+      cpu: 10m
+      memory: 48Mi
+  csi_provisioner:
+    requests:
+      cpu: 10m
+      memory: 96Mi
+  csi_resizer:
+    requests:
+      cpu: 10m
+      memory: 96Mi
+  csi_snapshotter:
+    requests:
+      cpu: 10m
+      memory: 80Mi
+  # The chart applies one resource block to every lvmd DaemonSet. Size all
+  # variants for the busier main-vg nodes.
+  lvmd:
+    requests:
+      cpu: 30m
+      memory: 80Mi

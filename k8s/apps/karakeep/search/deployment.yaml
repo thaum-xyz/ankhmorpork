@@ -30,6 +30,10 @@ spec:
                 secretKeyRef:
                   name: karakeep-secrets
                   key: MEILI_MASTER_KEY
+          resources:
+            requests:
+              cpu: 10m
+              memory: 80Mi
           volumeMounts:
             - mountPath: /meili_data
               name: meilisearch

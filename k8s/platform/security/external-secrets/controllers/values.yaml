@@ -7,6 +7,16 @@ serviceMonitor:
 certController:
   serviceMonitor:
     enabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 96Mi
+
+webhook:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
 
 resources:
   requests:

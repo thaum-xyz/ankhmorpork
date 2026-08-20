@@ -53,6 +53,10 @@ spec:
                 name: karakeep-secrets
             - configMapRef:
                 name: karakeep-configuration
+          resources:
+            requests:
+              cpu: 40m
+              memory: 624Mi
       volumes:
         - name: data
           persistentVolumeClaim:

@@ -11,6 +11,10 @@ controller:
     - operator: Exists
 
 alloy:
+  resources:
+    requests:
+      cpu: 70m
+      memory: 432Mi
   # /var/log/pods
   mounts:
     varlog: true

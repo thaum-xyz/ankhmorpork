@@ -15,6 +15,11 @@ logLevel: &logLevel debug
 serviceMonitor:
   enabled: true
 
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+
 extraArgs:
   - --ignore-ingress-tls-spec
   - --fqdn-template={{`{{`}}.Name{{`}}`}}.{{`{{`}}.Namespace{{`}}`}}.ankhmorpork.thaum.xyz
@@ -27,6 +32,10 @@ provider:
     image:
       repository: ghcr.io/home-operations/external-dns-unifi-webhook
       tag: "0.10.9"
+    resources:
+      requests:
+        cpu: 10m
+        memory: 80Mi
     env:
       - name: LOG_LEVEL
         value: *logLevel
