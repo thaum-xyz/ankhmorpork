@@ -10,7 +10,13 @@ bpf:
   datapathMode: netkit
   distributedLRU:
     enabled: true
-  mapDynamicSizeRatio: 0.08
+  # Keep this explicit while distributedLRU is enabled. Cilium's 0.0025 default
+  # would be too small here: size for at most 50% map pressure using
+  #   peak = max(max_over_time(cilium_bpf_map_pressure[30d]))
+  #   ratio >= current ratio * peak / 0.50
+  # On 2026-08-20: 0.08 * 0.0542 / 0.50 = 0.0087, rounded up to 0.01.
+  # Recalculate when the 30-day peak crosses 0.50 or cluster traffic changes.
+  mapDynamicSizeRatio: 0.01
 bpfClockProbe: true
 enableIPv4BIGTCP: true
 enableIPv4Masquerade: true
