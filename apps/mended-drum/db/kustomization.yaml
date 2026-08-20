@@ -3,8 +3,6 @@ kind: Kustomization
 resources:
   - repository.yaml
   - release.yaml
-  - versity-objectstore.yaml
-  - versity-scheduledbackup.yaml
 configMapGenerator:
   - name: postgres-values
     files:
