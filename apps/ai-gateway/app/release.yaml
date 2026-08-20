@@ -22,3 +22,15 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values
+  # The litellm chart has no ingress.labels, and homer-operator selects
+  # Ingresses by label.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Ingress
+              name: litellm
+            patch: |
+              - op: add
+                path: /metadata/labels/homer.rajsingh.info~1enabled
+                value: "true"

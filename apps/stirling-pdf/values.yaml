@@ -16,13 +16,16 @@ ingress:
   ingressClassName: public
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg
-    reloader.homer/name: Stirling PDF
-    reloader.homer/subtitle: PDF manipulation tool
+    item.homer.rajsingh.info/name: "Stirling PDF"
+    item.homer.rajsingh.info/subtitle: "PDF manipulation tool"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg"
+    item.homer.rajsingh.info/order: "20"
+    service.homer.rajsingh.info/name: "Ankh Cloud"
+    service.homer.rajsingh.info/icon: "fa fa-cloud"
+    service.homer.rajsingh.info/order: "30"
   labels:
     probe: enabled
-    reloader.homer/enabled: "true"
+    homer.rajsingh.info/enabled: "true"
   hosts:
     - name: pdf.krupa.net.pl
       path: /

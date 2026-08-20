@@ -44,9 +44,12 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     #cert-manager.io/cluster-issuer: letsencrypt-prod
     #probe-uri: /-/healthy
-    reloader.homer/group: Administration
-    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg
-    reloader.homer/name: litellm
+    item.homer.rajsingh.info/name: "Litellm"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"
+    item.homer.rajsingh.info/order: "40"
+    service.homer.rajsingh.info/name: "Administration"
+    service.homer.rajsingh.info/icon: "fa fa-user-shield"
+    service.homer.rajsingh.info/order: "10"
   hosts:
     - host: ai-gateway.krupa.net.pl
       paths:

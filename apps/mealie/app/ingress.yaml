@@ -4,11 +4,15 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     probe-uri: /api/app/about
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/mealie.svg
-    reloader.homer/name: Mealie
-    reloader.homer/subtitle: Our recipes
+    item.homer.rajsingh.info/name: "Mealie"
+    item.homer.rajsingh.info/subtitle: "Our recipes"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/mealie.svg"
+    item.homer.rajsingh.info/order: "50"
+    service.homer.rajsingh.info/name: "Ankh Cloud"
+    service.homer.rajsingh.info/icon: "fa fa-cloud"
+    service.homer.rajsingh.info/order: "30"
   labels:
+    homer.rajsingh.info/enabled: "true"
     probe: enabled
     app.kubernetes.io/name: mealie
   name: mealie

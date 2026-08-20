@@ -3,16 +3,19 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    reloader.homer/group: Ankh Cloud
-    reloader.homer/logo: https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/paperlessng.svg
-    reloader.homer/name: Paperless
-    reloader.homer/subtitle: Document management system
+    item.homer.rajsingh.info/name: "Paperless"
+    item.homer.rajsingh.info/subtitle: "Document management system"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/paperlessng.svg"
+    item.homer.rajsingh.info/order: "30"
+    service.homer.rajsingh.info/name: "Ankh Cloud"
+    service.homer.rajsingh.info/icon: "fa fa-cloud"
+    service.homer.rajsingh.info/order: "30"
     traefik.ingress.kubernetes.io/router.middlewares: paperless-compress@kubernetescrd
   labels:
     app.kubernetes.io/component: webservice
     app.kubernetes.io/name: paperless
     probe: enabled
-    reloader.homer/enabled: "true"
+    homer.rajsingh.info/enabled: "true"
   name: paperless
   namespace: paperless
 spec:

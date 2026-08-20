@@ -82,13 +82,16 @@ server:
       enabled: true
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        reloader.homer/group: Ankh Cloud
-        reloader.homer/logo: https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/immich.svg
-        reloader.homer/name: Immich
-        reloader.homer/subtitle: Photo & Video Library
+        item.homer.rajsingh.info/name: "Immich"
+        item.homer.rajsingh.info/subtitle: "Photo & Video Library"
+        item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/immich.svg"
+        item.homer.rajsingh.info/order: "70"
+        service.homer.rajsingh.info/name: "Ankh Cloud"
+        service.homer.rajsingh.info/icon: "fa fa-cloud"
+        service.homer.rajsingh.info/order: "30"
       labels:
         probe: enabled
-        reloader.homer/enabled: "true"
+        homer.rajsingh.info/enabled: "true"
       hosts:
         - host: photos.krupa.net.pl
           paths:
