@@ -21,7 +21,7 @@ spec:
               service:
                 name: homer
                 port:
-                  name: http
+                  name: dashboard
             path: /
             pathType: Prefix
   tls:

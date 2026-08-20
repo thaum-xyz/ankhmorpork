@@ -1,0 +1,122 @@
+# Replaces what homer-reloader used to build from reloader.homer/* annotations
+# on Ingresses. homer-k8s has no Ingress discovery, so entries are declared here
+# instead and adding a service means editing this file.
+#
+# The tag/tagstyle pairs were YAML anchors in the old template (*local,
+# *external); anchors cannot span resources, so they are inlined.
+apiVersion: homer.bananaops.io/v1alpha1
+kind: HomerServices
+metadata:
+  name: ankhmorpork
+  namespace: homer
+spec:
+  groups:
+    - name: Ankh Cloud
+      icon: "fa fa-cloud"
+      items:
+        - name: Change Detection
+          url: "https://change.krupa.net.pl"
+          subtitle: "Website change detection"
+          logo: "https://user-images.githubusercontent.com/275001/231676626-7d768df9-be4c-4187-a573-aba640b826d3.svg"
+        - name: Immich
+          url: "https://photos.krupa.net.pl"
+          subtitle: "Photo & Video Library"
+          logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/immich.svg"
+        - name: Karakeep
+          url: "https://keep.krupa.net.pl"
+          subtitle: "Bookmarks hoarder"
+          logo: "https://avatars.githubusercontent.com/u/202258986?s=60&v=4"
+        - name: Mealie
+          url: "https://recipes.krupa.net.pl"
+          subtitle: "Our recipes"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/mealie.svg"
+        - name: Mended Drum
+          url: "https://drum.krupa.net.pl"
+          subtitle: "Bar assistant"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"
+        - name: Paperless
+          url: "https://papers.krupa.net.pl"
+          subtitle: "Document management system"
+          logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/paperlessng.svg"
+        - name: Stirling PDF
+          url: "https://pdf.krupa.net.pl"
+          subtitle: "PDF manipulation tool"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg"
+        - name: Packing list
+          url: "https://docs.google.com/spreadsheets/d/1d8LFOxTWqAZuA2OSVuZJV7pGUYlJfNCqAIA8Q5p6ci8/edit?usp=sharing"
+          subtitle: "What to pack on each type of trip"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/googledrive.svg"
+          tag: "3rd party"
+          tagstyle: "is-info"
+
+    - name: Multimedia
+      icon: "fa fa-tv"
+      items:
+        - name: Unifi Drive
+          url: "https://unifi.ui.com"
+          logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
+        - name: Trakt
+          url: "https://trakt.tv"
+          subtitle: "Movie and TV series tracking"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/trakt.svg"
+          tag: "3rd party"
+          tagstyle: "is-info"
+        - name: Jellyfin
+          url: "https://vod.krupa.net.pl"
+          subtitle: "Video on demand"
+          logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/jellyfin.svg"
+          tag: local
+          tagstyle: "is-success"
+        - name: Prowlarr
+          url: "https://prowlarr.ankhmorpork.thaum.xyz"
+          subtitle: "Indexer/proxy management"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/prowlarr.svg"
+          tag: local
+          tagstyle: "is-success"
+        - name: Radarr
+          url: "https://radarr.ankhmorpork.thaum.xyz"
+          subtitle: "Movie collection management"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/radarr.svg"
+          tag: local
+          tagstyle: "is-success"
+        - name: Sonarr
+          url: "https://sonarr.ankhmorpork.thaum.xyz"
+          subtitle: "TV shows collection management"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/sonarr.svg"
+          tag: local
+          tagstyle: "is-success"
+        - name: Transmission
+          url: "https://downloader.ankhmorpork.thaum.xyz"
+          subtitle: "Downloader"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/transmission.svg"
+          tag: local
+          tagstyle: "is-success"
+
+    - name: Administration
+      icon: "fa fa-user-shield"
+      items:
+        - name: Goldpinger
+          url: "https://goldpinger.ankhmorpork.thaum.xyz"
+          subtitle: "Cluster connectivity checker"
+          logo: "https://avatars.githubusercontent.com/u/1416818?s=200&v=4"
+          tag: local
+          tagstyle: "is-success"
+        - name: Grafana
+          url: "https://grafana.krupa.net.pl"
+          logo: "https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg"
+        - name: Litellm
+          url: "https://ai-gateway.krupa.net.pl"
+          logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"
+        - name: Pyrra
+          url: "https://pyrra.ankhmorpork.thaum.xyz"
+          logo: "https://avatars.githubusercontent.com/u/87393422?s=200&v=4"
+        - name: UptimeRobot
+          url: "https://dashboard.uptimerobot.com"
+          logo: "https://pbs.twimg.com/profile_images/1404824447052251143/zVZrK9YD_400x400.jpg"
+          tag: "3rd party"
+          tagstyle: "is-info"
+        - name: Doppler
+          url: "https://dashboard.doppler.com/"
+          logo: "https://dashboard.doppler.com/imgs/logo.png"
+          tag: "3rd party"
+          tagstyle: "is-info"
