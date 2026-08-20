@@ -4,6 +4,7 @@ metadata:
   name: system-kured
   namespace: flux-system
 spec:
+  suspend: true # FIXME(paulfantom): Temporary measure to prevent re-sync of all apps
   interval: 60m0s
   path: ./k8s/platform/cluster/system-kured
   prune: true

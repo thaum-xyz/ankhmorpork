@@ -4,6 +4,7 @@ metadata:
   name: longhorn-versity
   namespace: flux-system
 spec:
+  suspend: true # FIXME(paulfantom): Temporary measure to prevent re-sync of all apps
   interval: 30m0s
   path: ./k8s/platform/storage/longhorn-system/versity
   prune: true

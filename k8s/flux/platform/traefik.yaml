@@ -4,7 +4,7 @@ metadata:
   name: traefik
   namespace: flux-system
 spec:
-  force: true
+  suspend: true # FIXME(paulfantom): Temporary measure to prevent re-sync of all apps
   interval: 30m0s
   path: ./k8s/platform/network/traefik
   prune: false
