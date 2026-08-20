@@ -7,6 +7,8 @@ spec:
   interval: 15m0s
   path: ./k8s/platform/security/kyverno
   prune: true
+  wait: true
+  timeout: 15m
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
