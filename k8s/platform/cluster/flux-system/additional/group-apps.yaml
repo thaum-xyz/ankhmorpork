@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 15m0s
   path: ./k8s/flux/apps
-  prune: true
+  prune: false
   dependsOn:
   - name: platform
   sourceRef:
