@@ -4,7 +4,6 @@ metadata:
   name: cloudflared
   namespace: flux-system
 spec:
-  suspend: true # FIXME(paulfantom): Temporary measure to prevent re-sync of all apps
   interval: 15m0s
   path: ./k8s/platform/network/cloudflared
   prune: true
