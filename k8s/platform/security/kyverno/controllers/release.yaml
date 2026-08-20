@@ -10,7 +10,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: kyverno
-        namespace: kyverno
+        namespace: platform-security
       interval: 5m
   interval: 5m
   timeout: 10m
@@ -27,4 +27,4 @@ spec:
     crds: CreateReplace
   valuesFrom:
     - kind: ConfigMap
-      name: values
+      name: values-kyverno
