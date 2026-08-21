@@ -24,7 +24,7 @@ spec:
           type: RuntimeDefault
       initContainers:
         - name: install-gui
-          image: docker.io/library/busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0
+          image: docker.io/library/busybox:1.38.0@sha256:dc2d74b28e4cf8984fa52af1f39bc7c3d9c73760b41a74d629f5d11b1ab28616
           command:
             - /bin/sh
             - -ec
@@ -50,7 +50,7 @@ spec:
               mountPath: /tmp
       containers:
         - name: nginx
-          image: docker.io/nginxinc/nginx-unprivileged:1.29.1-alpine@sha256:27985295bdb22a1ef8f712863210bd5877c0f3006494a593e86b3fe0fa55467e
+          image: docker.io/nginxinc/nginx-unprivileged:1.31.2-alpine@sha256:6320020c7da8714feab524e02c08c5a1958675c4e68700e93a2fd8970b065786
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
