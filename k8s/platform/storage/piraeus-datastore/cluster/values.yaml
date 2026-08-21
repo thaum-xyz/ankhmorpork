@@ -1,16 +1,13 @@
 # Config reference: https://github.com/piraeusdatastore/helm-charts/blob/main/charts/linstor-cluster/values.yaml
 
 linstorCluster:
+  nodeSelector:
+    linstor: "true"
   # Only nodes with one of the existing TopoLVM thin pools can host a local
   # replica. This also prevents Piraeus volumes from scheduling onto a node
   # where the CSI node and LINSTOR satellite are absent.
   nodeAffinity:
     nodeSelectorTerms:
-      - matchExpressions:
-          - key: linstor
-            operator: In
-            values:
-              - "true"
       - matchExpressions:
           - key: devices.topolvm.io/vg
             operator: In
