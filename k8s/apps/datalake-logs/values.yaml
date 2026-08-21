@@ -27,7 +27,7 @@ singleBinary:
     size: 10Gi
     # Replicated rather than node-local, so the single replica can reschedule
     # when a node reboots.
-    storageClass: longhorn
+    storageClass: piraeus-r2
 
 # The memberlist Service is headless and, by default, only publishes ready
 # endpoints. With one replica that deadlocks at startup: the pod is not ready
