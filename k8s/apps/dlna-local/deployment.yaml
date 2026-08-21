@@ -30,7 +30,7 @@ spec:
                       - "true"
       containers:
         - name: minidlna
-          image: vladgh/minidlna:1.3.10
+          image: vladgh/minidlna:1.3.11
           imagePullPolicy: IfNotPresent
           env:
             - name: TZ
