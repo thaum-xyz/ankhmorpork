@@ -1,0 +1,265 @@
+# Config reference: https://github.com/piraeusdatastore/helm-charts/blob/main/charts/linstor-cluster/values.yaml
+
+linstorCluster:
+  # Only nodes with one of the existing TopoLVM thin pools can host a local
+  # replica. This also prevents Piraeus volumes from scheduling onto a node
+  # where the CSI node and LINSTOR satellite are absent.
+  nodeAffinity:
+    nodeSelectorTerms:
+      - matchExpressions:
+          - key: devices.topolvm.io/vg
+            operator: In
+            values:
+              - secondary-vg
+              - ubuntu-vg
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+
+  maxConcurrentEvacuations: 1
+
+  controller:
+    enabled: true
+  csiController:
+    enabled: true
+    replicas: 1
+  csiNode:
+    enabled: true
+  highAvailabilityController:
+    enabled: true
+  affinityController:
+    enabled: true
+    replicas: 1
+  # RWX remains provided by the existing NFS CSI deployment.
+  nfsServer:
+    enabled: false
+
+  # Piraeus creates these workloads from the LinstorCluster CR rather than the
+  # Helm chart, so set requests with operator patches. Values are deliberately
+  # requests-only until real cluster usage is available in Prometheus.
+  patches:
+    - target:
+        kind: Deployment
+        name: linstor-controller
+      patch: |-
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: linstor-controller
+        spec:
+          template:
+            spec:
+              initContainers:
+                - name: run-migration
+                  resources:
+                    requests:
+                      cpu: 50m
+                      memory: 512Mi
+              containers:
+                - name: linstor-controller
+                  resources:
+                    requests:
+                      cpu: 100m
+                      memory: 512Mi
+    - target:
+        kind: Deployment
+        name: linstor-csi-controller
+      patch: |-
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: linstor-csi-controller
+        spec:
+          template:
+            spec:
+              initContainers:
+                - name: linstor-wait-api-online
+                  resources:
+                    requests:
+                      cpu: 10m
+                      memory: 32Mi
+              containers:
+                - name: linstor-csi
+                  resources:
+                    requests:
+                      cpu: 20m
+                      memory: 64Mi
+                - name: csi-attacher
+                  resources:
+                    requests:
+                      cpu: 10m
+                      memory: 32Mi
+                - name: csi-livenessprobe
+                  resources:
+                    requests:
+                      cpu: 5m
+                      memory: 16Mi
+                - name: csi-provisioner
+                  resources:
+                    requests:
+                      cpu: 20m
+                      memory: 64Mi
+                - name: csi-snapshotter
+                  resources:
+                    requests:
+                      cpu: 10m
+                      memory: 48Mi
+                - name: csi-resizer
+                  resources:
+                    requests:
+                      cpu: 10m
+                      memory: 48Mi
+                - name: csi-health-monitor
+                  resources:
+                    requests:
+                      cpu: 10m
+                      memory: 32Mi
+    - target:
+        kind: DaemonSet
+        name: linstor-csi-node
+      patch: |-
+        apiVersion: apps/v1
+        kind: DaemonSet
+        metadata:
+          name: linstor-csi-node
+        spec:
+          template:
+            spec:
+              initContainers:
+                - name: linstor-wait-node-online
+                  resources:
+                    requests:
+                      cpu: 10m
+                      memory: 32Mi
+              containers:
+                - name: linstor-csi
+                  resources:
+                    requests:
+                      cpu: 20m
+                      memory: 64Mi
+                - name: csi-node-driver-registrar
+                  resources:
+                    requests:
+                      cpu: 10m
+                      memory: 32Mi
+                - name: csi-livenessprobe
+                  resources:
+                    requests:
+                      cpu: 5m
+                      memory: 16Mi
+    - target:
+        kind: DaemonSet
+        name: ha-controller
+      patch: |-
+        apiVersion: apps/v1
+        kind: DaemonSet
+        metadata:
+          name: ha-controller
+        spec:
+          template:
+            spec:
+              containers:
+                - name: ha-controller
+                  resources:
+                    requests:
+                      cpu: 20m
+                      memory: 64Mi
+    - target:
+        kind: Deployment
+        name: linstor-affinity-controller
+      patch: |-
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: linstor-affinity-controller
+        spec:
+          template:
+            spec:
+              containers:
+                - name: linstor-affinity-controller
+                  resources:
+                    requests:
+                      cpu: 20m
+                      memory: 64Mi
+
+linstorSatelliteConfigurations:
+  - name: common
+    deletionPolicy: Evacuate
+    podTemplate:
+      spec:
+        # DRBD replication should use the node network directly instead of the
+        # Cilium overlay. The satellite owns the DRBD network namespace.
+        hostNetwork: true
+        dnsPolicy: ClusterFirstWithHostNet
+        initContainers:
+          - name: drbd-module-loader
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+          - name: drbd-shutdown-guard
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+          - name: setup-lvm-configuration
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+        containers:
+          - name: linstor-satellite
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+          - name: drbd-reactor
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+  - name: secondary-vg
+    nodeSelector:
+      devices.topolvm.io/vg: secondary-vg
+    storagePools:
+      - name: temporary-topolvm
+        lvmThinPool:
+          volumeGroup: secondary-vg
+          thinPool: thin-pool0
+  - name: ubuntu-vg
+    nodeSelector:
+      devices.topolvm.io/vg: ubuntu-vg
+    storagePools:
+      - name: temporary-topolvm
+        lvmThinPool:
+          volumeGroup: ubuntu-vg
+          thinPool: thin-pool0
+
+storageClasses:
+  - name: piraeus-r2
+    reclaimPolicy: Delete
+    allowVolumeExpansion: true
+    volumeBindingMode: WaitForFirstConsumer
+    parameters:
+      csi.storage.k8s.io/fstype: xfs
+      linstor.csi.linbit.com/autoPlace: "2"
+      linstor.csi.linbit.com/storagePool: temporary-topolvm
+      # Keep application I/O local to one of the two diskful replicas. The
+      # affinity controller updates PV affinity if LINSTOR moves a replica.
+      linstor.csi.linbit.com/allowRemoteVolumeAccess: "false"
+
+volumeSnapshotClasses:
+  - name: piraeus
+    driver: linstor.csi.linbit.com
+    deletionPolicy: Delete
+    parameters:
+      snap.linstor.csi.linbit.com/type: InCluster
+
+monitoring:
+  enabled: true
+  dashboard:
+    enabled: true
+
+ingress:
+  enabled: false

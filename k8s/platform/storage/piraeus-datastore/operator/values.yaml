@@ -1,0 +1,16 @@
+# Config reference: https://github.com/piraeusdatastore/piraeus-operator/blob/v2/charts/piraeus/values.yaml
+
+installCRDs: true
+
+operator:
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+
+priorityClassName: system-cluster-critical
+
+# A single operator replica does not benefit from a PDB and minAvailable: 1
+# would prevent voluntary eviction during a node drain.
+podDisruptionBudget:
+  enabled: false

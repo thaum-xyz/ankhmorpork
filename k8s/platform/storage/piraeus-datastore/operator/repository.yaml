@@ -1,0 +1,8 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: piraeus-operator
+spec:
+  type: oci
+  interval: 5m
+  url: oci://ghcr.io/piraeusdatastore/piraeus-operator
