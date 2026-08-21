@@ -7,6 +7,11 @@ linstorCluster:
   nodeAffinity:
     nodeSelectorTerms:
       - matchExpressions:
+          - key: linstor
+            operator: In
+            values:
+              - "true"
+      - matchExpressions:
           - key: devices.topolvm.io/vg
             operator: In
             values:
@@ -221,6 +226,7 @@ linstorSatelliteConfigurations:
                 memory: 32Mi
   - name: secondary-vg
     nodeSelector:
+      linstor: "true"
       devices.topolvm.io/vg: secondary-vg
     storagePools:
       - name: temporary-topolvm
@@ -229,6 +235,7 @@ linstorSatelliteConfigurations:
           thinPool: thin-pool0
   - name: ubuntu-vg
     nodeSelector:
+      linstor: "true"
       devices.topolvm.io/vg: ubuntu-vg
     storagePools:
       - name: temporary-topolvm

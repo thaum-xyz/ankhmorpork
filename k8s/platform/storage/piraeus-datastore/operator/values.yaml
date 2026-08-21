@@ -10,6 +10,9 @@ operator:
 
 priorityClassName: system-cluster-critical
 
+nodeSelector:
+  linstor: "true"
+
 # A single operator replica does not benefit from a PDB and minAvailable: 1
 # would prevent voluntary eviction during a node drain.
 podDisruptionBudget:
