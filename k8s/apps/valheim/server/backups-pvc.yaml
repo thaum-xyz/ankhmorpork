@@ -8,4 +8,4 @@ spec:
   resources:
     requests:
       storage: 20Gi
-  storageClassName: longhorn-r2
+  storageClassName: unifi-nas
