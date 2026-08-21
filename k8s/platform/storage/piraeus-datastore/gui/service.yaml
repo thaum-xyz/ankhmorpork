@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: linstor-gui
+spec:
+  selector:
+    app.kubernetes.io/name: linstor-gui
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

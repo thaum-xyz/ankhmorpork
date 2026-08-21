@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: linstor-gui
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+spec:
+  ingressClassName: private
+  rules:
+    - host: piraeus.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: linstor-gui
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - piraeus.ankhmorpork.thaum.xyz
+      secretName: piraeus-ui-tls

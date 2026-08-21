@@ -1,0 +1,30 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: piraeus-operator
+spec:
+  chart:
+    spec:
+      chart: piraeus
+      version: "2.11.0"
+      sourceRef:
+        kind: HelmRepository
+        name: piraeus-operator
+        namespace: platform-storage
+      interval: 5m
+  interval: 5m
+  timeout: 10m
+  install:
+    timeout: 10m
+    disableWait: false
+    crds: CreateReplace
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 10m
+    disableWait: false
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: values-piraeus-operator

@@ -26,6 +26,14 @@ Values live in `values.yaml`, fed in via `configMapGenerator` and `valuesFrom` â
 not inline in `spec.values`. Renovate's `helm-values` manager reads `values.yaml`
 but cannot see inside a HelmRelease.
 
+## Manifest layout and naming
+
+Keep one Kubernetes object per manifest file. Group distinct components under
+their own directories and use type-based names inside them, such as
+`operator/repository.yaml`, `operator/release.yaml`, `operator/values.yaml`, and
+`gui/deployment.yaml`. If a flat directory genuinely needs qualified filenames,
+put the object or artifact type first rather than the component name.
+
 ## Suspended components
 
 No Flux Kustomizations are currently declared suspended in Git. Check both the
