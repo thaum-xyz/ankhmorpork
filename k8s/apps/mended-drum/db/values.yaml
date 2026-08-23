@@ -2,6 +2,7 @@ database: drum
 owner: drum
 
 cluster:
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.1-system-trixie
   instances: 2
   storage:
     size: 1Gi
