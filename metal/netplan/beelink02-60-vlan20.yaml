@@ -1,0 +1,14 @@
+# Install to /etc/netplan/60-vlan20.yaml on beelink02 (chmod 0600).
+# Gives minidlna a foot in VLAN20 so SSDP reaches the TV; see README.md.
+network:
+  version: 2
+  vlans:
+    bond0.20:
+      id: 20
+      link: bond0
+      dhcp4: false
+      dhcp6: false
+      # IoT VLAN: never take a route, DNS or RA from it.
+      accept-ra: false
+      addresses:
+        - 192.168.20.37/24
