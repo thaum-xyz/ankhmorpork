@@ -5,54 +5,59 @@ Not Ansible-managed yet. `bond0` on each node comes from cloud-init
 
 ## beelink02 VLAN20 (DLNA)
 
+**Applied 2026-08-23.** `/etc/netplan/60-vlan20.yaml` on beelink02.
+
 minidlna announces over SSDP (`239.255.255.250:1900`), which is scoped to a
 broadcast domain. The UDM routes unicast between VLAN50 and VLAN20 but does not
 forward that multicast, and its "Multicast DNS" toggle only relays mDNS
-(`224.0.0.251`) — a different group. So the TV in VLAN20 can only discover the
-server if the host has an interface in VLAN20 itself.
+(`224.0.0.251`) — a different group. So the host needs a leg in VLAN20 itself.
 
 Pinned to beelink02 because it is the only non-control-plane node. Putting an
 IoT VLAN on a control-plane node would place the API and etcd on the same
-segment as a TV.
+segment as a TV. That objection disappears once the Talos migration moves the
+control plane onto dedicated hardware.
 
-### Prerequisite: tag VLAN20 on the switch
+`192.168.20.37` is below VLAN20's DHCP pool, which starts at `.50`.
 
-`bond0` is an 802.3ad LACP bond of `enp170s0` + `enp171s0`, so **both** member
-ports need VLAN20 tagged in their UniFi port profile (native stays VLAN50).
-Without it the interface comes up and stays silent.
+### No switch change is needed
 
-Verify before applying — a live VLAN shows RX traffic within seconds:
+The UniFi port profile already has **Tagged VLAN Management: "Allow All"** with
+native VLAN50, which delivers every other VLAN tagged. There is no per-VLAN
+checkbox to find, and nothing to change for a new VLAN on these ports.
 
-```bash
-sudo ip link add link bond0 name bond0.20 type vlan id 20
-sudo ip link set bond0.20 up
-sleep 30 && ip -s link show bond0.20   # RX 0 packets => not tagged yet
-sudo ip link del bond0.20
-```
+### Probing: test actively, not passively
 
-### Apply
+Do **not** conclude anything from a silent interface. Watching RX counters on a
+fresh sub-interface showed 0 packets over 72s here and looked exactly like a
+missing tag — VLAN20 was simply idle, because the TV was its only occupant.
 
-The file is already installed at `/etc/netplan/60-vlan20.yaml` and passes
-`netplan generate`. It is deliberately **not applied**: until VLAN20 is tagged,
-activating it routes `192.168.20.0/24` down a dead interface.
-
-**Do not apply over an SSH session sourced from VLAN20.** Workstations live in
-that VLAN, so applying blackholes the return path and drops the session
-mid-command — recovery is via the rack console. Connect over Tailscale
-(`100.114.34.93`) or from VLAN50 instead, and check first:
+Force ARP instead. A resolved neighbour proves tagged frames flow both ways:
 
 ```bash
-ss -tunap | grep ':22 '     # is your own session sourced from 192.168.20.x?
+sudo ip link add link bond0 name vl20probe type vlan id 20
+sudo ip link set vl20probe up
+sudo ip addr add 192.168.20.37/24 dev vl20probe noprefixroute   # no route added
+sudo ip route add 192.168.20.1/32 dev vl20probe src 192.168.20.37
+timeout 4 bash -c 'echo > /dev/tcp/192.168.20.1/443'
+ip neigh show dev vl20probe        # a lladdr => works; INCOMPLETE => does not
+sudo ip route del 192.168.20.1/32 dev vl20probe; sudo ip link del vl20probe
 ```
 
-Confirm `192.168.20.37` sits outside VLAN20's DHCP pool, then:
+`noprefixroute` plus a host route keeps the probe from stealing the
+`192.168.20.0/24` path while a workstation in that VLAN holds an SSH session.
+
+### Applying without locking yourself out
+
+Workstations live in VLAN20, so activating the drop-in moves the return path for
+your own session. Run it detached so a dropped session cannot leave it
+half-applied:
 
 ```bash
-sudo netplan generate && sudo netplan apply
+sudo systemd-run --on-active=3 --unit=netplan-vlan20-apply /usr/sbin/netplan apply
 ```
 
-Then set `MINIDLNA_NETWORK_INTERFACE=bond0,bond0.20` on the deployment so it
-announces into both domains, and keep the node labelled `dlna-preferred=true`.
+Afterwards the node also answers on `192.168.20.37`, a symmetric path inside
+VLAN20. Expect one stale-ARP failure before the first connection succeeds.
 
 Note `net.ipv4.ip_forward=1` on every k8s node, so a multi-homed node is a
 latent router between the two segments — it sits beside the UDM, not behind it.
@@ -60,9 +65,9 @@ latent router between the two segments — it sits beside the UDM, not behind it
 ## Deferred: filter the VLAN20 interface
 
 Not implemented — noted for later. Today the host's wildcard-bound ports (SSH,
-rpcbind, and anything else on `0.0.0.0`) would answer on the IoT VLAN, and
-Cilium's `devices=` is empty (auto-detect), so `bond0.20` gets adopted into the
-NodePort datapath. There are 0 NodePort services now, but that is latent.
+rpcbind, and anything else on `0.0.0.0`) answer on the IoT VLAN, and Cilium's
+`devices=` is empty (auto-detect), so `bond0.20` gets adopted into the NodePort
+datapath. There are 0 NodePort services now, but that is latent.
 
 Intent is to allow only SSDP and minidlna's HTTP port inbound, and to refuse
 transit into VLAN50:
