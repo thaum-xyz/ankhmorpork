@@ -59,32 +59,31 @@ which compares by byte order and does not depend on glibc, so moving between
 Debian bases needs no `REINDEX`. Confirmed on mealie: `datcollversion` is null
 and the only index collations are `default` (inheriting C) and `C`.
 
-### Done
+### State
 
-    mealie      17.2  -> 17.11-standard-bookworm   unpinned
-    grafana     17.5  -> 17.11-standard-bookworm   unpinned
-    pocket-id   17.5  -> 17.11-standard-bookworm   unpinned
-    prowlarr    16.1  -> 16.15                     (patch, still pinned)
+Complete. Eight of eleven clusters follow the chart; the three that do not are
+recorded below with the reason.
 
-### Staying pinned
+    atuin        17.11   follows chart   (was 16.11, two steps)
+    grafana      17.11   follows chart   (was 17.5)
+    mealie       17.11   follows chart   (was 17.2)
+    paperless    17.11   follows chart   (was 15.2, two steps, two majors)
+    pocket-id    17.11   follows chart   (was 17.5)
+    prowlarr     17.11   follows chart   (was 16.1, two steps)
+    radarr       17.11   follows chart   (was 16.1, two steps)
+    sonarr       17.11   follows chart   (was 16.1, two steps)
 
-    ai-gateway   18.1   PostgreSQL has no downgrade path
-    mended-drum  18.1   ditto
-    photos       17.5   tensorchord VectorChord build, moves on its own schedule
+    ai-gateway   18.1    pinned   PostgreSQL has no downgrade path
+    mended-drum  18.1    pinned   ditto
+    photos       17.5    pinned   tensorchord VectorChord build
 
-### Remaining: two steps each
+Each two-step move went base-first (same major, a restart) and then major (an
+offline `pg_upgrade` with the base held constant), because `pg_upgrade` mounts
+the **old** binaries into the **new** container and fails across mismatched
+bases -- the immich `libssl.so.1.1` failure. paperless spanned 15 to 17 in one
+`pg_upgrade`, which is supported.
 
-15 and 16 clusters cannot go straight to 17.11-bookworm. `pg_upgrade` mounts the
-**old** binaries into the **new** container, so a major upgrade across Debian
-bases fails on missing libraries -- this is what broke the immich migration with
-`libssl.so.1.1`. Move the base first, then the major:
-
-    prowlarr/radarr/sonarr  16.x -> 16.15-standard-bookworm -> unpin (17.11)
-    atuin                   16.11 -> 16.15-standard-bookworm -> unpin (17.11)
-    paperless               15.2 -> 15.19-standard-bookworm -> unpin (17.11)
-
-Step one is same-major, so it is a restart, not a `pg_upgrade`. Step two is the
-offline `pg_upgrade`: take a backup and confirm it reached the bucket first.
+A backup was taken and confirmed `completed` before every major upgrade.
 
 ## Before each upgrade
 
