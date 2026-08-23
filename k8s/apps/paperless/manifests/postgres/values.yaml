@@ -2,7 +2,7 @@ database: paperless
 owner: paperless
 
 cluster:
-  imageName: ghcr.io/cloudnative-pg/postgresql:15.2
+  imageName: ghcr.io/cloudnative-pg/postgresql:15.19-standard-bookworm
   instances: 3
   primaryUpdateMethod: switchover
   storage:
