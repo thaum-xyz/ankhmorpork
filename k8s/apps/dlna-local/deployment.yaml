@@ -18,12 +18,12 @@ spec:
       # using hotNetwork for SSDP multicast discovery.
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+      # Pinned: SSDP only reaches the TV from a node with a VLAN20 sub-interface.
       affinity:
         nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              preference:
-                matchExpressions:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
                   - key: dlna-preferred
                     operator: In
                     values:
@@ -35,6 +35,8 @@ spec:
           env:
             - name: TZ
               value: Europe/Warsaw
+            - name: MINIDLNA_UUID
+              value: "4d696e69-444c-164e-9d41-7a2f67810b11"
             - name: MINIDLNA_FRIENDLY_NAME
               value: "UNAS DLNA Server"
             - name: MINIDLNA_MEDIA_DIR
@@ -74,7 +76,8 @@ spec:
               memory: 64Mi
       volumes:
         - name: cache
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: cache
         - name: photos
           persistentVolumeClaim:
             claimName: photos
