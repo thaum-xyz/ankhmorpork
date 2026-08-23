@@ -45,42 +45,56 @@ to fold into a patch bump.
 
 ## Plan
 
-Slowly, one cluster at a time, verifying before moving on.
+The chart owns the version. `cnpg-database` 0.5.0 locks
+`ghcr.io/cloudnative-pg/postgresql:17.11-standard-bookworm`, and each cluster
+drops its own `imageName` as it is moved onto that. A pin now means "this
+cluster cannot follow", not "this is what it happened to get".
 
-**Phase 1 — patch upgrades, same major and same OS base.** No `pg_upgrade`, no
-collation change; CNPG rolls replicas then switches over. Lowest risk.
+17 on bookworm because it matches the VectorChord image immich needs, so photos
+is not a major-version outlier. `17.x-system-bookworm` does not exist; the
+variants are `minimal` and `standard`.
 
-    paperless   15.2  -> 15.19-system-bullseye
-    multimedia  16.1  -> 16.15-system-bullseye   (prowlarr, then radarr, sonarr)
-    atuin       16.11 -> 16.15-system-bullseye
-    mealie      17.2  -> 17.11-system-bullseye
-    grafana     17.5  -> 17.11-system-bullseye
-    pocket-id   17.5  -> 17.11-system-bullseye
-    ai-gateway  18.1  -> 18.6-system-trixie
-    mended-drum 18.1  -> 18.6-system-trixie
+**Collation is a non-issue here.** Every database in the fleet is `collate=C`,
+which compares by byte order and does not depend on glibc, so moving between
+Debian bases needs no `REINDEX`. Confirmed on mealie: `datcollversion` is null
+and the only index collations are `default` (inheriting C) and `C`.
 
-Start with multimedia: three near-identical clusters whose downtime costs
-nothing, so they are the cheapest place to find out that something is wrong.
+### Done
 
-**Phase 2 — major upgrades to 18, holding the OS base constant.** Offline
-`pg_upgrade`, so real downtime. Take a backup first and verify it lands.
+    mealie      17.2  -> 17.11-standard-bookworm   unpinned
+    grafana     17.5  -> 17.11-standard-bookworm   unpinned
+    pocket-id   17.5  -> 17.11-standard-bookworm   unpinned
+    prowlarr    16.1  -> 16.15                     (patch, still pinned)
 
-    multimedia  16.15 -> 18.6-system-bullseye
-    atuin       16.15 -> 18.6-system-bullseye
-    mealie/grafana/pocket-id 17.11 -> 18.6-system-bullseye
-    paperless   15.19 -> 18.6-system-bullseye
+### Staying pinned
 
-**Phase 3 — move onto trixie, then `REINDEX`.** Do this last and per cluster,
-because it is the collation-sensitive step.
+    ai-gateway   18.1   PostgreSQL has no downgrade path
+    mended-drum  18.1   ditto
+    photos       17.5   tensorchord VectorChord build, moves on its own schedule
 
-`photos` sits outside all of this: it runs `tensorchord/cloudnative-vectorchord`
-for the immich embeddings and can only move when that image publishes a matching
-build. Do not point it at a stock CNPG image.
+### Remaining: two steps each
+
+15 and 16 clusters cannot go straight to 17.11-bookworm. `pg_upgrade` mounts the
+**old** binaries into the **new** container, so a major upgrade across Debian
+bases fails on missing libraries -- this is what broke the immich migration with
+`libssl.so.1.1`. Move the base first, then the major:
+
+    prowlarr/radarr/sonarr  16.x -> 16.15-standard-bookworm -> unpin (17.11)
+    atuin                   16.11 -> 16.15-standard-bookworm -> unpin (17.11)
+    paperless               15.2 -> 15.19-standard-bookworm -> unpin (17.11)
+
+Step one is same-major, so it is a restart, not a `pg_upgrade`. Step two is the
+offline `pg_upgrade`: take a backup and confirm it reached the bucket first.
 
 ## Before each upgrade
 
 - `primaryUpdateMethod: switchover` refuses an image change and a config change
   in the same step. Land them separately.
-- Take a backup and confirm it reached the bucket, rather than assuming.
+- These HelmReleases take values via `valuesFrom` a ConfigMap. Changing the
+  ConfigMap does **not** trigger an upgrade -- helm-controller waits out its 30m
+  interval. Annotate the HelmRelease itself with `reconcile.fluxcd.io/requestedAt`
+  or the image change appears to do nothing while everything reports Ready.
+- pocket-id exits rather than retrying when postgres-rw blips, so it will
+  restart during its primary's restart. It recovers on its own.
 - CNPG will not shrink storage, so a live resize must be mirrored into git or
   the next Helm upgrade fails on the webhook.
