@@ -4,7 +4,7 @@ metadata:
   name: minidlna
   namespace: dlna-local
 spec:
-  minAvailable: 1
+  maxUnavailable: 1
   selector:
     matchLabels:
       app: minidlna
