@@ -28,6 +28,9 @@ spec:
           env:
             - name: TZ
               value: Europe/Warsaw
+            # Announce into VLAN50 and the TV's VLAN20; SSDP does not cross them.
+            - name: MINIDLNA_NETWORK_INTERFACE
+              value: "bond0,bond0.20"
             - name: MINIDLNA_UUID
               value: "4d696e69-444c-164e-9d41-7a2f67810b11"
             - name: MINIDLNA_FRIENDLY_NAME
