@@ -18,16 +18,9 @@ spec:
       # using hotNetwork for SSDP multicast discovery.
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
-      # Pinned: SSDP only reaches the TV from a node with a VLAN20 sub-interface.
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: dlna-preferred
-                    operator: In
-                    values:
-                      - "true"
+      # SSDP only reaches the TV from a node carrying a VLAN20 sub-interface.
+      nodeSelector:
+        dlna-preferred: "true"
       containers:
         - name: minidlna
           image: vladgh/minidlna:1.3.11
