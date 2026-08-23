@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: ups-modbus
+  name: telegraf
+data:
+  # Register map is undocumented by PowerWalker and was derived against the
+  # front-panel LCD; see docs/ups/modbus-register-map.md.
+  # UFIXED rather than UINT16 so `scale` is actually applied.
+  telegraf.conf: |
+    [agent]
+      interval = "30s"
+      flush_interval = "30s"
+      omit_hostname = true
+
+    [[inputs.modbus]]
+      name = "vfi1500"
+      name_override = "ups"
+      slave_id = 1
+      timeout = "3s"
+      controller = "tcp://192.168.1.141:502"
+      configuration_type = "register"
+      holding_registers = [
+        { name="temperature_celsius",    byte_order="AB", data_type="UFIXED", scale=0.1, address=[128] },
+        { name="input_frequency_hertz",  byte_order="AB", data_type="UFIXED", scale=0.1, address=[129] },
+        { name="input_voltage_volts",    byte_order="AB", data_type="UFIXED", scale=0.1, address=[132] },
+        { name="output_frequency_hertz", byte_order="AB", data_type="UFIXED", scale=0.1, address=[144] },
+        { name="output_voltage_volts",   byte_order="AB", data_type="UFIXED", scale=0.1, address=[147] },
+        { name="output_current_amperes", byte_order="AB", data_type="UFIXED", scale=0.1, address=[153] },
+        { name="load_percent",           byte_order="AB", data_type="UFIXED", scale=1.0, address=[162] },
+        { name="runtime_minutes",        byte_order="AB", data_type="UFIXED", scale=1.0, address=[165] },
+        { name="battery_charge_percent", byte_order="AB", data_type="UFIXED", scale=1.0, address=[169] },
+        { name="battery_voltage_volts",  byte_order="AB", data_type="UFIXED", scale=0.1, address=[170] },
+        { name="bypass_voltage_volts",   byte_order="AB", data_type="UFIXED", scale=0.1, address=[176] },
+      ]
+
+    [[outputs.prometheus_client]]
+      listen = ":9273"
+      metric_version = 2
+      collectors_exclude = ["gocollector", "process"]
