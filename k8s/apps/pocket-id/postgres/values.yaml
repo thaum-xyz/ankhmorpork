@@ -4,7 +4,7 @@ owner: pocketid
 cluster:
   instances: 3
   storage:
-    size: 7Gi
+    size: 9Gi
   resources:
     limits:
       cpu: 400m
