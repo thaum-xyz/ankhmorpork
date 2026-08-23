@@ -20,6 +20,12 @@ spec:
         - name: meilisearch
           image: getmeili/meilisearch:v1.52.0
           env:
+            # meilisearch refuses to start when its on-disk format predates the
+            # engine, so every image bump halts it until the data is migrated.
+            # The index is derived from karakeep and can be rebuilt, so migrate
+            # on start rather than hand-holding each Renovate bump.
+            - name: MEILI_UPGRADE_DB
+              value: "true"
             - name: MEILI_NO_ANALYTICS
               value: "true"
             # Was envFrom over the whole karakeep-secrets Secret, which handed
