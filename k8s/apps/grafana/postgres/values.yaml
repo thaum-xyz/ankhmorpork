@@ -2,6 +2,7 @@ database: grafana
 owner: grafana
 
 cluster:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5
   instances: 2
   storage:
     size: 15Gi

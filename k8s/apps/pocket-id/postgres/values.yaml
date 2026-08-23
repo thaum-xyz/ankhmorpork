@@ -2,6 +2,7 @@ database: pocketid
 owner: pocketid
 
 cluster:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5
   instances: 3
   storage:
     size: 9Gi

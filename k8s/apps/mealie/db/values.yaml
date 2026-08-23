@@ -2,6 +2,7 @@ database: mealie
 owner: mealie
 
 cluster:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.2
   instances: 3
   storage:
     size: 2Gi
