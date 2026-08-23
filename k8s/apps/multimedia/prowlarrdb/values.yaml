@@ -2,7 +2,7 @@ database: prowlarr
 owner: prowlarr
 
 cluster:
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.15-system-bullseye
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.15-standard-bookworm
   instances: 2
   storage:
     size: 10Gi
