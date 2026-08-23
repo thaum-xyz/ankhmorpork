@@ -2,7 +2,7 @@ database: radarr
 owner: radarr
 
 cluster:
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.15-standard-bookworm
   instances: 2
   storage:
     size: 10Gi
