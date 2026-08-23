@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: ups-modbus
+  name: ups-modbus
+spec:
+  podMetricsEndpoints:
+    - interval: 30s
+      port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: ups-modbus
