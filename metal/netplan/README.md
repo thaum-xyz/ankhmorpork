@@ -32,11 +32,23 @@ sudo ip link del bond0.20
 
 ### Apply
 
-Confirm `192.168.20.37` sits outside VLAN20's DHCP pool first.
+The file is already installed at `/etc/netplan/60-vlan20.yaml` and passes
+`netplan generate`. It is deliberately **not applied**: until VLAN20 is tagged,
+activating it routes `192.168.20.0/24` down a dead interface.
+
+**Do not apply over an SSH session sourced from VLAN20.** Workstations live in
+that VLAN, so applying blackholes the return path and drops the session
+mid-command — recovery is via the rack console. Connect over Tailscale
+(`100.114.34.93`) or from VLAN50 instead, and check first:
 
 ```bash
-sudo install -m 0600 beelink02-60-vlan20.yaml /etc/netplan/60-vlan20.yaml
-sudo netplan generate && sudo netplan try   # auto-reverts if it breaks
+ss -tunap | grep ':22 '     # is your own session sourced from 192.168.20.x?
+```
+
+Confirm `192.168.20.37` sits outside VLAN20's DHCP pool, then:
+
+```bash
+sudo netplan generate && sudo netplan apply
 ```
 
 Then set `MINIDLNA_NETWORK_INTERFACE=bond0,bond0.20` on the deployment so it
