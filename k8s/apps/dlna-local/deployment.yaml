@@ -36,7 +36,7 @@ spec:
             - name: TZ
               value: Europe/Warsaw
             - name: MINIDLNA_FRIENDLY_NAME
-              value: "Zdjecia"
+              value: "UNAS DLNA Server"
             - name: MINIDLNA_MEDIA_DIR
               value: "P,/media/photos"
             - name: MINIDLNA_NOTIFY_INTERVAL
