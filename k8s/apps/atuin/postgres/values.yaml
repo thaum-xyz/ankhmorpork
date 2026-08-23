@@ -8,7 +8,6 @@ owner: atuin
 
 cluster:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.15-standard-bookworm
   storage:
     size: 7Gi
   resources:
