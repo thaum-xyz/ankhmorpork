@@ -3,19 +3,28 @@
 # 9000 yields insignificant performance improvement while causing unnecessary
 # complexity, so jumbo frames are deliberately not used here.
 #
-# 1280 matches tailscale0, which is what cilium auto-detects and what the tunnel
-# actually carries. It was overridden to 1500 on the assumption that tailscale0's
-# MTU was irrelevant to pod traffic; it is not. Pods at 1500 emit segments that
-# cilium then refuses to forward into the 1280 tunnel, dropping them in
-# bpf_lxc with BPF_FIB_LKUP_RET_FRAG_NEEDED and sending no ICMP back, so the pod
-# never learns to shrink. Small replies pass and large ones hang forever --
-# which is how it presented: a Plex web UI that loaded but rendered blank.
-# Host-stack traffic is unaffected either way, because the kernel takes the MSS
-# from the 1280 route; pods do not (cilium/cilium#41478).
+# 1280 matches tailscale0, which is what cilium auto-detects. It had been
+# overridden to 1500 on the assumption that tailscale0's MTU was irrelevant to
+# pod traffic; it is not -- pod packets bound for the tailnet are dropped in
+# bpf_lxc with BPF_FIB_LKUP_RET_FRAG_NEEDED. But 1280 on its own does NOT fix
+# that: measured 2026-08-28, pods at 1280 still hit the same drop, so cilium is
+# comparing against something smaller still (cilium/cilium#29583). The fix that
+# works is pmtuDiscovery below; this value only stops pods overshooting by a
+# wide margin, and is a candidate for returning to 1500 once PMTUD is confirmed
+# working, to get intra-cluster throughput back.
 #
 # Kept explicit rather than deleted: auto-detection would silently jump back to
 # 1500 if tailscale0 ever stopped being a detected device.
 MTU: 1280
+
+# Without this cilium drops oversized pod packets silently -- DF probes over the
+# tailnet got no ICMP back at all -- so the sender never learns the path MTU and
+# large transfers hang while small ones pass. packetizationLayerPMTUDMode is
+# already "blackhole" by default (tcp_mtu_probing=1 in pod netns) and is not
+# enough on its own: it only engages after repeated retransmission failure, which
+# shows up as a transfer crawling at ~1.5kB/s rather than recovering.
+pmtuDiscovery:
+  enabled: true
 
 bpf:
   hostLegacyRouting: false
