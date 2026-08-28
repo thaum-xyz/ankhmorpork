@@ -23,7 +23,9 @@ backup:
   schedule: "0 17 3 * * *"
   objectStore:
     # Three clusters share this namespace, so each needs its own store.
-    name: backblaze-radarr
+    name: versity-radarr
+    bucketPrefix: s3://cnpg/postgres
+    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
     retentionPolicy: 14d
     pathSuffix: radarr
 
