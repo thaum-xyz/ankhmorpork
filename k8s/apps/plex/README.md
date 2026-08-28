@@ -26,10 +26,12 @@ Libraries point at `/data/movies` and `/data/tv`.
 (`ADVERTISE_IP` → `customConnections`, `ALLOWED_NETWORKS` → `allowedNetworks`).
 Everything else is UI-only. After claiming, set under Settings → Network:
 
-- **LAN Networks** → `192.168.0.0/16,10.42.0.0/16`. This, not
+- **LAN Networks** → `192.168.0.0/16,10.42.0.0/16,100.64.0.0/10`. This, not
   `ALLOWED_NETWORKS`, is what decides whether a client is billed as local or
-  throttled to the remote-quality limit. `10.42.0.0/16` is needed because
-  traffic arriving through the ingress carries traefik's pod IP.
+  throttled to the remote-quality limit. `10.42.0.0/16` covers traffic arriving
+  through the ingress, which carries traefik's pod IP. `100.64.0.0/10` covers
+  tailnet clients reaching the Service directly — see the SNAT note below for
+  why their real address survives.
 - **Secure connections** → `Preferred`, never `Required`. Traefik terminates
   TLS and speaks plain HTTP to 32400, so `Required` breaks the ingress path.
 
@@ -96,12 +98,18 @@ subnet router does **not** fix this: tailscale elects one primary per route, so
 the mismatch just moves. Pinning Plex to the router node would, at the cost of
 tying media placement to VPN routing.
 
-Tailnet traffic is SNAT'd (`NoSNAT=false` on the routers), so Plex sees either
-the router node's `192.168.50.3x` address or, via the ingress, traefik's
-`10.42.x`. Both fall inside the **LAN Networks** value above, so remote tailnet
-clients are billed as local and are not subject to the remote-quality cap. That
-is the intent, but it is a consequence of that setting rather than something
-Plex is told directly.
+Tailnet traffic is **not** SNAT'd, despite `NoSNAT=false` on the router.
+Tailscale implements that masquerade as an iptables rule in `ts-postrouting`,
+and cilium's BPF datapath (`bpf.hostLegacyRouting: false`, netkit, BPF
+masquerade) delivers the packet to the pod without traversing netfilter, so the
+rule never runs. Verified by the source address in cilium's own drop trace: the
+pod was replying straight to `100.104.66.107`, not to a node address.
+
+The practical effect is that a client reaching the Service directly keeps its
+real `100.x` tailnet address, which is why `100.64.0.0/10` belongs in **LAN
+Networks**. Through the ingress, traefik terminates the connection and Plex sees
+`10.42.x` instead, with the tailnet address surviving only in
+`X-Forwarded-For`.
 
 ### No video touches Cloudflare
 

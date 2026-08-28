@@ -1,8 +1,21 @@
 # Reference - https://docs.cilium.io/en/stable/helm-reference/#id1
 
-# Setting to default 1500 as 9000 yields insignificant performance improvement while causing unnecessary complexity
-# By default cilium will set MTU to 1280 due to tailscale0 interface presence
-MTU: 1500
+# 9000 yields insignificant performance improvement while causing unnecessary
+# complexity, so jumbo frames are deliberately not used here.
+#
+# 1280 matches tailscale0, which is what cilium auto-detects and what the tunnel
+# actually carries. It was overridden to 1500 on the assumption that tailscale0's
+# MTU was irrelevant to pod traffic; it is not. Pods at 1500 emit segments that
+# cilium then refuses to forward into the 1280 tunnel, dropping them in
+# bpf_lxc with BPF_FIB_LKUP_RET_FRAG_NEEDED and sending no ICMP back, so the pod
+# never learns to shrink. Small replies pass and large ones hang forever --
+# which is how it presented: a Plex web UI that loaded but rendered blank.
+# Host-stack traffic is unaffected either way, because the kernel takes the MSS
+# from the 1280 route; pods do not (cilium/cilium#41478).
+#
+# Kept explicit rather than deleted: auto-detection would silently jump back to
+# 1500 if tailscale0 ever stopped being a detected device.
+MTU: 1280
 
 bpf:
   hostLegacyRouting: false
