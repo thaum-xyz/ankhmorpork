@@ -19,7 +19,9 @@ backup:
   schedule: "0 27 3 * * *"
   objectStore:
     # Three clusters share this namespace, so each needs its own store.
-    name: backblaze-sonarr
+    name: versity-sonarr
+    bucketPrefix: s3://cnpg/postgres
+    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
     retentionPolicy: 7d
     pathSuffix: sonarr
 
