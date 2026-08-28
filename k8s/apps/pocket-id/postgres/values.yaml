@@ -16,6 +16,9 @@ cluster:
 backup:
   schedule: "0 17 23 * * *"
   objectStore:
+    name: versity
+    bucketPrefix: s3://cnpg/postgres
+    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
     retentionPolicy: 30d
     # Not the namespace name.
     pathSuffix: pocketid
