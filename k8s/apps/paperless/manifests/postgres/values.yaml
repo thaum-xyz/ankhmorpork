@@ -17,9 +17,6 @@ cluster:
 backup:
   schedule: "0 36 22 * * *"
   objectStore:
-    name: versity
-    bucketPrefix: s3://cnpg/postgres
-    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
     retentionPolicy: 14d
     pathSuffix: paperless
 
