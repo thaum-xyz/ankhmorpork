@@ -40,7 +40,14 @@ bpf:
   # Recalculate when the 30-day peak crosses 0.50 or cluster traffic changes.
   mapDynamicSizeRatio: 0.01
 bpfClockProbe: true
-enableIPv4BIGTCP: true
+# Disabled because it breaks pod egress to the tailnet. BIG TCP lets TCP hand
+# cilium GSO super-packets tens of kB wide, and the BPF MTU check compares that
+# aggregate -- not the post-segmentation size -- against the route MTU, so every
+# batched write towards tailscale0's 1280 fails. Measured signature: transfers
+# complete for ~8kB (the initial congestion window, still unbatched) and then
+# stall the moment TSO engages, regardless of MTU or PMTUD. Same failure shape as
+# the GRO/FragNeeded problem on kubered.
+enableIPv4BIGTCP: false
 enableIPv4Masquerade: true
 cluster:
   name: ankhmorpork
