@@ -16,9 +16,6 @@ cluster:
 backup:
   schedule: "0 17 23 * * *"
   objectStore:
-    name: versity
-    bucketPrefix: s3://cnpg/postgres
-    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
     # Shortest window in the fleet: a run of missed backups expires the base
     # backup within days rather than weeks.
     retentionPolicy: 3d
