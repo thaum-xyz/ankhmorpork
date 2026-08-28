@@ -1,0 +1,79 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: ups-modbus
+  name: ups
+spec:
+  groups:
+    - name: ups.rules
+      rules:
+        # Two thresholds under one name, as node-exporter does for disk space:
+        # the warning is early notice, the critical is act-now. Alertmanager's
+        # severity inhibition drops the warning once the critical fires.
+        - alert: UPSBatteryLow
+          annotations:
+            description: UPS battery is at {{ $value | humanize }}%, so runtime is well below what the rack is sized for.
+            summary: UPS battery charge is low.
+          expr: |
+            ups_battery_charge_percent < 60
+          for: 5m
+          labels:
+            severity: warning
+
+        - alert: UPSBatteryLow
+          annotations:
+            description: UPS battery is at {{ $value | humanize }}%. Shut workloads down rather than waiting for the cutoff.
+            summary: UPS battery charge is critically low.
+          expr: |
+            ups_battery_charge_percent < 30
+          for: 1m
+          labels:
+            severity: critical
+
+        # The UPS exposes no status word -- the register map was derived against
+        # the front panel and there is none -- so mains loss is inferred from
+        # input voltage. Nominal is 230V and it reads near zero on battery.
+        # Gated that way on purpose: bare runtime would also fire from a load
+        # spike on healthy mains, which is a different and far less urgent
+        # problem.
+        - alert: UPSRuntimeLow
+          annotations:
+            description: UPS reports {{ $value | humanize }} minutes of runtime left while on battery. Shut workloads down before it is exhausted.
+            summary: UPS battery is nearly exhausted.
+          expr: |
+            ups_runtime_minutes < 15
+            and
+            ups_input_voltage_volts < 180
+          for: 1m
+          labels:
+            severity: critical
+
+        # On mains the battery floats at 100%. Sitting short of full for hours
+        # means it is not taking charge, which is how a battery fails quietly --
+        # discovered only when it is finally needed.
+        - alert: UPSBatteryNotCharging
+          annotations:
+            description: UPS battery has sat at {{ $value | humanize }}% for six hours while on mains, so it is not reaching full charge.
+            summary: UPS battery is not charging to full.
+          expr: |
+            ups_battery_charge_percent < 90
+            and
+            ups_input_voltage_volts > 180
+          for: 6h
+          labels:
+            severity: warning
+
+        # The metric is genuinely collected, unlike the NUT rule this replaces,
+        # which alerted on a series that was never once scraped and so fired for
+        # months until everyone learned to ignore it.
+        - alert: UPSMetricsMissing
+          annotations:
+            description: No UPS metrics have been scraped for 15 minutes, so battery state is unknown.
+            summary: UPS metrics are missing.
+          expr: |
+            absent(ups_load_percent)
+          for: 15m
+          labels:
+            severity: warning
