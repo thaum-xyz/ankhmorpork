@@ -1,0 +1,18 @@
+# Longhorn 1.8 dropped the backup-target Settings, so this CR is the only way to
+# point Longhorn at a store. It was created by hand when backups were unblocked
+# and had no owner, meaning nothing in git described what the backups depend on.
+#
+# The endpoint does not belong in backupTargetURL -- the validating webhook only
+# accepts storage-protocol schemes. It comes from AWS_ENDPOINTS inside
+# versitygw-credentials, and the region here must match the gateway's VGW_REGION.
+#
+# syncRequestedAt is deliberately absent: Longhorn writes it on every sync, so
+# declaring it would put Flux and Longhorn in a loop.
+apiVersion: longhorn.io/v1beta2
+kind: BackupTarget
+metadata:
+  name: default
+spec:
+  backupTargetURL: s3://longhorn@us-east-1/
+  credentialSecret: versitygw-credentials
+  pollInterval: 5m0s
