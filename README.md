@@ -176,6 +176,11 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Multimedia System</td>
   </tr>
   <tr>
+    <td><img width="32" src="https://cdn.jsdelivr.net/gh/selfhst/icons/svg/plex.svg"></td>
+    <td><a href="https://www.plex.tv/">Plex</a></td>
+    <td>Multimedia System</td>
+  </tr>
+  <tr>
     <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/steam.svg"></td>
     <td><a href="https://github.com/lloesche/valheim-server-docker">Game Server</a></td>
     <td>Valheim Game Server</td>

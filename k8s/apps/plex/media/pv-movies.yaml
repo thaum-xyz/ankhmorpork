@@ -1,0 +1,17 @@
+# PVs are cluster-scoped and bind 1:1, so plex needs its own pair pointing at
+# the same NFS export jellyfin and multimedia already read.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-movies
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 8Ti
+  nfs:
+    path: /var/nfs/shared/movies
+    server: 192.168.40.10
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  volumeMode: Filesystem

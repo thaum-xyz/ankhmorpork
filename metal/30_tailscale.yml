@@ -1,0 +1,26 @@
+---
+# tailscaled is installed and authenticated out of band; this play owns only the
+# advertised subnet routes. pi01 used to advertise them and has been offline
+# since, which left the tailnet holding a route that goes nowhere.
+- name: Advertise LAN subnets to the tailnet
+  hosts: tailscale_subnet_router
+  become: true
+  tasks:
+  - name: Read current tailscale preferences
+    command: tailscale debug prefs
+    register: tailscale_prefs
+    changed_when: false
+    check_mode: false
+
+  - name: Advertise LAN subnets, keeping the exit node offer
+    # The exit node is stored inside AdvertiseRoutes as 0.0.0.0/0 + ::/0, and
+    # --advertise-routes replaces that whole set. Both flags go together or the
+    # exit node silently disappears.
+    command: >-
+      tailscale set --advertise-exit-node
+      --advertise-routes={{ tailscale_advertise_routes | join(',') }}
+    vars:
+      current_subnets: >-
+        {{ (tailscale_prefs.stdout | from_json).AdvertiseRoutes
+           | default([], true) | difference(['0.0.0.0/0', '::/0']) }}
+    when: current_subnets | sort != tailscale_advertise_routes | sort

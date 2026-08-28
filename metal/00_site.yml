@@ -3,4 +3,6 @@
 
 - import_playbook: 20_gpu.yml
 
+- import_playbook: 30_tailscale.yml
+
 - import_playbook: 70_k3s.yml

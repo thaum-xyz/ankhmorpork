@@ -1,0 +1,23 @@
+# externalTrafficPolicy must stay Local: cilium runs in SNAT mode, so Cluster
+# would hide the client IP and plex would treat every LAN client as remote.
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: plex
+  name: plex
+spec:
+  externalTrafficPolicy: Local
+  loadBalancerIP: 192.168.50.135
+  ports:
+    - name: plex
+      port: 32400
+      protocol: TCP
+      targetPort: plex
+  selector:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: plex
+  type: LoadBalancer

@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: plex
+    app.kubernetes.io/version: 1.43.3.10896-cb3ebc72d
+  name: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: plex
+      app.kubernetes.io/part-of: plex
+  serviceName: plex
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: plex
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: plex
+        app.kubernetes.io/part-of: plex
+        app.kubernetes.io/version: 1.43.3.10896-cb3ebc72d
+    spec:
+      # Alder Lake-N (0300-46a3) is on the beelinks and handles HEVC and AV1;
+      # the masters only have Skylake HD 530.
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              preference:
+                matchExpressions:
+                  - key: gpu.intel.com/device-id.0300-46a3.present
+                    operator: In
+                    values:
+                      - "true"
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: DoesNotExist
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Warsaw
+            # Media on NFS is 1000:988, mode 0770/0660.
+            - name: PLEX_UID
+              value: "1000"
+            - name: PLEX_GID
+              value: "988"
+            - name: ADVERTISE_IP
+              value: http://192.168.50.135:32400/,https://vod.krupa.net.pl:443/
+          # One-shot claim token, created by hand for the initial claim only.
+          envFrom:
+            - secretRef:
+                name: plex-claim
+                optional: true
+          image: plexinc/pms-docker:1.43.3.10896-cb3ebc72d
+          imagePullPolicy: IfNotPresent
+          name: plex
+          ports:
+            - containerPort: 32400
+              name: plex
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /identity
+              port: plex
+            periodSeconds: 10
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "4"
+              gpu.intel.com/i915: "1"
+              memory: 8Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /identity
+              port: plex
+            periodSeconds: 5
+            timeoutSeconds: 5
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /transcode
+              name: transcode
+            - mountPath: /data/movies
+              name: movies
+            - mountPath: /data/tv
+              name: tv
+      # Plex takes its friendly name from the hostname; without this it is plex-0.
+      hostname: plex
+      nodeSelector:
+        intel.feature.node.kubernetes.io/gpu: "true"
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      serviceAccountName: plex
+      # Upstream's own chart picks 120s; the SQLite config DB wants a clean stop.
+      terminationGracePeriodSeconds: 120
+      volumes:
+        # Plex wants scratch space roughly the size of the source file, and the
+        # library holds 50GiB remuxes -- far past what belongs on the node root
+        # filesystem. A generic ephemeral volume keeps emptyDir's lifecycle (made
+        # with the pod, dropped with it) while coming out of the thin pool, and
+        # its own size caps the blast radius: overrunning it gives Plex ENOSPC
+        # instead of exhausting the pool under every other thin volume.
+        - name: transcode
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                labels:
+                  app.kubernetes.io/name: plex
+                  app.kubernetes.io/part-of: plex
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 96Gi
+                storageClassName: lvm-thin
+        - name: movies
+          persistentVolumeClaim:
+            claimName: plex-movies
+        - name: tv
+          persistentVolumeClaim:
+            claimName: plex-tv
+  volumeClaimTemplates:
+    - metadata:
+        name: config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 45Gi
+        storageClassName: lvm-thin

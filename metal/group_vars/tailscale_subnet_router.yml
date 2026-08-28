@@ -1,0 +1,5 @@
+---
+# VLAN50 carries the nodes and the cilium LoadBalancer pool; VLAN40 is the NAS.
+tailscale_advertise_routes:
+  - 192.168.40.0/24
+  - 192.168.50.0/24

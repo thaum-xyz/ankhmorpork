@@ -15,6 +15,12 @@ beelink02  ansible_host=192.168.50.37 #cp02
 [nvidia]
 #metal01
 
+# Both beelinks advertise, so tailscale can fail the primary route over. They
+# are also the only two nodes already offering exit nodes.
+[tailscale_subnet_router]
+beelink01
+beelink02
+
 [k3s_control_plane]
 master0[1:2]
 beelink01

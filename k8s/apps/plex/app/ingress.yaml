@@ -1,39 +1,38 @@
-# Chart 3.x dropped ingress.labels, so this is carried outside the chart --
-# homer discovery and blackbox probing both key off the labels.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jellyfin
+  name: plex
   labels:
-    app.kubernetes.io/name: jellyfin
+    app.kubernetes.io/name: plex
     probe: enabled
     homer.rajsingh.info/enabled: "true"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: jellyfin-deny-metrics-path@kubernetescrd
-    item.homer.rajsingh.info/name: "Jellyfin"
+    # / answers 401 to a non-browser UA; /identity needs no token.
+    probe-uri: /identity
+    item.homer.rajsingh.info/name: "Plex"
     item.homer.rajsingh.info/subtitle: "Video on demand"
-    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/jellyfin.svg"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/plex.svg"
     item.homer.rajsingh.info/tag: "local"
     item.homer.rajsingh.info/tagstyle: "is-success"
-    item.homer.rajsingh.info/order: "50"
+    item.homer.rajsingh.info/order: "45"
     service.homer.rajsingh.info/name: "Multimedia"
     service.homer.rajsingh.info/icon: "fa fa-tv"
     service.homer.rajsingh.info/order: "20"
 spec:
   ingressClassName: private
   rules:
-    - host: jelly.krupa.net.pl
+    - host: vod.krupa.net.pl
       http:
         paths:
           - backend:
               service:
-                name: jellyfin
+                name: plex
                 port:
-                  number: 8096
+                  number: 32400
             path: /
             pathType: Prefix
   tls:
     - hosts:
-        - jelly.krupa.net.pl
-      secretName: jelly-krupa-net-pl-tls
+        - vod.krupa.net.pl
+      secretName: vod-krupa-net-pl-tls
