@@ -16,6 +16,7 @@ spec:
   ports:
     - name: plex
       port: 32400
+      nodePort: 32400
       protocol: TCP
       targetPort: plex
   selector:

@@ -51,8 +51,12 @@ spec:
               value: "1000"
             - name: PLEX_GID
               value: "988"
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
             - name: ADVERTISE_IP
-              value: http://192.168.50.37:32400/,https://vod.krupa.net.pl:443/,http://192.168.50.135:32400/
+              value: http://$(NODE_IP):32400/,https://vod.krupa.net.pl:443/
           # One-shot claim token, created by hand for the initial claim only.
           envFrom:
             - secretRef:
