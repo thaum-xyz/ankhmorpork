@@ -10,7 +10,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     # / answers 401 to a non-browser UA; /identity needs no token.
     probe-uri: /identity
-    traefik.ingress.kubernetes.io/router.middlewares: no-x-forwarded-for@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: plex-no-x-forwarded-for@kubernetescrd
     item.homer.rajsingh.info/name: "Plex"
     item.homer.rajsingh.info/subtitle: "Video on demand"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/plex.svg"
