@@ -15,7 +15,7 @@
 #
 # Kept explicit rather than deleted: auto-detection would silently jump back to
 # 1500 if tailscale0 ever stopped being a detected device.
-MTU: 1200
+MTU: 1270
 
 pmtuDiscovery:
   enabled: true
