@@ -29,6 +29,13 @@ spec:
       # the masters only have Skylake HD 530.
       affinity:
         nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: gpu.intel.com/device-id.0300-1912.present
+                    operator: NotIn
+                    values:
+                      - "true"
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 50
               preference:
@@ -102,13 +109,10 @@ spec:
               name: tv
       # Plex takes its friendly name from the hostname; without this it is plex-0.
       hostname: plex
-      #hostNetwork: true
       nodeSelector:
         intel.feature.node.kubernetes.io/gpu: "true"
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
-        # FIXME: temporary workaround
-        kubernetes.io/hostname: beelink02
       restartPolicy: Always
       serviceAccountName: plex
       # Upstream's own chart picks 120s; the SQLite config DB wants a clean stop.
