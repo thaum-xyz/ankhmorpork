@@ -21,6 +21,10 @@ proxy_config:
       litellm_params:
         model: anthropic/claude-sonnet-5
         api_key: os.environ/ANTHROPIC_API_KEY
+    - model_name: deepseek-v4
+      litellm_params:
+        model: deepseek/deepseek-v4-flash
+        api_key: os.environ/DEEPSEEK_API_KEY
     - model_name: claude-haiku
       litellm_params:
         model: anthropic/claude-haiku-4-5-20251001
