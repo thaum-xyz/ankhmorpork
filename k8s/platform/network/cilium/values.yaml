@@ -15,14 +15,8 @@
 #
 # Kept explicit rather than deleted: auto-detection would silently jump back to
 # 1500 if tailscale0 ever stopped being a detected device.
-MTU: 1280
+MTU: 1200
 
-# Without this cilium drops oversized pod packets silently -- DF probes over the
-# tailnet got no ICMP back at all -- so the sender never learns the path MTU and
-# large transfers hang while small ones pass. packetizationLayerPMTUDMode is
-# already "blackhole" by default (tcp_mtu_probing=1 in pod netns) and is not
-# enough on its own: it only engages after repeated retransmission failure, which
-# shows up as a transfer crawling at ~1.5kB/s rather than recovering.
 pmtuDiscovery:
   enabled: true
 
@@ -40,13 +34,6 @@ bpf:
   # Recalculate when the 30-day peak crosses 0.50 or cluster traffic changes.
   mapDynamicSizeRatio: 0.01
 bpfClockProbe: true
-# Disabled because it breaks pod egress to the tailnet. BIG TCP lets TCP hand
-# cilium GSO super-packets tens of kB wide, and the BPF MTU check compares that
-# aggregate -- not the post-segmentation size -- against the route MTU, so every
-# batched write towards tailscale0's 1280 fails. Measured signature: transfers
-# complete for ~8kB (the initial congestion window, still unbatched) and then
-# stall the moment TSO engages, regardless of MTU or PMTUD. Same failure shape as
-# the GRO/FragNeeded problem on kubered.
 enableIPv4BIGTCP: false
 enableIPv4Masquerade: true
 cluster:
