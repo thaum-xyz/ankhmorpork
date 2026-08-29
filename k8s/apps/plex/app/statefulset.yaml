@@ -98,7 +98,7 @@ spec:
               name: tv
       # Plex takes its friendly name from the hostname; without this it is plex-0.
       hostname: plex
-      hostNetwork: true
+      #hostNetwork: true
       nodeSelector:
         intel.feature.node.kubernetes.io/gpu: "true"
         kubernetes.io/arch: amd64
