@@ -5,3 +5,4 @@ resources:
   - service.yaml
   - ingress.yaml
   - statefulset.yaml
+  - middleware-no-x-frowarded-for.yaml
