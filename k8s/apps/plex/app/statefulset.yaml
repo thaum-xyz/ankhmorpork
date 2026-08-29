@@ -52,7 +52,7 @@ spec:
             - name: PLEX_GID
               value: "988"
             - name: ADVERTISE_IP
-              value: http://192.168.50.135:32400/,https://vod.krupa.net.pl:443/
+              value: https://vod.krupa.net.pl:443/,http://192.168.50.135:32400/
           # One-shot claim token, created by hand for the initial claim only.
           envFrom:
             - secretRef:
