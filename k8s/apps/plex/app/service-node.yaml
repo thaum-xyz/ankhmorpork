@@ -7,14 +7,16 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: plex
     app.kubernetes.io/part-of: plex
-  name: plex
+  name: plex-node
 spec:
   #externalTrafficPolicy: Local
   #loadBalancerIP: 192.168.50.135
   #type: LoadBalancer
+  type: NodePort
   ports:
     - name: plex
       port: 32400
+      nodePort: 32400
       protocol: TCP
       targetPort: plex
   selector:
