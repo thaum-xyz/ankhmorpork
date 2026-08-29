@@ -149,4 +149,4 @@ spec:
         resources:
           requests:
             storage: 45Gi
-        storageClassName: lvm-thin
+        storageClassName: piraeus-r2
