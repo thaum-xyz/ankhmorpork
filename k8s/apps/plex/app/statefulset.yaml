@@ -52,7 +52,7 @@ spec:
             - name: PLEX_GID
               value: "988"
             - name: ADVERTISE_IP
-              value: https://vod.krupa.net.pl:443/,http://192.168.50.135:32400/
+              value: http://192.168.50.37:32400/,https://vod.krupa.net.pl:443/,http://192.168.50.135:32400/
           # One-shot claim token, created by hand for the initial claim only.
           envFrom:
             - secretRef:
@@ -98,10 +98,13 @@ spec:
               name: tv
       # Plex takes its friendly name from the hostname; without this it is plex-0.
       hostname: plex
+      hostNetwork: true
       nodeSelector:
         intel.feature.node.kubernetes.io/gpu: "true"
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
+        # FIXME: temporary workaround
+        kubernetes.io/hostname: beelink02
       restartPolicy: Always
       serviceAccountName: plex
       # Upstream's own chart picks 120s; the SQLite config DB wants a clean stop.
