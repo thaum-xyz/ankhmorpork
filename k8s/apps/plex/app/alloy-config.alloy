@@ -6,7 +6,6 @@ loki.write "default" {
   }
   external_labels = {
     environment = "ankhmorpork",
-    namespace = "plex",
   }
 }
 
