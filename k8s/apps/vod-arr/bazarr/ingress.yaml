@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    item.homer.rajsingh.info/name: "Bazarr"
+    item.homer.rajsingh.info/subtitle: "Subtitles"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/bazarr.svg"
+    item.homer.rajsingh.info/tag: "local"
+    item.homer.rajsingh.info/tagstyle: "is-success"
+    item.homer.rajsingh.info/order: "50"
+    service.homer.rajsingh.info/name: "Multimedia"
+    service.homer.rajsingh.info/icon: "fa fa-tv"
+    service.homer.rajsingh.info/order: "20"
+  labels:
+    homer.rajsingh.info/enabled: "true"
+  name: bazarr
+spec:
+  ingressClassName: private
+  rules:
+    - host: bazarr.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: bazarr
+                port:
+                  number: 6767
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - bazarr.ankhmorpork.thaum.xyz
+      secretName: bazarr-ankhmorpork-thaum-xyz-tls

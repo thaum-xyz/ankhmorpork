@@ -1,0 +1,75 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app.kubernetes.io/component: sync
+    app.kubernetes.io/name: recyclarr
+    app.kubernetes.io/part-of: recyclarr
+    app.kubernetes.io/version: 7.4.0
+  name: recyclarr
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  schedule: "0 4 * * *"
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/component: sync
+            app.kubernetes.io/name: recyclarr
+            app.kubernetes.io/part-of: recyclarr
+        spec:
+          containers:
+            - args:
+                - sync
+              env:
+                - name: TZ
+                  value: Europe/Berlin
+                - name: SONARR_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: apiKey
+                      name: sonarr-api-key
+                      optional: true
+                - name: RADARR_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: apiKey
+                      name: radarr-api-key
+                      optional: true
+              image: ghcr.io/recyclarr/recyclarr:7.4.0
+              name: recyclarr
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 300Mi
+                requests:
+                  cpu: 10m
+                  memory: 100Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              volumeMounts:
+                # recyclarr clones the guide repo into /config, so the directory
+                # itself has to be writable; only the config file comes from git.
+                - mountPath: /config
+                  name: state
+                - mountPath: /config/recyclarr.yml
+                  name: config
+                  subPath: recyclarr.yml
+          restartPolicy: OnFailure
+          securityContext:
+            fsGroup: 1000
+            runAsGroup: 1000
+            runAsUser: 1000
+          volumes:
+            - emptyDir: {}
+              name: state
+            - configMap:
+                name: recyclarr-config
+              name: config

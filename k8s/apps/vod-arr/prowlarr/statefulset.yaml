@@ -1,0 +1,198 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: prowlarr
+    app.kubernetes.io/part-of: prowlarr
+    app.kubernetes.io/version: 2.6.2
+  name: prowlarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: prowlarr
+      app.kubernetes.io/part-of: prowlarr
+  serviceName: prowlarr
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: prowlarr
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: prowlarr
+        app.kubernetes.io/part-of: prowlarr
+        app.kubernetes.io/version: 2.6.2
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+          image: ghcr.io/home-operations/prowlarr:2.6.2
+          imagePullPolicy: IfNotPresent
+          name: prowlarr
+          ports:
+            - containerPort: 9696
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 2
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 400m
+              memory: 300Mi
+            requests:
+              cpu: 160m
+              memory: 100Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          startupProbe:
+            failureThreshold: 60
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            tcpSocket:
+              port: http
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /config
+              name: config
+        - args:
+            - prowlarr
+          env:
+            - name: CONFIG
+              value: /app/config.xml
+            - name: URL
+              value: http://localhost
+            - name: PORT
+              value: "9709"
+          image: ghcr.io/onedr0p/exportarr:v2.3.0
+          name: exportarr
+          ports:
+            - containerPort: 9709
+              name: metrics
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+            requests:
+              cpu: 1m
+              memory: 11Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - mountPath: /app
+              name: config
+              readOnly: true
+      initContainers:
+        - args:
+            - |
+              set -euo pipefail
+              mkdir -p /config/backups
+              if [ -f /config/config.xml ]; then
+                cp /config/config.xml /config/backups/config.xml.$(date +%Y%m%d%H%M%S).bak
+              else
+                touch /config/config.xml
+              fi
+              export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
+              yq -i '
+                      (.Config.PostgresHost = env(POSTGRES_HOST)) |
+                      (.Config.PostgresPort = env(POSTGRES_PORT)) |
+                      (.Config.PostgresUser = env(POSTGRES_USER)) |
+                      (.Config.PostgresPassword = env(POSTGRES_PASS)) |
+                      (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
+                      (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
+                    ' /config/config.xml
+              # The private ingress is the trust boundary, so the built-in login is turned off
+              # rather than left behind a password nobody has -- which is how the multimedia
+              # stack ended up unauditable.
+              yq -i '
+                      (.Config.AuthenticationMethod = "External") |
+                      (.Config.AuthenticationRequired = "DisabledForLocalAddresses")
+                    ' /config/config.xml
+              # Prowlarr, Bazarr and Recyclarr all address this app by API key, so the key has
+              # to be declared rather than generated. Absent secret leaves whatever exists.
+              if [ -n "${API_KEY:-}" ]; then
+                export API_KEY
+                yq -i '(.Config.ApiKey = env(API_KEY))' /config/config.xml
+              fi
+          command:
+            - sh
+            - -c
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: postgres-prowlarr-user
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-prowlarr-user
+            - name: POSTGRES_HOST
+              value: postgres-prowlarr-rw
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_MAIN_DB
+              value: prowlarr
+            - name: POSTGRES_LOG_DB
+              value: logs
+            # Optional: the app generates its own key when the Doppler entry is
+            # absent, which only costs the automated integrations.
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: apiKey
+                  name: prowlarr-api-key
+                  optional: true
+          image: mikefarah/yq:4.53.3
+          name: postgres-setup
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      serviceAccountName: prowlarr
+  volumeClaimTemplates:
+    - metadata:
+        name: config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+        storageClassName: piraeus-r2-roaming

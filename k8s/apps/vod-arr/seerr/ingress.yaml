@@ -1,0 +1,38 @@
+# The default route, served by traefik. ingress-cloudflare.yaml carries the same
+# host for outside access; both are needed so external-dns keeps an internal A
+# record alongside the tunnel CNAME, as it does for the other cloudflare hosts.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    probe-uri: /
+    item.homer.rajsingh.info/name: "Seerr"
+    item.homer.rajsingh.info/subtitle: "Request movies and shows"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/jellyseerr.svg"
+    item.homer.rajsingh.info/order: "5"
+    service.homer.rajsingh.info/name: "Multimedia"
+    service.homer.rajsingh.info/icon: "fa fa-tv"
+    service.homer.rajsingh.info/order: "20"
+  labels:
+    app.kubernetes.io/name: seerr
+    homer.rajsingh.info/enabled: "true"
+    probe: enabled
+  name: seerr
+spec:
+  ingressClassName: public
+  rules:
+    - host: seek.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: seerr
+                port:
+                  number: 5055
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - seek.krupa.net.pl
+      secretName: seek-krupa-net-pl-tls

@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+  VPN_SERVICE_PROVIDER: nordvpn
+  # OpenVPN because the service credentials already in Doppler work as-is.
+  # Switching to WireGuard means putting a NordLynx private key in Doppler and
+  # changing two keys here -- see the README.
+  VPN_TYPE: openvpn
+  OPENVPN_PROTOCOL: udp
+  SERVER_COUNTRIES: Switzerland
+  # The kill switch's only holes. Pod CIDR, service CIDR and the node subnet:
+  # kubelet probes and Traefik arrive from these, and nothing else is allowed
+  # off the tunnel.
+  FIREWALL_OUTBOUND_SUBNETS: 10.42.0.0/16,10.43.0.0/16,192.168.50.0/24
+  # FIREWALL_INPUT_PORTS is deliberately absent: it opens the listener on the
+  # tunnel interface as well, publishing the WebUI to the VPN network.
+  DOT: "on"
+  DNS_KEEP_NAMESERVER: "off"
+  HTTP_CONTROL_SERVER_ADDRESS: :8000
+  TZ: Europe/Berlin
+kind: ConfigMap
+metadata:
+  name: gluetun-config
