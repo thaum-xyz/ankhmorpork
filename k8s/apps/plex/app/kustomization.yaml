@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - serviceAccount.yaml
   - service.yaml
+  - pvc-backups.yaml
   - service-lb.yaml
   - ingress.yaml
   - statefulset.yaml

@@ -226,6 +226,44 @@ synchronous DRBD replication of scratch data over the network, plus a second
 node-pinning constraint and one more thing to fail in the playback path. There
 is nothing here for replication to protect.
 
+### Database backups
+
+Plex backs its databases up every three days (`ButlerTaskBackupDatabase`) and by
+default drops the dated copies straight into `Plug-in Support/Databases`, the
+same directory as the live SQLite files. The `backups` PVC (`unifi-nas`, same
+pattern paperless and valheim use) is mounted at `/backup` to hold them
+instead — but the manifest only provides the volume. **Pointing Plex at it is a
+UI step**, under Settings → Scheduled Tasks with *Show Advanced* on:
+
+> **Backup directory** → `/backup`
+
+Until that is set the backups keep landing on the config volume; nothing breaks,
+they are just in the less useful place. The setting is
+`ButlerDatabaseBackupPath` in `Preferences.xml`, which lives on the config
+volume and so survives restarts, but not a config wipe — worth re-checking after
+any restore.
+
+Only the **backups** belong on NFS. The live `com.plexapp.plugins.library.db`
+and its `-wal`/`-shm` companions must stay on `piraeus-r2`: SQLite in WAL mode
+needs file locking that NFS does not reliably provide, and the Plex image's own
+README is blunt that a network share for the databases means "the vast majority
+will result in database corruption". Mounting the whole `Databases` directory on
+NFS is the obvious-looking move and it is the wrong one.
+
+### Logs
+
+Plex writes its real logs to files under `Plug-in Support/../Logs`, never to
+stdout, so the node-level Alloy DaemonSet cannot see them. The `alloy` sidecar
+tails them off the config volume (read-only, and the files are 0644 under
+world-traversable directories, so it needs no matching uid) and ships them to
+the same Loki as everything else, labelled `job="plex/logs"`.
+
+It reads only the live files: the `.1.log`–`.5.log` rotations are excluded, or
+each rotation would re-ingest a whole file, and `Plex Transcoder Statistics.log`
+is excluded because it is XML rather than lines. Positions live on an emptyDir
+with `tail_from_end`, which trades the lines written while the pod was down
+against replaying the ~10MB server log on every restart.
+
 ### Metrics
 
 None. The exporter this repo used to run needs a Plex token, which only exists

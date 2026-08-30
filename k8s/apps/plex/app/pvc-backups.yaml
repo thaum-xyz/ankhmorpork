@@ -1,0 +1,20 @@
+# Plex's own database backups, kept off the config volume so they survive it
+# being wiped and are obvious to find when restoring. Only the dated copies
+# land here -- the live SQLite databases stay on piraeus-r2, because the Plex
+# image warns that NFS lacks the file locking SQLite needs and "the vast
+# majority will result in database corruption".
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: plex
+  name: backups
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: unifi-nas

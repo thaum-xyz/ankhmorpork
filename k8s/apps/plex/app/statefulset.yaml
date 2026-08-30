@@ -100,6 +100,8 @@ spec:
               name: config
             - mountPath: /transcode
               name: transcode
+            - mountPath: /backup
+              name: backups
             - mountPath: /data/movies
               name: movies
             - mountPath: /data/tv
@@ -166,6 +168,9 @@ spec:
                   requests:
                     storage: 96Gi
                 storageClassName: lvm-thin
+        - name: backups
+          persistentVolumeClaim:
+            claimName: backups
         - name: movies
           persistentVolumeClaim:
             claimName: plex-movies
