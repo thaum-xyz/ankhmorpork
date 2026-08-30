@@ -3,18 +3,31 @@
 # 9000 yields insignificant performance improvement while causing unnecessary
 # complexity, so jumbo frames are deliberately not used here.
 #
-# 1280 matches tailscale0, which is what cilium auto-detects. It had been
-# overridden to 1500 on the assumption that tailscale0's MTU was irrelevant to
-# pod traffic; it is not -- pod packets bound for the tailnet are dropped in
-# bpf_lxc with BPF_FIB_LKUP_RET_FRAG_NEEDED. But 1280 on its own does NOT fix
-# that: measured 2026-08-28, pods at 1280 still hit the same drop, so cilium is
-# comparing against something smaller still (cilium/cilium#29583). The fix that
-# works is pmtuDiscovery below; this value only stops pods overshooting by a
-# wide margin, and is a candidate for returning to 1500 once PMTUD is confirmed
-# working, to get intra-cluster throughput back.
+# 1270 = tailscale0's 1280 minus 10, and both halves of that matter.
 #
-# Kept explicit rather than deleted: auto-detection would silently jump back to
-# 1500 if tailscale0 ever stopped being a detected device.
+# Pods must not exceed the tunnel, or their packets die in bpf_lxc with
+# BPF_FIB_LKUP_RET_FRAG_NEEDED and no ICMP comes back, so the sender never
+# learns. Symptom: small replies pass, large transfers hang -- a Plex web UI
+# that loaded but rendered blank. Host-stack traffic is immune because the
+# kernel takes its MSS from the 1280 route; pods do not (cilium/cilium#41478).
+#
+# The 10 is the awkward part. tailscale0 is a TUN carrying `vnet_hdr on` (see
+# `ip -d link show tailscale0`), so every frame is prefixed with a
+# struct virtio_net_hdr -- exactly 10 bytes -- which tailscale needs for GSO.
+# The host's own TX path hides that, and measures a clean 1280 ceiling: from
+# beelink01, a DF ping of 1280 succeeds and 1281 fails. Cilium's BPF redirect
+# does not hide it, so pods lose those 10 bytes and cap at 1270. Measured
+# 2026-08-30, sharp on both sides -- 1270 works, 1271 does not.
+#
+# So this tracks tailscale0, it is not a tuning knob: if tailscale ever changes
+# its TUN MTU or stops using vnet_hdr, the right value is (tailscale0 MTU - 10),
+# not 1500. Note cilium programs this as a route MTU inside the pod netns
+# (`ip route show` there shows `mtu 1270`), which is what governs MSS -- raising
+# the pod's eth0 by hand changes nothing.
+#
+# Kept explicit rather than deleted: auto-detection picks 1280 from tailscale0,
+# which is 10 too high, and would jump to 1500 if tailscale0 ever stopped being
+# a detected device.
 MTU: 1270
 
 pmtuDiscovery:
