@@ -11,8 +11,16 @@ data:
   # kubelet probes and Traefik arrive from these, and nothing else is allowed
   # off the tunnel.
   FIREWALL_OUTBOUND_SUBNETS: 10.42.0.0/16,10.43.0.0/16,192.168.50.0/24
-  # FIREWALL_INPUT_PORTS is deliberately absent: it opens the listener on the
-  # tunnel interface as well, publishing the WebUI to the VPN network.
+  # OUTBOUND_SUBNETS writes OUTPUT rules only -- the INPUT policy stays DROP, so
+  # without the ports below every inbound connection is dropped and the
+  # readiness probe times out instead of being refused, while Traefik, the *arrs
+  # and Prometheus all hang. 8080 is the WebUI, 9091 the exporter.
+  #
+  # These bind to the default-route interface, not the tunnel: gluetun passes
+  # them to SetAllowedPort with defaultRoute.NetInterface. The tunnel-side
+  # equivalent is FIREWALL_VPN_INPUT_PORTS, which stays unset -- that is the one
+  # that would publish a listener to the VPN network.
+  FIREWALL_INPUT_PORTS: 8080,9091
   DOT: "on"
   DNS_KEEP_NAMESERVER: "off"
   HTTP_CONTROL_SERVER_ADDRESS: :8000
