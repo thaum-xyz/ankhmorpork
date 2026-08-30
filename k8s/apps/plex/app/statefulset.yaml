@@ -58,12 +58,9 @@ spec:
               value: "1000"
             - name: PLEX_GID
               value: "988"
-            - name: NODE_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
+            # Tied to service-lb.yaml's loadBalancerIP; change both together.
             - name: ADVERTISE_IP
-              value: http://$(NODE_IP):32400/,https://vod.krupa.net.pl:443/
+              value: http://192.168.50.135:32400/,https://vod.krupa.net.pl:443/
           # One-shot claim token, created by hand for the initial claim only.
           envFrom:
             - secretRef:
@@ -107,6 +104,31 @@ spec:
               name: movies
             - mountPath: /data/tv
               name: tv
+        # Ships plex's own log files, which never reach stdout and so are
+        # invisible to the node-level Alloy DaemonSet.
+        - args:
+            - run
+            - /etc/alloy/config.alloy
+            - --storage.path=/var/lib/alloy
+          image: docker.io/grafana/alloy:v1.18.1
+          name: alloy
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 96Mi
+          volumeMounts:
+            - mountPath: /etc/alloy
+              name: alloy-config
+              readOnly: true
+            # Logs are 0644 under world-traversable dirs, so alloy's own uid
+            # reads them without matching PLEX_UID.
+            - mountPath: /config
+              name: config
+              readOnly: true
+            - mountPath: /var/lib/alloy
+              name: alloy-data
       # Plex takes its friendly name from the hostname; without this it is plex-0.
       hostname: plex
       nodeSelector:
@@ -118,6 +140,12 @@ spec:
       # Upstream's own chart picks 120s; the SQLite config DB wants a clean stop.
       terminationGracePeriodSeconds: 120
       volumes:
+        - name: alloy-config
+          configMap:
+            name: alloy-config
+        - name: alloy-data
+          emptyDir:
+            sizeLimit: 128Mi
         # Plex wants scratch space roughly the size of the source file, and the
         # library holds 50GiB remuxes -- far past what belongs on the node root
         # filesystem. A generic ephemeral volume keeps emptyDir's lifecycle (made

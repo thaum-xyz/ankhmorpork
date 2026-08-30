@@ -1,0 +1,28 @@
+# The address plex advertises to clients, so it must not move when the pod does.
+# externalTrafficPolicy is Cluster deliberately: the config volume is piraeus-r2
+# with two replicas, so plex can run on either beelink, and Local only accepts
+# traffic on the node holding the pod. That mismatch is what broke AppleTV
+# playback while the ingress-served UI kept working. Cluster costs the real
+# client IP, but the SNAT'd node address lands in 192.168.50.0/24, which is
+# inside plex's LAN Networks value, so clients still count as local.
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: plex
+  name: plex-lb
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.50.135
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: plex
+      port: 32400
+      protocol: TCP
+      targetPort: plex
+  selector:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/part-of: plex

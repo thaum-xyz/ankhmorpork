@@ -1,5 +1,5 @@
-# externalTrafficPolicy must stay Local: cilium runs in SNAT mode, so Cluster
-# would hide the client IP and plex would treat every LAN client as remote.
+# ClusterIP on purpose: this is only the ingress backend. External clients reach
+# plex through the LoadBalancer in service-lb.yaml.
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,9 +9,6 @@ metadata:
     app.kubernetes.io/part-of: plex
   name: plex
 spec:
-  #externalTrafficPolicy: Local
-  #loadBalancerIP: 192.168.50.135
-  #type: LoadBalancer
   ports:
     - name: plex
       port: 32400

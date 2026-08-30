@@ -146,14 +146,32 @@ https://developers.cloudflare.com/fundamentals/reference/policies-compliances/de
 
 ### Traffic policy
 
-`externalTrafficPolicy: Local` on the LoadBalancer Service is load-bearing.
-Cilium runs `loadBalancer.mode: snat`, so `Cluster` would replace every client
-IP with a node IP and every LAN client would fall outside **LAN Networks**. The
-trade-off is that the LB IP is advertised over BGP only from the node running
-the pod — fine now that all four nodes peer with the UDM.
+`externalTrafficPolicy: Cluster`, and the earlier reasoning for `Local` was
+wrong. `Local` only accepts traffic on the node actually holding the pod, so
+over the tailnet it works solely when the subnet router and plex land on the
+same beelink. Measured with a one-pod LoadBalancer moved between nodes:
 
-`ADVERTISE_IP` is tied to the Service's `loadBalancerIP`; changing one without
-the other leaves clients falling back to the plex.tv relay.
+| pod placement | `etp: Local` | `etp: Cluster` |
+| --- | --- | --- |
+| on the subnet router | 200 | 200 |
+| on the other node | no route | 200 |
+
+That is what broke AppleTV playback while the UI kept working — the UI came
+through the ingress, where traefik has a pod on both beelinks and so always
+satisfied `Local`, while playback went to the advertised VIP and found nothing.
+The argument for `Local` had been that `Cluster` hides the client IP; it does,
+but the SNAT'd address is a node IP in `192.168.50.0/24`, which is inside the
+**LAN Networks** value above, so clients still count as local. The only real
+loss is that plex cannot tell a LAN client from a tailnet one.
+
+Two Services on purpose: `plex` is a ClusterIP serving only as the ingress
+backend, and `plex-lb` carries the LoadBalancer VIP for direct clients.
+
+`ADVERTISE_IP` is tied to `plex-lb`'s `loadBalancerIP`; changing one without the
+other leaves clients falling back to the plex.tv relay. Do not swap the VIP for
+the node address via the downward API — the config volume has two replicas, so
+the pod can move and the advertisement would move with it, while plex.tv goes on
+handing clients the address it cached.
 
 ### First-run environment variables re-apply on every start
 
@@ -172,9 +190,12 @@ Plex Pass.
 
 ### Storage
 
-`/config` is `lvm-thin`, which is node-local and `WaitForFirstConsumer`: the pod
-is pinned to whichever node it first landed on. That matches the GPU affinity
-but means a dead node keeps Plex down until the PVC is recreated.
+`/config` is `piraeus-r2` — DRBD with two replicas and
+`allowRemoteVolumeAccess: false`, so the pod must run where a replica lives but
+can use either. In practice that is beelink01 or beelink02, which is also where
+the GPU affinity wants it, and it means a dead node no longer strands plex.
+Since the pod can therefore move, nothing that has to stay put may be derived
+from the node it happens to be on.
 
 `/transcode` is a **generic ephemeral volume** on `lvm-thin`, sized 96Gi. Plex
 documents the requirement as "roughly equal to the size of the source file of

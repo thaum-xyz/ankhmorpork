@@ -1,0 +1,60 @@
+// Plex writes its real logs to files, not stdout, so the node-level Alloy
+// DaemonSet never sees them. This sidecar tails them off the config volume.
+loki.write "default" {
+  endpoint {
+    url = "http://loki.datalake-logs.svc.cluster.local:3100/loki/api/v1/push"
+  }
+  external_labels = {
+    environment = "ankhmorpork",
+  }
+}
+
+// Only the live files. Plex rotates by renaming to .1.log through .5.log, and
+// without the exclude every rotation re-ingests a whole file as "new".
+// Transcoder Statistics is XML rather than lines, so it would arrive as
+// meaningless multi-line blobs. PMS Plugin Logs/ is left out: no ** in the
+// pattern. Everything else here shares the server log's line format.
+local.file_match "plex" {
+  path_targets = [{
+    "__path__"         = "/config/Library/Application Support/Plex Media Server/Logs/*.log",
+    "__path_exclude__" = "/config/Library/Application Support/Plex Media Server/Logs/{*.[0-9].log,Plex Transcoder Statistics.log}",
+    "namespace"        = "plex",
+    "app"              = "plex",
+    "job"              = "plex/logs",
+  }]
+}
+
+loki.source.file "plex" {
+  targets    = local.file_match.plex.targets
+  forward_to = [loki.process.plex.receiver]
+
+  // Positions live on an emptyDir, so a restart would otherwise replay the
+  // whole ~10MB server log. Costs the lines written while the pod was down.
+  tail_from_end = true
+}
+
+loki.process "plex" {
+  // "Aug 30, 2026 14:20:14.171 [132002540448568] DEBUG - Completed: ..."
+  // Continuation lines carry no timestamp and belong to the entry above.
+  stage.multiline {
+    firstline = "^[A-Z][a-z]{2} \\d{1,2}, \\d{4} \\d{2}:\\d{2}:\\d{2}\\.\\d{3} "
+  }
+
+  stage.regex {
+    expression = "^(?P<ts>[A-Z][a-z]{2} \\d{1,2}, \\d{4} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}) \\[\\d+\\] (?P<level>[A-Z]+) - "
+  }
+
+  // Without this Loki stamps ingest time, which skews once a backlog is read.
+  stage.timestamp {
+    source = "ts"
+    format = "Jan 2, 2006 15:04:05.000"
+  }
+
+  stage.labels {
+    values = {
+      level = "level",
+    }
+  }
+
+  forward_to = [loki.write.default.receiver]
+}

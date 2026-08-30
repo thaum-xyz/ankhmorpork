@@ -3,6 +3,13 @@ kind: Kustomization
 resources:
   - serviceAccount.yaml
   - service.yaml
-  - service-node.yaml
+  - service-lb.yaml
   - ingress.yaml
   - statefulset.yaml
+
+# Hashed on purpose, unlike the HelmRelease values elsewhere in the repo: the
+# name change is what rolls the pod when the Alloy config changes.
+configMapGenerator:
+  - name: alloy-config
+    files:
+      - config.alloy=alloy-config.alloy
