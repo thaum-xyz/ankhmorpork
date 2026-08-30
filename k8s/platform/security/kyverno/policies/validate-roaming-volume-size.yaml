@@ -1,0 +1,42 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: validate-roaming-volume-size
+spec:
+  evaluation:
+    background:
+      enabled: false
+  failurePolicy: Fail
+  validationActions:
+    - Deny
+  matchConstraints:
+    resourceRules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - persistentvolumeclaims
+  matchConditions:
+    - name: only-roaming-storage-class
+      expression: >-
+        object.spec.?storageClassName.orValue("") == "piraeus-r2-roaming"
+  variables:
+    - name: requested
+      expression: >-
+        quantity(object.spec.?resources.?requests.?storage.orValue("0"))
+  validations:
+    # A Pod that moves attaches diskless for the class's 5 minute auto-diskful
+    # delay, then resyncs a replica over the node network. rs-discard-granularity
+    # keeps unallocated blocks off the wire, but requested size is the only proxy
+    # admission has: a full 32Gi is about five more minutes at 1Gb/s.
+    - expression: >-
+        !variables.requested.isGreaterThan(quantity("32Gi"))
+      message: >-
+        PersistentVolumeClaims on piraeus-r2-roaming are limited to 32Gi, because
+        the volume is resynced across the node network every time its Pod moves
+        to a node without a replica. Use piraeus-r2 for larger volumes; it pins
+        the Pod to a replica instead.

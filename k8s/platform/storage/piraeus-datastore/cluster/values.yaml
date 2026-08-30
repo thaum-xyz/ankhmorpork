@@ -252,6 +252,21 @@ storageClasses:
       # Keep application I/O local to one of the two diskful replicas. The
       # affinity controller updates PV affinity if LINSTOR moves a replica.
       linstor.csi.linbit.com/allowRemoteVolumeAccess: "false"
+  # Same two replicas, but Pods are not pinned to them: a Pod may schedule onto
+  # any satellite node and attach diskless, and auto-diskful then converts that
+  # attachment into a local replica and drops the surplus one. I/O is remote
+  # until the conversion completes, hence the size cap enforced by the
+  # validate-roaming-volume-size policy.
+  - name: piraeus-r2-roaming
+    reclaimPolicy: Delete
+    allowVolumeExpansion: true
+    volumeBindingMode: WaitForFirstConsumer
+    parameters:
+      csi.storage.k8s.io/fstype: xfs
+      linstor.csi.linbit.com/autoPlace: "2"
+      linstor.csi.linbit.com/storagePool: temporary-topolvm
+      linstor.csi.linbit.com/allowRemoteVolumeAccess: "true"
+      property.linstor.csi.linbit.com/DrbdOptions/auto-diskful: "5"
 
 volumeSnapshotClasses:
   - name: piraeus
