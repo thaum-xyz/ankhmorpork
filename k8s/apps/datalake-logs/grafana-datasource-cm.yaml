@@ -11,7 +11,7 @@ data:
     - name: Logs
       type: loki
       uid: datalake-logs
-      url: http://loki-read.datalake-logs.svc.cluster.local:3100
+      url: http://loki.datalake-logs.svc.cluster.local:3100
       access: proxy
       jsonData:
         maxLines: 1000
