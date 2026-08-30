@@ -63,6 +63,42 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+        - args:
+            - prowlarr
+          env:
+            - name: CONFIG
+              value: /app/config.xml
+            - name: URL
+              value: http://localhost
+            - name: PORT
+              value: "9709"
+          image: ghcr.io/onedr0p/exportarr:v2.3.0
+          name: exportarr
+          ports:
+            - containerPort: 9709
+              name: metrics
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+            requests:
+              cpu: 1m
+              memory: 11Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - mountPath: /app
+              name: config
+              readOnly: true
       initContainers:
         - args:
             - |
