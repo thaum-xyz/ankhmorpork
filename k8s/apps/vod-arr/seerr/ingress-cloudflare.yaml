@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudflare-ingress
+spec:
+  ingressClassName: cloudflare
+  rules:
+    - host: seek.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: seerr
+                port:
+                  number: 5055
+            path: /
+            pathType: Prefix

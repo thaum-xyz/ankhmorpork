@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: seerr
+    app.kubernetes.io/part-of: seerr
+    app.kubernetes.io/version: 3.4.1
+  name: seerr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: seerr
+      app.kubernetes.io/part-of: seerr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: seerr
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: seerr
+        app.kubernetes.io/part-of: seerr
+        app.kubernetes.io/version: 3.4.1
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+            - name: LOG_LEVEL
+              value: info
+            - name: PORT
+              value: "5055"
+            # Defaults to /app/config off __dirname; named so the mount cannot
+            # drift from where the app actually writes.
+            - name: CONFIG_DIRECTORY
+              value: /app/config
+          image: ghcr.io/seerr-team/seerr:v3.4.1
+          imagePullPolicy: IfNotPresent
+          name: seerr
+          ports:
+            - containerPort: 5055
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /api/v1/status
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 300Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - mountPath: /app/config
+              name: config
+      initContainers:
+        # First-run only. Seerr merges settings.json over its defaults and
+        # rewrites the file with the result, so a partial seed is expanded
+        # rather than replacing anything and the rest stays UI-owned.
+        - args:
+            - |
+              set -eu
+              if [ ! -f /app/config/settings.json ]; then
+                cat > /app/config/settings.json <<'JSON'
+              {
+                "main": {
+                  "applicationUrl": "https://seek.krupa.net.pl"
+                },
+                "network": {
+                  "trustProxy": true
+                }
+              }
+              JSON
+              fi
+          command:
+            - sh
+            - -c
+          image: busybox:1.37.0
+          name: seed-settings
+          resources:
+            limits:
+              cpu: 50m
+              memory: 32Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - mountPath: /app/config
+              name: config
+      restartPolicy: Always
+      # The image is already USER node:node, which is uid 1000.
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: seerr-config

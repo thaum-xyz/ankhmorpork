@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/name: flaresolverr
+    app.kubernetes.io/part-of: prowlarr
+    app.kubernetes.io/version: 3.5.0
+  name: flaresolverr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: proxy
+      app.kubernetes.io/name: flaresolverr
+      app.kubernetes.io/part-of: prowlarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: proxy
+        app.kubernetes.io/name: flaresolverr
+        app.kubernetes.io/part-of: prowlarr
+        app.kubernetes.io/version: 3.5.0
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+            - name: LOG_LEVEL
+              value: info
+          image: ghcr.io/flaresolverr/flaresolverr:v3.5.0
+          imagePullPolicy: IfNotPresent
+          name: flaresolverr
+          ports:
+            - containerPort: 8191
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          # Chromium, so the floor is high and the ceiling matters: a stuck
+          # solver leaks browser processes until something reaps it.
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 400Mi
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+      restartPolicy: Always

@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: bazarr
+    app.kubernetes.io/part-of: bazarr
+    app.kubernetes.io/version: 1.6.0
+  name: bazarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: bazarr
+      app.kubernetes.io/part-of: bazarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: bazarr
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: bazarr
+        app.kubernetes.io/part-of: bazarr
+        app.kubernetes.io/version: 1.6.0
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+          image: ghcr.io/home-operations/bazarr:1.6.0
+          imagePullPolicy: IfNotPresent
+          name: bazarr
+          ports:
+            - containerPort: 6767
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 500m
+              memory: 700Mi
+            requests:
+              cpu: 50m
+              memory: 250Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          # Identical mount paths to sonarr and radarr, so bazarr's path
+          # mappings are the identity and a renamed episode still resolves.
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /media/tv
+              name: tv
+            - mountPath: /media/movies
+              name: movies
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: bazarr-config
+        - name: tv
+          persistentVolumeClaim:
+            claimName: vod-tv
+        - name: movies
+          persistentVolumeClaim:
+            claimName: vod-movies

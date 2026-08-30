@@ -1,0 +1,209 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: sonarr
+    app.kubernetes.io/version: 4.0.19
+  name: sonarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: sonarr
+      app.kubernetes.io/part-of: sonarr
+  serviceName: sonarr
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: sonarr
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: sonarr
+        app.kubernetes.io/part-of: sonarr
+        app.kubernetes.io/version: 4.0.19
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+          image: ghcr.io/home-operations/sonarr:4.0.19
+          imagePullPolicy: IfNotPresent
+          name: sonarr
+          ports:
+            - containerPort: 8989
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 2
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 750m
+              memory: 700Mi
+            requests:
+              cpu: 200m
+              memory: 300Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          startupProbe:
+            failureThreshold: 60
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            tcpSocket:
+              port: http
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /media/tv
+              name: media
+            - mountPath: /downloads
+              name: downloads
+        - args:
+            - sonarr
+          env:
+            - name: CONFIG
+              value: /app/config.xml
+            - name: URL
+              value: http://localhost
+            - name: PORT
+              value: "9707"
+          image: ghcr.io/onedr0p/exportarr:v2.3.0
+          name: exportarr
+          ports:
+            - containerPort: 9707
+              name: metrics
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+            requests:
+              cpu: 1m
+              memory: 11Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - mountPath: /app
+              name: config
+              readOnly: true
+      initContainers:
+        - args:
+            - |
+              set -euo pipefail
+              mkdir -p /config/backups
+              if [ -f /config/config.xml ]; then
+                cp /config/config.xml /config/backups/config.xml.$(date +%Y%m%d%H%M%S).bak
+              else
+                touch /config/config.xml
+              fi
+              export POSTGRES_HOST POSTGRES_PORT POSTGRES_USER POSTGRES_PASS POSTGRES_MAIN_DB POSTGRES_LOG_DB
+              yq -i '
+                      (.Config.PostgresHost = env(POSTGRES_HOST)) |
+                      (.Config.PostgresPort = env(POSTGRES_PORT)) |
+                      (.Config.PostgresUser = env(POSTGRES_USER)) |
+                      (.Config.PostgresPassword = env(POSTGRES_PASS)) |
+                      (.Config.PostgresMainDb = env(POSTGRES_MAIN_DB)) |
+                      (.Config.PostgresLogDb = env(POSTGRES_LOG_DB))
+                    ' /config/config.xml
+              # The private ingress is the trust boundary, so the built-in login is turned off
+              # rather than left behind a password nobody has -- which is how the multimedia
+              # stack ended up unauditable.
+              yq -i '
+                      (.Config.AuthenticationMethod = "External") |
+                      (.Config.AuthenticationRequired = "DisabledForLocalAddresses")
+                    ' /config/config.xml
+              # Prowlarr, Bazarr and Recyclarr all address this app by API key, so the key has
+              # to be declared rather than generated. Absent secret leaves whatever exists.
+              if [ -n "${API_KEY:-}" ]; then
+                export API_KEY
+                yq -i '(.Config.ApiKey = env(API_KEY))' /config/config.xml
+              fi
+          command:
+            - sh
+            - -c
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: postgres-sonarr-user
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-sonarr-user
+            - name: POSTGRES_HOST
+              value: postgres-sonarr-rw
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_MAIN_DB
+              value: sonarr
+            - name: POSTGRES_LOG_DB
+              value: logs
+            # Optional: the app generates its own key when the Doppler entry is
+            # absent, which only costs the automated integrations.
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: apiKey
+                  name: sonarr-api-key
+                  optional: true
+          image: mikefarah/yq:4.53.3
+          name: postgres-setup
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      serviceAccountName: sonarr
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: vod-tv
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: vod-downloads
+  volumeClaimTemplates:
+    - metadata:
+        name: config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+        storageClassName: piraeus-r2-roaming

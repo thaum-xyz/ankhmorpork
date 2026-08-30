@@ -1,0 +1,31 @@
+database: prowlarr
+owner: prowlarr
+
+cluster:
+  instances: 2
+  storage:
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 130m
+      memory: 300Mi
+  bootstrap:
+    postInitSQL:
+      - CREATE DATABASE logs;
+      - ALTER DATABASE logs OWNER TO prowlarr;
+
+backup:
+  schedule: "0 47 3 * * *"
+  objectStore:
+    # Three clusters share this namespace, so each needs its own store.
+    name: versity-vod-prowlarr
+    bucketPrefix: s3://cnpg/postgres
+    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
+    retentionPolicy: 7d
+    pathSuffix: vod-prowlarr
+
+externalSecrets:
+  admin:
+    remoteKey: PROWLARR_DB_ADMIN_PASS
+  user:
+    remoteKey: PROWLARR_DB_PASS

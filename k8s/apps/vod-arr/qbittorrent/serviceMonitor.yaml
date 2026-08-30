@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: downloader
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/part-of: qbittorrent
+    app.kubernetes.io/version: 5.2.3
+  name: qbittorrent
+spec:
+  endpoints:
+    - interval: 100s
+      port: metrics
+      scrapeTimeout: 30s
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: downloader
+      app.kubernetes.io/name: qbittorrent
+      app.kubernetes.io/part-of: qbittorrent

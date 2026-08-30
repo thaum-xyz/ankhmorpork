@@ -1,0 +1,223 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: downloader
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/part-of: qbittorrent
+    app.kubernetes.io/version: 5.2.3
+  name: qbittorrent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: downloader
+      app.kubernetes.io/name: qbittorrent
+      app.kubernetes.io/part-of: qbittorrent
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: qbittorrent
+      labels:
+        app.kubernetes.io/component: downloader
+        app.kubernetes.io/name: qbittorrent
+        app.kubernetes.io/part-of: qbittorrent
+        app.kubernetes.io/version: 5.2.3
+    spec:
+      containers:
+        # gluetun owns the pod's network namespace: it is the only container with
+        # NET_ADMIN, and its firewall drops everything that is not the tunnel or
+        # one of FIREWALL_OUTBOUND_SUBNETS. qBittorrent has no route to the
+        # internet except through it, and none at all while it is down -- which
+        # is the kill switch, enforced by the netns rather than by the client
+        # behaving itself.
+        - envFrom:
+            - configMapRef:
+                name: gluetun-config
+                optional: false
+            - secretRef:
+                name: vod-vpn-creds
+                optional: false
+          image: qmcgaw/gluetun:v3.41.3
+          livenessProbe:
+            # gluetun restarts the tunnel itself; this only catches the case
+            # where that loop stops making progress. Deliberately slow -- a
+            # 10-minute outage is cheaper than a restart storm.
+            exec:
+              command:
+                - sh
+                - -c
+                - wget -qO- http://127.0.0.1:8000/v1/openvpn/status | grep -q running
+            failureThreshold: 10
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            timeoutSeconds: 10
+          name: gluetun
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 25m
+              memory: 64Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          volumeMounts:
+            - mountPath: /dev/net/tun
+              name: dev-tun
+            - mountPath: /gluetun
+              name: gluetun-state
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+          image: ghcr.io/home-operations/qbittorrent:5.2.3
+          imagePullPolicy: IfNotPresent
+          name: qbittorrent
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /downloads
+              name: downloads
+        - env:
+            - name: QBITTORRENT_HOST
+              value: 127.0.0.1
+            - name: QBITTORRENT_PORT
+              value: "8080"
+            - name: EXPORTER_PORT
+              value: "9091"
+          image: ghcr.io/esanchezm/prometheus-qbittorrent-exporter:v1.7.0
+          name: exporter
+          ports:
+            - containerPort: 9091
+              name: metrics
+          resources:
+            limits:
+              cpu: 50m
+              memory: 128Mi
+            requests:
+              cpu: 1m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
+      # 127.0.0.1 is gluetun's DNS-over-TLS resolver in the shared netns. Without
+      # this the qBittorrent container keeps cluster DNS and resolves trackers
+      # through CoreDNS and out of the node -- a plaintext record of everything
+      # being downloaded, outside the tunnel the rest of the traffic uses.
+      dnsConfig:
+        nameservers:
+          - 127.0.0.1
+      dnsPolicy: None
+      initContainers:
+        # First-run only. qBittorrent rewrites this file constantly, so it is
+        # seeded rather than managed: what is here is the starting state, not a
+        # declaration of the running config.
+        - args:
+            - |
+              set -eu
+              mkdir -p /config/qBittorrent
+              if [ ! -f /config/qBittorrent/qBittorrent.conf ]; then
+                cat > /config/qBittorrent/qBittorrent.conf <<'CONF'
+              [BitTorrent]
+              Session\DefaultSavePath=/downloads/complete
+              Session\TempPath=/downloads/incomplete
+              Session\TempPathEnabled=true
+              Session\Port=6881
+              Session\GlobalMaxRatio=2
+              Session\GlobalMaxSeedingMinutes=10080
+              Session\MaxRatioAction=0
+              Session\QueueingSystemEnabled=true
+              Session\MaxActiveDownloads=3
+              Session\MaxActiveTorrents=8
+              Session\MaxActiveUploads=4
+
+              [Preferences]
+              WebUI\Address=*
+              WebUI\Port=8080
+              WebUI\LocalHostAuth=false
+              WebUI\AuthSubnetWhitelistEnabled=true
+              WebUI\AuthSubnetWhitelist=10.42.0.0/16, 192.168.50.0/24
+              WebUI\CSRFProtection=false
+              WebUI\HostHeaderValidation=false
+              CONF
+              fi
+              if [ ! -f /config/qBittorrent/categories.json ]; then
+                cat > /config/qBittorrent/categories.json <<'CATS'
+              {
+                  "movies": {"save_path": "/downloads/complete/movies"},
+                  "tv": {"save_path": "/downloads/complete/tv"}
+              }
+              CATS
+              fi
+              mkdir -p /downloads/incomplete /downloads/complete/movies /downloads/complete/tv
+          command:
+            - sh
+            - -c
+          image: busybox:1.37.0
+          name: seed-config
+          resources:
+            limits:
+              cpu: 50m
+              memory: 32Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /downloads
+              name: downloads
+      restartPolicy: Always
+      # No pod-level runAsNonRoot: gluetun has to be root to create the tunnel
+      # and program iptables. Every other container names its own UID.
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:
+        - hostPath:
+            path: /dev/net/tun
+            type: CharDevice
+          name: dev-tun
+        - emptyDir: {}
+          name: gluetun-state
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent-config
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: vod-downloads
