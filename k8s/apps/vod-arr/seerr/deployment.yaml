@@ -68,9 +68,18 @@ spec:
             - mountPath: /app/config
               name: config
       initContainers:
-        # First-run only. Seerr merges settings.json over its defaults and
-        # rewrites the file with the result, so a partial seed is expanded
-        # rather than replacing anything and the rest stays UI-owned.
+        # First-run only. The normal settings load merges this over the
+        # defaults, so everything omitted stays UI-owned.
+        #
+        # mediaServerType is NOT optional here, however much it looks like it.
+        # checkOverseerrMerge() runs before anything else at boot and loads
+        # settings with raw=true, which skips the merge and reads this file
+        # literally. A missing mediaServerType is then undefined, which it
+        # reads as "un-migrated Overseerr install", and it tries to stamp
+        # migration rows into a table typeorm has not created yet and exits.
+        # 4 is NOT_CONFIGURED -- exactly what a fresh install holds. The enum
+        # is persisted in every existing user's settings.json, so its numbering
+        # cannot change without breaking them.
         - args:
             - |
               set -eu
@@ -78,7 +87,8 @@ spec:
                 cat > /app/config/settings.json <<'JSON'
               {
                 "main": {
-                  "applicationUrl": "https://seek.krupa.net.pl"
+                  "applicationUrl": "https://seek.krupa.net.pl",
+                  "mediaServerType": 4
                 },
                 "network": {
                   "trustProxy": true

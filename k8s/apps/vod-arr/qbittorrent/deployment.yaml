@@ -157,7 +157,15 @@ spec:
               Session\Port=6881
               Session\GlobalMaxRatio=2
               Session\GlobalMaxSeedingMinutes=10080
-              Session\MaxRatioAction=0
+              # Stop, not Remove: qBittorrent's ratio counter has no idea whether
+              # sonarr has imported yet, so removing on ratio can delete a release
+              # out from under an import. Stopping is the interlock -- the *arrs
+              # then remove the torrent and its data once they have imported it
+              # AND the client reports the share limit met.
+              # Key renamed from MaxRatioAction in qBittorrent 5, and enum
+              # settings serialise as the name, not the number: Stop, Remove,
+              # RemoveWithContent, EnableSuperSeeding.
+              Session\ShareLimitAction=Stop
               Session\QueueingSystemEnabled=true
               Session\MaxActiveDownloads=3
               Session\MaxActiveTorrents=8
