@@ -55,8 +55,9 @@ spec:
                   drop:
                     - ALL
               volumeMounts:
-                # recyclarr clones the guide repo into /config, so the directory
-                # itself has to be writable; only the config file comes from git.
+                # recyclarr clones the guide repos into /config and keeps its
+                # profile-rename cache there, so it is a PVC rather than an
+                # emptyDir; only the config file itself comes from git.
                 - mountPath: /config
                   name: state
                 - mountPath: /config/recyclarr.yml
@@ -68,8 +69,9 @@ spec:
             runAsGroup: 1000
             runAsUser: 1000
           volumes:
-            - emptyDir: {}
-              name: state
+            - name: state
+              persistentVolumeClaim:
+                claimName: recyclarr-config
             - configMap:
                 name: recyclarr-config
               name: config

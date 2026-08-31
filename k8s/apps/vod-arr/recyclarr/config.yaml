@@ -6,16 +6,30 @@
 # `include: - template:` indirection this used to rely on. That mechanism still
 # exists in v8, but every template was renamed when config-templates dropped
 # includes.json for templates.json -- the old `sonarr-v4-*` / `radarr-*-movie`
-# names resolve to nothing. Regenerate with `-t web-1080p` / `-t web-2160p`
-# (sonarr) and `-t hd-bluray-web` / `-t uhd-bluray-web` (radarr) to diff against
-# upstream, including the optional custom formats left out here.
+# names resolve to nothing.
 #
-# Three profiles per service:
-#   Any     -- every resolution, but nothing from a camcorder. Not a default.
-#   1080p   -- TRaSH HD Bluray + WEB.
-#   Ultra   -- TRaSH UHD Bluray + WEB. Deliberately NOT the Remux profile: Remux
-#              is where the 50GB+ rips live, and "Bluray + WEB" is the same tier
-#              without them.
+# Three profiles, named identically in both services. The guide names differ per
+# app (WEB-1080p vs HD Bluray + WEB), and so do the *arrs' own built-ins -- e.g.
+# Radarr's stock Ultra-HD allows Remux-2160p while Sonarr's does not -- so the
+# `name` override exists to stop that leaking into what you pick from:
+#
+#   Any    -- take anything watchable now, settle at 1080p.
+#   1080p  -- 1080p, full stop.
+#   Ultra  -- 1080p now, replaced by 2160p when one appears. This is the Seerr
+#             default: a requester gets something watchable immediately instead
+#             of waiting on a 4K release that may never exist, and the *arr
+#             keeps one file per movie/episode, so the 1080p is deleted on
+#             upgrade rather than kept alongside.
+#
+# No profile lists Remux, BR-DISK or Raw-HD. Excluding those formats is what
+# bounds file size here; there is deliberately no max-size cap, because it is
+# those formats that inflate, not 2160p as such.
+#
+# assign_scores_to is load-bearing. Omitted, a custom format group scores "all
+# guide-backed profiles" only -- which is why Any previously had all 59 formats
+# sitting at score 0, so the [Unwanted] group (LQ, BR-DISK, x265 (HD), Bad Dual
+# Groups) was synced but blocked nothing on the profile holding most of the
+# library. User-defined profiles have to be named explicitly.
 sonarr:
   # Instance names are global across services in v8: two instances both called
   # "main" are silently treated as duplicates and dropped, logged only at debug.
@@ -28,16 +42,12 @@ sonarr:
 
     quality_profiles:
       - name: Any
-        # Takes the best release available now, then keeps improving it until it
-        # reaches 1080p and stops. 2160p is deliberately NOT the cutoff: this
-        # profile covers the whole back catalogue, and pulling ~500 titles up to
-        # 4K is roughly 10TB against 8.8TB free -- it would fill the array
-        # slowly, over weeks of RSS grabs, which is the worst way to find out.
-        #
-        # until_score stays high so a better-scoring 1080p release (proper,
-        # repack, preferred group) can still replace a worse one without
-        # changing resolution. Remux and Raw-HD are excluded on size, Unknown on
-        # being unidentifiable rather than bad.
+        score_set: default
+        # until_quality is required even when upgrades are off: without it
+        # recyclarr picks a cutoff outside the declared groups and the *arr
+        # rejects the whole profile with "Cutoff must be an allowed quality or
+        # group". until_score high so a better-scoring release at the same
+        # resolution can still replace a worse one.
         upgrade:
           allowed: true
           until_quality: 1080p
@@ -53,20 +63,46 @@ sonarr:
             qualities: [Bluray-576p, Bluray-480p, WEBDL-480p, WEBRip-480p, DVD, SDTV]
 
       - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+        name: 1080p
         reset_unmatched_scores:
           enabled: true
 
-      - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
-        reset_unmatched_scores:
-          enabled: true
+      - name: Ultra
+        score_set: default
+        upgrade:
+          allowed: true
+          until_quality: 2160p
+          until_score: 10000
+        qualities:
+          - name: 2160p
+            qualities: [Bluray-2160p, WEBDL-2160p, WEBRip-2160p, HDTV-2160p]
+          - name: 1080p
+            qualities: [Bluray-1080p, WEBDL-1080p, WEBRip-1080p, HDTV-1080p]
 
     custom_format_groups:
       add:
         - trash_id: 158188097a58d7687dee647e04af0da3 # [Optional] Golden Rule HD
+          assign_scores_to:
+            - name: Any
+            - name: 1080p
         - trash_id: e3f37512790f00d0e89e54fe5e790d1c # [Optional] Golden Rule UHD
+          assign_scores_to:
+            - name: Ultra
         - trash_id: 74aff4168620ed49dcc67e92b2c2a5b4 # [Optional] Language Profiles
+          assign_scores_to:
+            - name: Any
+            - name: 1080p
+            - name: Ultra
         - trash_id: 85fae4a2294965b75710ef2989c850eb # [Streaming Services] HD/UHD boost
+          assign_scores_to:
+            - name: Any
+            - name: 1080p
+            - name: Ultra
         - trash_id: 59c3af66780d08332fdc64e68297098f # [Unwanted] Unwanted Formats
+          assign_scores_to:
+            - name: Any
+            - name: 1080p
+            - name: Ultra
 
 radarr:
   movies:
@@ -78,6 +114,7 @@ radarr:
 
     quality_profiles:
       - name: Any
+        score_set: default
         upgrade:
           allowed: true
           until_quality: 1080p
@@ -96,15 +133,33 @@ radarr:
             qualities: [Bluray-576p, Bluray-480p, WEBDL-480p, WEBRip-480p, DVD, DVD-R, SDTV]
 
       - trash_id: d1d67249d3890e49bc12e275d989a7e9 # HD Bluray + WEB
+        name: 1080p
         reset_unmatched_scores:
           enabled: true
 
-      - trash_id: 64fb5f9858489bdac2af690e27c8f42f # UHD Bluray + WEB
-        reset_unmatched_scores:
-          enabled: true
+      - name: Ultra
+        score_set: default
+        upgrade:
+          allowed: true
+          until_quality: 2160p
+          until_score: 10000
+        qualities:
+          - name: 2160p
+            qualities: [Bluray-2160p, WEBDL-2160p, WEBRip-2160p, HDTV-2160p]
+          - name: 1080p
+            qualities: [Bluray-1080p, WEBDL-1080p, WEBRip-1080p, HDTV-1080p]
 
     custom_format_groups:
       add:
         - trash_id: f8bf8eab4617f12dfdbd16303d8da245 # [Optional] Golden Rule HD
+          assign_scores_to:
+            - name: Any
+            - name: 1080p
         - trash_id: ff204bbcecdd487d1cefcefdbf0c278d # [Optional] Golden Rule UHD
+          assign_scores_to:
+            - name: Ultra
         - trash_id: a3ac6af01d78e4f21fcb75f601ac96df # [Unwanted] Unwanted Formats
+          assign_scores_to:
+            - name: Any
+            - name: 1080p
+            - name: Ultra
