@@ -14,13 +14,16 @@
 # `name` override exists to stop that leaking into what you pick from:
 #
 #   Any    -- take anything watchable now, settle at 1080p.
-#   1080p  -- 1080p, full stop.
 #
-# All three are user-defined and share one grouping rule, so a tier means the
-# same thing everywhere. The guide profiles were dropped for exactly that: TRaSH
-# ships WEB-only for Sonarr's 1080p and, for Radarr's, a set that reaches down to
-# Bluray-720p while excluding HDTV-1080p -- defensible on its own terms, but two
-# different shapes under one name.
+# There is deliberately no separate 1080p profile: Any already caps there, so the
+# two only differed in whether a lower resolution was accepted as a stepping
+# stone on the way up, and both end at the same place.
+#
+# Both are user-defined and share one grouping rule, so a tier means the same
+# thing in either app. The guide profiles were dropped for exactly that reason:
+# TRaSH ships WEB-only for Sonarr's 1080p and, for Radarr's, a set reaching down
+# to Bluray-720p while excluding HDTV-1080p -- two different shapes under one
+# name.
 #   Ultra  -- 1080p now, replaced by 2160p when one appears. This is the Seerr
 #             default: a requester gets something watchable immediately instead
 #             of waiting on a 4K release that may never exist, and the *arr
@@ -68,16 +71,6 @@ sonarr:
           - name: SD
             qualities: [Bluray-576p, Bluray-480p, WEBDL-480p, WEBRip-480p, DVD, SDTV]
 
-      - name: 1080p
-        score_set: default
-        upgrade:
-          allowed: true
-          until_quality: 1080p
-          until_score: 10000
-        qualities:
-          - name: 1080p
-            qualities: [Bluray-1080p, WEBDL-1080p, WEBRip-1080p, HDTV-1080p]
-
       - name: Ultra
         score_set: default
         upgrade:
@@ -95,24 +88,20 @@ sonarr:
         - trash_id: 158188097a58d7687dee647e04af0da3 # [Optional] Golden Rule HD
           assign_scores_to:
             - name: Any
-            - name: 1080p
         - trash_id: e3f37512790f00d0e89e54fe5e790d1c # [Optional] Golden Rule UHD
           assign_scores_to:
             - name: Ultra
         - trash_id: 74aff4168620ed49dcc67e92b2c2a5b4 # [Optional] Language Profiles
           assign_scores_to:
             - name: Any
-            - name: 1080p
             - name: Ultra
         - trash_id: 85fae4a2294965b75710ef2989c850eb # [Streaming Services] HD/UHD boost
           assign_scores_to:
             - name: Any
-            - name: 1080p
             - name: Ultra
         - trash_id: 59c3af66780d08332fdc64e68297098f # [Unwanted] Unwanted Formats
           assign_scores_to:
             - name: Any
-            - name: 1080p
             - name: Ultra
 
 radarr:
@@ -143,16 +132,6 @@ radarr:
           - name: SD
             qualities: [Bluray-576p, Bluray-480p, WEBDL-480p, WEBRip-480p, DVD, DVD-R, SDTV]
 
-      - name: 1080p
-        score_set: default
-        upgrade:
-          allowed: true
-          until_quality: 1080p
-          until_score: 10000
-        qualities:
-          - name: 1080p
-            qualities: [Bluray-1080p, WEBDL-1080p, WEBRip-1080p, HDTV-1080p]
-
       - name: Ultra
         score_set: default
         upgrade:
@@ -170,12 +149,10 @@ radarr:
         - trash_id: f8bf8eab4617f12dfdbd16303d8da245 # [Optional] Golden Rule HD
           assign_scores_to:
             - name: Any
-            - name: 1080p
         - trash_id: ff204bbcecdd487d1cefcefdbf0c278d # [Optional] Golden Rule UHD
           assign_scores_to:
             - name: Ultra
         - trash_id: a3ac6af01d78e4f21fcb75f601ac96df # [Unwanted] Unwanted Formats
           assign_scores_to:
             - name: Any
-            - name: 1080p
             - name: Ultra
