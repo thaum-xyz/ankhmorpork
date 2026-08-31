@@ -1,0 +1,16 @@
+# recyclarr keeps its guide checkouts and its rename-tracking cache under
+# /config. On an emptyDir both are lost every run, and the cache is what lets it
+# recognise a renamed profile -- without it a rename creates a duplicate profile
+# instead. NFS rather than block storage because it is a nightly CronJob: shared
+# access matters more than latency, and nothing here is worth a replicated volume.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: recyclarr-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: unifi-nas
