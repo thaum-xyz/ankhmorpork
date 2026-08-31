@@ -6,9 +6,16 @@
 # `include: - template:` indirection this used to rely on. That mechanism still
 # exists in v8, but every template was renamed when config-templates dropped
 # includes.json for templates.json -- the old `sonarr-v4-*` / `radarr-*-movie`
-# names resolve to nothing. Regenerate with `-t web-1080p` (sonarr) and
-# `-t hd-bluray-web` (radarr) to diff against upstream, including the optional
-# custom formats left out here.
+# names resolve to nothing. Regenerate with `-t web-1080p` / `-t web-2160p`
+# (sonarr) and `-t hd-bluray-web` / `-t uhd-bluray-web` (radarr) to diff against
+# upstream, including the optional custom formats left out here.
+#
+# Three profiles per service:
+#   Any     -- every resolution, but nothing from a camcorder. Not a default.
+#   1080p   -- TRaSH HD Bluray + WEB.
+#   Ultra   -- TRaSH UHD Bluray + WEB. Deliberately NOT the Remux profile: Remux
+#              is where the 50GB+ rips live, and "Bluray + WEB" is the same tier
+#              without them.
 sonarr:
   # Instance names are global across services in v8: two instances both called
   # "main" are silently treated as duplicates and dropped, logged only at debug.
@@ -20,13 +27,43 @@ sonarr:
       type: series
 
     quality_profiles:
+      - name: Any
+        # Takes the best release available now, then keeps improving it until it
+        # reaches 1080p and stops. 2160p is deliberately NOT the cutoff: this
+        # profile covers the whole back catalogue, and pulling ~500 titles up to
+        # 4K is roughly 10TB against 8.8TB free -- it would fill the array
+        # slowly, over weeks of RSS grabs, which is the worst way to find out.
+        #
+        # until_score stays high so a better-scoring 1080p release (proper,
+        # repack, preferred group) can still replace a worse one without
+        # changing resolution. Remux and Raw-HD are excluded on size, Unknown on
+        # being unidentifiable rather than bad.
+        upgrade:
+          allowed: true
+          until_quality: 1080p
+          until_score: 10000
+        qualities:
+          - name: 2160p
+            qualities: [Bluray-2160p, WEBDL-2160p, WEBRip-2160p, HDTV-2160p]
+          - name: 1080p
+            qualities: [Bluray-1080p, WEBDL-1080p, WEBRip-1080p, HDTV-1080p]
+          - name: 720p
+            qualities: [Bluray-720p, WEBDL-720p, WEBRip-720p, HDTV-720p]
+          - name: SD
+            qualities: [Bluray-576p, Bluray-480p, WEBDL-480p, WEBRip-480p, DVD, SDTV]
+
       - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+        reset_unmatched_scores:
+          enabled: true
+
+      - trash_id: d1498e7d189fbe6c7110ceaabb7473e6 # WEB-2160p
         reset_unmatched_scores:
           enabled: true
 
     custom_format_groups:
       add:
         - trash_id: 158188097a58d7687dee647e04af0da3 # [Optional] Golden Rule HD
+        - trash_id: e3f37512790f00d0e89e54fe5e790d1c # [Optional] Golden Rule UHD
         - trash_id: 74aff4168620ed49dcc67e92b2c2a5b4 # [Optional] Language Profiles
         - trash_id: 85fae4a2294965b75710ef2989c850eb # [Streaming Services] HD/UHD boost
         - trash_id: 59c3af66780d08332fdc64e68297098f # [Unwanted] Unwanted Formats
@@ -40,11 +77,34 @@ radarr:
       type: movie
 
     quality_profiles:
+      - name: Any
+        upgrade:
+          allowed: true
+          until_quality: 1080p
+          until_score: 10000
+        # WORKPRINT/CAM/TELESYNC/TELECINE/REGIONAL/DVDSCR are omitted entirely --
+        # that is the whole point of this profile over Radarr's built-in "Any",
+        # which happily accepts a camcorder rip.
+        qualities:
+          - name: 2160p
+            qualities: [Bluray-2160p, WEBDL-2160p, WEBRip-2160p, HDTV-2160p]
+          - name: 1080p
+            qualities: [Bluray-1080p, WEBDL-1080p, WEBRip-1080p, HDTV-1080p]
+          - name: 720p
+            qualities: [Bluray-720p, WEBDL-720p, WEBRip-720p, HDTV-720p]
+          - name: SD
+            qualities: [Bluray-576p, Bluray-480p, WEBDL-480p, WEBRip-480p, DVD, DVD-R, SDTV]
+
       - trash_id: d1d67249d3890e49bc12e275d989a7e9 # HD Bluray + WEB
+        reset_unmatched_scores:
+          enabled: true
+
+      - trash_id: 64fb5f9858489bdac2af690e27c8f42f # UHD Bluray + WEB
         reset_unmatched_scores:
           enabled: true
 
     custom_format_groups:
       add:
         - trash_id: f8bf8eab4617f12dfdbd16303d8da245 # [Optional] Golden Rule HD
+        - trash_id: ff204bbcecdd487d1cefcefdbf0c278d # [Optional] Golden Rule UHD
         - trash_id: a3ac6af01d78e4f21fcb75f601ac96df # [Unwanted] Unwanted Formats
