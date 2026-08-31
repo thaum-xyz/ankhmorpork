@@ -15,6 +15,12 @@
 #
 #   Any    -- take anything watchable now, settle at 1080p.
 #   1080p  -- 1080p, full stop.
+#
+# All three are user-defined and share one grouping rule, so a tier means the
+# same thing everywhere. The guide profiles were dropped for exactly that: TRaSH
+# ships WEB-only for Sonarr's 1080p and, for Radarr's, a set that reaches down to
+# Bluray-720p while excluding HDTV-1080p -- defensible on its own terms, but two
+# different shapes under one name.
 #   Ultra  -- 1080p now, replaced by 2160p when one appears. This is the Seerr
 #             default: a requester gets something watchable immediately instead
 #             of waiting on a 4K release that may never exist, and the *arr
@@ -62,10 +68,15 @@ sonarr:
           - name: SD
             qualities: [Bluray-576p, Bluray-480p, WEBDL-480p, WEBRip-480p, DVD, SDTV]
 
-      - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
-        name: 1080p
-        reset_unmatched_scores:
-          enabled: true
+      - name: 1080p
+        score_set: default
+        upgrade:
+          allowed: true
+          until_quality: 1080p
+          until_score: 10000
+        qualities:
+          - name: 1080p
+            qualities: [Bluray-1080p, WEBDL-1080p, WEBRip-1080p, HDTV-1080p]
 
       - name: Ultra
         score_set: default
@@ -132,10 +143,15 @@ radarr:
           - name: SD
             qualities: [Bluray-576p, Bluray-480p, WEBDL-480p, WEBRip-480p, DVD, DVD-R, SDTV]
 
-      - trash_id: d1d67249d3890e49bc12e275d989a7e9 # HD Bluray + WEB
-        name: 1080p
-        reset_unmatched_scores:
-          enabled: true
+      - name: 1080p
+        score_set: default
+        upgrade:
+          allowed: true
+          until_quality: 1080p
+          until_score: 10000
+        qualities:
+          - name: 1080p
+            qualities: [Bluray-1080p, WEBDL-1080p, WEBRip-1080p, HDTV-1080p]
 
       - name: Ultra
         score_set: default
