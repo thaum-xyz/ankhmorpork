@@ -1,7 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: jellyfin
-spec:
-  interval: 5m
-  url: https://jellyfin.github.io/jellyfin-helm/

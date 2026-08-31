@@ -1,5 +1,5 @@
 # PVs are cluster-scoped and bind 1:1, so plex needs its own pair pointing at
-# the same NFS export jellyfin and multimedia already read.
+# the same NFS export vod-arr already reads.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
