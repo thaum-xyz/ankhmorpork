@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: cleaner
+    app.kubernetes.io/name: cleanuparr
+    app.kubernetes.io/part-of: cleanuparr
+    app.kubernetes.io/version: 2.10.5
+  name: cleanuparr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: cleaner
+      app.kubernetes.io/name: cleanuparr
+      app.kubernetes.io/part-of: cleanuparr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: cleanuparr
+      labels:
+        app.kubernetes.io/component: cleaner
+        app.kubernetes.io/name: cleanuparr
+        app.kubernetes.io/part-of: cleanuparr
+        app.kubernetes.io/version: 2.10.5
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+            - name: PORT
+              value: "11011"
+            # This image starts as root and drops to PUID/PGID in its entrypoint,
+            # so it cannot run with runAsNonRoot the way the *arrs do. 1000 is
+            # what the rest of the namespace uses.
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          image: ghcr.io/cleanuparr/cleanuparr:2.10.5
+          imagePullPolicy: IfNotPresent
+          name: cleanuparr
+          ports:
+            - containerPort: 11011
+              name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            tcpSocket:
+              port: http
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 20m
+              memory: 128Mi
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: cleanuparr-config
