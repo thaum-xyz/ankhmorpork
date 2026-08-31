@@ -5,6 +5,7 @@ resources:
   - pv-downloads.yaml
   - pv-movies.yaml
   - pv-tv.yaml
+  - pvc-backups.yaml
   - pvc-downloads.yaml
   - pvc-movies.yaml
   - pvc-tv.yaml
