@@ -1,22 +1,50 @@
 # TRaSH-guide quality profiles and custom formats, applied on a schedule so the
 # *arrs' release selection is declared here rather than clicked into a database
 # nobody can read back.
+#
+# Written in the shape `recyclarr config create -t <id>` renders, rather than the
+# `include: - template:` indirection this used to rely on. That mechanism still
+# exists in v8, but every template was renamed when config-templates dropped
+# includes.json for templates.json -- the old `sonarr-v4-*` / `radarr-*-movie`
+# names resolve to nothing. Regenerate with `-t web-1080p` (sonarr) and
+# `-t hd-bluray-web` (radarr) to diff against upstream, including the optional
+# custom formats left out here.
 sonarr:
-  main:
+  # Instance names are global across services in v8: two instances both called
+  # "main" are silently treated as duplicates and dropped, logged only at debug.
+  tv:
     base_url: http://sonarr:8989
     api_key: !env_var SONARR_API_KEY
-    replace_existing_custom_formats: true
-    include:
-      - template: sonarr-quality-definition-series
-      - template: sonarr-v4-quality-profile-web-1080p
-      - template: sonarr-v4-custom-formats-web-1080p
+
+    quality_definition:
+      type: series
+
+    quality_profiles:
+      - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+        reset_unmatched_scores:
+          enabled: true
+
+    custom_format_groups:
+      add:
+        - trash_id: 158188097a58d7687dee647e04af0da3 # [Optional] Golden Rule HD
+        - trash_id: 74aff4168620ed49dcc67e92b2c2a5b4 # [Optional] Language Profiles
+        - trash_id: 85fae4a2294965b75710ef2989c850eb # [Streaming Services] HD/UHD boost
+        - trash_id: 59c3af66780d08332fdc64e68297098f # [Unwanted] Unwanted Formats
 
 radarr:
-  main:
+  movies:
     base_url: http://radarr:7878
     api_key: !env_var RADARR_API_KEY
-    replace_existing_custom_formats: true
-    include:
-      - template: radarr-quality-definition-movie
-      - template: radarr-quality-profile-hd-bluray-web
-      - template: radarr-custom-formats-hd-bluray-web
+
+    quality_definition:
+      type: movie
+
+    quality_profiles:
+      - trash_id: d1d67249d3890e49bc12e275d989a7e9 # HD Bluray + WEB
+        reset_unmatched_scores:
+          enabled: true
+
+    custom_format_groups:
+      add:
+        - trash_id: f8bf8eab4617f12dfdbd16303d8da245 # [Optional] Golden Rule HD
+        - trash_id: a3ac6af01d78e4f21fcb75f601ac96df # [Unwanted] Unwanted Formats

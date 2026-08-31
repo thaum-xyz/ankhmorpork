@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/component: sync
     app.kubernetes.io/name: recyclarr
     app.kubernetes.io/part-of: recyclarr
-    app.kubernetes.io/version: 7.4.0
+    app.kubernetes.io/version: 8.7.1
   name: recyclarr
 spec:
   concurrencyPolicy: Forbid
@@ -40,7 +40,7 @@ spec:
                       key: apiKey
                       name: radarr-api-key
                       optional: true
-              image: ghcr.io/recyclarr/recyclarr:7.4.0
+              image: ghcr.io/recyclarr/recyclarr:8.7.1
               name: recyclarr
               resources:
                 limits:
