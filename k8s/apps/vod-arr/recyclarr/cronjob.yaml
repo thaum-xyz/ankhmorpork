@@ -28,6 +28,17 @@ spec:
               env:
                 - name: TZ
                   value: Europe/Berlin
+                # The NFS export maps /config to uid 977 while this runs as 1000,
+                # and git refuses to touch a repo it does not own ("detected
+                # dubious ownership"), which fails the whole sync. fsGroup cannot
+                # fix it: NFS ignores it. Set via GIT_CONFIG_* rather than a
+                # global config file so nothing has to be written to $HOME.
+                - name: GIT_CONFIG_COUNT
+                  value: "1"
+                - name: GIT_CONFIG_KEY_0
+                  value: safe.directory
+                - name: GIT_CONFIG_VALUE_0
+                  value: "*"
                 - name: SONARR_API_KEY
                   valueFrom:
                     secretKeyRef:
