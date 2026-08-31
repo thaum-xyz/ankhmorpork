@@ -76,15 +76,7 @@ spec:
             url: "https://unifi.ui.com"
             logo: "https://dl.ubnt.com/press/Company_Logos/U_Logo/WEB/U_Logo_RGB.png"
             parameters:
-              order: "70"
-          - name: Trakt
-            url: "https://trakt.tv"
-            subtitle: "Movie and TV series tracking"
-            logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/trakt.svg"
-            tag: "3rd party"
-            tagstyle: "is-info"
-            parameters:
-              order: "60"
+              order: "90"
       - name: Administration
         icon: "fa fa-user-shield"
         parameters:

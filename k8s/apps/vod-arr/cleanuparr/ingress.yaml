@@ -8,7 +8,7 @@ metadata:
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/Cleanuparr/Cleanuparr/refs/heads/main/Logo/256.png"
     item.homer.rajsingh.info/tag: "local"
     item.homer.rajsingh.info/tagstyle: "is-success"
-    item.homer.rajsingh.info/order: "45"
+    item.homer.rajsingh.info/order: "10"
     service.homer.rajsingh.info/name: "Multimedia"
     service.homer.rajsingh.info/icon: "fa fa-tv"
     service.homer.rajsingh.info/order: "20"

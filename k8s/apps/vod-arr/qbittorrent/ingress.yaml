@@ -8,7 +8,7 @@ metadata:
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/qbittorrent.svg"
     item.homer.rajsingh.info/tag: "local"
     item.homer.rajsingh.info/tagstyle: "is-success"
-    item.homer.rajsingh.info/order: "10"
+    item.homer.rajsingh.info/order: "5"
     service.homer.rajsingh.info/name: "Multimedia"
     service.homer.rajsingh.info/icon: "fa fa-tv"
     service.homer.rajsingh.info/order: "20"

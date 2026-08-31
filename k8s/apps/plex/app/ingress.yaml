@@ -16,7 +16,7 @@ metadata:
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/plex.svg"
     item.homer.rajsingh.info/tag: "local"
     item.homer.rajsingh.info/tagstyle: "is-success"
-    item.homer.rajsingh.info/order: "45"
+    item.homer.rajsingh.info/order: "80"
     service.homer.rajsingh.info/name: "Multimedia"
     service.homer.rajsingh.info/icon: "fa fa-tv"
     service.homer.rajsingh.info/order: "20"
