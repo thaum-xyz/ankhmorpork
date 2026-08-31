@@ -63,6 +63,9 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /backup
+              name: backups
+              subPath: prowlarr
         - args:
             - prowlarr
           env:
@@ -186,6 +189,10 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
       serviceAccountName: prowlarr
+      volumes:
+        - name: backups
+          persistentVolumeClaim:
+            claimName: backups
   volumeClaimTemplates:
     - metadata:
         name: config

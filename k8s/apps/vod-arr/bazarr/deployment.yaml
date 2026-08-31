@@ -59,6 +59,9 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /backup
+              name: backups
+              subPath: bazarr
             - mountPath: /media/tv
               name: tv
             - mountPath: /media/movies
@@ -74,6 +77,9 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: bazarr-config
+        - name: backups
+          persistentVolumeClaim:
+            claimName: backups
         - name: tv
           persistentVolumeClaim:
             claimName: vod-tv

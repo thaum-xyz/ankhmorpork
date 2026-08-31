@@ -1,0 +1,18 @@
+# The *arrs' own scheduled backups, kept off each app's config volume so they
+# survive it being wiped and are somewhere obvious when restoring. Same reasoning
+# and same storage class as plex's backups PVC. One claim for the namespace, with
+# each app mounted into its own subPath so the dated archives do not intermingle.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/part-of: vod-arr
+  name: backups
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: unifi-nas

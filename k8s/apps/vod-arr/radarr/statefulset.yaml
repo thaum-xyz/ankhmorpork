@@ -63,6 +63,9 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /backup
+              name: backups
+              subPath: radarr
             - mountPath: /media/movies
               name: media
             - mountPath: /downloads
@@ -191,6 +194,9 @@ spec:
         runAsUser: 1000
       serviceAccountName: radarr
       volumes:
+        - name: backups
+          persistentVolumeClaim:
+            claimName: backups
         - name: media
           persistentVolumeClaim:
             claimName: vod-movies
