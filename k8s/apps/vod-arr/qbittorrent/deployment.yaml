@@ -193,7 +193,7 @@ spec:
           command:
             - sh
             - -c
-          image: busybox:1.37.0
+          image: busybox:1.38.0
           name: seed-config
           resources:
             limits:
