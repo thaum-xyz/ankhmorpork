@@ -1,0 +1,51 @@
+prometheusUrl: http://prometheus-k8s:9090
+prometheusExternalUrl: https://prometheus.ankhmorpork.thaum.xyz
+
+# Homer selects on Ingresses only (ingressSelector in the Dashboard CR), so
+# labelling every chart resource is harmless and keeps this out of a patch.
+additionalLabels:
+  homer.rajsingh.info/enabled: "true"
+
+ingress:
+  enabled: true
+  className: public
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    probe-uri: /-/healthy
+    item.homer.rajsingh.info/name: "Pyrra"
+    item.homer.rajsingh.info/logo: "https://avatars.githubusercontent.com/u/87393422?s=200&v=4"
+    item.homer.rajsingh.info/order: "30"
+    service.homer.rajsingh.info/name: "Administration"
+    service.homer.rajsingh.info/icon: "fa fa-user-shield"
+    service.homer.rajsingh.info/order: "10"
+  hosts:
+    - host: pyrra.ankhmorpork.thaum.xyz
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: pyrra-api-tls
+      hosts:
+        - pyrra.ankhmorpork.thaum.xyz
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 30Mi
+operator:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 30Mi
+
+serviceMonitor:
+  enabled: true
+serviceMonitorOperator:
+  enabled: true
+prometheusRule:
+  enabled: true
+
+dashboards:
+  enabled: true
+  annotations:
+    grafana_folder: pyrra

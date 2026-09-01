@@ -1,0 +1,38 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: blackbox-exporter
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 0.25.0
+  name: ingress
+spec:
+  interval: 30s
+  module: http_2xx
+  prober:
+    url: blackbox-exporter:19115
+  scrapeTimeout: 30s
+  targets:
+    ingress:
+      namespaceSelector:
+        any: true
+      relabelingConfigs:
+        - action: replace
+          regex: (.+);(.+);(.+)
+          replacement: ${1}://${2}${3}
+          separator: ;
+          sourceLabels:
+            - __meta_kubernetes_ingress_scheme
+            - __tmp_ingress_address
+            - __meta_kubernetes_ingress_annotation_probe_uri
+          targetLabel: __param_target
+        - action: replace
+          sourceLabels:
+            - __param_target
+          targetLabel: instance
+      selector:
+        matchLabels:
+          probe: enabled
+  tlsConfig:
+    insecureSkipVerify: true

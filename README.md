@@ -2,7 +2,7 @@
 
 <!-- [![document](https://img.shields.io/website?label=document&logo=gitbook&logoColor=white&url=https%3A%2F%2Fdocs.thaum.xyz)](https://docs.thaum.xyz) -->
 [![license](https://img.shields.io/github/license/thaum-xyz/ankhmorpork?logo=mit&logoColor=white)](https://github.com/thaum-xyz/ankhmorpork/blob/master/LICENSE)
-[![kubescape](https://github.com/thaum-xyz/ankhmorpork/actions/workflows/kubescape.yml/badge.svg)](https://github.com/thaum-xyz/ankhmorpork/actions/workflows/kubescape.yml)
+[![validate](https://github.com/thaum-xyz/ankhmorpork/actions/workflows/validate.yml/badge.svg)](https://github.com/thaum-xyz/ankhmorpork/actions/workflows/validate.yml)
 
 ## 📖 Overview
 
@@ -111,24 +111,19 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
     <td>Systems monitoring and alerting toolkit</td>
   </tr>
   <tr>
-    <td><img width="32" src="https://cncf-branding.netlify.app/img/projects/thanos/icon/color/thanos-icon-color.svg"></td>
-    <td><a href="https://thanos.io">Thanos</a></td>
-    <td>Metrics datalake</td>
-  </tr>
-  <tr>
     <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/grafana.svg"></td>
     <td><a href="https://grafana.com">Grafana</a></td>
     <td>Operational dashboards</td>
   </tr>
-  <!--<tr>
-    <td><img width="32" src="https://avatars.githubusercontent.com/u/86306284?s=200&v=4"></td>
-    <td><a href="https://parca.dev">Parca</a></td>
-    <td>Continuous profiling</td>
-  </tr>-->
   <tr>
     <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/grafanaloki.svg"></td>
     <td><a href="https://grafana.com/oss/loki">Loki</a></td>
     <td>Log aggregation system</td>
+  </tr>
+  <tr>
+    <td><img width="32" src="https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/grafanaalloy.svg"></td>
+    <td><a href="https://grafana.com/oss/alloy">Alloy</a></td>
+    <td>Log and metric collector</td>
   </tr>
   <tr>
     <td><img width="32" src="https://cloudnative-pg.io/images/hero_image.svg"></td>

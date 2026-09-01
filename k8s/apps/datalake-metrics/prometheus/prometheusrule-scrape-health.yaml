@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+  name: scrape-health
+spec:
+  groups:
+    - name: scrape-health.rules
+      rules:
+        # Catches exporters that are up themselves but cannot reach what they
+        # export, which a `up == 0` alert misses entirely.
+        - alert: ExporterTargetDown
+          annotations:
+            description: Exporter {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) reported its target being down. This results in lack of ability to scrape metrics from the main service.
+            summary: Service monitored by exporter is Down
+          expr: '{__name__=~".*_up",__name__!="node_network_up",__name__!="node_supervisord_up"} == 0'
+          for: 5m
+          labels:
+            severity: warning

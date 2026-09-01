@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: blackbox-exporter
+  name: blackbox-exporter
+spec:
+  groups:
+    - name: blackbox.rules
+      rules:
+        # Joins the in-cluster probe with the external one so a WAN outage does
+        # not read as a site outage.
+        - alert: SiteDown
+          annotations:
+            description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteNotUP
+            summary: Site is down
+          expr: probe_success == 0 AND on (instance) uptimerobot_monitor_status == 9
+          for: 15m
+          labels:
+            severity: critical

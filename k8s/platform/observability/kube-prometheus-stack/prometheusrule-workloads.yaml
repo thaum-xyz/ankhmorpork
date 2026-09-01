@@ -1,0 +1,58 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-state-metrics
+  name: kube-state-metrics-custom
+spec:
+  groups:
+    - name: workload-custom.rules
+      rules:
+        # Cluster-wide: the OpenShift original filtered to openshift-*/kube-*/default,
+        # which here meant it could never fire for an actual workload.
+        - alert: HighlyAvailableWorkloadIncorrectlySpread
+          annotations:
+            description: Workload {{ $labels.namespace }}/{{ $labels.workload }} is incorrectly spread across multiple nodes which breaks high-availability requirements. Since the workload is using persistent volumes, manual intervention is needed. Please follow the guidelines provided in the runbook of this alert to fix this issue.
+            runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/HighlyAvailableWorkloadIncorrectlySpread.md
+            summary: Highly-available workload is incorrectly spread across multiple nodes and manual intervention is needed.
+          expr: |
+            count without (node)
+            (
+              group by (node, workload, namespace)
+              (
+                kube_pod_info{node!=""}
+                * on(namespace,pod) group_left(workload)
+                (
+                  kube_pod_spec_volumes_persistentvolumeclaims_info
+                  * on(namespace,pod) group_left(workload)
+                  (
+                    namespace_workload_pod:kube_pod_owner:relabel
+                    * on(namespace,workload,workload_type) group_left()
+                    (
+                      count without(pod) (namespace_workload_pod:kube_pod_owner:relabel) > 1
+                    )
+                  )
+                )
+              )
+            ) == 1
+          for: 1h
+          labels:
+            severity: warning
+        - alert: MultipleContainersOOMKilled
+          annotations:
+            description: Multiple containers were out of memory killed within the past 15 minutes. There are many potential causes of OOM errors, however issues on a specific node or containers breaching their limits is common.
+            summary: Containers are being killed due to OOM
+          expr: |
+            sum(
+              max by(namespace, container, pod) (
+                increase(kube_pod_container_status_restarts_total[12m])
+              )
+              and
+              max by(namespace, container, pod) (
+                kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}
+              ) == 1
+            ) > 2
+          for: 15m
+          labels:
+            severity: info

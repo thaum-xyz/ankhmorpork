@@ -13,9 +13,7 @@ podDisruptionBudget:
 # This was cloudflare-only, which left grafana.krupa.net.pl with no internal A
 # record -- external-dns published just the tunnel CNAME, and
 # *.cfargotunnel.com resolves nowhere outside Cloudflare's edge, so the host was
-# unreachable from the tailnet. Note the grafana at grafana.ankhmorpork.thaum.xyz
-# is a different instance, kube-prometheus's in the monitoring namespace, so it
-# was not covering for this one.
+# unreachable from the tailnet.
 #
 # probe-uri and the probe label are restored along with it: blackbox takes its
 # scheme from whether the Ingress declares TLS, so only the traefik route is
@@ -155,4 +153,6 @@ grafana.ini:
     # ssl_mode: require
   unified_alerting:
     enabled: true
-    execute_alerts: false  # Alerts should be evaluated/excuted by prometheus/thanos. Otherwise grafana will become a critical part of the observability stack which is unnnecessary.
+    # Prometheus evaluates and Alertmanager routes; grafana only displays. Keeps
+    # grafana out of the alerting path.
+    execute_alerts: false

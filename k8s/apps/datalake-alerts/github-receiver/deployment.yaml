@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: alertmanager-webhook-receiver
+    app.kubernetes.io/name: github-receiver
+    app.kubernetes.io/version: 0.1.3
+  name: github-receiver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: alertmanager-webhook-receiver
+      app.kubernetes.io/name: github-receiver
+  template:
+    metadata:
+      annotations:
+        template.checksum.md5/body: 978e0810afef6389ecd4ca8ca9b9bb12
+        template.checksum.md5/title: e0e001470816a17057e5ee7afe721561
+      labels:
+        app.kubernetes.io/component: alertmanager-webhook-receiver
+        app.kubernetes.io/name: github-receiver
+        app.kubernetes.io/version: 0.1.3
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - args:
+            - start
+            - --labels=alert/new
+            - --auto-close-resolved-issues=false
+            - --title-template-file=/etc/github-receiver/title-template.txt
+            - --body-template-file=/etc/github-receiver/body-template.txt
+          envFrom:
+            - secretRef:
+                name: github-receiver-credentials
+          image: ghcr.io/pfnet-research/alertmanager-to-github:v0.1.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 8080
+          name: github-receiver
+          ports:
+            - containerPort: 8080
+              name: http
+          resources:
+            limits:
+              cpu: 10m
+              memory: 50Mi
+            requests:
+              cpu: 2m
+              memory: 23Mi
+          volumeMounts:
+            - mountPath: /etc/github-receiver
+              name: config
+              readOnly: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      serviceAccountName: github-receiver
+      volumes:
+        - configMap:
+            name: github-receiver-config
+          name: config

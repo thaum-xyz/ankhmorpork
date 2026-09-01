@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator CRDs
+    probe-uri: /-/healthy
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 3.14.0
+  name: prometheus-k8s
+spec:
+  ingressClassName: private
+  rules:
+    - host: prometheus.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: prometheus-k8s
+                port:
+                  name: web
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - prometheus.ankhmorpork.thaum.xyz
+      secretName: prometheus-k8s-tls

@@ -1,0 +1,102 @@
+# Schemas come from the prometheus-operator-crds HelmRelease, which the bootstrap
+# layer applies before this one.
+crds:
+  enabled: false
+
+# The Prometheus and Alertmanager CRs are hand-written so their specs stay under
+# our control: k8s/apps/datalake-metrics and k8s/apps/datalake-alerts.
+prometheus:
+  enabled: false
+alertmanager:
+  enabled: false
+
+# Grafana runs in its own namespace; only the dashboards are wanted from here.
+grafana:
+  enabled: false
+  forceDeployDashboards: true
+  sidecar:
+    dashboards:
+      annotations:
+        grafana_folder: kube-prometheus
+
+defaultRules:
+  create: true
+  rules:
+    # Both select on job names this release does not create.
+    alertmanager: false
+    prometheus: false
+    # k3s runs the controller-manager and scheduler in-process, and kube-proxy is
+    # disabled in favour of cilium.
+    kubeControllerManager: false
+    kubeProxy: false
+    kubeSchedulerAlerting: false
+    kubeSchedulerRecording: false
+    windows: false
+
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
+
+# k3s serves etcd metrics on 2381 (etcd-expose-metrics in metal/group_vars/k3s.yml).
+kubeEtcd:
+  enabled: true
+  endpoints:
+    - 192.168.50.31
+    - 192.168.50.32
+    - 192.168.50.35
+
+nodeExporter:
+  operatingSystems:
+    aix:
+      enabled: false
+    darwin:
+      enabled: false
+
+prometheusOperator:
+  admissionWebhooks:
+    certManager:
+      enabled: true
+  resources:
+    requests:
+      cpu: 5m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 2m
+      memory: 34Mi
+    limits:
+      cpu: 200m
+      memory: 180Mi
+
+prometheus-node-exporter:
+  # Replaces the chart default wholesale: k3s keeps containerd under /run/k3s, and
+  # the textfile directory is where Ansible drops smartmon, apt_info and lvm output.
+  extraArgs:
+    - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
+    - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs|erofs)$
+    - --collector.netclass.ignored-devices=^(veth.*|[a-f0-9]{15})$
+    - --collector.netdev.device-exclude=^(veth.*|[a-f0-9]{15})$
+    - --no-collector.wifi
+    - --no-collector.hwmon
+    - --no-collector.btrfs
+    - --collector.textfile.directory=/host/textfile
+  extraHostVolumeMounts:
+    - name: textfile
+      hostPath: /var/lib/node_exporter
+      mountPath: /host/textfile
+      readOnly: true
+      mountPropagation: HostToContainer
+  resources:
+    requests:
+      cpu: 2m
+      memory: 20Mi
+    limits:
+      cpu: 150m
+      memory: 180Mi
