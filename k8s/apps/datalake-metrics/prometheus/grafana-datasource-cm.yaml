@@ -7,6 +7,13 @@ metadata:
 data:
   prometheus-datasource.yaml: |
     apiVersion: 1
+    # The retired kube-prometheus grafana left a read-only Prometheus datasource
+    # behind, pointing at the deleted monitoring namespace. Its provisioning file
+    # is gone, so nothing reclaims it and the API refuses to delete it. Grafana
+    # processes deletes before inserts, so this drops it and re-provisions below.
+    deleteDatasources:
+      - name: Prometheus
+        orgId: 1
     datasources:
       - name: Prometheus
         type: prometheus
