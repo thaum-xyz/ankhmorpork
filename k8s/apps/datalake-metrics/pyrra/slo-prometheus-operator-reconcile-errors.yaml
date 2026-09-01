@@ -10,10 +10,10 @@ spec:
   indicator:
     ratio:
       errors:
-        metric: prometheus_operator_reconcile_errors_total{job="prometheus-operator"}
+        metric: prometheus_operator_reconcile_errors_total{job="kube-prometheus-stack-operator"}
       grouping:
         - controller
       total:
-        metric: prometheus_operator_reconcile_operations_total{job="prometheus-operator"}
+        metric: prometheus_operator_reconcile_operations_total{job="kube-prometheus-stack-operator"}
   target: "95"
   window: 2w
