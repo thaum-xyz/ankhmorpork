@@ -11,6 +11,8 @@ defaultSettings:
   snapshotDataIntegrity: "fast-check"
   upgradeChecker: false
   concurrentAutomaticEngineUpgradePerNodeLimit: "3"
+  systemManagedCSIComponentsResourceLimits: >-
+    {"csi-attacher":{"requests":{"cpu":"10m","memory":"80Mi"}},"csi-provisioner":{"requests":{"cpu":"10m","memory":"80Mi"}},"csi-resizer":{"requests":{"cpu":"10m","memory":"80Mi"}},"csi-snapshotter":{"requests":{"cpu":"10m","memory":"80Mi"}},"longhorn-csi-plugin":{"requests":{"cpu":"10m","memory":"96Mi"}},"node-driver-registrar":{"requests":{"cpu":"10m","memory":"32Mi"}},"longhorn-liveness-probe":{"requests":{"cpu":"10m","memory":"32Mi"}}}
 
 # Keep the live default target reproducible. The credentials Secret is generated
 # alongside the in-cluster Versity gateway and contains both the gateway and
@@ -25,6 +27,10 @@ longhornUI:
 
 longhornManager:
   priorityClass: "system-node-critical"
+  resources:
+    requests:
+      cpu: 110m
+      memory: 656Mi
 
 longhornDriver:
   priorityClass: "system-node-critical"
