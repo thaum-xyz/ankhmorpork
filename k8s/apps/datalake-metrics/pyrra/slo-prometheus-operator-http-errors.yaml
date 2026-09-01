@@ -10,8 +10,8 @@ spec:
   indicator:
     ratio:
       errors:
-        metric: prometheus_operator_kubernetes_client_http_requests_total{job="prometheus-operator",status_code=~"5.."}
+        metric: prometheus_operator_kubernetes_client_http_requests_total{job="kube-prometheus-stack-operator",status_code=~"5.."}
       total:
-        metric: prometheus_operator_kubernetes_client_http_requests_total{job="prometheus-operator"}
+        metric: prometheus_operator_kubernetes_client_http_requests_total{job="kube-prometheus-stack-operator"}
   target: "99.5"
   window: 2w
