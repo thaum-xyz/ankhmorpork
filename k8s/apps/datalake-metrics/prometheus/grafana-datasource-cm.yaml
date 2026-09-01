@@ -7,7 +7,6 @@ metadata:
 data:
   prometheus-datasource.yaml: |
     apiVersion: 1
-    prune: true
     datasources:
       - name: Prometheus
         type: prometheus

@@ -20,7 +20,7 @@ spec:
           for: 24h
           labels:
             severity: warning
-        - alert: RebootRequired
+        - alert: KuredRebootRequired
           annotations:
             description: Node {{ $labels.node }} has been waiting for a kured reboot for over a week, which spans several reboot windows.
             runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/RebootRequired
