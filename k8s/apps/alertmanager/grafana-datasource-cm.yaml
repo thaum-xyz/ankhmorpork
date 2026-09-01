@@ -5,7 +5,6 @@ metadata:
   labels:
     grafana_datasource: "1"
   name: alerts-grafana-datasource
-  namespace: monitoring
 data:
   alerts-datasource.yaml: |
     apiVersion: 1
@@ -15,7 +14,7 @@ data:
       type: alertmanager
       orgId: 1
       uid: alerts-datasource
-      url: http://alertmanager-main.monitoring.svc:9093/
+      url: http://alertmanager-main.alertmanager.svc:9093/
       access: proxy
       isDefault: false
       jsonData:

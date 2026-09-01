@@ -121,7 +121,7 @@ data:
     - name: 'github'
       webhook_configs:
         - send_resolved: true
-          url: "http://github-receiver.monitoring.svc:8080/v1/webhook?owner=thaum-xyz&repo=ankhmorpork"
+          url: "http://github-receiver:8080/v1/webhook?owner=thaum-xyz&repo=ankhmorpork"
     - name: "null"
     route:
       group_by: ['alertname', 'namespace', 'job']
@@ -174,11 +174,6 @@ data:
         - "alertname = TargetDown"
         equal: ['job', 'instance']
       - source_matchers:
-        - "alertname = TargetDown"
-        - "job = lancre"
-        target_matchers:
-        - "environment = lancre.thaum.xyz"
-      - source_matchers:
         - "alertname = KubeNodeUnreachable"
         target_matchers:
         - "alertname = TargetDown"
@@ -199,6 +194,5 @@ metadata:
     app.kubernetes.io/instance: main
     app.kubernetes.io/name: alertmanager
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.27.0
+    app.kubernetes.io/version: 0.34.0
   name: alertmanager-config-template
-  namespace: monitoring

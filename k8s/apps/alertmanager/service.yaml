@@ -9,9 +9,8 @@ metadata:
     app.kubernetes.io/instance: main
     app.kubernetes.io/name: alertmanager
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 0.27.0
+    app.kubernetes.io/version: 0.34.0
   name: alertmanager-main
-  namespace: monitoring
 spec:
   ports:
     - name: web
