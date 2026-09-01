@@ -45,5 +45,6 @@ spec:
     runAsNonRoot: true
     runAsUser: 1000
   serviceAccountName: alertmanager-main
-  # Image is derived from version.
-  version: 0.34.0
+  # Derived image tag. Unlike Prometheus, the operator uses this verbatim for
+  # alertmanager, so the v prefix is required.
+  version: v0.34.0
