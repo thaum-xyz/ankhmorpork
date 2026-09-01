@@ -17,7 +17,7 @@ spec:
         - url
       targetLabel: instance
   prober:
-    url: uptimerobot:7979
+    url: uptimerobot.platform-observability.svc:7979
   targets:
     staticConfig:
       static:
