@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: uptimerobot
+  name: uptimerobot
+spec:
+  groups:
+    - name: uptimerobot.rules
+      rules:
+        - expr: (uptimerobot_monitor_status == 2)/2 OR clamp(uptimerobot_monitor_status,0,0)
+          record: uptimerobot_monitor_normalized_status
+        - alert: SiteExternallyDown
+          annotations:
+            description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
+            summary: Site is not available from external network
+          expr: uptimerobot_monitor_status == 9
+          for: 10m
+          labels:
+            severity: warning

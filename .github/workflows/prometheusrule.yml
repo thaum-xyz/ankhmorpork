@@ -10,6 +10,7 @@ on:
 
 env:
   golang-version: 1.27.0
+  yq-version: v4.53.6
 
 jobs:
   verify:
@@ -21,8 +22,8 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: '${{ env.golang-version }}'
-      - run: go install github.com/brancz/gojsontoyaml@latest
-      - run: PATH="${PATH}:${GITHUB_WORKSPACE}" ./hack/unpack-prometheus-rules.sh
+      - run: go install github.com/mikefarah/yq/v4@${{ env.yq-version }}
+      - run: ./hack/unpack-prometheus-rules.sh
       - name: Run pint
         uses: prymitive/pint-action@v1
         with:

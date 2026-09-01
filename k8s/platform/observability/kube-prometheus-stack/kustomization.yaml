@@ -4,7 +4,8 @@ namespace: platform-observability
 resources:
   - repository.yaml
   - release.yaml
-  - syslog-service.yaml
+  - prometheusrule-nodes.yaml
+  - prometheusrule-workloads.yaml
 configMapGenerator:
   - name: values
     files:
