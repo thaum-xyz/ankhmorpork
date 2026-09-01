@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: flux-system
 resources:
   - github-repo.yaml
+  - crds-prometheus-operator.yaml
   - group-platform.yaml
   - group-apps.yaml
