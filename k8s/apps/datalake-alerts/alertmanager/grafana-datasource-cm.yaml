@@ -14,9 +14,9 @@ data:
       type: alertmanager
       orgId: 1
       uid: alerts-datasource
-      url: http://alertmanager-main.alertmanager.svc:9093/
+      url: http://alertmanager-main.datalake-alerts.svc:9093/
       access: proxy
       isDefault: false
       jsonData:
         implementation: prometheus
-        handleGrafanaManagedAlerts: false
+        handleGrafanaManagedAlerts: true

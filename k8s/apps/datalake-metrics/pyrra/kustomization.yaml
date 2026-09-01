@@ -3,15 +3,8 @@ kind: Kustomization
 # Namespace is created and owned by the parent.
 namespace: datalake-metrics
 resources:
-  - crd.yaml
-  - serviceaccount.yaml
-  - clusterrole.yaml
-  - clusterrolebinding.yaml
-  - deployment.yaml
-  - service.yaml
-  - api-deployment.yaml
-  - api-service.yaml
-  - ingress.yaml
+  - repository.yaml
+  - release.yaml
   - slo-apiserver-read-cluster-latency.yaml
   - slo-apiserver-read-namespace-latency.yaml
   - slo-apiserver-read-resource-latency.yaml
@@ -27,3 +20,10 @@ resources:
   - slo-prometheus-query-errors.yaml
   - slo-prometheus-rule-evaluation-failures.yaml
   - slo-prometheus-sd-kubernetes-errors.yaml
+# Qualified so a future values generator in the parent cannot collide.
+configMapGenerator:
+  - name: pyrra-values
+    files:
+      - values.yaml=values.yaml
+generatorOptions:
+  disableNameSuffixHash: true

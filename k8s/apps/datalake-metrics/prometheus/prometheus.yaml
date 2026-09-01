@@ -34,7 +34,7 @@ spec:
     alertmanagers:
       - apiVersion: v2
         name: alertmanager-main
-        namespace: alertmanager
+        namespace: datalake-alerts
         port: web
   enableFeatures:
     - memory-snapshot-on-shutdown

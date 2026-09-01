@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 # Namespace is created and owned by the parent.
-namespace: alertmanager
+namespace: datalake-alerts
 resources:
   - serviceaccount.yaml
   - externalsecret.yaml

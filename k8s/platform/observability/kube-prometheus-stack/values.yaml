@@ -4,7 +4,7 @@ crds:
   enabled: false
 
 # The Prometheus and Alertmanager CRs are hand-written so their specs stay under
-# our control: k8s/apps/datalake-metrics and k8s/apps/alertmanager.
+# our control: k8s/apps/datalake-metrics and k8s/apps/datalake-alerts.
 prometheus:
   enabled: false
 alertmanager:

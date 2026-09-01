@@ -60,7 +60,7 @@ Split by role, not by stack. `platform-observability` holds collectors and
 exporters only — alloy, kube-prometheus-stack (with its own Prometheus and
 Alertmanager disabled), blackbox-exporter, uptimerobot. The stores get their own
 namespaces: `datalake-metrics` (Prometheus, Pyrra), `datalake-logs` (Loki),
-`alertmanager`, `grafana`.
+`datalake-alerts` (Alertmanager, github-receiver), `grafana`.
 
 Operator CRDs come from the `prometheus-operator-crds` HelmRelease, whose
 Kustomization sits in `k8s/bootstrap/` because nearly every component ships a
