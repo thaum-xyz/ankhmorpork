@@ -74,8 +74,12 @@ monitoring:
     enabled: true
   rules:
     enabled: true
+  alerts:
+    enabled: true
   dashboards:
     enabled: true
+    annotations:
+      grafana_folder: loki
 
 sidecar:
   resources:

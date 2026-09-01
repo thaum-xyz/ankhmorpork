@@ -2,18 +2,15 @@ rule {
   match {
     kind = "alerting"
   }
-/*
   annotation "summary" {
     severity = "warning"
     required = true
   }
-*/
-/*
+
   annotation "description" {
     severity = "warning"
     required = true
   }
-*/
 
 /*
   annotation "runbook_url" {
