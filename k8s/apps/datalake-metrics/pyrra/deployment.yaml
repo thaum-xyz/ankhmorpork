@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: kubernetes
+    app.kubernetes.io/name: pyrra
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 0.10.1
+  name: pyrra-kubernetes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: kubernetes
+      app.kubernetes.io/name: pyrra
+      app.kubernetes.io/part-of: kube-prometheus
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      annotations:
+        parca.dev/scrape: "true"
+      labels:
+        app.kubernetes.io/component: kubernetes
+        app.kubernetes.io/name: pyrra
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: 0.10.1
+    spec:
+      containers:
+        - args:
+            - kubernetes
+          image: ghcr.io/pyrra-dev/pyrra:v0.10.1
+          name: pyrra
+          ports:
+            - containerPort: 9099
+          resources:
+            requests:
+              cpu: 100m
+              memory: 30Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: pyrra-kubernetes

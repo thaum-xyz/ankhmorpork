@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Namespace is created and owned by the parent.
+namespace: datalake-metrics
+resources:
+  - crd.yaml
+  - serviceaccount.yaml
+  - clusterrole.yaml
+  - clusterrolebinding.yaml
+  - deployment.yaml
+  - service.yaml
+  - api-deployment.yaml
+  - api-service.yaml
+  - ingress.yaml
+  - slo-apiserver-read-cluster-latency.yaml
+  - slo-apiserver-read-namespace-latency.yaml
+  - slo-apiserver-read-resource-latency.yaml
+  - slo-apiserver-read-response-errors.yaml
+  - slo-apiserver-write-response-errors.yaml
+  - slo-coredns-response-errors.yaml
+  - slo-ingress.yaml
+  - slo-kubelet-request-errors.yaml
+  - slo-kubelet-runtime-errors.yaml
+  - slo-prometheus-notification-errors.yaml
+  - slo-prometheus-operator-http-errors.yaml
+  - slo-prometheus-operator-reconcile-errors.yaml
+  - slo-prometheus-query-errors.yaml
+  - slo-prometheus-rule-evaluation-failures.yaml
+  - slo-prometheus-sd-kubernetes-errors.yaml
