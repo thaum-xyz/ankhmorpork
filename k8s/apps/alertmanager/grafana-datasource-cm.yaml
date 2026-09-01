@@ -19,4 +19,4 @@ data:
       isDefault: false
       jsonData:
         implementation: prometheus
-        handleGrafanaManagedAlerts: true
+        handleGrafanaManagedAlerts: false

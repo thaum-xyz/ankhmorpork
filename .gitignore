@@ -8,8 +8,3 @@ master.key
 bin/
 .cache_ggshield
 tmp/
-apps/snmp/mibs/
-apps/snmp/snmp.yml
-apps/homeassistant/config/secrets.yaml
-apps/homeassistant/config/google_service_account.json
-apps/monitoring/dashboards

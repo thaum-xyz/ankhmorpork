@@ -54,7 +54,17 @@ Backups: `barman_cloud_cloudnative_pg_io_*` metrics are the real signal.
 `cnpg_collector_last_available_backup_timestamp` reads **0** for plugin-method
 backups, so anything built on it is worthless.
 
-## Out of scope unless asked
+## Observability
 
-`k8s/apps/monitoring` — still hand-maintained kube-prometheus manifests with the
-largest upgrade backlog in the repo. Excluded from routine upgrade work.
+Split by role, not by stack. `platform-observability` holds collectors and
+exporters only — alloy, kube-prometheus-stack (with its own Prometheus and
+Alertmanager disabled), blackbox-exporter, uptimerobot. The stores get their own
+namespaces: `datalake-metrics` (Prometheus, Pyrra), `datalake-logs` (Loki),
+`alertmanager`, `grafana`.
+
+Operator CRDs come from the `prometheus-operator-crds` HelmRelease, whose
+Kustomization sits in `k8s/bootstrap/` because nearly every component ships a
+ServiceMonitor or PrometheusRule. The platform group dependsOn it.
+
+Rules live with whatever produces or remediates their signal, the way longhorn,
+cnpg and ups rules already do.

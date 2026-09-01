@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - repository.yaml
   - release.yaml
+  - prometheusrule.yaml
   - admin-creds.yaml
   - oidc-secret.yaml
   - ingress-cloudflare.yaml
