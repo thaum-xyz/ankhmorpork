@@ -4,6 +4,9 @@ metadata:
   name: csi-nfs
   namespace: flux-system
 spec:
+  # The MutatingPolicy needs kyverno's CRDs, as kyverno-policies does.
+  dependsOn:
+    - name: kyverno
   interval: 15m0s
   path: ./k8s/platform/storage/csi-nfs
   prune: true

@@ -1,10 +1,15 @@
 apiVersion: policies.kyverno.io/v1
 kind: MutatingPolicy
 metadata:
+  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
+  # component's namespace on it in the rendered output; the API server ignores
+  # the field for cluster-scoped resources. Verified with a server-side dry-run.
   name: mutate-nfs-pvc-alert-exclusion
 spec:
-  # Every unifi-nas claim is a directory on one btrfs volume on the UNAS, so all
-  # of them report that volume's fill level as their own. KubePersistentVolumeFillingUp
+  # Lives with this provisioner rather than with kyverno because it exists purely
+  # to describe how this driver provisions: subDir puts every claim in a
+  # subdirectory of one share, so all of them report that share's fill level as
+  # their own. KubePersistentVolumeFillingUp
   # then fires once per claim for a single filling disk. The mixin rule already
   # ends with `unless ... kube_persistentvolumeclaim_labels
   # {label_excluded_from_alerts="true"}`, so this label is the supported way out.
