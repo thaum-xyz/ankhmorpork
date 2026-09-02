@@ -9,18 +9,6 @@ spec:
   groups:
     - name: node-custom.rules
       rules:
-        - alert: PackagesAvailable
-          annotations:
-            description: '{{ $value }} packages are available for upgrade. Maybe it is time to upgrade?'
-            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/PackagesAvailable
-            summary: Packages are available for upgrade
-          expr: |
-            sum by (node,instance) (yum_upgrades_pending) > 200
-            or
-            sum by (node,instance) (apt_upgrades_pending) > 200
-          for: 48h
-          labels:
-            severity: info
         - alert: FilesystemReadOnly
           annotations:
             description: Filesystem went read-only on {{ $labels.instance }}. Check FS for possible corruption.

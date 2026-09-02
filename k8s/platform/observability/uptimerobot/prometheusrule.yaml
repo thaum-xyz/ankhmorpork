@@ -13,7 +13,7 @@ spec:
           record: uptimerobot_monitor_normalized_status
         - alert: SiteExternallyDown
           annotations:
-            description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 15m.
+            description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 10m.
             runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
             summary: Site is not available from external network
           expr: uptimerobot_monitor_status == 9
