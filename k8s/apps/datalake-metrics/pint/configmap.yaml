@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: linter
+    app.kubernetes.io/name: pint
+  name: pint-config
+data:
+  # Distinct from the repo's .pint.hcl, which is CI-shaped: its parser.include is
+  # hard-wired to tmp/rules and it declares no prometheus server, so none of the
+  # online checks can run there. This config exists to run exactly those.
+  pint.hcl: |
+    prometheus "k8s" {
+      uri         = "http://prometheus-k8s:9090"
+      timeout     = "1m"
+      concurrency = 4
+    }
+
+    checks {
+      disabled = [
+        # 48 findings, 41 of them namespace=~".*" inside the chart's own mixin
+        # rules. Not ours to fix without forking, so it would be permanent noise.
+        "promql/regexp",
+        # Annotation templating is CI's job; here it would drown the online checks.
+        "alerts/template",
+        # Strips comparison operators to estimate firing frequency, which breaks
+        # vector matching on the kube-state-metrics join rules and errors instead
+        # of reporting. Also the most expensive check -- it queries per alert.
+        "alerts/count",
+      ]
+    }

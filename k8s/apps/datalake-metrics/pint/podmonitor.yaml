@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: linter
+    app.kubernetes.io/name: pint
+  name: pint
+spec:
+  # Without this the job label defaults to <namespace>/<name>, as the other
+  # PodMonitors here get. The alerts select on job="pint", so take it from the
+  # pod label instead of depending on that default.
+  jobLabel: app.kubernetes.io/name
+  podMetricsEndpoints:
+    - interval: 60s
+      port: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: linter
+      app.kubernetes.io/name: pint
