@@ -18,7 +18,7 @@ spec:
             summary: Service monitored by exporter is Down
           # cnpg_pg_replication_is_wal_receiver_up is 0 on every primary by
           # definition -- only replicas run a WAL receiver.
-          expr: '{__name__=~".*_up",__name__!="node_network_up",__name__!="node_supervisord_up",__name__!="cnpg_pg_replication_is_wal_receiver_up"} == 0'
+          expr: '{__name__=~".*_up",__name__!="node_network_up",__name__!="cnpg_pg_replication_is_wal_receiver_up"} == 0'
           for: 5m
           labels:
             severity: warning

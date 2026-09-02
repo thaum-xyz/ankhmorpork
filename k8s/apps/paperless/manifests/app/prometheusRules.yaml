@@ -14,7 +14,7 @@ spec:
           annotations:
             description: Paperless has been unhealthy for more than 5 minutes.
             summary: Paperless is unhealthy
-          expr: up{job="paperless"} == 0
+          expr: up{job="paperless/paperless"} == 0
           for: 5m
           labels:
             severity: critical
