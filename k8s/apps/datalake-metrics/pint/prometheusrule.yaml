@@ -26,9 +26,9 @@ spec:
         # evaluate. The job label is pinned in the ServiceMonitor.
         - alert: PintNotReporting
           annotations:
-            description: pint_problems has been absent for 1h. Either pint is not running or it is not being scraped; either way nothing is checking the loaded rules against live data.
+            description: pint is not checking anything. Either it is absent or unscrapeable, or it is running but its last iteration checked zero rules; either way the loaded rules are unverified.
             summary: pint is not reporting
-          expr: absent(pint_problems{job="pint"})
+          expr: absent(pint_problems{job="pint"}) or max(pint_last_run_checks{job="pint"}) == 0
           for: 1h
           labels:
             severity: warning
