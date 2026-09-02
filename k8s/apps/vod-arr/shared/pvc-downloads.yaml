@@ -1,6 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  labels:
+    # NFS on the UNAS: this claim reports the whole share's fill level,
+    # not its own. NASVolumeFillingUp covers the share itself.
+    excluded_from_alerts: "true"
   name: vod-downloads
 spec:
   accessModes:

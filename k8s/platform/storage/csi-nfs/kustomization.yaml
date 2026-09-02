@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - release.yaml
   - mutatingpolicy.yaml
+  - prometheusrule.yaml
 configMapGenerator:
   - name: values-csi-nfs
     files:

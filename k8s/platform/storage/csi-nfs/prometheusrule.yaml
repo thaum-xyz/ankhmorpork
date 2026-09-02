@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/name: csi-nfs
+  name: csi-nfs
+spec:
+  groups:
+    - name: nfs.rules
+      rules:
+        # Every NFS claim is a directory on one btrfs volume, so each reports the
+        # whole share and KubePersistentVolumeFillingUp fires once per claim.
+        # Those claims carry excluded_from_alerts, which silences that -- and
+        # would leave the share itself unwatched. This is the one alert for it:
+        # the join collapses however many claims exist into a single series.
+        - alert: NASVolumeFillingUp
+          annotations:
+            description: The UNAS share behind every NFS PersistentVolume is {{ $value | humanizePercentage }} free. Individual claims cannot show this because they all report the share, not themselves.
+            summary: Shared NFS volume is filling up
+          expr: |
+            min(
+              kubelet_volume_stats_available_bytes{job="kubelet"}
+              * on (namespace, persistentvolumeclaim) group_left
+                kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}
+            )
+            /
+            min(
+              kubelet_volume_stats_capacity_bytes{job="kubelet"}
+              * on (namespace, persistentvolumeclaim) group_left
+                kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}
+            ) < 0.10
+          for: 1h
+          labels:
+            severity: warning
