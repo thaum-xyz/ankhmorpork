@@ -10,7 +10,7 @@ resources:
   - server-pdb.yaml
   - ingress-cloudflare.yaml
 configMapGenerator:
-  - name: values
+  - name: values-immich
     files:
       - values.yaml=values.yaml
 # Stable ConfigMap name: helm-controller tracks values through

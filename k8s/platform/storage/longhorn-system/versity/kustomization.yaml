@@ -14,7 +14,7 @@ configMapGenerator:
   # Not "values": base/longhorn-system already generates a ConfigMap by that
   # name in this namespace. It is hashed today and so does not collide, but it
   # would the moment its kustomizeconfig.yaml is dropped.
-  - name: versity-values
+  - name: values-versitygw
     files:
       - values.yaml=values.yaml
 generatorOptions:

@@ -28,4 +28,4 @@ spec:
     crds: CreateReplace
   valuesFrom:
     - kind: ConfigMap
-      name: values
+      name: values-nfd

@@ -10,6 +10,6 @@ resources:
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
-  - name: values
+  - name: values-flux2
     files:
       - values.yaml=values.yaml

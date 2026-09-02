@@ -6,7 +6,7 @@ resources:
   - secrets.yaml
   - ingress-cloudflare.yaml
 configMapGenerator:
-  - name: values
+  - name: values-atuin
     files:
       - values.yaml=values.yaml
 # Stable ConfigMap name: helm-controller tracks values through

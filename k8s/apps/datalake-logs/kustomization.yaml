@@ -8,7 +8,7 @@ resources:
   - grafana-datasource-cm.yaml
   - versity/
 configMapGenerator:
-  - name: values
+  - name: values-loki
     files:
       - values.yaml=values.yaml
 # Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.

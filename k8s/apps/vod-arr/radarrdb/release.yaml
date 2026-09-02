@@ -31,4 +31,4 @@ spec:
     mode: warn
   valuesFrom:
     - kind: ConfigMap
-      name: postgres-radarr-values
+      name: values-postgres-radarr
