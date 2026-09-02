@@ -22,7 +22,7 @@ resources:
   - slo-prometheus-sd-kubernetes-errors.yaml
 # Qualified so a future values generator in the parent cannot collide.
 configMapGenerator:
-  - name: pyrra-values
+  - name: values-pyrra
     files:
       - values.yaml=values.yaml
 generatorOptions:

@@ -6,9 +6,11 @@ resources:
   - release.yaml
   - syslog-service.yaml
 configMapGenerator:
-  - name: values
+  - name: values-alloy
     files:
       - values.yaml=values.yaml
-# Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.
+# Stable name so valuesFrom can reference it directly; no nameReference rewrite
+# needed. Qualified because every component in this namespace would otherwise
+# generate a ConfigMap called "values" and silently overwrite the others.
 generatorOptions:
   disableNameSuffixHash: true
