@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: linter
+    app.kubernetes.io/name: pint
+    app.kubernetes.io/version: 0.87.0
+  name: pint
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: linter
+      app.kubernetes.io/name: pint
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: pint
+      labels:
+        app.kubernetes.io/component: linter
+        app.kubernetes.io/name: pint
+        app.kubernetes.io/version: 0.87.0
+    spec:
+      serviceAccountName: pint
+      containers:
+        # Mirrors the operator's rulefile ConfigMaps into the shared volume. The
+        # label selector matches however many shards exist, so nothing here has to
+        # know or care how the operator splits them.
+        - name: rules-sync
+          image: quay.io/kiwigrid/k8s-sidecar:2.10.3
+          env:
+            - name: METHOD
+              value: WATCH
+            - name: RESOURCE
+              value: configmap
+            - name: NAMESPACE
+              value: datalake-metrics
+            - name: LABEL
+              value: prometheus-name
+            - name: LABEL_VALUE
+              value: k8s
+            - name: FOLDER
+              value: /rules
+            # Rule files are already <namespace>-<name>-<uid>.yaml and unique, and
+            # prefixing would only make pint's problem output harder to read.
+            - name: UNIQUE_FILENAMES
+              value: "false"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /rules
+              name: rules
+        - name: pint
+          image: ghcr.io/cloudflare/pint:0.87.0
+          args:
+            - --config=/etc/pint/pint.hcl
+            - --log-level=warn
+            - watch
+            # Default is bug, which hides series problems reported as warnings.
+            - --min-severity=warning
+            # Bounds pint_problem cardinality; pint_problems stays a true total.
+            - --max-problems=50
+            - glob
+            - /rules/*.yaml
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /etc/pint
+              name: config
+              readOnly: true
+            - mountPath: /rules
+              name: rules
+              readOnly: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        fsGroup: 65534
+      volumes:
+        - name: config
+          configMap:
+            name: pint-config
+        - name: rules
+          emptyDir: {}

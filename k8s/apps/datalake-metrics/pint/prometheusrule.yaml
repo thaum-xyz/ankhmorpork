@@ -1,0 +1,34 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: linter
+    app.kubernetes.io/name: pint
+  name: pint
+spec:
+  groups:
+    - name: pint.rules
+      rules:
+        # max, not sum: every replica lints the same rule set and reports the
+        # same total, so summing would multiply the count by the replica count.
+        - alert: PintRuleProblems
+          annotations:
+            description: pint reports {{ $value }} problem(s) in the rules Prometheus has loaded. Most often an alert referencing a metric that no longer exists.
+            summary: Prometheus rules have problems pint can see
+          expr: max(pint_problems{job="pint"}) > 0
+          for: 1h
+          labels:
+            severity: warning
+        # Zero problems and a dead linter look identical from the outside, so
+        # alert on the absence of the signal itself. up{job="pint"} == 0 would be
+        # silent in the case that matters most -- if the ServiceMonitor never
+        # matches, the series does not exist and the comparison has nothing to
+        # evaluate. The job label is pinned in the ServiceMonitor.
+        - alert: PintNotReporting
+          annotations:
+            description: pint_problems has been absent for 1h. Either pint is not running or it is not being scraped; either way nothing is checking the loaded rules against live data.
+            summary: pint is not reporting
+          expr: absent(pint_problems{job="pint"})
+          for: 1h
+          labels:
+            severity: warning

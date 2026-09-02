@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: linter
+    app.kubernetes.io/name: pint
+  name: pint
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pint
+subjects:
+  - kind: ServiceAccount
+    name: pint

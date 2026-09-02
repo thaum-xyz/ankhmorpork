@@ -4,4 +4,5 @@ namespace: datalake-metrics
 resources:
   - namespace.yaml
   - prometheus/
+  - pint/
   - pyrra/
