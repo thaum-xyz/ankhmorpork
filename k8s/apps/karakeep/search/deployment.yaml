@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: meilisearch
-          image: getmeili/meilisearch:v1.53.0
+          image: getmeili/meilisearch:v1.53.1
           env:
             # meilisearch refuses to start when its on-disk format predates the
             # engine, so every image bump halts it until the data is migrated.
