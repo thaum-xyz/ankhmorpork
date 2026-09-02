@@ -6,7 +6,7 @@ resources:
   - namespace.yaml
   - release.yaml
 configMapGenerator:
-  - name: values
+  - name: values-node-problem-detector
     files:
       - values.yaml=values.yaml
 # Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.

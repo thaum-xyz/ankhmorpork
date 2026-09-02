@@ -10,7 +10,7 @@ resources:
   - job.yaml
 # Not "values": the parent already generates a ConfigMap by that name here.
 configMapGenerator:
-  - name: versity-values
+  - name: values-versitygw
     files:
       - values.yaml=values.yaml
 generatorOptions:

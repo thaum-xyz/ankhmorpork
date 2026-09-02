@@ -28,7 +28,7 @@ spec:
     crds: CreateReplace
   valuesFrom:
     - kind: ConfigMap
-      name: values
+      name: values-changedetection
   postRenderers:
     - kustomize:
         patches:

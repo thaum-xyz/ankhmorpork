@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - release.yaml
 configMapGenerator:
-  - name: postgres-prowlarr-values
+  - name: values-postgres-prowlarr
     files:
       - values.yaml=values.yaml
 # Stable ConfigMap name: helm-controller tracks values through

@@ -12,6 +12,10 @@ validate:  ## Render every kustomization and validate it against schemas
 validate-flux:  ## Check that Flux Kustomization paths exist
 	./hack/validate-flux-paths.sh
 
+.PHONY: validate-configmaps
+validate-configmaps:  ## Check no two Kustomizations render the same ConfigMap
+	./hack/validate-configmap-ownership.sh
+
 .PHONY: prometheusrules
 prometheusrules:  ## Validate prometheus rules
 	./hack/unpack-prometheus-rules.sh

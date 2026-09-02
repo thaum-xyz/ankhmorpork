@@ -7,7 +7,7 @@ resources:
   - release.yaml
   - unifi-credentials.yaml
 configMapGenerator:
-  - name: values
+  - name: values-external-dns
     files:
       - values.yaml=values.yaml
 # Stable ConfigMap name: helm-controller tracks values through

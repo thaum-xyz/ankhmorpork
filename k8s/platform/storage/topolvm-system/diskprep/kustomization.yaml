@@ -7,6 +7,6 @@ resources:
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
-  - name: values
+  - name: values-diskprep
     files:
       - values.yaml=values.yaml

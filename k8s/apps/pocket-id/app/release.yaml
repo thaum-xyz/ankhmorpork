@@ -28,7 +28,7 @@ spec:
     crds: CreateReplace
   valuesFrom:
     - kind: ConfigMap
-      name: values
+      name: values-pocket-id
     - kind: Secret
       name: pg-connection
       valuesKey: connectionString

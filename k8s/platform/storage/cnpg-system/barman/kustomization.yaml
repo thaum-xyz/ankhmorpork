@@ -4,7 +4,7 @@ namespace: cnpg-system
 resources:
   - release.yaml
 configMapGenerator:
-  - name: barman-values
+  - name: values-barman
     files:
       - values.yaml=values.yaml
 generatorOptions:

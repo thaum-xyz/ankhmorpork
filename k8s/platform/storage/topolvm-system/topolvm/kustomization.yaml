@@ -8,6 +8,6 @@ resources:
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
-  - name: values
+  - name: values-topolvm
     files:
       - values.yaml=values.yaml

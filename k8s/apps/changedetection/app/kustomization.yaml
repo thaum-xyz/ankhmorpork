@@ -4,7 +4,7 @@ resources:
   - repository.yaml
   - release.yaml
 configMapGenerator:
-  - name: values
+  - name: values-changedetection
     files:
       - values.yaml=values.yaml
 # Stable ConfigMap name: helm-controller tracks values through

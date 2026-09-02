@@ -8,7 +8,7 @@ resources:
   - ingress-cloudflare.yaml
   - oidc-secret.yaml
 configMapGenerator:
-  - name: values
+  - name: values-stirling-pdf
     files:
       - values.yaml=values.yaml
 # Stable ConfigMap name: helm-controller tracks values through

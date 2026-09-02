@@ -31,4 +31,4 @@ spec:
     mode: warn
   valuesFrom:
     - kind: ConfigMap
-      name: postgres-prowlarr-values
+      name: values-postgres-prowlarr

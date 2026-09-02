@@ -6,7 +6,7 @@ resources:
   - credentials.yaml
   - ingress-cloudflare.yaml
 configMapGenerator:
-  - name: values
+  - name: values-litellm
     files:
       - values.yaml=values.yaml
 # Stable ConfigMap name: helm-controller tracks values through

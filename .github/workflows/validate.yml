@@ -34,4 +34,9 @@ jobs:
         with:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/mikefarah/yq/v4@${{ env.yq-version }}
+      # Both scripts shell out to kustomize. Without it validate-flux-paths.sh
+      # silently skipped every directory that has a kustomization.yaml, which is
+      # all of k8s/bootstrap.
+      - run: go install sigs.k8s.io/kustomize/kustomize/v5@${{ env.kustomize-version }}
       - run: ./hack/validate-flux-paths.sh
+      - run: ./hack/validate-configmap-ownership.sh
