@@ -67,6 +67,13 @@ prometheusOperator:
       memory: 256Mi
 
 kube-state-metrics:
+  # Without this kube_persistentvolumeclaim_labels has no series at all, and the
+  # mixin's KubePersistentVolumeFillingUp rule ends with
+  # `unless ... kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}`
+  # -- an exclusion that can never match. Allowlisting the one label turns that
+  # clause back on without the cardinality cost of `*`.
+  metricLabelsAllowlist:
+    - persistentvolumeclaims=[excluded_from_alerts]
   resources:
     requests:
       cpu: 2m

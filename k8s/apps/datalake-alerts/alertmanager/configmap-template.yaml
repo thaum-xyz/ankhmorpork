@@ -75,6 +75,13 @@ data:
         - matchers:
           - "severity = critical"
           receiver: 'opsgenie'
+        # Every NFS-backed PVC reports the whole export's fill level, so a single
+        # NAS filling up fires this once per PVC across unrelated namespaces.
+        # Grouping on alertname alone turns that into one issue listing them all.
+        - matchers:
+          - "alertname = KubePersistentVolumeFillingUp"
+          group_by: ['alertname']
+          receiver: 'github'
         - matchers:
           - "severity = warning"
           receiver: 'github'
@@ -101,6 +108,19 @@ data:
         - "alertname = KubeNodeUnreachable"
         target_matchers:
         - "alertname = KubeNodeNotReady"
+      # A node going away shows up as every workload on it looking unhealthy.
+      - source_matchers:
+        - "alertname =~ KubeNodeNotReady|KubeNodeUnreachable"
+        target_matchers:
+        - "alertname =~ KubePodNotReady|KubeContainerWaiting|KubePodCrashLooping|KubeDeploymentReplicasMismatch|KubeStatefulSetReplicasMismatch|KubeDaemonSetRolloutStuck|KubeDeploymentRolloutStuck"
+        equal: ['cluster']
+      # And a pod that cannot start is the reason its workload is short replicas,
+      # so report the cause rather than both.
+      - source_matchers:
+        - "alertname =~ KubePodCrashLooping|KubePodNotReady|KubeContainerWaiting"
+        target_matchers:
+        - "alertname =~ KubeDeploymentReplicasMismatch|KubeStatefulSetReplicasMismatch|KubeDeploymentRolloutStuck|KubeDaemonSetRolloutStuck"
+        equal: ['namespace']
       - source_matchers:
         - "alertname = InfoInhibitor"
         target_matchers:

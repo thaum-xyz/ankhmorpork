@@ -204,7 +204,10 @@ My home IP can change at any given time and in order to keep my WAN IP address u
 
 ## 💽 Network Attached Storage
 
-QNAP NAS TS-451DeU is used to manage NFS shares and backup them to B2 cloud using HBS.
+A UniFi UNAS Pro serves the NFS shares. The `unifi-nas` storage class provisions
+each claim as a subdirectory of a single share, so every PVC on it reports that
+one volume's free space rather than its own -- see the `excluded_from_alerts`
+Kyverno policy.
 
 ## 🔧 Hardware
 
@@ -212,7 +215,7 @@ QNAP NAS TS-451DeU is used to manage NFS shares and backup them to B2 cloud usin
 |--------------------------|-------|-------|----------------------------------|--------------------|-----------------|
 | Unifi Dream Machine Pro  | 1     | N/A   | N/A                              | 8x GbE + 2xSFP+    | Router          |
 | Unifi US-16-PoE switch   | 1     | N/A   | N/A                              | 16x GbE + 2xSFP    | Main Switch     |
-| QNAP TS-451DeU           | 1     | 16GB  | 2x240GB NVMe RAID1 + 4x6TB RAID5 | 2x 2.5GbE LACP     | NAS             |
+| UniFi UNAS Pro           | 1     | ----- | ~10TB usable                     | 1x 10GbE           | NAS             |
 | Raspberry Pi             | 1     | ----- | -----                            | 1x GbE             | DNS Server      |
 | HP EliteDesk G2 800 mini | 2     | 32GB  | 240GB M2 SSD + 500GB SSD         | 1x GbE             | K3S Node        |
 | Lenovo X1 Laptop         | 1     | 48GB  | 480GB NVMe + 1x 480GB SSD        | 1x GbE             | K3S Node        |
