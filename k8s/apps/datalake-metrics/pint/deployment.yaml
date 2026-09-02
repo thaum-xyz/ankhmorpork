@@ -24,11 +24,13 @@ spec:
         app.kubernetes.io/version: 0.87.0
     spec:
       serviceAccountName: pint
-      containers:
+      initContainers:
         # Mirrors the operator's rulefile ConfigMaps into the shared volume. The
         # label selector matches however many shards exist, so nothing here has to
         # know or care how the operator splits them.
         - name: rules-sync
+          # Native sidecar: starts before pint and terminates after it.
+          restartPolicy: Always
           image: quay.io/kiwigrid/k8s-sidecar:2.10.3
           env:
             - name: METHOD
@@ -47,6 +49,18 @@ spec:
             # prefixing would only make pint's problem output harder to read.
             - name: UNIQUE_FILENAMES
               value: "false"
+          # Kubelet holds pint until this passes, which is what removes the
+          # race: previously pint ran its first check seconds before the sidecar
+          # wrote anything and failed with "no matching files", then sat blind
+          # until the next 10m interval.
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - ls /rules/*.yaml >/dev/null 2>&1
+            periodSeconds: 2
+            failureThreshold: 60
           resources:
             requests:
               cpu: 10m
@@ -63,6 +77,7 @@ spec:
           volumeMounts:
             - mountPath: /rules
               name: rules
+      containers:
         - name: pint
           image: ghcr.io/cloudflare/pint:0.87.0
           # The image declares CMD and no ENTRYPOINT, so args on their own
