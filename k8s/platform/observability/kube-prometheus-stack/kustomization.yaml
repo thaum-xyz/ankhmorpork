@@ -7,9 +7,11 @@ resources:
   - prometheusrule-nodes.yaml
   - prometheusrule-workloads.yaml
 configMapGenerator:
-  - name: values
+  - name: values-kube-prometheus-stack
     files:
       - values.yaml=values.yaml
-# Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.
+# Stable name so valuesFrom can reference it directly; no nameReference rewrite
+# needed. Qualified because every component in this namespace would otherwise
+# generate a ConfigMap called "values" and silently overwrite the others.
 generatorOptions:
   disableNameSuffixHash: true

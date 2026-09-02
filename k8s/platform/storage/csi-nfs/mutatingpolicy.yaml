@@ -9,20 +9,23 @@ spec:
   # Lives with this provisioner rather than with kyverno because it exists purely
   # to describe how this driver provisions: subDir puts every claim in a
   # subdirectory of one share, so all of them report that share's fill level as
-  # their own. KubePersistentVolumeFillingUp
-  # then fires once per claim for a single filling disk. The mixin rule already
-  # ends with `unless ... kube_persistentvolumeclaim_labels
-  # {label_excluded_from_alerts="true"}`, so this label is the supported way out.
+  # their own. KubePersistentVolumeFillingUp then fires once per claim for a
+  # single filling disk. The mixin rule already ends with
+  # `unless ... kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}`,
+  # so this label is the supported way out.
   #
   # A policy rather than manifest labels because the versitygw chart owns three of
   # these claims and does not expose PVC labels.
+  #
+  # Admission only. mutateExisting is implemented by kyverno's background
+  # controller, which is deliberately disabled in this cluster
+  # (k8s/platform/security/kyverno/controllers/values.yaml: "Generate rules and
+  # mutate-existing rules are not part of the initial use case"), so enabling it
+  # here only parks UpdateRequests in Pending forever. Claims that predate this
+  # policy were labelled once by hand.
   evaluation:
     background:
-      enabled: true
-    mutateExisting:
-      enabled: true
-    # Must be false for mutateExisting to act on background-controller requests.
-    skipBackgroundRequests: false
+      enabled: false
   failurePolicy: Fail
   matchConstraints:
     resourceRules:
