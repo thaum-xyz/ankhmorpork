@@ -65,6 +65,10 @@ spec:
               name: rules
         - name: pint
           image: ghcr.io/cloudflare/pint:0.87.0
+          # The image declares CMD and no ENTRYPOINT, so args on their own
+          # replace the binary path rather than appending to it.
+          command:
+            - /usr/local/bin/pint
           args:
             - --config=/etc/pint/pint.hcl
             - --log-level=warn
@@ -73,11 +77,13 @@ spec:
             - --min-severity=warning
             # Bounds pint_problem cardinality; pint_problems stays a true total.
             - --max-problems=50
+            - --listen=:8081
             - glob
             - /rules/*.yaml
           ports:
+            # 8080 is taken: k8s-sidecar serves its own endpoint there.
             - name: http
-              containerPort: 8080
+              containerPort: 8081
           livenessProbe:
             httpGet:
               path: /health
