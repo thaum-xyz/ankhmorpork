@@ -6,6 +6,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
+    # NFS: this PVC reports the whole export's fill level, not its own.
+    excluded_from_alerts: "true"
     app.kubernetes.io/component: backup
     app.kubernetes.io/part-of: vod-arr
   name: backups

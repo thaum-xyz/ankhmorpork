@@ -66,7 +66,7 @@ data:
 
     <!-- alert data: {{json $payload}} -->
   title-template.txt: |
-    Alert: {{ .Payload.GroupLabels.alertname }} in {{ .Payload.GroupLabels.namespace }}
+    Alert: {{ .Payload.GroupLabels.alertname }}{{ with .Payload.GroupLabels.namespace }} in {{ . }}{{ end }}
 kind: ConfigMap
 metadata:
   labels:
