@@ -63,34 +63,24 @@ prometheusRules:
     smartCTLDeviceMediaErrors:
       expr: increase(smartctl_device_media_errors[1h]) > 0
       for: 5m
-    # Endurance consumed, as the drive reports it. Slow-moving and with no
-    # remediation but replacement, so one warning tier: it stays firing until
-    # the disk is swapped, which is the point -- it is a work item, not a page.
+    # Endurance consumed, from whichever field the drive reports it in:
+    # percentage_used is NVMe-only, and SATA SSDs expose wear as a vendor
+    # attribute instead. Both attribute names are normalised the SMART way --
+    # 100 at manufacture, falling toward the failure threshold -- so
+    # subtracting from 100 puts the second arm on the same scale as the first,
+    # and $value is percent consumed either way.
+    #
+    # One warning tier, no critical: replacement is the only remediation, and
+    # a worn disk is a work item rather than something to wake anyone for. It
+    # keeps firing until the disk is swapped.
     smartCTLDeviceWearHigh:
       enabled: true
       alert: SmartCTLDeviceWearHigh
-      expr: smartctl_device_percentage_used >= 80
+      expr: smartctl_device_percentage_used >= 80 or (100 - smartctl_device_attribute{attribute_name=~"Percent_Lifetime_Remain|Wear_Leveling_Count", attribute_value_type="value"}) >= 80
       for: 1h
       annotations:
         summary: Disk has used most of its rated write endurance
         description: Device {{ $labels.device }} on {{ $labels.node }} has consumed {{ $value | printf "%.0f" }}% of its rated write endurance. Plan a replacement.
-      labels:
-        severity: warning
-
-    # percentage_used is an NVMe field; SATA SSDs report wear as a vendor
-    # attribute instead. Both of the names matched here are normalised the SMART
-    # way -- 100 at manufacture, falling toward the failure threshold -- so one
-    # expression covers a Crucial reporting Percent_Lifetime_Remain and a
-    # Samsung reporting Wear_Leveling_Count. Without this the two SATA SSDs
-    # have no wear alert at all, and they are the most worn disks here.
-    smartCTLDeviceWearHighATA:
-      enabled: true
-      alert: SmartCTLDeviceWearHigh
-      expr: smartctl_device_attribute{attribute_name=~"Percent_Lifetime_Remain|Wear_Leveling_Count", attribute_value_type="value"} <= 20
-      for: 1h
-      annotations:
-        summary: Disk has used most of its rated write endurance
-        description: Device {{ $labels.device }} on {{ $labels.node }} has {{ $labels.attribute_name }} normalised down to {{ $value | printf "%.0f" }} of 100. Plan a replacement.
       labels:
         severity: warning
 
