@@ -37,7 +37,33 @@ spec:
               Arr Application prowlarr is having issues with {{ $labels.source }} health check - {{ $labels.message }}.
               For more infromation check {{ $labels.wikiurl }}.
             summary: prowlarr is unhealthy
-          expr: max_over_time(prowlarr_system_health_issues{job="prowlarr",source!="UpdateCheck",source!="IndexerLongTermStatusCheck"}[1h]) == 1
+          # IndexerStatusCheck joins the exclusions. It reports only "some
+          # indexer is unavailable", which for a set of public trackers is close
+          # to a steady state: across 40h of history the count sat at two or
+          # three of nine and never once reached zero. Three of those were dead
+          # entries, since removed, but a single tracker going down for the two
+          # hours this alert waits is ordinary and not actionable.
+          # IndexerLongTermStatusCheck was already excluded for the same reason;
+          # prowlarrIndexersUnavailable below covers the case that is not
+          # ordinary.
+          expr: max_over_time(prowlarr_system_health_issues{job="prowlarr",source!="UpdateCheck",source!="IndexerLongTermStatusCheck",source!="IndexerStatusCheck"}[1h]) == 1
+          for: 2h
+          labels:
+            severity: warning
+        # What actually matters is whether prowlarr can still find anything, so
+        # alert on the share of indexers that are down rather than on any single
+        # one. Stated as a proportion so adding indexers does not quietly move
+        # the threshold, but written as a multiplication: sum/total goes NaN
+        # when the denominator is absent or zero, which would leave the alert
+        # unfireable exactly when prowlarr has lost every indexer. Fires when
+        # more than half are down.
+        - alert: prowlarrIndexersUnavailable
+          annotations:
+            description: |
+              {{ $value }} of prowlarr's indexers are unavailable, more than half of them, so searches are running against a small fraction of its sources.
+              Individual public trackers fail routinely; this means most of them are failing at once.
+            summary: Most of prowlarr's indexers are unavailable
+          expr: sum(prowlarr_indexer_unavailable) * 2 > scalar(max(prowlarr_indexer_total))
           for: 2h
           labels:
             severity: warning
