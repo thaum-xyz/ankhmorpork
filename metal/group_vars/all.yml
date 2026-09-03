@@ -12,15 +12,3 @@ ssh_kex:
 - diffie-hellman-group-exchange-sha256
 
 system_earlyoom_params: "-r 60 -m 4"
-
-node_exporter_scripts:
-  - name: apt
-    exec: /usr/local/bin/apt_info.py
-    url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/53d484331170e6f00237f0fbd6f4acae33064b87/apt_info.py"
-  - name: smartmon
-    exec: /usr/local/bin/smartmon.sh
-    url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/53d484331170e6f00237f0fbd6f4acae33064b87/smartmon.sh"
-  - name: lvm
-    exec: /usr/local/bin/lvm.sh
-    url: "https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/53d484331170e6f00237f0fbd6f4acae33064b87/lvm-prom-collector"
-    params: "-a"

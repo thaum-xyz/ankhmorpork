@@ -1,8 +1,6 @@
 # By default hosts are labeled with `network=slow` label
 # Hosts with label `network=fast` are used for metallb loadbalancer
 
-# Assign enable_smartmon=true label to enable SMART monitoring of disks
-
 master01 ansible_host=192.168.50.31
 master02 ansible_host=192.168.50.32
 #master03  ansible_host=192.168.50.33
