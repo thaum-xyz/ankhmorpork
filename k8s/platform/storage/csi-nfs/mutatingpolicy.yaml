@@ -17,6 +17,14 @@ spec:
   # A policy rather than manifest labels because the versitygw chart owns three of
   # these claims and does not expose PVC labels.
   #
+  # Deliberately no replacement alert. Measured 2026-09-02: every NFS claim
+  # reports the underlying disk rather than itself -- all 11 give capacity
+  # 9992.1GB and used ~8890GB whatever the share or storage class -- and the
+  # quotas that actually bind (1TB for this driver's share, 7TB movies, 4TB
+  # tvshows, on a 10TB disk) appear in no metric kubelet exports. An in-cluster
+  # alert could therefore only restate the disk, which the UNAS already watches
+  # along with per-share quotas. Quota exhaustion is the UNAS's job, not ours.
+  #
   # Admission only. mutateExisting is implemented by kyverno's background
   # controller, which is deliberately disabled in this cluster
   # (k8s/platform/security/kyverno/controllers/values.yaml: "Generate rules and
