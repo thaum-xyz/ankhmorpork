@@ -42,3 +42,13 @@ externalSecrets:
     remoteKey: IMMICH_POSTGRES_ADMIN_PASS
   user:
     remoteKey: IMMICH_POSTGRES_PASS
+
+prometheusRule:
+  # immich's IntegrityService sweeps nightly at 03:00 local, holding one
+  # transaction open while it batches through ~42k untracked-file and ~42k
+  # missing-file checks. Measured peaks of 1683s (2026-09-02) and 1113s
+  # (2026-09-03), climbing then committing -- the job working, not a
+  # transaction stuck on locks, and it grows with the library. The default
+  # 300s filed a GitHub issue every night (#685); the other ten databases
+  # keep that default.
+  maxTransactionSeconds: 3600
