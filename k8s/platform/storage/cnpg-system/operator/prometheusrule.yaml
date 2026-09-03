@@ -6,12 +6,21 @@ spec:
   groups:
   - name: cnp-default.rules
     rules:
+    # immich is exempted up to an hour. Its IntegrityService sweep runs nightly
+    # at 03:00 local and holds one transaction open while it batches through
+    # ~42k untracked-file and ~42k missing-file checks; measured peaks of 1683s
+    # on 2026-09-02 and 1113s on 2026-09-03, climbing monotonically then
+    # committing. That is the job working, not a transaction stuck holding
+    # locks, and it grows with the library -- so a fixed 300s would keep filing
+    # an issue every night for as long as the library exists.
     - alert: LongRunningTransaction
       annotations:
         description: Pod {{ $labels.pod }} is taking more than 5 minutes (300 seconds) for a query.
         summary: A query is taking longer than 5 minutes.
       expr: |-
-        cnpg_backends_max_tx_duration_seconds > 300
+        cnpg_backends_max_tx_duration_seconds{datname!="immich"} > 300
+        or
+        cnpg_backends_max_tx_duration_seconds{datname="immich"} > 3600
       for: 1m
       labels:
         severity: warning
