@@ -1,11 +1,46 @@
 fullnameOverride: smartctl-exporter
 
-# No device list: the exporter scans, which is the point of the switch. The
-# Ansible smartmon.sh it replaces only produced metrics on master01, because
-# that is the one host where smartmontools happened to be installed -- the
-# other three wrote an empty .prom file that node-exporter parsed without
-# complaint. This image carries its own smartctl.
-config: {}
+resources: &smartctlResources
+  requests:
+    cpu: 5m
+    memory: 24Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi
+
+tolerations: &smartctlTolerations
+  - effect: NoSchedule
+    operator: Exists
+
+# Longhorn attaches its volumes over iSCSI, so they surface as /dev/sd* and a
+# scan cannot tell them from a real disk: master01's SATA SSD and beelink01's
+# iSCSI targets both scan as `-d scsi`, and the sat/scsi split only shows up
+# once the device is queried. Volumes also move with their workloads, so any
+# node can sprout new /dev/sd* at any time. Excluding scanned SCSI devices and
+# naming the two real SATA disks explicitly is the only filter that survives
+# that churn. NVMe is still found by scan.
+#
+# The cost: a newly fitted SATA disk stays unmonitored until it is named here.
+config:
+  device_exclude: "^/dev/sd"
+
+# The chart reads resources and tolerations per instance and does not fall back
+# to the base ones -- an instance that omits them renders `resources: null`.
+extraInstances:
+  - config:
+      devices:
+        - /dev/sda
+    nodeSelector:
+      kubernetes.io/hostname: master01
+    resources: *smartctlResources
+    tolerations: *smartctlTolerations
+  - config:
+      devices:
+        - /dev/sda
+    nodeSelector:
+      kubernetes.io/hostname: master02
+    resources: *smartctlResources
+    tolerations: *smartctlTolerations
 
 serviceMonitor:
   enabled: true
@@ -19,29 +54,26 @@ serviceMonitor:
 prometheusRules:
   enabled: true
   rules:
-    # beelink01's eight USB-attached disks report current != max as a matter of
-    # course, so this fires on healthy hardware here.
-    smartCTLDInterfaceSlow:
-      enabled: false
     # An increase rather than a nonzero count: a disk carrying a handful of
     # errors from years ago is not news, and would otherwise alert forever.
     smartCTLDeviceMediaErrors:
       expr: increase(smartctl_device_media_errors[1h]) > 0
       for: 5m
-    # smartctl's exit code is a bitmask. Bits 0-2 mean it could not talk to the
-    # device at all; bits 3-7 are SMART conditions the rules above already
-    # cover, and include benign history like "an attribute was once below
-    # threshold". Masking to the low three bits alerts only on the blind spot,
-    # which is the failure mode that hid smartmon.sh being broken on three of
-    # four nodes for years.
-    smartCTLDeviceUnreadable:
+    # The blind spot this guards is a disk the exporter can see but cannot get
+    # a health verdict from -- the failure mode that hid smartmon.sh being
+    # broken on three of four nodes for years. Stated as a coverage check
+    # rather than off smartctl's exit code, because that code is a bitmask
+    # whose bit 2 ("a SMART command failed") is set by any disk that does not
+    # implement the error log: master01's Crucial BX500 trips it while
+    # reporting every metric we actually read.
+    smartCTLDeviceUnmonitored:
       enabled: true
-      alert: SmartCTLDeviceUnreadable
-      expr: smartctl_device_smartctl_exit_status % 8 > 0
-      for: 1h
+      alert: SmartCTLDeviceUnmonitored
+      expr: smartctl_device unless on(instance, device) smartctl_device_smart_status
+      for: 15m
       annotations:
-        summary: Disk SMART data is unreadable
-        description: smartctl cannot read SMART data from device {{ $labels.device }} on {{ $labels.node }}, so that disk is unmonitored.
+        summary: Disk reports no SMART health verdict
+        description: The exporter found device {{ $labels.device }} ({{ $labels.model_name }}) on {{ $labels.node }} but gets no health status from it, so that disk is unmonitored.
       labels:
         severity: warning
 
@@ -49,11 +81,3 @@ prometheusRules:
 # has not existed since 1.25.
 rbac:
   create: false
-
-resources:
-  requests:
-    cpu: 5m
-    memory: 24Mi
-  limits:
-    cpu: 100m
-    memory: 64Mi
