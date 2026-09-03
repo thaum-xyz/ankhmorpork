@@ -6,8 +6,6 @@ namespace: platform-storage
 resources:
   - repository.yaml
   - release.yaml
-  - servicemonitor.yaml
-  - prometheusrule.yaml
 configMapGenerator:
   - name: values-smartctl-exporter
     files:
