@@ -252,6 +252,19 @@ storageClasses:
       # Keep application I/O local to one of the two diskful replicas. The
       # affinity controller updates PV affinity if LINSTOR moves a replica.
       linstor.csi.linbit.com/allowRemoteVolumeAccess: "false"
+      # DRBD writes activity-log metadata synchronously whenever a write lands in
+      # an extent it is not already tracking. The default 1237 extents cover
+      # ~4.8GiB, so a random write workload over a larger volume thrashes the AL
+      # and pays a metadata write on nearly every miss. 6433 is the maximum and
+      # covers ~25GiB.
+      #
+      # Measured 2026-09-03 on beelink01/beelink02/master02, 8GiB working set:
+      # random write IOPS 3833/3751/7491 -> 11800/11500/24100 (3.1-3.2x), QD1
+      # write latency -35%/-34%/-46%, durable commits +19-28%. Reads unchanged,
+      # which is expected -- the activity log only gates writes. Neither option
+      # trades away durability.
+      property.linstor.csi.linbit.com/DrbdOptions/Disk/al-extents: "6433"
+      property.linstor.csi.linbit.com/DrbdOptions/Net/max-buffers: "8000"
   # Same two replicas, but Pods are not pinned to them: a Pod may schedule onto
   # any satellite node and attach diskless, and auto-diskful then converts that
   # attachment into a local replica and drops the surplus one. I/O is remote
@@ -267,6 +280,19 @@ storageClasses:
       linstor.csi.linbit.com/storagePool: temporary-topolvm
       linstor.csi.linbit.com/allowRemoteVolumeAccess: "true"
       property.linstor.csi.linbit.com/DrbdOptions/auto-diskful: "5"
+      # DRBD writes activity-log metadata synchronously whenever a write lands in
+      # an extent it is not already tracking. The default 1237 extents cover
+      # ~4.8GiB, so a random write workload over a larger volume thrashes the AL
+      # and pays a metadata write on nearly every miss. 6433 is the maximum and
+      # covers ~25GiB.
+      #
+      # Measured 2026-09-03 on beelink01/beelink02/master02, 8GiB working set:
+      # random write IOPS 3833/3751/7491 -> 11800/11500/24100 (3.1-3.2x), QD1
+      # write latency -35%/-34%/-46%, durable commits +19-28%. Reads unchanged,
+      # which is expected -- the activity log only gates writes. Neither option
+      # trades away durability.
+      property.linstor.csi.linbit.com/DrbdOptions/Disk/al-extents: "6433"
+      property.linstor.csi.linbit.com/DrbdOptions/Net/max-buffers: "8000"
 
 volumeSnapshotClasses:
   - name: piraeus
