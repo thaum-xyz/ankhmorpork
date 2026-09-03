@@ -19,8 +19,10 @@ cd "$(git rev-parse --show-toplevel)"
 WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "$WORK_DIR"' EXIT
 
+# @tsv, not `+ "\t" +`: yq emits that as a literal backslash-t, which left every
+# line unsplittable and silently reduced this whole check to a no-op.
 QUERY='select(.kind == "Kustomization" and (.apiVersion | test("^kustomize.toolkit.fluxcd.io/")))
-       | .metadata.name + "\t" + .spec.path'
+       | [.metadata.name, .spec.path] | @tsv'
 
 # Collect live Kustomizations, one "name<TAB>path" per line.
 : > "$WORK_DIR/live.tsv"
