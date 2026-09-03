@@ -19,3 +19,16 @@ storageClass:
   mountOptions:
     - nfsvers=3
     - nolock
+    # One NFS mount is one TCP connection, and LACP hashes a flow onto a single
+    # physical link -- so beelink01/beelink02's 2Gbps bond0 delivered exactly the
+    # same 106 MiB/s as master02's single 1GbE. Measured 2026-09-03: sequential
+    # read 106 MiB/s on beelink01 and 104 MiB/s on master02, both ~89% of one
+    # 1GbE link, while the bond members carried a 7:1 traffic split.
+    #
+    # nconnect opens 4 TCP connections per mount so the hash can spread them
+    # across both bond members. Jumbo frames were the other option and are ruled
+    # out by Tailscale's MTU.
+    - nconnect=4
+    # Cuts atime write-back on a share that holds backups and versitygw object
+    # data -- nothing here reads atime.
+    - noatime
