@@ -9,15 +9,20 @@ spec:
   groups:
     - name: nfs.rules
       rules:
-        # Every NFS claim is a directory on one btrfs volume, so each reports the
-        # whole share and KubePersistentVolumeFillingUp fires once per claim.
-        # Those claims carry excluded_from_alerts, which silences that -- and
-        # would leave the share itself unwatched. This is the one alert for it:
-        # the join collapses however many claims exist into a single series.
+        # No NFS claim can report its own usage. unifi-nas provisions each claim
+        # as a subdirectory of one share; the `manual` PVs are separate shares,
+        # and two of them (movies, tvshows) are each mounted twice as different
+        # PVs. Either way df reports the filesystem behind the share, so all of
+        # them carry excluded_from_alerts and this is the one alert for the space.
+        #
+        # Measured 2026-09-02: all 11 excluded claims report an identical
+        # 9992.1GB capacity, so today every share sits on one pool and min() over
+        # them is that pool. NASVolumeCapacitiesDiverged below is the guard on
+        # that assumption.
         - alert: NASVolumeFillingUp
           annotations:
-            description: The UNAS share behind every NFS PersistentVolume is {{ $value | humanizePercentage }} free. Individual claims cannot show this because they all report the share, not themselves.
-            summary: Shared NFS volume is filling up
+            description: The UNAS filesystem behind the NFS PersistentVolumes is {{ $value | humanizePercentage }} free. Individual claims cannot show this because each reports the filesystem rather than itself.
+            summary: Shared NFS filesystem is filling up
           expr: |
             min(
               kubelet_volume_stats_available_bytes{job="kubelet"}
@@ -31,5 +36,25 @@ spec:
                 kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}
             ) < 0.10
           for: 1h
+          labels:
+            severity: warning
+
+        # If the excluded claims ever report more than one capacity they are no
+        # longer all on one filesystem, and the min() above would report only the
+        # fullest while hiding the rest. count_values turns each distinct capacity
+        # into a series so they can be counted.
+        - alert: NASVolumeCapacitiesDiverged
+          annotations:
+            description: Claims excluded from per-volume alerting report {{ $value }} different capacities, so they are not all on one filesystem any more. NASVolumeFillingUp only reports the fullest and is hiding the others.
+            summary: NFS claims are no longer on a single filesystem
+          expr: |
+            count(
+              count_values("capacity",
+                max by (namespace, persistentvolumeclaim) (kubelet_volume_stats_capacity_bytes{job="kubelet"})
+                and on (namespace, persistentvolumeclaim)
+                  kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}
+              )
+            ) > 1
+          for: 6h
           labels:
             severity: warning
