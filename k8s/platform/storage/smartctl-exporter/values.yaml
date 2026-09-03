@@ -28,20 +28,21 @@ prometheusRules:
     smartCTLDeviceMediaErrors:
       expr: increase(smartctl_device_media_errors[1h]) > 0
       for: 5m
-    # smartctl's exit code is a bitmask. Bits 0-2 mean it could not talk to the
-    # device at all; bits 3-7 are SMART conditions the rules above already
-    # cover, and include benign history like "an attribute was once below
-    # threshold". Masking to the low three bits alerts only on the blind spot,
-    # which is the failure mode that hid smartmon.sh being broken on three of
-    # four nodes for years.
-    smartCTLDeviceUnreadable:
+    # The blind spot this guards is a disk the exporter can see but cannot
+    # get a health verdict from -- the failure mode that hid smartmon.sh being
+    # broken on three of four nodes for years. Stated as a coverage check
+    # rather than off smartctl's exit code, because that code is a bitmask
+    # whose bit 2 ("a SMART command failed") is set by any disk that does not
+    # implement the error log: master01's Crucial BX500 trips it while
+    # reporting every metric we actually read.
+    smartCTLDeviceUnmonitored:
       enabled: true
-      alert: SmartCTLDeviceUnreadable
-      expr: smartctl_device_smartctl_exit_status % 8 > 0
-      for: 1h
+      alert: SmartCTLDeviceUnmonitored
+      expr: smartctl_device unless on(instance, device) smartctl_device_smart_status
+      for: 15m
       annotations:
-        summary: Disk SMART data is unreadable
-        description: smartctl cannot read SMART data from device {{ $labels.device }} on {{ $labels.node }}, so that disk is unmonitored.
+        summary: Disk reports no SMART health verdict
+        description: The exporter found device {{ $labels.device }} ({{ $labels.model_name }}) on {{ $labels.node }} but gets no health status from it, so that disk is unmonitored.
       labels:
         severity: warning
 
