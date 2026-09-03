@@ -21,8 +21,12 @@ tolerations: &smartctlTolerations
 # that churn. NVMe is still found by scan.
 #
 # The cost: a newly fitted SATA disk stays unmonitored until it is named here.
+#
+# The pattern matches a bare device label, not a path: the exporter strips the
+# /dev/ prefix before filtering, so "^/dev/sd" silently matches nothing. The
+# chart's own values.yaml suggests "/dev/sr.*", which has the same problem.
 config:
-  device_exclude: "^/dev/sd"
+  device_exclude: "^sd"
 
 # The chart reads resources and tolerations per instance and does not fall back
 # to the base ones -- an instance that omits them renders `resources: null`.
