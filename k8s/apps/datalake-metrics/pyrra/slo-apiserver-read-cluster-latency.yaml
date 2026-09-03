@@ -6,11 +6,18 @@ metadata:
     role: alert-rules
   name: apiserver-read-cluster-latency
 spec:
+  # le must name a bucket that survives kube-prometheus-stack's cardinality
+  # drop on the apiserver ServiceMonitor, which discards
+  # apiserver_request_duration_seconds_bucket for le 1.5 among others. k3s
+  # serves one merged registry, so the kubelet endpoint re-exports these same
+  # metrics without that drop: at le=1.5 the numerator had only job="kubelet"
+  # while the denominator had both jobs, and the SLO read 51% against a 99%
+  # target. 1.0 is kept on both jobs, and is the stricter objective anyway.
   description: ""
   indicator:
     latency:
       success:
-        metric: apiserver_request_duration_seconds_bucket{component="apiserver",scope=~"cluster|",verb=~"LIST|GET",le="1.5"}
+        metric: apiserver_request_duration_seconds_bucket{component="apiserver",scope=~"cluster|",verb=~"LIST|GET",le="1.0"}
       total:
         metric: apiserver_request_duration_seconds_count{component="apiserver",scope=~"cluster|",verb=~"LIST|GET"}
   target: "99"
