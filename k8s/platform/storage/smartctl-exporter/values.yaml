@@ -76,7 +76,7 @@ prometheusRules:
     smartCTLDeviceWearHigh:
       enabled: true
       alert: SmartCTLDeviceWearHigh
-      expr: smartctl_device_percentage_used >= 80 or (100 - smartctl_device_attribute{attribute_name=~"Percent_Lifetime_Remain|Wear_Leveling_Count", attribute_value_type="value"}) >= 80
+      expr: smartctl_device_percentage_used >= 90 or (100 - smartctl_device_attribute{attribute_name=~"Percent_Lifetime_Remain|Wear_Leveling_Count", attribute_value_type="value"}) >= 90
       for: 1h
       annotations:
         summary: Disk has used most of its rated write endurance
