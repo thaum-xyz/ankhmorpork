@@ -1,0 +1,29 @@
+fullnameOverride: smartctl-exporter
+
+# No device list: the exporter scans, which is the point of the switch. The
+# Ansible smartmon.sh it replaces only produced metrics on master01, because
+# that is the one host where smartmontools happened to be installed -- the
+# other three wrote an empty .prom file that node-exporter parsed without
+# complaint. This image carries its own smartctl.
+config: {}
+
+# ServiceMonitor and rules live in git instead. The chart's ServiceMonitor
+# selects on helm.sh/chart and app.kubernetes.io/version, so a chart bump
+# rewrites both the Service labels and the selector, and it pins no jobLabel.
+serviceMonitor:
+  enabled: false
+prometheusRules:
+  enabled: false
+
+# The RoleBinding this creates points at a PodSecurityPolicy ClusterRole that
+# has not existed since 1.25.
+rbac:
+  create: false
+
+resources:
+  requests:
+    cpu: 5m
+    memory: 24Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi

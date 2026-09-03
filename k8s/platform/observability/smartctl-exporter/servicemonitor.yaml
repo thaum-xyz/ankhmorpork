@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: smartctl-exporter
+  name: smartctl-exporter
+spec:
+  # Pins job="smartctl-exporter" off the release name rather than letting it
+  # default to "<namespace>/<name>", so the alerts below can select on it.
+  jobLabel: app.kubernetes.io/instance
+  endpoints:
+    - interval: 120s
+      path: /metrics
+      port: http
+      scrapeTimeout: 30s
+      relabelings:
+        # A DaemonSet target's identity is the machine, not the pod IP.
+        - action: replace
+          sourceLabels:
+            - __meta_kubernetes_pod_node_name
+          targetLabel: node
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-smartctl-exporter
+      app.kubernetes.io/instance: smartctl-exporter

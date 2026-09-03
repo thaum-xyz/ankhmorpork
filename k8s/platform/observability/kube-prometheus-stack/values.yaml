@@ -83,8 +83,10 @@ kube-state-metrics:
       memory: 180Mi
 
 prometheus-node-exporter:
-  # Replaces the chart default wholesale: k3s keeps containerd under /run/k3s, and
-  # the textfile directory is where Ansible drops smartmon, apt_info and lvm output.
+  # Replaces the chart default wholesale: k3s keeps containerd under /run/k3s.
+  # The textfile directory has no producer today -- smartctl-exporter took over
+  # SMART and the apt and lvm collectors are gone -- but the mount stays for
+  # lvm-diskprep, which writes there once topolvm-system/diskprep is enabled.
   extraArgs:
     - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
     - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs|erofs)$

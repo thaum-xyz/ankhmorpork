@@ -109,27 +109,36 @@
       group: root
       mode: 0644
 
-- name: Install metrics collectors
+# Replaces the play that installed apt_info.py, smartmon.sh and lvm.sh. SMART is
+# now collected by smartctl-exporter in-cluster; the apt and lvm collectors fed
+# nothing (no rule or dashboard read node_volume_group_* or apt_upgrades_pending,
+# and unattended-upgrades plus kured already handle patching). Ansible does not
+# retract files, so this play removes them -- otherwise node-exporter keeps
+# serving the last .prom written, forever, with no indication it is frozen.
+# Once every host has run this, the play can go too.
+- name: Remove Ansible textfile collectors
   hosts: all
   become: true
   tasks:
-  - name: Install dependencies
-    package:
-      name:
-      - moreutils
-      - cron
-      state: present
-  - name: Download textfile collector scripts
-    get_url:
-      url: "{{ item.url }}"
-      dest: "{{ item.exec }}"
-      mode: 0755
-    loop: "{{ node_exporter_scripts }}"
-  - name: Set cronjob for textfile scripts
-    cron:
-      cron_file: "/etc/cron.d/metrics"
-      user: root
-      name: "{{ item.name }}"
-      minute: "*/5"
-      job: "{{ item.exec }} {{ item.params | default('') }} | sponge /var/lib/node_exporter/{{ item.name }}.prom"
-    loop: "{{ node_exporter_scripts }}"
+  - name: Drop the collector cronjobs
+    file:
+      path: /etc/cron.d/metrics
+      state: absent
+  - name: Drop the collector scripts
+    file:
+      path: "{{ item }}"
+      state: absent
+    loop:
+    - /usr/local/bin/apt_info.py
+    - /usr/local/bin/smartmon.sh
+    - /usr/local/bin/lvm.sh
+  # The directory itself stays: it is the hostPath node-exporter reads, and
+  # lvm-diskprep writes there once it is enabled.
+  - name: Drop the stale metric files
+    file:
+      path: "/var/lib/node_exporter/{{ item }}.prom"
+      state: absent
+    loop:
+    - apt
+    - smartmon
+    - lvm
