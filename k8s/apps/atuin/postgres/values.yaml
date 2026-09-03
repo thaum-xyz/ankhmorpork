@@ -1,9 +1,11 @@
-# No `database`, and bootstrap disabled below. The hand-written manifest declared
-# no bootstrap stanza -- it was dropped in c5c5ab63 when this cluster was
-# recovered from backup -- so what is live is CloudNativePG's own default,
-# initdb with database and owner "app". Rendering the chart's bootstrap would
-# rewrite that to "atuin" on an already-initialised cluster. `owner` is still
-# required: it supplies the username in the user ExternalSecret.
+# The cluster was recovered from backup with no bootstrap stanza, so CNPG
+# defaulted initdb to database and owner "app" -- neither of which exists here.
+# The monitoring queries target the declared app database, so all 61
+# cnpg_backends_* / cnpg_pg_* metric families failed with
+# `FATAL: database "app" does not exist`, leaving seven of the ten CNPG alerts
+# evaluating against nothing. Declaring the real names fixes that; initdb does
+# not re-run on initialised PGDATA.
+database: atuin
 owner: atuin
 
 cluster:
@@ -17,8 +19,6 @@ cluster:
     requests:
       cpu: 130m
       memory: 300Mi
-  bootstrap:
-    enabled: false
 
 backup:
   schedule: "0 17 23 * * *"
