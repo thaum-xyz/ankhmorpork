@@ -12,14 +12,29 @@ spec:
   groups:
     - name: GitOpsToolkit
       rules:
-        - alert: ReconciliationFailure
+        # Was ReconciliationFailure, on gotk_reconcile_condition. Flux no longer
+        # exports that metric -- flux2 still serves gotk_reconcile_duration_seconds
+        # and 18 other gotk_ families, so the controllers look scraped and healthy
+        # while this alert quietly had nothing to evaluate. pint found it as a
+        # promql/series bug once --max-problems stopped truncating the list.
+        #
+        # gotk_resource_ready comes from kube-state-metrics reading the Ready
+        # condition off the CRs, so it does not depend on the controllers
+        # exporting anything about themselves. StateSet gives one series per
+        # state with a 1 on the current one.
+        #
+        # Unknown is the in-progress state and is normal in bursts, which is what
+        # `for` is sized for: a Flux object still Unknown a quarter of an hour
+        # later is stuck, not busy.
+        - alert: FluxCDReconciliationFailure
           annotations:
-            description: '{{ $labels.kind }} {{ $labels.namespace }}/{{ $labels.name }} reconciliation has been failing for more than 10 minutes.'
-            summary: Flux objects reconciliation failure
+            description: '{{ $labels.customresource_kind }} {{ $labels.namespace }}/{{ $labels.name }} has not reached Ready for more than 15 minutes ({{ $labels.status }}). Everything on this cluster arrives through Flux, so changes stop landing until it is fixed.'
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/FluxCDReconciliationFailure
+            summary: Flux object is not reconciling
           expr: |
-            sum by (kind, name, namespace) (
-              max_over_time(gotk_reconcile_condition{status=~"False|Unknown",type="Ready"}[3m])
-            ) != 0
-          for: 20m
+            max by (customresource_kind, namespace, name) (
+              max_over_time(gotk_resource_ready{status=~"False|Unknown"}[5m])
+            ) > 0
+          for: 15m
           labels:
             severity: warning

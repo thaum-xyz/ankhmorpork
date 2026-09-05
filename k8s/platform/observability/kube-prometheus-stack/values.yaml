@@ -145,6 +145,104 @@ kube-state-metrics:
   # API server unless it is scraped about itself.
   selfMonitor:
     enabled: true
+  # Flux stopped exporting gotk_reconcile_condition, which took
+  # FluxCDReconciliationFailure with it -- the only alert that fires when a
+  # Kustomization or HelmRelease stops reconciling. flux2 still exports
+  # gotk_reconcile_duration_seconds, so the controllers look scraped and healthy
+  # while nothing watches whether they are succeeding.
+  #
+  # kube-state-metrics can read the Ready condition straight off the CRs
+  # instead, which does not depend on the controllers exporting anything.
+  # StateSet emits one series per state with a 1 on the current one, so
+  # gotk_resource_ready{status="False"} == 1 means exactly what it says.
+  #
+  # Verified against this cluster with kube-state-metrics v2.20.0 before
+  # merging: 387 series -- Kustomization 153, HelmRelease 147, HelmRepository 84,
+  # GitRepository 3 -- and no object currently not-Ready, so the alert is silent.
+  # HelmChart is deliberately absent: Flux generates one per HelmRelease, and a
+  # chart that fails to fetch already takes its HelmRelease not-Ready, so
+  # including it would double every alert.
+  customResourceState:
+    enabled: true
+    config:
+      kind: CustomResourceStateMetrics
+      spec:
+        resources:
+          - groupVersionKind:
+              group: kustomize.toolkit.fluxcd.io
+              version: v1
+              kind: Kustomization
+            metricNamePrefix: gotk
+            labelsFromPath:
+              name: [metadata, name]
+              namespace: [metadata, namespace]
+            metrics: &fluxReadyCondition
+              - name: resource_ready
+                help: The current Ready condition of a Flux resource.
+                each:
+                  type: StateSet
+                  stateSet:
+                    labelName: status
+                    path: [status, conditions, "[type=Ready]"]
+                    valueFrom: [status]
+                    list: ["True", "False", "Unknown"]
+          - groupVersionKind:
+              group: helm.toolkit.fluxcd.io
+              version: v2
+              kind: HelmRelease
+            metricNamePrefix: gotk
+            labelsFromPath:
+              name: [metadata, name]
+              namespace: [metadata, namespace]
+            metrics: *fluxReadyCondition
+          - groupVersionKind:
+              group: source.toolkit.fluxcd.io
+              version: v1
+              kind: GitRepository
+            metricNamePrefix: gotk
+            labelsFromPath:
+              name: [metadata, name]
+              namespace: [metadata, namespace]
+            metrics: *fluxReadyCondition
+          - groupVersionKind:
+              group: source.toolkit.fluxcd.io
+              version: v1
+              kind: HelmRepository
+            metricNamePrefix: gotk
+            labelsFromPath:
+              name: [metadata, name]
+              namespace: [metadata, namespace]
+            metrics: *fluxReadyCondition
+          # No objects today, but the CRDs exist and cost nothing to watch.
+          - groupVersionKind:
+              group: source.toolkit.fluxcd.io
+              version: v1
+              kind: OCIRepository
+            metricNamePrefix: gotk
+            labelsFromPath:
+              name: [metadata, name]
+              namespace: [metadata, namespace]
+            metrics: *fluxReadyCondition
+          - groupVersionKind:
+              group: source.toolkit.fluxcd.io
+              version: v1
+              kind: Bucket
+            metricNamePrefix: gotk
+            labelsFromPath:
+              name: [metadata, name]
+              namespace: [metadata, namespace]
+            metrics: *fluxReadyCondition
+  rbac:
+    # customResourceState reads the CRs directly, so the ServiceAccount needs
+    # list/watch on each group above. Without these the exporter starts, logs a
+    # permission error per kind and serves no gotk_ series at all.
+    extraRules:
+      - apiGroups:
+          - kustomize.toolkit.fluxcd.io
+          - helm.toolkit.fluxcd.io
+          - source.toolkit.fluxcd.io
+        resources: ["*"]
+        verbs: ["list", "watch"]
   resources:
     requests:
       cpu: 2m
