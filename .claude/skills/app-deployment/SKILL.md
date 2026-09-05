@@ -128,6 +128,16 @@ kubectl -n <ns> get cm values-<release> -o jsonpath='{.data.values\.yaml}' | gre
 The GitRepository can also still be on a pre-merge revision minutes after a merge,
 so reconcile the source explicitly rather than assuming.
 
+**The HelmRelease reconcile is not optional.** Because
+`disableNameSuffixHash: true` gives the ConfigMap a stable name, a values change
+alters its *content* but not `valuesFrom.name` — so nothing in the HelmRelease
+spec changes and there is no event for helm-controller to act on. It notices via
+`status.lastAttemptedConfigDigest` only on its next interval. Intervals here are
+5m on 32 releases, 10m on one and **30m on fifteen**, so an unforced change can
+sit for half an hour looking like a failed deploy. The hash suffix would trigger
+it immediately, at the cost of a new ConfigMap name on every edit; stable names
+are the deliberate trade, and reconciling the release is the price.
+
 ## Traps that have bitten
 
 - **StorageClass fields are immutable.** `parameters`, `mountOptions`,
