@@ -1,0 +1,56 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/name: k8up
+  name: k8up-rules
+spec:
+  groups:
+    - name: k8up.rules
+      # Nothing here is critical. severity=critical routes to opsgenie and pages;
+      # a backup that failed tonight is fixed tomorrow with the previous night's
+      # snapshot still on the NAS, so these go to github as issues instead.
+      rules:
+        - alert: K8upJobFailed
+          annotations:
+            description: K8up {{$labels.label_k8up_io_type}} job {{$labels.job_name}} in namespace {{$labels.namespace}} failed. Backups for that namespace are not landing until it is fixed.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/K8upJobFailed
+            summary: K8up job failed
+          expr: |
+            sum by (job_name, namespace) (kube_job_status_failed)
+            * on (job_name, namespace) group_right ()
+            kube_job_labels{label_k8up_io_type=~"backup|check|prune|restore"}
+            > 0
+          for: 1m
+          labels:
+            severity: warning
+        - alert: K8upBackupNotRunning
+          annotations:
+            description: Namespace {{$labels.namespace}} has a K8up Schedule but no job of any type has run in 25h. The operator is not scheduling; check it for a deadlock.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/K8upBackupNotRunning
+            summary: K8up scheduled no jobs for a namespace with a Schedule
+          # Upstream sums without by(namespace), which makes the `on(namespace)`
+          # join match nothing. Grouped here so the join actually works.
+          expr: |
+            sum by (namespace) (rate(k8up_jobs_total[25h])) == 0
+            and on (namespace) k8up_schedules_gauge > 0
+          for: 1h
+          labels:
+            severity: warning
+        - alert: K8upBackupStale
+          annotations:
+            description: No K8up backup job has completed in namespace {{$labels.namespace}} for over 36h. Backups run from the live volume, so this is also what a silently broken k8up.io/backupcommand hook looks like.
+            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/K8upBackupStale
+            summary: K8up backup is stale
+          expr: |
+            (
+              time() - max by (namespace) (
+                kube_job_status_completion_time
+                * on (job_name, namespace) group_left ()
+                kube_job_labels{label_k8up_io_type="backup"}
+              )
+            ) > 36 * 60 * 60
+          for: 15m
+          labels:
+            severity: warning

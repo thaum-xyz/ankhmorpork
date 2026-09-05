@@ -1,0 +1,7 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: k8up
+spec:
+  interval: 5m
+  url: https://k8up-io.github.io/k8up

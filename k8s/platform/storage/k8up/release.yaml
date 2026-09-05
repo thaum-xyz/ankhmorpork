@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: k8up
+spec:
+  chart:
+    spec:
+      chart: k8up
+      version: "4.10.0"
+      sourceRef:
+        kind: HelmRepository
+        name: k8up
+      interval: 5m
+  interval: 5m
+  install:
+    # The chart ships the nine k8up.io CRDs under charts/k8up/crds/.
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  valuesFrom:
+    - kind: ConfigMap
+      name: values-k8up

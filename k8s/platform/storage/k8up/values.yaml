@@ -1,0 +1,39 @@
+k8up:
+  # Opt-in. Without this every bound PVC in a namespace with a Schedule is
+  # backed up, which would enrol plex-movies (8Ti), vod-tv (6Ti) and the immich
+  # library (3Ti) onto the same NAS they already live on.
+  skipWithoutAnnotation: true
+
+  envVars:
+    # ~100 MiB/s over a single 1GbE link to the UNAS, and nconnect=4 does not
+    # lift it. More parallel jobs only contend. See bench/storage-2026-09.
+    - name: BACKUP_GLOBAL_CONCURRENT_BACKUP_JOBS_LIMIT
+      value: "2"
+    # A restic repository is only consistent at rest, and prune rewrites pack
+    # files. Never let two prunes run at once against the same NFS export.
+    - name: BACKUP_GLOBAL_CONCURRENT_PRUNE_JOBS_LIMIT
+      value: "1"
+
+  # Kyverno's require-resource-requests applies to every container, and backup
+  # Pods are built by the operator rather than declared here.
+  globalResources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+metrics:
+  serviceMonitor:
+    enabled: true
+  # Rules are hand-written in prometheusrule.yaml. The chart's defaults omit the
+  # description annotation that .pint.hcl requires, and K8upResticErrors reads
+  # k8up_backup_restic_last_errors, which only exists with a pushgateway
+  # configured via promURL.
+  prometheusRule:
+    enabled: false
+
+resources:
+  limits:
+    memory: 256Mi
+  requests:
+    cpu: 20m
+    memory: 128Mi
