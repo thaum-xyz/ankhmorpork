@@ -9,6 +9,9 @@ spec:
   prune: false
   dependsOn:
     - name: topolvm
+    # The roaming size policy ships with this component, so the Kyverno CRDs
+    # have to exist before it applies. Same reason csi-nfs depends on kyverno.
+    - name: kyverno
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
