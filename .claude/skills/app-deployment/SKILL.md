@@ -32,7 +32,29 @@ Ask what the workload needs, in this order:
 | Survive losing a node | `piraeus-r2` |
 | Lowest latency, restorable from backup | `lvm-thin` |
 | Bulk sequential — media, backups, object storage | `unifi-nas` |
-| Pod must move between nodes with its volume | `piraeus-r2-roaming` (≤32 GiB) |
+| Pod must move freely between nodes | `piraeus-r2-roaming` (≤32 GiB) |
+| Several Pods mount it at once (RWX) | `unifi-nas` — piraeus provides no RWX |
+| Must stay up across a kured node reboot | **not `lvm-thin`** |
+
+**Mobility is often the binding constraint, not speed.** kured reboots every node
+on a cycle, so a volume that pins its Pod to one node means downtime each time
+that node goes.
+
+| Class | Nodes a Pod can land on | Access modes | Survives a drain |
+| --- | --- | --- | --- |
+| `lvm-thin` | **1** | RWO | **no** |
+| `piraeus-r2` | **2** (the replica holders) | RWO | yes |
+| `piraeus-r2-roaming` | any linstor node | RWO | yes |
+| `longhorn` | any | RWO, RWX | yes |
+| `unifi-nas` | any | RWO, RWX | yes |
+
+`lvm-thin` belongs only where the app provides its own redundancy — the CNPG
+clusters replicate at the database layer, so a node-local volume per instance is
+right — or where node-tied downtime is acceptable. Piraeus runs with
+`nfsServer.enabled: false`, so neither piraeus class offers RWX; `unifi-nas` is the
+only like-for-like target for a ReadWriteMany workload. A declared RWX is not
+always a required one: a single-replica Deployment often needs it only because a
+RollingUpdate briefly runs two Pods, and `strategy: Recreate` removes that.
 
 **Never put anything transactional on `longhorn`.** Measured 2026-09-05: its
 `fsync` completes 2–8× faster than the device it writes to, because the
