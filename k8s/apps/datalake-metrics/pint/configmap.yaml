@@ -16,6 +16,19 @@ data:
       concurrency = 4
     }
 
+    # Remote write is not configured, so prometheus_remote_storage_* has no
+    # series and promql/series reports these three as bugs. They are kept
+    # deliberately -- they become correct the moment remote write is turned on,
+    # which is the likely path if Thanos comes back -- so the check is scoped
+    # off them rather than the rules being deleted. Verified against pint
+    # 0.87.0: without this block the three report 5 problems, with it, none.
+    rule {
+      match {
+        name = "PrometheusRemoteStorageFailures|PrometheusRemoteWriteBehind|PrometheusRemoteWriteDesiredShards"
+      }
+      disable = ["promql/series"]
+    }
+
     checks {
       disabled = [
         # 48 findings, 41 of them namespace=~".*" inside the chart's own mixin
