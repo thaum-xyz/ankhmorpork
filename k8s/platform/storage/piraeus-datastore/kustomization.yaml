@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: platform-storage
 resources:
   - namespace.yaml
+  - validatingpolicy.yaml
   - operator/
   - cluster/
   - gui/

@@ -1,6 +1,14 @@
 apiVersion: policies.kyverno.io/v1
 kind: ValidatingPolicy
 metadata:
+  # Lives with piraeus rather than with kyverno because it exists purely to
+  # describe how this storage class behaves: the cap is a recovery-time budget
+  # for the roaming class, not a general admission rule. It belongs beside the
+  # class it constrains, and moves or dies with it.
+  #
+  # Cluster-scoped. Kustomize cannot know that for a CRD kind and stamps the
+  # component namespace on the rendered output; the API server ignores the field
+  # for cluster-scoped resources.
   name: validate-roaming-volume-size
 spec:
   evaluation:

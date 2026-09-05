@@ -5,4 +5,3 @@ resources:
   - validate-pdb-drain-safety.yaml
   - validate-helm-chart-version.yaml
   - validate-ingress-contract.yaml
-  - validate-roaming-volume-size.yaml
