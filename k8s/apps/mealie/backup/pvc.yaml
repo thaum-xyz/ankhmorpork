@@ -6,20 +6,16 @@ metadata:
     app.kubernetes.io/component: backup
     app.kubernetes.io/name: mealie
 spec:
-  # This namespace's restic repository, at backups/mealie on the share.
-  # Repositories stay per-namespace even though the password is shared: a
-  # corrupted one then costs a single namespace, restic check stays cheap, and
-  # concurrent backups never contend for the same repository lock over an NFSv3
-  # mount with nolock.
+  # This namespace's restic repository. Repositories stay per-namespace even
+  # though the password is shared: a corrupted one then costs a single
+  # namespace, restic check stays cheap, and concurrent backups never contend
+  # for the same repository lock over an NFSv3 mount with nolock.
   #
-  # unifi-nas-backups rather than unifi-nas: a readable, stable path, and
-  # onDelete: retain so removing this claim cannot destroy the repository.
-  #
-  # excluded_from_alerts is stamped by kyverno's mutate-nfs-pvc-alert-exclusion,
-  # which matches any unifi-nas* class. Do not add it here.
+  # excluded_from_alerts is stamped by kyverno's mutate-nfs-pvc-alert-exclusion
+  # for every unifi-nas claim. Do not add it here.
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
-  storageClassName: unifi-nas-backups
+  storageClassName: unifi-nas
