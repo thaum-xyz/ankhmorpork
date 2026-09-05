@@ -30,6 +30,38 @@ defaultRules:
     # etcdHighNumberOfFailedGRPCRequests above, no relabeling change brings this
     # one back.
     etcdGRPCRequestsSlow: true
+
+    # k3s manages kubelet certificates itself, so client-go's certificate
+    # manager never runs and kubelet_certificate_manager_* is never registered.
+    # 134 other kubelet_* families are present on job="kubelet", so this is a
+    # property of k3s rather than a scrape gap, and nothing we configure
+    # changes it.
+    KubeletClientCertificateExpiration: true
+    KubeletClientCertificateRenewalErrors: true
+    KubeletServerCertificateExpiration: true
+    KubeletServerCertificateRenewalErrors: true
+
+    # aggregator_unavailable_apiservice_total was renamed upstream; only the
+    # aggregator_unavailable_apiservice gauge exists on this Kubernetes.
+    KubeAggregatedAPIErrors: true
+
+    # node_md_* comes from node-exporter's mdadm collector, which emits nothing
+    # without /proc/mdstat. No node here has mdraid.
+    NodeRAIDDegraded: true
+
+    # node_systemd_* needs --collector.systemd, off by default and expensive
+    # enough that it is not worth turning on to serve two alerts. If it is ever
+    # enabled, delete these two lines rather than leaving the rules dark.
+    NodeSystemdServiceFailed: true
+    NodeSystemdServiceCrashlooping: true
+
+    # kube_state_metrics_list_total has never existed across the full retention
+    # on kube-state-metrics v2.20.0, while its watch_total counterpart is
+    # populated -- so this is not the telemetry-port gap that selfMonitor above
+    # fixed. Kubernetes 1.32+ enables WatchListClient by default, so reflectors
+    # open a streaming WATCH with sendInitialEvents and never issue a LIST at
+    # all. KubeStateMetricsWatchErrors still covers the failure this was for.
+    KubeStateMetricsListErrors: true
   rules:
     # Both select on job names this release does not create.
     alertmanager: false
@@ -41,6 +73,10 @@ defaultRules:
     kubeSchedulerAlerting: false
     kubeSchedulerRecording: false
     windows: false
+    # The group holds one recording rule,
+    # node_namespace_pod_container:container_memory_swap, and cAdvisor emits
+    # container_memory_swap only with swap accounting on. Swap is off.
+    k8sContainerMemorySwap: false
 
 kubeControllerManager:
   enabled: false
