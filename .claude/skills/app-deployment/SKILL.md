@@ -154,11 +154,16 @@ so reconcile the source explicitly rather than assuming.
 `disableNameSuffixHash: true` gives the ConfigMap a stable name, a values change
 alters its *content* but not `valuesFrom.name` — so nothing in the HelmRelease
 spec changes and there is no event for helm-controller to act on. It notices via
-`status.lastAttemptedConfigDigest` only on its next interval. Intervals here are
-5m on 32 releases, 10m on one and **30m on fifteen**, so an unforced change can
-sit for half an hour looking like a failed deploy. The hash suffix would trigger
-it immediately, at the cost of a new ConfigMap name on every edit; stable names
-are the deliberate trade, and reconciling the release is the price.
+`status.lastAttemptedConfigDigest` only on its next interval. The hash suffix
+would trigger it immediately, at the cost of a new ConfigMap name on every edit;
+stable names are the deliberate trade, and reconciling the release is the price.
+
+**Keep `spec.interval` at 5m on every HelmRelease** — it is the ceiling on how
+long a values-only change can sit looking like a failed deploy, and the only
+automatic path to picking one up. A quiet chart is not a reason to raise it: the
+interval costs a Helm dry-run diff, not an upgrade. Fifteen releases sat at 30m
+and one at 10m until 2026-09-05. `spec.chart.spec.interval` is a different
+knob — that one polls the chart source and can stay high.
 
 ## Traps that have bitten
 
