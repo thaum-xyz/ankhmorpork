@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Namespace is declared by piraeus-datastore, the same way
+# prometheus-operator-crds declares platform-observability for its neighbours.
+namespace: platform-storage
+resources:
+  - repository.yaml
+  - release.yaml
+  - prometheusrule.yaml
+configMapGenerator:
+  - name: values-k8up
+    files:
+      - values.yaml=values.yaml
+generatorOptions:
+  disableNameSuffixHash: true
