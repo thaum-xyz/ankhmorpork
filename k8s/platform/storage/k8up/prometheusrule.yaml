@@ -27,14 +27,21 @@ spec:
             severity: warning
         - alert: K8upBackupNotRunning
           annotations:
-            description: Namespace {{$labels.namespace}} has a K8up Schedule but no job of any type has run in 25h. The operator is not scheduling; check it for a deadlock.
+            description: Namespace {{$labels.exported_namespace}} has a K8up Schedule but no job of any type has run in 25h. The operator is not scheduling; check it for a deadlock.
             runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/K8upBackupNotRunning
             summary: K8up scheduled no jobs for a namespace with a Schedule
-          # Upstream sums without by(namespace), which makes the `on(namespace)`
-          # join match nothing. Grouped here so the join actually works.
+          # exported_namespace, not namespace. K8up labels these metrics with the
+          # namespace it is backing up, but that collides with the target label
+          # from the ServiceMonitor, so prometheus renames it and `namespace` is
+          # the operator's own -- platform-storage for every series. Grouping on
+          # that sums every namespace into one, where a healthy one masks a dead
+          # one and the alert names platform-storage rather than the app.
+          #
+          # Upstream also sums without a by() at all, which leaves its
+          # `on(namespace)` join matching nothing.
           expr: |
-            sum by (namespace) (rate(k8up_jobs_total[25h])) == 0
-            and on (namespace) k8up_schedules_gauge > 0
+            sum by (exported_namespace) (rate(k8up_jobs_total[25h])) == 0
+            and on (exported_namespace) k8up_schedules_gauge > 0
           for: 1h
           labels:
             severity: warning
