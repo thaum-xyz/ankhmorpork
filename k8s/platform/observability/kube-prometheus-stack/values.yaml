@@ -47,6 +47,39 @@ kubeEtcd:
     - 192.168.50.31
     - 192.168.50.32
     - 192.168.50.35
+  serviceMonitor:
+    # k3s runs apiserver, scheduler, controller-manager and kubelet in one
+    # process behind a single merged registry, so scraping the etcd port also
+    # returns everyone else's metrics: 3812 of the 5746 series on this job were
+    # not etcd_* at all. Keep only what this job actually owns. `up` and the
+    # scrape_* series are added after metric relabeling, so the 11 etcd alerts
+    # that key off up{job="kube-etcd"} are unaffected.
+    metricRelabelings:
+      - action: keep
+        sourceLabels: [__name__]
+        regex: etcd_.*
+
+kubelet:
+  serviceMonitor:
+    metricRelabelings:
+      # Chart default, repeated because setting this key replaces it wholesale.
+      - action: drop
+        sourceLabels: [__name__, le]
+        regex: (csi_operations|storage_operation_duration)_seconds_bucket;(0.25|2.5|15|25|120|600)(\.0)?
+      # The same merged registry means the kubelet port re-exports the entire
+      # apiserver metric set -- 165441 series, exactly the count on
+      # job="apiserver". Worse than redundant: the apiserver ServiceMonitor
+      # drops histogram buckets for cardinality and this one does not, so any
+      # query spanning both jobs takes its numerator and denominator from
+      # different populations. That is what made the apiserver latency SLOs
+      # read 51% against a 99% target (#1247).
+      #
+      # Checked before dropping: of the 180 rule selectors that do not pin a
+      # job, the only bucket ones need le 0.1 and 1.0, and both survive on
+      # job="apiserver" with identical series counts.
+      - action: drop
+        sourceLabels: [__name__]
+        regex: apiserver_.*
 
 nodeExporter:
   operatingSystems:
