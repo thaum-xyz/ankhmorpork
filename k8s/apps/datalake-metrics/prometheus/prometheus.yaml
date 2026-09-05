@@ -60,8 +60,18 @@ spec:
     requests:
       cpu: 500m
       memory: 1800Mi
+  # 33d costs ~74.9GB per replica: measured 1.598 B/sample against 16449
+  # samples/s on 2026-09-03, so 2.27 GB/day. retentionSize sits deliberately
+  # above that, at roughly 35 days' worth, so the 33d time limit is what
+  # actually bounds the window and size is only a guard rail. They were the
+  # wrong way round before -- 35GB is 16.5 days at this rate, so the 33d was
+  # decorative and size would have started evicting around 2026-09-17.
+  #
+  # Re-measure after any large change in series count. #1267 removed 169k
+  # duplicate series and took this from 2.98 to 2.27 GB/day; sizing from the
+  # day before would have overshot by 30%.
   retention: 33d
-  retentionSize: 35GB
+  retentionSize: 75GB
   ruleNamespaceSelector: {}
   ruleSelector: {}
   scrapeConfigNamespaceSelector: {}
@@ -78,7 +88,11 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 40Gi
+            # 25% over retentionSize: compaction writes a merged block before
+            # dropping its sources, and max block duration is 10% of retention
+            # (~3.3d, ~7.5GB here). Thin-provisioned, so the unused part costs
+            # nothing until written.
+            storage: 100Gi
         storageClassName: lvm-thin
   # Image is derived from version; pinning both is how they drifted apart.
   version: 3.14.0
