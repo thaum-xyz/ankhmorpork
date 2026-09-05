@@ -88,8 +88,14 @@ spec:
             - watch
             # Default is bug, which hides series problems reported as warnings.
             - --min-severity=warning
-            # Bounds pint_problem cardinality; pint_problems stays a true total.
-            - --max-problems=50
+            # 0 is "no limit", and is pint's default. It was 50, on the
+            # reasoning that pint_problems stays a true total -- which is true
+            # but misses that pint_problem is the worklist. Demonstrated
+            # 2026-09-05: fixing the job="prometheus" selector took
+            # pint_problems 91 -> 67 while pint_problem sat at exactly 50, as
+            # hidden problems stepped forward to refill the cap. Two dozen real
+            # fixes moved the visible list by nothing.
+            - --max-problems=0
             - --listen=:8081
             - glob
             - /rules/*.yaml
