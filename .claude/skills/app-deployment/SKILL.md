@@ -82,10 +82,14 @@ Kyverno runs these on every apply. The first four are the ones a new app trips.
 
 Values go in `values.yaml`, fed in through a `configMapGenerator` and
 `valuesFrom` — never inline in `spec.values`. Renovate's `helm-values` manager
-reads the file and cannot see inside a HelmRelease. Set
-`generatorOptions.disableNameSuffixHash: true` and reference the literal generator
-name; names must be unique per namespace, so name a second one distinctly
-(`postgres-values`).
+reads the file and cannot see inside a HelmRelease.
+
+Set `generatorOptions.disableNameSuffixHash: true` and **name the generator
+`values-<ReleaseName>`**, matching the release it feeds. This is settled
+convention across every component here after past collisions; a bare `values`
+collides as soon as a namespace gains a second release. A namespace with several
+releases gets one per release — `values-postgres-sonarr`, `values-postgres-radarr`.
+`valuesFrom.name` then references that literal name, with no hash suffix.
 
 ## Validate before pushing
 
