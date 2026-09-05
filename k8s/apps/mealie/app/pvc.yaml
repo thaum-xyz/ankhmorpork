@@ -1,6 +1,16 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
+    # without this is not backed up -- which is what keeps the three CNPG
+    # claims in this namespace out, since they self-backup via barman.
+    k8up.io/backup: "true"
+    # 22.6M of the 25M on this volume is mealie.log and its rotations; the
+    # recipes are 2.1M. Backing up a log that churns daily costs a fresh copy
+    # in every snapshot for something Loki already collects and nobody would
+    # restore.
+    k8up.io/backup-restic-args: '["--exclude=mealie.log*"]'
   name: data
   labels:
     app.kubernetes.io/name: mealie

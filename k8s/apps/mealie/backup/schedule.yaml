@@ -1,0 +1,59 @@
+apiVersion: k8up.io/v1
+kind: Schedule
+metadata:
+  name: backup
+  labels:
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/name: mealie
+spec:
+  backend:
+    # No repoPasswordSecretRef: the operator supplies RESTIC_PASSWORD from
+    # BACKUP_GLOBALREPOPASSWORD. Setting it here would override that for this
+    # namespace alone.
+    #
+    # The repository is plain restic files on the UNAS rather than S3 via a
+    # fourth versitygw. versitygw's posix backend would write those same files
+    # to that same export; going direct means a restore needs restic and an NFS
+    # mount, with no cluster running.
+    local:
+      mountPath: /repo
+    volumeMounts:
+      - name: backup-repo
+        mountPath: /repo
+  # Runs as root, deliberately. csi-nfs creates each subdir 0775 owned by
+  # 977:988 -- measured on a live claim, where the sonarr pod at uid 1000
+  # cannot write to its own backup directory -- and the UNAS refuses chown, so
+  # fsGroup cannot fix it either. paperless works around this with a root
+  # initContainer that chmods the export; K8up builds these Pods itself, so
+  # that is not available. A backup agent also has to read every file it is
+  # pointed at, regardless of ownership.
+  podSecurityContext:
+    runAsUser: 0
+    runAsGroup: 0
+  backup:
+    # Fixed rather than @daily-random: a restic repository is only consistent at
+    # rest, so an off-site copy of it needs a known quiet window. Staggered
+    # clear of paperless (22:36), CNPG (23:17-03:47) and Longhorn (04:19).
+    schedule: "15 21 * * *"
+    volumes:
+      - name: backup-repo
+        persistentVolumeClaim:
+          claimName: backup-repo
+  check:
+    schedule: "45 5 * * 0"
+    volumes:
+      - name: backup-repo
+        persistentVolumeClaim:
+          claimName: backup-repo
+  prune:
+    # After check, so a repository that already fails verification is not
+    # repacked before anyone has seen the failure.
+    schedule: "15 7 * * 0"
+    retention:
+      keepDaily: 14
+      keepWeekly: 8
+      keepMonthly: 6
+    volumes:
+      - name: backup-repo
+        persistentVolumeClaim:
+          claimName: backup-repo
