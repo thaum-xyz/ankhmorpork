@@ -5,6 +5,13 @@ k8up:
   skipWithoutAnnotation: true
 
   envVars:
+    # Shared by every repository. Schedules omit repoPasswordSecretRef and
+    # inherit this; setting it there overrides this for that namespace only.
+    - name: BACKUP_GLOBALREPOPASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: k8up-repo
+          key: password
     # ~100 MiB/s over a single 1GbE link to the UNAS, and nconnect=4 does not
     # lift it. More parallel jobs only contend. See bench/storage-2026-09.
     - name: BACKUP_GLOBAL_CONCURRENT_BACKUP_JOBS_LIMIT

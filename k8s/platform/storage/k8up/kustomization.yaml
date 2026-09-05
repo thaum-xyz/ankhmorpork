@@ -4,6 +4,7 @@ kind: Kustomization
 # prometheus-operator-crds declares platform-observability for its neighbours.
 namespace: platform-storage
 resources:
+  - secret.yaml
   - repository.yaml
   - release.yaml
   - prometheusrule.yaml
