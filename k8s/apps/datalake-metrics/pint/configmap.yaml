@@ -44,14 +44,16 @@ data:
     # are no ResourceQuotas on this cluster for it to select from, and it is not
     # ours to rewrite, so scope the check off rather than carry a fork.
     #
-    # Both rules, not just the one pint names. They carry the same topk and pint
-    # deduplicates identical problems, so it reports KubeQuotaAlmostFull with
-    # KubeQuotaFullyUsed hidden behind it. Scoping only the visible one lets the
-    # duplicate step forward and the count does not move -- the same dynamic
-    # that made --max-problems=50 hide two dozen fixes in #1271.
+    # All three KubeQuota* rules, not the one pint happens to name. They share
+    # the same topk expression and pint deduplicates identical problems, so it
+    # reports one and hides the others behind it. Scoping the visible name lets
+    # the next duplicate step forward and the count does not move -- the same
+    # dynamic that made --max-problems=50 hide two dozen fixes in #1271.
+    # Demonstrated twice while writing this: scoping AlmostFull surfaced
+    # FullyUsed, and scoping both surfaced Exceeded. Match the family.
     rule {
       match {
-        name = "KubeQuota(AlmostFull|FullyUsed)"
+        name = "KubeQuota.+"
       }
       disable = ["promql/fragile"]
     }
