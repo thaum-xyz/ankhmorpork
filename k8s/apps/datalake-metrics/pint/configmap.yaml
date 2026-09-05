@@ -29,6 +29,41 @@ data:
       disable = ["promql/series"]
     }
 
+    # Watchdog is supposed to always fire -- that is the whole point of a
+    # dead-man's switch, and Alertmanager's watchdog receiver is built on it
+    # firing continuously. alerts/comparison is right in general and wrong here.
+    rule {
+      match {
+        name = "Watchdog"
+      }
+      disable = ["alerts/comparison"]
+    }
+
+    # promql/fragile objects to topk returning a different set on each
+    # evaluation, which is a fair criticism of the upstream mixin query. There
+    # are no ResourceQuotas on this cluster for it to select from, and it is not
+    # ours to rewrite, so scope the check off rather than carry a fork.
+    rule {
+      match {
+        name = "KubeQuotaAlmostFull"
+      }
+      disable = ["promql/fragile"]
+    }
+
+    # smartctl-exporter declares smartctl_device_percentage_used,
+    # _available_spare, _available_spare_threshold and _critical_warning as
+    # counters in its metadata. They are gauges -- a wear level does not
+    # monotonically accumulate in the way rate() assumes -- so reading them
+    # directly is correct and promql/counter is reacting to the exporter's
+    # mislabelling, not to these rules. The fix belongs upstream in the
+    # exporter.
+    rule {
+      match {
+        name = "SmartCTLDevice.+"
+      }
+      disable = ["promql/counter"]
+    }
+
     checks {
       disabled = [
         # 48 findings, 41 of them namespace=~".*" inside the chart's own mixin
