@@ -14,7 +14,7 @@ spec:
         kind: HelmRepository
         name: thaum-charts
       interval: 5m
-  interval: 30m
+  interval: 5m
   timeout: 10m
   install:
     # Helm's waiter cannot judge a CNPG Cluster, and install remediation would
