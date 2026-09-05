@@ -49,7 +49,7 @@ spec:
   matchConditions:
     - name: only-nfs-storage-class
       expression: >-
-        object.spec.?storageClassName.orValue("") == "unifi-nas"
+        object.spec.?storageClassName.orValue("").startsWith("unifi-nas")
   mutations:
     - patchType: ApplyConfiguration
       applyConfiguration:

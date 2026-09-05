@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - release.yaml
   - mutatingpolicy.yaml
+  - storageclass-backups.yaml
 configMapGenerator:
   - name: values-csi-nfs
     files:
