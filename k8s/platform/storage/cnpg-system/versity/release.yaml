@@ -11,7 +11,7 @@ spec:
         kind: HelmRepository
         name: versity
       interval: 15m
-  interval: 30m
+  interval: 5m
   timeout: 10m
   install:
     remediation:

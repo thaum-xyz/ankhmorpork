@@ -11,7 +11,7 @@ spec:
         name: litellm
       version: "1.97.0"
       interval: 30m
-  interval: 10m
+  interval: 5m
   timeout: 15m
   install:
     remediation:
