@@ -3,6 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: backup-repo
   labels:
+    # NFS on the UNAS: this claim reports the whole share's fill level, not its
+    # own. NASVolumeFillingUp covers the share itself. Set by hand here --
+    # kyverno's mutate-nfs-pvc-alert-exclusion only fires for unifi-nas.
+    excluded_from_alerts: "true"
     app.kubernetes.io/component: backup
     app.kubernetes.io/name: mealie
 spec:
@@ -10,12 +14,10 @@ spec:
   # though the password is shared: a corrupted one then costs a single
   # namespace, restic check stays cheap, and concurrent backups never contend
   # for the same repository lock over an NFSv3 mount with nolock.
-  #
-  # excluded_from_alerts is stamped by kyverno's mutate-nfs-pvc-alert-exclusion
-  # for every unifi-nas claim. Do not add it here.
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
-  storageClassName: unifi-nas
+  storageClassName: manual
+  volumeName: mealie-backup-repo

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mealie-backup-repo
+  labels:
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/name: mealie
+spec:
+  # Static rather than a dynamically provisioned unifi-nas claim, because that
+  # StorageClass is reclaimPolicy: Delete -- removing the PVC would take the
+  # restic repository with it. A Flux prune or a bad edit should not be able to
+  # destroy the backups. Retain also means the repository outlives the cluster,
+  # which is the point of keeping it as plain restic files.
+  #
+  # One directory per namespace under a single backups export, so a namespace
+  # can only mount its own repository. The path has to exist on the NAS first;
+  # NFS will not create it.
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    # nfs.csi.k8s.io does not enforce the request and neither does a static NFS
+    # mount, so this is a label rather than a reservation.
+    storage: 10Gi
+  nfs:
+    path: /var/nfs/shared/backups/mealie
+    server: 192.168.40.10
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  volumeMode: Filesystem
