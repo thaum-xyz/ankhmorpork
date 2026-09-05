@@ -21,6 +21,15 @@ grafana:
 
 defaultRules:
   create: true
+  # Alerts whose metric cannot exist on this cluster, so they can only ever
+  # report as pint findings.
+  disabled:
+    # Needs grpc_server_handling_seconds_bucket, which k3s's embedded etcd does
+    # not export at all: the endpoint serves grpc_server_handled_total,
+    # _started_total and _msg_* but zero histogram lines. Unlike
+    # etcdHighNumberOfFailedGRPCRequests above, no relabeling change brings this
+    # one back.
+    etcdGRPCRequestsSlow: true
   rules:
     # Both select on job names this release does not create.
     alertmanager: false
@@ -54,10 +63,30 @@ kubeEtcd:
     # not etcd_* at all. Keep only what this job actually owns. `up` and the
     # scrape_* series are added after metric relabeling, so the 11 etcd alerts
     # that key off up{job="kube-etcd"} are unaffected.
+    #
+    # grpc_server_handled_total is here because "what this job owns" is not the
+    # same set as "names starting with etcd_", and the first regex assumed it
+    # was. The metric is etcd's own gRPC server -- the services carrying traffic
+    # are etcdserverpb.KV (4.6M Range, 2.3M Txn), etcdserverpb.Lease and
+    # etcdserverpb.Watch -- and dropping it killed
+    # etcdHighNumberOfFailedGRPCRequests, which had been working until #1267.
+    #
+    # It is the only etcd alert that sees failures from the client's side. The
+    # other eleven cover availability, raft, latency and capacity, but none of
+    # them fires when the backend quota trips and etcd starts returning
+    # ResourceExhausted to every write: proposals are rejected before they can
+    # fail, so etcdHighNumberOfFailedProposals stays quiet while the cluster is
+    # effectively read-only.
+    #
+    # Cost, measured on 192.168.50.31:2381: 748 series per endpoint, 2244 across
+    # the three. 738 of the 748 are permanently zero -- only OK and Canceled
+    # ever move -- so they cost head-index memory rather than disk. That takes
+    # job="kube-etcd" from 1950 series to roughly 4200, or 0.5% of the 453970 in
+    # the head.
     metricRelabelings:
       - action: keep
         sourceLabels: [__name__]
-        regex: etcd_.*
+        regex: etcd_.*|grpc_server_handled_total
 
 kubelet:
   serviceMonitor:
