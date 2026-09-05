@@ -107,6 +107,15 @@ kube-state-metrics:
   # clause back on without the cardinality cost of `*`.
   metricLabelsAllowlist:
     - persistentvolumeclaims=[excluded_from_alerts]
+  # kube-state-metrics serves its own telemetry on a second port, and the chart
+  # leaves that port off the Service by default. Four mixin alerts key off it --
+  # KubeStateMetricsListErrors, KubeStateMetricsWatchErrors,
+  # KubeStateMetricsShardingMismatch, KubeStateMetricsShardsMissing -- and all
+  # four were dead, with pint reporting no series for kube_state_metrics_*
+  # in the last 1w. The exporter cannot report that it has stopped seeing the
+  # API server unless it is scraped about itself.
+  selfMonitor:
+    enabled: true
   resources:
     requests:
       cpu: 2m
