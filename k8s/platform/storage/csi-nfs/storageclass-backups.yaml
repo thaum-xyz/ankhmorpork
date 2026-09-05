@@ -1,0 +1,32 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: unifi-nas-backups
+# A second class rather than a knob on the chart's, which only renders one.
+#
+# Two things differ from unifi-nas, and both matter only for backups:
+#
+#   subDir has no ${pv.metadata.name}, so the path is backups/<namespace> --
+#   stable and readable. A recovery means mounting the share and running restic
+#   against backups/mealie, not hunting for
+#   backup-repo-pvc-115cec42-f8a6-47a6-ad0f-60bd470735c0. It also makes
+#   provisioning idempotent: a recreated claim lands on its existing repository
+#   rather than an empty directory.
+#
+#   onDelete: retain keeps that directory when the volume goes. The default is
+#   delete, which means removing a PVC destroys the repository -- a Flux prune
+#   or a bad edit should not be able to do that to the backups.
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 192.168.40.10
+  share: /var/nfs/shared/k8snfscsi
+  subDir: backups/${pvc.metadata.namespace}
+  onDelete: retain
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+mountOptions:
+  # Kept identical to unifi-nas; see that class for why each is set.
+  - nfsvers=3
+  - nolock
+  - nconnect=4
+  - noatime
