@@ -8,6 +8,9 @@ metadata:
 spec:
   groups:
     - name: k8up.rules
+      # Nothing here is critical. severity=critical routes to opsgenie and pages;
+      # a backup that failed tonight is fixed tomorrow with the previous night's
+      # snapshot still on the NAS, so these go to github as issues instead.
       rules:
         - alert: K8upJobFailed
           annotations:
@@ -21,7 +24,7 @@ spec:
             > 0
           for: 1m
           labels:
-            severity: critical
+            severity: warning
         - alert: K8upBackupNotRunning
           annotations:
             description: Namespace {{$labels.namespace}} has a K8up Schedule but no job of any type has run in 25h. The operator is not scheduling; check it for a deadlock.
@@ -34,7 +37,7 @@ spec:
             and on (namespace) k8up_schedules_gauge > 0
           for: 1h
           labels:
-            severity: critical
+            severity: warning
         - alert: K8upBackupStale
           annotations:
             description: No K8up backup job has completed in namespace {{$labels.namespace}} for over 36h. Backups run from the live volume, so this is also what a silently broken k8up.io/backupcommand hook looks like.
