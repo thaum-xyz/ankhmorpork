@@ -1,6 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    # pint reads its config once at startup and has no reload endpoint, so a
+    # change to pint-config used to sit in the mounted volume unread until
+    # something happened to restart the Pod -- nothing did. #1281's three check
+    # scopes were live in the ConfigMap for six hours while pint went on
+    # reporting the six findings they silence.
+    #
+    # mutate-configmap-autoreload stamps this ConfigMap's resourceVersion into
+    # the pod template on every apply, so a change to it rolls the Pod on Flux's
+    # next reconcile.
+    autoreloader.thaum.xyz/configmap: pint-config
   labels:
     app.kubernetes.io/component: linter
     app.kubernetes.io/name: pint

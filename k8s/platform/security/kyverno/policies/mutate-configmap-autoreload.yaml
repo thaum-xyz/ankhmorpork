@@ -1,0 +1,89 @@
+apiVersion: policies.kyverno.io/v1
+kind: MutatingPolicy
+metadata:
+  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
+  # component's namespace on it in the rendered output; the API server ignores
+  # the field for cluster-scoped resources.
+  name: mutate-configmap-autoreload
+spec:
+  # A Pod mounting a ConfigMap sees file changes -- kubelet syncs the volume --
+  # but a process that reads its config once at startup never notices. pint is
+  # the case that surfaced this: #1281 merged three new check scopes into
+  # pint-config, the ConfigMap in the cluster carried them within minutes, and
+  # pint went on reporting six findings against a config that no longer objected
+  # to them, because nothing had restarted it. The pod template has no checksum
+  # annotation and the ConfigMap has a stable name, so a content change alters
+  # nothing the Deployment references.
+  #
+  # This stamps the referenced ConfigMap's resourceVersion into the pod template,
+  # which changes when the ConfigMap does, which rolls the Pods.
+  #
+  # Admission only, deliberately, and this is why it is written the way it is.
+  # The obvious shape -- match on the ConfigMap changing and mutate the
+  # Deployment -- is a mutate-existing rule, and an admission webhook can only
+  # mutate the object being admitted. mutate-existing needs kyverno's background
+  # controller, which is disabled in this cluster
+  # (k8s/platform/security/kyverno/controllers/values.yaml: "Generate rules and
+  # mutate-existing rules are not part of the initial use case"), where it would
+  # only park UpdateRequests in Pending forever -- the same trap already
+  # recorded on mutate-nfs-pvc-alert-exclusion.
+  #
+  # So the trigger is inverted: the Deployment is the admitted object, and it is
+  # stamped with the ConfigMap's version whenever it is applied. Flux re-applies
+  # every workload on its Kustomization interval -- 5m for datalake-metrics -- so
+  # that is the worst-case delay between a ConfigMap change and the rollout.
+  #
+  # No new RBAC: kyverno:admission-controller already holds get/list/watch on
+  # configmaps. Secrets are deliberately not covered -- the admission controller
+  # has no secrets permission, and granting it read on every Secret in the
+  # cluster is a decision to take on its own merits, not a side effect of this.
+  evaluation:
+    background:
+      enabled: false
+  # Ignore, not Fail. This policy runs on every Deployment and StatefulSet
+  # admission, including Flux's. A missing or renamed ConfigMap makes
+  # resource.Get error, and with Fail that would block the apply rather than
+  # skip the stamp. Failing open costs a stale Pod; failing closed costs the
+  # ability to deploy.
+  failurePolicy: Ignore
+  matchConstraints:
+    resourceRules:
+      - apiGroups:
+          - apps
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - deployments
+          - statefulsets
+  matchConditions:
+    # Opt-in per workload rather than by labelling the ConfigMap. Naming the
+    # ConfigMap here keeps it to one API read per admission instead of a
+    # comprehension over every volume, env and envFrom entry, and makes it
+    # visible in the workload's own manifest which config it reloads on.
+    - name: opted-in
+      expression: >-
+        has(object.metadata.annotations) &&
+        object.metadata.annotations.exists(k, k == "autoreloader.thaum.xyz/configmap")
+  variables:
+    - name: cmname
+      expression: >-
+        object.metadata.annotations["autoreloader.thaum.xyz/configmap"]
+    - name: cmversion
+      expression: >-
+        resource.Get("v1", "configmaps", object.metadata.namespace, variables.cmname).metadata.resourceVersion
+  mutations:
+    - patchType: ApplyConfiguration
+      applyConfiguration:
+        expression: >-
+          Object{
+            spec: Object.spec{
+              template: Object.spec.template{
+                metadata: Object.spec.template.metadata{
+                  annotations: {"autoreloader.thaum.xyz/version": variables.cmversion}
+                }
+              }
+            }
+          }
