@@ -42,8 +42,19 @@ spec:
           expr: |
             # Without min_over_time, failed scrapes could create false negatives, see
             # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
+            #
+            # queue_length is per-Alertmanager (three of them, so six series across
+            # the two Prometheis); queue_capacity is per-Prometheus, with two. The
+            # label sets therefore never matched and this alert could not fire --
+            # pint reports it as promql/vector_matching, and it stayed invisible
+            # until --max-problems stopped truncating the list. max without() takes
+            # the fullest queue and leaves both sides on identical labels.
+            # ignoring(alertmanager) is not enough on its own: it turns the
+            # mismatch into "many-to-one matching must be explicit".
             (
-              predict_linear(prometheus_notifications_queue_length{job="prometheus-k8s"}[5m], 60 * 30)
+              max without(alertmanager) (
+                predict_linear(prometheus_notifications_queue_length{job="prometheus-k8s"}[5m], 60 * 30)
+              )
             >
               min_over_time(prometheus_notifications_queue_capacity{job="prometheus-k8s"}[5m])
             )

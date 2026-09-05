@@ -9,36 +9,15 @@ spec:
   groups:
     - name: workload-custom.rules
       rules:
-        # Cluster-wide: the OpenShift original filtered to openshift-*/kube-*/default,
-        # which here meant it could never fire for an actual workload.
-        - alert: HighlyAvailableWorkloadIncorrectlySpread
-          annotations:
-            description: Workload {{ $labels.namespace }}/{{ $labels.workload }} is incorrectly spread across multiple nodes which breaks high-availability requirements. Since the workload is using persistent volumes, manual intervention is needed. Please follow the guidelines provided in the runbook of this alert to fix this issue.
-            runbook_url: https://github.com/openshift/runbooks/blob/master/alerts/HighlyAvailableWorkloadIncorrectlySpread.md
-            summary: Highly-available workload is incorrectly spread across multiple nodes and manual intervention is needed.
-          expr: |
-            count without (node)
-            (
-              group by (node, workload, namespace)
-              (
-                kube_pod_info{node!=""}
-                * on(namespace,pod) group_left(workload)
-                (
-                  kube_pod_spec_volumes_persistentvolumeclaims_info
-                  * on(namespace,pod) group_left(workload)
-                  (
-                    namespace_workload_pod:kube_pod_owner:relabel
-                    * on(namespace,workload,workload_type) group_left()
-                    (
-                      count without(pod) (namespace_workload_pod:kube_pod_owner:relabel) > 1
-                    )
-                  )
-                )
-              )
-            ) == 1
-          for: 1h
-          labels:
-            severity: warning
+        # HighlyAvailableWorkloadIncorrectlySpread lived here until 2026-09-05.
+        # It never once evaluated: kube_pod_spec_volumes_persistentvolumeclaims_info
+        # emits one series per volume, so any Pod with two PVCs made the join
+        # ambiguous and Prometheus errored with "many-to-many matching not
+        # allowed" every evaluation. Deduping the right-hand side fixed the
+        # query and showed why it should not come back -- it matched all eleven
+        # CNPG clusters, which are spread across nodes on purpose. The OpenShift
+        # original targets workloads sharing one RWO volume; nothing here is
+        # shaped like that.
         - alert: MultipleContainersOOMKilled
           annotations:
             description: Multiple containers were out of memory killed within the past 15 minutes. There are many potential causes of OOM errors, however issues on a specific node or containers breaching their limits is common.
