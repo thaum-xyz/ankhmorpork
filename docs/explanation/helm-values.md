@@ -78,6 +78,24 @@ The hash suffix would trigger the upgrade immediately, at the cost of a new
 ConfigMap on every edit. Stable names are the trade; reconciling the release is
 the price.
 
+### And where nothing prunes, that cost is permanent
+
+Under `prune: true` an orphaned `values-myapp-7f9c2b4h8d` is garbage-collected on
+the next reconcile, so the hash costs churn but not accumulation.
+
+Eight Kustomizations here do not prune, and five of them are platform components
+that generate values ConfigMaps — `cilium`, `flux-system`, `topolvm`,
+`piraeus-datastore` and `traefik`. See
+[how Flux is layered](flux-layering.md) for why those five are exempt. There,
+nothing would ever remove the old ConfigMap: every values edit would leave one
+behind, permanently, in exactly the components whose namespaces are hardest to
+reason about when something is wrong.
+
+Stable names mean the set of values ConfigMaps in a namespace is exactly the set
+declared in git. `traefik` holds three — `values-common`, `values-public`,
+`values-private` — and that is what `kubectl get cm` shows, not three plus a
+sediment of every edit since the component was created.
+
 ## Why `values-<ReleaseName>`
 
 The generator is named after the release it feeds, not after the component. A bare

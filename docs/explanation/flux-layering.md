@@ -93,6 +93,11 @@ obvious property, but that is inference from what they are, not something the
 repository states — worth knowing before assuming any of them can safely be
 switched back.
 
+All five also generate values ConfigMaps, which is one of the reasons those are
+given stable names rather than hashed ones: with nothing pruning, a hashed name
+would leave an orphan behind on every edit. See
+[why Helm values live in a file](helm-values.md).
+
 ## What reconciliation actually costs
 
 The `GitRepository` polls every 60 seconds, and a GitHub webhook `Receiver`
