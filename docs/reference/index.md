@@ -22,7 +22,6 @@ Admission test:
 
 ## Planned
 
-- Storage classes — capabilities, ceilings, access modes, node affinity
 - Ingress classes and certificate issuers
 
 ## Available now
@@ -31,6 +30,8 @@ Admission test:
   its hostnames *(generated)*
 - [Admission policies](admission-policies.md) — what Kyverno enforces, and which
   rules only warn *(generated)*
+- [Storage classes](storage-classes.md) — capabilities, access modes, node
+  affinity and measured ceilings
 - [Annotations and labels](annotations.md) — keys this cluster gives meaning to,
   and two that look load-bearing but are not
 - [Charts and images](charts.md) — the two sibling repositories, what they hold,

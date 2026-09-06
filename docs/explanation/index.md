@@ -19,8 +19,6 @@ currently exists only in commit messages, per-app READMEs and
 
 ## Planned
 
-- Why storage is split across four classes, and why nothing transactional runs on
-  Longhorn *(the fsync measurement)*
 - Why observability is split by role rather than by stack
 - How Flux is layered: bootstrap, platform, apps
 - Why Helm values live in `values.yaml` rather than inline in a HelmRelease
@@ -28,6 +26,8 @@ currently exists only in commit messages, per-app READMEs and
 
 ## Available now
 
+- [Why storage is split four ways](storage-durability.md) — and how a durability
+  claim was tested rather than trusted
 - [Why a Kyverno policy rolls Pods on ConfigMap changes](configmap-autoreload.md)
 - [Why the rule linter alerts on change, not on count](pint-rule-linting.md)
 - [Postgres fleet upgrade plan](../postgres/fleet-upgrade-plan.md)

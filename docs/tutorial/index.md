@@ -312,8 +312,11 @@ it, because `prune: true` means Flux owns what it created.
 This was a lesson, so it made every choice for you. Real work needs those choices
 back:
 
+- **[Choose a storage class](../how-to/choose-a-storage-class.md)** — the first
+  real decision most apps hit. `whoami` had no storage; almost nothing else is so
+  lucky, and the choice is hard to reverse.
 - **[How-to](../how-to/index.md)** — the same steps for an app that needs
-  storage, a database, or a public hostname.
+  a database or a public hostname.
 - **[Reference](../reference/index.md)** — the storage classes, ingress classes
   and admission policies you skipped past. The Ingress above satisfies
   `validate-ingress-contract`, which *denies* anything missing TLS or using an
