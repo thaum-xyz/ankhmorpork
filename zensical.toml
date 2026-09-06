@@ -60,6 +60,7 @@ nav = [
   { "Explanation" = [
     "explanation/index.md",
     { "How Flux is layered" = "explanation/flux-layering.md" },
+    { "Why observability is split by role" = "explanation/observability-split.md" },
     { "Why Helm values live in a file" = "explanation/helm-values.md" },
     { "ConfigMap autoreload" = "explanation/configmap-autoreload.md" },
     { "Why storage is split the way it is" = "explanation/storage-durability.md" },
