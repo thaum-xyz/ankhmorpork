@@ -16,3 +16,7 @@ resources:
   - ingress.yaml
   - prometheusrule.yaml
   - grafana-datasource-cm.yaml
+  - slo-prometheus-notification-errors.yaml
+  - slo-prometheus-query-errors.yaml
+  - slo-prometheus-rule-evaluation-failures.yaml
+  - slo-prometheus-sd-kubernetes-errors.yaml
