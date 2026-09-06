@@ -9,14 +9,42 @@ spec:
   groups:
     - name: pint.rules
       rules:
-        # max, not sum: every replica lints the same rule set and reports the
-        # same total, so summing would multiply the count by the replica count.
-        - alert: PintRuleProblems
+        # Fires when pint starts reporting something it was not reporting
+        # before, not when the count is non-zero.
+        #
+        # The old shape was max(pint_problems) > 0 for 1h. The count has a floor
+        # -- rules that work, reported because the series they select is not
+        # present right now, like an alert waiting on a label value that only
+        # appears when something breaks -- so it was permanently true, held one
+        # github issue open forever, and taught everyone to skim it.
+        #
+        # The count is also the wrong signal even as a delta. Findings replace
+        # each other: silencing one can promote a hidden duplicate, and pint
+        # shows one problem per group. On 2026-09-06 the total fell 37 -> 15
+        # while KubeContainerWaiting appeared underneath -- a delta alert would
+        # have seen the drop and said nothing. Comparing the *set* caught it.
+        #
+        # Aggregating to (name, reporter) is required, not tidiness. `problem`
+        # embeds durations that change every run ("average life span of 6m55s"),
+        # `filename` embeds the PrometheusRule's UID, and the scrape adds pod
+        # and instance -- so a pint rollout alone would mark every finding new.
+        #
+        # `for` must stay well under the offset. The baseline catches up an hour
+        # after a finding appears, so a longer `for` would never fire. 24h is
+        # deliberate: a new finding is news for a day, after which the worklist
+        # owns it and this resolves, closing its issue with a dated record.
+        #
+        # If pint is down for more than 25h the baseline window is empty and
+        # everything reads as new. PintNotReporting fires long before that.
+        - alert: PintNewRuleProblem
           annotations:
-            description: pint reports {{ $value }} problem(s) in the rules Prometheus has loaded. Most often an alert referencing a metric that no longer exists.
-            summary: Prometheus rules have problems pint can see
-          expr: max(pint_problems{job="pint"}) > 0
-          for: 1h
+            description: pint has started reporting {{ $labels.reporter }} against {{ $labels.name }}, which it was not reporting in the previous 24h. Either a rule changed, or the cluster changed underneath one.
+            summary: pint found a problem it was not reporting before
+          expr: |
+            count by (name, reporter) (pint_problem{job="pint"})
+            unless
+            count by (name, reporter) (last_over_time(pint_problem{job="pint"}[24h] offset 1h))
+          for: 15m
           labels:
             severity: warning
         # Zero problems and a dead linter look identical from the outside, so

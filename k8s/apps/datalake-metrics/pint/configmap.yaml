@@ -154,9 +154,21 @@ data:
     # alertmanager_notifications_failed_total (3d17h), the *arr health metrics
     # (3d17h-6h), and gotk_resource_info{ready=~"False|Unknown"} (5m), which is
     # the healthy case for Flux.
+    #
+    # Every rule reading each of those metrics is listed, not just the one pint
+    # named. Three were found only by asking which other rules read the same
+    # metric, and the first of them had already stepped forward:
+    #   kube_pod_container_status_waiting_reason  KubePodCrashLooping,
+    #                                             KubeContainerWaiting
+    #   alertmanager_notifications_failed_total   AlertmanagerClusterFailedToSendAlerts,
+    #                                             AlertmanagerFailedToSendAlerts
+    #   the prowlarr pair                         prowlarrUnhealthy reads
+    #                                             prowlarr_system_health_issues,
+    #                                             prowlarrIndexersUnavailable reads
+    #                                             prowlarr_indexer_unavailable
     rule {
       match {
-        name = "AlertmanagerClusterFailedToSendAlerts|FluxCDReconciliationFailure|KubeJobFailed|KubePodCrashLooping|prowlarrUnhealthy|radarrUnhealthy|sonarrUnhealthy"
+        name = "AlertmanagerClusterFailedToSendAlerts|AlertmanagerFailedToSendAlerts|FluxCDReconciliationFailure|KubeContainerWaiting|KubeJobFailed|KubePodCrashLooping|prowlarrIndexersUnavailable|prowlarrUnhealthy|radarrUnhealthy|sonarrUnhealthy"
       }
       disable = ["promql/series"]
     }
