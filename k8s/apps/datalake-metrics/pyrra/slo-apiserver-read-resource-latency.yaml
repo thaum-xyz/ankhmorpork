@@ -19,7 +19,7 @@ spec:
   # 60.0 -- there is no 0.25 to reach for.
   description: ""
   alerting:
-    name: APIServerReadResourceLatencyBudgetBurn
+    name: KubeAPIServerReadResourceLatencyBudgetBurn
   indicator:
     latency:
       success:

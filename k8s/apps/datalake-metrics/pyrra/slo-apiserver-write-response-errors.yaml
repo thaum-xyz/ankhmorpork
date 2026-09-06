@@ -8,7 +8,7 @@ metadata:
 spec:
   description: ""
   alerting:
-    name: APIServerWriteBudgetBurn
+    name: KubeAPIServerWriteErrorBudgetBurn
   indicator:
     ratio:
       errors:

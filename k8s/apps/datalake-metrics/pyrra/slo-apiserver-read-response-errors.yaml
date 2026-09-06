@@ -8,7 +8,7 @@ metadata:
 spec:
   description: ""
   alerting:
-    name: APIServerReadBudgetBurn
+    name: KubeAPIServerReadErrorBudgetBurn
   indicator:
     ratio:
       errors:
