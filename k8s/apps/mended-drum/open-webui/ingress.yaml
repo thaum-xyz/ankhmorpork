@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    probe-uri: /health
+    ingress.thaum.xyz/probe-uri: /health
     item.homer.rajsingh.info/name: "Mended Drum"
     item.homer.rajsingh.info/subtitle: "Bar assistant"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"
@@ -13,7 +13,7 @@ metadata:
     service.homer.rajsingh.info/order: "30"
   labels:
     homer.rajsingh.info/enabled: "true"
-    probe: enabled
+    ingress.thaum.xyz/probe: enabled
     app.kubernetes.io/name: open-webui
   name: open-webui
 spec:

@@ -20,7 +20,7 @@ ingress:
     # into pocket-id -- see the --skip-auth-route note below for why that made
     # the probe measure the wrong service entirely, and why this is
     # /actuator/health rather than the app's own status endpoint.
-    probe-uri: /actuator/health
+    ingress.thaum.xyz/probe-uri: /actuator/health
     item.homer.rajsingh.info/name: "Stirling PDF"
     item.homer.rajsingh.info/subtitle: "PDF manipulation tool"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg"
@@ -29,7 +29,7 @@ ingress:
     service.homer.rajsingh.info/icon: "fa fa-cloud"
     service.homer.rajsingh.info/order: "30"
   labels:
-    probe: enabled
+    ingress.thaum.xyz/probe: enabled
     homer.rajsingh.info/enabled: "true"
   hosts:
     - name: pdf.krupa.net.pl

@@ -15,7 +15,7 @@ podDisruptionBudget:
 # *.cfargotunnel.com resolves nowhere outside Cloudflare's edge, so the host was
 # unreachable from the tailnet.
 #
-# probe-uri and the probe label are restored along with it: blackbox takes its
+# The ingress.thaum.xyz/probe* keys are restored along with it: blackbox takes its
 # scheme from whether the Ingress declares TLS, so only the traefik route is
 # probeable.
 ingress:
@@ -29,7 +29,7 @@ ingress:
     # /api/health is Grafana's own, answers in 101 bytes without a redirect, and
     # reports {"database": "ok"} -- so unlike the alternatives it fails when
     # Grafana's database is unreachable rather than only when the process is.
-    probe-uri: /api/health
+    ingress.thaum.xyz/probe-uri: /api/health
     item.homer.rajsingh.info/name: "Grafana"
     item.homer.rajsingh.info/logo: "https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg"
     item.homer.rajsingh.info/order: "50"
@@ -38,7 +38,7 @@ ingress:
     service.homer.rajsingh.info/order: "10"
   labels:
     homer.rajsingh.info/enabled: "true"
-    probe: enabled
+    ingress.thaum.xyz/probe: enabled
   hosts:
     - "grafana.krupa.net.pl"
   tls:

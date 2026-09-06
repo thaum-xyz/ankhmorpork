@@ -9,7 +9,7 @@
 # record internally and discards the CNAME, as it already does for the other ten
 # cloudflare-exposed hosts.
 #
-# The probe label belongs here rather than on the cloudflare twin: blackbox
+# ingress.thaum.xyz/probe belongs here rather than on the cloudflare twin: blackbox
 # derives its scheme from whether the Ingress declares TLS, so probing that one
 # built an http:// target the tunnel never answers.
 apiVersion: networking.k8s.io/v1
@@ -18,14 +18,14 @@ metadata:
   name: karakeep
   labels:
     app.kubernetes.io/name: karakeep
-    probe: enabled
+    ingress.thaum.xyz/probe: enabled
     homer.rajsingh.info/enabled: "true"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     # /  redirects to /signin, a 28KB Next.js shell that renders from static
     # assets -- it returns 200 with the backend dead. /api/health is served by
     # the app itself and answers {"status":"ok"} in 46 bytes.
-    probe-uri: /api/health
+    ingress.thaum.xyz/probe-uri: /api/health
     item.homer.rajsingh.info/name: "Karakeep"
     item.homer.rajsingh.info/subtitle: "Bookmarks hoarder"
     item.homer.rajsingh.info/logo: "https://avatars.githubusercontent.com/u/202258986?s=60&v=4"
