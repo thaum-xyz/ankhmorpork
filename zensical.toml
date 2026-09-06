@@ -1,0 +1,147 @@
+# Documentation site for the Ankh-Morpork cluster -- https://docs.thaum.xyz
+#
+# Zensical is the successor to Material for MkDocs, by the same team. MkDocs core
+# has been unmaintained since 2024-08 and Material entered maintenance mode in
+# 2025-11, so a site started now goes straight to Zensical rather than adopting
+# something with a closing support window.
+#
+# Zensical is alpha (0.0.x), which is why the version is pinned in
+# .github/workflows/docs.yml rather than floating. The content is plain CommonMark
+# in docs/ with no front matter, so it stays readable on github.com in the diff
+# that invalidates it -- and portable to any other generator if this one stalls.
+
+[project]
+site_name = "Ankh-Morpork"
+site_url = "https://docs.thaum.xyz/"
+site_description = "Documentation for the thaum.xyz home Kubernetes cluster"
+site_author = "paulfantom"
+copyright = "Copyright &copy; 2026 paulfantom"
+
+repo_url = "https://github.com/thaum-xyz/ankhmorpork"
+repo_name = "thaum-xyz/ankhmorpork"
+edit_uri = "edit/master/docs/"
+
+docs_dir = "docs"
+extra_css = ["stylesheets/extra.css"]
+
+# Diataxis. The four sections are document *types*, not subjects: the same app
+# can appear in all four. Which section a page belongs in is decided by what the
+# reader is doing when they open it, not by what the page is about.
+#
+#             | practical        | theoretical
+#   ----------+------------------+-----------------
+#   studying  | Tutorial         | Explanation
+#   working   | How-to           | Reference
+#
+# Each section's index.md states its own admission test. Read it before adding a
+# page there.
+nav = [
+  { "Home" = "index.md" },
+  { "Tutorial" = [
+    "tutorial/index.md",
+  ] },
+  { "How-to" = [
+    "how-to/index.md",
+  ] },
+  { "Reference" = [
+    "reference/index.md",
+    { "Charts and images" = "reference/charts.md" },
+    { "UPS Modbus register map" = "ups/modbus-register-map.md" },
+  ] },
+  { "Explanation" = [
+    "explanation/index.md",
+    { "Postgres fleet upgrade plan" = "postgres/fleet-upgrade-plan.md" },
+  ] },
+]
+
+[project.theme]
+language = "en"
+features = [
+  "announce.dismiss",
+  # One click from "this page is wrong" to editing it on GitHub. The single most
+  # useful feature here given that staleness, not authoring, killed the last two
+  # doc sets.
+  "content.action.edit",
+  "content.action.view",
+  "content.code.annotate",
+  "content.code.copy",
+  "content.code.select",
+  "content.footnote.tooltips",
+  "content.tabs.link",
+  "content.tooltips",
+  "navigation.footer",
+  # Section index.md pages are reachable by clicking the section itself, which is
+  # what makes the bare "how-to/index.md" nav entries above work.
+  "navigation.indexes",
+  "navigation.instant",
+  "navigation.instant.prefetch",
+  "navigation.path",
+  "navigation.sections",
+  "navigation.tabs",
+  "navigation.tabs.sticky",
+  "navigation.top",
+  "navigation.tracking",
+  "search.highlight",
+  "search.suggest",
+  "toc.follow",
+]
+
+[project.theme.font]
+text = "Inter"
+code = "JetBrains Mono"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+primary = "deep purple"
+accent = "amber"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "deep purple"
+accent = "amber"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "deep purple"
+accent = "amber"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/thaum-xyz/ankhmorpork"
+
+[project.markdown_extensions]
+abbr = {}
+admonition = {}
+attr_list = {}
+def_list = {}
+footnotes = {}
+md_in_html = {}
+toc.permalink = true
+pymdownx.betterem = {}
+pymdownx.caret = {}
+pymdownx.details = {}
+pymdownx.emoji.emoji_generator = "zensical.extensions.emoji.to_svg"
+pymdownx.emoji.emoji_index = "zensical.extensions.emoji.twemoji"
+pymdownx.highlight.anchor_linenums = true
+pymdownx.highlight.line_spans = "__span"
+pymdownx.highlight.pygments_lang_class = true
+pymdownx.inlinehilite = {}
+pymdownx.keys = {}
+pymdownx.magiclink = {}
+pymdownx.mark = {}
+pymdownx.smartsymbols = {}
+pymdownx.superfences.custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]
+pymdownx.tabbed.alternate_style = true
+pymdownx.tabbed.combine_header_slug = true
+pymdownx.tasklist.custom_checkbox = true
+pymdownx.tilde = {}

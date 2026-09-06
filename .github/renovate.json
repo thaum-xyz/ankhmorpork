@@ -77,6 +77,20 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "mikefarah/yq"
+    },
+    {
+      "customType": "regex",
+      "description": "Zensical, pinned in the docs workflow and the Makefile.",
+      "managerFilePatterns": [
+        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/",
+        "/^Makefile$/"
+      ],
+      "matchStrings": [
+        "zensical-version:\\s(?<currentValue>.*?)\\n",
+        "ZENSICAL_VERSION:=(?<currentValue>.*?)\\n"
+      ],
+      "datasourceTemplate": "pypi",
+      "depNameTemplate": "zensical"
     }
   ],
   "packageRules": [
@@ -154,6 +168,18 @@
       "groupName": "applications",
       "minimumReleaseAge": "0",
       "automerge": true
+    },
+    {
+      "description": "Zensical is alpha (0.0.x) and can change rendering between patch releases. The docs build gates it, but a green build does not prove the site still looks right, so it lands as its own PR and is never automerged.",
+      "matchDepNames": [
+        "zensical"
+      ],
+      "groupName": "zensical",
+      "addLabels": [
+        "dependencies/ci"
+      ],
+      "automerge": false,
+      "minimumReleaseAge": "3 days"
     }
   ],
   "kubernetes": {

@@ -1,0 +1,129 @@
+/* ---------------------------------------------------------------------------
+   Diataxis colour system
+
+   The four sections are document *types*, and the whole framework only works if
+   a reader can tell at a glance which type they are looking at. So colour is
+   used semantically here, not decoratively: one hue per quadrant, applied to the
+   landing cards and to that quadrant's own pages, and used nowhere else.
+
+     Tutorial     green   -- learning, safe to follow, "start here"
+     How-to       orange  -- action, hands-on, in the middle of a task
+     Reference    blue    -- neutral lookup
+     Explanation  purple  -- discussion, continuous with the site's primary
+
+   Each pair is a Material palette shade chosen to hold contrast against both
+   backgrounds: the darker shade on white, the lighter on slate.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --diataxis-tutorial: #2e7d32;
+  --diataxis-howto: #d84315;
+  --diataxis-reference: #1565c0;
+  --diataxis-explanation: #6a1b9a;
+}
+
+[data-md-color-scheme="slate"] {
+  --diataxis-tutorial: #66bb6a;
+  --diataxis-howto: #ff8a65;
+  --diataxis-reference: #42a5f5;
+  --diataxis-explanation: #ce93d8;
+}
+
+/* Each quadrant marks itself by putting its class on an icon (landing cards) or
+   on its <h1> (section pages); everything downstream reads --quad. Selecting on
+   the marker rather than on nth-child keeps this correct if the cards are ever
+   reordered. */
+.quad-tutorial { --quad: var(--diataxis-tutorial); }
+.quad-howto { --quad: var(--diataxis-howto); }
+.quad-reference { --quad: var(--diataxis-reference); }
+.quad-explanation { --quad: var(--diataxis-explanation); }
+
+.md-typeset .grid.cards > ul > li:has(.quad-tutorial) { --quad: var(--diataxis-tutorial); }
+.md-typeset .grid.cards > ul > li:has(.quad-howto) { --quad: var(--diataxis-howto); }
+.md-typeset .grid.cards > ul > li:has(.quad-reference) { --quad: var(--diataxis-reference); }
+.md-typeset .grid.cards > ul > li:has(.quad-explanation) { --quad: var(--diataxis-explanation); }
+
+.md-content:has(.quad-tutorial) { --quad: var(--diataxis-tutorial); }
+.md-content:has(.quad-howto) { --quad: var(--diataxis-howto); }
+.md-content:has(.quad-reference) { --quad: var(--diataxis-reference); }
+.md-content:has(.quad-explanation) { --quad: var(--diataxis-explanation); }
+
+/* --- Landing page cards --------------------------------------------------- */
+
+.md-typeset .grid.cards > ul > li {
+  border-top: 3px solid var(--quad, var(--md-default-fg-color--lightest));
+  transition: border-color 125ms, box-shadow 125ms, transform 125ms;
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  box-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.md-typeset .grid.cards > ul > li > hr {
+  background-color: var(--quad);
+  opacity: 0.25;
+}
+
+/* The icon and the call-to-action carry the quadrant colour; the body copy stays
+   at normal text contrast so the colour never costs legibility. */
+.md-typeset .grid.cards > ul > li > p:first-child .twemoji {
+  color: var(--quad);
+}
+
+.md-typeset .grid.cards > ul > li > p:last-child a {
+  color: var(--quad);
+  font-weight: 600;
+}
+
+.md-typeset .grid.cards > ul > li > p:last-child a:hover {
+  text-decoration: underline;
+}
+
+/* --- Section pages -------------------------------------------------------- */
+
+/* A coloured rule under the page title is the whole signal: it tells you which
+   kind of document you are in before you have read a word of it. */
+.md-typeset h1:is(.quad-tutorial, .quad-howto, .quad-reference, .quad-explanation) {
+  border-bottom: 3px solid var(--quad);
+  color: var(--md-default-fg-color);
+  display: inline-block;
+  padding-bottom: 0.2rem;
+}
+
+/* Admission-test criteria: rendered as task lists for their shape, but they are
+   conditions to check against, not work to tick off -- so drop the interactive
+   affordance and tint them to the section. */
+.md-typeset .task-list-control .task-list-indicator::before {
+  background-color: var(--quad, var(--md-default-fg-color--lighter));
+  opacity: 0.55;
+}
+
+/* --- Chrome --------------------------------------------------------------- */
+
+/* Without this the header is near-white in light mode and near-black in dark,
+   which is what made the first draft read as monochrome. */
+.md-header,
+.md-tabs {
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+}
+
+/* Full-strength primary is right against white, but against the near-black slate
+   background (#0b0c0f) it glares. The dark variant keeps the identity without
+   making the header the brightest thing on the page. */
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: var(--md-primary-fg-color--dark);
+}
+
+.md-header__title,
+.md-tabs__link {
+  color: var(--md-primary-bg-color);
+}
+
+/* Several reference pages carry tables that are uncomfortable at the default
+   content width. */
+.md-grid {
+  max-width: 68rem;
+}

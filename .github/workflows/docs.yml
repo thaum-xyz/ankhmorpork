@@ -1,0 +1,50 @@
+---
+name: docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths: ['docs/**', 'zensical.toml', '.github/workflows/docs.yml']
+  pull_request:
+    branches: [master]
+    paths: ['docs/**', 'zensical.toml', '.github/workflows/docs.yml']
+
+env:
+  # Zensical is alpha (0.0.x) and ships every few days, so this is pinned rather
+  # than floating. A customManager in .github/renovate.json bumps it here and in
+  # the Makefile together; without that entry this line would simply freeze.
+  zensical-version: 0.0.59
+
+permissions:
+  contents: read
+
+jobs:
+  # Runs on pull requests too, so a docs change that does not build is caught
+  # before merge rather than by a red deploy on master.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: 3.x
+      - run: pip install zensical==${{ env.zensical-version }}
+      - run: zensical build --clean
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v5
+        id: deployment
