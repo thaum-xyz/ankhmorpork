@@ -44,6 +44,7 @@ Every class here flushes an acknowledged write to the device.
 ### O_DIRECT — what the storage stack costs
 
 Bare-device rows are a hostPath onto the same disk with no CSI driver in the path.
+`piraeus-r2` rows apply to `piraeus-r2-roaming` equally.
 
 | Target | QD1 write | rd IOPS | wr IOPS | seq rd MiB/s | seq wr MiB/s |
 | --- | --- | --- | --- | --- | --- |
@@ -77,7 +78,8 @@ xfs, and carry the same DRBD tuning. They differ only in where the Pod may run:
 | --- | --- | --- |
 | `allowRemoteVolumeAccess` | `false` | `true` |
 | Pod may schedule on | the 2 replica holders | any linstor node |
-| I/O when it lands off-replica | n/a | **remote**, until `auto-diskful` converts it |
+| Performance, steady state | identical | identical |
+| Landing on a node with no replica | cannot happen | **degraded** until LINSTOR replicates to it |
 | `auto-diskful` delay | — | **5 minutes**, then a local replica, surplus dropped |
 | Max PVC size | unbounded | **32 GiB**, denied above |
 
@@ -86,10 +88,11 @@ network, and a full 32 GiB is roughly five more minutes at 1 Gb/s.
 `rs-discard-granularity` keeps unallocated blocks off the wire, but requested size
 is the only proxy admission has.
 
-`piraeus-r2-roaming` is not in the fio tables above, so it has **no independent
-throughput figures**. Its steady state is a local replica on the same pool as
-`piraeus-r2`, so those rows are the closest available guide; the diskless window
-after a move is not characterised.
+**The two classes perform identically.** The `piraeus-r2` rows in the tables above
+apply to both: same pool, same replica count, same DRBD tuning. The only
+difference in practice is that a Pod landing on a node with no replica reads and
+writes over the network until LINSTOR has replicated the data to it — degraded
+while that runs, and back to local-disk performance once it completes.
 
 #### DRBD tuning
 

@@ -91,13 +91,14 @@ offered; that capability is being replaced instead of traded against durability
   the price.
 - **`piraeus-r2-roaming`** for ordinary application data, and in practice the
   most used class here. Two synchronous replicas, and the Pod is free to schedule
-  anywhere: it attaches diskless on a node without a replica and `auto-diskful`
-  converts that into a local one after five minutes. The steady state is therefore
-  a local disk; what you pay for the freedom is a window after each move, and the
-  32 GiB cap that keeps that window bounded.
-- **`piraeus-r2`** for the same data when it must exceed 32 GiB, or when five
-  minutes of remote I/O after a reschedule is unacceptable. The Pod is pinned to a
-  replica holder, so I/O is always local. Reads are free, at parity with raw LVM on
+  anywhere. It performs identically to `piraeus-r2` — the same pool, replicas and
+  DRBD tuning — and the only cost of the freedom is that a Pod landing where no
+  replica exists runs over the network until LINSTOR replicates the data to it,
+  which `auto-diskful` begins after five minutes. The 32 GiB cap is what keeps
+  that period bounded.
+- **`piraeus-r2`** for the same data when it must exceed 32 GiB, or when a period
+  of degraded I/O after a reschedule is unacceptable. The Pod is pinned to a
+  replica holder, so it can never land where the data isn't. Reads are free, at parity with raw LVM on
   the same thin pool; writes pay the full cost of synchronous replication, capped
   at 111 MiB/s by the replication link on every node.
 - **`unifi-nas`** for bulk sequential and for the only RWX in the cluster, at the

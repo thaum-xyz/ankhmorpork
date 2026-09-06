@@ -49,11 +49,11 @@ on `piraeus-r2` in step 6.
 **This is the default for ordinary application data**, and the most used class in
 the cluster. Two synchronous replicas, and the Pod is free to schedule anywhere.
 
-When a Pod lands on a node without a replica it attaches **diskless** and runs
-over the network. After five minutes `auto-diskful` converts that attachment into
-a local replica and drops the surplus one, so the steady state is a local disk —
-the same as `piraeus-r2`. The cost is the window after a move, not the running
-state.
+Performance is **the same as `piraeus-r2`** — same pool, same replicas, same DRBD
+tuning. The single difference: if a Pod lands on a node holding no replica, it
+reads and writes over the network until LINSTOR replicates the data there.
+`auto-diskful` starts that conversion after five minutes. Degraded while it runs,
+identical afterwards.
 
 That resync is also why PVCs here are **capped at 32 GiB** and denied above it: a
 full 32 GiB is roughly five more minutes over the node network at 1 Gb/s, and
@@ -61,15 +61,14 @@ requested size is the only proxy admission has.
 
 ## 6. When to use `piraeus-r2` instead
 
-Same two replicas, but the Pod is pinned to a node holding one of them
-(`allowRemoteVolumeAccess: false`), so I/O is always local and there is never a
-diskless window.
+Same two replicas and the same performance, but the Pod is pinned to a node
+holding one of them (`allowRemoteVolumeAccess: false`), so it can never land
+somewhere the data isn't.
 
 Choose it over roaming when:
 
 - the volume needs to exceed **32 GiB**, or
-- the workload cannot tolerate running remote for five minutes after a
-  reschedule.
+- the workload cannot tolerate a period of degraded I/O after a reschedule.
 
 The trade is scheduling freedom: a Pod can only land on the two replica holders,
 so if both are drained at once it waits.
