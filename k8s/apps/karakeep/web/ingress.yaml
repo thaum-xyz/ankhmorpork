@@ -22,7 +22,10 @@ metadata:
     homer.rajsingh.info/enabled: "true"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    probe-uri: /
+    # /  redirects to /signin, a 28KB Next.js shell that renders from static
+    # assets -- it returns 200 with the backend dead. /api/health is served by
+    # the app itself and answers {"status":"ok"} in 46 bytes.
+    probe-uri: /api/health
     item.homer.rajsingh.info/name: "Karakeep"
     item.homer.rajsingh.info/subtitle: "Bookmarks hoarder"
     item.homer.rajsingh.info/logo: "https://avatars.githubusercontent.com/u/202258986?s=60&v=4"
