@@ -57,7 +57,7 @@ nav = [
   { "Explanation" = [
     "explanation/index.md",
     { "ConfigMap autoreload" = "explanation/configmap-autoreload.md" },
-    { "Why storage is split four ways" = "explanation/storage-durability.md" },
+    { "Why storage is split the way it is" = "explanation/storage-durability.md" },
     { "Rule linting with pint" = "explanation/pint-rule-linting.md" },
     { "Postgres fleet upgrade plan" = "postgres/fleet-upgrade-plan.md" },
   ] },

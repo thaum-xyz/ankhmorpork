@@ -1,16 +1,9 @@
 # Choose a storage class { .quad-howto }
 
-Work through these in order and stop at the first one that matches. Each answer
-is justified in [why storage is split this way](../explanation/storage-durability.md);
+Work through these in order and stop at the first one that matches. Each answer is
+justified in [why storage is split the way it is](../explanation/storage-durability.md);
 the full capability tables are in
 [storage classes](../reference/storage-classes.md).
-
-!!! warning "Longhorn is being retired"
-
-    Do not choose `longhorn`, `longhorn-r2` or `longhorn-static` for anything new.
-    An acknowledged write on Longhorn is not flushed to the device, and its
-    retirement is tracked in
-    [#1266](https://github.com/thaum-xyz/ankhmorpork/issues/1266).
 
 ## 1. Does more than one Pod mount it at once?
 
@@ -27,9 +20,8 @@ classes back on the table.
 Postgres, etcd, SQLite, or anything where an acknowledged write must survive a
 power cut.
 
-- **Not `unifi-nas`.** It mounts `nfsvers=3` with `nolock`, so there is no
-  byte-range locking — SQLite in particular does not belong there at any speed.
-- **Not Longhorn.** Its commit acknowledgement is not backed by a flush.
+**Not `unifi-nas`.** It mounts `nfsvers=3` with `nolock`, so there is no
+byte-range locking — SQLite in particular does not belong there at any speed.
 
 That leaves `lvm-thin` and `piraeus-r2`. Continue to the next question.
 

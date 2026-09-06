@@ -26,7 +26,7 @@ currently exists only in commit messages, per-app READMEs and
 
 ## Available now
 
-- [Why storage is split four ways](storage-durability.md) — and how a durability
+- [Why storage is split the way it is](storage-durability.md) — and how a durability
   claim was tested rather than trusted
 - [Why a Kyverno policy rolls Pods on ConfigMap changes](configmap-autoreload.md)
 - [Why the rule linter alerts on change, not on count](pint-rule-linting.md)
