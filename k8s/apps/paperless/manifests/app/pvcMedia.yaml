@@ -12,4 +12,7 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  storageClassName: longhorn
+  # piraeus-r2-roaming rather than piraeus-r2: allowRemoteVolumeAccess lets the
+  # Pod start on any node and attach diskless instead of waiting for one holding
+  # a replica, which matters when kured reboots nodes.
+  storageClassName: piraeus-r2-roaming
