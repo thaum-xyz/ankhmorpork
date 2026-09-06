@@ -11,3 +11,4 @@ resources:
   - servicemonitor.yaml
   - networkpolicy.yaml
   - prometheusrule.yaml
+  - slo-blackbox-probe-success.yaml
