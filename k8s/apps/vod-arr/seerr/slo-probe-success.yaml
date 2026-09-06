@@ -1,0 +1,34 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  name: seerr-probe-success
+spec:
+  # Availability as a person experiences it: the blackbox probe, end to end
+  # through DNS, TLS and the ingress. Split out of the shared
+  # blackbox-probe-success so this service owns the objective that describes it,
+  # the same reason its Ingress is not kept in traefik's namespace.
+  #
+  # Matches on the host rather than the full probe URL, so changing
+  # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
+  # SLO behind it.
+  #
+  # target is a PLACEHOLDER carried over from the shared objective. 95%/7d
+  # permitted 8h24m of downtime a week, which was only ever defensible because
+  # one number had to cover thirteen services. Set from data around 2026-10-06 --
+  # having somewhere to put a real number is the point of splitting.
+  description: >-
+    Fraction of successful blackbox probes against seek.krupa.net.pl.
+  alerting:
+    name: SeerrProbeBudgetBurn
+    absentName: SeerrProbeMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
+  indicator:
+    bool_gauge:
+      metric: probe_success{instance=~"https://seek\\.krupa\\.net\\.pl(/.*)?"}
+  target: "95.0"
+  window: 4w

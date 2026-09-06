@@ -9,6 +9,7 @@ resources:
   - ingress-cloudflare.yaml
   - slo-availability.yaml
   - slo-latency.yaml
+  - slo-probe-success.yaml
 configMapGenerator:
   - name: values-pocket-id
     files:

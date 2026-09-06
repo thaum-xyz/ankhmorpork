@@ -10,3 +10,4 @@ resources:
   - slo-availability.yaml
   - slo-latency.yaml
   - secrets.yaml
+  - slo-probe-success.yaml

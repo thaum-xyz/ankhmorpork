@@ -7,6 +7,7 @@ resources:
   - ingress-cloudflare.yaml
   - pvc.yaml
   - podmonitor.yaml
+  - slo-probe-success.yaml
 configMapGenerator:
   # The dump script is a real file so it stays readable and lintable. Inlining
   # it in the k8up.io/backupcommand annotation is not an option: K8up tokenises
