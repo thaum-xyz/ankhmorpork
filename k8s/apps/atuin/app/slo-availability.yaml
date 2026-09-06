@@ -26,7 +26,17 @@ spec:
     Excludes the kubelet's health checks on /.
   alerting:
     name: AtuinAvailabilityBudgetBurn
-    absentName: AtuinAvailabilityMetricAbsent
+    # absent is off, and this is the one SLO family where that is right.
+    # /api/v0/* sees ~27 requests a day, so its counter series do not exist
+    # until the first sync after a restart -- and Pyrra fixes the absent
+    # alert at for: 600s with no knob. It fired twice within minutes of the
+    # 2026-09-06 rollout, correctly, for a service that was fine.
+    #
+    # Absence carries no information at this request rate. What guards
+    # against measuring nothing here is the /healthz probe, scraped every
+    # 30s by both Prometheus replicas and covered by blackbox-probe-success.
+    # Absent-checking belongs on SLIs that are always exercised.
+    absent: false
     severities:
       fastBurn: info
       mediumBurn: info
