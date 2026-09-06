@@ -9,6 +9,13 @@ spec:
   description: If there are too many errors Prometheus is having a bad time discovering new Kubernetes services.
   alerting:
     name: PrometheusSDKubernetesBudgetBurn
+    absentName: PrometheusSDKubernetesMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
   indicator:
     ratio:
       errors:

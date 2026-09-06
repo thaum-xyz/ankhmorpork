@@ -9,9 +9,11 @@ spec:
   # SSO, so the blast radius of an outage here is every OIDC service. This is
   # one of only two services in the cluster exporting a real request signal.
   #
-  # target is a PLACEHOLDER. Prometheus holds days, not weeks, so no number
-  # here would be grounded -- burnrates are off until there is a month of
-  # history to pick one from. Revisit from 2026-10-06.
+  # target is a PLACEHOLDER. Prometheus holds days, not weeks, so no number here
+  # is grounded yet. The burn alerts fire anyway, at info/none, so they land in
+  # ALERTS without routing anywhere -- that is how we find out whether these
+  # windows are noisy at 4 requests a minute before anyone lets them page.
+  # Revisit the target, and the severities, from 2026-10-06.
   #
   # Read the denominator before trusting a ratio over it: essentially all of
   # this traffic is synthetic, and after the stirling-pdf probe fix it is
@@ -35,10 +37,13 @@ spec:
     all of the denominator is the pdf blackbox probe's authorize redirect.
   alerting:
     name: PocketIDAvailabilityBudgetBurn
-    # No budget alerts until the target is grounded. The absent alert stays on
-    # deliberately: it is the guard that an SLO is measuring something at all.
-    burnrates: false
-    absent: true
+    absentName: PocketIDAvailabilityMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
   indicator:
     ratio:
       errors:

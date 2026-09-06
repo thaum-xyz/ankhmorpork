@@ -5,6 +5,13 @@ metadata:
 spec:
   alerting:
     name: ProbeBudgetBurn
+    absentName: ProbeMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
   indicator:
     bool_gauge:
       grouping:
