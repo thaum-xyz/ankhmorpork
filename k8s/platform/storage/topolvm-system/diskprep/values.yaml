@@ -1,4 +1,4 @@
-# Config reference: https://github.com/thaum-xyz/helm-charts/blob/main/charts/lvm-diskprep/values.yaml
+# Config reference: https://github.com/thaum-xyz/helm-charts/tree/main/charts/lvm-diskprep
 
 nodeSelector:
   storage.topolvm.io/enabled: "true"

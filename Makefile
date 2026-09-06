@@ -1,5 +1,9 @@
 SHELL:=/bin/bash
 
+# Kept in sync with .github/workflows/docs.yml by the zensical customManager
+# in .github/renovate.json, which matches both spellings.
+ZENSICAL_VERSION:=0.0.59
+
 .PHONY: help
 help: ## Display help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -24,3 +28,11 @@ prometheusrules:  ## Validate prometheus rules
 .PHONY: bootstrap
 bootstrap:  ## Bootstrap development environment
 	ggshield install -m local
+
+.PHONY: docs
+docs:  ## Serve the documentation site locally with live reload
+	uvx zensical==$(ZENSICAL_VERSION) serve
+
+.PHONY: docs-build
+docs-build:  ## Build the documentation site into ./site
+	uvx zensical==$(ZENSICAL_VERSION) build --clean

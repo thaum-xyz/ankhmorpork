@@ -1,0 +1,35 @@
+# Explanation { .quad-explanation }
+
+!!! warning "Placeholder"
+
+    The site scaffold is in place; this section has mostly no content yet.
+
+## What belongs here
+
+Explanation is **discussion**. It is the only section that may argue, compare,
+admit uncertainty, or describe something that was tried and rejected. It is read
+away from the keyboard.
+
+Admission test:
+
+- [ ] It answers "why is it like this?" rather than "how do I?".
+- [ ] It is useful to someone who is not currently doing anything.
+- [ ] It can be read in any order relative to the rest of the site.
+
+This is where hard-won knowledge goes to stay found: measurements, trade-offs,
+and the reasoning behind conventions that otherwise look arbitrary. Most of it
+currently exists only in commit messages, per-app READMEs and
+`.claude/skills/app-deployment/SKILL.md`.
+
+## Planned
+
+- Why storage is split across four classes, and why nothing transactional runs on
+  Longhorn *(the fsync measurement)*
+- Why observability is split by role rather than by stack
+- How Flux is layered: bootstrap, platform, apps
+- Why Helm values live in `values.yaml` rather than inline in a HelmRelease
+- What stays private, and why the rest of this is public
+
+## Available now
+
+- [Postgres fleet upgrade plan](../postgres/fleet-upgrade-plan.md)

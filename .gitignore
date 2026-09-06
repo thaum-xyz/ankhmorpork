@@ -8,3 +8,7 @@ master.key
 bin/
 .cache_ggshield
 tmp/
+
+# Rendered documentation site (see zensical.toml)
+site/
+.venv/
