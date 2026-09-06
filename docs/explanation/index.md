@@ -32,4 +32,5 @@ currently exists only in commit messages, per-app READMEs and
 
 ## Available now
 
+- [Why a Kyverno policy rolls Pods on ConfigMap changes](configmap-autoreload.md)
 - [Postgres fleet upgrade plan](../postgres/fleet-upgrade-plan.md)

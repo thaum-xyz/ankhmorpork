@@ -34,6 +34,8 @@ Admission test:
 
 ## Available now
 
+- [Annotations and labels](annotations.md) — keys this cluster gives meaning to,
+  and two that look load-bearing but are not
 - [Charts and images](charts.md) — the two sibling repositories, what they hold,
   and where their generated reference lives
 - [UPS Modbus register map](../ups/modbus-register-map.md)
