@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/name: atuin
+    app.kubernetes.io/instance: atuin
+    # blackbox discovers targets from Ingresses carrying this label. It belongs
+    # here rather than on ingress-cloudflare.yaml: blackbox takes its scheme
+    # from whether the Ingress declares TLS, and the cloudflare twin declares
+    # none, so probing that one would build an http:// target the tunnel never
+    # answers.
+    probe: enabled
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+    # / is the root handler -- 200 with a 234-byte Discworld homage, which
+    # proves the HTTP server is up and nothing else. /healthz answers
+    # {"status":"healthy"} in 20 bytes.
+    probe-uri: /healthz
+  name: atuin
+spec:
+  ingressClassName: public
+  rules:
+    - host: atuin.thaum.xyz
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: atuin
+                port:
+                  number: 80
+  tls:
+    - secretName: atuin-tls
+      hosts:
+        - atuin.thaum.xyz

@@ -14,8 +14,6 @@ resources:
   - slo-ingress.yaml
   - slo-kubelet-request-errors.yaml
   - slo-kubelet-runtime-errors.yaml
-  - slo-pocket-id-availability.yaml
-  - slo-pocket-id-latency.yaml
   - slo-prometheus-notification-errors.yaml
   - slo-prometheus-operator-http-errors.yaml
   - slo-prometheus-operator-reconcile-errors.yaml

@@ -1,0 +1,43 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: atuin-availability
+spec:
+  # Scoped to /api/v0/*, which is the shell-history sync API and the only thing
+  # here a person would notice failing.
+  #
+  # Excluding path="/" is the whole point of the selector. atuin's liveness and
+  # readiness probes both hit / every 10s, so 17299 of the 17328 requests it
+  # served in 24h were the kubelet checking on it -- 99.8%. A ratio over
+  # everything would report on kubelet reachability, which KubePodNotReady
+  # already covers, and would drown the sync API at a ratio of 577:1.
+  #
+  # What is left is thin and honestly so: ~30 requests a day, ~840 per window.
+  # A 4w availability figure over that is meaningful; a 5m burn rate over it is
+  # mostly noise. Whether that matters is exactly what the unrouted burn-in is
+  # for -- read it back with everything else around 2026-10-06.
+  #
+  # target is a PLACEHOLDER.
+  description: >-
+    Fraction of atuin sync API requests answered without a server error.
+    Excludes the kubelet's health checks on /.
+  alerting:
+    name: AtuinAvailabilityBudgetBurn
+    absentName: AtuinAvailabilityMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
+  indicator:
+    ratio:
+      errors:
+        metric: http_requests_total{job="atuin",path=~"/api/v0/.*",status=~"5.."}
+      total:
+        metric: http_requests_total{job="atuin",path=~"/api/v0/.*"}
+  target: "99"
+  window: 4w

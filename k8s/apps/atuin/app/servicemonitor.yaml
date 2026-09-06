@@ -1,0 +1,45 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/name: atuin
+    app.kubernetes.io/instance: atuin
+  name: atuin
+spec:
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 60s
+      # atuin labels every request with its path, and the internet supplies the
+      # paths: 773 of the 776 distinct values are scanner 404s for /.env, /wp/,
+      # /sitemap.xml and the like. One permanent series per URL anyone invents,
+      # times twelve histogram buckets -- 9396 bucket series and climbing, from
+      # a service with three real routes.
+      #
+      # Anything outside the known set collapses to path="other", which bounds
+      # the label without discarding requests or flattening the routes the SLOs
+      # select on.
+      #
+      # Note what this deliberately does not do: test for an empty regex.
+      # Omitted or empty, the operator defaults regex to (.*), which here would
+      # rewrite every path to "other" including /api/v0/* -- silently reducing
+      # both SLOs to a selector that matches nothing, which reads as a perfect
+      # 100% rather than an error. Matching .+ on a temp label is the same test
+      # without depending on that default.
+      metricRelabelings:
+        - sourceLabels: [path]
+          targetLabel: __tmp_unknown_path
+        - sourceLabels: [path]
+          regex: /|/healthz|/api/v[0-9]+/.*
+          targetLabel: __tmp_unknown_path
+          replacement: ""
+        - sourceLabels: [__tmp_unknown_path]
+          regex: .+
+          targetLabel: path
+          replacement: other
+        - action: labeldrop
+          regex: __tmp_unknown_path
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: atuin
+      app.kubernetes.io/instance: atuin
