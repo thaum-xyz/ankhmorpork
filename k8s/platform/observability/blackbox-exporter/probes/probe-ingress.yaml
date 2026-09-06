@@ -31,6 +31,15 @@ spec:
           sourceLabels:
             - __param_target
           targetLabel: instance
+        # The other two Probes set environment through staticConfig labels;
+        # ingress discovery has no equivalent, so it is set here. It is what the
+        # two probe SLOs split on: this cluster serves these, and merely watches
+        # everything else. A replace with no sourceLabels concatenates to the
+        # empty string, which the default (.*) matches, so the label is set
+        # unconditionally.
+        - action: replace
+          targetLabel: environment
+          replacement: ankhmorpork
       selector:
         matchLabels:
           probe: enabled

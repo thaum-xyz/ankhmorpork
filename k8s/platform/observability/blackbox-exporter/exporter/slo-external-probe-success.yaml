@@ -1,0 +1,38 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  name: external-probe-success
+spec:
+  # Endpoints this cluster watches but does not run: registry.avsystem.com
+  # (environment=avs, somebody else's entirely) and zmc.krupa.net.pl
+  # (environment=lancre, yours but at another site). Neither is something an
+  # operator here can commit to, which is the whole reason they are not in the
+  # objective next door.
+  #
+  # Selecting on environment!="ankhmorpork" rather than naming the two hosts, so
+  # a new external probe joins this SLO by default rather than silently
+  # inflating the one for services we actually serve.
+  #
+  # target is a PLACEHOLDER carried over unchanged. When the numbers are set
+  # around 2026-10-06 this one should end up looser than its neighbour, not
+  # because the endpoints are less important but because nothing here can fix
+  # them.
+  description: >-
+    Fraction of successful blackbox probes against endpoints outside this
+    cluster.
+  alerting:
+    name: ExternalProbeBudgetBurn
+    absentName: ExternalProbeMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
+  indicator:
+    bool_gauge:
+      grouping:
+        - instance
+      metric: probe_success{environment!="ankhmorpork"}
+  target: "95.0"
+  window: 7d
