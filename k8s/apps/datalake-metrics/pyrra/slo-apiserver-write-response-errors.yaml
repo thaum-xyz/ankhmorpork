@@ -7,6 +7,8 @@ metadata:
   name: apiserver-write-response-errors
 spec:
   description: ""
+  alerting:
+    name: APIServerWriteBudgetBurn
   indicator:
     ratio:
       errors:

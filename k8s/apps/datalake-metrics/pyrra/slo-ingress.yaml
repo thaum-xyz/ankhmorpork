@@ -3,6 +3,8 @@ kind: ServiceLevelObjective
 metadata:
   name: blackbox-probe-success
 spec:
+  alerting:
+    name: ProbeBudgetBurn
   indicator:
     bool_gauge:
       grouping:
