@@ -1,6 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    # On the Deployment, not the pod template. mutate-configmap-autoreload
+    # matches object.metadata.annotations, and the policy writes its stamp into
+    # spec.template.metadata.annotations -- putting the opt-in there instead
+    # means the policy never sees it and silently does nothing, which is what
+    # happened in #1299.
+    #
+    # alertmanager-to-github reads both template files once at startup, so a
+    # change to them needs a new Pod. Two md5 annotations used to sit on the pod
+    # template and were maintained by hand; 84b6c1f7 shows the cost -- it added
+    # the `with` guard to the title template and changed nothing else, so the
+    # checksums did not move, no rollout happened, and the running Pod formatted
+    # titles with the pre-guard version for three days. Every alert without a
+    # namespace label was filed as "Alert: <name> in <no value>".
+    #
+    # One annotation covers the ConfigMap and so both template keys, where the
+    # hand-maintained scheme needed one per file and tolerated a stale value.
+    autoreloader.thaum.xyz/configmap: github-receiver-config
   labels:
     app.kubernetes.io/component: alertmanager-webhook-receiver
     app.kubernetes.io/name: github-receiver
@@ -13,22 +31,6 @@ spec:
       app.kubernetes.io/name: github-receiver
   template:
     metadata:
-      annotations:
-        # alertmanager-to-github reads both template files once at startup, so a
-        # change to them needs a new Pod. The two md5 annotations that used to
-        # live here were maintained by hand, and 84b6c1f7 shows what that costs:
-        # it added the `with` guard to the title template and did not touch this
-        # file, so the checksums did not move, no rollout happened, and the
-        # running Pod went on formatting titles with the pre-guard template for
-        # three days. Every alert without a namespace label -- which is every
-        # alert whose expression aggregates it away -- was filed as
-        # "Alert: <name> in <no value>".
-        #
-        # mutate-configmap-autoreload stamps the ConfigMap's resourceVersion
-        # into this pod template on every apply instead, so the rollout cannot
-        # be forgotten. One annotation covers the ConfigMap, so it covers both
-        # template keys.
-        autoreloader.thaum.xyz/configmap: github-receiver-config
       labels:
         app.kubernetes.io/component: alertmanager-webhook-receiver
         app.kubernetes.io/name: github-receiver
