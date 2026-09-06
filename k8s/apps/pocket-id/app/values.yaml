@@ -82,6 +82,12 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
+    # The OIDC discovery document rather than /healthz: /healthz is a 204 the
+    # kubelet already checks locally, while this is the document every relying
+    # party must fetch, so it fails when SSO is actually unusable. Matches the
+    # house style of probing a real app endpoint (mealie /api/app/about,
+    # immich /api/server/config) rather than a liveness path.
+    probe-uri: /.well-known/openid-configuration
   className: private
   host: login.krupa.net.pl
   tls:

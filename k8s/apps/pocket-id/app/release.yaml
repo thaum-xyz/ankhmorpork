@@ -56,3 +56,18 @@ spec:
                   name: metrics
                   containerPort: 9464
                   protocol: TCP
+          # blackbox discovers targets from Ingresses labelled probe=enabled and
+          # the chart exposes annotations but no labels, so the label has to be
+          # patched on. It goes on this Ingress, not pocket-id-cloudflare:
+          # blackbox derives the scheme from whether the Ingress declares TLS,
+          # and the cloudflare twin declares none, so probing that one would
+          # build an http:// target the tunnel never answers.
+          - target:
+              group: networking.k8s.io
+              version: v1
+              kind: Ingress
+              name: pocket-id
+            patch: |-
+              - op: add
+                path: /metadata/labels/probe
+                value: enabled
