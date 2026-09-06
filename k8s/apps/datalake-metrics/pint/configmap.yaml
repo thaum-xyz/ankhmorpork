@@ -72,6 +72,95 @@ data:
       disable = ["promql/counter"]
     }
 
+    # ---- Accepted promql/series findings -------------------------------
+    #
+    # Everything below is a rule that works, reported because the series it
+    # selects is not present *right now*. They are permanent findings, and the
+    # PintRuleProblems alert fires on pint_problems > 0, so left alone they keep
+    # issue #1237 open forever and train everyone to ignore it.
+    #
+    # Two things to know before adding to this list.
+    #
+    # pint's config file cannot disable a check for a single metric --
+    # `promql/series(kubelet_evictions)` is rejected with "unknown check name";
+    # that syntax only works as a comment inside the rule file, which is not an
+    # option for chart-generated rules. So every entry here disables
+    # promql/series for the whole rule, and a later rename or typo in any metric
+    # that rule reads goes unnoticed.
+    #
+    # That is why only two of pint's four wordings are accepted here: "has the
+    # metric ... but there are no series matching {label=value}" and "only
+    # sometimes present". In both the metric itself exists, so a typo would
+    # produce the *other* wording -- "didn't have any series for" -- against a
+    # rule that is not on this list, and still be caught. Findings of that third
+    # kind are deliberately left reported. One of them turned out to be a dead
+    # alert.
+
+    # The label value only exists when something is wrong: status="429",
+    # key="node.kubernetes.io/unreachable", access_mode="ReadOnlyMany",
+    # result="error", reason="OOMKilled", type="task-failed". Each metric is
+    # present and each alert is correct; there is simply nothing wrong yet.
+    #
+    # KubePersistentVolume.*FillingUp, not KubePersistentVolumeFillingUp: the
+    # Inodes variant carries the same `unless ... access_mode="ReadOnlyMany"`
+    # clause, and all four rules in kubernetes-storage (warning and critical of
+    # each) share it. pint deduplicates identical problems and shows one, so
+    # matching the name it happened to print just promotes the next. Verified by
+    # doing exactly that -- scoping the visible name surfaced
+    # KubePersistentVolumeInodesFillingUp on the next run. KubePersistentVolumeErrors
+    # does not use the clause and stays checked.
+    rule {
+      match {
+        name = "CertManagerHittingRateLimits|KubeNodeUnreachable|KubePersistentVolume.*FillingUp|KubeStateMetricsWatchErrors|MultipleContainersOOMKilled|TaskFailureRatioTooHigh"
+      }
+      disable = ["promql/series"]
+    }
+
+    # Pyrra ratio SLOs that have had no errors yet. sum(rate(...{code=~"5.."}))
+    # over an empty selector returns no series rather than zero, so the
+    # numerator is empty, the division is empty, and the burnrate record records
+    # nothing. Each clears itself the first time the thing it measures fails.
+    # SLOMetricAbsent already covers the input metric disappearing.
+    #
+    # `burnrate.+`, not the one window pint happened to name. Pyrra generates
+    # seven windows per SLO -- 5m, 30m, 1h, 2h, 6h, 1d, 4d for these three --
+    # all with the same empty numerator, so they are duplicates of each other
+    # and pint shows one. Matching that one just promotes the next window.
+    # apiserver_request:burnrate.+ is deliberately absent: the read SLO does
+    # produce series, so a break there should still be reported.
+    rule {
+      match {
+        name = "KubeAPIServerWriteErrorBudgetBurn|prometheus_http_requests:burnrate.+|prometheus_operator_kubernetes_client_http_requests:burnrate.+|prometheus_sd_kubernetes_http_request:burnrate.+"
+      }
+      disable = ["promql/series"]
+    }
+
+    # Union branches for pod owners this cluster does not have: owner_kind="Node"
+    # is static pods, owner_kind="" is ownerless ReplicaSets. The rule produces
+    # 225 series from DaemonSet, ReplicaSet, StatefulSet and Job owners. Only
+    # promql/series is scoped off -- the promql/impossible finding about the
+    # redundant owner_kind join stays visible, because that one is upstream
+    # style rather than a property of this cluster.
+    rule {
+      match {
+        name = "namespace_workload_pod:kube_pod_owner:relabel"
+      }
+      disable = ["promql/series"]
+    }
+
+    # Metrics that exist only while their condition holds, so pint sees them
+    # come and go: kube_job_failed (1d15h average life span),
+    # kube_pod_container_status_waiting_reason (6m55s),
+    # alertmanager_notifications_failed_total (3d17h), the *arr health metrics
+    # (3d17h-6h), and gotk_resource_info{ready=~"False|Unknown"} (5m), which is
+    # the healthy case for Flux.
+    rule {
+      match {
+        name = "AlertmanagerClusterFailedToSendAlerts|FluxCDReconciliationFailure|KubeJobFailed|KubePodCrashLooping|prowlarrUnhealthy|radarrUnhealthy|sonarrUnhealthy"
+      }
+      disable = ["promql/series"]
+    }
+
     checks {
       disabled = [
         # 48 findings, 41 of them namespace=~".*" inside the chart's own mixin
