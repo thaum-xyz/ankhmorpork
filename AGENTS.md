@@ -66,5 +66,5 @@ Operator CRDs come from the `prometheus-operator-crds` HelmRelease, whose
 Kustomization sits in `k8s/bootstrap/` because nearly every component ships a
 ServiceMonitor or PrometheusRule. The platform group dependsOn it.
 
-Rules live with whatever produces or remediates their signal, the way longhorn,
+Rules live with whatever produces or remediates their signal, the way k8up,
 cnpg and ups rules already do.

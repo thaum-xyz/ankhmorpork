@@ -16,7 +16,6 @@ spec:
           operator: NotIn
           values:
             - kube-system
-            - longhorn-system
     resourceRules:
       - apiGroups:
           - ""

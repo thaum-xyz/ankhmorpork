@@ -51,7 +51,7 @@ which is worth remembering when a fix appears not to have landed.
 
 ## Where the S3 gateways come from
 
-All three S3 gateways — `cnpg-system`, `longhorn-system` and `datalake-logs` —
+Both S3 gateways — `cnpg-system` and `datalake-logs` —
 run [upstream's chart][up] at v0.3.5 from `oci://ghcr.io/versity/versitygw/charts`,
 not a thaum-xyz chart. Their values follow upstream's shape: `gateway.backend`,
 `persistence`, `auth.existingSecret`.

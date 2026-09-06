@@ -12,13 +12,17 @@ tolerations: &smartctlTolerations
   - effect: NoSchedule
     operator: Exists
 
-# Longhorn attaches its volumes over iSCSI, so they surface as /dev/sd* and a
-# scan cannot tell them from a real disk: master01's SATA SSD and beelink01's
-# iSCSI targets both scan as `-d scsi`, and the sat/scsi split only shows up
-# once the device is queried. Volumes also move with their workloads, so any
-# node can sprout new /dev/sd* at any time. Excluding scanned SCSI devices and
-# naming the two real SATA disks explicitly is the only filter that survives
+# Longhorn attached its volumes over iSCSI, so they surfaced as /dev/sd* and a
+# scan could not tell them from a real disk: master01's SATA SSD and beelink01's
+# iSCSI targets both scanned as `-d scsi`, and the sat/scsi split only showed up
+# once the device was queried. Volumes also moved with their workloads, so any
+# node could sprout new /dev/sd* at any time. Excluding scanned SCSI devices and
+# naming the two real SATA disks explicitly was the only filter that survived
 # that churn. NVMe is still found by scan.
+#
+# Longhorn is gone, so that churn is too, and a simpler filter would probably do.
+# Left as-is deliberately: loosening it risks silently unmonitoring a disk, which
+# deserves a deliberate change rather than a drive-by one.
 #
 # The cost: a newly fitted SATA disk stays unmonitored until it is named here.
 #
