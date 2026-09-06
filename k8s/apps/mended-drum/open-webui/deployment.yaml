@@ -13,6 +13,14 @@ spec:
       app.kubernetes.io/name: open-webui
   template:
     metadata:
+      annotations:
+        # webui.db and the chroma vector store are live SQLite in WAL mode, and
+        # K8up reads the running filesystem, so the file-level copies of them
+        # can tear. This streams copies taken through SQLite's own API into the
+        # repository as one tar; that is what to restore from. The file-level
+        # copies stay as a fallback.
+        k8up.io/backupcommand: python3 /backup/dump.py
+        k8up.io/file-extension: .tar
       labels:
         app.kubernetes.io/name: open-webui
     spec:
@@ -73,7 +81,13 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /app/backend/data
+            - name: backup-script
+              mountPath: /backup
+              readOnly: true
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: open-webui-data
+        - name: backup-script
+          configMap:
+            name: backup-script
