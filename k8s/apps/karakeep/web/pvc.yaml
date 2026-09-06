@@ -1,6 +1,15 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
+    # without this is not backed up.
+    #
+    # db.db is live SQLite and this is a file-level copy, so the database in a
+    # snapshot may be torn. Deliberate for now: a consistent dump needs a
+    # k8up.io/backupcommand, which comes separately. assets/ is the bulk of the
+    # volume and is write-once, so it is unaffected.
+    k8up.io/backup: "true"
   name: data-pvc
 spec:
   storageClassName: longhorn

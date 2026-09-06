@@ -8,3 +8,4 @@ resources:
   - web/
   - search/
   - snapshotter/
+  - backup/

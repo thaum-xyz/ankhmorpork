@@ -1,6 +1,16 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
+    # without this is not backed up.
+    #
+    # The meilisearch index is derived data -- karakeep can rebuild it from
+    # db.db -- but #1266 has not yet confirmed it reindexes from empty, so it
+    # is backed up until that is settled. It is also a live LMDB store copied
+    # at the file level, so treat a restored index as a convenience, not a
+    # guarantee.
+    k8up.io/backup: "true"
   name: meilisearch-pvc
 spec:
   storageClassName: longhorn
