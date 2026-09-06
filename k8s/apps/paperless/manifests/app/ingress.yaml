@@ -3,6 +3,12 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Without this the relabeling builds the bare host, so the probe followed a
+    # redirect to /accounts/login/?next=/ and depended on a default nobody
+    # chose. Same page, named explicitly and without the hop -- it is also what
+    # paperless's own readiness probe uses, and Django renders it server-side,
+    # so unlike an SPA shell a 200 does mean the application is running.
+    probe-uri: /accounts/login/
     item.homer.rajsingh.info/name: "Paperless"
     item.homer.rajsingh.info/subtitle: "Document management system"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/paperlessng.svg"

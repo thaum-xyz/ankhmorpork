@@ -6,7 +6,10 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    probe-uri: /
+    # /  redirects to /login, a 297KB SPA bundle that renders from static
+    # assets whether or not the backend is alive. /api/v1/status is what seerr's
+    # own readiness probe uses, and answers in 98 bytes.
+    probe-uri: /api/v1/status
     item.homer.rajsingh.info/name: "Seerr"
     item.homer.rajsingh.info/subtitle: "Request movies and shows"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/jellyseerr.svg"
