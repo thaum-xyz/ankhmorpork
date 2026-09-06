@@ -23,13 +23,14 @@ Admission test:
 ## Planned
 
 - Storage classes — capabilities, ceilings, access modes, node affinity
-- Kyverno admission policies
 - Ingress classes and certificate issuers
-- Namespace and Flux Kustomization layout
-- App inventory *(generated)*
 
 ## Available now
 
+- [Applications](apps.md) — every app, its namespace, its Flux Kustomization and
+  its hostnames *(generated)*
+- [Admission policies](admission-policies.md) — what Kyverno enforces, and which
+  rules only warn *(generated)*
 - [Annotations and labels](annotations.md) — keys this cluster gives meaning to,
   and two that look load-bearing but are not
 - [Charts and images](charts.md) — the two sibling repositories, what they hold,

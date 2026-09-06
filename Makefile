@@ -36,3 +36,19 @@ docs:  ## Serve the documentation site locally with live reload
 .PHONY: docs-build
 docs-build:  ## Build the documentation site into ./site
 	uvx zensical==$(ZENSICAL_VERSION) build --clean
+
+.PHONY: docs-reference
+docs-reference:  ## Regenerate the derivable reference pages under docs/reference
+	/usr/bin/python3 hack/generate-docs-reference.py
+
+.PHONY: docs-reference-check
+docs-reference-check: docs-reference  ## Fail if the generated reference pages are stale
+	@# git-status, not git-diff: diff ignores untracked files, so a page that was
+	@# never generated would pass silently.
+	@out="$$(git status --porcelain -- docs/reference/apps.md docs/reference/admission-policies.md)"; \
+	if [ -n "$$out" ]; then \
+		echo "$$out"; \
+		echo; \
+		echo "Generated reference pages are out of date. Run 'make docs-reference' and commit."; \
+		exit 1; \
+	fi
