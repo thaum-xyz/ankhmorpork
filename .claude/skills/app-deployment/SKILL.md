@@ -1,6 +1,6 @@
 ---
 name: app-deployment
-description: Deploy or extend an application in thaum-xyz/ankhmorpork — picking a StorageClass, satisfying the admission policies, wiring it into Flux, and rolling it out safely. Use when adding anything under k8s/apps/ or k8s/platform/, when adding or resizing persistent storage, when a PVC/Ingress/PDB is rejected or silently altered at admission, or when a reconcile reports success but nothing changed.
+description: Deploy, extend or restructure an application in thaum-xyz/ankhmorpork — picking a StorageClass, satisfying the admission policies, wiring it into Flux, and rolling it out safely. Use when adding anything under k8s/apps/ or k8s/platform/, when adding or resizing persistent storage, when replacing a Helm release with plain manifests or otherwise removing a HelmRelease, when a PVC/Ingress/PDB is rejected or silently altered at admission, or when a reconcile reports success but nothing changed.
 ---
 
 # Deploying an application
@@ -165,6 +165,54 @@ interval costs a Helm dry-run diff, not an upgrade. Fifteen releases sat at 30m
 and one at 10m until 2026-09-05. `spec.chart.spec.interval` is a different
 knob — that one polls the chart source and can stay high.
 
+## Replacing a Helm release with plain manifests
+
+Worth doing when the chart has stopped paying for itself — it ships a handful of
+objects and most of them need `postRenderers` patches to be usable. atuin was
+five objects, three patched, so the chart was pure indirection.
+
+**Do it in two commits, and not in one.** Removing the HelmRelease makes
+helm-controller *uninstall* the release, and Helm deletes by name from its stored
+manifest — the same names the new plain manifests use. kustomize-controller
+applies the new objects and deletes the HelmRelease in the same reconcile, then
+the uninstall lands afterwards and deletes what was just applied. The
+Kustomization is left `Ready=True` over a namespace with nothing in it.
+
+The guard is `helm.sh/resource-policy: keep`, which makes Helm leave a resource
+alone on uninstall. It has to reach the objects **through the chart**:
+
+```yaml
+# commit 1 — via postRenderers, or ingress.annotations etc. where the chart has them
+- target: {kind: Deployment, name: <app>}
+  patch: |-
+    - op: add
+      path: /metadata/annotations/helm.sh~1resource-policy
+      value: keep
+```
+
+Merge that, confirm the annotation is live on every object the chart owns, and
+only then commit the plain manifests and drop the HelmRelease. Helm skips the
+annotated objects, kustomize adopts them in place, and nothing restarts.
+
+**Annotating the live objects with `kubectl annotate` instead does not work.**
+kustomize-controller applies with server-side apply and force; it takes ownership
+of `metadata.annotations`, the new manifests do not carry the annotation, and the
+apply strips it moments before the uninstall reads it. This cost a ~4 minute
+atuin outage on 2026-09-06.
+
+Carry across exactly:
+
+- **`spec.selector` on a Deployment is immutable** — copy it from the live object
+  and diff it, or the apply fails and the only fix is delete-and-recreate.
+- **The full env set.** Diff it rather than eyeballing:
+  `kubectl get deploy <app> -o jsonpath='{..env[*].name}'` against the manifest.
+  Empty-valued vars the chart set are still part of the contract; drop them in a
+  later commit once the app is known not to distinguish unset from empty.
+
+Recovery, if the objects do get deleted: `flux -n flux-system reconcile
+kustomization <name>` recreates them, and is safe once the HelmRelease is gone
+because nothing is left to uninstall. There is no `--force` flag on that command.
+
 ## Traps that have bitten
 
 - **StorageClass fields are immutable.** `parameters`, `mountOptions`,
@@ -187,6 +235,13 @@ knob — that one polls the chart source and can stay high.
 - **Removing a field from git does not remove it from the object** when a previous
   manager holds server-side apply ownership and no longer applies it. Finish with
   `kubectl annotate <kind> <name> <key>-`; check with `--show-managed-fields=true`.
+  The mirror image also bites: **applying a manifest that omits a field strips it**
+  once kustomize-controller force-owns the parent map, which is why an annotation
+  added out of band with `kubectl annotate` does not survive the next reconcile.
+- **A green Kustomization is not evidence the objects exist.** `Ready=True` means
+  the apply succeeded, not that nothing deleted the result afterwards — a Helm
+  uninstall or another controller can remove objects out of band and the status
+  never moves. Check the objects.
 - **`kubectl get backup` resolves to `backups.longhorn.io`.** Always
   `backups.postgresql.cnpg.io`. Has produced false "no phase" readings twice.
 - **A misdirected ServiceMonitor reports `down`, not missing.** Scraping a port
