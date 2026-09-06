@@ -8,26 +8,47 @@ metadata:
 spec:
   groups:
     - name: k8up.rules
+      # Two symptoms, not four mechanisms: a backup ran and failed, or it did
+      # not run at all. Everything else -- restic errors, job counters, restore
+      # failures -- shows up as one of those two.
+      #
       # Nothing here is critical. severity=critical routes to opsgenie and pages;
       # a backup that failed tonight is fixed tomorrow with the previous night's
       # snapshot still on the NAS, so these go to github as issues instead.
       rules:
         - alert: K8upJobFailed
           annotations:
-            description: K8up {{$labels.label_k8up_io_type}} job {{$labels.job_name}} in namespace {{$labels.namespace}} failed. Backups for that namespace are not landing until it is fixed.
+            description: K8up {{$labels.owner_kind}} job {{$labels.job_name}} in namespace {{$labels.namespace}} failed. It stays reported until the failed Job is rotated out of history or removed.
             runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/K8upJobFailed
-            summary: K8up job failed
+            summary: A K8up job failed
+          # Identifies K8up's Jobs by the CR that owns them rather than by
+          # kube_job_labels, which carries no series at all: kube-state-metrics
+          # only emits kube_<resource>_labels for resources named in
+          # --metric-labels-allowlist, and ours lists only
+          # persistentvolumeclaims. The previous version of this rule joined on
+          # it and could never fire (#1288).
+          #
+          # kube_job_owner has no API group, so the owner_kind match is on bare
+          # kind names. cnpg and longhorn also define a Backup kind, but neither
+          # creates Jobs, and no Job in this cluster carries these owner kinds
+          # except K8up's.
+          #
+          # Job objects rather than k8up_jobs_failed_counter because the counter
+          # resets when the operator restarts -- which kured does weekly -- and
+          # because increase() cannot see the first failure of a job type whose
+          # series did not previously exist. Measured: a failed restore took
+          # k8up_jobs_failed_counter{jobType="restore"} from absent to 1, and
+          # increase(...[24h]) > 0 matched nothing.
           expr: |
-            sum by (job_name, namespace) (kube_job_status_failed)
-            * on (job_name, namespace) group_right ()
-            kube_job_labels{label_k8up_io_type=~"backup|check|prune|restore"}
-            > 0
-          for: 1m
+            (kube_job_failed{condition="true"} > 0)
+            * on (job_name, namespace) group_left (owner_kind)
+            kube_job_owner{owner_kind=~"Archive|Backup|Check|Prune|Restore"}
+          for: 5m
           labels:
             severity: warning
         - alert: K8upBackupNotRunning
           annotations:
-            description: Namespace {{$labels.exported_namespace}} has a K8up Schedule but no job of any type has run in 25h. The operator is not scheduling; check it for a deadlock.
+            description: Namespace {{$labels.exported_namespace}} has a K8up Schedule but no job of any type has run in 25h. Nothing is failing, because nothing is being attempted.
             runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/K8upBackupNotRunning
             summary: K8up scheduled no jobs for a namespace with a Schedule
           # exported_namespace, not namespace. K8up labels these metrics with the
@@ -43,21 +64,5 @@ spec:
             sum by (exported_namespace) (rate(k8up_jobs_total[25h])) == 0
             and on (exported_namespace) k8up_schedules_gauge > 0
           for: 1h
-          labels:
-            severity: warning
-        - alert: K8upBackupStale
-          annotations:
-            description: No K8up backup job has completed in namespace {{$labels.namespace}} for over 36h. Backups run from the live volume, so this is also what a silently broken k8up.io/backupcommand hook looks like.
-            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/K8upBackupStale
-            summary: K8up backup is stale
-          expr: |
-            (
-              time() - max by (namespace) (
-                kube_job_status_completion_time
-                * on (job_name, namespace) group_left ()
-                kube_job_labels{label_k8up_io_type="backup"}
-              )
-            ) > 36 * 60 * 60
-          for: 15m
           labels:
             severity: warning
