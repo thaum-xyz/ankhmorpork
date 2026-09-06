@@ -1,6 +1,24 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
+    # without this is not backed up -- which is what keeps the two CNPG claims
+    # in this namespace out, since they self-backup via barman.
+    k8up.io/backup: "true"
+    # cache/embedding and cache/whisper are 1.03G of the 1.1G on this volume:
+    # HuggingFace blobs for all-MiniLM-L6-v2 and faster-whisper-base, which
+    # open-webui re-downloads on demand. Copying them to the NAS nightly over
+    # one 1GbE link would make this backup a hundred times larger than every
+    # other one in the cluster combined, to protect nothing.
+    #
+    # cache/audio/transcriptions is deliberately kept: it is small, and the
+    # uploads it was derived from are already gone.
+    #
+    # webui.db is live SQLite in WAL mode and this is a file-level copy, so the
+    # database in a snapshot may be torn. A consistent dump needs a
+    # k8up.io/backupcommand, which comes separately.
+    k8up.io/backup-restic-args: '["--exclude=/data/open-webui-data/cache/embedding", "--exclude=/data/open-webui-data/cache/whisper"]'
   name: open-webui-data
   labels:
     app.kubernetes.io/name: open-webui

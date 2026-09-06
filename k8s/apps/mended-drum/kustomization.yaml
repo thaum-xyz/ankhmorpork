@@ -6,3 +6,4 @@ resources:
   - open-webui/
   - tools/
   - db/
+  - backup/
