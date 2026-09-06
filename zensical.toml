@@ -42,6 +42,8 @@ nav = [
   ] },
   { "How-to" = [
     "how-to/index.md",
+    { "Expose an app on an ingress" = "how-to/expose-an-app.md" },
+    { "Require a login" = "how-to/require-a-login.md" },
     { "Choose a storage class" = "how-to/choose-a-storage-class.md" },
     { "Roll a workload on ConfigMap change" = "how-to/reload-on-configmap-change.md" },
   ] },
@@ -51,6 +53,7 @@ nav = [
     { "Admission policies" = "reference/admission-policies.md" },
     { "Annotations and labels" = "reference/annotations.md" },
     { "Charts and images" = "reference/charts.md" },
+    { "Ingress and certificates" = "reference/ingress.md" },
     { "Storage classes" = "reference/storage-classes.md" },
     { "UPS Modbus register map" = "ups/modbus-register-map.md" },
   ] },

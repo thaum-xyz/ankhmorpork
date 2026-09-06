@@ -20,16 +20,14 @@ Admission test:
     The app inventory, ingress hosts, namespaces and storage classes are all
     derivable from the manifests — generate them in CI rather than typing them.
 
-## Planned
-
-- Ingress classes and certificate issuers
-
 ## Available now
 
 - [Applications](apps.md) — every app, its namespace, its Flux Kustomization and
   its hostnames *(generated)*
 - [Admission policies](admission-policies.md) — what Kyverno enforces, and which
   rules only warn *(generated)*
+- [Ingress and certificates](ingress.md) — the three classes, the two issuers,
+  and what external-dns publishes
 - [Storage classes](storage-classes.md) — capabilities, access modes, node
   affinity and measured ceilings
 - [Annotations and labels](annotations.md) — keys this cluster gives meaning to,

@@ -20,13 +20,16 @@ section once migrated.
 
 ## Available now
 
+- [Expose an app on an ingress](expose-an-app.md) — which class, and why a public
+  host needs two Ingresses
+- [Require a login](require-a-login.md) — pocket-id, natively or through
+  oauth2-proxy
 - [Choose a storage class](choose-a-storage-class.md) — which class a workload
   belongs on, in the order the questions actually matter
 - [Roll a workload when its ConfigMap changes](reload-on-configmap-change.md)
 
 ## Planned
 
-- Expose an app on an ingress
 - Rotate a secret
 - Recover a Postgres cluster from backup
 - Drain and reboot a node outside the kured cycle
