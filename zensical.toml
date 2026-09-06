@@ -53,6 +53,7 @@ nav = [
   { "Explanation" = [
     "explanation/index.md",
     { "ConfigMap autoreload" = "explanation/configmap-autoreload.md" },
+    { "Rule linting with pint" = "explanation/pint-rule-linting.md" },
     { "Postgres fleet upgrade plan" = "postgres/fleet-upgrade-plan.md" },
   ] },
 ]
