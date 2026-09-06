@@ -5,11 +5,15 @@ metadata:
     # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
     # without this is not backed up.
     #
-    # The meilisearch index is derived data -- karakeep can rebuild it from
-    # db.db -- but #1266 has not yet confirmed it reindexes from empty, so it
-    # is backed up until that is settled. It is also a live LMDB store copied
-    # at the file level, so treat a restored index as a convenience, not a
-    # guarantee.
+    # The meilisearch index looks like derived data, but karakeep does not
+    # rebuild it. Measured 2026-09-06: emptying /meili_data and restarting both
+    # meilisearch and karakeep leaves /stats reporting `"indexes":{}` -- the
+    # worker logs "Starting search indexing worker" and never backfills.
+    # Repopulating needs someone to run admin.reindex from the web UI.
+    #
+    # So this is not emptyDir material, and the backup is what actually gets it
+    # back: restoring the snapshot returned all 26 documents with search
+    # working, where nothing would have alerted that the index was empty.
     k8up.io/backup: "true"
   name: meilisearch-pvc
 spec:
