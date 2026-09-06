@@ -1,6 +1,6 @@
 ---
 name: app-deployment
-description: Deploy or extend an application in thaum-xyz/ankhmorpork — picking a StorageClass, satisfying the admission policies, wiring it into Flux, and rolling it out safely. Use when adding anything under k8s/apps/ or k8s/platform/, when adding or resizing persistent storage, when a PVC/Ingress/PDB is rejected or silently altered at admission, or when a reconcile reports success but nothing changed.
+description: Deploy, extend or restructure an application in thaum-xyz/ankhmorpork — picking a StorageClass, satisfying the admission policies, wiring it into Flux, and rolling it out safely. Use when adding anything under k8s/apps/ or k8s/platform/, when adding or resizing persistent storage, when replacing a Helm release with plain manifests or otherwise removing a HelmRelease, when a PVC/Ingress/PDB is rejected or silently altered at admission, or when a reconcile reports success but nothing changed.
 ---
 
 # Deploying an application
