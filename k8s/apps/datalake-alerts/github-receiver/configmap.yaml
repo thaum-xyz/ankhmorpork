@@ -3,7 +3,7 @@ data:
   body-template.txt: |
     {{- $payload := .Payload -}}
 
-    # Alert {{ $payload.GroupLabels.alertname }} firing in {{ $payload.GroupLabels.namespace }} namespace
+    # Alert {{ $payload.GroupLabels.alertname }} firing{{ with $payload.GroupLabels.namespace }} in {{ . }} namespace{{ end }}
 
     This is an automated issue created by the monitoring system. Please do not edit this message.
 
