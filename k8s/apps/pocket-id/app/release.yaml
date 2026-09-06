@@ -69,5 +69,6 @@ spec:
               name: pocket-id
             patch: |-
               - op: add
-                path: /metadata/labels/probe
+                # ~1 is JSON Pointer's escape for / in a key name.
+                path: /metadata/labels/ingress.thaum.xyz~1probe
                 value: enabled

@@ -25,14 +25,23 @@ spec:
           sourceLabels:
             - __meta_kubernetes_ingress_scheme
             - __tmp_ingress_address
-            - __meta_kubernetes_ingress_annotation_probe_uri
+            - __meta_kubernetes_ingress_annotation_ingress_thaum_xyz_probe_uri
           targetLabel: __param_target
         - action: replace
           sourceLabels:
             - __param_target
           targetLabel: instance
+        # The other two Probes set environment through staticConfig labels;
+        # ingress discovery has no equivalent, so it is set here. It is what the
+        # two probe SLOs split on: this cluster serves these, and merely watches
+        # everything else. A replace with no sourceLabels concatenates to the
+        # empty string, which the default (.*) matches, so the label is set
+        # unconditionally.
+        - action: replace
+          targetLabel: environment
+          replacement: ankhmorpork
       selector:
         matchLabels:
-          probe: enabled
+          ingress.thaum.xyz/probe: enabled
   tlsConfig:
     insecureSkipVerify: true

@@ -3,9 +3,9 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    probe-uri: /healthz
+    ingress.thaum.xyz/probe-uri: /healthz
   labels:
-    probe: enabled
+    ingress.thaum.xyz/probe: enabled
     app.kubernetes.io/name: mended-drum-tools
   name: mended-drum-tools
 spec:

@@ -43,6 +43,52 @@ For a process that reads its configuration once at startup. See
 value is overwritten on the next apply. Its presence is how you confirm the
 policy matched.
 
+### `ingress.thaum.xyz/probe`
+
+| | |
+| --- | --- |
+| **Type** | Label |
+| **Set on** | `Ingress` |
+| **Value** | `enabled` — the only value the selector matches |
+| **Read by** | the `ingress` `Probe` (blackbox-exporter) |
+| **Effect** | blackbox probes the host, and the target joins `blackbox-probe-success` |
+
+Pairs with `ingress.thaum.xyz/probe-uri`; a label without the annotation probes
+the bare host, which is rarely what you want.
+
+!!! warning "On the Ingress that declares TLS"
+
+    blackbox derives the scheme from whether the Ingress declares `spec.tls`. On a
+    host with both a traefik and a cloudflare Ingress, labelling the cloudflare one
+    builds an `http://` target the tunnel never answers. Label the one with TLS.
+
+Charts that expose `ingress.annotations` but no `ingress.labels` need this
+patched on through `postRenderers` — see pocket-id and atuin.
+
+### `ingress.thaum.xyz/probe-uri`
+
+| | |
+| --- | --- |
+| **Type** | Annotation |
+| **Set on** | `Ingress`, alongside the label above |
+| **Value** | A path, e.g. `/api/health` |
+| **Read by** | the `ingress` `Probe`, as `__meta_kubernetes_ingress_annotation_ingress_thaum_xyz_probe_uri` |
+| **Effect** | Appended to `scheme://host` to form the probe target |
+
+**Probe an endpoint the application serves, not its front door.** The
+`http_2xx` module follows redirects and asserts nothing about the body, so `/`
+on an SPA returns 200 from static assets with the backend dead — and on a host
+behind an oauth2 proxy it can return 200 from the *identity provider's* login
+page, which is how the `pdf` probe stayed green while measuring pocket-id.
+
+Prefer what the app's own readiness probe uses. Good examples in tree:
+`/api/health` (karakeep, grafana — the latter also reports database status),
+`/api/v1/status` (seerr), `/healthz` (atuin), `/actuator/health` (stirling-pdf),
+`/.well-known/openid-configuration` (pocket-id).
+
+Omitting the annotation is not a way to opt out — the relabeling then builds the
+bare host, silently. Remove the label instead.
+
 ## Upstream keys, local contract
 
 Keys owned by other projects, where what they mean *here* is a local decision.

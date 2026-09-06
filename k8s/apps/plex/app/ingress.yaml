@@ -4,12 +4,12 @@ metadata:
   name: plex
   labels:
     app.kubernetes.io/name: plex
-    probe: enabled
+    ingress.thaum.xyz/probe: enabled
     homer.rajsingh.info/enabled: "true"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     # / answers 401 to a non-browser UA; /identity needs no token.
-    probe-uri: /identity
+    ingress.thaum.xyz/probe-uri: /identity
     #traefik.ingress.kubernetes.io/router.middlewares: plex-no-x-forwarded-for@kubernetescrd
     item.homer.rajsingh.info/name: "Plex"
     item.homer.rajsingh.info/subtitle: "Video on demand"

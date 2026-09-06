@@ -47,7 +47,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     #cert-manager.io/cluster-issuer: letsencrypt-prod
-    #probe-uri: /-/healthy
+    #ingress.thaum.xyz/probe-uri: /-/healthy
     item.homer.rajsingh.info/name: "Litellm"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"
     item.homer.rajsingh.info/order: "40"

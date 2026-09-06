@@ -98,7 +98,7 @@ server:
         service.homer.rajsingh.info/icon: "fa fa-cloud"
         service.homer.rajsingh.info/order: "30"
       labels:
-        probe: enabled
+        ingress.thaum.xyz/probe: enabled
         homer.rajsingh.info/enabled: "true"
       hosts:
         - host: photos.krupa.net.pl

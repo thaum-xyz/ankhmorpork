@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: homer
     app.kubernetes.io/part-of: homer
-    probe: enabled
+    ingress.thaum.xyz/probe: enabled
   name: homer
   namespace: homer
 spec:
