@@ -1,9 +1,5 @@
 # Explanation { .quad-explanation }
 
-!!! warning "Placeholder"
-
-    The site scaffold is in place; this section has mostly no content yet.
-
 ## What belongs here
 
 Explanation is **discussion**. It is the only section that may argue, compare,

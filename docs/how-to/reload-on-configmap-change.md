@@ -1,4 +1,4 @@
-# Roll a workload when its ConfigMap changes
+# Roll a workload when its ConfigMap changes { .quad-howto }
 
 Mounting a ConfigMap as a volume does **not** restart the Pod. The kubelet syncs
 the file within a minute or so, but a process that reads its configuration once

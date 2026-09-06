@@ -1,4 +1,4 @@
-# PostgreSQL fleet: state and upgrade plan
+# PostgreSQL fleet: state and upgrade plan { .quad-explanation }
 
 Surveyed 2026-08-23. Eleven CNPG clusters on operator 1.30.0, chart
 `cnpg-database`.
@@ -9,7 +9,15 @@ Nine clusters never set `imageName`. CloudNativePG defaults it at creation and
 **writes that value into the spec permanently** — it does not re-default when the
 operator is upgraded. So each cluster froze whatever shipped on the day it was
 created, and nobody ever chose a version. Every cluster now pins its image
-explicitly, and the chart defaults new ones to 18.6.
+explicitly.
+
+The default for *new* clusters is set by the `cnpg-database` chart, and is not
+restated here: it is invalidated by a change in
+[thaum-xyz/helm-charts](https://github.com/thaum-xyz/helm-charts), which no diff
+in this repository would reveal. A version written down here said 18.6 long after
+the chart had moved to 17.11. See the chart's
+[generated values reference](https://github.com/thaum-xyz/helm-charts/tree/main/charts/cnpg-database)
+for the current `cluster.imageName`.
 
 ## Current state
 

@@ -1,9 +1,5 @@
 # Reference { .quad-reference }
 
-!!! warning "Placeholder"
-
-    The site scaffold is in place; this section has mostly no content yet.
-
 ## What belongs here
 
 Reference is a **map**, consulted mid-task and never read through. It describes
