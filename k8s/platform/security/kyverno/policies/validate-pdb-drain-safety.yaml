@@ -10,13 +10,6 @@ spec:
   validationActions:
     - Warn
   matchConstraints:
-    namespaceSelector:
-      matchExpressions:
-        # Longhorn manages its own instance-manager and CSI PDBs.
-        - key: kubernetes.io/metadata.name
-          operator: NotIn
-          values:
-            - longhorn-system
     resourceRules:
       - apiGroups:
           - policy

@@ -45,7 +45,6 @@ that node goes.
 | `lvm-thin` | **1** | RWO | **no** |
 | `piraeus-r2` | **2** (the replica holders) | RWO | yes |
 | `piraeus-r2-roaming` | any linstor node | RWO | yes |
-| `longhorn` | any | RWO, RWX | yes |
 | `unifi-nas` | any | RWO, RWX | yes |
 
 `lvm-thin` belongs only where the app provides its own redundancy — the CNPG
@@ -56,21 +55,16 @@ only like-for-like target for a ReadWriteMany workload. A declared RWX is not
 always a required one: a single-replica Deployment often needs it only because a
 RollingUpdate briefly runs two Pods, and `strategy: Recreate` removes that.
 
-**Never put anything transactional on `longhorn`.** Measured 2026-09-05: its
-`fsync` completes 2–8× faster than the device it writes to, because the
-controller-to-replica protocol has no flush operation at all. An acknowledged
-commit sits in the drive's volatile cache. A pod kill, node reboot or kernel
-panic is survivable; a power cut is not. It remains fine for workloads that can
-lose recent writes, and it is the only class here offering snapshots and S3
-backup.
+Longhorn used to be the RWX option here and was retired in 2026-09 because its
+`fsync` did not flush — see `docs/explanation/storage-durability.md`. Nothing
+should reference `longhorn` or `longhorn-r2` any more; `unifi-nas` is the only
+remaining RWX class.
 
 Ceilings worth knowing before promising throughput:
 
 - `lvm-thin` — indistinguishable from the bare device.
 - `piraeus-r2` — reads at parity with `lvm-thin`; writes ~3 ms, ~12k IOPS,
   sequential write pinned at **111 MiB/s** by the replication link on every node.
-- `longhorn` — sequential write pinned at **55 MiB/s** by its own engine, and the
-  only class the page cache cannot accelerate at all.
 - `unifi-nas` — **~100 MiB/s**, a single 1 GbE link. `nolock` means no byte-range
   locking, so nothing SQLite-backed belongs there.
 
@@ -242,8 +236,10 @@ because nothing is left to uninstall. There is no `--force` flag on that command
   the apply succeeded, not that nothing deleted the result afterwards — a Helm
   uninstall or another controller can remove objects out of band and the status
   never moves. Check the objects.
-- **`kubectl get backup` resolves to `backups.longhorn.io`.** Always
-  `backups.postgresql.cnpg.io`. Has produced false "no phase" readings twice.
+- **`kubectl get backup` is ambiguous.** It resolves to `backups.k8up.io` since
+  k8up was installed — it was `backups.longhorn.io` before that. Always spell out
+  `backups.postgresql.cnpg.io` or `backups.k8up.io`. Has produced false "no phase"
+  readings twice.
 - **A misdirected ServiceMonitor reports `down`, not missing.** Scraping a port
   serving an SPA returns 200 `text/html`, which Prometheus rejects while the app's
   own log shows a clean 200. Confirm via `/api/v1/targets` (`health`, `lastError`).

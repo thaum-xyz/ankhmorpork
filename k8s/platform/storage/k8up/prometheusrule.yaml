@@ -29,9 +29,9 @@ spec:
           # it and could never fire (#1288).
           #
           # kube_job_owner has no API group, so the owner_kind match is on bare
-          # kind names. cnpg and longhorn also define a Backup kind, but neither
-          # creates Jobs, and no Job in this cluster carries these owner kinds
-          # except K8up's.
+          # kind names. cnpg also defines a Backup kind, but it creates no Jobs,
+          # and no Job in this cluster carries these owner kinds except K8up's.
+          # longhorn defined one too until it was retired.
           #
           # Job objects rather than k8up_jobs_failed_counter because the counter
           # resets when the operator restarts -- which kured does weekly -- and

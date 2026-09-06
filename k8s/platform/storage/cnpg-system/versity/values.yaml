@@ -1,7 +1,7 @@
 # Config reference: https://github.com/versity/versitygw/blob/main/chart/values.yaml
 #
 # Backup target for the fleet's postgres clusters, replacing Backblaze. Same
-# pattern as the longhorn and datalake gateways, but shared: eleven clusters
+# pattern as the datalake gateway, but shared: eleven clusters
 # across eleven namespaces write here rather than one consumer next door.
 
 # Pinned. The chart defaults to :latest.
