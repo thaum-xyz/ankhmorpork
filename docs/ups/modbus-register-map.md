@@ -1,4 +1,4 @@
-# PowerWalker VFI 1500 LICR IoT — Modbus TCP register map
+# PowerWalker VFI 1500 LICR IoT — Modbus TCP register map { .quad-reference }
 
 `192.168.1.141:502`, function code 3, unit id ignored (1, 2, 3 and 255 all
 answer identically). Reads only — do not write, these are live UPS settings.

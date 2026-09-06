@@ -1,4 +1,4 @@
-# Why a Kyverno policy rolls Pods on ConfigMap changes
+# Why a Kyverno policy rolls Pods on ConfigMap changes { .quad-explanation }
 
 A Pod mounting a ConfigMap sees the file change — the kubelet syncs the volume
 within a minute — but a process that reads its configuration once at startup

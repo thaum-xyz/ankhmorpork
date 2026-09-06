@@ -1,4 +1,4 @@
-# Why the rule linter alerts on change, not on count
+# Why the rule linter alerts on change, not on count { .quad-explanation }
 
 [pint](https://cloudflare.github.io/pint/) lints the alerting and recording rules
 this cluster runs. It found six alerts that could never have fired, some of them
