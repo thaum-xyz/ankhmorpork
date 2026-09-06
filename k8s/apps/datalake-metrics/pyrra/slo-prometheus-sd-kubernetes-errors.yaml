@@ -7,6 +7,8 @@ metadata:
   name: prometheus-sd-kubernetes-errors
 spec:
   description: If there are too many errors Prometheus is having a bad time discovering new Kubernetes services.
+  alerting:
+    name: PrometheusSDKubernetesBudgetBurn
   indicator:
     ratio:
       errors:

@@ -7,6 +7,8 @@ metadata:
   name: coredns-response-errors
 spec:
   description: ""
+  alerting:
+    name: CoreDNSBudgetBurn
   indicator:
     ratio:
       errors:

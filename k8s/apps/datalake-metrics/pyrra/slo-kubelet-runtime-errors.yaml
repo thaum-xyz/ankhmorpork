@@ -7,6 +7,8 @@ metadata:
   name: kubelet-runtime-errors
 spec:
   description: ""
+  alerting:
+    name: KubeletRuntimeBudgetBurn
   indicator:
     ratio:
       errors:

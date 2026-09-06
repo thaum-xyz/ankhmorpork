@@ -7,6 +7,8 @@ metadata:
   name: prometheus-notification-errors
 spec:
   description: ""
+  alerting:
+    name: PrometheusNotificationBudgetBurn
   indicator:
     ratio:
       errors:

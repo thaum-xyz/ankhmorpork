@@ -7,6 +7,8 @@ metadata:
   name: prometheus-operator-reconcile-errors
 spec:
   description: ""
+  alerting:
+    name: PrometheusOperatorReconcileBudgetBurn
   indicator:
     ratio:
       errors:

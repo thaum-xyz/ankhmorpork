@@ -7,6 +7,8 @@ metadata:
   name: prometheus-rule-evaluation-failures
 spec:
   description: Rule and alerting rules are being evaluated every few seconds. This needs to work for recording rules to be created and most importantly for alerts to be evaluated.
+  alerting:
+    name: PrometheusRuleEvaluationBudgetBurn
   indicator:
     ratio:
       errors:

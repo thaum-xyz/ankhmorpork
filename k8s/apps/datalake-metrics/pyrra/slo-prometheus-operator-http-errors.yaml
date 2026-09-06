@@ -7,6 +7,8 @@ metadata:
   name: prometheus-operator-http-errors
 spec:
   description: ""
+  alerting:
+    name: PrometheusOperatorHTTPBudgetBurn
   indicator:
     ratio:
       errors:
