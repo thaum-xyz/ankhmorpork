@@ -312,6 +312,9 @@ it, because `prune: true` means Flux owns what it created.
 This was a lesson, so it made every choice for you. Real work needs those choices
 back:
 
+- **[Expose an app on an ingress](../how-to/expose-an-app.md)** — you wrote one
+  in step 1 and every choice in it was made for you. This explains them, and why
+  a host reachable from outside the house needs two.
 - **[Choose a storage class](../how-to/choose-a-storage-class.md)** — the first
   real decision most apps hit. `whoami` had no storage; almost nothing else is so
   lucky, and the choice is hard to reverse.
