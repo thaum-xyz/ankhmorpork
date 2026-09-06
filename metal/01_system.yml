@@ -62,8 +62,13 @@
       state: present
       reload: yes
 
-# Multipathd needs to be configured to prevent colisions with longhorn
+# Multipathd was configured to prevent collisions with longhorn, whose iSCSI
+# volumes appeared as /dev/sd* and got claimed by multipathd.
 # More in https://longhorn.io/kb/troubleshooting-volume-with-multipath/
+#
+# Longhorn is gone, so nothing needs this any more. Kept because the blacklist
+# is inert on single-path disks and dropping it would let multipathd start
+# managing the real /dev/sd* devices -- a behaviour change with no upside.
 - name: Configure multipathd
   hosts: all
   become: true
