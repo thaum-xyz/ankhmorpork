@@ -4,33 +4,47 @@ The obvious layout is one `monitoring` namespace holding the whole stack —
 Prometheus, Alertmanager, Grafana, Loki, the exporters — because that is how the
 charts ship and how most clusters end up. This one does not do that.
 
-Instead the split runs along a different seam: **what collects, and what stores**.
+The split runs along a different seam: **what collects, and what stores**.
 
-| | Where | Components |
+| | Layer | Components |
 | --- | --- | --- |
 | **Collectors and exporters** | `platform` | `alloy`, `kube-prometheus-stack`, `blackbox-exporter`, `uptimerobot` |
 | **Stores** | `apps` | `datalake-metrics`, `datalake-logs`, `datalake-alerts`, `grafana` |
 
-Not one namespace with everything in it, and not one namespace per *stack* either.
-Prometheus and its exporters end up in different layers.
+## The reason is the word "datalake"
 
-## Why that seam
+These stores are not meant to be ankhmorpork's monitoring. They are meant to be
+*the* store, for more sources than this cluster — which is why they are named
+`datalake-*` rather than `monitoring`, and why they sit in `apps` as services that
+happen to run here rather than in `platform` as this cluster's own machinery.
 
-The two halves fail differently, and depend on different things.
+Collectors are the opposite. `alloy` runs on every node *of this cluster* and
+scrapes *this cluster*; it belongs to ankhmorpork the way the CNI does. A second
+environment — [lancre][l] or [uberwald][u] — would bring its own collectors, and
+they would be that cluster's platform layer, not this one's.
 
-A **collector** is infrastructure. Nothing declares a dependency on `alloy`, but
-everything assumes it. It runs on every node, it has no data of its own, and
-losing it means losing visibility rather than losing anything. It belongs with the
-CNI and the CSI drivers, in the layer that exists before any workload does.
+[l]: https://github.com/thaum-xyz/lancre
+[u]: https://github.com/thaum-xyz/uberwald
 
-A **store** behaves like a workload, because it is one. It holds data on a
-volume, it needs an ingress, it wants backups, it has an upgrade path with
-migrations. `datalake-metrics` has a PVC and an ingress; `grafana` has a Postgres
-database of its own. Treating those as platform would mean the layer that is meant
-to be boring and stable is also the layer with the most state in it.
+So the seam is not aesthetic. It is the line along which a second source attaches:
+new collectors *there*, pointing at the same stores *here*, with nothing in the
+store layer needing to move or be renamed. Had the stack been assembled as one
+`monitoring` namespace, that would be a migration rather than an addition.
 
-The practical consequence: an app failing takes down one app, and a store is an
-app. Losing `datalake-logs` loses log *ingestion*, not the cluster.
+!!! note "Not yet wired"
+
+    This is the shape, not the current state. Today every sample in these stores
+    comes from ankhmorpork: Loki runs `auth_enabled: false`, no remote-write
+    receiver is enabled, and both `datalake-metrics` and `datalake-alerts` are on
+    `private` ingresses. The layout anticipates more sources; the plumbing for
+    them does not exist yet.
+
+A secondary benefit falls out of the same split, and it is worth noting because it
+is what keeps the arrangement sensible even before a second cluster exists: stores
+behave like workloads — a volume, an ingress, backups, migrations, and in
+`grafana`'s case a Postgres of its own — while collectors hold no data at all.
+Keeping the stores out of `platform` means the layer everything silently assumes
+contains no databases.
 
 ## The chart makes the split visible
 
@@ -48,9 +62,9 @@ grafana:
 ```
 
 What is left is the operator, `node-exporter`, `kube-state-metrics` and the
-scrape-target plumbing. The chart is used for its collector half and nothing else,
-while the stores it would otherwise install run in `apps` with their own
-lifecycles.
+scrape-target plumbing — the collector half, all of it specific to this cluster.
+The stores the chart would otherwise install run in `apps` with their own
+lifecycles, because they are not this cluster's to own.
 
 That is a real cost, and worth naming: a bundled chart is being used against its
 grain, so its defaults have to be re-checked after every major to see whether
@@ -104,7 +118,9 @@ is nine components across three layers — four collectors in `platform`, four
 stores in `apps`, and the CRDs in `bootstrap` — and that the `datalake-*` naming is
 a convention rather than anything Kubernetes enforces.
 
-What it buys is that the boring layer stays boring. The components that hold
-state, need backups and have migrations are in `apps`, where an outage is scoped
-to one thing — and the layer everything else silently assumes contains no
-databases at all.
+What it buys is a store layer that does not have to be rearranged when a second
+source appears — and, in the meantime, a platform layer with no databases in it.
+
+It is worth being honest that the first of those is a bet. If no second
+environment ever sends anything here, the split will have cost some indirection
+and bought only the second benefit.

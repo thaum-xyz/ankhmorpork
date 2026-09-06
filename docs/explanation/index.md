@@ -25,8 +25,8 @@ currently exists only in commit messages, per-app READMEs and
 
 - [Why Helm values live in a file](helm-values.md) — what inline `spec.values`
   would cost, and why the ConfigMap name is deliberately stable
-- [Why observability is split by role](observability-split.md) — collectors in
-  the platform layer, stores treated as the workloads they are
+- [Why observability is split by role](observability-split.md) — the stores are a
+  datalake meant for more sources than this cluster, which is the seam
 - [How Flux is layered](flux-layering.md) — bootstrap, platform, apps, and why
   reconciling in the wrong order reports success
 - [Why storage is split the way it is](storage-durability.md) — and how a durability
