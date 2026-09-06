@@ -166,9 +166,18 @@ data:
     #                                             prowlarr_system_health_issues,
     #                                             prowlarrIndexersUnavailable reads
     #                                             prowlarr_indexer_unavailable
+    #   kube_job_failed                           KubeJobFailed, K8upJobFailed
+    #
+    # K8upJobFailed joined this list by being rewritten, not by being missed:
+    # #1291 moved it off kube_job_labels -- which has no series at all, and is
+    # why it could never fire -- onto kube_job_failed and kube_job_owner. It now
+    # reports the same "only sometimes present" wording as KubeJobFailed, for
+    # the same reason: the metric exists only while a failed Job does, with an
+    # average life span of 1d15h. Re-check co-readers after a rule is rewritten,
+    # not just after one is accepted.
     rule {
       match {
-        name = "AlertmanagerClusterFailedToSendAlerts|AlertmanagerFailedToSendAlerts|FluxCDReconciliationFailure|KubeContainerWaiting|KubeJobFailed|KubePodCrashLooping|prowlarrIndexersUnavailable|prowlarrUnhealthy|radarrUnhealthy|sonarrUnhealthy"
+        name = "AlertmanagerClusterFailedToSendAlerts|AlertmanagerFailedToSendAlerts|FluxCDReconciliationFailure|K8upJobFailed|KubeContainerWaiting|KubeJobFailed|KubePodCrashLooping|prowlarrIndexersUnavailable|prowlarrUnhealthy|radarrUnhealthy|sonarrUnhealthy"
       }
       disable = ["promql/series"]
     }
