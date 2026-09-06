@@ -37,6 +37,12 @@ spec:
           value: '1000'
         - name: TZ
           value: Europe/Warsaw
+        # Loads the logging ConfigMap in place of mealie's built-in
+        # logconf.prod.json, whose "file" handler wrote ${DATA_DIR}/mealie.log --
+        # a duplicate of this container's stdout, which alloy already ships to
+        # Loki, growing ~1M/day on a replicated volume holding 2.1M of recipes.
+        - name: LOG_CONFIG_OVERRIDE
+          value: /etc/mealie/logconf.json
         - name: BASE_URL
           value: https://recipes.krupa.net.pl
         - name: ALLOW_PASSWORD_LOGIN
@@ -94,7 +100,16 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /app/data/
+        # Its own directory, so no subPath is needed. mealie reads this once
+        # while building the root logger, so editing the ConfigMap alone changes
+        # nothing until the Pod restarts.
+        - name: logging
+          mountPath: /etc/mealie
+          readOnly: true
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: data
+      - name: logging
+        configMap:
+          name: logging

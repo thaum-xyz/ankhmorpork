@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logging
+  labels:
+    app.kubernetes.io/name: mealie
+data:
+  # mealie's own logconf.prod.json, minus the "file" handler that writes
+  # ${DATA_DIR}/mealie.log. Fed in through LOG_CONFIG_OVERRIDE, which
+  # mealie/core/logger/config.py loads instead of the built-in config after
+  # substituting ${LOG_LEVEL} and ${DATA_DIR} -- so ${LOG_LEVEL} below is
+  # mealie's placeholder, not a shell or kustomize one, and must stay literal.
+  #
+  # Nothing is lost by dropping the handler: the file was a strict duplicate of
+  # stdout, which alloy already ships to Loki. In the upstream config the file
+  # handler sits at DEBUG but every logger sits at ${LOG_LEVEL}, so the two
+  # captured exactly the same records. mealie itself never reads the file back
+  # either -- routes/admin/admin_maintenance.py still defines tail_log(), but as
+  # of v3.22.0 nothing calls it and no route serves the file.
+  #
+  # A bad path here is a startup crash, not a silent fall back to the built-in
+  # config, so this cannot quietly resume writing to the volume.
+  logconf.json: |
+    {
+      "version": 1,
+      "disable_existing_loggers": false,
+      "formatters": {
+        "simple": {
+          "format": "%(levelname)-8s %(asctime)s - %(message)s",
+          "datefmt": "%Y-%m-%dT%H:%M:%S"
+        },
+        "access": {
+          "()": "uvicorn.logging.AccessFormatter",
+          "fmt": "%(levelname)-8s %(asctime)s - [%(client_addr)s] %(status_code)s \"%(request_line)s\"",
+          "datefmt": "%Y-%m-%dT%H:%M:%S"
+        }
+      },
+      "handlers": {
+        "stderr": {
+          "class": "logging.StreamHandler",
+          "level": "WARNING",
+          "formatter": "simple",
+          "stream": "ext://sys.stderr"
+        },
+        "stdout": {
+          "class": "logging.StreamHandler",
+          "level": "${LOG_LEVEL}",
+          "formatter": "simple",
+          "stream": "ext://sys.stdout"
+        },
+        "access": {
+          "class": "logging.StreamHandler",
+          "level": "${LOG_LEVEL}",
+          "formatter": "access",
+          "stream": "ext://sys.stdout"
+        }
+      },
+      "loggers": {
+        "root": {
+          "level": "${LOG_LEVEL}",
+          "handlers": [
+            "stderr",
+            "stdout"
+          ]
+        },
+        "uvicorn.error": {
+          "handlers": [
+            "stderr",
+            "stdout"
+          ],
+          "level": "${LOG_LEVEL}",
+          "propagate": false
+        },
+        "uvicorn.access": {
+          "handlers": [
+            "access"
+          ],
+          "level": "${LOG_LEVEL}",
+          "propagate": false
+        }
+      }
+    }

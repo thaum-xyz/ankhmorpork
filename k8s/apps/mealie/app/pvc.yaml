@@ -6,10 +6,16 @@ metadata:
     # without this is not backed up -- which is what keeps the three CNPG
     # claims in this namespace out, since they self-backup via barman.
     k8up.io/backup: "true"
-    # 22.6M of the 25M on this volume is mealie.log and its rotations; the
-    # recipes are 2.1M. Backing up a log that churns daily costs a fresh copy
-    # in every snapshot for something Loki already collects and nobody would
-    # restore.
+    # Kept even though LOG_CONFIG_OVERRIDE on the Deployment stopped mealie
+    # writing mealie.log at all. Dropping the file handler does not delete the
+    # files already on the volume, so without this the next nightly run would
+    # pull the historical log into the repository and retention would hold it
+    # for months -- the exact copies this was added to keep out, admitted on the
+    # way out rather than on the way in.
+    #
+    # It also stays cheap insurance afterwards. Removing the env var, or an
+    # image that stops honouring it, brings the file back silently; an exclude
+    # matching nothing costs nothing.
     k8up.io/backup-restic-args: '["--exclude=mealie.log*"]'
   name: data
   labels:
