@@ -42,6 +42,7 @@ nav = [
   ] },
   { "How-to" = [
     "how-to/index.md",
+    { "Roll a workload on ConfigMap change" = "how-to/reload-on-configmap-change.md" },
   ] },
   { "Reference" = [
     "reference/index.md",
@@ -50,6 +51,7 @@ nav = [
   ] },
   { "Explanation" = [
     "explanation/index.md",
+    { "ConfigMap autoreload" = "explanation/configmap-autoreload.md" },
     { "Postgres fleet upgrade plan" = "postgres/fleet-upgrade-plan.md" },
   ] },
 ]

@@ -1,9 +1,5 @@
 # How-to { .quad-howto }
 
-!!! warning "Placeholder"
-
-    The site scaffold is in place; this section has no content yet.
-
 ## What belongs here
 
 A how-to is a **recipe** for a reader who already knows what they want. It starts
@@ -21,6 +17,10 @@ Admission test:
 
 Runbooks are how-to documents written for someone at 2am, and belong in this
 section once migrated.
+
+## Available now
+
+- [Roll a workload when its ConfigMap changes](reload-on-configmap-change.md)
 
 ## Planned
 
