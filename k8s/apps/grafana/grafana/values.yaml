@@ -23,7 +23,13 @@ ingress:
   ingressClassName: public
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    probe-uri: /-/healthy
+    # /-/healthy is Prometheus's convention, not Grafana's -- Grafana has no
+    # such route, so the request fell through to the catch-all and redirected to
+    # /login, where the probe collected a 59KB login page and called it healthy.
+    # /api/health is Grafana's own, answers in 101 bytes without a redirect, and
+    # reports {"database": "ok"} -- so unlike the alternatives it fails when
+    # Grafana's database is unreachable rather than only when the process is.
+    probe-uri: /api/health
     item.homer.rajsingh.info/name: "Grafana"
     item.homer.rajsingh.info/logo: "https://grafana.com/static/img/logos/grafana_logo_swirl-events.svg"
     item.homer.rajsingh.info/order: "50"
