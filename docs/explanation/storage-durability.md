@@ -89,10 +89,17 @@ offered; that capability is being replaced instead of traded against durability
   database layer, so a node-local volume per instance is correct and costs
   essentially nothing over the bare device. It pins the Pod to one node, which is
   the price.
-- **`piraeus-r2`** where the data itself must survive a node. Reads are free, at
-  parity with raw LVM on the same thin pool; writes pay the full cost of
-  synchronous replication, capped at 111 MiB/s by the replication link on every
-  node. `piraeus-r2-roaming` trades that for free Pod movement, capped at 32 GiB.
+- **`piraeus-r2-roaming`** for ordinary application data, and in practice the
+  most used class here. Two synchronous replicas, and the Pod is free to schedule
+  anywhere: it attaches diskless on a node without a replica and `auto-diskful`
+  converts that into a local one after five minutes. The steady state is therefore
+  a local disk; what you pay for the freedom is a window after each move, and the
+  32 GiB cap that keeps that window bounded.
+- **`piraeus-r2`** for the same data when it must exceed 32 GiB, or when five
+  minutes of remote I/O after a reschedule is unacceptable. The Pod is pinned to a
+  replica holder, so I/O is always local. Reads are free, at parity with raw LVM on
+  the same thin pool; writes pay the full cost of synchronous replication, capped
+  at 111 MiB/s by the replication link on every node.
 - **`unifi-nas`** for bulk sequential and for the only RWX in the cluster, at the
   ~100 MiB/s a single 1 GbE link allows. `nconnect=4` does not lift it: the switch
   hashes on MAC and IP, and a routed client-to-NAS flow presents one of each, so

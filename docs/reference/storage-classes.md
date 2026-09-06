@@ -68,9 +68,47 @@ The only fair mode for `unifi-nas`.
 | `piraeus-r2` · beelink01 | 53.6k | 26.4k | 954 | **111** | 132 |
 | `unifi-nas` · beelink01 | 300 | 815 | 99 | 82 | 12 |
 
-`piraeus-r2-roaming` is **not measured**. It carries the same DRBD tuning as
-`piraeus-r2` but has two distinct performance states — diskless until auto-diskful
-converts it after five minutes — and needs its own methodology.
+### `piraeus-r2` and `piraeus-r2-roaming`
+
+Both place two synchronous replicas from the same `temporary-topolvm` pool, use
+xfs, and carry the same DRBD tuning. They differ only in where the Pod may run:
+
+| | `piraeus-r2` | `piraeus-r2-roaming` |
+| --- | --- | --- |
+| `allowRemoteVolumeAccess` | `false` | `true` |
+| Pod may schedule on | the 2 replica holders | any linstor node |
+| I/O when it lands off-replica | n/a | **remote**, until `auto-diskful` converts it |
+| `auto-diskful` delay | — | **5 minutes**, then a local replica, surplus dropped |
+| Max PVC size | unbounded | **32 GiB**, denied above |
+
+The size cap is a resync budget: a moved Pod resyncs the volume across the node
+network, and a full 32 GiB is roughly five more minutes at 1 Gb/s.
+`rs-discard-granularity` keeps unallocated blocks off the wire, but requested size
+is the only proxy admission has.
+
+`piraeus-r2-roaming` is not in the fio tables above, so it has **no independent
+throughput figures**. Its steady state is a local replica on the same pool as
+`piraeus-r2`, so those rows are the closest available guide; the diskless window
+after a move is not characterised.
+
+#### DRBD tuning
+
+Both classes carry `al-extents=6433` (the maximum, covering ~25 GiB) and
+`max-buffers=8000`, merged 2026-09-03. DRBD writes activity-log metadata
+synchronously whenever a write lands in an extent it is not already tracking, and
+the default 1237 extents cover only ~4.8 GiB, so random writes over a larger
+volume thrash the log.
+
+Measured on beelink01/beelink02/master02 with an 8 GiB working set:
+
+| Metric | Before | After |
+| --- | --- | --- |
+| Random write IOPS | 3 833 / 3 751 / 7 491 | 11 800 / 11 500 / 24 100 (**3.1–3.2×**) |
+| QD1 write latency | — | **−35% / −34% / −46%** |
+| Durable commits | — | **+19–28%** |
+
+Reads are unchanged, as expected — the activity log only gates writes. Neither
+option trades away durability.
 
 ## Caveats on these numbers
 

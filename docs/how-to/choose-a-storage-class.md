@@ -23,37 +23,56 @@ power cut.
 **Not `unifi-nas`.** It mounts `nfsvers=3` with `nolock`, so there is no
 byte-range locking — SQLite in particular does not belong there at any speed.
 
-That leaves `lvm-thin` and `piraeus-r2`. Continue to the next question.
+That leaves the local classes — `lvm-thin` and the two piraeus classes, all of
+which flush to the device. Continue to the next question.
 
 ## 3. Does the application replicate the data itself?
 
 If yes — the CNPG clusters do, at the database layer — use **`lvm-thin`**. A
 node-local volume per instance is correct there, and it is indistinguishable from
-the bare device.
+the bare device. It pins the Pod to one node, which is exactly what you want when
+the redundancy lives a layer up.
 
-If no, continue.
+Almost nothing else qualifies. If no, continue.
 
-## 4. Must the Pod stay up when its node reboots?
+## 4. Is it bulk sequential?
 
-kured reboots every node on a cycle, and this is often the binding constraint
-rather than speed.
+Media libraries, backups, object storage — large, streamed, and not latency
+sensitive. **`unifi-nas`**, at about 100 MiB/s on a single 1 GbE link, which is the
+link and not the NAS.
 
-- **Yes → `piraeus-r2`.** Two synchronous replicas; the PV's node affinity lists
-  both, so the Pod reschedules to the second when the first drains.
-- **No → `lvm-thin`**, which pins the Pod to one node. Pair it with real backups:
-  losing the node loses the volume.
+Size alone does not send you here: a large volume that needs real latency belongs
+on `piraeus-r2` in step 6.
 
-## 5. Does the Pod need to move freely, beyond two nodes?
+## 5. Otherwise: `piraeus-r2-roaming`
 
-**`piraeus-r2-roaming`**, capped at **32 GiB** by admission policy — larger PVCs
-are denied. It has never been benchmarked, and a Pod may attach diskless and run
-fully remote until auto-diskful converts it after five minutes, so treat its
-performance as unknown.
+**This is the default for ordinary application data**, and the most used class in
+the cluster. Two synchronous replicas, and the Pod is free to schedule anywhere.
 
-## 6. Is it bulk sequential?
+When a Pod lands on a node without a replica it attaches **diskless** and runs
+over the network. After five minutes `auto-diskful` converts that attachment into
+a local replica and drops the surplus one, so the steady state is a local disk —
+the same as `piraeus-r2`. The cost is the window after a move, not the running
+state.
 
-Media, backups, object storage — **`unifi-nas`**. About 100 MiB/s on a single
-1 GbE link, which is the link and not the NAS.
+That resync is also why PVCs here are **capped at 32 GiB** and denied above it: a
+full 32 GiB is roughly five more minutes over the node network at 1 Gb/s, and
+requested size is the only proxy admission has.
+
+## 6. When to use `piraeus-r2` instead
+
+Same two replicas, but the Pod is pinned to a node holding one of them
+(`allowRemoteVolumeAccess: false`), so I/O is always local and there is never a
+diskless window.
+
+Choose it over roaming when:
+
+- the volume needs to exceed **32 GiB**, or
+- the workload cannot tolerate running remote for five minutes after a
+  reschedule.
+
+The trade is scheduling freedom: a Pod can only land on the two replica holders,
+so if both are drained at once it waits.
 
 ## Then declare it
 
