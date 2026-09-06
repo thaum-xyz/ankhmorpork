@@ -46,6 +46,7 @@ nav = [
   ] },
   { "Reference" = [
     "reference/index.md",
+    { "Annotations and labels" = "reference/annotations.md" },
     { "Charts and images" = "reference/charts.md" },
     { "UPS Modbus register map" = "ups/modbus-register-map.md" },
   ] },
