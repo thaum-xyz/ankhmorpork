@@ -21,8 +21,9 @@ grafana:
 
 defaultRules:
   create: true
-  # Alerts whose metric cannot exist on this cluster, so they can only ever
-  # report as pint findings.
+  # Two reasons an alert lands here: its metric cannot exist on this cluster, so
+  # the rule can only ever report as a pint finding; or a Pyrra SLO measures the
+  # same thing and owns the budget instead. The second kind names its SLO.
   disabled:
     # Needs grpc_server_handling_seconds_bucket, which k3s's embedded etcd does
     # not export at all: the endpoint serves grpc_server_handled_total,
@@ -62,6 +63,14 @@ defaultRules:
     # open a streaming WATCH with sendInitialEvents and never issue a LIST at
     # all. KubeStateMetricsWatchErrors still covers the failure this was for.
     KubeStateMetricsListErrors: true
+
+    # Superseded by the prometheus-operator-reconcile-errors Pyrra SLO, which
+    # divides the same two counters over a window instead of thresholding a 5m
+    # rate. One budget engine: where a mixin alert and an SLO measure the same
+    # thing, the SLO wins. Its siblings stay -- PrometheusOperatorListErrors and
+    # PrometheusOperatorWatchErrors read *_operations_failed_total, which the
+    # prometheus-operator-http-errors SLO does not cover.
+    PrometheusOperatorReconcileErrors: true
   rules:
     # Both select on job names this release does not create.
     alertmanager: false
@@ -77,6 +86,22 @@ defaultRules:
     # node_namespace_pod_container:container_memory_swap, and cAdvisor emits
     # container_memory_swap only with swap accounting on. Swap is off.
     k8sContainerMemorySwap: false
+
+    # KubeAPIErrorBudgetBurn and the burnrate records that feed it. The five
+    # apiserver-* Pyrra SLOs measure the same requests, and both sides recorded
+    # apiserver_request:burnrate30m and :burnrate1h -- the mixin labelled
+    # verb=read|write, Pyrra labelled slo=. KubeAPIErrorBudgetBurn then reads
+    # `sum by (cluster) (...)`, and no series here carries a cluster label, so
+    # the sum collapsed every producer into one number and compared four
+    # unrelated burn rates against one threshold. Nothing but the slos group
+    # ever read the burnrate records, so both groups go together.
+    #
+    # kubeApiserverAvailability and kubeApiserverHistogram stay: they are
+    # recording rules only, and the chart's own kube-apiserver dashboard reads
+    # apiserver_request:availability30d and
+    # cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile.
+    kubeApiserverSlos: false
+    kubeApiserverBurnrate: false
 
 kubeControllerManager:
   enabled: false
