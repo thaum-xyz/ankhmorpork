@@ -1,6 +1,6 @@
 # Ankhmorpork
 
-<!-- [![document](https://img.shields.io/website?label=document&logo=gitbook&logoColor=white&url=https%3A%2F%2Fdocs.thaum.xyz)](https://docs.thaum.xyz) -->
+[![document](https://img.shields.io/website?label=document&logo=gitbook&logoColor=white&url=https%3A%2F%2Fdocs.thaum.xyz)](https://docs.thaum.xyz)
 [![license](https://img.shields.io/github/license/thaum-xyz/ankhmorpork?logo=mit&logoColor=white)](https://github.com/thaum-xyz/ankhmorpork/blob/master/LICENSE)
 [![validate](https://github.com/thaum-xyz/ankhmorpork/actions/workflows/validate.yml/badge.svg)](https://github.com/thaum-xyz/ankhmorpork/actions/workflows/validate.yml)
 
