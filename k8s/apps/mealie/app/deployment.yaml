@@ -5,6 +5,12 @@ metadata:
   labels:
     app.kubernetes.io/name: mealie
 spec:
+  # data is ReadWriteOnce since it moved to piraeus, which offers no RWX. A
+  # rolling update would start the replacement before the old Pod releases the
+  # volume and deadlock if it landed on another node -- the same trap karakeep
+  # documents. Recreate takes the old Pod down first.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: mealie
