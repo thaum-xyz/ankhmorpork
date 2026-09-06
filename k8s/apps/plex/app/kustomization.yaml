@@ -7,6 +7,7 @@ resources:
   - service-lb.yaml
   - ingress.yaml
   - statefulset.yaml
+  - slo-probe-success.yaml
 
 # Hashed on purpose, unlike the HelmRelease values elsewhere in the repo: the
 # name change is what rolls the pod when the Alloy config changes.

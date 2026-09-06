@@ -6,3 +6,4 @@ resources:
   - ingress.yaml
   - pvc-config.yaml
   - service.yaml
+  - slo-probe-success.yaml

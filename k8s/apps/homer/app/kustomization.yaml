@@ -6,6 +6,7 @@ resources:
   - release.yaml
   - ingress.yaml
   - ingress-cloudflare.yaml
+  - slo-probe-success.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:

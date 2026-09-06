@@ -7,3 +7,4 @@ resources:
   - deployment.yaml
   - ingress.yaml
   - ingress-cloudflare.yaml
+  - slo-probe-success.yaml
