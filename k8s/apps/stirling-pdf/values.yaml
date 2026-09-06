@@ -18,8 +18,9 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     # Without this the probe hits `/`, which oauth2-proxy answers with a redirect
     # into pocket-id -- see the --skip-auth-route note below for why that made
-    # the probe measure the wrong service entirely.
-    probe-uri: /api/v1/info/status
+    # the probe measure the wrong service entirely, and why this is
+    # /actuator/health rather than the app's own status endpoint.
+    probe-uri: /actuator/health
     item.homer.rajsingh.info/name: "Stirling PDF"
     item.homer.rajsingh.info/subtitle: "PDF manipulation tool"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg"
@@ -81,12 +82,27 @@ deployment:
         # stayed green with Stirling completely down, and it generated ~5760
         # authorize requests a day against pocket-id.
         #
-        # The same path the kubelet already uses for liveness and readiness, so
-        # the external probe and the internal one agree on what healthy means.
-        # It answers {"version":"2.14.2","status":"UP"} unauthenticated, which
-        # discloses nothing new -- the image tag is pinned in this repo, which
-        # is public.
-        - --skip-auth-route=GET=^/api/v1/info/status$
+        # /actuator/health, not the /api/v1/info/status the kubelet uses.
+        # Checked against the v2.14.2 source: MetricsController.getApplicationStatus()
+        # builds its response with status.put("status", "UP") -- a hardcoded
+        # literal. It answers 200 for as long as Spring can route a request and
+        # can never report anything else, so it tests reachability and nothing
+        # more. `up` and KubePodNotReady already cover that.
+        #
+        # /actuator/health is Spring Boot's aggregate over the registered
+        # indicators, and returns 503 when any is DOWN, which the http_2xx
+        # module reads as a failed probe. Here that means db (the local H2 file
+        # at ./configs/stirling-pdf-DB) and diskSpace -- a corrupt database file
+        # or a full volume, both real for a tool that writes temp files, and
+        # neither prone to flapping on a network blip. Upstream's own comment on
+        # spring.autoconfigure.exclude confirms the aggregate is live: they
+        # exclude Redis auto-config precisely because a dead localhost:6379
+        # factory "flips /actuator/health to DOWN".
+        #
+        # EnterpriseEndpointFilter allows it without a licence -- it permits any
+        # path where trimmedUri.startsWith("/actuator/health") -- so this does
+        # not depend on the paid tier.
+        - --skip-auth-route=GET=^/actuator/health$
       env:
         - name: OAUTH2_PROXY_CLIENT_ID
           valueFrom:
