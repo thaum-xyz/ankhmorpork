@@ -28,6 +28,10 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
+    # / is the root handler -- it answers 200 with a 234-byte Discworld homage,
+    # which proves the HTTP server is up and nothing else. /healthz is atuin's
+    # own health endpoint and answers {"status":"healthy"} in 20 bytes.
+    probe-uri: /healthz
   className: "public"
   hosts:
     - host: atuin.thaum.xyz

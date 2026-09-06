@@ -46,3 +46,52 @@ spec:
               - op: replace
                 path: /spec/template/spec/containers/0/args
                 value: ["start"]
+          # blackbox discovers targets from Ingresses labelled probe=enabled and
+          # the chart exposes annotations but no labels. This Ingress, not
+          # cloudflare-ingress: blackbox takes the scheme from whether the
+          # Ingress declares TLS, and the cloudflare twin declares none.
+          - target:
+              group: networking.k8s.io
+              version: v1
+              kind: Ingress
+              name: atuin
+            patch: |-
+              - op: add
+                path: /metadata/labels/probe
+                value: enabled
+          # atuin labels every request with its path, and the internet supplies
+          # the paths: 773 of the 776 distinct values are scanner 404s for
+          # /.env, /wp/, /sitemap.xml and the like. One permanent series per URL
+          # anyone invents, times twelve histogram buckets -- 9396 bucket series
+          # and climbing, from a service with three real routes.
+          #
+          # Anything outside the known set collapses to path="other", which
+          # bounds the label without discarding the requests or flattening the
+          # routes the SLOs need to tell apart. The chart offers no
+          # metricRelabelings knob, hence the patch.
+          - target:
+              group: monitoring.coreos.com
+              version: v1
+              kind: ServiceMonitor
+              name: atuin
+            patch: |-
+              - op: add
+                path: /spec/endpoints/0/metricRelabelings
+                value:
+                  # Deliberately avoids matching on an empty regex: omitted or
+                  # empty, the operator defaults regex to (.*), which here would
+                  # rewrite every path to "other" including the ones the SLOs
+                  # select on. Matching .+ on a temp label is the same test
+                  # without depending on that default.
+                  - sourceLabels: [path]
+                    targetLabel: __tmp_unknown_path
+                  - sourceLabels: [path]
+                    regex: /|/healthz|/api/v[0-9]+/.*
+                    targetLabel: __tmp_unknown_path
+                    replacement: ""
+                  - sourceLabels: [__tmp_unknown_path]
+                    regex: .+
+                    targetLabel: path
+                    replacement: other
+                  - action: labeldrop
+                    regex: __tmp_unknown_path

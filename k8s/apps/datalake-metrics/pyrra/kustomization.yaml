@@ -10,6 +10,8 @@ resources:
   - slo-apiserver-read-resource-latency.yaml
   - slo-apiserver-read-response-errors.yaml
   - slo-apiserver-write-response-errors.yaml
+  - slo-atuin-availability.yaml
+  - slo-atuin-latency.yaml
   - slo-coredns-response-errors.yaml
   - slo-ingress.yaml
   - slo-kubelet-request-errors.yaml
