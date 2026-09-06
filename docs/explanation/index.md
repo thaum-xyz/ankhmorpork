@@ -33,4 +33,5 @@ currently exists only in commit messages, per-app READMEs and
 ## Available now
 
 - [Why a Kyverno policy rolls Pods on ConfigMap changes](configmap-autoreload.md)
+- [Why the rule linter alerts on change, not on count](pint-rule-linting.md)
 - [Postgres fleet upgrade plan](../postgres/fleet-upgrade-plan.md)
