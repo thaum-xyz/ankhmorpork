@@ -16,6 +16,13 @@ spec:
       app: karakeep-web
   template:
     metadata:
+      annotations:
+        # db.db is live SQLite and K8up reads the running filesystem, so the
+        # file-level copy of it can tear. This streams a copy taken through
+        # SQLite's own API into the repository as its own snapshot; that is the
+        # one to restore from. The file-level copy stays as a fallback.
+        k8up.io/backupcommand: node /backup/dump.js
+        k8up.io/file-extension: .sqlite
       labels:
         app: karakeep-web
     spec:
@@ -48,6 +55,9 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: data
+            - mountPath: /backup
+              name: backup-script
+              readOnly: true
           envFrom:
             - secretRef:
                 name: karakeep-secrets
@@ -61,3 +71,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: data-pvc
+        - name: backup-script
+          configMap:
+            name: backup-script
