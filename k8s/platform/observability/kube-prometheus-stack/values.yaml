@@ -47,8 +47,10 @@ defaultRules:
     KubeAggregatedAPIErrors: true
 
     # node_md_* comes from node-exporter's mdadm collector, which emits nothing
-    # without /proc/mdstat. No node here has mdraid.
+    # without /proc/mdstat. No node here has mdraid. NodeRAIDDiskFailure is the
+    # sibling on the same collector and was missed when NodeRAIDDegraded went.
     NodeRAIDDegraded: true
+    NodeRAIDDiskFailure: true
 
     # node_systemd_* needs --collector.systemd, off by default and expensive
     # enough that it is not worth turning on to serve two alerts. If it is ever
