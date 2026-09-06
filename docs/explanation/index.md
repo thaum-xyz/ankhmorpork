@@ -20,12 +20,13 @@ currently exists only in commit messages, per-app READMEs and
 ## Planned
 
 - Why observability is split by role rather than by stack
-- How Flux is layered: bootstrap, platform, apps
 - Why Helm values live in `values.yaml` rather than inline in a HelmRelease
 - What stays private, and why the rest of this is public
 
 ## Available now
 
+- [How Flux is layered](flux-layering.md) — bootstrap, platform, apps, and why
+  reconciling in the wrong order reports success
 - [Why storage is split the way it is](storage-durability.md) — and how a durability
   claim was tested rather than trusted
 - [Why a Kyverno policy rolls Pods on ConfigMap changes](configmap-autoreload.md)
