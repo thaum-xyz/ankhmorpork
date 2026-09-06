@@ -26,6 +26,28 @@ CACHE_DIR="$WORK_DIR/schemacache"
 mkdir -p "$CACHE_DIR"
 
 CRD_CATALOG='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+# Schemas for CRDs the catalog carries but has not caught up on. kubeconform
+# tries -schema-location entries in order, so anything here wins and everything
+# else still falls through to the catalog above.
+#
+# pyrra.dev: the catalog's ServiceLevelObjective predates spec.alerting's
+# severities and absentName, both of which the deployed CRD accepts -- a
+# server-side dry-run round-trips them. Regenerate against the cluster after a
+# pyrra chart bump:
+#
+#   kubectl get crd servicelevelobjectives.pyrra.dev -o json \
+#     | jq '.spec.versions[0].schema.openAPIV3Schema
+#           | def harden: if type=="object" then
+#               (if has("properties") and (has("x-kubernetes-preserve-unknown-fields")|not)
+#                  then . + {additionalProperties:false} else . end)
+#               | with_entries(.value |= harden)
+#             elif type=="array" then map(harden) else . end;
+#           harden' > hack/schemas/pyrra.dev/servicelevelobjective_v1alpha1.json
+#
+# The harden pass restores additionalProperties: false, which a CRD implies
+# through structural pruning but does not state. Without it this override would
+# be laxer than the catalog it replaces and would wave typos through.
+LOCAL_SCHEMAS="$(pwd)/hack/schemas/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
 # CRD definitions themselves have no schema in the upstream set; the custom
 # resources they define are still validated via the catalog above.
 SKIP=CustomResourceDefinition,Dashboard
@@ -33,6 +55,7 @@ SKIP=CustomResourceDefinition,Dashboard
 validate() {
   kubeconform \
     -schema-location default \
+    -schema-location "$LOCAL_SCHEMAS" \
     -schema-location "$CRD_CATALOG" \
     -cache "$CACHE_DIR" \
     -skip "$SKIP" \

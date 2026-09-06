@@ -6,9 +6,9 @@ metadata:
     role: alert-rules
   name: pocket-id-latency
 spec:
-  # target is a PLACEHOLDER, and burnrates are off, for the same reason as
-  # pocket-id-availability: days of history, not weeks. Revisit from
-  # 2026-10-06.
+  # target is a PLACEHOLDER and the burn alerts run unrouted at info/none, for
+  # the same reason as pocket-id-availability: days of history, not weeks.
+  # Revisit from 2026-10-06.
   #
   # le=0.1 measured rather than guessed. Over 24h on 2026-09-06 the
   # distribution was 59.7% under 5ms, 98.4% under 10ms, 99.97% under 25ms and
@@ -21,8 +21,13 @@ spec:
     Fraction of HTTP requests pocket-id answers within 100ms.
   alerting:
     name: PocketIDLatencyBudgetBurn
-    burnrates: false
-    absent: true
+    absentName: PocketIDLatencyMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
   indicator:
     latency:
       success:

@@ -20,6 +20,13 @@ spec:
   description: ""
   alerting:
     name: KubeAPIServerReadClusterLatencyBudgetBurn
+    absentName: KubeAPIServerReadClusterLatencyMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
   indicator:
     latency:
       success:
