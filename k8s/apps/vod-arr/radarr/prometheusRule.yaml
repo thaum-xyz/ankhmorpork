@@ -37,7 +37,17 @@ spec:
               Arr Application radarr is having issues with {{ $labels.source }} health check - {{ $labels.message }}.
               For more infromation check {{ $labels.wikiurl }}.
             summary: radarr is unhealthy
-          expr: max_over_time(radarr_system_health_issues{job="radarr",source!="UpdateCheck",source!="IndexerLongTermStatusCheck"}[1h]) == 1
+          # IndexerStatusCheck joins the exclusions, for the reason prowlarr's
+          # own rule already records: every indexer here is synced from prowlarr
+          # (each message carries the "(Prowlarr)" suffix), public trackers fail
+          # routinely, and prowlarr deliberately stays quiet about a single one.
+          # Leaving it in meant one dead tracker opened an issue in both radarr
+          # and sonarr while the source of truth said nothing. prowlarr's
+          # prowlarrIndexersUnavailable covers the case that is not ordinary.
+          # What is left are the checks only radarr can see: root folder and
+          # mount, download client reachability, remote path mapping, import
+          # lists.
+          expr: max_over_time(radarr_system_health_issues{job="radarr",source!="UpdateCheck",source!="IndexerLongTermStatusCheck",source!="IndexerStatusCheck"}[1h]) == 1
           for: 2h
           labels:
             severity: warning
