@@ -20,11 +20,12 @@ currently exists only in commit messages, per-app READMEs and
 ## Planned
 
 - Why observability is split by role rather than by stack
-- Why Helm values live in `values.yaml` rather than inline in a HelmRelease
 - What stays private, and why the rest of this is public
 
 ## Available now
 
+- [Why Helm values live in a file](helm-values.md) — what inline `spec.values`
+  would cost, and why the ConfigMap name is deliberately stable
 - [How Flux is layered](flux-layering.md) — bootstrap, platform, apps, and why
   reconciling in the wrong order reports success
 - [Why storage is split the way it is](storage-durability.md) — and how a durability
