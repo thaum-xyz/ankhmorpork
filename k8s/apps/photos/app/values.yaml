@@ -121,9 +121,10 @@ machine-learning:
   controllers:
     main:
       replicas: 1
-      strategy: RollingUpdate
-      rollingUpdate:
-        unavailable: 1
+      # Recreate since the cache became ReadWriteOnce: RollingUpdate's default
+      # maxSurge would start the replacement before this Pod releases the
+      # volume, and deadlock if it landed on another node.
+      strategy: Recreate
       containers:
         main:
           env:
@@ -138,5 +139,11 @@ machine-learning:
       enabled: true
       size: 3Gi
       type: persistentVolumeClaim
-      accessMode: ReadWriteMany
-      storageClass: longhorn-r2
+      # RWX was never required -- one replica, one mounter -- and Piraeus offers
+      # none. Recreate above keeps two Pods from ever holding it at once.
+      accessMode: ReadWriteOnce
+      # Kept on replicated storage rather than emptyDir. It is a genuine
+      # download cache, but a measured 786M of it (CLIP 583M, buffalo_l 183M,
+      # OCR 21M), so emptyDir would mean re-fetching that from HuggingFace after
+      # every kured reboot with smart search degraded until it finished.
+      storageClass: piraeus-r2-roaming
