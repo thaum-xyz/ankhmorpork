@@ -46,6 +46,8 @@ nav = [
   ] },
   { "Reference" = [
     "reference/index.md",
+    { "Applications" = "reference/apps.md" },
+    { "Admission policies" = "reference/admission-policies.md" },
     { "Annotations and labels" = "reference/annotations.md" },
     { "Charts and images" = "reference/charts.md" },
     { "UPS Modbus register map" = "ups/modbus-register-map.md" },

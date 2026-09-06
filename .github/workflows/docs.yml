@@ -29,7 +29,11 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: 3.x
-      - run: pip install zensical==${{ env.zensical-version }}
+      - run: pip install zensical==${{ env.zensical-version }} pyyaml
+      # apps.md and admission-policies.md are derived from the manifests, so a new
+      # app or policy that did not regenerate them fails here rather than leaving
+      # the reference quietly wrong.
+      - run: make docs-reference-check
       - run: zensical build --clean
       - uses: actions/upload-pages-artifact@v5
         with:
