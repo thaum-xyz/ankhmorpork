@@ -21,8 +21,8 @@ spec:
   description: >-
     Fraction of successful blackbox probes against login.krupa.net.pl.
   alerting:
-    name: PocketIDProbeProbeBudgetBurn
-    absentName: PocketIDProbeProbeMetricAbsent
+    name: PocketIDProbeBudgetBurn
+    absentName: PocketIDProbeMetricAbsent
     severities:
       fastBurn: info
       mediumBurn: info

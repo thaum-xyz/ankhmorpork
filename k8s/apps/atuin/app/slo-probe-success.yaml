@@ -21,8 +21,8 @@ spec:
   description: >-
     Fraction of successful blackbox probes against atuin.thaum.xyz.
   alerting:
-    name: AtuinProbeProbeBudgetBurn
-    absentName: AtuinProbeProbeMetricAbsent
+    name: AtuinProbeBudgetBurn
+    absentName: AtuinProbeMetricAbsent
     severities:
       fastBurn: info
       mediumBurn: info

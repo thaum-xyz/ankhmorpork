@@ -90,6 +90,17 @@ server:
       enabled: true
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
+        # Without this the probe hits `/` and gets 10.5KB of Svelte shell, which
+        # the web container serves from static assets -- it returns 200 with the
+        # API dead, and /health and /healthz fall through to the same catch-all.
+        # Not /api/server/ping either: ServerService.ping() is `return { res:
+        # 'pong' }`, a literal that cannot fail while the process can route a
+        # request, which is what `up` already tells us. getSystemConfig() behind
+        # /api/server/config makes three uncached reads -- the config repository,
+        # an admin-user lookup for isInitialized, and system_metadata for
+        # isOnboarded -- so it answers 372 bytes of JSON and fails when Postgres
+        # is unreachable. It is also what the login page itself fetches.
+        ingress.thaum.xyz/probe-uri: /api/server/config
         item.homer.rajsingh.info/name: "Immich"
         item.homer.rajsingh.info/subtitle: "Photo & Video Library"
         item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/refs/heads/main/assets/immich.svg"
