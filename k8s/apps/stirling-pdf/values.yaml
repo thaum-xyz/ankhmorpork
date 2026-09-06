@@ -16,6 +16,10 @@ ingress:
   ingressClassName: public
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Without this the probe hits `/`, which oauth2-proxy answers with a redirect
+    # into pocket-id -- see the --skip-auth-route note below for why that made
+    # the probe measure the wrong service entirely.
+    probe-uri: /api/v1/info/status
     item.homer.rajsingh.info/name: "Stirling PDF"
     item.homer.rajsingh.info/subtitle: "PDF manipulation tool"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/stirlingpdf.svg"
@@ -66,6 +70,23 @@ deployment:
         - --cookie-secure=true
         # Straight to pocket-id rather than showing an interstitial sign-in page.
         - --skip-provider-button=true
+        # Let the blackbox probe reach Stirling's health endpoint without auth.
+        #
+        # Before this, the probe requested `/`, oauth2-proxy redirected it to
+        # login.krupa.net.pl/authorize (--skip-provider-button sends it straight
+        # to the IdP rather than rendering a sign-in page), and pocket-id
+        # answered /interaction with 200. blackbox follows redirects and the
+        # http_2xx module asserts nothing about the body, so the probe's success
+        # criterion was "pocket-id's login page returned 200" -- it would have
+        # stayed green with Stirling completely down, and it generated ~5760
+        # authorize requests a day against pocket-id.
+        #
+        # The same path the kubelet already uses for liveness and readiness, so
+        # the external probe and the internal one agree on what healthy means.
+        # It answers {"version":"2.14.2","status":"UP"} unauthenticated, which
+        # discloses nothing new -- the image tag is pinned in this repo, which
+        # is public.
+        - --skip-auth-route=GET=^/api/v1/info/status$
       env:
         - name: OAUTH2_PROXY_CLIENT_ID
           valueFrom:
