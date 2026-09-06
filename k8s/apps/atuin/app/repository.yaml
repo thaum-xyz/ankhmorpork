@@ -1,7 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: atuin
-spec:
-  interval: 5m
-  url: https://atuinsh.github.io/helm-charts/

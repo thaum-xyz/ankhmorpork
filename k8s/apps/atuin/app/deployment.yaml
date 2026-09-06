@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: atuin
+    app.kubernetes.io/instance: atuin
+  name: atuin
+spec:
+  replicas: 1
+  # Must stay exactly these two labels: a Deployment's selector is immutable, so
+  # anything else here would need the object deleted and recreated rather than
+  # updated.
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: atuin
+      app.kubernetes.io/instance: atuin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: atuin
+        app.kubernetes.io/instance: atuin
+    spec:
+      serviceAccountName: atuin
+      containers:
+        - name: atuin
+          image: ghcr.io/atuinsh/atuin:18.18.1
+          # v18.12.0 split the binaries: the image ships only atuin-server,
+          # whose usage is `atuin-server start`. The chart hardcoded
+          # ["server", "start"] and had to be patched; here it is just the arg.
+          args: ["start"]
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: metrics
+              containerPort: 9001
+              protocol: TCP
+          env:
+            - name: ATUIN_HOST
+              value: "0.0.0.0"
+            - name: ATUIN_PORT
+              value: "80"
+            - name: ATUIN_LOG
+              value: info
+            - name: ATUIN_OPEN_REGISTRATION
+              value: "false"
+            - name: ATUIN_MAX_HISTORY_LENGTH
+              value: "0"
+            - name: ATUIN_MAX_RECORD_SIZE
+              value: "1073741824"
+            - name: ATUIN_PAGE_SIZE
+              value: "1100"
+            - name: ATUIN_TLS__ENABLE
+              value: "false"
+            # Empty, and inert while ATUIN_TLS__ENABLE is false, but the chart
+            # set them and this migration is meant to be behaviour-identical --
+            # atuin's config layer may distinguish an unset key from an empty
+            # one. Drop them once that has actually been checked, not before.
+            - name: ATUIN_TLS__CERT_PATH
+              value: ""
+            - name: ATUIN_TLS__PKEY_PATH
+              value: ""
+            - name: ATUIN_METRICS__ENABLE
+              value: "true"
+            - name: ATUIN_METRICS__HOST
+              value: "0.0.0.0"
+            - name: ATUIN_METRICS__PORT
+              value: "9001"
+            - name: ATUIN_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: atuin-secrets
+                  key: dbUri
+          # /healthz, not /. The chart probed / -- the root handler, which
+          # answers 200 with a 234-byte Discworld homage and proves only that
+          # the HTTP server is listening. /healthz answers {"status":"healthy"}.
+          # It also stops the kubelet accounting for 99.8% of the requests atuin
+          # records against path="/".
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 80Mi
