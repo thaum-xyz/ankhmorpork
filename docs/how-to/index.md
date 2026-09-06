@@ -20,11 +20,12 @@ section once migrated.
 
 ## Available now
 
+- [Choose a storage class](choose-a-storage-class.md) — which class a workload
+  belongs on, in the order the questions actually matter
 - [Roll a workload when its ConfigMap changes](reload-on-configmap-change.md)
 
 ## Planned
 
-- Add persistent storage to an app
 - Expose an app on an ingress
 - Rotate a secret
 - Recover a Postgres cluster from backup
