@@ -14,14 +14,22 @@ spec:
   # history to pick one from. Revisit from 2026-10-06.
   #
   # Read the denominator before trusting a ratio over it: essentially all of
-  # this traffic is synthetic. The blackbox probe for pdf.krupa.net.pl follows
-  # its oauth2 redirect into /authorize here, and both Prometheus replicas run
-  # that probe every 30s, so pocket-id sees ~5760 authorize redirects a day
-  # against a handful of real requests. That is not a defect and it is not
-  # useless -- it exercises routing, TLS, client lookup and PKCE validation end
-  # to end, and a steady synthetic denominator is what stops one real error
-  # reading as a catastrophic burn on a low-traffic service. It does mean this
-  # SLO measures the authorize path, not a logged-in user's experience.
+  # this traffic is synthetic, and after the stirling-pdf probe fix it is
+  # pocket-id's own probe rather than another service's. Both Prometheus
+  # replicas fetch /.well-known/openid-configuration every 30s, so the
+  # denominator is ~5760 discovery fetches a day against a handful of real
+  # requests.
+  #
+  # That is deliberate, not a defect. A steady synthetic denominator is what
+  # stops one real error reading as a catastrophic burn on a low-traffic
+  # service. It does mean this SLO measures "can a relying party discover and
+  # reach the IdP", not a logged-in user's experience.
+  #
+  # It used to be the pdf.krupa.net.pl probe supplying that traffic, by
+  # following its oauth2 redirect into /authorize here -- which meant pocket-id
+  # depended on another service's auth flow for its own denominator, and that
+  # probe was measuring pocket-id rather than stirling-pdf. Both halves of that
+  # are fixed; see k8s/apps/stirling-pdf/values.yaml.
   description: >-
     Fraction of HTTP requests pocket-id answers without a server error. Nearly
     all of the denominator is the pdf blackbox probe's authorize redirect.

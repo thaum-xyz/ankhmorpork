@@ -15,8 +15,8 @@ spec:
   # 100% under 100ms, so 0.1 sits above the whole observed spread and leaves
   # headroom to pick a target from data. Tighter buckets exist (0.025, 0.05,
   # 0.075) if this turns out too loose once there is real user traffic to
-  # measure -- today the sample is dominated by the pdf probe's authorize
-  # redirect, which pocket-id answers in 2-5ms.
+  # measure -- today the sample is dominated by pocket-id's own probe fetching
+  # the discovery document, which it answers in single-digit milliseconds.
   description: >-
     Fraction of HTTP requests pocket-id answers within 100ms.
   alerting:
