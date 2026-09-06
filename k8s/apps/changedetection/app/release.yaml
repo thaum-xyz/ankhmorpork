@@ -50,3 +50,16 @@ spec:
                   port: http
                 periodSeconds: 5
                 failureThreshold: 36
+        # The chart's persistence block has no annotations knob, and K8up runs
+        # with skipWithoutAnnotation, so the claim has to be opted in here.
+        # No excludes: the UUID directories are the watch history, which is the
+        # thing worth keeping, and the rest is config.
+        - target:
+            version: v1
+            kind: PersistentVolumeClaim
+            name: changedetection
+          patch: |-
+            - op: add
+              path: /metadata/annotations
+              value:
+                k8up.io/backup: "true"

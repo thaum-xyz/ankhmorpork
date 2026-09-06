@@ -6,3 +6,4 @@ resources:
   - app/
   - playwright/
   - proxy/
+  - backup/
