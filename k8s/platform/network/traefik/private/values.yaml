@@ -13,4 +13,11 @@ providers:
 service:
   spec:
     loadBalancerIP: "192.168.50.130"
-    #externalTrafficPolicy: Local
+    # Cluster deliberately, and set explicitly so Helm owns the field: with
+    # Local, only nodes running a private-traefik pod serve and BGP-advertise
+    # the VIP. Two replicas with required per-hostname anti-affinity can never
+    # cover all schedulable nodes, so a rollout can leave the Tailscale subnet
+    # router (beelink01/beelink02) without a backend and every remote client
+    # loses the private ingress. Nothing here needs the real client IP, and the
+    # SNAT'd node address still lands in 192.168.50.0/24.
+    externalTrafficPolicy: Cluster
