@@ -61,22 +61,6 @@ spec:
           for: 15m
           labels:
             severity: warning
-        - alert: PrometheusErrorSendingAlertsToSomeAlertmanagers
-          annotations:
-            description: '{{ printf "%.1f" $value }}% errors while sending alerts from Prometheus {{$labels.instance}} to Alertmanager {{$labels.alertmanager}}.'
-            runbook_url: https://runbooks.thaum.xyz/runbooks/prometheus/prometheuserrorsendingalertstosomealertmanagers
-            summary: Prometheus has encountered more than 1% errors sending alerts to a specific Alertmanager.
-          expr: |
-            (
-              rate(prometheus_notifications_errors_total{job="prometheus-k8s"}[5m])
-            /
-              rate(prometheus_notifications_sent_total{job="prometheus-k8s"}[5m])
-            )
-            * 100
-            > 1
-          for: 15m
-          labels:
-            severity: warning
         - alert: PrometheusNotConnectedToAlertmanagers
           annotations:
             description: Prometheus {{$labels.instance}} is not connected to any Alertmanagers.
@@ -200,16 +184,6 @@ spec:
           for: 15m
           labels:
             severity: warning
-        - alert: PrometheusRuleFailures
-          annotations:
-            description: Prometheus {{$labels.instance}} has failed to evaluate {{ printf "%.0f" $value }} rules in the last 5m.
-            runbook_url: https://runbooks.thaum.xyz/runbooks/prometheus/prometheusrulefailures
-            summary: Prometheus is failing rule evaluations.
-          expr: |
-            increase(prometheus_rule_evaluation_failures_total{job="prometheus-k8s"}[5m]) > 0
-          for: 15m
-          labels:
-            severity: critical
         - alert: PrometheusMissingRuleEvaluations
           annotations:
             description: Prometheus {{$labels.instance}} has missed {{ printf "%.0f" $value }} rule group evaluations in the last 5m.
@@ -280,19 +254,3 @@ spec:
           for: 15m
           labels:
             severity: warning
-        - alert: PrometheusErrorSendingAlertsToAnyAlertmanager
-          annotations:
-            description: '{{ printf "%.1f" $value }}% minimum errors while sending alerts from Prometheus {{$labels.instance}} to any Alertmanager.'
-            runbook_url: https://runbooks.thaum.xyz/runbooks/prometheus/prometheuserrorsendingalertstoanyalertmanager
-            summary: Prometheus encounters more than 3% errors sending alerts to any Alertmanager.
-          expr: |
-            min without (alertmanager) (
-              rate(prometheus_notifications_errors_total{job="prometheus-k8s",alertmanager!~``}[5m])
-            /
-              rate(prometheus_notifications_sent_total{job="prometheus-k8s",alertmanager!~``}[5m])
-            )
-            * 100
-            > 3
-          for: 15m
-          labels:
-            severity: critical
