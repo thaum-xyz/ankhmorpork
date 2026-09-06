@@ -325,5 +325,7 @@ back:
   `validate-ingress-contract`, which *denies* anything missing TLS or using an
   unapproved issuer; the resource requests satisfy `require-resource-requests`,
   which only warns. Both were chosen for you here.
+- **[How Flux is layered](../explanation/flux-layering.md)** — why step 5's
+  reconcile order is what it is, and why getting it wrong reports success.
 - **[Explanation](../explanation/index.md)** — why the cluster is arranged this
   way.
