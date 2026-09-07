@@ -5,7 +5,12 @@ A Job runs pgloader against the SQLite file on `seerr-config` and copies the
 rows into the `postgres-seerr` cluster. It lives here and not under `k8s/`
 because Flux must never apply it: it truncates seerr's tables first.
 
-Rehearsed on 2026-09-07 against `postgres:17` and `seerr:v3.4.1` with a copy of
+Ran on 2026-09-07: 793 rows in, 793 imported, 0 errors, and seerr read all 28
+requests and both users back through its API. pgloader checkpointed the WAL on
+close, so the `-wal` and `-shm` files are gone and `db.sqlite3` is left as the
+fallback.
+
+Rehearsed first, on the same day, against `postgres:17` and `seerr:v3.4.1` with a copy of
 the live file: 793 rows over 14 tables, foreign keys dropped and recreated by
 pgloader, sequences reset, schema byte-identical to one seerr created itself,
 seerr serving every request and user through its API afterwards, and a second
