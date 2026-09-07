@@ -29,56 +29,35 @@ client. A newly created client allows **no** groups at all.
 kubectl krew install oidc-login
 ```
 
-## 3. Write a kubeconfig
+## 3. Build a kubeconfig
 
-The issuer is `https://login.krupa.net.pl`. For the client ID use
-`k3s_oidc_client_id` from `metal/group_vars/k3s.yml`, which is the value the API
-server is configured to accept as the audience.
-
-```yaml
-apiVersion: v1
-kind: Config
-current-context: ankhmorpork
-clusters:
-  - name: ankhmorpork
-    cluster:
-      server: https://100.127.115.15:6443
-      certificate-authority-data: <same CA as the certificate kubeconfig>
-users:
-  - name: pocket-id
-    user:
-      exec:
-        apiVersion: client.authentication.k8s.io/v1
-        command: kubectl
-        args:
-          - oidc-login
-          - get-token
-          - --oidc-issuer-url=https://login.krupa.net.pl
-          - --oidc-client-id=<client-id>
-          - --oidc-extra-scope=email
-          - --oidc-extra-scope=groups
-          - --oidc-extra-scope=offline_access
-          - --oidc-pkce-method=S256
-        interactiveMode: IfAvailable
-contexts:
-  - name: ankhmorpork
-    context:
-      cluster: ankhmorpork
-      user: pocket-id
-```
-
-`offline_access` is what earns a refresh token, so the passkey is needed once per
-session rather than once per command. `interactiveMode` is mandatory under the
-`v1` exec API.
-
-## 4. Verify
+From a checkout of this repository, on the house network:
 
 ```bash
-kubectl auth whoami
+./hack/mkkubeconfig.sh
 ```
 
-The username is `oidc:` plus the user's email address, and the groups list should
-contain the `oidc:`-prefixed group from step 1 alongside `system:authenticated`.
+That writes `~/.kube/clusters/ankhmorpork-oidc` and ends by verifying it. The
+issuer, client ID and API server address come from `metal/group_vars/k3s.yml`, so
+they cannot drift from what the API server accepts, and `offline_access` in the
+generated credentials earns a refresh token — the passkey is needed once per
+session rather than once per command.
+
+## 4. Check the CA fingerprint
+
+The script prints the cluster CA's SHA-256 fingerprint. Confirm it with someone
+who already has cluster access before using the kubeconfig from a network you do
+not control.
+
+By default the CA comes from the API server's own TLS handshake, which is
+trust-on-first-use: it is the client's only defence against trusting an impostor
+API server and sending it a bearer token. With access to a control-plane node,
+`-n <node>` reads the CA over SSH instead, which is authoritative and needs no
+confirmation.
+
+Verification output names the identity the cluster now sees — `oidc:` plus the
+user's email address, with the `oidc:`-prefixed group from step 1 alongside
+`system:authenticated`.
 
 !!! warning "Every pocket-id group becomes a Kubernetes group"
 
