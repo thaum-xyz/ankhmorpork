@@ -1,0 +1,30 @@
+database: bazarr
+owner: bazarr
+
+cluster:
+  instances: 2
+  storage:
+    # The SQLite file this replaces was 6.4 MB with a 4.4 MB WAL when measured
+    # on 2026-09-07, and most of its 8288 rows are subtitle state bazarr
+    # re-derives by scanning. 2Gi is the same allowance the other arrs get.
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+backup:
+  schedule: "0 7 4 * * *"
+  objectStore:
+    # Several clusters share this namespace, so each needs its own store.
+    name: versity-vod-bazarr
+    bucketPrefix: s3://cnpg/postgres
+    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
+    retentionPolicy: 7d
+    pathSuffix: vod-bazarr
+
+externalSecrets:
+  admin:
+    remoteKey: BAZARR_DB_ADMIN_PASS
+  user:
+    remoteKey: BAZARR_DB_PASS

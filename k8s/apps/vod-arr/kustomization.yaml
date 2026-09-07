@@ -11,6 +11,7 @@ resources:
   - sonarr/
   - sonarrdb/
   - bazarr/
+  - bazarrdb/
   - qbittorrent/
   - seerr/
   - seerrdb/
