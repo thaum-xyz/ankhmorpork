@@ -30,10 +30,13 @@ jobs:
         with:
           python-version: 3.x
       - run: pip install zensical==${{ env.zensical-version }} pyyaml
-      # apps.md and admission-policies.md are derived from the manifests, so a new
-      # app or policy that did not regenerate them fails here rather than leaving
-      # the reference quietly wrong.
-      - run: make docs-reference-check
+      # The generated reference pages are derived from the manifests. This check
+      # also runs in validate.yml, because a PR that adds an app or a policy does
+      # not touch docs/** and so never reaches this workflow.
+      - run: make docs-reference-check PYTHON=python3
+      # Broken links, paths that no longer exist, namespaces no manifest declares,
+      # and warnings for the prose patterns that have gone stale before.
+      - run: make docs-lint PYTHON=python3
       - run: zensical build --clean
       - uses: actions/upload-pages-artifact@v5
         with:

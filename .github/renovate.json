@@ -91,6 +91,17 @@
       ],
       "datasourceTemplate": "pypi",
       "depNameTemplate": "zensical"
+    },
+    {
+      "customType": "regex",
+      "description": "Container image tags quoted in the docs, so a how-to's copy-paste block tracks the cluster instead of freezing on the day it was written.",
+      "managerFilePatterns": [
+        "/^docs/.+\\.md$/"
+      ],
+      "matchStrings": [
+        "image: (?<depName>[a-z0-9.-]+(?:/[a-z0-9._-]+)+):(?<currentValue>v?[0-9][A-Za-z0-9.+-]*)"
+      ],
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -167,6 +178,19 @@
       ],
       "groupName": "applications",
       "minimumReleaseAge": "0",
+      "automerge": true
+    },
+    {
+      "description": "Image tags quoted in docs: the same soak as the apps they mirror, automerged because the docs build is the only thing they can break.",
+      "matchFileNames": [
+        "docs/**"
+      ],
+      "addLabels": [
+        "dependencies/docs",
+        "dependencies/automerge"
+      ],
+      "groupName": "documentation examples",
+      "minimumReleaseAge": "20 days",
       "automerge": true
     },
     {

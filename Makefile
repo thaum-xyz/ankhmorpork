@@ -4,6 +4,10 @@ SHELL:=/bin/bash
 # in .github/renovate.json, which matches both spellings.
 ZENSICAL_VERSION:=0.0.59
 
+# Homebrew's python3 has no pyyaml on the workstations this runs on; the system
+# one does. CI passes PYTHON=python3 so setup-python's interpreter is used.
+PYTHON?=/usr/bin/python3
+
 .PHONY: help
 help: ## Display help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -39,16 +43,20 @@ docs-build:  ## Build the documentation site into ./site
 
 .PHONY: docs-reference
 docs-reference:  ## Regenerate the derivable reference pages under docs/reference
-	/usr/bin/python3 hack/generate-docs-reference.py
+	$(PYTHON) hack/generate-docs-reference.py
 
 .PHONY: docs-reference-check
 docs-reference-check: docs-reference  ## Fail if the generated reference pages are stale
 	@# git-status, not git-diff: diff ignores untracked files, so a page that was
 	@# never generated would pass silently.
-	@out="$$(git status --porcelain -- docs/reference/apps.md docs/reference/admission-policies.md)"; \
+	@out="$$(git status --porcelain -- docs/reference/apps.md docs/reference/admission-policies.md docs/reference/flux-kustomizations.md docs/reference/helm-releases.md)"; \
 	if [ -n "$$out" ]; then \
 		echo "$$out"; \
 		echo; \
 		echo "Generated reference pages are out of date. Run 'make docs-reference' and commit."; \
 		exit 1; \
 	fi
+
+.PHONY: docs-lint
+docs-lint:  ## Check docs for broken links, missing paths, unknown names and stale-prone prose
+	$(PYTHON) hack/lint-docs.py
