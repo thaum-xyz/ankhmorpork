@@ -170,6 +170,29 @@ than what happens to be in git.
 | **Read by** | Grafana's dashboard sidecar |
 | **Effect** | Files the dashboard under that folder |
 
+### `linbit.com/hostname`
+
+| | |
+| --- | --- |
+| **Type** | Label |
+| **Set on** | `Node` |
+| **Value** | That node's own hostname |
+| **Written by** | kubelet, from the topology keys the `linstor.csi.linbit.com` node plugin registers |
+| **Effect** | Marks a node where a Piraeus volume can actually be attached |
+
+Select it with `Exists` in a `nodeAffinity`, never as a `nodeSelector` — the
+value differs per node, and a selector can only compare a key to one fixed
+value. Use it for any Pod mounting a `piraeus-*` volume: the roaming classes put
+no node affinity on the PV, so nothing else stops the scheduler picking a node
+with no CSI plugin, where the Pod then waits forever on `CSINode <node> does not
+contain driver linstor.csi.linbit.com`.
+
+Prefer it over restating Piraeus's placement rule in the consumer, which
+diverges silently the day that rule changes. Its one weakness is the mirror
+image: kubelet writes topology labels at plugin registration and removes nothing
+when a plugin stops, so a node that has *stopped* running Piraeus keeps the
+label until something clears it.
+
 ### `feature.node.kubernetes.io/module-signing-enforced`
 
 | | |

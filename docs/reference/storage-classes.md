@@ -83,6 +83,22 @@ xfs, and carry the same DRBD tuning. They differ only in where the Pod may run:
 | `auto-diskful` delay | — | **5 minutes**, then a local replica, surplus dropped |
 | Max PVC size | unbounded | **32 GiB**, denied above |
 
+How the "Pod may schedule on" row is enforced differs, and the difference bites.
+`piraeus-r2` PVs carry node affinity for their two replica holders, written by
+the driver, so the scheduler honours that row on its own. `piraeus-r2-roaming`
+PVs carry no node affinity at all — being attachable from anywhere is the point —
+so once the claim is bound, nothing keeps a Pod off a node with no CSI node
+plugin, where it waits forever on `CSINode <node> does not contain driver
+linstor.csi.linbit.com`. A Pod mounting a roaming volume needs its own
+[`linbit.com/hostname`](annotations.md) affinity.
+
+Both classes restrict *provisioning* through `allowedTopologies` on
+`linbit.com/hostname`, patched in through the HelmRelease's `postRenderers`
+because the chart's template does not render that field. Under
+`WaitForFirstConsumer` the scheduler applies it while the claim is unbound, so a
+new volume is steered to a node that can serve it — it does nothing for a claim
+that is already bound.
+
 The size cap is a resync budget: a moved Pod resyncs the volume across the node
 network, and a full 32 GiB is roughly five more minutes at 1 Gb/s.
 `rs-discard-granularity` keeps unallocated blocks off the wire, but requested size

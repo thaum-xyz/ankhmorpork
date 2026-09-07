@@ -1,12 +1,15 @@
 # Config reference: https://github.com/piraeusdatastore/helm-charts/blob/main/charts/linstor-cluster/values.yaml
 
 linstorCluster:
-  # A node has to match both nodeSelector and nodeAffinity to run any Piraeus
-  # component. The operator applies them to the satellite, CSI node plugin and
-  # HA controller DaemonSets and to the controller Deployments alike, and a node
-  # they exclude also cannot run a Pod that mounts a Piraeus volume.
-  nodeSelector:
-    linstor: "true"
+  # nodeAffinity alone decides where Piraeus runs. The operator applies it to
+  # the satellite, CSI node plugin and HA controller DaemonSets and to the
+  # controller Deployments alike, and a node it excludes also cannot run a Pod
+  # that mounts a Piraeus volume.
+  #
+  # There was a `nodeSelector: linstor: "true"` here as well, hand-applied to
+  # three nodes and defined nowhere. Both expressions below are discovered, so
+  # a new node with a thin pool joins the cluster correctly labelled or not at
+  # all -- nothing to remember.
   nodeAffinity:
     nodeSelectorTerms:
       # Expressions inside one term are ANDed; a second term would be an OR.
@@ -33,14 +36,6 @@ linstorCluster:
             operator: NotIn
             values:
               - "true"
-          # master01 is the node that condition currently describes: Secure Boot
-          # on, lockdown integrity, sig_enforce Y, no DRBD module loaded. Kept as
-          # a by-name guard alongside the discovered rule; drop it once the label
-          # has been seen on every node, not before.
-          - key: kubernetes.io/hostname
-            operator: NotIn
-            values:
-              - master01
   tolerations:
     - key: node-role.kubernetes.io/control-plane
       operator: Exists
@@ -250,7 +245,6 @@ linstorSatelliteConfigurations:
                 memory: 32Mi
   - name: secondary-vg
     nodeSelector:
-      linstor: "true"
       devices.topolvm.io/vg: secondary-vg
     storagePools:
       - name: temporary-topolvm
@@ -259,7 +253,6 @@ linstorSatelliteConfigurations:
           thinPool: thin-pool0
   - name: ubuntu-vg
     nodeSelector:
-      linstor: "true"
       devices.topolvm.io/vg: ubuntu-vg
     storagePools:
       - name: temporary-topolvm

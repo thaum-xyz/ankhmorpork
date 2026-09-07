@@ -148,11 +148,23 @@ spec:
       # uncordoned, at which point the scheduler picked it every time -- it holds
       # the least of anything in the cluster.
       #
-      # Selecting on the label rather than excluding a hostname: this is the same
-      # label the Piraeus component uses to place its own workloads, so it tracks
-      # which nodes can serve these volumes instead of restating today's answer.
-      nodeSelector:
-        linstor: "true"
+      # linbit.com/hostname is one of the topology keys the linstor CSI node
+      # plugin registers, so kubelet stamps it on exactly the nodes where that
+      # plugin has come up -- the condition this Pod actually needs. It replaced
+      # a `linstor: "true"` nodeSelector, a hand-applied label that stopped
+      # meaning anything once Piraeus stopped reading it, and it is preferred
+      # over restating Piraeus's own placement rule here, which would silently
+      # diverge the day that rule gains a condition.
+      #
+      # Exists, because the value is the node's own hostname. That needs
+      # affinity: a nodeSelector can only compare a key to one fixed value.
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: linbit.com/hostname
+                    operator: Exists
       restartPolicy: Always
       # The image is already USER node:node, which is uid 1000.
       securityContext:
