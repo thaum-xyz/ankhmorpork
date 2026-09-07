@@ -39,6 +39,34 @@ proxy_config:
     request_timeout: 120
     fallbacks:
       - claude-sonnet: [claude-haiku]
+    # Registers litellm's own /metrics collectors. Without this the route still
+    # exists -- it is mounted unconditionally and answers 401 -- so a 401 from
+    # /metrics says nothing about whether the callback is loaded.
+    callbacks: ["prometheus"]
+    # /metrics keeps its API key requirement (the default since litellm 1.85.0,
+    # and this runs 1.97.0). That is not optional here: ingress path is `/`
+    # Prefix, so anything litellm serves is internet-facing, and these metrics
+    # carry per-key spend, team aliases and user emails. Prometheus scrapes it
+    # with a dedicated virtual key -- see servicemonitor.yaml.
+    #
+    # The default label set on the request counters includes client_ip and
+    # user_agent, which on a public endpoint is the atuin problem with the
+    # internet supplying the values: one permanent series per scanner. end_user,
+    # user and user_email are unbounded for the same reason. Dropping them at
+    # the source rather than in metricRelabelings keeps the series out of the
+    # scrape entirely.
+    #
+    # Kept deliberately: `route` (bounded by litellm's own router, unlike an
+    # arbitrary URL path), api_key_alias (readable, and bounded by the number of
+    # keys issued), team/team_alias, and the model and provider labels the RED
+    # signal splits on.
+    prometheus_exclude_labels:
+      - "client_ip"
+      - "user_agent"
+      - "end_user"
+      - "user"
+      - "user_email"
+      - "hashed_api_key"
   general_settings:
     master_key: os.environ/PROXY_MASTER_KEY
 ingress:
@@ -46,8 +74,17 @@ ingress:
   className: public
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    #cert-manager.io/cluster-issuer: letsencrypt-prod
-    #ingress.thaum.xyz/probe-uri: /-/healthy
+    # Not /-/healthy, which is Prometheus's convention and 404s here in 22
+    # bytes; not /health, which needs a key and answers 401. /health/readiness
+    # is what the chart points its own readiness and startup probes at, so it is
+    # litellm's answer to "can this pod serve", database included -- and it
+    # returns {"status":"healthy","db":"connected"} in 37 bytes rather than a UI
+    # shell that would come back 200 with the backend dead.
+    #
+    # The matching ingress.thaum.xyz/probe *label* is added by the postRenderer
+    # in release.yaml. This annotation alone does nothing: blackbox's Probe
+    # selects Ingresses on that label and only then reads the URI from here.
+    ingress.thaum.xyz/probe-uri: /health/readiness
     item.homer.rajsingh.info/name: "Litellm"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"
     item.homer.rajsingh.info/order: "40"

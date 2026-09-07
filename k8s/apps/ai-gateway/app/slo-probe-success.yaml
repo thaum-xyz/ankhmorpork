@@ -1,0 +1,35 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  name: ai-gateway-probe-success
+spec:
+  # Availability as a person experiences it: the blackbox probe, end to end
+  # through DNS, TLS and the ingress. The first availability signal this service
+  # has ever had -- before #1337 all 308 metric families in the namespace came
+  # from cadvisor, kube-state-metrics or the CNPG database, and described the
+  # container and its Postgres rather than whether the gateway answers.
+  #
+  # Matches on the host rather than the full probe URL, so changing
+  # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
+  # SLO behind it.
+  #
+  # target is a PLACEHOLDER. Unlike the other probe SLOs it is not even carried
+  # over from the shared objective -- ai-gateway was never in it, so there is no
+  # history behind this number at all. Set it from data once the probe has run
+  # a few weeks.
+  description: >-
+    Fraction of successful blackbox probes against ai-gateway.krupa.net.pl.
+  alerting:
+    name: AiGatewayProbeBudgetBurn
+    absentName: AiGatewayProbeMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
+  indicator:
+    bool_gauge:
+      metric: probe_success{instance=~"https://ai-gateway\\.krupa\\.net\\.pl(/.*)?"}
+  target: "95.0"
+  window: 4w

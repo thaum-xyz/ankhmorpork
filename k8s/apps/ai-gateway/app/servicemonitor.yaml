@@ -1,0 +1,49 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/name: litellm
+    app.kubernetes.io/instance: litellm
+  name: litellm
+spec:
+  endpoints:
+    # The chart's Service exposes one port, named `http`, and litellm serves
+    # /metrics on it alongside the API -- there is no separate metrics listener
+    # to point at.
+    - port: http
+      # With the trailing slash on purpose. /metrics answers 307 to /metrics/;
+      # Prometheus does follow that, but the hop is free to avoid and a
+      # redirect is one more thing to be wrong about later.
+      path: /metrics/
+      interval: 60s
+      # /metrics requires a litellm API key (default since 1.85.0). The token is
+      # a dedicated virtual key, not the master key; see
+      # metrics-credentials.yaml. prometheus-operator resolves this Secret from
+      # this ServiceMonitor's namespace, the same way karakeep's PodMonitor
+      # already does.
+      bearerTokenSecret:
+        name: litellm-metrics-credentials
+        key: PROMETHEUS_AUTH_TOKEN
+      # litellm counts the scrape as a request it served, so every scrape
+      # increments litellm_proxy_total_requests_metric{route="/metrics"} -- one
+      # per minute per replica, for ever. Verified against 1.97.0 locally: a
+      # proxy with no traffic at all still reported that series.
+      #
+      # Left in, a RED signal built on these counters would be mostly this
+      # monitoring reading itself, and an error ratio would be diluted by a
+      # denominator that grows on a timer. Dropped, the counters describe actual
+      # use of the gateway and go quiet when nobody is using it, which is the
+      # honest reading.
+      #
+      # The regex is anchored by the operator and written out in full rather
+      # than relying on a default -- an omitted or empty regex defaults to (.*),
+      # which here would drop every series and leave a target that scrapes
+      # cleanly and yields nothing.
+      metricRelabelings:
+        - action: drop
+          sourceLabels: [route]
+          regex: /metrics/?
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: litellm
+      app.kubernetes.io/instance: litellm
