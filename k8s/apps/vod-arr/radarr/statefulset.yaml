@@ -63,6 +63,8 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /config/logs
+              name: logs
             - mountPath: /backup
               name: backups
               subPath: radarr
@@ -132,6 +134,13 @@ spec:
                       (.Config.AuthenticationMethod = "External") |
                       (.Config.AuthenticationRequired = "DisabledForLocalAddresses")
                     ' /config/config.xml
+              # The file log only has to carry what the UI's Log Files tab shows -- the
+              # console is what reaches Loki. This had drifted to debug in the UI and was
+              # declared nowhere, which is a 50 x 1MB ring of *.debug.txt nothing reads:
+              # stdout is Info, so Loki never saw that detail, and this claim carries no
+              # k8up annotation either. ConsoleLogLevel is left alone deliberately --
+              # raising it is how to put debug into Loki for an investigation.
+              yq -i '(.Config.LogLevel = "info")' /config/config.xml
               # Prowlarr, Bazarr and Recyclarr all address this app by API key, so the key has
               # to be declared rather than generated. Absent secret leaves whatever exists.
               if [ -n "${API_KEY:-}" ]; then
@@ -169,7 +178,7 @@ spec:
                   name: radarr-api-key
                   optional: true
           image: mikefarah/yq:4.53.3
-          name: postgres-setup
+          name: render-config
           resources:
             limits:
               cpu: 100m
@@ -203,6 +212,14 @@ spec:
         - name: downloads
           persistentVolumeClaim:
             claimName: vod-downloads
+        # Logs are shipped from stdout by alloy, so the files are a local convenience
+        # for the UI's Log Files tab and do not belong on the claim. The app's own
+        # rotation is the real cap -- 50 x logSizeLimit (1M) for the info ring, and
+        # the same again if LogLevel is raised to debug for an investigation. 128Mi
+        # clears both, and exceeding sizeLimit evicts the Pod.
+        - name: logs
+          emptyDir:
+            sizeLimit: 128Mi
   volumeClaimTemplates:
     - metadata:
         name: config

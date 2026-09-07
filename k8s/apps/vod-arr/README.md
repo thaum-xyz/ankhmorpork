@@ -127,13 +127,42 @@ The CNPG clusters stay on the chart's `lvm-thin`: they have their own replicatio
 and barman backups, so DRBD underneath would be a second copy of a guarantee
 Postgres already gives.
 
+### Logs
+
+Every app here writes its log to stdout, and `alloy` tails `/var/log/pods` on all
+four nodes into Loki, which keeps six months. The file copies are a local
+convenience for each app's own log viewer, so each log directory is an
+`emptyDir` rather than part of the claim:
+
+| App                        | Log directory  |
+| -------------------------- | -------------- |
+| sonarr / radarr / prowlarr | `/config/logs` |
+| bazarr                     | `/config/log`  |
+| cleanuparr                 | `/config/logs` |
+
+qBittorrent needs no volume: the image symlinks `qbittorrent.log` to
+`/proc/self/fd/1`, which is the same idea one layer down.
+
+The three *arrs are why `LogLevel` is now declared. At `debug`, where the UI had
+it, they keep a 50 × `logSizeLimit` ring of `*.debug.txt` on top of the info log,
+while `ConsoleLogLevel` stays empty and stdout carries Info only. That made the
+debug detail the one thing here with no second copy: absent from Loki, on a claim
+with no `k8up` annotation, and overwritten as the ring wraps. Raising
+`ConsoleLogLevel` for the length of an investigation puts it in Loki instead,
+where it can be searched.
+
+`sizeLimit` on each `emptyDir` sits above the app's own rotation ceiling, since
+exceeding it evicts the Pod rather than dropping a log line.
+
 ## Configuration that is declared
 
-The `postgres-setup` init container rewrites `config.xml` on every start. It
+The `render-config` init container rewrites `config.xml` on every start. It
 sets the Postgres connection, turns the built-in login **off**
 (`AuthenticationMethod: External` — the private ingress is the trust boundary,
-and a password nobody has is how the old namespace became unauditable), and
-pins the API key from Doppler when the entry exists.
+and a password nobody has is how the old namespace became unauditable), pins
+`LogLevel` to `info`, and pins the API key from Doppler when the entry exists.
+
+It was called `postgres-setup` while Postgres was all it did.
 
 A declared API key is what lets Prowlarr, Bazarr and Recyclarr be configured
 against these apps without reading a generated value back out of a database.
