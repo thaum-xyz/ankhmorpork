@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/name: cloudnative-pg
+  name: cloudnative-pg
+spec:
+  groups:
+    - name: cnpg-custom.rules
+      rules:
+        # Cross-cluster, so it belongs to the operator rather than to any one
+        # database. The per-cluster CNPG* alerts come from the `cnpg-database`
+        # chart and cover backups and replication lag; none of them covers
+        # having no replica at all.
+        #
+        # Every CNPG cluster carries a `<name>-primary` PDB with
+        # disruptionsAllowed permanently 0. Draining the primary's node only
+        # works because the operator switches over first, and it can only
+        # switch to a ready, streaming replica on a schedulable node. With no
+        # streaming replica the PDB blocks the eviction for as long as the
+        # drain is allowed to run.
+        #
+        # `severity: info` routes to the null receiver and opens no issue. That
+        # is deliberate: this alert's consumer is kured, which refuses to cordon
+        # while it is firing -- see `alertFilterRegexp` in
+        # k8s/platform/cluster/system-kured/values.yaml. Renaming it there and
+        # here has to happen together.
+        - alert: CNPGClusterNoStreamingReplica
+          annotations:
+            description: The postgres primary of {{ $labels.namespace }}/{{ $labels.job }} has no streaming replica, so it cannot be switched over and its PDB will block a drain of whichever node it runs on.
+            summary: CNPG cluster has no replica to switch over to.
+          expr: |
+            max by (namespace, job) (cnpg_pg_replication_streaming_replicas) == 0
+          for: 5m
+          labels:
+            severity: info

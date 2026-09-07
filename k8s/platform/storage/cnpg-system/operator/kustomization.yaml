@@ -5,6 +5,7 @@ resources:
   - repository.yaml
   - release.yaml
   - podmonitor.yaml
+  - prometheusrule.yaml
   - configmap-dashboard.yaml
 configMapGenerator:
   - name: values-cnpg

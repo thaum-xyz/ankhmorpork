@@ -35,3 +35,28 @@ spec:
           for: 15m
           labels:
             severity: info
+    - name: kube-node-custom.rules
+      rules:
+        # A node cordoned for 45m is not one kured is mid-cycle on: a healthy
+        # cordon -> drain -> reboot -> uncordon measured 25 min at the current
+        # drainTimeout. So this means a manual cordon, or a drain that gave up,
+        # and either way the cluster is already a node short.
+        #
+        # Not covered upstream -- the kubernetes-mixin ships KubeNodeNotReady,
+        # KubeNodeUnreachable and KubeNodeReadinessFlapping, all of which key on
+        # node *readiness*; a cordoned node stays Ready, so none of them fires.
+        #
+        # `severity: info` routes to the null receiver and opens no issue. That
+        # is deliberate: this alert's consumer is kured, which refuses to cordon
+        # while it is firing -- see `alertFilterRegexp` in
+        # k8s/platform/cluster/system-kured/values.yaml. Renaming it there and
+        # here has to happen together.
+        - alert: NodeUnschedulable
+          annotations:
+            description: Node {{ $labels.node }} has been unschedulable for over 45m, so the cluster is effectively a node short. kured will not begin draining any other node until this clears.
+            summary: Node has been cordoned for longer than a reboot cycle.
+          expr: |
+            kube_node_spec_unschedulable == 1
+          for: 45m
+          labels:
+            severity: info

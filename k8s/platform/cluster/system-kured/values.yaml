@@ -51,17 +51,23 @@ configuration:
   # it the regexp means the opposite and every unrelated alert would stop
   # reboots. alertFiringOnly ignores `pending`.
   #
-  # The list is exactly "reasons a drain cannot succeed":
-  #   KubeNode{NotReady,Unreachable,ReadinessFlapping} -- a node is down
-  #   NodeUnschedulable                -- a node is cordoned (manually, or by a
-  #                                       drain that got stuck); this is the
-  #                                       one that would have stopped the
-  #                                       2026-09-07 cascade
-  #   CNPGClusterNoStreamingReplica    -- a postgres primary has nowhere to
-  #                                       switch over to, so its PDB will
-  #                                       block the drain forever
-  #   drbd*                            -- Piraeus replicas are resyncing or
-  #                                       short of quorum
+  # The list is exactly "reasons a drain cannot succeed". It matches on alert
+  # NAMES as plain strings, so renaming one of these rules silently opens the
+  # gate -- nothing fails, kured just stops checking. Each name and where it
+  # is defined:
+  #   KubeNode{NotReady,Unreachable,ReadinessFlapping}
+  #                    kubernetes-mixin; a node is down or flapping
+  #   NodeUnschedulable
+  #                    k8s/platform/observability/kube-prometheus-stack/
+  #                    prometheusrule-workloads.yaml -- a node is cordoned
+  #                    (manually, or by a drain that got stuck); this is the
+  #                    one that would have stopped the 2026-09-07 cascade
+  #   CNPGClusterNoStreamingReplica
+  #                    k8s/platform/storage/cnpg-system/operator/
+  #                    prometheusrule.yaml -- a postgres primary has nowhere
+  #                    to switch over to, so its PDB blocks the drain forever
+  #   drbd*            piraeus-datastore chart; replicas resyncing or short
+  #                    of quorum
   #
   # Fail-safe by design: if this Prometheus is unreachable, kured treats that
   # as blocked and reboots nothing. KuredRebootRequired is the backstop that

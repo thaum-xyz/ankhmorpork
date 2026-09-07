@@ -10,48 +10,6 @@ spec:
           expr: |
             sum_over_time(kured_reboot_required[1d])
 
-        # --- Drain gates ---------------------------------------------------
-        # The two `info` alerts below exist to be read by kured, not by a
-        # human: they are named in `alertFilterRegexp` in values.yaml, and
-        # while either is firing kured refuses to cordon anything. `info`
-        # routes to the null receiver, so neither opens a GitHub issue.
-        # Editing one changes reboot behaviour -- keep it in step with the
-        # regexp.
-
-        # A node that has been unschedulable for 45m is not one kured is
-        # mid-cycle on: a healthy cordon+drain+reboot+uncordon takes ~25m at
-        # the current drainTimeout. So this means a manual cordon or a drain
-        # that gave up, and in either case the cluster is already a node down
-        # -- which is how the 2026-09-07 cascade started.
-        - alert: NodeUnschedulable
-          annotations:
-            description: Node {{ $labels.node }} has been unschedulable for over 45m, so the cluster is effectively a node short. kured will not begin draining any other node until this clears.
-            summary: Node has been cordoned for longer than a reboot cycle.
-          expr: |
-            kube_node_spec_unschedulable == 1
-          for: 45m
-          labels:
-            severity: info
-
-        # Every CNPG cluster carries a `<name>-primary` PDB with
-        # disruptionsAllowed permanently 0; draining the primary's node only
-        # works because the operator switches over first, and it can only do
-        # that to a ready, streaming replica. With no streaming replica the
-        # PDB blocks the eviction for as long as the drain is allowed to run.
-        # The CNPG* alerts shipped by the chart cover backups and replication
-        # lag, not this, and the chart is vendored -- hence the rule lives
-        # here, next to the gate that consumes it.
-        - alert: CNPGClusterNoStreamingReplica
-          annotations:
-            description: The postgres primary of {{ $labels.namespace }}/{{ $labels.job }} has no streaming replica, so it cannot be switched over and its PDB will block a drain of whichever node it runs on.
-            summary: CNPG cluster has no replica to switch over to.
-          expr: |
-            max by (namespace, job) (cnpg_pg_replication_streaming_replicas) == 0
-          for: 5m
-          labels:
-            severity: info
-
-        # --- Backstops -----------------------------------------------------
         - alert: KuredDrainFailure
           annotations:
             description: Kured on cluster {{ $labels.cluster }} left node {{ $labels.node }} in unschedulable state for more than 24h. This most likely indicates failed node drain and requires manual intervention.
@@ -63,9 +21,11 @@ spec:
           for: 24h
           labels:
             severity: warning
-        # Also the backstop for the drain gates above: a gate that stays shut
-        # -- a chronic drbd alert, an unreachable Prometheus -- shows up as a
-        # node whose reboot never happens, and nothing else will say so.
+
+        # Also the backstop for the reboot gate in values.yaml: a gate that
+        # stays shut -- a chronic drbd alert, an unreachable Prometheus -- shows
+        # up as a node whose reboot never happens. kured 1.23.0 exposes no
+        # metric for a blocked reboot, so nothing else will say so.
         - alert: KuredRebootRequired
           annotations:
             description: Node {{ $labels.node }} has been waiting for a kured reboot for over a week, which spans several reboot windows.
