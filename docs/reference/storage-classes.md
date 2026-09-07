@@ -88,12 +88,6 @@ network, and a full 32 GiB is roughly five more minutes at 1 Gb/s.
 `rs-discard-granularity` keeps unallocated blocks off the wire, but requested size
 is the only proxy admission has.
 
-**The two classes perform identically.** The `piraeus-r2` rows in the tables above
-apply to both: same pool, same replica count, same DRBD tuning. The only
-difference in practice is that a Pod landing on a node with no replica reads and
-writes over the network until LINSTOR has replicated the data to it — degraded
-while that runs, and back to local-disk performance once it completes.
-
 #### DRBD tuning
 
 Both classes carry `al-extents=6433` (the maximum, covering ~25 GiB) and
@@ -120,4 +114,5 @@ option trades away durability.
 - `unifi-nas` was measured on one node, buffered only.
 - fsync on the bare-device baselines is the noisiest measurement, CV 24–61%.
 
-Method and raw results: `bench/storage-2026-09/` (local, untracked).
+Method and raw results are not in the repository; they live in the operator's
+local `bench/storage-2026-09/`.

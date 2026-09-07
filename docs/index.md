@@ -79,7 +79,7 @@ So the rule here is proximity:
   `k8s/apps/<app>/README.md`, for the same reason.
 - **Nothing here contains secrets, credentials, or break-glass paths.** The
   repository is public on purpose. Anything failing that test does not belong on
-  this site — see [what stays private](explanation/index.md).
+  this site.
 
 !!! tip "Found something wrong?"
 
