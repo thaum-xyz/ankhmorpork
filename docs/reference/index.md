@@ -24,8 +24,12 @@ Admission test:
 
 - [Applications](apps.md) — every app, its namespace, its Flux Kustomization and
   its hostnames *(generated)*
-- [Admission policies](admission-policies.md) — what Kyverno enforces, and which
-  rules only warn *(generated)*
+- [Admission policies](admission-policies.md) — every Kyverno policy wherever it
+  lives, what it does, and which rules only warn *(generated)*
+- [Flux Kustomizations](flux-kustomizations.md) — every Kustomization by layer, with
+  interval, prune, wait and `dependsOn` *(generated)*
+- [Helm releases](helm-releases.md) — every release, its chart and source, and
+  where its values come from *(generated)*
 - [Ingress and certificates](ingress.md) — the three classes, the two issuers,
   and what external-dns publishes
 - [Storage classes](storage-classes.md) — capabilities, access modes, node
