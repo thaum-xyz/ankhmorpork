@@ -83,6 +83,27 @@ Prefer what the app's own readiness probe uses. Good examples in tree:
 Omitting the annotation is not a way to opt out — the relabeling then builds the
 bare host, silently. Remove the label instead.
 
+### `thaum.xyz/kured-node-reboot`
+
+| | |
+| --- | --- |
+| **Type** | Taint, effect `PreferNoSchedule` |
+| **Set on** | `Node` |
+| **Value** | None — presence is the signal |
+| **Written by** | kured, when the node wants a reboot but another node holds the lock |
+| **Read by** | the descheduler's `RemovePodsViolatingNodeTaints` plugin, and the CloudNativePG operator via `DRAIN_TAINTS` |
+| **Effect** | The node stops attracting new Pods; movable Pods and Postgres primaries leave ahead of the drain |
+
+**Output, not input.** kured adds it on its own and removes it when the reboot
+finishes or the window closes; setting it by hand only lasts until kured's next
+pass. To stop a node rebooting, relabel it `kured=disabled` instead — that
+selector is what the DaemonSet schedules on.
+
+Both readers are configured with this exact string, and neither fails loudly if
+it stops matching: renaming the taint would leave the drain gate open and the
+switchover late, with nothing to show for it. See
+[how a node reboot is gated](../explanation/node-reboots.md).
+
 ## Upstream keys, local contract
 
 Keys owned by other projects, where what they mean *here* is a local decision.

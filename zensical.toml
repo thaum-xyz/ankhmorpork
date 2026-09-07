@@ -69,6 +69,7 @@ nav = [
     { "Why storage is split the way it is" = "explanation/storage-durability.md" },
     { "Rule linting with pint" = "explanation/pint-rule-linting.md" },
     { "The Postgres fleet upgrade" = "explanation/postgres-fleet-upgrade.md" },
+    { "How a node reboot is gated" = "explanation/node-reboots.md" },
   ] },
 ]
 
