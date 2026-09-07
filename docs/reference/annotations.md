@@ -24,12 +24,6 @@ For a process that reads its configuration once at startup. See
 [the how-to](../how-to/reload-on-configmap-change.md) and
 [the reasoning](../explanation/configmap-autoreload.md).
 
-!!! danger "On the workload, not the Pod template"
-
-    The policy matches `object.metadata.annotations`. An opt-in placed in
-    `spec.template.metadata.annotations` never matches, and because the policy is
-    `failurePolicy: Ignore` it produces no stamp, no error and no rollout.
-
 ### `autoreloader.thaum.xyz/version`
 
 | | |

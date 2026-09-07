@@ -88,15 +88,9 @@ first reconcile stamps the version that is still current at that moment and
 nothing changes. The next one picks up the new value and rolls the Pods.
 
 With a 5m Kustomization interval that is **up to ten minutes** between merging a
-ConfigMap change and seeing new Pods. Measured on a real change:
-
-```
-configmap written by kustomize-controller   05:50:41
-deployment written by kustomize-controller  05:43:34   <- skipped this reconcile
-pod rolled                                  05:57
-```
-
-To skip the wait, reconcile explicitly:
+ConfigMap change and seeing new Pods —
+[measured](../explanation/configmap-autoreload.md#what-it-trades). To skip the
+wait, reconcile explicitly:
 
 ```bash
 flux reconcile source git ankhmorpork
@@ -108,7 +102,7 @@ flux -n flux-system reconcile kustomization <component>
 ## Limits
 
 - **ConfigMaps only.** Secrets would need the Kyverno admission controller to
-  hold read on every Secret in the cluster; it currently has none. See
+  hold read on every Secret in the cluster, which it does not. See
   [the explanation](../explanation/configmap-autoreload.md#why-not-secrets).
 - **One ConfigMap per workload.** The annotation takes a single name.
 - **Deployments and StatefulSets only.** DaemonSets are not matched.

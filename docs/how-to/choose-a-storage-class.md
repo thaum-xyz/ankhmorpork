@@ -49,15 +49,12 @@ on `piraeus-r2` in step 6.
 **This is the default for ordinary application data**, and the most used class in
 the cluster. Two synchronous replicas, and the Pod is free to schedule anywhere.
 
-Performance is **the same as `piraeus-r2`** — same pool, same replicas, same DRBD
-tuning. The single difference: if a Pod lands on a node holding no replica, it
-reads and writes over the network until LINSTOR replicates the data there.
-`auto-diskful` starts that conversion after five minutes. Degraded while it runs,
-identical afterwards.
-
-That resync is also why PVCs here are **capped at 32 GiB** and denied above it: a
-full 32 GiB is roughly five more minutes over the node network at 1 Gb/s, and
-requested size is the only proxy admission has.
+Performance is **the same as `piraeus-r2`**. The single difference: a Pod that
+lands on a node holding no replica runs over the network until LINSTOR has
+replicated the data there — degraded for a few minutes, identical afterwards.
+That resync is also why PVCs here are **capped at 32 GiB** and denied above it.
+The mechanism and the numbers are in the
+[class comparison](../reference/storage-classes.md#piraeus-r2-and-piraeus-r2-roaming).
 
 ## 6. When to use `piraeus-r2` instead
 

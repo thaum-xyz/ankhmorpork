@@ -117,18 +117,11 @@ flux -n flux-system reconcile kustomization <component>
 ```
 
 For a component whose values come from a `configMapGenerator`, there is a third
-step, and it is not optional. Values are fed in through a ConfigMap with
-`disableNameSuffixHash: true`, so editing `values.yaml` changes the ConfigMap's
-*contents* but not its name — and therefore nothing in the HelmRelease spec
-changes, and helm-controller sees no event to act on. It notices via
-`status.lastAttemptedConfigDigest` on its next interval, which is why every
-HelmRelease here is kept at a 5 minute interval, and why a values-only change
-needs its release reconciled explicitly:
+step, and it is not optional: a values edit changes the ConfigMap's contents but
+not its name, so nothing in the HelmRelease spec moves and helm-controller has no
+event to act on. [Why Helm values live in a file](helm-values.md) has the
+mechanism and the trade; the step is:
 
 ```bash
 flux -n <namespace> reconcile helmrelease <release>
 ```
-
-The stable ConfigMap name is a deliberate trade — a hash suffix would trigger the
-upgrade immediately, at the cost of a new ConfigMap on every edit. Reconciling the
-release is the price of not accumulating those.
