@@ -137,6 +137,11 @@ spec:
               # k8up annotation either. ConsoleLogLevel is left alone deliberately --
               # raising it is how to put debug into Loki for an investigation.
               yq -i '(.Config.LogLevel = "info")' /config/config.xml
+              # Not drift like LogLevel was -- this key is absent from config.xml
+              # altogether. The app reads it with a built-in default of true and never
+              # persists it, so usage telemetry ships to the *arr project until the
+              # element is written. Booleans in this file are capitalised.
+              yq -i '(.Config.AnalyticsEnabled = "False")' /config/config.xml
               # Prowlarr, Bazarr and Recyclarr all address this app by API key, so the key has
               # to be declared rather than generated. Absent secret leaves whatever exists.
               if [ -n "${API_KEY:-}" ]; then

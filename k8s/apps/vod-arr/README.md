@@ -160,7 +160,14 @@ The `render-config` init container rewrites `config.xml` on every start. It
 sets the Postgres connection, turns the built-in login **off**
 (`AuthenticationMethod: External` — the private ingress is the trust boundary,
 and a password nobody has is how the old namespace became unauditable), pins
-`LogLevel` to `info`, and pins the API key from Doppler when the entry exists.
+`LogLevel` to `info`, turns usage analytics **off** (`AnalyticsEnabled: False`),
+and pins the API key from Doppler when the entry exists.
+
+Analytics is the one of those that was never in `config.xml` to begin with. The
+apps default it to on and read it without persisting it, so the element has to
+be written for the telemetry to stop -- an absent key is not an off one. That is
+the difference from `LogLevel`, which was in the file and had drifted to `debug`
+from the UI.
 
 It was called `postgres-setup` while Postgres was all it did.
 
