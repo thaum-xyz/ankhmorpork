@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bench
+  labels:
+    # Not Flux-managed on purpose: this namespace exists only while a benchmark
+    # run is in flight. Nothing here belongs in k8s/apps or k8s/platform.
+    app.kubernetes.io/name: storage-bench

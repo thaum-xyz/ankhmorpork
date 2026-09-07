@@ -1,0 +1,24 @@
+# Preconditioning only, run once per volume before any measurement.
+#
+# Split out of modern.fio so a volume can be laid out once and then measured
+# many times. Without this every repeat would pay the 8GiB allocation again --
+# 150s on longhorn -- which is what made repeated sampling unaffordable.
+
+[global]
+ioengine=libaio
+direct=${FIO_DIRECT}
+filename=${MOUNT}/fiotest
+size=${FIO_SIZE}
+
+# Not a measurement. Allocates every block of the test file so the jobs below
+# hit real storage. Runs to completion rather than on a timer.
+[layout]
+rw=write
+bs=1M
+iodepth=8
+numjobs=1
+time_based=0
+ramp_time=0
+runtime=0
+stonewall
+

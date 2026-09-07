@@ -114,5 +114,6 @@ option trades away durability.
 - `unifi-nas` was measured on one node, buffered only.
 - fsync on the bare-device baselines is the noisiest measurement, CV 24–61%.
 
-Method and raw results are not in the repository; they live in the operator's
-local `bench/storage-2026-09/`.
+Method: [`hack/bench/storage/`](https://github.com/thaum-xyz/ankhmorpork/tree/master/hack/bench/storage).
+Raw results are not in the repository. The numbers describe the nodes named above
+on the date given — re-measure after a node, disk, network or DRBD option change.
