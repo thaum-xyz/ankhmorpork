@@ -96,8 +96,12 @@ bare host, silently. Remove the label instead.
 
 **Output, not input.** kured adds it on its own and removes it when the reboot
 finishes or the window closes; setting it by hand only lasts until kured's next
-pass. To stop a node rebooting, relabel it `kured=disabled` instead — that
-selector is what the DaemonSet schedules on.
+pass.
+
+There is no per-node opt-out to reach for instead: the DaemonSet carries no
+`nodeSelector`, so every node reboots. Cordoning one does stop reboots, but
+cluster-wide rather than for that node — a node unschedulable for 45 minutes
+raises `NodeUnschedulable`, which is one of the alerts the gate blocks on.
 
 Both readers are configured with this exact string, and neither fails loudly if
 it stops matching: renaming the taint would leave the drain gate open and the
