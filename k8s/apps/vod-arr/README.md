@@ -132,10 +132,21 @@ pins the API key from Doppler when the entry exists.
 A declared API key is what lets Prowlarr, Bazarr and Recyclarr be configured
 against these apps without reading a generated value back out of a database.
 
+Seerr reads its database connection from `DB_*` environment variables, so it
+has no init container: `postgres-seerr-user` goes straight into the pod from
+the `seerrdb` release. It moved off SQLite with the one-off load in
+[`hack/seerr-sqlite-to-postgres/`](../../../hack/seerr-sqlite-to-postgres/README.md)
+(#1370). `settings.json` stays on `seerr-config`, which is why that claim keeps
+its K8up annotation while the CNPG claims carry none.
+
 ### Doppler entries
 
 Reused: `VPN_USERNAME`, `VPN_PASSWORD`, `{SONARR,RADARR,PROWLARR}_DB_ADMIN_PASS`,
 `{SONARR,RADARR,PROWLARR}_DB_PASS`, `POSTGRES_S3_{ACCESS,SECRET}_KEY`.
+
+New, and required: `SEERR_DB_ADMIN_PASS`, `SEERR_DB_PASS`. The `postgres-seerr`
+release renders them into `postgres-seerr-admin` and `postgres-seerr-user`, and
+neither the cluster nor seerr starts without those Secrets.
 
 New, and optional — absent, each app generates its own key and only the
 automated integrations suffer: `SONARR_API_KEY`, `RADARR_API_KEY`,
