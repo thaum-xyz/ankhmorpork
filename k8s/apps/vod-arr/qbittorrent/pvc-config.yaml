@@ -1,6 +1,14 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
+    # without this is not backed up -- which is what keeps the six CNPG claims
+    # in this namespace out, since they self-backup via barman.
+    #
+    # No hook needed: /config/qBittorrent is JSON, .conf and the BT_backup
+    # fastresume files, with no database in it.
+    k8up.io/backup: "true"
   name: qbittorrent-config
 spec:
   accessModes:
