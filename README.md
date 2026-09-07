@@ -206,16 +206,9 @@ Kyverno policy.
 
 ## 🔧 Hardware
 
-| Device                   | Count | RAM   | Storage                          | Connectivity       | Purpose         |
-|--------------------------|-------|-------|----------------------------------|--------------------|-----------------|
-| Unifi Dream Machine Pro  | 1     | N/A   | N/A                              | 8x GbE + 2xSFP+    | Router          |
-| Unifi US-16-PoE switch   | 1     | N/A   | N/A                              | 16x GbE + 2xSFP    | Main Switch     |
-| UniFi UNAS Pro           | 1     | ----- | ~10TB usable                     | 1x 10GbE           | NAS             |
-| Raspberry Pi             | 1     | ----- | -----                            | 1x GbE             | DNS Server      |
-| HP EliteDesk G2 800 mini | 2     | 32GB  | 240GB M2 SSD + 500GB SSD         | 1x GbE             | K3S Node        |
-| Lenovo X1 Laptop         | 1     | 48GB  | 480GB NVMe + 1x 480GB SSD        | 1x GbE             | K3S Node        |
-| Custom-built Server      | 1     | 64GB  | 480GB NVMe + 1TB SSD             | 2x GbE LACP + 1GbE | K3S Node w/GPU  |
-| Custom-built Server      | 1     | 64GB  | ???                              | 1x GbE             | K3S Node (spot) |
+Mini-PCs, UniFi networking and a UNAS Pro.
+**[docs.thaum.xyz/reference/hardware](https://docs.thaum.xyz/reference/hardware/)**
+has the nodes, their disks and the labels that decide where workloads land.
 
 ## ✨ Features
 
