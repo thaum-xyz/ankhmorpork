@@ -1,0 +1,30 @@
+database: seerr
+owner: seerr
+
+cluster:
+  instances: 2
+  storage:
+    # The SQLite file this replaces was 368 KB when measured on 2026-09-07. The
+    # chart default is generous for that, and its WAL bounds keep the rest of
+    # the volume from being spent on retention.
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+backup:
+  schedule: "0 57 3 * * *"
+  objectStore:
+    # Several clusters share this namespace, so each needs its own store.
+    name: versity-vod-seerr
+    bucketPrefix: s3://cnpg/postgres
+    endpointURL: http://versitygw.cnpg-system.svc.cluster.local:7070
+    retentionPolicy: 7d
+    pathSuffix: vod-seerr
+
+externalSecrets:
+  admin:
+    remoteKey: SEERR_DB_ADMIN_PASS
+  user:
+    remoteKey: SEERR_DB_PASS

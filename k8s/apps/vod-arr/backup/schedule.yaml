@@ -33,7 +33,7 @@ spec:
   backup:
     # Fixed rather than @daily-random: a restic repository is only consistent at
     # rest, so an off-site copy of it needs a known quiet window. Staggered
-    # clear of paperless (22:36) and CNPG (23:17-03:47).
+    # clear of paperless (22:36) and CNPG (23:17-03:57).
     schedule: "15 22 * * *"
     volumes:
       - name: backup-repo
