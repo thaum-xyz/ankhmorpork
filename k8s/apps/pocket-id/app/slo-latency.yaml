@@ -35,4 +35,4 @@ spec:
       total:
         metric: http_server_request_duration_seconds_count{job="pocket-id/pocket-id"}
   target: "99"
-  window: 4w
+  window: 7d

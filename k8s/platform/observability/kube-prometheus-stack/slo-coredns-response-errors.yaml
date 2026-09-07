@@ -23,4 +23,4 @@ spec:
       total:
         metric: coredns_dns_responses_total{job="coredns"}
   target: "99.9"
-  window: 2w
+  window: 7d

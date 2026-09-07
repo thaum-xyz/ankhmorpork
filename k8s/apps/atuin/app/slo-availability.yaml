@@ -15,10 +15,15 @@ spec:
   # everything would report on kubelet reachability, which KubePodNotReady
   # already covers, and would drown the sync API at a ratio of 577:1.
   #
-  # What is left is thin and honestly so: ~30 requests a day, ~840 per window.
-  # A 4w availability figure over that is meaningful; a 5m burn rate over it is
-  # mostly noise. Whether that matters is exactly what the unrouted burn-in is
-  # for -- read it back with everything else around 2026-10-06.
+  # What is left is thin and honestly so: 242 requests over the last 5 days,
+  # so ~339 per 7d window. That is the thinnest denominator of any SLO here and
+  # the window change made it thinner -- at a 99% target the budget is 3.4
+  # requests, so a single 5xx spends 29% of a week's budget and four breach it.
+  # The window is still right: the alternative is a 4w figure that takes four
+  # times as long to say anything and still cannot survive four errors. What
+  # carries alerting for a service this quiet is atuin-probe-success, which is
+  # exercised every 30s regardless of whether anyone syncs. Read this one back
+  # as a trend, not as a gate.
   #
   # target is a PLACEHOLDER.
   description: >-
@@ -50,4 +55,4 @@ spec:
       total:
         metric: http_requests_total{job="atuin",path=~"/api/v0/.*"}
   target: "99"
-  window: 4w
+  window: 7d

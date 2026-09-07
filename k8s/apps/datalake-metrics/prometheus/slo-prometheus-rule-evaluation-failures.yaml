@@ -23,4 +23,4 @@ spec:
       total:
         metric: prometheus_rule_evaluations_total{job="prometheus-k8s"}
   target: "99.99"
-  window: 2w
+  window: 7d

@@ -31,4 +31,4 @@ spec:
     bool_gauge:
       metric: probe_success{instance=~"https://drum\\.krupa\\.net\\.pl(/.*)?"}
   target: "95.0"
-  window: 4w
+  window: 7d

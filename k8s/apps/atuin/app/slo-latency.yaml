@@ -44,4 +44,4 @@ spec:
       total:
         metric: http_requests_duration_seconds_count{job="atuin",path=~"/api/v0/.*"}
   target: "99"
-  window: 4w
+  window: 7d

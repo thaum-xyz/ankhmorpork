@@ -32,4 +32,4 @@ spec:
     bool_gauge:
       metric: probe_success{instance=~"https://ankhmorpork\\.thaum\\.xyz(/.*)?"}
   target: "95.0"
-  window: 4w
+  window: 7d
