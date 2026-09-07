@@ -10,9 +10,6 @@ operator:
 
 priorityClassName: system-cluster-critical
 
-nodeSelector:
-  linstor: "true"
-
 # Same exclusion as linstorCluster.nodeAffinity in ../cluster/values.yaml: the
 # operator itself needs no DRBD, but nothing of Piraeus should land on a node
 # whose kernel rejects unsigned modules. The by-name guard is kept alongside the
@@ -26,10 +23,6 @@ affinity:
               operator: NotIn
               values:
                 - "true"
-            - key: kubernetes.io/hostname
-              operator: NotIn
-              values:
-                - master01
 
 # A single operator replica does not benefit from a PDB and minAvailable: 1
 # would prevent voluntary eviction during a node drain.
