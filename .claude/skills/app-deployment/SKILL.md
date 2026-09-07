@@ -44,11 +44,16 @@ The short version, in the order the questions matter:
 2. Transactional → not `unifi-nas` (`nolock`, no byte-range locking).
 3. App replicates itself (the CNPG clusters do) → `lvm-thin`.
 4. Bulk sequential → `unifi-nas`.
-5. **Everything else → `piraeus-r2-roaming`.** This is the default for application
+5. A config volume of plain files the app rewrites rarely → `unifi-nas`, for
+   scheduling freedom rather than speed: `csi-nfs` runs on all four nodes,
+   linstor on three. Not when a UI reads it a file at a time (sonarr's and
+   radarr's MediaCover), and not when it would be the app's only reason to
+   depend on the NAS — prowlarr dropped its claim instead.
+6. **Everything else → `piraeus-r2-roaming`.** This is the default for application
    data and the most used class here. Same performance as `piraeus-r2`; the only
    difference is that a Pod landing where no replica exists runs over the network
    until LINSTOR replicates to it.
-6. Over 32 GiB, or cannot tolerate that window → `piraeus-r2`.
+7. Over 32 GiB, or cannot tolerate that window → `piraeus-r2`.
 
 `lvm-thin` pins the Pod to one node, so kured means downtime on every reboot of
 that node. Use it only where the app provides its own redundancy.

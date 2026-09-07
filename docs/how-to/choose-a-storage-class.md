@@ -42,9 +42,27 @@ sensitive. **`unifi-nas`**, at about 100 MiB/s on a single 1 GbE link, which is 
 link and not the NAS.
 
 Size alone does not send you here: a large volume that needs real latency belongs
-on `piraeus-r2` in step 6.
+on `piraeus-r2` in step 7.
 
-## 5. Otherwise: `piraeus-r2-roaming`
+## 5. Is it a config volume of plain files?
+
+Settings, credentials, a fetched cache — a few files the app reads at startup and
+rewrites rarely. Step 2 has already sent anything transactional elsewhere, so what
+reaches here is genuinely plain. **`unifi-nas`.**
+
+Neither reason is speed. `csi-nfs` registers on all four nodes and
+`linstor.csi.linbit.com` on three, because master01 loads no DRBD module under
+Secure Boot — so a claim here is one fewer Pod the scheduler cannot place on it.
+And the UNAS backs up its own shares, so the claim needs no `k8up.io/backup`
+annotation, where the same files on piraeus do.
+
+Not this when a UI reads the volume a file at a time: sonarr's and radarr's
+MediaCover are served to the browser one poster per request, and stay on piraeus
+for that alone. And not this when the volume would be the app's only reason to
+depend on the NAS at all — prefer no volume, as prowlarr does, over a dependency
+bought for a cache.
+
+## 6. Otherwise: `piraeus-r2-roaming`
 
 **This is the default for ordinary application data**, and the most used class in
 the cluster. Two synchronous replicas, and the Pod is free to schedule anywhere.
@@ -56,7 +74,7 @@ That resync is also why PVCs here are **capped at 32 GiB** and denied above it.
 The mechanism and the numbers are in the
 [class comparison](../reference/storage-classes.md#piraeus-r2-and-piraeus-r2-roaming).
 
-## 6. When to use `piraeus-r2` instead
+## 7. When to use `piraeus-r2` instead
 
 Same two replicas and the same performance, but the Pod is pinned to a node
 holding one of them (`allowRemoteVolumeAccess: false`), so it can never land
