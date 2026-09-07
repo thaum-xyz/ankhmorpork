@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Applied by hand, once: `kubectl apply -k hack/seerr-sqlite-to-postgres`.
+# Kept outside k8s/ on purpose so Flux never sees it -- the Job truncates
+# seerr's tables and reloads them from the SQLite file, which must only ever
+# happen while seerr is stopped and the SQLite file is still the truth.
+namespace: vod-arr
+resources:
+  - job.yaml
+configMapGenerator:
+  - name: seerr-sqlite-to-postgres
+    files:
+      - seerr.load
+generatorOptions:
+  disableNameSuffixHash: true

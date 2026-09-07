@@ -1,0 +1,24 @@
+-- Copies seerr's rows out of its SQLite file into the postgres-seerr cluster.
+-- Read by the Job in job.yaml. {{VARS}} are filled from the Job's environment
+-- by pgloader's mustache templating; the password comes from PGPASSWORD, which
+-- pgloader honours when the URI carries none, so it is never URL-encoded into
+-- a connection string.
+--
+-- data only: seerr has already created the schema from its own migrations on
+-- first start, so pgloader must not create tables or indexes. It still drops
+-- the foreign keys for the duration of the copy and recreates them after, which
+-- is what makes the load order irrelevant.
+-- quote identifiers: typeorm's columns are camelCase and quoted. pgloader's
+-- default downcasing would COPY into columns that do not exist.
+-- truncate: seerr seeds discover_slider on every start, and those rows carry
+-- the same ids as the ones being copied in. It also makes a re-run safe.
+-- migrations excluded: the SQLite and PostgreSQL migration histories are
+-- different files with different names. The PostgreSQL set is already recorded
+-- and copying the SQLite rows over it would make the next start attempt the
+-- initial migration again, against tables that exist.
+LOAD DATABASE
+  FROM sqlite:///app/config/db/db.sqlite3
+  INTO postgresql://{{DB_USER}}@{{DB_HOST}}:{{DB_PORT}}/{{DB_NAME}}
+  WITH data only, quote identifiers, truncate, reset sequences
+  EXCLUDING TABLE NAMES LIKE 'migrations'
+;

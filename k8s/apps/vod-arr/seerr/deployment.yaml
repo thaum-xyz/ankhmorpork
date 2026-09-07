@@ -20,12 +20,6 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: seerr
-        # db/db.sqlite3 is live SQLite in WAL mode, so the file-level copy can
-        # tear. This streams a VACUUM INTO copy into the repository as its own
-        # snapshot; that is what to restore from, and the file-level copy stays
-        # as a fallback.
-        k8up.io/backupcommand: node /backup/dump.js
-        k8up.io/file-extension: .sqlite
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: seerr
@@ -44,6 +38,28 @@ spec:
             # drift from where the app actually writes.
             - name: CONFIG_DIRECTORY
               value: /app/config
+            # server/datasource.ts reads the connection straight off the
+            # environment, so unlike the *arrs there is no init container
+            # rewriting a config file. The Secret is rendered by the
+            # cnpg-database release in ../seerrdb.
+            - name: DB_TYPE
+              value: postgres
+            - name: DB_HOST
+              value: postgres-seerr-rw
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: seerr
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: postgres-seerr-user
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-seerr-user
           image: ghcr.io/seerr-team/seerr:v3.4.1
           imagePullPolicy: IfNotPresent
           name: seerr
@@ -73,9 +89,6 @@ spec:
           volumeMounts:
             - mountPath: /app/config
               name: config
-            - mountPath: /backup
-              name: backup-script
-              readOnly: true
       initContainers:
         # First-run only. The normal settings load merges this over the
         # defaults, so everything omitted stays UI-owned.
@@ -137,6 +150,3 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: seerr-config
-        - name: backup-script
-          configMap:
-            name: backup-script-seerr

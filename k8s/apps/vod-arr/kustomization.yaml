@@ -13,6 +13,7 @@ resources:
   - bazarr/
   - qbittorrent/
   - seerr/
+  - seerrdb/
   - flaresolverr/
   - cleanuparr/
   - recyclarr/
