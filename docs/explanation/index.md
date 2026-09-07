@@ -32,3 +32,5 @@ is only in commit messages, per-app READMEs and
 - [Why the rule linter alerts on change, not on count](pint-rule-linting.md)
 - [The Postgres fleet upgrade](postgres-fleet-upgrade.md) — a record: why the fleet
   was scattered, and the two traps that decided the order
+- [How a node reboot is gated](node-reboots.md) — what has to agree before a node
+  goes down, and why a shorter drain timeout is the safer one
