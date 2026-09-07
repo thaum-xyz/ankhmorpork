@@ -11,10 +11,13 @@ That structure is three layers deep, and the shape is not arbitrary.
 ## The three layers
 
 ```
-k8s/bootstrap/     4 objects, applied once by hand
-  └── platform     24 components — the cluster's machinery
-        └── apps   22 components — the workloads
+k8s/bootstrap/     applied once by hand: the GitRepository and the umbrellas
+  └── platform     the cluster's machinery
+        └── apps   the workloads
 ```
+
+The current membership of each layer, with every interval, prune and wait
+setting, is in [Flux Kustomizations](../reference/flux-kustomizations.md).
 
 **`k8s/bootstrap/`** is the seed: a `GitRepository` pointing at this repo, and
 three umbrella `Kustomization`s. It is the only thing ever applied manually, and
@@ -48,9 +51,10 @@ component is. Those change for different reasons.
 
 ## Ordering, where it genuinely matters
 
-Seven of the 49 Kustomizations declare `dependsOn`, and two of those are the
-umbrellas themselves. Everything else is order-independent by construction; the
-exceptions are all cases where an object cannot be *accepted* by the API server
+Only a handful of Kustomizations declare `dependsOn` — the
+[reference page](../reference/flux-kustomizations.md) lists them — and two of those
+are the umbrellas themselves. Everything else is order-independent by construction;
+the exceptions are all cases where an object cannot be *accepted* by the API server
 until something else exists:
 
 | Component | Waits for | Why |
@@ -70,13 +74,12 @@ CRD has to be established before an object of that kind will be accepted, and
 admission control that is applied but not yet enforcing lets anything reconciled
 into the gap slip past the policies unchecked.
 
-## Pruning, and the eight exceptions
+## Pruning, and the exceptions
 
-`prune: true` is the default here — 41 of 49 Kustomizations have it, which is what
+`prune: true` is the default here — nearly every Kustomization has it, which is what
 makes deleting a directory delete the objects, and what makes the tutorial's
-cleanup step work.
-
-The exceptions divide into two kinds.
+cleanup step work. The ones that opt out are listed on the
+[reference page](../reference/flux-kustomizations.md), and they divide into two kinds.
 
 **The three umbrellas** (`platform`, `apps`, `prometheus-operator-crds`) do not
 prune because a transient failure to render one of them would otherwise be read as

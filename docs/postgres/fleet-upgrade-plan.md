@@ -53,10 +53,9 @@ to fold into a patch bump.
 
 ## Plan
 
-The chart owns the version. `cnpg-database` 0.5.0 locks
-`ghcr.io/cloudnative-pg/postgresql:17.11-standard-bookworm`, and each cluster
-drops its own `imageName` as it is moved onto that. A pin now means "this
-cluster cannot follow", not "this is what it happened to get".
+The chart owns the version, and each cluster drops its own `imageName` as it is
+moved onto the chart default. A pin now means "this cluster cannot follow", not
+"this is what it happened to get".
 
 17 on bookworm because it matches the VectorChord image immich needs, so photos
 is not a major-version outlier. `17.x-system-bookworm` does not exist; the
@@ -98,9 +97,10 @@ A backup was taken and confirmed `completed` before every major upgrade.
 - `primaryUpdateMethod: switchover` refuses an image change and a config change
   in the same step. Land them separately.
 - These HelmReleases take values via `valuesFrom` a ConfigMap. Changing the
-  ConfigMap does **not** trigger an upgrade -- helm-controller waits out its 30m
-  interval. Annotate the HelmRelease itself with `reconcile.fluxcd.io/requestedAt`
-  or the image change appears to do nothing while everything reports Ready.
+  ConfigMap does **not** trigger an upgrade -- helm-controller only notices on its
+  next interval. Reconcile the release explicitly (`flux -n <ns> reconcile
+  helmrelease <release>`) or the image change appears to do nothing while
+  everything reports Ready. See [how Flux is layered](../explanation/flux-layering.md).
 - pocket-id exits rather than retrying when postgres-rw blips, so it will
   restart during its primary's restart. It recovers on its own.
 - CNPG will not shrink storage, so a live resize must be mirrored into git or

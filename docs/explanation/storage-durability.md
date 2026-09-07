@@ -119,5 +119,5 @@ that same LV, but is only approximate for `lvm-thin` and `piraeus-r2`, which use
 thin pool in the same volume group. And `piraeus-r2`'s sequential read exceeding
 the bare device remains unexplained.
 
-Method and raw results: `bench/storage-2026-09/` (local, untracked), re-runnable
-with `./full05.sh 4`.
+Method and raw results are not in the repository; they live in the operator's
+local `bench/storage-2026-09/` and re-run with `./full05.sh 4`.

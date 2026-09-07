@@ -51,6 +51,8 @@ nav = [
     "reference/index.md",
     { "Applications" = "reference/apps.md" },
     { "Admission policies" = "reference/admission-policies.md" },
+    { "Flux Kustomizations" = "reference/flux-kustomizations.md" },
+    { "Helm releases" = "reference/helm-releases.md" },
     { "Annotations and labels" = "reference/annotations.md" },
     { "Charts and images" = "reference/charts.md" },
     { "Ingress and certificates" = "reference/ingress.md" },

@@ -4,9 +4,11 @@ Flux-managed k3s homelab. `k8s/bootstrap/` creates the umbrella Flux resources,
 `k8s/platform/` contains infrastructure, and `k8s/apps/` contains workloads.
 Component Flux Kustomizations live in `k8s/flux/platform/` and `k8s/flux/apps/`.
 
-Changing anything Flux applies: see the `flux-app-change` skill in
-`.claude/skills/`. It covers proving the render, the traps that have bitten, and
-removing `kustomizeconfig.yaml`.
+Changing anything Flux applies: see the `app-deployment` skill in
+`.claude/skills/`. It covers proving the render, the rollout order and the traps
+that have bitten. Editing `docs/`: see the `docs-authoring` skill there — which
+section a page belongs in, what must be generated rather than typed, and how to
+lint before pushing.
 
 ## Validation
 
@@ -42,8 +44,8 @@ temporarily diverge during maintenance.
 
 ## Postgres (CloudNativePG)
 
-All eleven databases use the `cnpg-database` chart from
-`oci://ghcr.io/thaum-xyz/helm-charts`.
+Every database uses the `cnpg-database` chart from
+`oci://ghcr.io/thaum-xyz/helm-charts`; `docs/reference/helm-releases.md` lists them.
 
 Rendered names must match what's live — `postgres-rw` is hardcoded by consumers,
 so the chart's fullname is the bare release name and `releaseName` is pinned.

@@ -3,7 +3,8 @@
 # Applications { .quad-reference }
 
 Every application under `k8s/apps/`, the namespace it renders into, the Flux
-Kustomization that applies it, and the hostnames it answers on.
+Kustomization that applies it, and the hostnames it answers on. Where an app
+keeps a README next to its manifests, the app name links to it.
 
 !!! note
 
@@ -25,14 +26,14 @@ Kustomization that applies it, and the hostnames it answers on.
 | `karakeep` | `karakeep` | `karakeep` | `keep.krupa.net.pl` (cloudflare)<br>`keep.krupa.net.pl` (public) |
 | `mealie` | `mealie` | `mealie` | `recipes.krupa.net.pl` (cloudflare)<br>`recipes.krupa.net.pl` (public) |
 | `mended-drum` | `mended-drum` | `mended-drum` | `drum-tools.krupa.net.pl` (cloudflare)<br>`drum-tools.krupa.net.pl` (public)<br>`drum.krupa.net.pl` (cloudflare)<br>`drum.krupa.net.pl` (public) |
-| `paperless` | `paperless` | `paperless` | `papers.krupa.net.pl` (cloudflare)<br>`papers.krupa.net.pl` (public) |
+| [`paperless`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/paperless/README.md) | `paperless` | `paperless` | `papers.krupa.net.pl` (cloudflare)<br>`papers.krupa.net.pl` (public) |
 | `photos` | `photos` | `photos` | `photos.krupa.net.pl` (cloudflare) |
-| `plex` | `plex` | `plex` | `vod.krupa.net.pl` (private) |
+| [`plex`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/plex/README.md) | `plex` | `plex` | `vod.krupa.net.pl` (private) |
 | `pocket-id` | `pocket-id` | `pocket-id` | `login.krupa.net.pl` (cloudflare) |
 | `stirling-pdf` | `stirling-pdf` | `stirling-pdf` | `pdf.krupa.net.pl` (cloudflare) |
 | `unifi` | `unifi` | `unifi` | — |
 | `ups` | `ups` | `ups` | — |
 | `valheim` | `valheim` | `valheim` | — |
-| `vod-arr` | `vod-arr` | `vod-arr` | `bazarr.ankhmorpork.thaum.xyz` (private)<br>`cleanuparr.ankhmorpork.thaum.xyz` (private)<br>`downloader.ankhmorpork.thaum.xyz` (private)<br>`prowlarr.ankhmorpork.thaum.xyz` (private)<br>`radarr.ankhmorpork.thaum.xyz` (private)<br>`seek.krupa.net.pl` (cloudflare)<br>`seek.krupa.net.pl` (public)<br>`sonarr.ankhmorpork.thaum.xyz` (private) |
+| [`vod-arr`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/README.md) | `vod-arr` | `vod-arr` | `bazarr.ankhmorpork.thaum.xyz` (private)<br>`cleanuparr.ankhmorpork.thaum.xyz` (private)<br>`downloader.ankhmorpork.thaum.xyz` (private)<br>`prowlarr.ankhmorpork.thaum.xyz` (private)<br>`radarr.ankhmorpork.thaum.xyz` (private)<br>`seek.krupa.net.pl` (cloudflare)<br>`seek.krupa.net.pl` (public)<br>`sonarr.ankhmorpork.thaum.xyz` (private) |
 
 21 applications.

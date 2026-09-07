@@ -1,8 +1,9 @@
 # Why Helm values live in a file { .quad-explanation }
 
-Every HelmRelease here that sets values at all — 46 of the 47; the exception is
+Every HelmRelease here that sets values at all — all but
 `prometheus-operator-crds`, which takes the chart's defaults — feeds them in from a
-ConfigMap rather than writing them inline:
+ConfigMap rather than writing them inline. The *Values from* column in
+[Helm releases](../reference/helm-releases.md) is the check:
 
 ```yaml
 # kustomization.yaml
@@ -65,8 +66,9 @@ helm-controller sees no event to act on. It notices only via
 
 Two things follow from that, and both are deliberate:
 
-- **Every HelmRelease is kept at `interval: 5m`** — all 47, with no exceptions.
-  That interval is the ceiling on
+- **Every HelmRelease is kept at `interval: 5m`**, with no exceptions — the
+  *Interval* column in [Helm releases](../reference/helm-releases.md) should show
+  one value. That interval is the ceiling on
   how long a values-only change can sit looking like a failed deploy. A quiet chart
   is not a reason to raise it: the interval costs a Helm dry-run diff, not an
   upgrade. (`spec.chart.spec.interval` is a different knob — that one polls the
@@ -83,7 +85,7 @@ the price.
 Under `prune: true` an orphaned `values-myapp-7f9c2b4h8d` is garbage-collected on
 the next reconcile, so the hash costs churn but not accumulation.
 
-Eight Kustomizations here do not prune, and five of them are platform components
+The Kustomizations that do not prune include five platform components
 that generate values ConfigMaps — `cilium`, `flux-system`, `topolvm`,
 `piraeus-datastore` and `traefik`. See
 [how Flux is layered](flux-layering.md) for why those five are exempt. There,
@@ -103,7 +105,7 @@ The generator is named after the release it feeds, not after the component. A ba
 here routinely have several — `values-postgres-sonarr` and `values-postgres-radarr`
 sit side by side.
 
-All 46 follow it. It is settled convention rather than preference,
+Every release follows it. It is settled convention rather than preference,
 arrived at after collisions.
 
 ## Layering, and secrets

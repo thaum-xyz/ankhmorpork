@@ -40,3 +40,17 @@ jobs:
       - run: go install sigs.k8s.io/kustomize/kustomize/v5@${{ env.kustomize-version }}
       - run: ./hack/validate-flux-paths.sh
       - run: ./hack/validate-configmap-ownership.sh
+
+  # docs/reference/{apps,admission-policies,flux-kustomizations,helm-releases}.md
+  # are generated from k8s/**. The docs workflow only runs when docs/** changes,
+  # so without this the PR that adds an app or a policy would pass while leaving
+  # the reference stale until someone next edited a doc.
+  docs-reference:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: 3.x
+      - run: pip install pyyaml
+      - run: make docs-reference-check PYTHON=python3

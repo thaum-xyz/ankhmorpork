@@ -35,9 +35,10 @@ section once migrated.
 - Drain and reboot a node outside the kured cycle
 - Debug a Flux reconcile that reports success but changes nothing
 
-## Open item: the existing runbooks
+## The existing runbooks
 
-[runbooks.thaum.xyz](https://runbooks.thaum.xyz/) is still serving, from a
-repository whose last commit was 2021-11-05. Its content predates most of this
-cluster. It needs to be triaged into this section and the old site retired —
-tracked at `docs/runbooks/README.md`, which currently just points at it.
+[runbooks.thaum.xyz](https://runbooks.thaum.xyz/) serves from
+[thaum-xyz/runbooks](https://github.com/thaum-xyz/runbooks), whose last commit was
+2021-11-05. Its content predates most of this cluster. Two alerts in this repository
+still carry `runbook_url` annotations pointing at it; those runbooks migrate here
+first, and the old site retires when the last link is gone.

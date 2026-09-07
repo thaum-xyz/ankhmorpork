@@ -113,7 +113,7 @@ Once `READY` is `True`, the host answers. If it does not:
 
 ```bash
 # Did external-dns publish it?
-kubectl -n network logs deploy/external-dns | grep myapp
+kubectl -n external-dns logs deploy/external-dns | grep myapp
 
 # Did the ingress controller accept it?
 kubectl -n myapp describe ingress myapp

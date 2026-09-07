@@ -2,25 +2,77 @@
      run `make docs-reference` instead. -->
 # Admission policies { .quad-reference }
 
-Kyverno policies applied to every request. **Deny** blocks the apply;
-**Warn** records an audit warning and lets it through, so a warn-only rule
-is invisible until something goes wrong.
+Every Kyverno policy in the repository, wherever it lives: the kyverno
+component's own policies and the ones storage components ship to describe
+their classes. **Deny** blocks the apply; **Warn** records an audit warning
+and lets it through, so a warn-only rule is invisible until something goes
+wrong; **Mutate** changes the object on the way in; **Delete** runs on a
+schedule against objects that already exist.
 
-| Policy | Applies to | Effect |
-| --- | --- | --- |
-| [`mutate-configmap-autoreload`](#mutate-configmap-autoreload) | `deployments`, `statefulsets` | **mutates** |
-| [`require-resource-requests`](#require-resource-requests) | `pods` | **Warn** |
-| [`validate-helm-chart-version`](#validate-helm-chart-version) | `helmreleases` | **Deny** |
-| [`validate-ingress-contract`](#validate-ingress-contract) | `ingresses` | **Deny** |
-| [`validate-pdb-drain-safety`](#validate-pdb-drain-safety) | `poddisruptionbudgets` | **Warn** |
+| Policy | Applies to | Effect | Shipped by |
+| --- | --- | --- | --- |
+| [`cleanup-cnpg-backups`](#cleanup-cnpg-backups) | `backups` | **Delete on schedule `17 3 * * *`** | `cnpg-system` |
+| [`mutate-configmap-autoreload`](#mutate-configmap-autoreload) | `deployments`, `statefulsets` | **Mutate** | `kyverno-policies` |
+| [`mutate-nfs-pvc-alert-exclusion`](#mutate-nfs-pvc-alert-exclusion) | `persistentvolumeclaims` | **Mutate** | `csi-nfs` |
+| [`require-resource-requests`](#require-resource-requests) | `pods` | **Warn** | `kyverno-policies` |
+| [`validate-helm-chart-version`](#validate-helm-chart-version) | `helmreleases` | **Deny** | `kyverno-policies` |
+| [`validate-ingress-contract`](#validate-ingress-contract) | `ingresses` | **Deny** | `kyverno-policies` |
+| [`validate-pdb-drain-safety`](#validate-pdb-drain-safety) | `poddisruptionbudgets` | **Warn** | `kyverno-policies` |
+| [`validate-roaming-volume-size`](#validate-roaming-volume-size) | `persistentvolumeclaims` | **Deny** | `piraeus-datastore` |
+
+## `cleanup-cnpg-backups`
+
+| | |
+| --- | --- |
+| **Kind** | `DeletingPolicy` |
+| **Applies to** | `backups` |
+| **Effect** | **Delete on schedule `17 3 * * *`** |
+| **Shipped by** | `cnpg-system` |
+| **Source** | [`k8s/platform/storage/cnpg-system/policies/cleanup-backups.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-system/policies/cleanup-backups.yaml) |
+
+Deletes only objects matching all of:
+
+- `scheduled-backup`
+- `terminal-phase`
+- `older-than-retention-window`
 
 ## `mutate-configmap-autoreload`
 
-`MutatingPolicy` on `deployments`, `statefulsets` — **mutates matching resources**. Source: [`k8s/platform/security/kyverno/policies/mutate-configmap-autoreload.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/mutate-configmap-autoreload.yaml).
+| | |
+| --- | --- |
+| **Kind** | `MutatingPolicy` |
+| **Applies to** | `deployments`, `statefulsets` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Mutate** |
+| **failurePolicy** | `Ignore` — a policy error skips the rule silently |
+| **Only when** | `has(object.metadata.annotations) && object.metadata.annotations.exists(k, k == "autoreloader.thaum.xyz/configmap")` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/mutate-configmap-autoreload.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/mutate-configmap-autoreload.yaml) |
+
+## `mutate-nfs-pvc-alert-exclusion`
+
+| | |
+| --- | --- |
+| **Kind** | `MutatingPolicy` |
+| **Applies to** | `persistentvolumeclaims` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Mutate** |
+| **failurePolicy** | `Fail` |
+| **Only when** | `object.spec.?storageClassName.orValue("") == "unifi-nas"` |
+| **Shipped by** | `csi-nfs` |
+| **Source** | [`k8s/platform/storage/csi-nfs/mutatingpolicy.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/csi-nfs/mutatingpolicy.yaml) |
 
 ## `require-resource-requests`
 
-`ValidatingPolicy` on `pods` — **Warn**. Source: [`k8s/platform/security/kyverno/policies/require-resource-requests.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/require-resource-requests.yaml).
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `pods` |
+| **On** | `CREATE` |
+| **Effect** | **Warn** |
+| **failurePolicy** | `Fail` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/require-resource-requests.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/require-resource-requests.yaml) |
 
 Rules enforced:
 
@@ -28,7 +80,15 @@ Rules enforced:
 
 ## `validate-helm-chart-version`
 
-`ValidatingPolicy` on `helmreleases` — **Deny**. Source: [`k8s/platform/security/kyverno/policies/validate-helm-chart-version.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-helm-chart-version.yaml).
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `helmreleases` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Deny** |
+| **failurePolicy** | `Fail` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/validate-helm-chart-version.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-helm-chart-version.yaml) |
 
 Rules enforced:
 
@@ -36,7 +96,15 @@ Rules enforced:
 
 ## `validate-ingress-contract`
 
-`ValidatingPolicy` on `ingresses` — **Deny**. Source: [`k8s/platform/security/kyverno/policies/validate-ingress-contract.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-ingress-contract.yaml).
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `ingresses` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Deny** |
+| **failurePolicy** | `Fail` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/validate-ingress-contract.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-ingress-contract.yaml) |
 
 Rules enforced:
 
@@ -48,7 +116,16 @@ Rules enforced:
 
 ## `validate-pdb-drain-safety`
 
-`ValidatingPolicy` on `poddisruptionbudgets` — **Warn**. Source: [`k8s/platform/security/kyverno/policies/validate-pdb-drain-safety.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-pdb-drain-safety.yaml).
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `poddisruptionbudgets` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Warn** |
+| **failurePolicy** | `Fail` |
+| **Only when** | `!object.metadata.?ownerReferences.orValue([]).exists( owner, owner.kind == "Cluster" && owner.apiVersion.startsWith("postgresql.cnpg.io/") )` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/validate-pdb-drain-safety.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-pdb-drain-safety.yaml) |
 
 Rules enforced:
 
@@ -56,3 +133,20 @@ Rules enforced:
 - maxUnavailable must permit at least one voluntary disruption.
 - unhealthyPodEvictionPolicy must be AlwaysAllow so an unhealthy Pod does not indefinitely block a node drain.
 - PodDisruptionBudget selectors must not be empty because policy/v1 empty selectors match every Pod in the namespace.
+
+## `validate-roaming-volume-size`
+
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `persistentvolumeclaims` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Deny** |
+| **failurePolicy** | `Fail` |
+| **Only when** | `object.spec.?storageClassName.orValue("") == "piraeus-r2-roaming"` |
+| **Shipped by** | `piraeus-datastore` |
+| **Source** | [`k8s/platform/storage/piraeus-datastore/validatingpolicy.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/piraeus-datastore/validatingpolicy.yaml) |
+
+Rules enforced:
+
+- PersistentVolumeClaims on piraeus-r2-roaming are limited to 32Gi, because the volume is resynced across the node network every time its Pod moves to a node without a replica. Use piraeus-r2 for larger volumes; it pins the Pod to a replica instead.

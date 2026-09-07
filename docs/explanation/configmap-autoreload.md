@@ -106,9 +106,9 @@ absence of a stamp.
 
 ## Why not Secrets { #why-not-secrets }
 
-The same policy could watch Secrets, and there is a real gap to close: **69
-ExternalSecrets** are reconciled by external-secrets, and a rotation restarts
-nothing that consumes them.
+The same policy could watch Secrets, and there is a real gap to close: every
+ExternalSecret in the cluster is reconciled by external-secrets, and a rotation
+restarts nothing that consumes them.
 
 It is left out on purpose. `resource.Get` on a Secret requires the Kyverno
 admission controller to hold read on **every Secret in the cluster**, which it

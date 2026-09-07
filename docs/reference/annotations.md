@@ -163,8 +163,8 @@ ruleNamespaceSelector: {}
 ```
 
 An empty selector matches everything, so **every** `PrometheusRule` in the
-cluster is loaded regardless of its labels. 58 of them carry no `role` label at
-all and are loaded exactly the same.
+cluster is loaded regardless of its labels. Most rules that arrive inside charts
+carry no `role` label at all and are loaded exactly the same.
 
 They appear on hand-written rules because upstream examples carry them. Copying
 them onto a new rule is harmless; omitting them is equally harmless. Nothing

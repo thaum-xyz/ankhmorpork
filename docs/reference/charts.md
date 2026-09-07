@@ -28,7 +28,7 @@ Published to `oci://ghcr.io/thaum-xyz/helm-charts`, source in
 
 | Chart | Purpose | Used by | Values |
 | --- | --- | --- | --- |
-| `cnpg-database` | CloudNativePG cluster with barman-cloud object store, scheduled backups, Doppler-backed credentials and backup alerting | all eleven Postgres databases | [reference][v-cnpg] |
+| `cnpg-database` | CloudNativePG cluster with barman-cloud object store, scheduled backups, Doppler-backed credentials and backup alerting | every Postgres database — see [Helm releases](helm-releases.md) | [reference][v-cnpg] |
 | `lvm-diskprep` | Prepares LVM node disks for CSI stacks via privileged DaemonSets and textfile metrics | `topolvm-system` | [reference][v-lvm] |
 
 [v-cnpg]: https://github.com/thaum-xyz/helm-charts/tree/main/charts/cnpg-database
@@ -52,8 +52,9 @@ which is worth remembering when a fix appears not to have landed.
 ## Where the S3 gateways come from
 
 Both S3 gateways — `cnpg-system` and `datalake-logs` —
-run [upstream's chart][up] at v0.3.5 from `oci://ghcr.io/versity/versitygw/charts`,
-not a thaum-xyz chart. Their values follow upstream's shape: `gateway.backend`,
+run [upstream's chart][up] from `oci://ghcr.io/versity/versitygw/charts`, not a
+thaum-xyz chart; the pinned version lives in each release manifest, linked from
+[Helm releases](helm-releases.md). Their values follow upstream's shape: `gateway.backend`,
 `persistence`, `auth.existingSecret`.
 
 A thaum-xyz `versitygw` chart did exist, shaped differently (`storage.data`,
