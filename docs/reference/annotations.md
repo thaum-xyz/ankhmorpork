@@ -166,6 +166,28 @@ than what happens to be in git.
 | **Read by** | Grafana's dashboard sidecar |
 | **Effect** | Files the dashboard under that folder |
 
+### `linbit.com/sp-<pool>`
+
+| | |
+| --- | --- |
+| **Type** | Label |
+| **Set on** | `Node` |
+| **Value** | `"true"` |
+| **Written by** | kubelet, from the topology keys the `linstor.csi.linbit.com` node plugin registers when it runs with `--label-by-storage-pool` |
+| **Effect** | Marks a node holding that LINSTOR storage pool |
+
+The companion to the driver's other topology key, `linbit.com/hostname`, and the
+reason to prefer this one in a StorageClass: its value is the same on every
+eligible node, so
+`allowedTopologies` can name one value rather than enumerating hostnames. A
+`TopologySelectorLabelRequirement` takes only a key and a list of values — there
+is no `Exists` — which makes a per-node key unusable there without a list.
+
+Enabled through `linstorCluster.patches`, since neither the chart nor the
+`LinstorCluster` CR has a field for the flag. Same caveat as its companion:
+kubelet writes topology labels at plugin registration and removes nothing when a
+plugin stops.
+
 ### `feature.node.kubernetes.io/module-signing-enforced`
 
 | | |
