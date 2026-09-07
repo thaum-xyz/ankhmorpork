@@ -13,6 +13,18 @@ priorityClassName: system-cluster-critical
 nodeSelector:
   linstor: "true"
 
+# Same exclusion as linstorCluster.nodeAffinity in ../cluster/values.yaml: the
+# operator itself needs no DRBD, but nothing of Piraeus should land on master01.
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: NotIn
+              values:
+                - master01
+
 # A single operator replica does not benefit from a PDB and minAvailable: 1
 # would prevent voluntary eviction during a node drain.
 podDisruptionBudget:

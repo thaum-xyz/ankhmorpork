@@ -1,19 +1,32 @@
 # Config reference: https://github.com/piraeusdatastore/helm-charts/blob/main/charts/linstor-cluster/values.yaml
 
 linstorCluster:
+  # A node has to match both nodeSelector and nodeAffinity to run any Piraeus
+  # component. The operator applies them to the satellite, CSI node plugin and
+  # HA controller DaemonSets and to the controller Deployments alike, and a node
+  # they exclude also cannot run a Pod that mounts a Piraeus volume.
   nodeSelector:
     linstor: "true"
-  # Only nodes with one of the existing TopoLVM thin pools can host a local
-  # replica. This also prevents Piraeus volumes from scheduling onto a node
-  # where the CSI node and LINSTOR satellite are absent.
   nodeAffinity:
     nodeSelectorTerms:
+      # Expressions inside one term are ANDed; a second term would be an OR.
       - matchExpressions:
+          # Only nodes with one of the existing TopoLVM thin pools can host a
+          # local replica. This also prevents Piraeus volumes from scheduling
+          # onto a node where the CSI node and LINSTOR satellite are absent.
           - key: devices.topolvm.io/vg
             operator: In
             values:
               - secondary-vg
               - ubuntu-vg
+          # master01 has Secure Boot issues that stop the DRBD kernel module
+          # from loading, so a satellite there cannot work. It has a
+          # secondary-vg and would otherwise qualify, so it is excluded by
+          # name instead of relying on the absence of the linstor label.
+          - key: kubernetes.io/hostname
+            operator: NotIn
+            values:
+              - master01
   tolerations:
     - key: node-role.kubernetes.io/control-plane
       operator: Exists
