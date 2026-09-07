@@ -315,7 +315,25 @@ storageClasses:
       csi.storage.k8s.io/fstype: xfs
       linstor.csi.linbit.com/autoPlace: "2"
       linstor.csi.linbit.com/storagePool: temporary-topolvm
-      linstor.csi.linbit.com/allowRemoteVolumeAccess: "true"
+      # "true" means accessible from anywhere, which is why every roaming PV
+      # created before this carries no nodeAffinity at all -- and why a Pod could
+      # be scheduled onto master01 and then wait forever on "CSINode master01
+      # does not contain driver linstor.csi.linbit.com".
+      #
+      # fromSame narrows "anywhere" to "nodes whose module-signing-enforced value
+      # matches the placing node's", i.e. false -- so a new volume's PV carries
+      # nodeAffinity the scheduler enforces, and master01 (true) is refused
+      # before the Pod is placed rather than after.
+      #
+      # Verified on a scratch class 2026-09-07: PV came out with
+      # `module-signing-enforced In [false]`, and a Pod pinned to master01 stayed
+      # Pending with "didn't match PersistentVolume's node affinity".
+      #
+      # Only applies to volumes created from here on. PV nodeAffinity is
+      # immutable, so the 13 roaming volumes that predate this keep none.
+      linstor.csi.linbit.com/allowRemoteVolumeAccess: |
+        - fromSame:
+            - feature.node.kubernetes.io/module-signing-enforced
       property.linstor.csi.linbit.com/DrbdOptions/auto-diskful: "5"
       # DRBD writes activity-log metadata synchronously whenever a write lands in
       # an extent it is not already tracking. The default 1237 extents cover
