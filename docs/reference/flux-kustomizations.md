@@ -34,12 +34,12 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `cnpg-system` | [`k8s/platform/storage/cnpg-system`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/cnpg-system) | `15m0s` | yes | no | `kyverno` |
 | `csi-nfs` | [`k8s/platform/storage/csi-nfs`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/csi-nfs) | `15m0s` | yes | no | `kyverno` |
 | `descheduler` | [`k8s/platform/cluster/descheduler`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/descheduler) | `15m0s` | yes | no | — |
+| `device-plugins` | [`k8s/platform/cluster/device-plugins`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/device-plugins) | `15m0s` | yes | no | — |
 | `external-dns` | [`k8s/platform/network/external-dns`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network/external-dns) | `15m0s` | yes | no | — |
 | `external-secrets` | [`k8s/platform/security/external-secrets`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/external-secrets) | `15m0s` | yes | no | — |
 | `flux-system` | [`k8s/platform/cluster/flux-system`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/flux-system) | `15m0s` | **no** | no | — |
 | `k8up` | [`k8s/platform/storage/k8up`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/k8up) | `15m0s` | yes | no | — |
 | `kube-prometheus-stack` | [`k8s/platform/observability/kube-prometheus-stack`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability/kube-prometheus-stack) | `15m0s` | yes | no | — |
-| `kube-system` | [`k8s/platform/cluster/device-plugins`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/device-plugins) | `15m0s` | yes | no | — |
 | `kyverno` | [`k8s/platform/security/kyverno`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kyverno) | `15m0s` | yes | **yes** (15m) | — |
 | `kyverno-policies` | [`k8s/platform/security/kyverno/policies`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kyverno/policies) | `15m0s` | yes | no | `kyverno` |
 | `node-feature-discovery` | [`k8s/platform/cluster/node-feature-discovery`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/node-feature-discovery) | `15m0s` | yes | no | — |
