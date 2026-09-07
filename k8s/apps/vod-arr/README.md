@@ -111,11 +111,33 @@ the data follows the Pod.
 I/O is remote until that conversion completes, which is why the class is capped
 at 32Gi by the `validate-roaming-volume-size` policy. Every volume here is 2Gi.
 
-`seerr-config` is the exception: it is on `unifi-nas`. Once its database moved
-to `postgres-seerr` the volume held only `settings.json` and rotated logs, and
-plain files over NFS are safe in a way SQLite over `nolock` is not. NFS also
-attaches from any node, where a piraeus volume needs the linstor CSI plugin and
-so needs a nodeAffinity keeping the Pod off master01.
+Which app is on which class follows from what its volume still holds now that
+every database is in CNPG:
+
+| Claim                | Class                | Why                                                  |
+| -------------------- | -------------------- | ---------------------------------------------------- |
+| `config-sonarr-0`    | `piraeus-r2-roaming` | MediaCover, read by the UI a poster at a time         |
+| `config-radarr-0`    | `piraeus-r2-roaming` | the same, and the larger library of the two           |
+| `cleanuparr-config`  | `piraeus-r2-roaming` | three live SQLite databases                           |
+| `bazarr-config`      | `unifi-nas`          | `config.yaml` and caches, no database                 |
+| `qbittorrent-config` | `unifi-nas`          | `.conf`, `categories.json`, `BT_backup`, no database  |
+| `seerr-config`       | `unifi-nas`          | `settings.json`, no database                          |
+| prowlarr             | none                 | nothing that outlives the Pod — see its StatefulSet   |
+| `recyclarr-config`   | `unifi-nas`          | a mounted `config.yaml`                               |
+
+Two things decide it. **SQLite keeps a volume on Piraeus**: this class mounts
+`nfsvers=3,nolock`, and unhonoured advisory locks are how SQLite corrupts.
+cleanuparr's three databases are in WAL mode besides, which wants an mmap of the
+`-shm` file that NFS cannot back. **Small-file read latency keeps the two *arrs
+there**: MediaCover is served to the browser one file per poster, and radarr's is
+the larger.
+
+Everything else gains by leaving. `csi-nfs` runs on all four nodes and
+`linstor.csi.linbit.com` on three — master01 loads no DRBD module under Secure
+Boot — so a claim on `unifi-nas` is one fewer Pod that cannot be placed there.
+K8up goes with it: the UNAS backs up its own shares, so a restic repo written by
+the cluster onto that same NAS would be a second copy the NAS then backs up
+again.
 
 Not `piraeus-r2`: it pins the Pod to the two nodes holding its replicas, which is
 the right trade for something latency-sensitive like plex's `/config`, but these

@@ -63,8 +63,6 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
-            - mountPath: /config/logs
-              name: logs
             - mountPath: /backup
               name: backups
               subPath: prowlarr
@@ -207,21 +205,20 @@ spec:
         - name: backups
           persistentVolumeClaim:
             claimName: backups
-        # Logs are shipped from stdout by alloy, so the files are a local convenience
-        # for the UI's Log Files tab and do not belong on the claim. The app's own
-        # rotation is the real cap -- 50 x logSizeLimit (1M) for the info ring, and
-        # the same again if LogLevel is raised to debug for an investigation. 128Mi
-        # clears both, and exceeding sizeLimit evicts the Pod.
-        - name: logs
+        # Nothing here outlives the Pod, so prowlarr has no claim at all. Its
+        # indexers, apps and history are in postgres-prowlarr, and render-config
+        # rewrites config.xml -- API key included -- from Doppler on every start.
+        # What is left is cache: Definitions/, which the image does not ship and
+        # the app re-fetches, asp/ DataProtection keys that only sign cookies for
+        # an app with AuthenticationMethod External, and the logs alloy already
+        # shipped to Loki.
+        #
+        # A warm Definitions cache would only ever pay off while the network is
+        # up, and prowlarr queries public trackers over that same network, so a
+        # cold start costs 552 small files exactly when it can afford them.
+        #
+        # 256Mi covers Definitions plus the log ring; exceeding sizeLimit evicts
+        # the Pod.
+        - name: config
           emptyDir:
-            sizeLimit: 128Mi
-  volumeClaimTemplates:
-    - metadata:
-        name: config
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 2Gi
-        storageClassName: piraeus-r2-roaming
+            sizeLimit: 256Mi
