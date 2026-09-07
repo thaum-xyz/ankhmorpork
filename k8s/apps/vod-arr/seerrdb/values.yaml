@@ -14,7 +14,9 @@ cluster:
       memory: 256Mi
 
 backup:
-  schedule: "0 57 3 * * *"
+  # Ends before 01:30 UTC, which is 03:30 Warsaw in summer -- when the UNAS
+  # copies these backups offsite. Later, and the copy ships yesterday's.
+  schedule: "0 27 0 * * *"
   objectStore:
     # Several clusters share this namespace, so each needs its own store.
     name: versity-vod-seerr
