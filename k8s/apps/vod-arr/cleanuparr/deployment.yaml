@@ -67,6 +67,8 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /config/logs
+              name: logs
             - mountPath: /backup
               name: backup-script
               readOnly: true
@@ -75,6 +77,11 @@ spec:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
       volumes:
+        # Same lines as stdout, which alloy ships to Loki. Off the claim they also
+        # leave the K8up backup, which is here for the three SQLite databases.
+        - name: logs
+          emptyDir:
+            sizeLimit: 64Mi
         - name: config
           persistentVolumeClaim:
             claimName: cleanuparr-config

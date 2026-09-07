@@ -82,6 +82,8 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /config/log
+              name: logs
             - mountPath: /backup
               name: backups
               subPath: bazarr
@@ -97,6 +99,12 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
       volumes:
+        # bazarr writes the same lines to log/bazarr.log that it writes to stdout,
+        # where alloy already picks them up, so the file set was 7.3M of the claim
+        # duplicating what Loki holds. It rotates itself; 64Mi is well clear of it.
+        - name: logs
+          emptyDir:
+            sizeLimit: 64Mi
         - name: config
           persistentVolumeClaim:
             claimName: bazarr-config
