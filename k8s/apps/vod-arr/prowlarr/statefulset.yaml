@@ -140,6 +140,15 @@ spec:
               # persists it, so usage telemetry ships to the *arr project until the
               # element is written. Booleans in this file are capitalised.
               yq -i '(.Config.AnalyticsEnabled = "False")' /config/config.xml
+              # exportarr reads this file once, at startup, and its XML parser only
+              # overrides the port in URL when <Port> is present -- with URL set to
+              # http://localhost and the element missing it scrapes port 80. prowlarr
+              # does write its own default here, but not until after it has started,
+              # which the config claim used to hide: config.xml came back from the
+              # previous run with <Port> in it already. On an emptyDir the file is new
+              # every start and exportarr loses that race, so the port the two
+              # containers have to agree on is declared rather than defaulted.
+              yq -i '(.Config.Port = "9696")' /config/config.xml
               # Prowlarr, Bazarr and Recyclarr all address this app by API key, so the key has
               # to be declared rather than generated. Absent secret leaves whatever exists.
               if [ -n "${API_KEY:-}" ]; then
