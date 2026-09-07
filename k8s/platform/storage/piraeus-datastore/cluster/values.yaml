@@ -311,6 +311,8 @@ storageClasses:
     reclaimPolicy: Delete
     allowVolumeExpansion: true
     volumeBindingMode: WaitForFirstConsumer
+    annotations:
+      storageclass.kubernetes.io/is-default-class: "true"
     parameters:
       csi.storage.k8s.io/fstype: xfs
       linstor.csi.linbit.com/autoPlace: "2"
