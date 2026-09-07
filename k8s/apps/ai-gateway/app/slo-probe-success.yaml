@@ -15,8 +15,8 @@ spec:
   #
   # target is a PLACEHOLDER. Unlike the other probe SLOs it is not even carried
   # over from the shared objective -- ai-gateway was never in it, so there is no
-  # history behind this number at all. Set it from data once the probe has run
-  # a few weeks.
+  # history behind this number at all. Set it with the other 33 once this probe
+  # has a full 7d window behind it.
   description: >-
     Fraction of successful blackbox probes against ai-gateway.krupa.net.pl.
   alerting:
@@ -32,4 +32,4 @@ spec:
     bool_gauge:
       metric: probe_success{instance=~"https://ai-gateway\\.krupa\\.net\\.pl(/.*)?"}
   target: "95.0"
-  window: 4w
+  window: 7d

@@ -9,9 +9,18 @@ spec:
   # operator here can commit to, which is the whole reason they are not in the
   # objective next door.
   #
-  # Selecting on environment!="ankhmorpork" rather than naming the two hosts, so
-  # a new external probe joins this SLO by default rather than silently
-  # inflating the one for services we actually serve.
+  # Selecting on environment rather than naming the two hosts, so a new external
+  # probe joins this SLO by default rather than silently inflating the one for
+  # services we actually serve.
+  #
+  # environment!="" is load-bearing, not belt-and-braces. A negative matcher
+  # alone fails open: it matches series that carry no environment label at all,
+  # and every probe series written before #1326 added that label is one of
+  # those. They stop being written but stay inside the 7d lookback, so this SLO
+  # was computing over 20 series -- the 2 real ones and 18 stale internal ones,
+  # dragging keep's achieved figure to 97.5% under an objective that should
+  # never have seen it. Requiring the label present keeps the "joins by default"
+  # property and excludes anything unlabelled.
   #
   # target is a PLACEHOLDER carried over unchanged. When the numbers are set
   # around 2026-10-06 this one should end up looser than its neighbour, not
@@ -33,6 +42,6 @@ spec:
     bool_gauge:
       grouping:
         - instance
-      metric: probe_success{environment!="ankhmorpork"}
+      metric: probe_success{environment!="ankhmorpork", environment!=""}
   target: "95.0"
   window: 7d
