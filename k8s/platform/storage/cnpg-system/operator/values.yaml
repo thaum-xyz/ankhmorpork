@@ -15,3 +15,19 @@ nodeSelector: {}
 config:
   data:
     INHERITED_LABELS: "app.kubernetes.io/*"
+    # Taints the operator treats as "this node is being drained", which makes it
+    # switch a primary away before the eviction arrives. Adding kured's reboot
+    # taint buys the databases a head start: kured applies it as soon as a node
+    # wants a reboot but finds the lock held, so the switchover happens while
+    # the node is still queued rather than after it is cordoned.
+    #
+    # This REPLACES the operator's defaults rather than adding to them --
+    # configparser only falls back to them when the value is empty. The first
+    # four are therefore upstream's list, copied verbatim; only the last is
+    # ours. Dropping `node.kubernetes.io/unschedulable` would silently disable
+    # switchover-on-cordon, which is what makes an ordinary drain work at all.
+    #
+    # The autoscaler and karpenter taints are inert on bare metal. They are kept
+    # so this stays "upstream's defaults plus one" and cannot rot into a
+    # surprise if that ever changes.
+    DRAIN_TAINTS: "node.kubernetes.io/unschedulable,ToBeDeletedByClusterAutoscaler,karpenter.sh/disrupted,karpenter.sh/disruption,thaum.xyz/kured-node-reboot"
