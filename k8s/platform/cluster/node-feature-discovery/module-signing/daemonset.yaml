@@ -1,0 +1,205 @@
+# Discovers whether a node's kernel will load an unsigned out-of-tree module --
+# the condition that decides where Piraeus can run, since its DRBD module is
+# built in a container and signed by nobody.
+#
+# Publishes three labels. The verdict is module-signing-enforced; secureboot and
+# kernel-lockdown are the inputs it was derived from, kept because a "true" with
+# no visible cause is not debuggable:
+#
+#   feature.node.kubernetes.io/module-signing-enforced  true | false | unknown
+#   feature.node.kubernetes.io/secureboot               enabled | disabled | legacy-bios | unknown
+#   feature.node.kubernetes.io/kernel-lockdown          none | integrity | confidentiality | unavailable | unknown
+#
+# The verdict ORs the two enforcement paths because the kernel does: an unsigned
+# module is rejected if the sig_enforce parameter is set *or* if lockdown is
+# above none (module_sig_check falls through to security_locked_down). Reading
+# either one alone misclassifies a kernel that uses the other.
+#
+# Secure Boot is deliberately not the verdict. It is only the usual cause on
+# these Ubuntu nodes -- lockdown can be raised from the kernel command line
+# without it, and a kernel built without CONFIG_LOCK_DOWN_IN_EFI_SECURE_BOOT
+# enforces nothing with Secure Boot on.
+#
+# NFD has no firmware or lockdown source of its own, and nothing it already
+# collects stands in: kernel-config flags describe what the kernel was *built*
+# to support and read identically on every node here. So these are read from
+# sysfs and handed to nfd-master through a NodeFeature object, the CRD NFD
+# offers 3rd-party extensions.
+#
+# One apply per Pod lifetime, deliberately. None of the three can change without
+# a reboot, and a reboot restarts this Pod; the Pod then idles on pause instead
+# of looping, so restart counts stay at zero and this never reads as a crashloop.
+#
+# The objects are named module-signing-<node> and carry
+# nfd.node.kubernetes.io/node-name, which is both how nfd-master attaches them to
+# a Node and how nfd-gc drops them when a node leaves the cluster. Deleting this
+# DaemonSet does *not* remove the labels -- delete the NodeFeature objects for that.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: module-signing-labeler
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: module-signing-labeler
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: module-signing-labeler
+    spec:
+      serviceAccountName: module-signing-labeler
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: read-sysfs
+          image: docker.io/library/busybox:1.38.0
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              efi=/host-sys/firmware/efi
+              sbvar=$efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c
+              lockdownfile=/host-sys/kernel/security/lockdown
+              sigfile=/host-sys/module/module/parameters/sig_enforce
+
+              # efivarfs prefixes every variable with four attribute bytes, so
+              # the payload is the last byte: 1 enabled, 0 disabled.
+              if [ ! -d "$efi" ]; then
+                secureboot=legacy-bios
+              elif [ ! -r "$sbvar" ]; then
+                secureboot=unknown
+              elif [ "$(tail -c1 "$sbvar" | od -An -tu1 | tr -dc 0-9)" = "1" ]; then
+                secureboot=enabled
+              else
+                secureboot=disabled
+              fi
+
+              # The file lists every mode with the active one in brackets. It is
+              # absent unless the lockdown LSM is both built in and in CONFIG_LSM.
+              lockdown=unavailable
+              if [ -r "$lockdownfile" ]; then
+                lockdown=$(tr ' ' '\n' <"$lockdownfile" | sed -n 's/^\[\(.*\)\]$/\1/p')
+                if [ -z "$lockdown" ]; then
+                  lockdown=unknown
+                fi
+              fi
+
+              sig=absent
+              if [ -r "$sigfile" ]; then
+                sig=$(cat "$sigfile")
+              fi
+
+              enforced=unknown
+              if [ "$lockdown" = integrity ] || [ "$lockdown" = confidentiality ]; then
+                enforced=true
+              elif [ "$sig" = Y ]; then
+                enforced=true
+              elif [ "$sig" = N ]; then
+                enforced=false
+              elif [ "$lockdown" = none ]; then
+                # No sig_enforce parameter means module signing was not compiled
+                # in, and lockdown says it is not enforcing either.
+                enforced=false
+              fi
+
+              echo "$NODE_NAME: module-signing-enforced=$enforced (secureboot=$secureboot lockdown=$lockdown sig_enforce=$sig)"
+              cat >/work/nodefeature.yaml <<EOF
+              apiVersion: nfd.k8s-sigs.io/v1alpha1
+              kind: NodeFeature
+              metadata:
+                name: module-signing-$NODE_NAME
+                labels:
+                  nfd.node.kubernetes.io/node-name: $NODE_NAME
+              spec:
+                labels:
+                  feature.node.kubernetes.io/module-signing-enforced: "$enforced"
+                  feature.node.kubernetes.io/secureboot: "$secureboot"
+                  feature.node.kubernetes.io/kernel-lockdown: "$lockdown"
+                features:
+                  attributes:
+                    hostsecurity.state:
+                      elements:
+                        module-signing-enforced: "$enforced"
+                        secureboot: "$secureboot"
+                        lockdown: "$lockdown"
+                        sig-enforce: "$sig"
+              EOF
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: host-sys
+              mountPath: /host-sys
+              readOnly: true
+            - name: work
+              mountPath: /work
+          securityContext:
+            # Root, because these sysfs modes are set by the kernel and vary --
+            # efivars is world-readable on these nodes, 0600 on some firmware.
+            # Read-only mount, no caps, no escalation.
+            runAsUser: 0
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+        - name: apply
+          # Upstream Kubernetes build, pinned to the cluster's minor, as in
+          # k8s/apps/valheim/restarter/cronjob.yaml. Distroless, hence the split
+          # from the shell above.
+          image: registry.k8s.io/kubectl:v1.34.10
+          command:
+            - kubectl
+            - apply
+            - --server-side
+            - --force-conflicts
+            - --field-manager=module-signing-labeler
+            - --filename
+            - /work/nodefeature.yaml
+          volumeMounts:
+            - name: work
+              mountPath: /work
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+      containers:
+        # A DaemonSet needs a long-lived container; the work is done by the time
+        # this starts. pause costs nothing and never restarts.
+        - name: idle
+          image: registry.k8s.io/pause:3.10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 1m
+              memory: 8Mi
+      volumes:
+        - name: host-sys
+          hostPath:
+            path: /sys
+            type: Directory
+        - name: work
+          emptyDir: {}

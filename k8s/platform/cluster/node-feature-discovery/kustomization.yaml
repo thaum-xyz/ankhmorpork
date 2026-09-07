@@ -5,6 +5,7 @@ resources:
   - repository.yaml
   - namespace.yaml
   - release.yaml
+  - module-signing/
 configMapGenerator:
   - name: values-nfd
     files:

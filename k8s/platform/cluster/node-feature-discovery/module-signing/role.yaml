@@ -1,0 +1,18 @@
+# No resourceNames: they cannot be wildcarded, and the object names follow the
+# node names, so pinning them would need an edit every time the fleet changes.
+# The Role therefore also reaches nfd-worker's own NodeFeature objects in this
+# namespace -- move this component to its own namespace if that ever matters,
+# nfd-master honours NodeFeature objects from anywhere.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: module-signing-labeler
+rules:
+  - apiGroups:
+      - nfd.k8s-sigs.io
+    resources:
+      - nodefeatures
+    verbs:
+      - get
+      - create
+      - patch

@@ -145,6 +145,47 @@ than what happens to be in git.
 | **Read by** | Grafana's dashboard sidecar |
 | **Effect** | Files the dashboard under that folder |
 
+### `feature.node.kubernetes.io/module-signing-enforced`
+
+| | |
+| --- | --- |
+| **Type** | Label |
+| **Set on** | `Node` |
+| **Value** | `true`, `false`, `unknown` |
+| **Written by** | the `module-signing-labeler` DaemonSet, via a `NodeFeature` object |
+| **Effect** | None by itself — available to `nodeSelector`, `nodeAffinity` and `NodeFeatureRule` |
+
+`true` means the kernel rejects unsigned out-of-tree modules, which is what
+decides whether a node can run Piraeus: its DRBD module is built in a container
+and signed by nobody. Node Feature Discovery has no source for this, so it is
+fed to it — the DaemonSet reads sysfs and hands nfd-master a `NodeFeature`
+object, the CRD NFD offers 3rd-party extensions. Manifest and reasoning:
+[`k8s/platform/cluster/node-feature-discovery/module-signing/daemonset.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/cluster/node-feature-discovery/module-signing/daemonset.yaml).
+
+Two companion labels carry the inputs the verdict was derived from, for when a
+node classifies surprisingly:
+
+| Label | Values |
+| --- | --- |
+| `feature.node.kubernetes.io/secureboot` | `enabled`, `disabled`, `legacy-bios`, `unknown` |
+| `feature.node.kubernetes.io/kernel-lockdown` | `none`, `integrity`, `confidentiality`, `unavailable`, `unknown` |
+
+!!! warning "Gate on the verdict, not on either input"
+
+    Secure Boot is only the usual *cause* here. Lockdown can be raised from the
+    kernel command line without it, and a kernel built without
+    `CONFIG_LOCK_DOWN_IN_EFI_SECURE_BOOT` enforces nothing with Secure Boot on.
+    The kernel rejects an unsigned module if the `sig_enforce` parameter is set
+    **or** lockdown is above `none`, so the verdict ORs both paths.
+
+    `feature.node.kubernetes.io/kernel-config.*` is not a substitute either. It
+    describes what the running kernel was *built* to support and reads identically
+    on every node here whatever the firmware is doing.
+
+Exclude with `NotIn [true]` rather than selecting on `false`: a node whose label
+is missing — labeler not run, discovery broken — then still matches, so a failure
+of discovery cannot deschedule a storage workload that was running.
+
 ## Look load-bearing, are not
 
 ### `role: alert-rules` and `prometheus: k8s` on PrometheusRules
