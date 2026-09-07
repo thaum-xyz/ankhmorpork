@@ -20,6 +20,12 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: cleanuparr
+        # cleanuparr.db, events.db and users.db are all live SQLite, so the
+        # file-level copies can tear. This streams consistent copies of all three
+        # into the repository as one tar; that is what to restore from, and the
+        # file-level copies stay as a fallback.
+        k8up.io/backupcommand: /opt/apprise-venv/bin/python3 /backup/dump.py
+        k8up.io/file-extension: .tar
       labels:
         app.kubernetes.io/component: cleaner
         app.kubernetes.io/name: cleanuparr
@@ -61,6 +67,9 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: config
+            - mountPath: /backup
+              name: backup-script
+              readOnly: true
       restartPolicy: Always
       securityContext:
         fsGroup: 1000
@@ -69,3 +78,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: cleanuparr-config
+        - name: backup-script
+          configMap:
+            name: backup-script-cleanuparr

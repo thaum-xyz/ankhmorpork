@@ -1,6 +1,16 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
+    # without this is not backed up -- which is what keeps the six CNPG claims
+    # in this namespace out, since they self-backup via barman.
+    #
+    # Three live SQLite databases here -- cleanuparr.db, users.db and events.db,
+    # the last being 36M of the 40M volume -- so the file-level copies can tear.
+    # scripts/dump.py streams consistent copies of all three; that tar is what
+    # to restore from.
+    k8up.io/backup: "true"
   name: cleanuparr-config
 spec:
   accessModes:

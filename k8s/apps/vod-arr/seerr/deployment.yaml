@@ -20,6 +20,12 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: seerr
+        # db/db.sqlite3 is live SQLite in WAL mode, so the file-level copy can
+        # tear. This streams a VACUUM INTO copy into the repository as its own
+        # snapshot; that is what to restore from, and the file-level copy stays
+        # as a fallback.
+        k8up.io/backupcommand: node /backup/dump.js
+        k8up.io/file-extension: .sqlite
       labels:
         app.kubernetes.io/component: server
         app.kubernetes.io/name: seerr
@@ -67,6 +73,9 @@ spec:
           volumeMounts:
             - mountPath: /app/config
               name: config
+            - mountPath: /backup
+              name: backup-script
+              readOnly: true
       initContainers:
         # First-run only. The normal settings load merges this over the
         # defaults, so everything omitted stays UI-owned.
@@ -128,3 +137,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: seerr-config
+        - name: backup-script
+          configMap:
+            name: backup-script-seerr

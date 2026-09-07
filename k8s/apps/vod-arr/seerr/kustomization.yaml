@@ -7,3 +7,18 @@ resources:
   - pvc-config.yaml
   - service.yaml
   - slo-probe-success.yaml
+configMapGenerator:
+  # Named per app: cleanuparr and seerr both live in vod-arr, so a bare
+  # `backup-script` collides -- validate-configmaps catches it, same lesson as
+  # values-<release>.
+  #
+  # The dump script is a real file so it stays readable and lintable. Inlining
+  # it in the k8up.io/backupcommand annotation is not an option: K8up tokenises
+  # that string with qsplit, whose quotes neither nest nor escape.
+  - name: backup-script-seerr
+    files:
+      - scripts/dump.js
+generatorOptions:
+  # Stable name. The script is read at exec time from the mounted ConfigMap, so
+  # a change reaches the next backup without rolling the pod.
+  disableNameSuffixHash: true
