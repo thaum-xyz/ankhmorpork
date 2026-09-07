@@ -22,8 +22,15 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values-litellm
-  # The litellm chart has no ingress.labels, and homer-operator selects
-  # Ingresses by label.
+  # The litellm chart has no ingress.labels, and both homer-operator and
+  # blackbox's ingress Probe select Ingresses by label. The probe-uri annotation
+  # in values.yaml is inert on its own -- the Probe finds the Ingress by
+  # ingress.thaum.xyz/probe and only then reads the URI off it.
+  #
+  # The label goes on this Ingress and not the cloudflare twin in
+  # ingress-cloudflare.yaml: blackbox derives the scheme from whether the
+  # Ingress declares TLS, and the tunnel one declares none, so probing it builds
+  # an http:// target nothing answers.
   postRenderers:
     - kustomize:
         patches:
@@ -34,3 +41,6 @@ spec:
               - op: add
                 path: /metadata/labels/homer.rajsingh.info~1enabled
                 value: "true"
+              - op: add
+                path: /metadata/labels/ingress.thaum.xyz~1probe
+                value: enabled

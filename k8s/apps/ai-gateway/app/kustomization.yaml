@@ -4,7 +4,10 @@ resources:
   - repository.yaml
   - release.yaml
   - credentials.yaml
+  - metrics-credentials.yaml
+  - servicemonitor.yaml
   - ingress-cloudflare.yaml
+  - slo-probe-success.yaml
 configMapGenerator:
   - name: values-litellm
     files:
