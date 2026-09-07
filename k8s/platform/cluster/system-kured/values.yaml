@@ -3,15 +3,75 @@
 configuration:
   annotateNodes: true
   concurrency: 1
-  # Abort drain after this time
-  drainTimeout: "2h"
-  period: "2h"
+
+  # --- Reboot window ---------------------------------------------------------
   rebootDays:
   - mo
   - we
   - th
   startTime: "07:00:00"
   endTime: "12:00:00"
+  # Poll every 20m, not 2h. `period` is not just the sentinel check -- it is
+  # also the retry interval for a node that found the lock held or found the
+  # cluster unhealthy. At 2h a node that lost one race sat out the rest of the
+  # window, so a 5h window fitted two nodes instead of four. 20m also caps
+  # failed-drain churn at one attempt per 40m (drainTimeout + period).
+  period: "20m"
+
+  # --- Drain -----------------------------------------------------------------
+  # 20m, not 2h. A drain that has not finished in 20m is PDB-blocked and is not
+  # going to finish: every CNPG cluster carries a `<name>-primary` PDB whose
+  # disruptionsAllowed is permanently 0, and it only clears when the operator
+  # switches the primary away -- which it cannot do when the only replica sits
+  # on a node that is itself cordoned. Timing out is cheap: forceReboot is
+  # false, so kured releases the lock and best-effort uncordons, then retries
+  # next period. Two hours of that is what turned one bad drain into a
+  # cluster-wide outage.
+  drainTimeout: "20m"
+  # Stop waiting on pods that have been Terminating for over a minute. A DRBD
+  # volume that will not detach otherwise holds the whole drain open.
+  skipWaitForDeleteTimeout: "60"
+
+  # --- Soft drain ------------------------------------------------------------
+  # Applied to a node the moment it wants a reboot but finds the lock held, and
+  # removed once its reboot is done or the window closes. Two effects: the node
+  # stops attracting pods evicted from the node currently rebooting, and the
+  # descheduler moves what it can off the node ahead of time (see
+  # RemovePodsViolatingNodeTaints / includePreferNoSchedule in
+  # k8s/platform/cluster/descheduler/values.yaml). By the time the lock comes
+  # free, the real drain has much less left to do.
+  preferNoScheduleTaint: "thaum.xyz/kured-node-reboot"
+
+  # --- Safety gate -----------------------------------------------------------
+  # Do not start a reboot while the cluster is already short a node. kured
+  # queries `ALERTS` here and refuses to cordon while any active alert matches.
+  #
+  # alertFilterMatchOnly inverts the regexp from a mute-list into an allow-list
+  # of blockers: ONLY these alerts block, everything else is ignored. Without
+  # it the regexp means the opposite and every unrelated alert would stop
+  # reboots. alertFiringOnly ignores `pending`.
+  #
+  # The list is exactly "reasons a drain cannot succeed":
+  #   KubeNode{NotReady,Unreachable,ReadinessFlapping} -- a node is down
+  #   NodeUnschedulable                -- a node is cordoned (manually, or by a
+  #                                       drain that got stuck); this is the
+  #                                       one that would have stopped the
+  #                                       2026-09-07 cascade
+  #   CNPGClusterNoStreamingReplica    -- a postgres primary has nowhere to
+  #                                       switch over to, so its PDB will
+  #                                       block the drain forever
+  #   drbd*                            -- Piraeus replicas are resyncing or
+  #                                       short of quorum
+  #
+  # Fail-safe by design: if this Prometheus is unreachable, kured treats that
+  # as blocked and reboots nothing. KuredRebootRequired is the backstop that
+  # tells you the gate has been closed too long.
+  prometheusUrl: "http://prometheus-k8s.datalake-metrics.svc.cluster.local:9090"
+  alertFilterRegexp: "^(KubeNodeNotReady|KubeNodeUnreachable|KubeNodeReadinessFlapping|NodeUnschedulable|CNPGClusterNoStreamingReplica|drbd.+)$"
+  alertFilterMatchOnly: true
+  alertFiringOnly: true
+
+  # --- Pacing ----------------------------------------------------------------
   lockReleaseDelay: "1h"
   # Without a TTL an interrupted holder strands the lock forever -- restarting
   # the daemonset mid-reboot does exactly that, since the release delay is

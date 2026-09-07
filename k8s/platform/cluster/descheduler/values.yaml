@@ -20,20 +20,55 @@ serviceMonitor:
 # including LowNodeUtilization and RemoveDuplicates, which rebalance by evicting
 # and would churn pods across the four nodes.
 #
-# No node carries a taint today, so this evicts nothing. It is here for
-# NoSchedule taints: those stop new pods but leave running ones, and this is
-# what migrates them off.
+# This is the soft-drain half of the kured reboot pipeline. kured taints a node
+# `thaum.xyz/kured-node-reboot:PreferNoSchedule` as soon as it wants a reboot
+# but finds the lock held; this plugin then walks the movable pods off it while
+# it waits, so the real drain has less to do and less to time out on. It also
+# still serves its original purpose: NoSchedule taints such as
+# `drbd.linbit.com/lost-quorum` stop new pods but leave running ones, and this
+# is what migrates them off.
 deschedulerPolicyAPIVersion: descheduler/v1alpha2
 deschedulerPolicy:
+  # Bound the churn. Without these, tainting three nodes at once (all four
+  # wanting a reboot in the same window) lets one pass evict most of the
+  # cluster. Two pods per node per run at a 5m interval is a trickle that
+  # still empties a node well inside kured's 1h lockReleaseDelay.
+  maxNoOfPodsToEvictPerNode: 2
+  maxNoOfPodsToEvictTotal: 6
   profiles:
     - name: default
       pluginConfig:
         - name: DefaultEvictor
           args:
+            # Only evict a pod that can actually be scheduled somewhere else.
+            # Mandatory once PreferNoSchedule is in scope: a soft taint does
+            # not stop placement, so without nodeFit the descheduler would
+            # happily evict a pod and let the scheduler put it straight back
+            # on the same node, or leave it Pending when every node is
+            # tainted.
+            nodeFit: true
             podProtections:
               extraEnabled:
                 - PodsWithPVC
+              config:
+                # Narrowed from "every pod with a PVC". Protecting all of them
+                # made the soft drain a no-op for the 27 pods on roaming
+                # Piraeus or NFS volumes, which follow their pod to any node.
+                # What genuinely cannot move is node-local storage:
+                #   lvm-thin   topolvm, pinned to one node's VG -- this is
+                #              where all 11 CNPG clusters live
+                #   piraeus-r2 two DRBD replicas, no diskless attach
+                # Those stay protected; the databases are moved by CNPG's own
+                # switchover during the drain, not by eviction.
+                PodsWithPVC:
+                  protectedStorageClasses:
+                    - name: lvm-thin
+                    - name: piraeus-r2
         - name: RemovePodsViolatingNodeTaints
+          args:
+            # Act on kured's PreferNoSchedule reboot taint, not just on
+            # NoSchedule. This is what makes the soft drain happen.
+            includePreferNoSchedule: true
       plugins:
         deschedule:
           enabled:
