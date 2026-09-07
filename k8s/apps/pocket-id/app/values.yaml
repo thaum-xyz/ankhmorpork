@@ -88,7 +88,7 @@ ingress:
     # house style of probing a real app endpoint (mealie /api/app/about,
     # immich /api/server/config) rather than a liveness path.
     ingress.thaum.xyz/probe-uri: /.well-known/openid-configuration
-  className: private
+  className: public
   host: login.krupa.net.pl
   tls:
     - secretName: login-krupa-net-pl-tls

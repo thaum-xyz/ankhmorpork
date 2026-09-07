@@ -1,0 +1,36 @@
+# Managed by ansible. Lets kubectl authenticate against pocket-id.
+#
+# The apiserver hot-reloads this file, so editing it does not need a k3s
+# restart -- only adding the `authentication-config` arg itself does.
+apiVersion: apiserver.config.k8s.io/v1
+kind: AuthenticationConfiguration
+jwt:
+- issuer:
+    url: "{{ k3s_oidc_issuer_url }}"
+    # Must match --oidc-client-id in every kubeconfig using this issuer.
+    audiences:
+    - "{{ k3s_oidc_client_id }}"
+    # No certificateAuthority: the cert is letsencrypt-dns01, which the node's
+    # system trust store already accepts. Verified from all three servers.
+  claimMappings:
+    # `sub` is a pocket-id UUID, which makes RBAC and the audit log unreadable.
+    # `email` is legible and stable, and pocket-id forces emailsVerified.
+    username:
+      claim: email
+      # Required whenever `claim` is set -- the apiserver rejects the config
+      # otherwise. Namespaces these identities away from `system:` and from
+      # the client-cert users in /etc/rancher/k3s/k3s.yaml.
+      prefix: "oidc:"
+    groups:
+      claim: groups
+      prefix: "oidc:"
+  claimValidationRules:
+  # Deliberately a CEL expression rather than `requiredValue: "true"`.
+  # requiredValue unmarshals the claim into a Go *string*, and email_verified
+  # is a JSON boolean -- a requiredValue rule here rejects every token.
+  #
+  # This is also not redundant with the authenticator's own email_verified
+  # check: that one fires only when the claim is present, so a pocket-id that
+  # stopped emitting it would silently pass. has() makes absence a failure.
+  - expression: 'has(claims.email_verified) && claims.email_verified == true'
+    message: "pocket-id must assert a verified email address"

@@ -1,0 +1,21 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: oidc-cluster-admins
+  annotations:
+    # This binding has to be live BEFORE the apiserver learns about the issuer.
+    # Applied the other way round, tokens authenticate and then map to a group
+    # with no permissions, which reads exactly like a broken authenticator.
+    kubernetes.io/description: >-
+      cluster-admin for the pocket-id `k8s-admins` group. The `oidc:` prefix is
+      applied by claimMappings.groups.prefix in
+      metal/roles/k3s-master/templates/authentication-config.yaml.j2 -- the two
+      must be changed together.
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: oidc:k8s-admins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin

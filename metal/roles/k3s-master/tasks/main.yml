@@ -7,6 +7,19 @@
     group: root
     mode: 0755
 
+- name: Ensure apiserver authentication config is present
+  template:
+    src: "authentication-config.yaml.j2"
+    dest: "/etc/rancher/k3s/authentication-config.yaml"
+    owner: root
+    group: root
+    mode: 0600
+  # Ordered before config.yaml on purpose: that task is what adds the
+  # `authentication-config` arg and notifies the restart, and the apiserver
+  # will not start without the file the arg points at. No notify here -- the
+  # apiserver hot-reloads this file on its own.
+  when: k3s_oidc_client_id | default('') | length > 0
+
 - name: Ensure configuration file is present
   template:
     src: "config.yaml.j2"
