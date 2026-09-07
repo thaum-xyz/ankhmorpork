@@ -1,15 +1,6 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  annotations:
-    # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
-    # without this is not backed up -- which is what keeps the CNPG claims in
-    # this namespace out, since they self-backup via barman.
-    #
-    # What is left here is settings.json: plain files, so the file-level copy
-    # is a faithful one. The database lives in postgres-seerr (../seerrdb) and
-    # is barman's to back up.
-    k8up.io/backup: "true"
   name: seerr-config
 spec:
   accessModes:
@@ -17,4 +8,27 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  storageClassName: piraeus-r2-roaming
+  # unifi-nas, not the piraeus-r2-roaming every other config claim here uses.
+  #
+  # The SQLite database that used to sit in db/ is what made NFS the wrong
+  # answer: SQLite corrupts when its advisory locks are not honoured, and this
+  # class mounts nfsvers=3,nolock. With the database in postgres-seerr all that
+  # is left is settings.json and a self-rotating log directory -- plain files,
+  # which NFS serves correctly.
+  #
+  # What it buys is scheduling freedom. The linstor CSI node plugin runs only
+  # where Piraeus does, so a piraeus-backed Pod needs a nodeAffinity to stay
+  # off master01, which cannot load the DRBD module under Secure Boot. csi-nfs
+  # runs on all four nodes, so this claim attaches anywhere and the affinity is
+  # gone from the Deployment.
+  #
+  # Deliberately no k8up.io/backup, unlike qbittorrent-config and
+  # cleanuparr-config: the UNAS backs up its own shares, so K8up here would be
+  # restic reading the NAS to write a repo onto the same NAS, and the NAS would
+  # then back up both. Removing SQLite removed the need for the backupcommand
+  # hook; moving to a medium that is already backed up removes the need for the
+  # file-level copy too.
+  #
+  # excluded_from_alerts is not set here -- mutate-nfs-pvc-alert-exclusion
+  # stamps it on every unifi-nas claim.
+  storageClassName: unifi-nas
