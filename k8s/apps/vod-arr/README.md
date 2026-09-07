@@ -96,9 +96,8 @@ the existing ~5.7 TB is a metadata operation, not a copy — but it also moves t
 libraries out from under Plex and Jellyfin, so it was deliberately left out of
 this change.
 
-Until then, keep qBittorrent's seeding limits (ratio 2 / 7 days, already seeded
-into `qBittorrent.conf`) and leave "Remove Completed Downloads" on in both
-*arrs, or `/downloads` grows without bound.
+Until then, keep qBittorrent's seeding limits and leave "Remove Completed Downloads"
+on in both *arrs, or `/downloads` grows without bound.
 
 ### Config volumes
 
