@@ -32,17 +32,14 @@ store layer needing to move or be renamed. Had the stack been assembled as one
 `monitoring` namespace, that would be a migration rather than an addition — and a
 migration with data already in it.
 
-!!! note "Waiting on the refactor, not on a decision"
+!!! note "Single-source on the receiving side"
 
-    Every sample in these stores comes from ankhmorpork today, and the receiving
-    side still shows it: Loki runs `auth_enabled: false`, no remote-write receiver
-    is enabled, and both `datalake-metrics` and `datalake-alerts` sit on `private`
-    ingresses.
+    The store layout is shaped for several sources; the receiving configuration is
+    not: Loki runs `auth_enabled: false`, no remote-write receiver is enabled, and
+    both `datalake-metrics` and `datalake-alerts` sit on `private` ingresses.
 
-    That is sequencing, not uncertainty. The other collectors are ready and are
-    held until the cluster refactor currently in flight lands — which is also why
-    the store layer is worth reading as the finished shape rather than as a
-    placeholder.
+    Those are three settings, not a redesign. The layout is the finished shape,
+    and the collectors that will use it are built.
 
 A secondary benefit falls out of the same split, and it is worth noting because it
 is what keeps the arrangement sensible even before a second cluster exists: stores
@@ -111,7 +108,7 @@ That is not an aesthetic choice. Nearly every component in the cluster ships a
 `ServiceMonitor`, `PodMonitor` or `PrometheusRule`, so those CRDs must be
 established before the platform layer applies anything at all — and a layer cannot
 depend on one of its own members. It also carries `wait: true`, because a CRD that
-is applied is not yet established, and `prune: false`, because pruning it would
+is applied is not thereby established, and `prune: false`, because pruning it would
 cascade into deleting every monitor and rule in the cluster.
 
 See [how Flux is layered](flux-layering.md) for the rest of that structure.
@@ -119,9 +116,10 @@ See [how Flux is layered](flux-layering.md) for the rest of that structure.
 ## What it costs
 
 The split is not free. Someone looking for "the monitoring stack" has to know it
-is nine components across three layers — four collectors in `platform`, four
-stores in `apps`, and the CRDs in `bootstrap` — and that the `datalake-*` naming is
-a convention rather than anything Kubernetes enforces.
+is spread across three layers — collectors in `platform`, stores in `apps`, the
+CRDs in `bootstrap`, all listed in
+[flux kustomizations](../reference/flux-kustomizations.md) — and that the
+`datalake-*` naming is a convention rather than anything Kubernetes enforces.
 
 What it buys is a store layer that does not have to be rearranged when the other
 collectors arrive — which is the near-term plan, not a hypothetical — and, along

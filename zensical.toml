@@ -55,6 +55,7 @@ nav = [
     { "Helm releases" = "reference/helm-releases.md" },
     { "Annotations and labels" = "reference/annotations.md" },
     { "Charts and images" = "reference/charts.md" },
+    { "Hardware" = "reference/hardware.md" },
     { "Ingress and certificates" = "reference/ingress.md" },
     { "Storage classes" = "reference/storage-classes.md" },
     { "UPS Modbus register map" = "reference/ups-modbus-register-map.md" },
