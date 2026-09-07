@@ -59,6 +59,45 @@ spec:
               - op: replace
                 path: /spec/groups/1/rules/6/labels/severity
                 value: warning
+          # allowedTopologies has to be patched in: the chart's storageclass.yaml
+          # renders name, annotations, labels, provisioner, reclaimPolicy,
+          # volumeBindingMode, allowVolumeExpansion and parameters, and nothing
+          # else. Setting it in values.yaml reads as configuration and is
+          # silently inert.
+          #
+          # What it buys, with WaitForFirstConsumer: the scheduler will not place
+          # a Pod holding an unbound claim of these classes on a node outside the
+          # list, so a new volume is steered to a node that can serve it instead
+          # of the claim sitting Pending forever because the selected node has no
+          # linstor entry in its CSINode.
+          #
+          # What it does not buy: anything for an already-bound volume.
+          # piraeus-r2-roaming PVs carry no node affinity by design, so their
+          # consumers still need their own `linbit.com/hostname` affinity for
+          # every reschedule after the first.
+          #
+          # Hostnames rather than a label test, because a
+          # TopologySelectorLabelRequirement takes a key and a list of values --
+          # there is no Exists. Keep this in step with the nodes carrying
+          # linbit.com/hostname; one missing here is never provisioned onto,
+          # which is degraded rather than broken. The field is mutable, so a
+          # change here is an ordinary upgrade and not the delete-and-recreate
+          # dance the immutable StorageClass fields need.
+          - target:
+              group: storage.k8s.io
+              version: v1
+              kind: StorageClass
+              name: piraeus-r2.*
+            patch: |-
+              - op: add
+                path: /allowedTopologies
+                value:
+                  - matchLabelExpressions:
+                      - key: linbit.com/hostname
+                        values:
+                          - beelink01
+                          - beelink02
+                          - master02
   valuesFrom:
     - kind: ConfigMap
       name: values-linstor-cluster
