@@ -46,3 +46,28 @@ spec:
       for: 5m
       labels:
         severity: critical
+    # Metadata exhaustion fails a thin pool exactly as hard as data exhaustion,
+    # and the four rules above only watch data.
+    #
+    # 80% rather than the 90% used for data, for two reasons. Measured
+    # 2026-09-06, metadata usage fits 17.35 MiB fixed + ~19 B per allocated
+    # chunk, so filling every pool here to 100% data lands metadata at 8-34%
+    # (beelink01 8%, beelink02 12%, master01 34%, master02 32%). Anything
+    # sustained above 80% therefore is not ordinary growth -- it means thin
+    # snapshots have appeared, whose divergence multiplies mappings, or the
+    # metadata LV is undersized for its pool. Second, there is no predict_linear
+    # companion here as there is for data, because no metric exposes the
+    # metadata LV size or the chunk size, so an earlier absolute threshold is
+    # what buys the lead time instead.
+    #
+    # The fix is an online lvextend --poolmetadatasize, so a warning with plenty
+    # of runway is more useful than a critical with none.
+    - alert: TopoLVMThinPoolMetadataAlmostFull
+      annotations:
+        description: The metadata in LVM thin pool connected to device class {{$labels.device_class}} on node {{$labels.node}} reached {{$value}}% occupancy. Ordinary data growth tops out near 34% here, so this means snapshots have appeared or the metadata LV is undersized. If it reaches 100% every LogicalVolume in the pool starts misbehaving, exactly as with data exhaustion.
+        runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/TopoLVMThinPoolMetadataAlmostFull
+        summary: LVM thin pool metadata has less than 20% free space.
+      expr: topolvm_thinpool_metadata_percent > 80
+      for: 15m
+      labels:
+        severity: warning
