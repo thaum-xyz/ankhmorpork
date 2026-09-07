@@ -11,9 +11,19 @@ metadata:
   name: changedetection-public
   labels:
     app.kubernetes.io/name: changedetection
+    # On this Ingress rather than the cloudflare twin: blackbox derives its
+    # scheme from whether the Ingress declares TLS, so probing that one builds
+    # an http:// target the tunnel never answers.
+    ingress.thaum.xyz/probe: enabled
     homer.rajsingh.info/enabled: "true"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Everything here is behind the oauth2-proxy, so the default bare-host probe
+    # would land on pocket-id's /interaction page and report changedetection
+    # healthy whenever pocket-id is. /queue-status is exempted from auth in
+    # proxy/deployment.yaml and answered by changedetection itself; summary=true
+    # keeps the response to counts and a fixed size however deep the queue is.
+    ingress.thaum.xyz/probe-uri: /queue-status?summary=true
     item.homer.rajsingh.info/name: "Change Detection"
     item.homer.rajsingh.info/subtitle: "Website change detection"
     item.homer.rajsingh.info/logo: "https://user-images.githubusercontent.com/275001/231676626-7d768df9-be4c-4187-a573-aba640b826d3.svg"

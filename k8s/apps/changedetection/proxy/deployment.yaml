@@ -45,6 +45,36 @@ spec:
             - --cookie-secure=true
             # Straight to pocket-id rather than an interstitial sign-in page.
             - --skip-provider-button=true
+            # Let the blackbox probe reach changedetection itself without auth.
+            #
+            # Without it the probe requests `/`, this proxy redirects to
+            # login.krupa.net.pl (--skip-provider-button sends it straight to the
+            # IdP rather than rendering a sign-in page), and pocket-id answers
+            # /interaction with 200. blackbox follows redirects and the http_2xx
+            # module asserts nothing about the body, so the probe's success
+            # criterion would be "pocket-id's login page returned 200" -- green
+            # with changedetection completely down. Same defect stirling-pdf had.
+            #
+            # /queue-status, not /worker-health or `/`:
+            #  - `/` is the watch list, 59KB and every watched URL in it. Never
+            #    exempt that.
+            #  - /worker-health calls worker_pool.check_worker_health(), which
+            #    *restarts* dead workers. A probe must not repair what it
+            #    measures, and it answers 200 whether the result is healthy or
+            #    degraded, so exposing it buys nothing.
+            #  - /queue-status is a read under the queue lock and returns 135
+            #    bytes. Exempted it is reachable unauthenticated, but its whole
+            #    output is queue counts and opaque watch UUIDs -- no URLs, no
+            #    titles, no content.
+            #
+            # changedetection has no endpoint that reports its own health, so
+            # this is a reachability check: the Flask process answered. That is
+            # all any path here can prove.
+            #
+            # Path only -- oauth2-proxy matches skip-auth-route against
+            # GetRequestPath, not the request URI, so the ?summary=true the
+            # probe-uri carries is not part of the match.
+            - --skip-auth-route=GET=^/queue-status$
           env:
             - name: OAUTH2_PROXY_CLIENT_ID
               valueFrom:

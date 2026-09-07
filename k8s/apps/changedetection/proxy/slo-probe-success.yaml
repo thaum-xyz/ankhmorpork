@@ -1,0 +1,39 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  name: changedetection-probe-success
+spec:
+  # Availability as a person experiences it: the blackbox probe, end to end
+  # through DNS, TLS, the ingress and the oauth2-proxy. Kept beside the Ingress
+  # and the proxy that carry the probe configuration, since the three have to
+  # move together -- the probe only reaches changedetection because
+  # --skip-auth-route exempts the path this measures.
+  #
+  # Matches on the host rather than the full probe URL, so changing
+  # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
+  # SLO behind it.
+  #
+  # changedetection exports no metrics of its own and has no endpoint that
+  # reports its own health, so this probe is its only availability signal -- and
+  # it is a reachability check, not a statement about whether watches are
+  # actually being fetched.
+  #
+  # target is a PLACEHOLDER, matching the other probe objectives. This service
+  # has never been measured, so there is no history to pick a number from; set
+  # it once there is a window of data.
+  description: >-
+    Fraction of successful blackbox probes against change.krupa.net.pl.
+  alerting:
+    name: ChangedetectionProbeBudgetBurn
+    absentName: ChangedetectionProbeMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
+  indicator:
+    bool_gauge:
+      metric: probe_success{instance=~"https://change\\.krupa\\.net\\.pl(/.*)?"}
+  target: "95.0"
+  window: 4w
