@@ -92,11 +92,8 @@ resources:
     cpu: 3m
     memory: 64Mi
 
-# Per-node kill switch: relabel a node kured=disabled to stop it rebooting.
-# Turning one back on: relabel first, then clear the DaemonSet's
-# weave.works/kured-node-lock annotation -- that order, or it reboots at once.
-nodeSelector:
-  kured: enabled
+# No nodeSelector: kured runs on every node, including new ones, without a
+# labelling step that is easy to forget.
 
 metrics:
   create: true
