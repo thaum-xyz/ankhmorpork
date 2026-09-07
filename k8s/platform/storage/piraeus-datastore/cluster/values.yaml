@@ -19,10 +19,24 @@ linstorCluster:
             values:
               - secondary-vg
               - ubuntu-vg
-          # master01 has Secure Boot issues that stop the DRBD kernel module
-          # from loading, so a satellite there cannot work. It has a
-          # secondary-vg and would otherwise qualify, so it is excluded by
-          # name instead of relying on the absence of the linstor label.
+          # The constraint itself, discovered rather than hardcoded: true means
+          # the kernel rejects unsigned out-of-tree modules, which is what stops
+          # DRBD from loading. Written by the module-signing-labeler DaemonSet,
+          # see docs/reference/annotations.md.
+          #
+          # NotIn, never In [false]: NotIn also matches a node carrying no such
+          # label, so a labeler that has not run yet -- or has broken -- cannot
+          # deschedule a satellite and take its replicas offline. The cost of
+          # that direction is that a node with Secure Boot on gets a satellite
+          # that cannot load DRBD until discovery catches up.
+          - key: feature.node.kubernetes.io/module-signing-enforced
+            operator: NotIn
+            values:
+              - "true"
+          # master01 is the node that condition currently describes: Secure Boot
+          # on, lockdown integrity, sig_enforce Y, no DRBD module loaded. Kept as
+          # a by-name guard alongside the discovered rule; drop it once the label
+          # has been seen on every node, not before.
           - key: kubernetes.io/hostname
             operator: NotIn
             values:

@@ -14,12 +14,18 @@ nodeSelector:
   linstor: "true"
 
 # Same exclusion as linstorCluster.nodeAffinity in ../cluster/values.yaml: the
-# operator itself needs no DRBD, but nothing of Piraeus should land on master01.
+# operator itself needs no DRBD, but nothing of Piraeus should land on a node
+# whose kernel rejects unsigned modules. The by-name guard is kept alongside the
+# discovered one until the label has been seen on every node.
 affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
         - matchExpressions:
+            - key: feature.node.kubernetes.io/module-signing-enforced
+              operator: NotIn
+              values:
+                - "true"
             - key: kubernetes.io/hostname
               operator: NotIn
               values:
