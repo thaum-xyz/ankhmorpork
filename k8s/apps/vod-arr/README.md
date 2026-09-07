@@ -111,6 +111,12 @@ the data follows the Pod.
 I/O is remote until that conversion completes, which is why the class is capped
 at 32Gi by the `validate-roaming-volume-size` policy. Every volume here is 2Gi.
 
+`seerr-config` is the exception: it is on `unifi-nas`. Once its database moved
+to `postgres-seerr` the volume held only `settings.json` and rotated logs, and
+plain files over NFS are safe in a way SQLite over `nolock` is not. NFS also
+attaches from any node, where a piraeus volume needs the linstor CSI plugin and
+so needs a nodeAffinity keeping the Pod off master01.
+
 Not `piraeus-r2`: it pins the Pod to the two nodes holding its replicas, which is
 the right trade for something latency-sensitive like plex's `/config`, but these
 are small single-replica apps where being able to land anywhere is worth more
@@ -136,8 +142,10 @@ Seerr reads its database connection from `DB_*` environment variables, so it
 has no init container: `postgres-seerr-user` goes straight into the pod from
 the `seerrdb` release. It moved off SQLite with the one-off load in
 [`hack/seerr-sqlite-to-postgres/`](../../../hack/seerr-sqlite-to-postgres/README.md)
-(#1370). `settings.json` stays on `seerr-config`, which is why that claim keeps
-its K8up annotation while the CNPG claims carry none.
+(#1370). `settings.json` stays on `seerr-config`, which moved to `unifi-nas` in
+the same breath: the UNAS backs up its own shares, so that claim carries no
+K8up annotation either. `qbittorrent-config` and `cleanuparr-config` still do,
+because they are on Piraeus and nothing else copies them.
 
 ### Doppler entries
 
