@@ -99,6 +99,23 @@ because the chart's template does not render that field. Under
 new volume is steered to a node that can serve it — it does nothing for a claim
 that is already bound.
 
+`piraeus-r2-roaming` narrows "anywhere" with `allowRemoteVolumeAccess:
+fromSame` on `feature.node.kubernetes.io/module-signing-enforced`, so a **newly
+created** roaming PV carries `nodeAffinity` for nodes sharing the placing node's
+value — and master01, the one node reading `true`, is refused by the scheduler
+before a Pod is placed. `fromSame` freezes the placing node's *value* into the
+PV, which is why the key has to be one whose value is shared across satellites
+rather than `linbit.com/hostname`.
+
+!!! warning "Only volumes created after that change"
+
+    `PV.spec.nodeAffinity` is immutable, so every roaming volume predating it
+    keeps none, and nothing but a Pod-level rule keeps those off a node with no
+    CSI plugin. The key is also only reported at plugin *registration*, so a
+    csi-node restart is required after it first appears on a node; a class naming
+    a key that is not advertised intersects to nothing and provisions volumes
+    with no affinity at all, without erroring.
+
 The size cap is a resync budget: a moved Pod resyncs the volume across the node
 network, and a full 32 GiB is roughly five more minutes at 1 Gb/s.
 `rs-discard-granularity` keeps unallocated blocks off the wire, but requested size
