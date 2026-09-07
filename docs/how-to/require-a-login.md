@@ -142,6 +142,42 @@ the sidecar's port on the app's own Service. Both the `public` and `cloudflare`
 Ingresses must point there. An Ingress still aimed at the app bypasses
 authentication entirely, and nothing will warn you.
 
+### Probing an app behind the proxy
+
+Adding `ingress.thaum.xyz/probe: enabled` and stopping there produces a probe
+that cannot fail. The blackbox target becomes the bare host, the proxy redirects
+it into pocket-id, `--skip-provider-button` sends it straight to `/interaction`,
+and pocket-id answers 200. blackbox follows redirects and `http_2xx` asserts
+nothing about the body, so the probe's success criterion is *pocket-id is up* —
+it stays green with the app it names completely down. That is worse than no
+probe, because it looks like coverage.
+
+Both proxied apps here were caught by it: `pdf` had the defect for real, and
+`change` would have inherited it.
+
+So pick a path the app serves itself and exempt it:
+
+```yaml
+- --skip-auth-route=GET=^/actuator/health$
+```
+
+Three things to check before choosing one:
+
+- **It must be answered by the app process**, not by a static asset and not by
+  the proxy. `/ping` and `/ready` are oauth2-proxy's own endpoints, so probing
+  them measures the proxy.
+- **It must be safe to serve unauthenticated**, because exempting it publishes
+  it. Prefer counts and status over anything that lists content — `/` is usually
+  the app's data.
+- **It must not change anything.** changedetection's `/worker-health` restarts
+  dead workers; a probe must not repair what it measures.
+
+The exemption matches `req.URL.Path`, not the request URI, so a query string in
+`ingress.thaum.xyz/probe-uri` is not part of the regex.
+
+Verify with `probe_http_redirects == 0` on the new target — a probe still
+redirecting is a probe still landing on the login page.
+
 ## Authorisation stays in pocket-id
 
 Restrict the **client** to groups in pocket-id. It then refuses to issue a token
