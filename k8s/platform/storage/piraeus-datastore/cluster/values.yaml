@@ -210,6 +210,23 @@ linstorCluster:
 linstorSatelliteConfigurations:
   - name: common
     deletionPolicy: Evacuate
+    # Import the NFD label into LINSTOR's topology namespace. Anything under
+    # Aux/topology/ is stripped of that prefix and reported by the driver as a
+    # CSI topology key (linstor-csi GetNodeTopologies), which is how it reaches
+    # a PV's nodeAffinity through allowRemoteVolumeAccess below.
+    #
+    # This key rather than linbit.com/hostname because fromSame freezes the
+    # placing node's *value* into the PV, so the key has to carry the same value
+    # on every eligible node. hostname is unique per node, which would pin each
+    # volume to one machine.
+    #
+    # optional: a node with no such label gets no property, rather than an empty
+    # one.
+    properties:
+      - name: Aux/topology/feature.node.kubernetes.io/module-signing-enforced
+        valueFrom:
+          nodeFieldRef: metadata.labels['feature.node.kubernetes.io/module-signing-enforced']
+        optional: true
     podTemplate:
       spec:
         # DRBD replication should use the node network directly instead of the

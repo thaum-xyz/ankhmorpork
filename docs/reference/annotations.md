@@ -230,6 +230,15 @@ node classifies surprisingly:
     describes what the running kernel was *built* to support and reads identically
     on every node here whatever the firmware is doing.
 
+It is also imported into LINSTOR as `Aux/topology/feature.node.kubernetes.io/module-signing-enforced`
+by the `common` satellite configuration. Anything under `Aux/topology/` is
+stripped of that prefix and reported by the driver as a CSI topology key, which
+makes this label usable in a `piraeus-*` StorageClass's `allowRemoteVolumeAccess`
+— see [storage classes](storage-classes.md). Two consequences worth knowing:
+the key is only advertised at plugin *registration*, so a csi-node restart is
+needed after the label first appears on a node; and a node without the label
+gets no property, so the topology key is simply absent there.
+
 Exclude with `NotIn [true]` rather than selecting on `false`: a node whose label
 is missing — labeler not run, discovery broken — then still matches, so a failure
 of discovery cannot deschedule a storage workload that was running.
