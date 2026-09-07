@@ -5,6 +5,11 @@ description: Deploy, extend or restructure an application in thaum-xyz/ankhmorpo
 
 # Deploying an application
 
+Cluster documentation lives in `docs/` and is published at
+<https://docs.thaum.xyz>. This skill covers what an agent needs while making the
+change; it points at those pages rather than restating their tables, so when the
+two disagree the docs are right.
+
 ## Layout
 
 An app is a directory of manifests plus a Flux Kustomization that points at it.
@@ -22,90 +27,60 @@ its own `namespace:` — keep that, it is what stops objects landing in `default
 Platform components live under `k8s/platform/` with their Kustomization in
 `k8s/flux/platform/`.
 
+Worked end-to-end example, including the reconcile and the cleanup:
+`docs/tutorial/index.md`.
+
 ## Choosing a StorageClass
 
-Ask what the workload needs, in this order:
+Full decision procedure: `docs/how-to/choose-a-storage-class.md`. Capabilities,
+constraints and measured ceilings: `docs/reference/storage-classes.md`. Read those
+rather than reproducing their tables here.
 
-| Need | Class |
-| --- | --- |
-| Durable commit — Postgres, etcd, SQLite, anything transactional | `lvm-thin` or `piraeus-r2` |
-| Survive losing a node | `piraeus-r2` |
-| Lowest latency, restorable from backup | `lvm-thin` |
-| Bulk sequential — media, backups, object storage | `unifi-nas` |
-| Pod must move freely between nodes | `piraeus-r2-roaming` (≤32 GiB) |
-| Several Pods mount it at once (RWX) | `unifi-nas` — piraeus provides no RWX |
-| Must stay up across a kured node reboot | **not `lvm-thin`** |
+The short version, in the order the questions matter:
 
-**Mobility is often the binding constraint, not speed.** kured reboots every node
-on a cycle, so a volume that pins its Pod to one node means downtime each time
-that node goes.
+1. Needs real RWX → `unifi-nas`, the only RWX class. Check the RWX is real first:
+   a single-replica Deployment often needs it only because a RollingUpdate briefly
+   runs two Pods, and `strategy: Recreate` removes that.
+2. Transactional → not `unifi-nas` (`nolock`, no byte-range locking).
+3. App replicates itself (the CNPG clusters do) → `lvm-thin`.
+4. Bulk sequential → `unifi-nas`.
+5. **Everything else → `piraeus-r2-roaming`.** This is the default for application
+   data and the most used class here. Same performance as `piraeus-r2`; the only
+   difference is that a Pod landing where no replica exists runs over the network
+   until LINSTOR replicates to it.
+6. Over 32 GiB, or cannot tolerate that window → `piraeus-r2`.
 
-| Class | Nodes a Pod can land on | Access modes | Survives a drain |
-| --- | --- | --- | --- |
-| `lvm-thin` | **1** | RWO | **no** |
-| `piraeus-r2` | **2** (the replica holders) | RWO | yes |
-| `piraeus-r2-roaming` | any linstor node | RWO | yes |
-| `unifi-nas` | any | RWO, RWX | yes |
+`lvm-thin` pins the Pod to one node, so kured means downtime on every reboot of
+that node. Use it only where the app provides its own redundancy.
 
-`lvm-thin` belongs only where the app provides its own redundancy — the CNPG
-clusters replicate at the database layer, so a node-local volume per instance is
-right — or where node-tied downtime is acceptable. Piraeus runs with
-`nfsServer.enabled: false`, so neither piraeus class offers RWX; `unifi-nas` is the
-only like-for-like target for a ReadWriteMany workload. A declared RWX is not
-always a required one: a single-replica Deployment often needs it only because a
-RollingUpdate briefly runs two Pods, and `strategy: Recreate` removes that.
-
-Longhorn used to be the RWX option here and was retired in 2026-09 because its
-`fsync` did not flush — see `docs/explanation/storage-durability.md`. Nothing
-should reference `longhorn` or `longhorn-r2` any more; `unifi-nas` is the only
-remaining RWX class.
-
-Ceilings worth knowing before promising throughput:
-
-- `lvm-thin` — indistinguishable from the bare device.
-- `piraeus-r2` — reads at parity with `lvm-thin`; writes ~3 ms, ~12k IOPS,
-  sequential write pinned at **111 MiB/s** by the replication link on every node.
-- `unifi-nas` — **~100 MiB/s**, a single 1 GbE link. `nolock` means no byte-range
-  locking, so nothing SQLite-backed belongs there.
-
-Numbers and method: the storage guide artifact, and `bench/storage-2026-09/`
-(local, untracked). Re-measure with `./full05.sh 4` after any hardware change —
-and always keep a `hostpath-*` target per node, because it is the bare-device
-reference that makes the durability audit possible.
+Why the classes differ, and how a durability claim was tested rather than trusted:
+`docs/explanation/storage-durability.md`.
 
 ## Admission policies you must satisfy
 
-Kyverno runs these on every apply. The first four are the ones a new app trips.
+`docs/reference/admission-policies.md` is **generated from the policies
+themselves** and is authoritative — read it rather than a copy. Five policies,
+of which `validate-ingress-contract`, `validate-helm-chart-version` and
+`validate-roaming-volume-size` **deny**.
 
-- **`require-resource-requests`** — every container *and initContainer* sets both
-  `cpu` and `memory` requests. Warn-only, so it will not block, but the omission
-  is invisible until something is evicted.
-- **`validate-ingress-contract`** — `spec.ingressClassName` must be `public`,
-  `private` or `cloudflare`; the deprecated `kubernetes.io/ingress.class`
-  annotation is rejected; public and private Ingresses must set TLS with an
-  approved cert-manager ClusterIssuer and a `secretName` on every TLS entry.
-- **`validate-pdb-drain-safety`** — PDBs must use `maxUnavailable`, never
-  `minAvailable`, so the allowance follows replica count; it must permit at least
-  one disruption; `unhealthyPodEvictionPolicy: AlwaysAllow`; and the selector must
-  not be empty, because a policy/v1 empty selector matches every Pod in the
-  namespace.
-- **`validate-roaming-volume-size`** — PVCs on `piraeus-r2-roaming` are capped at
-  **32 GiB** and denied above it. Use `piraeus-r2` for larger volumes.
-- **`mutate-nfs-pvc-alert-exclusion`** — `unifi-nas` PVCs are labelled
+Two that mislead if you only read the names:
+
+- **`require-resource-requests` is warn-only.** It will not block, so a missing
+  request is invisible until something is evicted. Set them anyway, on
+  initContainers too.
+- **`mutate-nfs-pvc-alert-exclusion`** labels `unifi-nas` PVCs
   `excluded_from_alerts=true` automatically. Expected, not drift; do not remove it.
+
+For ingress specifically: `docs/how-to/expose-an-app.md`.
 
 ## Helm values
 
-Values go in `values.yaml`, fed in through a `configMapGenerator` and
-`valuesFrom` — never inline in `spec.values`. Renovate's `helm-values` manager
-reads the file and cannot see inside a HelmRelease.
+Values go in `values.yaml`, fed through a `configMapGenerator` and `valuesFrom` —
+never inline in `spec.values`, because Renovate's `helm-values` manager cannot see
+inside a HelmRelease. Set `disableNameSuffixHash: true` and name the generator
+`values-<ReleaseName>`, matching the release it feeds.
 
-Set `generatorOptions.disableNameSuffixHash: true` and **name the generator
-`values-<ReleaseName>`**, matching the release it feeds. This is settled
-convention across every component here after past collisions; a bare `values`
-collides as soon as a namespace gains a second release. A namespace with several
-releases gets one per release — `values-postgres-sonarr`, `values-postgres-radarr`.
-`valuesFrom.name` then references that literal name, with no hash suffix.
+Why, and what the stable name costs: `docs/explanation/helm-values.md`.
 
 ## Validate before pushing
 
@@ -132,32 +107,24 @@ flux -n flux-system reconcile kustomization <component>   # regenerates the Conf
 flux -n <ns> reconcile helmrelease <release>              # now sees new values
 ```
 
-`flux reconcile helmrelease --with-source` refreshes the *chart* source, not the
-values ConfigMap. Run alone after a `values.yaml` change it logs "Helm upgrade
-succeeded" having used the old values. Confirm the ConfigMap actually changed
-before reconciling the release:
+- The GitRepository can still be on a pre-merge revision minutes after a merge, so
+  reconcile the source explicitly rather than assuming.
+- `flux reconcile helmrelease --with-source` refreshes the *chart* source, not the
+  values ConfigMap. Run alone after a `values.yaml` change it logs "Helm upgrade
+  succeeded" having used the old values.
+- **The HelmRelease reconcile is not optional** — a values change moves no field in
+  the HelmRelease spec, so there is no event for helm-controller to act on.
+- Keep `spec.interval` at 5m on every HelmRelease. `spec.chart.spec.interval` is a
+  different knob and can stay high.
+
+Confirm the ConfigMap actually changed before reconciling the release:
 
 ```bash
 kubectl -n <ns> get cm values-<release> -o jsonpath='{.data.values\.yaml}' | grep <new-key>
 ```
 
-The GitRepository can also still be on a pre-merge revision minutes after a merge,
-so reconcile the source explicitly rather than assuming.
-
-**The HelmRelease reconcile is not optional.** Because
-`disableNameSuffixHash: true` gives the ConfigMap a stable name, a values change
-alters its *content* but not `valuesFrom.name` — so nothing in the HelmRelease
-spec changes and there is no event for helm-controller to act on. It notices via
-`status.lastAttemptedConfigDigest` only on its next interval. The hash suffix
-would trigger it immediately, at the cost of a new ConfigMap name on every edit;
-stable names are the deliberate trade, and reconciling the release is the price.
-
-**Keep `spec.interval` at 5m on every HelmRelease** — it is the ceiling on how
-long a values-only change can sit looking like a failed deploy, and the only
-automatic path to picking one up. A quiet chart is not a reason to raise it: the
-interval costs a Helm dry-run diff, not an upgrade. Fifteen releases sat at 30m
-and one at 10m until 2026-09-05. `spec.chart.spec.interval` is a different
-knob — that one polls the chart source and can stay high.
+Full reasoning: `docs/explanation/flux-layering.md` and
+`docs/explanation/helm-values.md`.
 
 ## Replacing a Helm release with plain manifests
 
@@ -218,7 +185,7 @@ because nothing is left to uninstall. There is no `--force` flag on that command
   DRBD needs `linstor resource-definition drbd-options ... <pv>` per volume.
 - **Never pin a Pod with `nodeName`.** It bypasses the scheduler, so nothing writes
   `volume.kubernetes.io/selected-node` on the PVC, the provisioner never fires, and
-  any `WaitForFirstConsumer` class (`lvm-thin`, `piraeus-r2`) deadlocks Pending
+  any `WaitForFirstConsumer` class (`lvm-thin`, both piraeus classes) deadlocks Pending
   forever. Use `nodeAffinity`.
 - **Helm deep-merges maps.** `{}` does not clear a chart default; only explicit
   `null` does.
