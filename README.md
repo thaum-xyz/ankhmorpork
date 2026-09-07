@@ -208,7 +208,7 @@ Kyverno policy.
 
 Mini-PCs, UniFi networking and a UNAS Pro.
 **[docs.thaum.xyz/reference/hardware](https://docs.thaum.xyz/reference/hardware/)**
-has the nodes, their disks and the labels that decide where workloads land.
+has the nodes, their disks and what backs each volume group.
 
 ## ✨ Features
 
