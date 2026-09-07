@@ -66,9 +66,7 @@ linstorCluster:
 
   # Piraeus creates these workloads from the LinstorCluster CR rather than the
   # Helm chart, so set requests with operator patches. Values are deliberately
-  # requests-only until real cluster usage is available in Prometheus -- the one
-  # exception is LABEL_BY_STORAGE_POOL below, which the chart has no field for
-  # either.
+  # requests-only until real cluster usage is available in Prometheus.
   patches:
     - target:
         kind: Deployment
@@ -165,17 +163,6 @@ linstorCluster:
                       memory: 32Mi
               containers:
                 - name: linstor-csi
-                  # Publishes linbit.com/sp-<pool>="true" on every node holding
-                  # that pool and registers it as a CSI topology key. That gives
-                  # a StorageClass a topology key whose value is the same on
-                  # every eligible node, so allowedTopologies can say "a node
-                  # with this pool" instead of listing hostnames: the driver's
-                  # other key, linbit.com/hostname, carries a value unique per
-                  # node, and a TopologySelectorLabelRequirement has only key
-                  # and values -- no Exists.
-                  env:
-                    - name: LABEL_BY_STORAGE_POOL
-                      value: "true"
                   resources:
                     requests:
                       cpu: 20m
