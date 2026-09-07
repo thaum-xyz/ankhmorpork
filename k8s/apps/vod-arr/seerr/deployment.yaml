@@ -138,6 +138,21 @@ spec:
           volumeMounts:
             - mountPath: /app/config
               name: config
+      # seerr-config is a piraeus-r2-roaming volume, and that class has no node
+      # affinity on the PV -- being able to attach from anywhere is the point of
+      # the roaming variant. What it still needs is the linstor CSI node plugin,
+      # which runs only where Piraeus does. master01 cannot load the DRBD module
+      # (Secure Boot), so it carries no satellite and no plugin; a Pod scheduled
+      # there fails to attach forever with "CSINode master01 does not contain
+      # driver linstor.csi.linbit.com". Nothing stopped that until master01 was
+      # uncordoned, at which point the scheduler picked it every time -- it holds
+      # the least of anything in the cluster.
+      #
+      # Selecting on the label rather than excluding a hostname: this is the same
+      # label the Piraeus component uses to place its own workloads, so it tracks
+      # which nodes can serve these volumes instead of restating today's answer.
+      nodeSelector:
+        linstor: "true"
       restartPolicy: Always
       # The image is already USER node:node, which is uid 1000.
       securityContext:
