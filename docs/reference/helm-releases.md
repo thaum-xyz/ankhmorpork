@@ -11,9 +11,9 @@ and why the interval matters, see
 
 | | |
 | --- | --- |
-| **Total** | 48 releases, 35 distinct charts |
+| **Total** | 49 releases, 35 distinct charts |
 | **Intervals in use** | `5m` |
-| **Charts used more than once** | `cnpg-database` ×12, `versitygw` ×2, `traefik` ×2 |
+| **Charts used more than once** | `cnpg-database` ×13, `versitygw` ×2, `traefik` ×2 |
 
 | Release | Namespace | Chart | Source | Interval | Values from | Component |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -61,6 +61,7 @@ and why the interval matters, see
 | [`topolvm`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/topolvm-system/topolvm/release.yaml) | `topolvm-system` | `topolvm` | `https://topolvm.github.io/topolvm` | `5m` | ConfigMap `values-topolvm` | `topolvm` |
 | [`private`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/network/traefik/private/release.yaml) | `traefik` | `traefik` | `https://traefik.github.io/charts` | `5m` | ConfigMap `values-common`<br>ConfigMap `values-private` | `traefik` |
 | [`public`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/network/traefik/public/release.yaml) | `traefik` | `traefik` | `https://traefik.github.io/charts` | `5m` | ConfigMap `values-common`<br>ConfigMap `values-public` | `traefik` |
+| [`postgres-bazarr`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/bazarrdb/release.yaml) | `vod-arr` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres-bazarr` | `vod-arr` |
 | [`postgres-prowlarr`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/prowlarrdb/release.yaml) | `vod-arr` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres-prowlarr` | `vod-arr` |
 | [`postgres-radarr`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/radarrdb/release.yaml) | `vod-arr` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres-radarr` | `vod-arr` |
 | [`postgres-seerr`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/seerrdb/release.yaml) | `vod-arr` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres-seerr` | `vod-arr` |

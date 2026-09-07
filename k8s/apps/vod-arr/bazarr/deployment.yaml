@@ -30,6 +30,29 @@ spec:
         - env:
             - name: TZ
               value: Europe/Berlin
+            # bazarr reads these directly (app/database.py:31-51): POSTGRES_ENABLED
+            # overrides settings.postgresql.enabled from config.yaml, and each
+            # field below falls back to that file individually. So no init
+            # container rewriting config on start, the way the *arrs need for
+            # config.xml -- the env is the whole of it.
+            - name: POSTGRES_ENABLED
+              value: "true"
+            - name: POSTGRES_HOST
+              value: postgres-bazarr-rw
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DATABASE
+              value: bazarr
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-bazarr-user
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-bazarr-user
+                  key: password
           image: ghcr.io/home-operations/bazarr:1.6.0
           imagePullPolicy: IfNotPresent
           name: bazarr

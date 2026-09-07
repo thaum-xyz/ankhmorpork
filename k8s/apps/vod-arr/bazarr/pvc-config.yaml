@@ -1,6 +1,18 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    # Opt in to K8up. The database moved to postgres-bazarr (../bazarrdb), but
+    # config.yaml did not: it holds the subtitle provider credentials and is a
+    # plain file, so the file-level copy is a faithful one and needs no
+    # backupcommand hook.
+    k8up.io/backup: "true"
+    # log/ rotates on its own and was 5.5M of the 17M here; cache/ and
+    # releases.txt are fetched; db/ holds the SQLite file postgres replaced,
+    # which is a complete, internally consistent bazarr database frozen at the
+    # cutover -- exactly the decoy a restore should not offer. It stays on the
+    # volume as a fallback until the cutover is proven, but it is not shipped.
+    k8up.io/backup-restic-args: '["--exclude=/data/bazarr-config/log", "--exclude=/data/bazarr-config/cache", "--exclude=/data/bazarr-config/db", "--exclude=/data/bazarr-config/config/releases.txt"]'
   name: bazarr-config
 spec:
   accessModes:

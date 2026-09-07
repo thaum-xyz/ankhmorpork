@@ -144,17 +144,25 @@ the `seerrdb` release. It moved off SQLite with the one-off load in
 [`hack/seerr-sqlite-to-postgres/`](../../../hack/seerr-sqlite-to-postgres/README.md)
 (#1370). `settings.json` stays on `seerr-config`, which moved to `unifi-nas` in
 the same breath: the UNAS backs up its own shares, so that claim carries no
-K8up annotation either. `qbittorrent-config` and `cleanuparr-config` still do,
-because they are on Piraeus and nothing else copies them.
+K8up annotation either.
+
+Bazarr reads `POSTGRES_*` from the environment the same way (`app/database.py`:
+`POSTGRES_ENABLED` overrides `settings.postgresql.enabled`, and each field falls
+back to `config.yaml` individually), so it needs no init container either. It
+was the last app here on SQLite. Its `config.yaml` holds the subtitle provider
+credentials and stays on `bazarr-config`, so unlike seerr that claim keeps a
+K8up annotation -- it is on Piraeus, not the NAS. `qbittorrent-config` and
+`cleanuparr-config` keep theirs for the same reason.
 
 ### Doppler entries
 
 Reused: `VPN_USERNAME`, `VPN_PASSWORD`, `{SONARR,RADARR,PROWLARR}_DB_ADMIN_PASS`,
 `{SONARR,RADARR,PROWLARR}_DB_PASS`, `POSTGRES_S3_{ACCESS,SECRET}_KEY`.
 
-New, and required: `SEERR_DB_ADMIN_PASS`, `SEERR_DB_PASS`. The `postgres-seerr`
-release renders them into `postgres-seerr-admin` and `postgres-seerr-user`, and
-neither the cluster nor seerr starts without those Secrets.
+New, and required: `{SEERR,BAZARR}_DB_ADMIN_PASS`, `{SEERR,BAZARR}_DB_PASS`. The
+`postgres-seerr` and `postgres-bazarr` releases render them into
+`postgres-<app>-admin` and `postgres-<app>-user`, and neither the cluster nor
+the app starts without those Secrets.
 
 New, and optional — absent, each app generates its own key and only the
 automated integrations suffer: `SONARR_API_KEY`, `RADARR_API_KEY`,
