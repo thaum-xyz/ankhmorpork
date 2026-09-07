@@ -63,6 +63,11 @@ spec:
             - mountPath: /load
               name: load
               readOnly: true
+      # Same constraint as the seerr Deployment, and for the same reason: this
+      # Pod mounts seerr-config, a piraeus-r2-roaming volume, and master01 runs
+      # no linstor CSI node plugin.
+      nodeSelector:
+        linstor: "true"
       restartPolicy: Never
       # Same identity as the seerr pod: the SQLite files are 0644 node:node.
       securityContext:
