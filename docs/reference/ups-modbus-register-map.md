@@ -15,9 +15,9 @@ displayed value rather than inferred.
 | 0–4   | `PHOENIXTEC` (Eaton subsidiary; OEM behind PowerWalker) |
 | 16–24 | `VFI 1500 LICR IoT` |
 | 48–53 | `00.03.1760` — UPS firmware |
-| 56–63 | `CPANR1398610001` — serial |
+| 56–63 | serial number — not reproduced here; read it from the unit |
 | 286–290 | `01.08.000` — network stack version |
-| 296–299 | `4aebc90e` — device id |
+| 296–299 | device id — not reproduced here |
 
 ## Telemetry
 

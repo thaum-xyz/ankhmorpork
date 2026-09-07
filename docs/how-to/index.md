@@ -28,17 +28,10 @@ section once migrated.
   belongs on, in the order the questions actually matter
 - [Roll a workload when its ConfigMap changes](reload-on-configmap-change.md)
 
-## Planned
+## Not written yet
 
-- Rotate a secret
-- Recover a Postgres cluster from backup
-- Drain and reboot a node outside the kured cycle
-- Debug a Flux reconcile that reports success but changes nothing
-
-## The existing runbooks
-
-[runbooks.thaum.xyz](https://runbooks.thaum.xyz/) serves from
-[thaum-xyz/runbooks](https://github.com/thaum-xyz/runbooks), whose last commit was
-2021-11-05. Its content predates most of this cluster. Two alerts in this repository
-still carry `runbook_url` annotations pointing at it; those runbooks migrate here
-first, and the old site retires when the last link is gone.
+Open documentation work is tracked as
+[issues labelled `documentation`](https://github.com/thaum-xyz/ankhmorpork/issues?q=is%3Aissue+is%3Aopen+label%3Adocumentation).
+Two runbooks are served from [runbooks.thaum.xyz](https://runbooks.thaum.xyz/), a
+site whose repository was last touched in 2021; bringing them here is
+[#1364](https://github.com/thaum-xyz/ankhmorpork/issues/1364).

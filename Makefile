@@ -49,7 +49,7 @@ docs-reference:  ## Regenerate the derivable reference pages under docs/referenc
 docs-reference-check: docs-reference  ## Fail if the generated reference pages are stale
 	@# git-status, not git-diff: diff ignores untracked files, so a page that was
 	@# never generated would pass silently.
-	@out="$$(git status --porcelain -- docs/reference/apps.md docs/reference/admission-policies.md docs/reference/flux-kustomizations.md docs/reference/helm-releases.md)"; \
+	@out="$$(git status --porcelain -- docs/reference/apps.md docs/reference/admission-policies.md docs/reference/flux-kustomizations.md docs/reference/helm-releases.md docs/reference/ingress.md)"; \
 	if [ -n "$$out" ]; then \
 		echo "$$out"; \
 		echo; \

@@ -57,7 +57,7 @@ nav = [
     { "Charts and images" = "reference/charts.md" },
     { "Ingress and certificates" = "reference/ingress.md" },
     { "Storage classes" = "reference/storage-classes.md" },
-    { "UPS Modbus register map" = "ups/modbus-register-map.md" },
+    { "UPS Modbus register map" = "reference/ups-modbus-register-map.md" },
   ] },
   { "Explanation" = [
     "explanation/index.md",
@@ -67,7 +67,7 @@ nav = [
     { "ConfigMap autoreload" = "explanation/configmap-autoreload.md" },
     { "Why storage is split the way it is" = "explanation/storage-durability.md" },
     { "Rule linting with pint" = "explanation/pint-rule-linting.md" },
-    { "Postgres fleet upgrade plan" = "postgres/fleet-upgrade-plan.md" },
+    { "The Postgres fleet upgrade" = "explanation/postgres-fleet-upgrade.md" },
   ] },
 ]
 

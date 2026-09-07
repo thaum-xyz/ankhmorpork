@@ -72,6 +72,6 @@ for a gateway chart should use upstream's.
 `cnpg-database` writes backups to the versitygw gateway in `cnpg-system` —
 `http://versitygw.cnpg-system.svc.cluster.local:7070`, from the upstream chart —
 which stores objects on a `unifi-nas` volume. Restoring any database depends on
-that gateway and that volume as well as on CloudNativePG. See
-[Postgres fleet upgrade plan](../postgres/fleet-upgrade-plan.md) for the state
-of the fleet itself.
+that gateway and that volume as well as on CloudNativePG. Every database and
+its chart is in [Helm releases](helm-releases.md); how the fleet was brought to
+one version is in [the Postgres fleet upgrade](../explanation/postgres-fleet-upgrade.md).

@@ -12,3 +12,7 @@ tmp/
 # Rendered documentation site (see zensical.toml)
 site/
 .venv/
+
+# Storage benchmark runs write here (hack/bench/storage/run.sh); the method is
+# committed, the results are not.
+hack/bench/storage/results/

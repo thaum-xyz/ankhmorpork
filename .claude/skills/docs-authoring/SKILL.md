@@ -18,9 +18,10 @@ One home per fact. Every other page links to it.
 | what admission does, and to what | `docs/reference/admission-policies.md` *(generated)* | link |
 | Kustomization interval, prune, wait, dependsOn | `docs/reference/flux-kustomizations.md` *(generated)* | link |
 | which chart, from where, values source, interval | `docs/reference/helm-releases.md` *(generated)* | link |
+| ingress classes and their addresses, issuers, external-dns settings | `docs/reference/ingress.md` *(generated blocks)* | link |
 | chart or image **version** | the manifest itself | link to the file, never quote it |
 | storage class capabilities and measured numbers | `docs/reference/storage-classes.md` | link |
-| ingress classes, issuers, DNS behaviour | `docs/reference/ingress.md` | link |
+| how the storage numbers were measured | `hack/bench/storage/` | link |
 | annotation and label contracts | `docs/reference/annotations.md` | link |
 | the reconcile order and why it matters | `docs/explanation/flux-layering.md` | one sentence + link |
 | per-app quirks | `k8s/apps/<app>/README.md` | link |
@@ -63,8 +64,12 @@ are not fine as a substitute for keeping a claim current.
 
 ## Generated pages
 
-Four reference pages are written by `hack/generate-docs-reference.py` and
-carry a banner saying so. Never edit them; edit the script.
+Four reference pages are written whole by `hack/generate-docs-reference.py` and
+carry a banner saying so. Never edit them; edit the script. A hand-written page
+can also carry a generated *block*: the tables in `docs/reference/ingress.md` sit
+between `<!-- generated:NAME -->` markers and are overwritten on every run, while
+the prose around them is yours. Use a block when a page mixes derivable facts
+with judgment.
 
 ```bash
 make docs-reference          # regenerate

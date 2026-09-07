@@ -1,15 +1,17 @@
-# PostgreSQL fleet: state and upgrade plan { .quad-explanation }
+# The PostgreSQL fleet upgrade { .quad-explanation }
 
-Surveyed 2026-08-23. Eleven CNPG clusters on operator 1.30.0, chart
-`cnpg-database`.
+A record of the upgrade carried out in August 2026: what the fleet looked like
+when it was surveyed on 2026-08-23, why it was scattered, and the two traps that
+decided the order. The databases as they are now are in
+[Helm releases](../reference/helm-releases.md) and the manifests it links.
 
 ## Why the fleet is scattered
 
 Nine clusters never set `imageName`. CloudNativePG defaults it at creation and
 **writes that value into the spec permanently** — it does not re-default when the
 operator is upgraded. So each cluster froze whatever shipped on the day it was
-created, and nobody ever chose a version. Every cluster now pins its image
-explicitly.
+created, and nobody ever chose a version. At the time of the survey every
+cluster pinned its image explicitly.
 
 The default for *new* clusters is set by the `cnpg-database` chart, and is not
 restated here: it is invalidated by a change in
@@ -19,7 +21,7 @@ the chart had moved to 17.11. See the chart's
 [generated values reference](https://github.com/thaum-xyz/helm-charts/tree/main/charts/cnpg-database)
 for the current `cluster.imageName`.
 
-## Current state
+## State when surveyed
 
 | Cluster | Running | OS base | Latest in series | Behind |
 |---------|---------|---------|------------------|--------|
@@ -66,10 +68,10 @@ which compares by byte order and does not depend on glibc, so moving between
 Debian bases needs no `REINDEX`. Confirmed on mealie: `datcollversion` is null
 and the only index collations are `default` (inheriting C) and `C`.
 
-### State
+### State after
 
-Complete. Eight of eleven clusters follow the chart; the three that do not are
-recorded below with the reason.
+Eight clusters follow the chart; the three that do not are recorded below with
+the reason.
 
     atuin        17.11   follows chart   (was 16.11, two steps)
     grafana      17.11   follows chart   (was 17.5)

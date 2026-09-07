@@ -8,29 +8,30 @@ keeps a README next to its manifests, the app name links to it.
 
 !!! note
 
-    Hostnames are read from Ingress **manifests**. An Ingress rendered by a
-    Helm chart from `values.yaml` does not appear here, so an app with no
-    hostname listed is not necessarily unreachable.
+    Hostnames come from Ingress manifests and from the `ingress` section of
+    chart values; the latter are marked *values*. A host whose class reads
+    *default class* is rendered by a chart that sets no class and lands on
+    the cluster default — see [ingress classes](ingress.md).
 
 | App | Namespace | Flux Kustomization | Hostnames |
 | --- | --- | --- | --- |
-| `ai-gateway` | `ai-gateway` | `ai-gateway` | `ai-gateway.krupa.net.pl` (cloudflare) |
+| `ai-gateway` | `ai-gateway` | `ai-gateway` | `ai-gateway.krupa.net.pl` (cloudflare)<br>`ai-gateway.krupa.net.pl` (public, *values*) |
 | `atuin` | `atuin` | `atuin` | `atuin.thaum.xyz` (cloudflare)<br>`atuin.thaum.xyz` (public) |
 | `changedetection` | `changedetection` | `changedetection` | `change.krupa.net.pl` (cloudflare)<br>`change.krupa.net.pl` (public) |
 | `datalake-alerts` | `datalake-alerts` | `datalake-alerts` | `alertmanager.ankhmorpork.thaum.xyz` (private) |
 | `datalake-logs` | `datalake-logs` | `datalake-logs` | — |
-| `datalake-metrics` | `datalake-metrics` | `datalake-metrics` | `prometheus.ankhmorpork.thaum.xyz` (private) |
+| `datalake-metrics` | `datalake-metrics` | `datalake-metrics` | `prometheus.ankhmorpork.thaum.xyz` (private)<br>`pyrra.ankhmorpork.thaum.xyz` (public, *values*) |
 | `dlna-local` | `dlna-local` | `dlna-local` | — |
-| `grafana` | `grafana` | `grafana` | `grafana.krupa.net.pl` (cloudflare) |
+| `grafana` | `grafana` | `grafana` | `grafana.krupa.net.pl` (cloudflare)<br>`grafana.krupa.net.pl` (public, *values*) |
 | `homer` | `homer` | `homer`, `homer-services` | `ankhmorpork.thaum.xyz` (cloudflare)<br>`ankhmorpork.thaum.xyz` (public) |
 | `karakeep` | `karakeep` | `karakeep` | `keep.krupa.net.pl` (cloudflare)<br>`keep.krupa.net.pl` (public) |
 | `mealie` | `mealie` | `mealie` | `recipes.krupa.net.pl` (cloudflare)<br>`recipes.krupa.net.pl` (public) |
 | `mended-drum` | `mended-drum` | `mended-drum` | `drum-tools.krupa.net.pl` (cloudflare)<br>`drum-tools.krupa.net.pl` (public)<br>`drum.krupa.net.pl` (cloudflare)<br>`drum.krupa.net.pl` (public) |
 | [`paperless`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/paperless/README.md) | `paperless` | `paperless` | `papers.krupa.net.pl` (cloudflare)<br>`papers.krupa.net.pl` (public) |
-| `photos` | `photos` | `photos` | `photos.krupa.net.pl` (cloudflare) |
+| `photos` | `photos` | `photos` | `photos.krupa.net.pl` (cloudflare)<br>`photos.krupa.net.pl` (default class, *values*) |
 | [`plex`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/plex/README.md) | `plex` | `plex` | `vod.krupa.net.pl` (private) |
-| `pocket-id` | `pocket-id` | `pocket-id` | `login.krupa.net.pl` (cloudflare) |
-| `stirling-pdf` | `stirling-pdf` | `stirling-pdf` | `pdf.krupa.net.pl` (cloudflare) |
+| `pocket-id` | `pocket-id` | `pocket-id` | `login.krupa.net.pl` (cloudflare)<br>`login.krupa.net.pl` (private, *values*) |
+| `stirling-pdf` | `stirling-pdf` | `stirling-pdf` | `pdf.krupa.net.pl` (cloudflare)<br>`pdf.krupa.net.pl` (public, *values*) |
 | `unifi` | `unifi` | `unifi` | — |
 | `ups` | `ups` | `ups` | — |
 | `valheim` | `valheim` | `valheim` | — |

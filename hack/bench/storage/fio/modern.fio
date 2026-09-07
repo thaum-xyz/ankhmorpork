@@ -1,0 +1,109 @@
+# Primary profile. Answers "which class do I put this workload on".
+#
+# Differences from legacy.fio that matter:
+#   * layout job fully writes the file first, so no job measures thin-pool
+#     allocation or reads unallocated blocks (which a thin pool serves from
+#     nowhere, at fake speed)
+#   * qd1 jobs give real single-request latency, including p99/p99.9, which is
+#     where replication (DRBD, Longhorn) and network (NFS) actually show up
+#   * commit_fsync is the Postgres/etcd question: durable 4k commits. This is the
+#     number that decides whether a database can live on a class at all.
+
+[global]
+randrepeat=0
+verify=0
+ioengine=libaio
+direct=${FIO_DIRECT}
+filename=${MOUNT}/fiotest
+size=${FIO_SIZE}
+group_reporting=1
+percentile_list=50:95:99:99.9:99.99
+time_based=1
+runtime=${RUNTIME}
+ramp_time=5s
+
+[randread_4k_qd1]
+rw=randread
+bs=4k
+iodepth=1
+numjobs=1
+stonewall
+
+[randwrite_4k_qd1]
+rw=randwrite
+bs=4k
+iodepth=1
+numjobs=1
+stonewall
+
+# --- durability probes -------------------------------------------------------
+# Three different ways to demand durability. On a stack that genuinely pushes to
+# stable media, all three cost roughly one device flush, and none can be FASTER
+# than the bare device's flush. Comparing them across classes is what exposes a
+# stack that acknowledges a sync it has not actually performed:
+#   fsync     - flush data + metadata after each write
+#   fdatasync - flush data only, skipping the metadata update
+#   O_SYNC    - every write is itself synchronous, no separate flush call
+# fio reports sync-call latency separately from write latency; report.py surfaces
+# it as `sync p50/p99`, which is the number that matters here.
+[commit_fsync_4k_qd1]
+rw=randwrite
+bs=4k
+iodepth=1
+numjobs=1
+fsync=1
+stonewall
+
+[commit_fdatasync_4k_qd1]
+rw=randwrite
+bs=4k
+iodepth=1
+numjobs=1
+fdatasync=1
+stonewall
+
+[commit_osync_4k_qd1]
+rw=randwrite
+bs=4k
+iodepth=1
+numjobs=1
+sync=1
+stonewall
+
+[randread_4k_qd64]
+rw=randread
+bs=4k
+iodepth=16
+numjobs=4
+thread=1
+stonewall
+
+[randwrite_4k_qd64]
+rw=randwrite
+bs=4k
+iodepth=16
+numjobs=4
+thread=1
+stonewall
+
+[randrw_4k_qd16_70r]
+rw=randrw
+rwmixread=70
+bs=4k
+iodepth=16
+numjobs=1
+stonewall
+
+[seqread_1m_qd8]
+rw=read
+bs=1M
+iodepth=8
+numjobs=1
+stonewall
+
+[seqwrite_1m_qd8]
+rw=write
+bs=1M
+iodepth=8
+numjobs=1
+stonewall
