@@ -1,13 +1,13 @@
 ---
 roles:
 - name: oefenweb.locales
-  version: v1.0.52
+  version: v1.0.60
 - name: hifis.unattended_upgrades
   version: v3.2.1
 - name: paulfantom.system
 
 collections:
 - name: devsec.hardening
-  version: 10.4.0
+  version: 10.6.0
 - name: prometheus.prometheus
-  version: 0.27.5
+  version: 0.30.1
