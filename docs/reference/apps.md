@@ -30,7 +30,7 @@ keeps a README next to its manifests, the app name links to it.
 | [`paperless`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/paperless/README.md) | `paperless` | `paperless` | `papers.krupa.net.pl` (cloudflare)<br>`papers.krupa.net.pl` (public) |
 | `photos` | `photos` | `photos` | `photos.krupa.net.pl` (cloudflare)<br>`photos.krupa.net.pl` (default class, *values*) |
 | [`plex`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/plex/README.md) | `plex` | `plex` | `vod.krupa.net.pl` (private) |
-| `pocket-id` | `pocket-id` | `pocket-id` | `login.krupa.net.pl` (cloudflare)<br>`login.krupa.net.pl` (private, *values*) |
+| `pocket-id` | `pocket-id` | `pocket-id` | `login.krupa.net.pl` (cloudflare)<br>`login.krupa.net.pl` (public, *values*) |
 | `stirling-pdf` | `stirling-pdf` | `stirling-pdf` | `pdf.krupa.net.pl` (cloudflare)<br>`pdf.krupa.net.pl` (public, *values*) |
 | `unifi` | `unifi` | `unifi` | — |
 | `ups` | `ups` | `ups` | — |

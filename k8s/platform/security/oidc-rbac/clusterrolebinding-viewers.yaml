@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: oidc-cluster-viewers
+  annotations:
+    kubernetes.io/description: >-
+      Cluster-wide read-only for the pocket-id `k8s-viewers` group. `view`
+      excludes Secrets but does read every ConfigMap in the cluster, so this is
+      not a nothing-to-see-here role. Membership also has to be granted on the
+      kubectl client's Allowed User Groups in pocket-id, or the login fails
+      before RBAC is consulted.
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: oidc:k8s-viewers
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view

@@ -24,6 +24,8 @@ section once migrated.
   host needs two Ingresses
 - [Require a login](require-a-login.md) — pocket-id, natively or through
   oauth2-proxy
+- [Log in with kubectl](log-in-with-kubectl.md) — passkey instead of a client
+  certificate, and how pocket-id groups become RBAC subjects
 - [Choose a storage class](choose-a-storage-class.md) — which class a workload
   belongs on, in the order the questions actually matter
 - [Roll a workload when its ConfigMap changes](reload-on-configmap-change.md)

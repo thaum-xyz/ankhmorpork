@@ -4,6 +4,14 @@
 # restart -- only adding the `authentication-config` arg itself does.
 apiVersion: apiserver.config.k8s.io/v1
 kind: AuthenticationConfiguration
+# Restores what k3s used to do for us. k3s normally passes
+# --anonymous-auth=false, but it logs "Not setting kube-apiserver
+# 'anonymous-auth' flag due to user-provided 'authentication-config' file" and
+# backs off, because the apiserver refuses the flag alongside this file. Without
+# this block the apiserver falls back to its own default -- anonymous ENABLED --
+# so unauthenticated callers become system:anonymous and /version answers them.
+anonymous:
+  enabled: false
 jwt:
 - issuer:
     url: "{{ k3s_oidc_issuer_url }}"

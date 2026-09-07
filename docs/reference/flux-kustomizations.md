@@ -8,7 +8,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | | |
 | --- | --- |
-| **Total** | 49 — 3 bootstrap, 24 platform, 22 apps |
+| **Total** | 50 — 3 bootstrap, 25 platform, 22 apps |
 | **`prune: false`** | `prometheus-operator-crds`, `apps`, `platform`, `cilium`, `flux-system`, `piraeus-datastore`, `topolvm`, `traefik` |
 | **`wait: true`** | `prometheus-operator-crds`, `kyverno` |
 | **Declare `dependsOn`** | `apps`, `platform`, `cnpg-system`, `csi-nfs`, `kyverno-policies`, `piraeus-datastore`, `homer-services` |
@@ -44,6 +44,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `kyverno-policies` | [`k8s/platform/security/kyverno/policies`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kyverno/policies) | `15m0s` | yes | no | `kyverno` |
 | `node-feature-discovery` | [`k8s/platform/cluster/node-feature-discovery`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/node-feature-discovery) | `15m0s` | yes | no | — |
 | `node-problem-detector` | [`k8s/platform/cluster/node-problem-detector`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/node-problem-detector) | `30m0s` | yes | no | — |
+| `oidc-rbac` | [`k8s/platform/security/oidc-rbac`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/oidc-rbac) | `15m0s` | yes | no | — |
 | `piraeus-datastore` | [`k8s/platform/storage/piraeus-datastore`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/piraeus-datastore) | `30m0s` | **no** | no | `topolvm`, `kyverno` |
 | `smartctl-exporter` | [`k8s/platform/storage/smartctl-exporter`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/smartctl-exporter) | `15m0s` | yes | no | — |
 | `system-kured` | [`k8s/platform/cluster/system-kured`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/system-kured) | `60m0s` | yes | no | — |
