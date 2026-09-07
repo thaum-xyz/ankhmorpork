@@ -11,8 +11,12 @@ spec:
   #
   # target is a PLACEHOLDER. Prometheus holds days, not weeks, so no number here
   # is grounded yet. The burn alerts fire anyway, at info/none, so they land in
-  # ALERTS without routing anywhere -- that is how we find out whether these
-  # windows are noisy at 4 requests a minute before anyone lets them page.
+  # ALERTS without routing anywhere -- that is how we find out whether the
+  # windows are noisy before anyone lets them page. On a 7d window the fastest
+  # tier is 1m/15m, and this SLI serves ~4.2 requests a minute, so the short
+  # window holds about four samples: at 99% one 5xx does not fire (the 15m
+  # window sees 1.7% against a 14% threshold) and at 99.9% it does. That
+  # threshold, not the window, is the thing to pick carefully.
   # Revisit the target, and the severities, from 2026-10-06.
   #
   # Read the denominator before trusting a ratio over it: essentially all of
@@ -51,4 +55,4 @@ spec:
       total:
         metric: http_server_request_duration_seconds_count{job="pocket-id/pocket-id"}
   target: "99"
-  window: 4w
+  window: 7d

@@ -23,4 +23,4 @@ spec:
       total:
         metric: prometheus_operator_kubernetes_client_http_requests_total{job="kube-prometheus-stack-operator"}
   target: "99.5"
-  window: 2w
+  window: 7d

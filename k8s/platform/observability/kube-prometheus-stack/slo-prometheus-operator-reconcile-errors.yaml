@@ -25,4 +25,4 @@ spec:
       total:
         metric: prometheus_operator_reconcile_operations_total{job="kube-prometheus-stack-operator"}
   target: "95"
-  window: 2w
+  window: 7d

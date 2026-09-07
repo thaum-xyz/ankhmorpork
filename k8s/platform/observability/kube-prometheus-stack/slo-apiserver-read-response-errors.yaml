@@ -23,4 +23,4 @@ spec:
       total:
         metric: apiserver_request_total{component="apiserver",verb=~"LIST|GET"}
   target: "99"
-  window: 2w
+  window: 7d
