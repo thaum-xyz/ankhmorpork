@@ -6,7 +6,7 @@ from prose, so the parts that are mechanically derivable are generated here and
 checked in CI rather than typed. Everything this writes is overwritten on every
 run -- edit this script, not the output.
 
-Pages written:
+Whole pages written:
 
   docs/reference/apps.md                 every app, namespace, Kustomization, hosts
   docs/reference/admission-policies.md   every Kyverno policy anywhere under k8s/
@@ -14,6 +14,11 @@ Pages written:
                                          interval, prune, wait, dependsOn
   docs/reference/helm-releases.md        every HelmRelease: chart, source, interval,
                                          where its values come from
+
+Blocks written into otherwise hand-written pages, between
+`<!-- generated:NAME -->` and `<!-- /generated:NAME -->` markers:
+
+  docs/reference/ingress.md   ingress-classes, cluster-issuers, external-dns
 
 Chart *versions* are deliberately not written anywhere here. Renovate bumps them
 in the manifests several times a week, and a generated page that carried them
@@ -25,6 +30,7 @@ new file is invisible until staged.
 """
 
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -61,6 +67,10 @@ def load_all(path):
         return []
 
 
+def is_k8s_object(doc):
+    return "apiVersion" in doc and "kind" in doc
+
+
 def rel(path):
     return str(path.relative_to(ROOT))
 
@@ -79,6 +89,21 @@ def tree(repo_path):
 
 def code_list(items, empty="—"):
     return ", ".join(f"`{x}`" for x in items) if items else empty
+
+
+def write_block(path, name, body):
+    """Replace the content between the generated:NAME markers in a hand-written page."""
+    text = path.read_text()
+    start, end = f"<!-- generated:{name} -->", f"<!-- /generated:{name} -->"
+    if start not in text or end not in text:
+        sys.exit(f"{rel(path)}: missing markers for generated block {name!r}")
+    head, rest = text.split(start, 1)
+    _, tail = rest.split(end, 1)
+    note = (
+        "<!-- This block is written by hack/generate-docs-reference.py; edit the\n"
+        "     manifests it reads, not the table. -->\n"
+    )
+    path.write_text(f"{head}{start}\n{note}{body.rstrip()}\n{end}{tail}")
 
 
 # --- Flux Kustomizations -----------------------------------------------------
@@ -183,6 +208,54 @@ def write_flux_kustomizations(rows):
 # --- Applications ------------------------------------------------------------
 
 
+def hosts_from_values(doc):
+    """Hostnames a Helm chart would render an Ingress for, read from values.
+
+    Charts disagree on shape, so this walks every subtree under a key named
+    `ingress` and accepts the three forms in use: `host: x`, `hosts: [x]`, and
+    `hosts: [{host: x}]` or `[{name: x}]`. The class is `className` or
+    `ingressClassName` on the same mapping, else the cluster default. Anything
+    with `enabled: false` is skipped. Returned as (host, class, "values").
+    """
+    found = []
+
+    def hosts_in(node):
+        if not isinstance(node, dict) or node.get("enabled") is False:
+            return
+        cls = node.get("className") or node.get("ingressClassName") or "default class"
+        names = []
+        if isinstance(node.get("host"), str):
+            names.append(node["host"])
+        for h in node.get("hosts", []) or []:
+            if isinstance(h, str):
+                names.append(h)
+            elif isinstance(h, dict):
+                n = h.get("host") or h.get("name")
+                if isinstance(n, str):
+                    names.append(n)
+        for n in names:
+            found.append((n, cls, "values"))
+        for k, v in node.items():
+            if k in ("hosts", "tls", "annotations", "labels"):
+                continue
+            if isinstance(v, dict):
+                hosts_in(v)
+
+    def walk(node):
+        if isinstance(node, dict):
+            for k, v in node.items():
+                if k == "ingress":
+                    hosts_in(v)
+                else:
+                    walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(doc)
+    return found
+
+
 def apps(kustomizations):
     """One row per directory under k8s/apps.
 
@@ -210,7 +283,9 @@ def apps(kustomizations):
                     cls = d.get("spec", {}).get("ingressClassName", "?")
                     for rule in d.get("spec", {}).get("rules", []) or []:
                         if rule.get("host"):
-                            ingresses.append((rule["host"], cls))
+                            ingresses.append((rule["host"], cls, "manifest"))
+                elif not is_k8s_object(d):
+                    ingresses.extend(hosts_from_values(d))
         owners = sorted(
             {
                 k["name"]
@@ -232,14 +307,19 @@ def write_apps(rows):
     )
     out.append(
         "\n!!! note\n\n"
-        "    Hostnames are read from Ingress **manifests**. An Ingress rendered by a\n"
-        "    Helm chart from `values.yaml` does not appear here, so an app with no\n"
-        "    hostname listed is not necessarily unreachable.\n"
+        "    Hostnames come from Ingress manifests and from the `ingress` section of\n"
+        "    chart values; the latter are marked *values*. A host whose class reads\n"
+        "    *default class* is rendered by a chart that sets no class and lands on\n"
+        "    the cluster default — see [ingress classes](ingress.md).\n"
     )
     out.append("\n| App | Namespace | Flux Kustomization | Hostnames |")
     out.append("\n| --- | --- | --- | --- |\n")
     for app, ns, flux, ing, readme in rows:
-        hosts = "<br>".join(f"`{h}` ({c})" for h, c in ing) if ing else "—"
+        cells = []
+        for h, c, src in ing:
+            tag = f" ({c})" if src == "manifest" else f" ({c}, *values*)"
+            cells.append(f"`{h}`{tag}")
+        hosts = "<br>".join(cells) if cells else "—"
         name = f"[`{app}`]({REPO}/blob/master/{rel(readme)})" if readme else f"`{app}`"
         out.append(
             f"| {name} | `{ns or '—'}` | "
@@ -388,13 +468,17 @@ def component_namespace(path, cache):
     return None
 
 
-def helm_releases(kustomizations):
+def helm_repositories():
     repos = {}
     for f in yaml_files("k8s"):
         for d in load_all(f):
             if d.get("kind") == "HelmRepository":
                 repos[d["metadata"]["name"]] = d.get("spec", {}).get("url", "")
+    return repos
 
+
+def helm_releases(kustomizations):
+    repos = helm_repositories()
     rows, cache = [], {}
     for f in sorted(yaml_files("k8s")):
         for d in load_all(f):
@@ -466,6 +550,152 @@ def write_helm_releases(rows):
     (DOCS / "helm-releases.md").write_text("".join(out))
 
 
+# --- Ingress: classes, issuers, external-dns (blocks in ingress.md) ----------
+
+
+def sibling_chart(values_file):
+    """Chart name of the HelmRelease that sits next to a values file."""
+    for f in sorted(values_file.parent.glob("*.yaml")):
+        for d in load_all(f):
+            if d.get("kind") == "HelmRelease":
+                spec = d.get("spec", {})
+                return (
+                    spec.get("chart", {}).get("spec", {}).get("chart")
+                    or spec.get("chartRef", {}).get("name")
+                    or "?"
+                ), f
+    return "?", None
+
+
+def ingress_classes():
+    """One row per IngressClass a network component's chart creates.
+
+    Read from values rather than from IngressClass manifests because the classes
+    here are chart-created: `ingressClass.name` in the Traefik and cloudflared
+    values. The address is the Traefik LoadBalancer IP or the Cloudflare tunnel.
+    """
+    rows = []
+    for f in sorted(yaml_files("k8s/platform/network")):
+        for d in load_all(f):
+            if is_k8s_object(d):
+                continue
+            ic = d.get("ingressClass")
+            if not isinstance(ic, dict) or not ic.get("name") or ic.get("enabled") is False:
+                continue
+            chart, release = sibling_chart(f)
+            lb = d.get("service", {}).get("spec", {}).get("loadBalancerIP")
+            tunnel = d.get("cloudflare", {}).get("tunnelName")
+            if lb:
+                address = f"`{lb}`"
+            elif tunnel:
+                address = f"Cloudflare tunnel `{tunnel}`"
+            else:
+                address = "—"
+            rows.append(
+                {
+                    "name": ic["name"],
+                    "chart": chart,
+                    "address": address,
+                    "default": bool(ic.get("isDefaultClass", False)),
+                    "file": f,
+                }
+            )
+    rows.sort(key=lambda r: r["name"])
+    return rows
+
+
+def cluster_issuers():
+    rows = []
+    for f in sorted(yaml_files("k8s")):
+        for d in load_all(f):
+            if d.get("kind") != "ClusterIssuer":
+                continue
+            acme = d.get("spec", {}).get("acme", {})
+            challenges = []
+            for s in acme.get("solvers", []) or []:
+                for kind in ("dns01", "http01"):
+                    if kind in s:
+                        provider = next(iter((s[kind] or {}).keys()), "")
+                        label = "DNS-01" if kind == "dns01" else "HTTP-01"
+                        challenges.append(f"{label} ({provider})" if provider else label)
+            server = acme.get("server", "")
+            if "acme-v02.api.letsencrypt.org" in server:
+                server = "Let's Encrypt, production"
+            elif "acme-staging" in server:
+                server = "Let's Encrypt, **staging**"
+            rows.append(
+                {
+                    "name": d["metadata"]["name"],
+                    "challenges": challenges or ["—"],
+                    "server": server or "—",
+                    "file": f,
+                }
+            )
+    rows.sort(key=lambda r: r["name"])
+    return rows
+
+
+def external_dns_settings():
+    """The external-dns values that decide what gets published where."""
+    files = [f for f in yaml_files("k8s/platform/network/external-dns") if f.name.startswith("values")]
+    for f in files:
+        for d in load_all(f):
+            if is_k8s_object(d):
+                continue
+            provider = d.get("provider")
+            if isinstance(provider, dict):
+                provider = provider.get("name", "?")
+            template = None
+            for arg in d.get("extraArgs", []) or []:
+                if isinstance(arg, str) and arg.startswith("--fqdn-template="):
+                    # Helm-escaped in the values file: {{`{{`}}.Name{{`}}`}} -> {{.Name}}
+                    template = arg.split("=", 1)[1].replace("{{`{{`}}", "{{").replace("{{`}}`}}", "}}")
+            return {
+                "provider": provider or "—",
+                "domains": d.get("domainFilters", []) or [],
+                "policy": d.get("policy", "—"),
+                "registry": d.get("registry", "—"),
+                "owner": d.get("txtOwnerId", "—"),
+                "prefix": d.get("txtPrefix", "—"),
+                "template": template,
+                "file": f,
+            }
+    return None
+
+
+def write_ingress_blocks():
+    page = DOCS / "ingress.md"
+
+    ic = ingress_classes()
+    body = ["| Class | Controller chart | Address | Default class | Source |", "| --- | --- | --- | --- | --- |"]
+    for r in ic:
+        body.append(
+            f"| `{r['name']}` | `{r['chart']}` | {r['address']} | "
+            f"{'**yes**' if r['default'] else 'no'} | {blob(r['file'])} |"
+        )
+    write_block(page, "ingress-classes", "\n".join(body))
+
+    ci = cluster_issuers()
+    body = ["| Issuer | Challenge | ACME server | Source |", "| --- | --- | --- | --- |"]
+    for r in ci:
+        body.append(f"| `{r['name']}` | {', '.join(r['challenges'])} | {r['server']} | {blob(r['file'])} |")
+    write_block(page, "cluster-issuers", "\n".join(body))
+
+    ed = external_dns_settings()
+    if ed is None:
+        sys.exit("external-dns values not found")
+    body = ["| Setting | Value |", "| --- | --- |"]
+    body.append(f"| Provider | `{ed['provider']}` |")
+    body.append(f"| Domains it will touch | {code_list(ed['domains'])} |")
+    body.append(f"| Policy | `{ed['policy']}` |")
+    body.append(f"| Ownership | `{ed['registry']}` registry, `txtOwnerId: {ed['owner']}`, `txtPrefix: {ed['prefix']}` |")
+    if ed["template"]:
+        body.append(f"| Fallback name for a Service with no host | `{ed['template']}` |")
+    body.append(f"| Source | {blob(ed['file'])} |")
+    write_block(page, "external-dns", "\n".join(body))
+    return len(ic), len(ci)
+
+
 # --- main --------------------------------------------------------------------
 
 
@@ -480,9 +710,11 @@ def main():
     write_policies(pol)
     hr = helm_releases(ks)
     write_helm_releases(hr)
+    n_classes, n_issuers = write_ingress_blocks()
     print(
         f"wrote flux-kustomizations.md ({len(ks)}), apps.md ({len(app_rows)}), "
-        f"admission-policies.md ({len(pol)}), helm-releases.md ({len(hr)})"
+        f"admission-policies.md ({len(pol)}), helm-releases.md ({len(hr)}), "
+        f"ingress.md blocks ({n_classes} classes, {n_issuers} issuers)"
     )
 
 
