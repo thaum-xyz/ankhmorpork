@@ -13,13 +13,10 @@ Admission test:
 - [ ] It can be read in any order relative to the rest of the site.
 
 This is where hard-won knowledge goes to stay found: measurements, trade-offs,
-and the reasoning behind conventions that otherwise look arbitrary. Most of it
-currently exists only in commit messages, per-app READMEs and
-`.claude/skills/app-deployment/SKILL.md`.
-
-## Planned
-
-- What stays private, and why the rest of this is public
+and the reasoning behind conventions that otherwise look arbitrary. Some of it
+is only in commit messages, per-app READMEs and
+`.claude/skills/app-deployment/SKILL.md`. Pages still to write are tracked as
+[issues labelled `documentation`](https://github.com/thaum-xyz/ankhmorpork/issues?q=is%3Aissue+is%3Aopen+label%3Adocumentation).
 
 ## Available now
 
@@ -33,4 +30,5 @@ currently exists only in commit messages, per-app READMEs and
   claim was tested rather than trusted
 - [Why a Kyverno policy rolls Pods on ConfigMap changes](configmap-autoreload.md)
 - [Why the rule linter alerts on change, not on count](pint-rule-linting.md)
-- [Postgres fleet upgrade plan](../postgres/fleet-upgrade-plan.md)
+- [The Postgres fleet upgrade](postgres-fleet-upgrade.md) — a record: why the fleet
+  was scattered, and the two traps that decided the order

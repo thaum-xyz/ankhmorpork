@@ -38,4 +38,5 @@ Admission test:
   and two that look load-bearing but are not
 - [Charts and images](charts.md) — the two sibling repositories, what they hold,
   and where their generated reference lives
-- [UPS Modbus register map](../ups/modbus-register-map.md)
+- [UPS Modbus register map](ups-modbus-register-map.md) — every register confirmed
+  against the front panel, and how to switch Modbus on
