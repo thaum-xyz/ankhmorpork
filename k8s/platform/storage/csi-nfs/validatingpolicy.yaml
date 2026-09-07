@@ -1,0 +1,61 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  # Lives with this provisioner rather than with kyverno for the same reason as
+  # the MutatingPolicy beside it: it says what this class means, not what the
+  # cluster requires in general. K8up is fine everywhere else; it is redundant
+  # here because of where this driver puts the data. The rule moves or dies with
+  # the class.
+  #
+  # Cluster-scoped. Kustomize cannot know that for a CRD kind and stamps the
+  # component's namespace on the rendered output; the API server ignores the
+  # field for cluster-scoped resources.
+  name: validate-nfs-k8up-annotations
+spec:
+  evaluation:
+    background:
+      enabled: false
+  # Ignore, where the two Warn policies under kyverno-policies use Fail. Match
+  # conditions are evaluated inside kyverno, not by the API server, so Fail
+  # would mean an unavailable admission controller rejects every PVC and PV
+  # write in the cluster -- including the PVs external-provisioner creates for
+  # every class -- in order to enforce a rule that never denies anything.
+  failurePolicy: Ignore
+  # Advisory. The warning reaches whoever submitted the object; there is no
+  # PolicyReport behind it, because every reports feature is off in this
+  # cluster (controllers/values.yaml), which also makes an Audit action a no-op.
+  validationActions:
+    - Warn
+  matchConstraints:
+    resourceRules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - persistentvolumeclaims
+          # K8up reads the annotation off the claim and never off the volume, so
+          # on a PV it is not merely redundant but inert -- the failure mode is
+          # someone believing a backup exists. A PV on this class is one this
+          # driver provisioned, so the annotation can only have been added by
+          # hand.
+          - persistentvolumes
+  matchConditions:
+    - name: only-nfs-storage-class
+      expression: >-
+        object.spec.?storageClassName.orValue("") == "unifi-nas"
+  validations:
+    - expression: >-
+        !object.metadata.?annotations.orValue({}).exists(
+          key,
+          key.startsWith("k8up.io/")
+        )
+      message: >-
+        k8up.io/* annotations do not belong on unifi-nas. The class provisions
+        each claim as a subdirectory of the NAS's own k8snfscsi share, which the
+        UNAS already backs up offsite nightly, so a K8up backup here reads the
+        NAS to write a restic repository back onto the same disk. Leave the
+        claim unannotated, or move it to piraeus-r2 and back it up there.

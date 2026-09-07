@@ -17,6 +17,7 @@ schedule against objects that already exist.
 | [`require-resource-requests`](#require-resource-requests) | `pods` | **Warn** | `kyverno-policies` |
 | [`validate-helm-chart-version`](#validate-helm-chart-version) | `helmreleases` | **Deny** | `kyverno-policies` |
 | [`validate-ingress-contract`](#validate-ingress-contract) | `ingresses` | **Deny** | `kyverno-policies` |
+| [`validate-nfs-k8up-annotations`](#validate-nfs-k8up-annotations) | `persistentvolumeclaims`, `persistentvolumes` | **Warn** | `csi-nfs` |
 | [`validate-pdb-drain-safety`](#validate-pdb-drain-safety) | `poddisruptionbudgets` | **Warn** | `kyverno-policies` |
 | [`validate-roaming-volume-size`](#validate-roaming-volume-size) | `persistentvolumeclaims` | **Deny** | `piraeus-datastore` |
 
@@ -113,6 +114,23 @@ Rules enforced:
 - Public and private Ingresses must configure TLS.
 - Public and private Ingresses must use an approved cert-manager ClusterIssuer.
 - Every Ingress TLS entry must specify a Secret name.
+
+## `validate-nfs-k8up-annotations`
+
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `persistentvolumeclaims`, `persistentvolumes` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Warn** |
+| **failurePolicy** | `Ignore` — a policy error skips the rule silently |
+| **Only when** | `object.spec.?storageClassName.orValue("") == "unifi-nas"` |
+| **Shipped by** | `csi-nfs` |
+| **Source** | [`k8s/platform/storage/csi-nfs/validatingpolicy.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/csi-nfs/validatingpolicy.yaml) |
+
+Rules enforced:
+
+- k8up.io/* annotations do not belong on unifi-nas. The class provisions each claim as a subdirectory of the NAS's own k8snfscsi share, which the UNAS already backs up offsite nightly, so a K8up backup here reads the NAS to write a restic repository back onto the same disk. Leave the claim unannotated, or move it to piraeus-r2 and back it up there.
 
 ## `validate-pdb-drain-safety`
 

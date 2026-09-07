@@ -129,6 +129,11 @@ media volumes, onto the NAS they already live on.
 Related, same object: `k8up.io/backupcommand` for an application-consistent dump
 instead of a file copy, and `k8up.io/backup-restic-args` for per-claim excludes.
 
+**Never on `unifi-nas`.** Those claims are subdirectories of a share the NAS
+backs up itself, so restic would only copy the NAS onto the NAS;
+[`validate-nfs-k8up-annotations`](admission-policies.md#validate-nfs-k8up-annotations)
+warns on any `k8up.io/*` key that reaches one.
+
 ### `excluded_from_alerts`
 
 | | |
