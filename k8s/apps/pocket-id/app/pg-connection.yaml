@@ -14,11 +14,7 @@ spec:
   target:
     template:
       data:
-        # pgbouncer, not postgres-rw. postgres-rw selects
-        # cnpg.io/instanceRole=primary, a label no pod carries for a moment
-        # during a switchover, so it goes to zero endpoints and the dial fails
-        # outright -- and pocket-id exits the process rather than reconnect.
-        # See postgres/values.yaml. The chart feeds this through valuesFrom
-        # into the pocket-id Secret, which the pod reads with envFrom, so a
-        # change here does not reach a running pod: it needs a restart.
-        connectionString: "postgresql://pocketid:{{ .password }}@pooler:5432/pocketid"
+        # postgres-rw, not a pooler: pgbouncer was measured making a failover
+        # worse here, not better.
+        # See docs/explanation/database-failover.md
+        connectionString: "postgresql://pocketid:{{ .password }}@postgres-rw:5432/pocketid"
