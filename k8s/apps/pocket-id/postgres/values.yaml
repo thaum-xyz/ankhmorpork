@@ -3,11 +3,9 @@ owner: pocketid
 
 cluster:
   instances: 3
-  # Default is restart, which stops Postgres in place on the primary for every
-  # image bump -- a longer window with postgres-rw at zero endpoints than
-  # promoting an already-running replica. paperless has run this way for a
-  # while. It shortens the gap the pooler below has to cover; it does not
-  # remove it.
+  # Promote a running replica rather than restarting Postgres in place, which
+  # is the shorter of the two no-endpoint windows.
+  # See docs/explanation/database-failover.md
   primaryUpdateMethod: switchover
   storage:
     size: 9Gi
@@ -26,33 +24,14 @@ backup:
     # Not the namespace name.
     pathSuffix: pocketid
 
-# pocket-id has no reconnect loop: its actor host exits the whole process on a
-# single failed database health check, and because postgres-rw selects
-# cnpg.io/instanceRole=primary -- a label no pod carries for a moment during a
-# switchover -- the Service goes to zero endpoints and the dial fails outright.
-# Every such blip is full SSO downtime, and costs two restarts rather than one,
-# since the abandoned hosts row keeps the next start out for up to its 90s
-# health-check deadline. pgbouncer keeps the client connection up across the
-# gap instead of handing pocket-id a hard error.
-pooler:
-  enabled: true
-  pgbouncer:
-    # transaction, not the chart's session default. Session pooling binds a
-    # client to one backend connection for its whole session, so a switchover
-    # breaks it anyway and the pooler buys nothing. Nothing here needs a
-    # pinned backend: francis keeps its host lock as a row in a hosts table
-    # with a timestamp deadline, and uses no advisory locks, LISTEN/NOTIFY or
-    # session state.
-    poolMode: transaction
-    parameters:
-      # pgx prepares statements by default, and pgbouncer only tracks them
-      # under transaction pooling when this is non-zero. Left at 0 the driver's
-      # prepared statements would fail once connections start being reused.
-      max_prepared_statements: "200"
-  resources:
-    requests:
-      cpu: 10m
-      memory: 64Mi
+# There is deliberately NO pooler here. pocket-id exits its process on a single
+# failed database health check, and a transaction-mode pgbouncer was measured
+# making that worse rather than better -- it cannot help while the -rw Service
+# has no endpoints, and its cached login failure outlives the switchover.
+# Numbers and reasoning: docs/explanation/database-failover.md
+#
+# The fix is upstream: a transient database error should be retried, not fatal.
+# See pocket-id#1274 and #1549.
 
 externalSecrets:
   admin:

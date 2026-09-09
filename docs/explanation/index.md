@@ -34,3 +34,6 @@ is only in commit messages, per-app READMEs and
   was scattered, and the two traps that decided the order
 - [How a node reboot is gated](node-reboots.md) — what has to agree before a node
   goes down, and why a shorter drain timeout is the safer one
+- [Why a database failover interrupts an app](database-failover.md) — the
+  no-endpoint moment every `-rw` Service passes through, and why a pooler does
+  not cover it
