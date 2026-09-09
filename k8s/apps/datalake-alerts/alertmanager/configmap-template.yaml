@@ -72,18 +72,25 @@ data:
         - matchers:
           - "alertname = InfoInhibitor"
           receiver: "null"
+        # continue: critical pages *and* falls through to the github routes
+        # below, so every alert that is worth waking someone for also leaves a
+        # written record. Without it a critical is paged and never written down —
+        # the reason the 2026-09-09 kured reboots left no issue to read back.
         - matchers:
           - "severity = critical"
           receiver: 'opsgenie'
+          continue: true
         # Every NFS-backed PVC reports the whole export's fill level, so a single
         # NAS filling up fires this once per PVC across unrelated namespaces.
         # Grouping on alertname alone turns that into one issue listing them all.
+        # Reached by criticals too: this alert has both a warning and a critical
+        # variant, and they should land in the same grouped issue.
         - matchers:
           - "alertname = KubePersistentVolumeFillingUp"
           group_by: ['alertname']
           receiver: 'github'
         - matchers:
-          - "severity = warning"
+          - "severity =~ warning|critical"
           receiver: 'github'
         - matchers:
           - "severity = info"

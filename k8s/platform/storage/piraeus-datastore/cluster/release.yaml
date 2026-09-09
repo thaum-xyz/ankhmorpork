@@ -59,6 +59,38 @@ spec:
               - op: replace
                 path: /spec/groups/1/rules/6/labels/severity
                 value: warning
+          # These three critical rules ship with no `for` at all, so a single
+          # failed scrape pages Opsgenie at P2. A kured reboot does exactly that:
+          # on 2026-09-09 beelink01 (07:11) and beelink02 (08:16) each produced
+          # drbdReactorOffline and linstorSatelliteNotOnline, 30-75s apiece.
+          #
+          # 10m is >3x the worst transient measured over the preceding 30 days —
+          # every firing of all three in that window was a reboot or a pod
+          # restart, and the longest ran 180s (master02, 2026-09-07 09:05).
+          #
+          # This costs no coverage on a node that stays down. Both satellite
+          # rules key on `up{job="platform-storage/linstor-satellite"}`, and a
+          # node that is gone takes its target out of service discovery — the
+          # series goes absent rather than reporting 0, so neither alert can fire
+          # for a full outage today either. KubeNodeNotReady/KubeNodeUnreachable
+          # is what covers that, and it is untouched. What still pages is the
+          # case these rules are actually for: a satellite or drbd-reactor that
+          # is scrapable and broken, holding the condition continuously.
+          - target:
+              group: monitoring.coreos.com
+              version: v1
+              kind: PrometheusRule
+              name: piraeus-datastore
+            patch: |-
+              - op: add
+                path: /spec/groups/0/rules/0/for
+                value: 10m
+              - op: add
+                path: /spec/groups/0/rules/3/for
+                value: 10m
+              - op: add
+                path: /spec/groups/1/rules/0/for
+                value: 10m
           # allowedTopologies has to be patched in: the chart's storageclass.yaml
           # renders name, annotations, labels, provisioner, reclaimPolicy,
           # volumeBindingMode, allowVolumeExpansion and parameters, and nothing
