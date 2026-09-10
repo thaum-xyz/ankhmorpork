@@ -11,7 +11,14 @@ ingress:
   className: public
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    ingress.thaum.xyz/probe-uri: /-/healthy
+    # Deliberately not probed, and so carries no ingress.thaum.xyz/probe-uri.
+    # It used to carry /-/healthy copied from its Prometheus neighbours, which
+    # pyrra 404s -- inert anyway, since the label that selects it was never
+    # added. There is nothing honest to point a probe at: / is a 1.1KB React
+    # shell that returns 200 with the backend dead (#1308), /metrics only says
+    # the process is alive, and the real API is Connect RPC, which 405s on the
+    # GET that blackbox's single http_2xx module makes. Probing it would need a
+    # POST module built for this one console. #1340.
     item.homer.rajsingh.info/name: "Pyrra"
     item.homer.rajsingh.info/logo: "https://avatars.githubusercontent.com/u/87393422?s=200&v=4"
     item.homer.rajsingh.info/order: "30"
