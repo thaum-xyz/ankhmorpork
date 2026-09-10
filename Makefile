@@ -4,9 +4,6 @@ SHELL:=/bin/bash
 # in .github/renovate.json, which matches both spellings.
 ZENSICAL_VERSION:=0.0.59
 
-# Homebrew's python3 has no pyyaml on the workstations this runs on; the system
-# one does. CI passes PYTHON=python3 so setup-python's interpreter is used.
-PYTHON?=/usr/bin/python3
 
 .PHONY: help
 help: ## Display help
@@ -22,7 +19,7 @@ validate-flux:  ## Check that Flux Kustomization paths exist
 
 .PHONY: validate-configmaps
 validate-configmaps:  ## Check no two Kustomizations render the same ConfigMap
-	$(PYTHON) hack/validate-configmap-ownership.py
+	python3 hack/validate-configmap-ownership.py
 
 .PHONY: lint-shell
 lint-shell:  ## Run shellcheck over every tracked shell script
@@ -51,7 +48,7 @@ docs-build:  ## Build the documentation site into ./site
 
 .PHONY: docs-reference
 docs-reference:  ## Regenerate the derivable reference pages under docs/reference
-	$(PYTHON) hack/generate-docs-reference.py
+	python3 hack/generate-docs-reference.py
 
 .PHONY: docs-reference-check
 docs-reference-check: docs-reference  ## Fail if the generated reference pages are stale
@@ -67,4 +64,4 @@ docs-reference-check: docs-reference  ## Fail if the generated reference pages a
 
 .PHONY: docs-lint
 docs-lint:  ## Check docs for broken links, missing paths, unknown names and stale-prone prose
-	$(PYTHON) hack/lint-docs.py
+	python3 hack/lint-docs.py

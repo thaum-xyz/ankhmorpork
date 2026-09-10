@@ -29,14 +29,14 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: 3.x
-      - run: pip install zensical==${{ env.zensical-version }} pyyaml
+      - run: pip install zensical==${{ env.zensical-version }}
       # The generated reference pages are derived from the manifests. This check
       # also runs in validate.yml, because a PR that adds an app or a policy does
       # not touch docs/** and so never reaches this workflow.
-      - run: make docs-reference-check PYTHON=python3
+      - run: make docs-reference-check
       # Broken links, paths that no longer exist, namespaces no manifest declares,
       # and warnings for the prose patterns that have gone stale before.
-      - run: make docs-lint PYTHON=python3
+      - run: make docs-lint
       - run: zensical build --clean
       - uses: actions/upload-pages-artifact@v5
         with:

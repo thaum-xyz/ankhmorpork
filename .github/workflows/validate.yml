@@ -41,7 +41,7 @@ jobs:
       # all of k8s/bootstrap.
       - run: go install sigs.k8s.io/kustomize/kustomize/v5@${{ env.kustomize-version }}
       - run: ./hack/validate-flux-paths.sh
-      - run: make validate-configmaps PYTHON=python3
+      - run: make validate-configmaps
 
   # The action finds shell files by extension and by shebang, so it covers
   # anything `make lint-shell` would and then some.
@@ -95,5 +95,4 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: 3.x
-      - run: pip install pyyaml
-      - run: make docs-reference-check PYTHON=python3
+      - run: make docs-reference-check
