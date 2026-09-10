@@ -14,6 +14,7 @@ env:
   kustomize-version: v5.8.1
   yq-version: v4.53.6
   shellcheck-version: v0.11.0
+  esoctl-version: v2.10.0
 
 jobs:
   manifests:
@@ -54,6 +55,34 @@ jobs:
           # latest release, which would fail unrelated PRs on scripts nobody
           # touched. Renovate keeps this in step with koalaman/shellcheck.
           version: ${{ env.shellcheck-version }}
+
+  # The Alertmanager config reaches the cluster as a Go template inside a
+  # ConfigMap, so the manifests jobs above only ever see an opaque string. This
+  # renders it with ESO's own engine and checks the result.
+  alertmanager-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '${{ env.golang-version }}'
+      - run: go install github.com/mikefarah/yq/v4@${{ env.yq-version }}
+      # Built from source, not `go install`: esoctl deliberately has no go.mod of
+      # its own so it can move with ESO, and the parent module carries replace
+      # directives, which `go install pkg@version` refuses. There are no
+      # published esoctl binaries either.
+      - name: Build esoctl ${{ env.esoctl-version }}
+        run: |
+          git clone --quiet --depth 1 --branch "${{ env.esoctl-version }}" \
+            https://github.com/external-secrets/external-secrets "$RUNNER_TEMP/eso"
+          mkdir -p "$HOME/.local/bin"
+          cd "$RUNNER_TEMP/eso" && go build -o "$HOME/.local/bin/esoctl" ./cmd/esoctl
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      # amtool's config schema is version-specific, so take the version from the
+      # Alertmanager CR rather than a second pin that could drift from it.
+      - run: |
+          go install "github.com/prometheus/alertmanager/cmd/amtool@$(yq -r '.spec.version' k8s/apps/datalake-alerts/alertmanager/alertmanager.yaml)"
+      - run: ./hack/validate-alertmanager-config.sh
 
   # docs/reference/{apps,admission-policies,flux-kustomizations,helm-releases}.md
   # are generated from k8s/**. The docs workflow only runs when docs/** changes,

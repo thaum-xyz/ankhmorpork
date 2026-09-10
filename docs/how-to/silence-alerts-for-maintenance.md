@@ -14,10 +14,16 @@ maintenance has grown too disruptive.
 
 ## Steps
 
-Silences are created in the Alertmanager UI at
-[alertmanager.ankhmorpork.thaum.xyz](https://alertmanager.ankhmorpork.thaum.xyz)
-— **Silences → New Silence**, or the *Silence* button on a firing alert, which
-prefills its labels and is usually the fastest correct start.
+Point `amtool` at the cluster once by putting this in
+`~/.config/amtool/config.yml`, and it needs no flags afterwards:
+
+```yaml
+alertmanager.url: https://alertmanager.ankhmorpork.thaum.xyz
+```
+
+The [Alertmanager UI](https://alertmanager.ankhmorpork.thaum.xyz) does the same
+job — **Silences → New Silence**, or the *Silence* button on a firing alert,
+which prefills its labels.
 
 1. **Work out the narrowest matcher set that covers the work.** Prefer the
    labels that describe *what you are touching* over the ones that describe
@@ -29,23 +35,29 @@ prefills its labels and is usually the fastest correct start.
     | one node | `node=<node>`, and `instance=<ip>:<port>` for node-exporter alerts |
     | one storage backend | `namespace=<namespace>`, `alertname=~"drbd.*\|linstor.*"` |
 
-2. **Set an expiry you will actually outlast, not a generous one.** A silence
-   that expires while you are still working is a nuisance; one that outlives the
-   work by hours is how a real outage goes unnoticed. Extend it rather than
-   starting long.
+2. **See what those matchers actually hit, before creating anything.** This is
+   the check that matters — see the trap below.
 
-3. **Read the preview before confirming.** Alertmanager lists the alerts the
-   silence would match. That list is the check that matters — see the trap
-   below.
+    ```bash
+    amtool alert query <matcher> [<matcher>...]
+    ```
+
+3. **Create it with an expiry you will outlast, not a generous one.** A silence
+   that expires mid-work is a nuisance; one that outlives the work by hours is
+   how a real outage goes unnoticed. Extend rather than starting long.
+
+    ```bash
+    amtool silence add <matcher> [<matcher>...] --duration=2h --comment="<what you are doing>"
+    ```
 
 4. **Expire it when you finish.** Do not wait for the timer.
 
-If you would rather script it, `amtool` does the same thing against the same
-API and takes matchers in the syntax above:
+    ```bash
+    amtool silence expire <silence-id>
+    ```
 
-```bash
-amtool silence add namespace=<namespace> --duration=2h --comment="<what you are doing>"
-```
+`amtool silence query` lists the active silences, which is the quickest way
+to find an id — or to catch a silence someone left behind.
 
 !!! danger "Never let a silence match `Watchdog`"
 
@@ -59,13 +71,25 @@ amtool silence add namespace=<namespace> --duration=2h --comment="<what you are 
     severity-based silence can reach it. What reaches it is a silence whose
     matchers are too loose — a bare cluster-wide match, or an `alertname=~".*"`.
     Give every silence at least one matcher `Watchdog` cannot satisfy, and
-    confirm it is absent from the preview in step 3.
+    confirm it is absent from the step 2 output.
 
 ## Overnight work
 
 Between 20:00 and 09:00 local, criticals do not page — they are still filed as
 GitHub issues and page at 09:00 if they are still firing. You do not need a
 silence to avoid being woken at night. You do need one to avoid the issues.
+
+## Changing the routing itself
+
+The rendered configuration is checked by `make validate-alertmanager`, which is
+also a CI job. Run it after any edit to the route tree: kustomize and
+kubeconform only see the config as an opaque string inside a ConfigMap, so an
+undefined receiver, a missing time interval or an unloadable timezone otherwise
+reaches the cluster and surfaces only as `AlertmanagerFailedReload`.
+
+It renders the template with `esoctl` and checks the result with
+`amtool check-config`, so esoctl, amtool and yq all have to be installed — the
+target says how if they are not.
 
 ## Where the boundaries are set
 
