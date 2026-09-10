@@ -6,6 +6,9 @@ metadata:
     role: alert-rules
   name: coredns-response-errors
 spec:
+  # target confirmed against the 7d window 2026-09-03..09-10 (#1379), not
+  # changed: 99.99830% achieved over 12.2M responses, 1.7% of the budget. 99.99
+  # is reachable on this data but leaves no room for a reboot cycle.
   description: ""
   alerting:
     name: CoreDNSBudgetBurn

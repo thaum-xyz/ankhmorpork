@@ -6,6 +6,8 @@ metadata:
     role: alert-rules
   name: prometheus-notification-errors
 spec:
+  # target from the 7d window 2026-09-03..09-10 (#1379): 99.99501% achieved
+  # over 1.3M notifications, 5.0% of a 99.9% budget.
   description: ""
   alerting:
     name: PrometheusNotificationBudgetBurn
@@ -22,5 +24,5 @@ spec:
         metric: prometheus_notifications_errors_total{job="prometheus-k8s"}
       total:
         metric: prometheus_notifications_sent_total{job="prometheus-k8s"}
-  target: "99"
+  target: "99.9"
   window: 7d

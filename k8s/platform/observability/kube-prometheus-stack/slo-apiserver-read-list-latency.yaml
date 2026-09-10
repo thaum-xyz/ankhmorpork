@@ -1,0 +1,50 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: apiserver-read-list-latency
+spec:
+  # LIST latency, which is the expensive read the apiserver actually struggles
+  # with. Replaces the separate cluster-scope and namespace-scope objectives
+  # (#1379) -- the scopes turned out to be a pure verb split, cluster and
+  # namespace being 100% LIST and resource 100% GET, so two objectives were
+  # describing one operation and paging twice for it.
+  #
+  # scope is matched exactly. The old selectors used scope=~"cluster|", which
+  # also matches scope="" -- 193,828 non-resource GETs a week (healthz, metrics,
+  # openapi, version) that were being billed to all three latency budgets at
+  # once, 59% of the cluster objective's denominator and 21% of the namespace
+  # one's. Those requests are now measured nowhere, which is correct: nobody
+  # reaches them through a client.
+  #
+  # le="0.1" rather than the 1.0 the two old objectives used. At 1.0 this reads
+  # 99.99894% and can only fire on a catastrophe; at 0.1 it reads 99.36066%
+  # over 846,526 LISTs, which discriminates. See
+  # slo-apiserver-read-resource-latency.yaml for why 0.25 is not on the menu.
+  #
+  # target from the 7d window 2026-09-03..09-10: 99.36066% achieved, 12.8% of a
+  # 95% budget. 95 looks loose next to the 99.9s around it and is not -- 100ms
+  # is a demanding bucket for a LIST, and the fast tier still trips when 70% of
+  # LISTs pass 100ms for 15 minutes, which is the signal worth having.
+  description: >-
+    Fraction of cluster- and namespace-scoped LIST requests the apiserver
+    answers within 100ms.
+  alerting:
+    name: KubeAPIServerReadListLatencyBudgetBurn
+    absentName: KubeAPIServerReadListLatencyMetricAbsent
+    severities:
+      fastBurn: info
+      mediumBurn: info
+      slowBurn: none
+      longTermBurn: none
+      absent: warning
+  indicator:
+    latency:
+      success:
+        metric: apiserver_request_sli_duration_seconds_bucket{component="apiserver",scope=~"cluster|namespace",verb="LIST",le="0.1"}
+      total:
+        metric: apiserver_request_sli_duration_seconds_count{component="apiserver",scope=~"cluster|namespace",verb="LIST"}
+  target: "95"
+  window: 7d

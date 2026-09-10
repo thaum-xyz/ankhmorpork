@@ -18,9 +18,11 @@ spec:
   # it is a reachability check, not a statement about whether watches are
   # actually being fetched.
   #
-  # target is a PLACEHOLDER, matching the other probe objectives. This service
-  # has never been measured, so there is no history to pick a number from; set
-  # it once there is a window of data.
+  # target is still a PLACEHOLDER. The probe started on 2026-09-07 08:02 UTC,
+  # so it has no full 7d window until 2026-09-14 08:02 UTC. Everything
+  # readable was set on 2026-09-10 (#1379).
+  #
+  # Provisionally 99.831% over its first 3 days.
   description: >-
     Fraction of successful blackbox probes against change.krupa.net.pl.
   alerting:

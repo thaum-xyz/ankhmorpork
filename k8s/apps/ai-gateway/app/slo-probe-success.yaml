@@ -13,10 +13,12 @@ spec:
   # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
   # SLO behind it.
   #
-  # target is a PLACEHOLDER. Unlike the other probe SLOs it is not even carried
-  # over from the shared objective -- ai-gateway was never in it, so there is no
-  # history behind this number at all. Set it with the other 33 once this probe
-  # has a full 7d window behind it.
+  # target is still a PLACEHOLDER, and unlike the other probe SLOs it is not
+  # even carried over from the shared objective -- ai-gateway was never in it.
+  # The probe started on 2026-09-07 08:57 UTC, so it has no full 7d window
+  # until 2026-09-14 08:57 UTC. Everything readable was set on 2026-09-10.
+  #
+  # Provisionally 99.904% over its first 3 days.
   description: >-
     Fraction of successful blackbox probes against ai-gateway.krupa.net.pl.
   alerting:

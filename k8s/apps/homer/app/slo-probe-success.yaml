@@ -13,10 +13,10 @@ spec:
   # SLO behind it.
   # The dashboard everything else is reached from.
   #
-  # target is a PLACEHOLDER carried over from the shared objective. 95%/7d
-  # permitted 8h24m of downtime a week, which was only ever defensible because
-  # one number had to cover thirteen services. Set from data around 2026-10-06 --
-  # having somewhere to put a real number is the point of splitting.
+  # target from the 7d window 2026-09-03..09-10 (#1379), the first full window
+  # in which this probe measured one endpoint throughout: 100% achieved, not a
+  # single failed sample. 99.5 rather than tighter because at 30s samples a
+  # 99.9 target pages on one failed scrape; 99.5 needs 1m30s.
   description: >-
     Fraction of successful blackbox probes against ankhmorpork.thaum.xyz.
   alerting:
@@ -31,5 +31,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://ankhmorpork\\.thaum\\.xyz(/.*)?"}
-  target: "95.0"
+  target: "99.5"
   window: 7d
