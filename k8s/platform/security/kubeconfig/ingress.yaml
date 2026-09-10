@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubeconfig
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns01
+spec:
+  # private, not public: the kubeconfig points at 192.168.50.30, which is only
+  # reachable from the house network or tailscale, so the thing handing it out
+  # is reachable in exactly the same places. That is also why nothing
+  # authenticates in front of it -- and why nothing needs to, since the file
+  # holds no secret.
+  ingressClassName: private
+  rules:
+    - host: kubeconfig.ankhmorpork.thaum.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kubeconfig
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - kubeconfig.ankhmorpork.thaum.xyz
+      secretName: kubeconfig-tls

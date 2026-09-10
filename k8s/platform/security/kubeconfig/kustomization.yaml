@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# The namespace itself is created by the kyverno component, the same way
+# platform-observability is created by prometheus-operator-crds and used by
+# everything else in that namespace.
+namespace: platform-security
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+# build.sh and kubeconfig.yaml are real files rather than heredocs inside a
+# ConfigMap, so shellcheck lints one and the other reads as the kubeconfig it
+# is. The name suffix hash is deliberately left on: kustomize rewrites the
+# volume reference to match, so editing either file changes the pod template
+# and rolls the Deployment by itself.
+configMapGenerator:
+  - name: kubeconfig-builder
+    files:
+      - build.sh
+      - kubeconfig.yaml
