@@ -4,6 +4,9 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator CRDs
+    # Alertmanager's own health handler, not /: the UI at / is a static asset
+    # bundle that returns 200 with the cluster peer gone. /-/healthy answers
+    # "OK" in 2 bytes.
     ingress.thaum.xyz/probe-uri: /-/healthy
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
   labels:
@@ -11,6 +14,19 @@ metadata:
     app.kubernetes.io/instance: main
     app.kubernetes.io/name: alertmanager
     app.kubernetes.io/part-of: kube-prometheus
+    # The annotation above is inert without this label -- the Probe selects
+    # Ingresses by it and only then reads the URI off them.
+    #
+    # The strongest case among the admin consoles: Alertmanager is what reports
+    # everything else and had no check on it from outside the pod at all.
+    # AlertmanagerFailedToSendAlerts covers the delivery leg; this covers the
+    # ingress leg, which is how a console goes unreachable while the pod stays
+    # Ready.
+    #
+    # Nothing alerts on the result, by decision in #1340: no SLO, because nobody
+    # waits on this console, and SiteDown joins on an UptimeRobot monitor, which
+    # a LAN-only host cannot have. A series to look at, not a page.
+    ingress.thaum.xyz/probe: enabled
   name: alertmanager
 spec:
   ingressClassName: private

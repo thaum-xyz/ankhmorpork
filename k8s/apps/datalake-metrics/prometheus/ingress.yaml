@@ -4,6 +4,9 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     ignore-check.kube-linter.io/dangling-service: Check is incompatible with prometheus-operator CRDs
+    # Prometheus's own health handler, not /: the UI at / is a static asset
+    # bundle that returns 200 with the TSDB unreachable. /-/healthy answers
+    # "Prometheus Server is Healthy." in 30 bytes.
     ingress.thaum.xyz/probe-uri: /-/healthy
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
   labels:
@@ -11,6 +14,16 @@ metadata:
     app.kubernetes.io/instance: k8s
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
+    # The annotation above is inert without this label -- the Probe selects
+    # Ingresses by it and only then reads the URI off them.
+    #
+    # A Prometheus that is down cannot scrape the probe that would report it,
+    # so this measures the path to the console, not Prometheus's liveness.
+    #
+    # Nothing alerts on the result, by decision in #1340: no SLO, because nobody
+    # waits on this console, and SiteDown joins on an UptimeRobot monitor, which
+    # a LAN-only host cannot have. A series to look at, not a page.
+    ingress.thaum.xyz/probe: enabled
   name: prometheus-k8s
 spec:
   ingressClassName: private
