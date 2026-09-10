@@ -18,10 +18,20 @@ In pocket-id, add the user to the group for the access level they need, and make
 sure that same group is selected under `Allowed User Groups` on the kubectl
 client. A newly created client allows **no** groups at all.
 
+Groups are named `k8s:<scope>:<tier>`, the colon-separated shape Kubernetes uses
+for its own `system:` groups.
+
 | Pocket-id group | Kubernetes group | Gets |
 | --- | --- | --- |
-| `k8s-admins` | `oidc:k8s-admins` | `cluster-admin` |
-| `k8s-viewers` | `oidc:k8s-viewers` | `view` cluster-wide |
+| `k8s:cluster:admin` | `oidc:k8s:cluster:admin` | `cluster-admin` |
+| `k8s:cluster:view` | `oidc:k8s:cluster:view` | `view` cluster-wide |
+| `k8s:group:<name>` | `oidc:k8s:group:<name>` | whatever each namespace grants it |
+
+A `k8s:group:` group has no tier of its own. Each namespace decides what that
+group gets there, so one group covers however many namespaces name it, at a
+different level in each if you like — which means groups scale with people
+rather than with namespaces. Nothing creates these groups for you: the
+Kubernetes side is generated, the pocket-id side is not.
 
 ## 2. Install the credential plugin
 
@@ -70,35 +80,49 @@ from step 1 alongside `system:authenticated`.
     ones that exist for unrelated applications. So a group named for an app is
     also a live cluster identity: bind `oidc:monitoring` and everyone who was
     added to that group for Grafana silently gains it in Kubernetes too. Give
-    groups intended for cluster access a `k8s-` prefix and never bind a bare
-    application group name.
+    groups intended for cluster access the `k8s:` prefix above, and never bind a
+    bare application group name.
 
-## 5. Grant a narrower level
+## 5. Hand someone a single namespace
 
-Add a binding under `k8s/platform/security/oidc-rbac/`, subject kind `Group`,
-name `oidc:<group>`. A `RoleBinding` that points at a `ClusterRole` applies that
-role's rules inside one namespace only, which is how to hand over an app without
-handing over the cluster:
+Label the Namespace once per group that should reach it, naming the group in the
+key and its level in the value. Nothing else on the Kubernetes side is written
+by hand:
 
 ```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
 metadata:
-  name: oidc-mealie-admins
-  namespace: mealie
-subjects:
-  - apiGroup: rbac.authorization.k8s.io
-    kind: Group
-    name: oidc:k8s-mealie
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: admin
+  labels:
+    group.rbac.thaum.xyz/media: edit
+    group.rbac.thaum.xyz/guests: view
 ```
 
-Reach for the built-in roles before writing rules. `view` is read-only and
-excludes Secrets, though it does read every ConfigMap in scope; `edit` can write
-most objects *and* read Secrets there; `admin` adds RBAC within the namespace.
+Each label generates a `RoleBinding` giving `oidc:k8s:group:<group>` that
+ClusterRole in that namespace, and keeps it in sync — so removing a label
+removes that group's access. Label keys are unique, so any number of groups can
+share a namespace at different levels. `edit` and `view` are the only accepted
+values; anything else is rejected at admission. A `RoleBinding` pointing at a
+`ClusterRole` applies that role's rules inside one namespace only, which is how
+an app gets handed over without handing over the cluster.
+
+The group name comes from the label key, and the `k8s:group:` prefix is prepended
+rather than written out. Pocket-id groups are shared with every other
+application — `oidc:mealie` is already the Mealie app's own SSO group — so that
+prefix is what keeps a label from pointing cluster access at one of them. A
+mistyped key names a group that does not exist, which grants nothing.
+
+`view` is read-only and excludes Secrets, though it reads every ConfigMap in
+scope. `edit` writes most objects *and* reads Secrets there. Neither reaches the
+app's SLO, its Postgres cluster or its generated alert rules — those API groups
+are absent from both roles.
+
+!!! warning "In a Flux-managed cluster this is not "manage the app""
+
+    Flux applies with server-side apply and force, so an edit to anything it
+    owns is reverted on the next reconcile, and the `Kustomization` that governs
+    the app lives in `flux-system` rather than the app's namespace. What the
+    grant really provides is the operational surface: logs, `exec`,
+    `port-forward`, deleting a pod to restart it, scaling for a minute. Durable
+    change still goes through a pull request.
 
 ## 6. When it fails
 
@@ -108,6 +132,8 @@ most objects *and* read Secrets there; `admin` adds RBAC within the namespace.
 | authenticates, then `Forbidden` | no binding matches any `oidc:` group the user holds |
 | `oidc: email not verified` | the account's email is not marked verified in pocket-id |
 | a stale identity after a group change | cached token; clear `~/.kube/cache/oidc-login` |
+| a namespace label is rejected | a `group.rbac.thaum.xyz/<group>` label accepts only `edit` or `view` |
+| the label is set but no RoleBinding appears | kyverno's background controller reconciles it; check its logs and the `UpdateRequest` objects |
 
 The API server reads its authenticator from a file written by the `k3s-master`
 ansible role and **hot-reloads it**, so changing claim or group mapping costs no

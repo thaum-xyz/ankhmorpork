@@ -1,0 +1,33 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno:background-controller:tenant-rbac
+  labels:
+    # kyverno:background-controller is an aggregated role; this is the
+    # documented extension point, and the admission and cleanup controllers use
+    # the same pattern. Extending it here rather than through
+    # backgroundController.rbac.clusterRole.extraResources in the chart values
+    # keeps a privilege grant reviewable as an RBAC object instead of buried in
+    # a Helm values file.
+    rbac.kyverno.io/aggregate-to-background-controller: "true"
+  annotations:
+    kubernetes.io/description: >-
+      Lets the background controller bind `edit` and `view`, which
+      generate-tenant-rolebinding needs. RBAC's escalation check rejects
+      creating a RoleBinding to a role the creator neither holds nor may `bind`,
+      and the chart grants the controller no `bind` at all.
+
+      `resourceNames` is the security boundary of the whole mechanism, not a
+      tidiness measure: with only these two names, no Kyverno policy -- however
+      written, and whatever a Namespace label says -- can generate a binding to
+      `admin` or `cluster-admin`. Widen this list and that ceiling moves.
+rules:
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterroles
+    verbs:
+      - bind
+    resourceNames:
+      - edit
+      - view

@@ -4,6 +4,7 @@ namespace: platform-security
 resources:
   - repository.yaml
   - release.yaml
+  - clusterrole-background-controller.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
