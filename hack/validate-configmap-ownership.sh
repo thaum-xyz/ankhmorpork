@@ -10,5 +10,5 @@
 # kube-prometheus-stack HelmRelease spent a day being handed alloy's config.
 
 set -uo pipefail
-cd "$(git rev-parse --show-toplevel)"
+cd "$(git rev-parse --show-toplevel)" || exit 1
 exec python3 hack/validate-configmap-ownership.py

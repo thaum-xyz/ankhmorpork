@@ -13,6 +13,7 @@ env:
   kubeconform-version: v0.8.0
   kustomize-version: v5.8.1
   yq-version: v4.53.6
+  shellcheck-version: v0.11.0
 
 jobs:
   manifests:
@@ -40,6 +41,19 @@ jobs:
       - run: go install sigs.k8s.io/kustomize/kustomize/v5@${{ env.kustomize-version }}
       - run: ./hack/validate-flux-paths.sh
       - run: ./hack/validate-configmap-ownership.sh
+
+  # The action finds shell files by extension and by shebang, so it covers
+  # anything `make lint-shell` would and then some.
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # 2.0.0
+        with:
+          # Pinned rather than left to float: the action's default tracks the
+          # latest release, which would fail unrelated PRs on scripts nobody
+          # touched. Renovate keeps this in step with koalaman/shellcheck.
+          version: ${{ env.shellcheck-version }}
 
   # docs/reference/{apps,admission-policies,flux-kustomizations,helm-releases}.md
   # are generated from k8s/**. The docs workflow only runs when docs/** changes,

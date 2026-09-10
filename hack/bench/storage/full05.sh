@@ -12,14 +12,14 @@
 #
 # Each pass retries with --resume on an outright failure; --resume keeps
 # completed cycles and reuses volumes whose layout finished.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit 1
 CYCLES="${1:-6}"
 
 run_pass() {
   local id="$1"; shift
   for attempt in 1 2 3 4 5 6; do
     echo "=== $id attempt $attempt at $(date -u +%H:%M:%SZ) ==="
-    if [[ $attempt -eq 1 ]] && ! ls -d results/${id}-* >/dev/null 2>&1; then
+    if [[ $attempt -eq 1 ]] && ! ls -d "results/${id}"-* >/dev/null 2>&1; then
       ./run.sh --cycles "$CYCLES" --runtime 20 --settle 15 --run-id "$id" "$@" && return 0
     else
       ./run.sh --cycles "$CYCLES" --runtime 20 --settle 15 --resume "$id" "$@" && return 0

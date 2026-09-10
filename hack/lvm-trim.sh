@@ -10,6 +10,6 @@ for volume in $volumes; do
   mountpoint=$(grep "$volume" /proc/mounts | head -n1 | awk '{print $2}')
   if [ -n "$mountpoint" ]; then
     echo "Trimming $volume ($mountpoint)"
-    fstrim -v $mountpoint
+    fstrim -v "$mountpoint"
   fi
 done

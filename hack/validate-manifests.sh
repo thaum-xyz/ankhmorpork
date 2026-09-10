@@ -18,7 +18,7 @@
 
 set -uo pipefail
 
-cd "$(git rev-parse --show-toplevel)"
+cd "$(git rev-parse --show-toplevel)" || exit 1
 
 WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "$WORK_DIR"' EXIT
@@ -150,6 +150,7 @@ while IFS= read -r dir; do
   else
     if ! out=$(validate "$dir" 2>&1); then
       echo "::error::schema validation failed for $dir"
+      # shellcheck disable=SC2001  # indenting every line needs a regex anchor
       echo "$out" | sed 's/^/    /'
       failed="$failed $dir"
     fi
