@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeconfig
+  labels:
+    app.kubernetes.io/name: kubeconfig
+spec:
+  selector:
+    app.kubernetes.io/name: kubeconfig
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

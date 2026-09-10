@@ -29,35 +29,40 @@ client. A newly created client allows **no** groups at all.
 kubectl krew install oidc-login
 ```
 
-## 3. Build a kubeconfig
+## 3. Fetch the kubeconfig
 
-From a checkout of this repository, on the house network:
+On the house network or over tailscale:
 
 ```bash
-./hack/mkkubeconfig.sh
+curl -o ~/.kube/clusters/ankhmorpork-oidc \
+  https://kubeconfig.ankhmorpork.thaum.xyz/kubeconfig
 ```
 
-That writes `~/.kube/clusters/ankhmorpork-oidc` and ends by verifying it. The
-issuer, client ID and API server address come from `metal/group_vars/k3s.yml`, so
-they cannot drift from what the API server accepts, and `offline_access` in the
-generated credentials earns a refresh token — the passkey is needed once per
-session rather than once per command.
+The file carries the API server address, the cluster CA and the OIDC client
+settings, and `offline_access` in it earns a refresh token — the passkey is
+needed once per session rather than once per command.
 
-## 4. Check the CA fingerprint
+It is built inside the cluster from what the API server is actually running on:
+the issuer and client ID come from its `authentication-config.yaml`, the address
+from the node's `tls-san`, and the CA from the `kube-root-ca.crt` ConfigMap the
+control plane maintains. Nothing is copied or transcribed, so the kubeconfig
+cannot disagree with what the API server accepts.
 
-The script prints the cluster CA's SHA-256 fingerprint. Confirm it with someone
-who already has cluster access before using the kubeconfig from a network you do
-not control.
+Nothing in it is secret. The address and client ID are public by design, and the
+API server hands the CA to every anonymous TLS client — which is why the endpoint
+sits behind no login. It is served over HTTPS with a certificate the machine's
+own trust store validates, so the CA arrives from a source already trusted rather
+than from the connection it is meant to protect.
 
-By default the CA comes from the API server's own TLS handshake, which is
-trust-on-first-use: it is the client's only defence against trusting an impostor
-API server and sending it a bearer token. With access to a control-plane node,
-`-n <node>` reads the CA over SSH instead, which is authoritative and needs no
-confirmation.
+## 4. Check it works
 
-Verification output names the identity the cluster now sees — `oidc:` plus the
-user's email address, with the `oidc:`-prefixed group from step 1 alongside
-`system:authenticated`.
+```bash
+KUBECONFIG=~/.kube/clusters/ankhmorpork-oidc kubectl auth whoami
+```
+
+A browser opens for the passkey. The output names the identity the cluster now
+sees — `oidc:` plus the user's email address, with the `oidc:`-prefixed group
+from step 1 alongside `system:authenticated`.
 
 !!! warning "Every pocket-id group becomes a Kubernetes group"
 

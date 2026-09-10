@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeconfig
+  labels:
+    app.kubernetes.io/name: kubeconfig
+  annotations:
+    # kube-root-ca.crt is maintained by the control plane, so a CA rotation
+    # arrives here on its own; this rolls the pod so the published file is
+    # rebuilt from it rather than staying on the CA the pod started with.
+    autoreloader.thaum.xyz/configmap: kube-root-ca.crt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kubeconfig
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kubeconfig
+    spec:
+      # The issuer and client ID are read from the API server's own
+      # configuration, which only exists on a server node. All three are
+      # untainted here, so a selector places the pod without tolerations.
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: "true"
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        # Runs as root for one reason: authentication-config.yaml is 0600
+        # root:root. It mounts two individual files rather than
+        # /etc/rancher/k3s, which also holds k3s.yaml -- a working admin
+        # kubeconfig -- and the server's private keys. It exits before the pod
+        # serves anything and needs no network.
+        - name: build
+          image: docker.io/mikefarah/yq:4.53.6@sha256:cfc4eee658595834ef304eadb0c3ea721f3b7cb6404ad8b7cb909cc5b5145b23
+          command:
+            - /bin/sh
+            - /builder/build.sh
+          securityContext:
+            runAsUser: 0
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          volumeMounts:
+            - name: builder
+              mountPath: /builder
+              readOnly: true
+            - name: authentication-config
+              mountPath: /node/authentication-config.yaml
+              readOnly: true
+            - name: node-config
+              mountPath: /node/config.yaml
+              readOnly: true
+            - name: cluster-ca
+              mountPath: /ca
+              readOnly: true
+            - name: out
+              mountPath: /out
+      containers:
+        # The only long-lived container, and the only one reachable over the
+        # network: unprivileged, non-root, and serving a directory it cannot
+        # write to.
+        - name: nginx
+          image: docker.io/nginxinc/nginx-unprivileged:1.31.4-alpine@sha256:d9083fe47768377ef55dedafd67d4da7c2f2bc2bece7554954f29359deb0dce9
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+          # / is not served: the default config has no index for this
+          # directory, so probe the file itself. That also makes the probe
+          # assert what the service exists to do.
+          readinessProbe:
+            httpGet:
+              path: /kubeconfig
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /kubeconfig
+              port: http
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          volumeMounts:
+            - name: out
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+            - name: cache
+              mountPath: /var/cache/nginx
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: out
+          emptyDir: {}
+        - name: builder
+          configMap:
+            name: kubeconfig-builder
+        - name: cluster-ca
+          configMap:
+            name: kube-root-ca.crt
+        - name: authentication-config
+          hostPath:
+            path: /etc/rancher/k3s/authentication-config.yaml
+            type: File
+        - name: node-config
+          hostPath:
+            path: /etc/rancher/k3s/config.yaml
+            type: File
+        - name: cache
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}

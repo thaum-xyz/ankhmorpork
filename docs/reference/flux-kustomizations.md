@@ -8,7 +8,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | | |
 | --- | --- |
-| **Total** | 50 — 3 bootstrap, 25 platform, 22 apps |
+| **Total** | 51 — 3 bootstrap, 26 platform, 22 apps |
 | **`prune: false`** | `prometheus-operator-crds`, `apps`, `platform`, `cilium`, `flux-system`, `piraeus-datastore`, `topolvm`, `traefik` |
 | **`wait: true`** | `prometheus-operator-crds`, `kyverno` |
 | **Declare `dependsOn`** | `apps`, `platform`, `cnpg-system`, `csi-nfs`, `kyverno-policies`, `piraeus-datastore`, `homer-services` |
@@ -40,6 +40,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `flux-system` | [`k8s/platform/cluster/flux-system`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/flux-system) | `15m0s` | **no** | no | — |
 | `k8up` | [`k8s/platform/storage/k8up`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/k8up) | `15m0s` | yes | no | — |
 | `kube-prometheus-stack` | [`k8s/platform/observability/kube-prometheus-stack`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability/kube-prometheus-stack) | `15m0s` | yes | no | — |
+| `kubeconfig` | [`k8s/platform/security/kubeconfig`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kubeconfig) | `15m0s` | yes | no | — |
 | `kyverno` | [`k8s/platform/security/kyverno`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kyverno) | `15m0s` | yes | **yes** (15m) | — |
 | `kyverno-policies` | [`k8s/platform/security/kyverno/policies`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kyverno/policies) | `15m0s` | yes | no | `kyverno` |
 | `node-feature-discovery` | [`k8s/platform/cluster/node-feature-discovery`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/node-feature-discovery) | `15m0s` | yes | no | — |
