@@ -29,12 +29,12 @@ Reads git-tracked manifests only, the same as hack/validate-manifests.sh, so a
 new file is invisible until staged.
 """
 
+import collections
+import json
 import pathlib
 import re
 import subprocess
 import sys
-
-import yaml
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs" / "reference"
@@ -60,11 +60,47 @@ def yaml_files(prefix):
     return [f for f in tracked(prefix) if f.suffix in (".yaml", ".yml")]
 
 
+_DOCS_BY_FILE = None
+
+
+def _parse(paths):
+    """{path: [document, ...]} for the given files, via one yq invocation.
+
+    yq rather than PyYAML: it is already a dependency of the other validators,
+    while PyYAML is not installed with Homebrew's python3 and would have to be
+    pip-installed in CI. `filename` tags each document with the file it came
+    from, which is what makes one call over 600-odd files possible instead of
+    one call per file.
+    """
+    out = subprocess.run(
+        ["yq", "ea", "-o=json", "-I0", '[{"f": filename, "d": .}]', *map(str, paths)],
+        capture_output=True, text=True,
+    )
+    if out.returncode != 0:
+        return None
+    docs = collections.defaultdict(list)
+    for entry in json.loads(out.stdout):
+        if isinstance(entry["d"], dict):
+            docs[pathlib.Path(entry["f"])].append(entry["d"])
+    return docs
+
+
 def load_all(path):
-    try:
-        return [d for d in yaml.safe_load_all(path.read_text()) if isinstance(d, dict)]
-    except yaml.YAMLError:
-        return []
+    global _DOCS_BY_FILE
+    if _DOCS_BY_FILE is None:
+        files = yaml_files("k8s")
+        parsed = _parse(files)
+        if parsed is None:
+            # One unparseable file fails the whole batch, so fall back to
+            # parsing each on its own and skipping the broken ones -- which is
+            # what this function did before it was batched.
+            parsed = collections.defaultdict(list)
+            for f in files:
+                one = _parse([f])
+                if one:
+                    parsed[f] = one[f]
+        _DOCS_BY_FILE = parsed
+    return _DOCS_BY_FILE.get(path, [])
 
 
 def is_k8s_object(doc):

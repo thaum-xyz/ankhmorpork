@@ -217,7 +217,8 @@ because nothing is left to uninstall. There is no `--force` flag on that command
   own log shows a clean 200. Confirm via `/api/v1/targets` (`health`, `lastError`).
   Exporters on a separate listener need the port declared as a container port
   before a PodMonitor can select it by name.
-- **Homebrew's `python3` lacks pyyaml here** — use `/usr/bin/python3`.
+- **No script under `hack/` needs a non-stdlib import** — any `python3` works.
+  YAML is read through `yq`, which the validators already require.
 
 ## After rollout
 
