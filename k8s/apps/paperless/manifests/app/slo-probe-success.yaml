@@ -15,10 +15,14 @@ spec:
   # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
   # SLO behind it.
   #
-  # target is a PLACEHOLDER carried over from the shared objective. 95%/7d
-  # permitted 8h24m of downtime a week, which was only ever defensible because
-  # one number had to cover thirteen services. Set from data around 2026-10-06 --
-  # having somewhere to put a real number is the point of splitting.
+  # target is still a PLACEHOLDER. This probe was re-pointed at a new
+  # endpoint on 2026-09-06 13:43 UTC, so a 7d window does not contain one
+  # endpoint throughout until 2026-09-13 13:43 UTC -- reading it before then
+  # sets a target from a URL that is no longer probed. Everything else in
+  # #1379 was set on 2026-09-10; this one waits.
+  #
+  # Provisionally 99.807% over the 3 days since the change, which is only
+  # here to show it is not an outlier that would change the shape.
   description: >-
     Fraction of successful blackbox probes against papers.krupa.net.pl.
   alerting:

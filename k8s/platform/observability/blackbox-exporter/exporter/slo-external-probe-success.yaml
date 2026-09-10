@@ -22,10 +22,15 @@ spec:
   # never have seen it. Requiring the label present keeps the "joins by default"
   # property and excludes anything unlabelled.
   #
-  # target is a PLACEHOLDER carried over unchanged. When the numbers are set
-  # around 2026-10-06 this one should end up looser than its neighbour, not
-  # because the endpoints are less important but because nothing here can fix
-  # them.
+  # target from the 7d window 2026-09-03..09-10 (#1379): 99.96030% achieved
+  # across both endpoints, 14 failed samples, worst burst 3m00s, 4.0% of a 99%
+  # budget. registry read 99.98512% and zmc 99.93053% taken separately.
+  #
+  # Not set looser than the objective next door in the end -- the data does
+  # not support pretending these endpoints are unreliable. The fact that
+  # nothing here can fix them belongs in the routing instead: when the burn
+  # severities come off info/none, this objective should not be the one that
+  # wakes somebody for a third party's outage.
   description: >-
     Fraction of successful blackbox probes against endpoints outside this
     cluster.
@@ -43,5 +48,5 @@ spec:
       grouping:
         - instance
       metric: probe_success{environment!="ankhmorpork", environment!=""}
-  target: "95.0"
+  target: "99"
   window: 7d

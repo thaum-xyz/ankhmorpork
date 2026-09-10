@@ -12,10 +12,10 @@ spec:
   # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
   # SLO behind it.
   #
-  # target is a PLACEHOLDER carried over from the shared objective. 95%/7d
-  # permitted 8h24m of downtime a week, which was only ever defensible because
-  # one number had to cover thirteen services. Set from data around 2026-10-06 --
-  # having somewhere to put a real number is the point of splitting.
+  # target from the 7d window 2026-09-03..09-10 (#1379): 99.91560% achieved, 17
+  # failed samples in 4 bursts, worst 7m00s, 8.4% of a 99% budget. 99.9 was
+  # rejected here: its weekly budget is 10m04s and this week spent 8m30s on
+  # planned work alone.
   description: >-
     Fraction of successful blackbox probes against recipes.krupa.net.pl.
   alerting:
@@ -30,5 +30,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://recipes\\.krupa\\.net\\.pl(/.*)?"}
-  target: "95.0"
+  target: "99"
   window: 7d

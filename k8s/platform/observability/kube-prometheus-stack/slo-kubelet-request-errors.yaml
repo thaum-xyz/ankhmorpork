@@ -6,6 +6,8 @@ metadata:
     role: alert-rules
   name: kubelet-request-errors
 spec:
+  # target from the 7d window 2026-09-03..09-10 (#1379): 99.99505% achieved
+  # over 6.8M requests, 5.0% of a 99.9% budget.
   description: ""
   alerting:
     name: KubeletClientBudgetBurn
@@ -22,5 +24,5 @@ spec:
         metric: rest_client_requests_total{job="kubelet",code=~"5.."}
       total:
         metric: rest_client_requests_total{job="kubelet"}
-  target: "99"
+  target: "99.9"
   window: 7d

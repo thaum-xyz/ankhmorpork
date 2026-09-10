@@ -6,6 +6,8 @@ metadata:
     role: alert-rules
   name: prometheus-rule-evaluation-failures
 spec:
+  # target confirmed against the 7d window 2026-09-03..09-10 (#1379), not
+  # changed: 99.99989% achieved over 30.0M evaluations, 1.1% of the budget.
   description: Rule and alerting rules are being evaluated every few seconds. This needs to work for recording rules to be created and most importantly for alerts to be evaluated.
   alerting:
     name: PrometheusRuleEvaluationBudgetBurn

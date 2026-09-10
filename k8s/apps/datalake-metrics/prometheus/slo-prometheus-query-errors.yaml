@@ -6,6 +6,8 @@ metadata:
     role: alert-rules
   name: prometheus-query-errors
 spec:
+  # target from the 7d window 2026-09-03..09-10 (#1379): no 5xx at all over 1.6M
+  # queries. The 95.0 it replaces was never grounded in anything.
   description: ""
   alerting:
     name: PrometheusQueryBudgetBurn
@@ -24,5 +26,5 @@ spec:
         - handler
       total:
         metric: prometheus_http_requests_total{job="prometheus-k8s",handler=~"/api/v1/query.*"}
-  target: "95.0"
+  target: "99.9"
   window: 7d

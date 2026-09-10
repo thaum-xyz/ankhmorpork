@@ -17,6 +17,16 @@ spec:
   # le must name a bucket that survives the cardinality drop on the apiserver
   # ServiceMonitor. The SLI variant keeps 0.05, 0.1, 1.0, 5.0, 10.0, 30.0 and
   # 60.0 -- there is no 0.25 to reach for.
+  #
+  # scope and verb are matched exactly. scope=~"resource|" also matched
+  # scope="" -- 193,828 non-resource GETs a week that were being counted
+  # here and in both of the old scope objectives at once. This scope is
+  # 100% GET, so the verb regex was never selecting anything else.
+  #
+  # target confirmed against the 7d window 2026-09-03..09-10 (#1379), not
+  # changed: 99.89151% achieved over 12.7M GETs, 10.7% of a 99% budget. The
+  # tightest of the control-plane objectives, and the only latency one with
+  # real discrimination at its old bucket.
   description: ""
   alerting:
     name: KubeAPIServerReadResourceLatencyBudgetBurn
@@ -30,8 +40,8 @@ spec:
   indicator:
     latency:
       success:
-        metric: apiserver_request_sli_duration_seconds_bucket{component="apiserver",scope=~"resource|",verb=~"LIST|GET",le="0.1"}
+        metric: apiserver_request_sli_duration_seconds_bucket{component="apiserver",scope="resource",verb="GET",le="0.1"}
       total:
-        metric: apiserver_request_sli_duration_seconds_count{component="apiserver",scope=~"resource|",verb=~"LIST|GET"}
+        metric: apiserver_request_sli_duration_seconds_count{component="apiserver",scope="resource",verb="GET"}
   target: "99"
   window: 7d

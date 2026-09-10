@@ -6,8 +6,7 @@ resources:
   - release.yaml
   - prometheusrule-nodes.yaml
   - prometheusrule-workloads.yaml
-  - slo-apiserver-read-cluster-latency.yaml
-  - slo-apiserver-read-namespace-latency.yaml
+  - slo-apiserver-read-list-latency.yaml
   - slo-apiserver-read-resource-latency.yaml
   - slo-apiserver-read-response-errors.yaml
   - slo-apiserver-write-response-errors.yaml
@@ -15,7 +14,6 @@ resources:
   - slo-kubelet-request-errors.yaml
   - slo-kubelet-runtime-errors.yaml
   - slo-prometheus-operator-http-errors.yaml
-  - slo-prometheus-operator-reconcile-errors.yaml
 configMapGenerator:
   - name: values-kube-prometheus-stack
     files:

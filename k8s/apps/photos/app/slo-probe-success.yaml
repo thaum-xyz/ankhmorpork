@@ -14,10 +14,13 @@ spec:
   # immich exports 565 metric families and not one measures the request path,
   # so the probe is the only availability signal it has.
   #
-  # target is a PLACEHOLDER carried over from the shared objective. 95%/7d
-  # permitted 8h24m of downtime a week, which was only ever defensible because
-  # one number had to cover thirteen services. Set from data around 2026-10-06 --
-  # having somewhere to put a real number is the point of splitting.
+  # target from the 7d window 2026-09-03..09-10 (#1379): 99.94050% achieved, 12
+  # failed samples in 3 bursts, worst 4m00s, 6.0% of a 99% budget.
+  #
+  # One asterisk on that window: the probe pointed at / rather than
+  # /api/server/config for about 5 hours from 2026-09-06 21:19 before #1345
+  # put it back. The endpoint measured now is the one measured for the other
+  # 6.8 days, so the reading holds.
   description: >-
     Fraction of successful blackbox probes against photos.krupa.net.pl.
   alerting:
@@ -32,5 +35,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://photos\\.krupa\\.net\\.pl(/.*)?"}
-  target: "95.0"
+  target: "99"
   window: 7d

@@ -6,6 +6,9 @@ metadata:
     role: alert-rules
   name: prometheus-sd-kubernetes-errors
 spec:
+  # target confirmed against the 7d window 2026-09-03..09-10 (#1379), not
+  # changed: 99.87905% achieved over 229k requests, 12.1% of a 99% budget --
+  # the noisiest platform objective, and the reason not to tighten it.
   description: If there are too many errors Prometheus is having a bad time discovering new Kubernetes services.
   alerting:
     name: PrometheusSDKubernetesBudgetBurn
