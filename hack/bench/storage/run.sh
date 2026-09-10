@@ -11,6 +11,8 @@
 #   ./run.sh --resume <run-id>        # continue a run, skipping finished targets
 #   ./run.sh --only unifi-nas --buffered   # NFS as an app actually uses it
 #   ./run.sh --dry-run                # print the plan, touch nothing
+#
+# Needs kubectl and jq. report.py, which it runs at the end, needs python3.
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -338,7 +340,7 @@ for cyc in $(seq 1 "$CYCLES"); do
     CDIR="$OUT/$TARGET_ID/cycle-$cyc"; mkdir -p "$CDIR"
 
     if $RESUME && [[ -s "$CDIR/fio.json" ]] \
-       && python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$CDIR/fio.json" 2>/dev/null; then
+       && jq -e . "$CDIR/fio.json" >/dev/null 2>&1; then
       log "  [$j/${#LIVE[@]}] $TARGET_ID already measured, skipping"; continue
     fi
 
@@ -356,7 +358,7 @@ for cyc in $(seq 1 "$CYCLES"); do
       done
       sed -n '/-----BEGIN FIO JSON-----/,/-----END FIO JSON-----/p' "$CDIR/pod.log" \
         | sed '1d;$d' > "$CDIR/fio.json" || true
-      if [[ -s "$CDIR/fio.json" ]] && python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$CDIR/fio.json" 2>/dev/null; then
+      if [[ -s "$CDIR/fio.json" ]] && jq -e . "$CDIR/fio.json" >/dev/null 2>&1; then
         log "  [$j/${#LIVE[@]}] $TARGET_ID ok"
       else
         fail "  [$j/${#LIVE[@]}] $TARGET_ID produced no valid json"

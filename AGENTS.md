@@ -28,6 +28,19 @@ Values live in `values.yaml`, fed in via `configMapGenerator` and `valuesFrom` �
 not inline in `spec.values`. Renovate's `helm-values` manager reads `values.yaml`
 but cannot see inside a HelmRelease.
 
+## Scripts in `hack/`
+
+Bash by default: a script that runs tools in sequence and checks exit codes is a
+bash script. Use Python when it needs a data structure that outlives one pipeline
+— grouping, joining or cross-referencing across files — or when it parses
+something with no good CLI. Prefer the standard library; `yq -o=json` into `json`
+beats adding a dependency.
+
+Never embed one language in another. No Python heredocs in bash, no
+`subprocess.run(["bash", "-c", ...])` in Python: pick the language that fits and
+write the whole script in it. And no wrapper scripts — the Makefile calls the
+real script directly.
+
 ## Manifest layout and naming
 
 Keep one Kubernetes object per manifest file. Group distinct components under

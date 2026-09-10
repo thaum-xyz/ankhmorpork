@@ -22,7 +22,7 @@ validate-flux:  ## Check that Flux Kustomization paths exist
 
 .PHONY: validate-configmaps
 validate-configmaps:  ## Check no two Kustomizations render the same ConfigMap
-	./hack/validate-configmap-ownership.sh
+	$(PYTHON) hack/validate-configmap-ownership.py
 
 .PHONY: lint-shell
 lint-shell:  ## Run shellcheck over every tracked shell script

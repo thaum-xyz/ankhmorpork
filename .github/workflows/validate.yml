@@ -40,7 +40,7 @@ jobs:
       # all of k8s/bootstrap.
       - run: go install sigs.k8s.io/kustomize/kustomize/v5@${{ env.kustomize-version }}
       - run: ./hack/validate-flux-paths.sh
-      - run: ./hack/validate-configmap-ownership.sh
+      - run: make validate-configmaps PYTHON=python3
 
   # The action finds shell files by extension and by shebang, so it covers
   # anything `make lint-shell` would and then some.
