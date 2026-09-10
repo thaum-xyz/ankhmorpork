@@ -34,7 +34,7 @@ kubectl krew install oidc-login
 From a checkout of this repository, on the house network:
 
 ```bash
-./hack/mkkubeconfig.sh
+./hack/mkkubeconfig.py
 ```
 
 That writes `~/.kube/clusters/ankhmorpork-oidc` and ends by verifying it. The
