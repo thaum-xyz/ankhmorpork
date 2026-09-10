@@ -1,0 +1,57 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
+  # component's namespace on it in the rendered output; the API server ignores
+  # the field for cluster-scoped resources.
+  name: validate-group-labels
+spec:
+  # generate-group-rolebindings turns every `group.rbac.thaum.xyz/<group>`
+  # label into a RoleBinding to the ClusterRole its value names. Two ways that
+  # goes wrong quietly, both made loud here:
+  #
+  #   - a tier outside edit/view. The background controller may only `bind`
+  #     those two, so anything else fails inside a background UpdateRequest --
+  #     no admission error, no binding, and a tenant who authenticates and then
+  #     gets Forbidden. That reads like a broken authenticator rather than a
+  #     mistyped label.
+  #   - an empty value, which would generate a binding to a ClusterRole named
+  #     "" rather than to nothing.
+  #
+  # Scoped to namespaces that actually carry such a label, so it can never
+  # block creating an ordinary namespace.
+  evaluation:
+    background:
+      enabled: false
+  failurePolicy: Fail
+  validationActions:
+    - Deny
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - namespaces
+  variables:
+    - name: prefix
+      expression: '"group.rbac.thaum.xyz/"'
+    - name: labels
+      expression: object.metadata.?labels.orValue({})
+  matchConditions:
+    # Inlined rather than reusing the variables above: matchConditions are
+    # evaluated before `variables`, so they cannot reference them.
+    - name: has-a-group-label
+      expression: >-
+        object.metadata.?labels.orValue({}).exists(k, k.startsWith("group.rbac.thaum.xyz/"))
+  validations:
+    - expression: >-
+        variables.labels.all(k, !k.startsWith(variables.prefix) ||
+        variables.labels[k] in ["edit", "view"])
+      message: >-
+        A group.rbac.thaum.xyz/<group> label must have the value "edit" or
+        "view". It grants the pocket-id group oidc:k8s:group:<group> that
+        ClusterRole in this namespace; the group name comes from the label key,
+        never from the value.

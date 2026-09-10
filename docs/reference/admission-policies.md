@@ -12,9 +12,11 @@ schedule against objects that already exist.
 | Policy | Applies to | Effect | Shipped by |
 | --- | --- | --- | --- |
 | [`cleanup-cnpg-backups`](#cleanup-cnpg-backups) | `backups` | **Delete on schedule `17 3 * * *`** | `cnpg-system` |
+| [`generate-group-rolebindings`](#generate-group-rolebindings) | `namespaces` | **Generate** | `kyverno-policies` |
 | [`mutate-configmap-autoreload`](#mutate-configmap-autoreload) | `deployments`, `statefulsets` | **Mutate** | `kyverno-policies` |
 | [`mutate-nfs-pvc-alert-exclusion`](#mutate-nfs-pvc-alert-exclusion) | `persistentvolumeclaims` | **Mutate** | `csi-nfs` |
 | [`require-resource-requests`](#require-resource-requests) | `pods` | **Warn** | `kyverno-policies` |
+| [`validate-group-labels`](#validate-group-labels) | `namespaces` | **Deny** | `kyverno-policies` |
 | [`validate-helm-chart-version`](#validate-helm-chart-version) | `helmreleases` | **Deny** | `kyverno-policies` |
 | [`validate-ingress-contract`](#validate-ingress-contract) | `ingresses` | **Deny** | `kyverno-policies` |
 | [`validate-nfs-k8up-annotations`](#validate-nfs-k8up-annotations) | `persistentvolumeclaims`, `persistentvolumes` | **Warn** | `csi-nfs` |
@@ -36,6 +38,18 @@ Deletes only objects matching all of:
 - `scheduled-backup`
 - `terminal-phase`
 - `older-than-retention-window`
+
+## `generate-group-rolebindings`
+
+| | |
+| --- | --- |
+| **Kind** | `GeneratingPolicy` |
+| **Applies to** | `namespaces` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Generate** |
+| **Only when** | `object.metadata.?labels.orValue({}).exists(k, k.startsWith("group.rbac.thaum.xyz/"))` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/generate-group-rolebindings.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/generate-group-rolebindings.yaml) |
 
 ## `mutate-configmap-autoreload`
 
@@ -78,6 +92,23 @@ Deletes only objects matching all of:
 Rules enforced:
 
 - All regular and init containers should set CPU and memory requests.
+
+## `validate-group-labels`
+
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `namespaces` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Deny** |
+| **failurePolicy** | `Fail` |
+| **Only when** | `object.metadata.?labels.orValue({}).exists(k, k.startsWith("group.rbac.thaum.xyz/"))` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/validate-group-labels.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-group-labels.yaml) |
+
+Rules enforced:
+
+- A group.rbac.thaum.xyz/<group> label must have the value "edit" or "view". It grants the pocket-id group oidc:k8s:group:<group> that ClusterRole in this namespace; the group name comes from the label key, never from the value.
 
 ## `validate-helm-chart-version`
 

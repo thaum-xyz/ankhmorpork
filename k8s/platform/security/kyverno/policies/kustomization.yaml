@@ -6,3 +6,5 @@ resources:
   - validate-helm-chart-version.yaml
   - validate-ingress-contract.yaml
   - mutate-configmap-autoreload.yaml
+  - validate-group-labels.yaml
+  - generate-group-rolebindings.yaml

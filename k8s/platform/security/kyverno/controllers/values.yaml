@@ -49,9 +49,38 @@ admissionController:
   serviceMonitor:
     enabled: true
 
-# Generate rules and mutate-existing rules are not part of the initial use case.
+# Required by generate-tenant-rolebinding. The admission controller only records
+# an UpdateRequest for a generate rule; this is the controller that reconciles
+# one into the generated object, and keeps it in sync afterwards. Without it a
+# generate policy parks UpdateRequests in Pending forever.
+#
+# The chart's own `kyverno:background-controller:core` role already carries
+# rolebindings create/update/patch/delete. What it does not carry is the `bind`
+# verb, without which RBAC's escalation check rejects a binding to a role the
+# controller does not itself hold -- see clusterrole-background-controller.yaml,
+# which grants it for exactly two ClusterRoles.
 backgroundController:
-  enabled: false
+  enabled: true
+  replicas: 1
+  priorityClassName: system-cluster-critical
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+  resources:
+    limits: null
+    requests:
+      cpu: 100m
+      memory: 64Mi
+  serviceMonitor:
+    enabled: true
 
 cleanupController:
   enabled: true
