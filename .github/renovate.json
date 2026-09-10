@@ -102,6 +102,17 @@
         "image: (?<depName>[a-z0-9.-]+(?:/[a-z0-9._-]+)+):(?<currentValue>v?[0-9][A-Za-z0-9.+-]*)"
       ],
       "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "shellcheck-version:\\s(?<currentValue>.*?)\\n"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "koalaman/shellcheck"
     }
   ],
   "packageRules": [

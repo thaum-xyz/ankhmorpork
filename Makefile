@@ -24,6 +24,10 @@ validate-flux:  ## Check that Flux Kustomization paths exist
 validate-configmaps:  ## Check no two Kustomizations render the same ConfigMap
 	./hack/validate-configmap-ownership.sh
 
+.PHONY: lint-shell
+lint-shell:  ## Run shellcheck over every tracked shell script
+	git ls-files '*.sh' | xargs shellcheck
+
 .PHONY: prometheusrules
 prometheusrules:  ## Validate prometheus rules
 	./hack/unpack-prometheus-rules.sh
