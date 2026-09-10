@@ -55,6 +55,25 @@ data:
         - send_resolved: true
           url: "http://github-receiver:8080/v1/webhook?owner=thaum-xyz&repo=ankhmorpork"
     - name: "null"
+    # Waking hours, local. Referenced by the opsgenie route below.
+    #
+    # Expressed as the hours that DO page rather than the hours that do not:
+    # an Alertmanager time range cannot cross midnight, so muting 20:00-09:00
+    # would need two ranges and a reader would have to intersect them in their
+    # head. active_time_intervals inverts it into one range that says what it
+    # means.
+    #
+    # location is not optional. Without it Alertmanager reads the times as UTC,
+    # which is right for two-thirds of the year and an hour out for the rest.
+    # The binary has embedded tzdata, so the name resolves without tzdata in
+    # the image.
+    time_intervals:
+    - name: waking-hours
+      time_intervals:
+      - times:
+        - start_time: "09:00"
+          end_time: "20:00"
+        location: Europe/Warsaw
     route:
       group_by: ['alertname', 'namespace', 'job']
       group_wait: 30s
@@ -76,10 +95,23 @@ data:
         # below, so every alert that is worth waking someone for also leaves a
         # written record. Without it a critical is paged and never written down —
         # the reason the 2026-09-09 kured reboots left no issue to read back.
+        #
+        # active_time_intervals sits on this route alone, so outside 09:00-20:00
+        # the page is withheld while the fall-through still files the issue.
+        # Nothing is lost overnight, it is only read in the morning -- and an
+        # alert still firing when the window opens pages then.
+        #
+        # This applies to every critical, with no carve-out for the ones whose
+        # damage compounds overnight -- UPS runtime, a filesystem gone read-only,
+        # a pool filling up. That is a deliberate trade by the one person who
+        # receives these: sleep is worth more than the hours between the alert
+        # and the morning. Revisit it if anyone else ever goes on the rota.
         - matchers:
           - "severity = critical"
           receiver: 'opsgenie'
           continue: true
+          active_time_intervals:
+          - waking-hours
         # Every NFS-backed PVC reports the whole export's fill level, so a single
         # NAS filling up fires this once per PVC across unrelated namespaces.
         # Grouping on alertname alone turns that into one issue listing them all.
