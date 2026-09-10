@@ -13,7 +13,7 @@ k3s_token: "{{ hostvars[groups['k3s_control_plane'][0]]['token'] }}"
 # k3s_oidc_client_id makes the whole feature inert again: no config file, no
 # apiserver arg, no restart. That is the way to back it out.
 #
-# The `oidc:k8s-admins` ClusterRoleBinding in
+# The `oidc:k8s:cluster:admin` ClusterRoleBinding in
 # k8s/platform/security/oidc-rbac/ must be live before this reaches an
 # apiserver, or logins authenticate into a group holding no permissions.
 k3s_oidc_issuer_url: "https://login.krupa.net.pl"
