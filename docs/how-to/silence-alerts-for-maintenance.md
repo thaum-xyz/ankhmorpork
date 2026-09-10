@@ -44,8 +44,7 @@ If you would rather script it, `amtool` does the same thing against the same
 API and takes matchers in the syntax above:
 
 ```bash
-amtool --alertmanager.url=https://alertmanager.ankhmorpork.thaum.xyz \
-  silence add namespace=<namespace> --duration=2h --comment="<what you are doing>"
+amtool silence add namespace=<namespace> --duration=2h --comment="<what you are doing>"
 ```
 
 !!! danger "Never let a silence match `Watchdog`"
