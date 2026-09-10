@@ -7,14 +7,19 @@ metadata:
     # Applied the other way round, tokens authenticate and then map to a group
     # with no permissions, which reads exactly like a broken authenticator.
     kubernetes.io/description: >-
-      cluster-admin for the pocket-id `k8s-admins` group. The `oidc:` prefix is
-      applied by claimMappings.groups.prefix in
+      cluster-admin for the pocket-id `k8s:cluster:admin` group. The `oidc:`
+      prefix is applied by claimMappings.groups.prefix in
       metal/roles/k3s-master/templates/authentication-config.yaml.j2 -- the two
       must be changed together.
+
+      Colon-separated to match the per-namespace tenant groups that
+      generate-tenant-rolebinding derives, and the shape Kubernetes uses for
+      its own `system:` groups. `scope:tier`, so the cluster-wide pair reads the
+      same way as `k8s:mealie:edit`.
 subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: Group
-    name: oidc:k8s-admins
+    name: oidc:k8s:cluster:admin
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
