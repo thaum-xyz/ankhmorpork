@@ -2,3 +2,13 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: mealie
+  labels:
+    # Generates a RoleBinding giving oidc:k8s:group:appadmin the `edit`
+    # ClusterRole here, via the generate-group-rolebindings GeneratingPolicy.
+    # Add another `group.rbac.thaum.xyz/<group>` label for a second group; keys
+    # are unique, so several groups can hold different levels here.
+    #
+    # The pocket-id group `k8s:group:appadmin` still has to exist with its
+    # members and be selected under the kubectl client's Allowed User Groups, or
+    # the login fails before RBAC is consulted.
+    group.rbac.thaum.xyz/appadmin: edit
