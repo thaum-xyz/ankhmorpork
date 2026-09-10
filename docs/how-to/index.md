@@ -29,6 +29,8 @@ section once migrated.
 - [Choose a storage class](choose-a-storage-class.md) — which class a workload
   belongs on, in the order the questions actually matter
 - [Roll a workload when its ConfigMap changes](reload-on-configmap-change.md)
+- [Silence alerts for maintenance](silence-alerts-for-maintenance.md) — and the
+  one matcher that must never match
 
 ## Not written yet
 
