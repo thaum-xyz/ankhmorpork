@@ -113,6 +113,17 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "koalaman/shellcheck"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "esoctl-version:\\s(?<currentValue>.*?)\\n"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "ghcr.io/external-secrets/external-secrets"
     }
   ],
   "packageRules": [

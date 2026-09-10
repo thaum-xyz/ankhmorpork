@@ -28,6 +28,10 @@ validate-configmaps:  ## Check no two Kustomizations render the same ConfigMap
 lint-shell:  ## Run shellcheck over every tracked shell script
 	git ls-files '*.sh' | xargs shellcheck
 
+.PHONY: validate-alertmanager
+validate-alertmanager:  ## Check the rendered Alertmanager config with amtool
+	./hack/validate-alertmanager-config.sh
+
 .PHONY: prometheusrules
 prometheusrules:  ## Validate prometheus rules
 	./hack/unpack-prometheus-rules.sh
