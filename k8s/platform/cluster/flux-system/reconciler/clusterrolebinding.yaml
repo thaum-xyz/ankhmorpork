@@ -1,0 +1,20 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-reconciler
+  annotations:
+    kubernetes.io/description: >-
+      cluster-admin, deliberately: this SA reconciles flux-system, which owns
+      every component Kustomization, the CRDs and the cluster-scoped RBAC.
+      Narrowing it would not bound anything -- flux-system is the control
+      plane, not a tenant. The boundary this change buys appears one namespace
+      at a time, as each app's Kustomization moves into its own namespace with
+      an SA scoped to that app.
+subjects:
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: flux-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin

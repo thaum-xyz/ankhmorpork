@@ -16,6 +16,25 @@ helmController:
             operator: Exists
 
 kustomizeController:
+  # Impersonate flux-system's flux-reconciler ServiceAccount for every
+  # Kustomization that does not set spec.serviceAccountName, rather than
+  # applying as the controller's own cluster-admin identity.
+  #
+  # Passed here rather than through `multitenancy.enabled`, which is the
+  # chart's switch for this flag but emits `--no-cross-namespace-refs=true`
+  # alongside it. That one forbids `sourceRef.namespace: flux-system`, which is
+  # how a Kustomization in an app namespace shares the single GitRepository --
+  # turning it on would mean a GitRepository per namespace. Impersonation
+  # already denies a tenant pointing spec.path at another component, so the
+  # cross-namespace flag buys nothing here.
+  #
+  # The SA is resolved in each Kustomization's OWN namespace, so this is inert
+  # while all of them live in flux-system: the name resolves to the SA in
+  # reconciler/, which is cluster-admin. It stops being inert the moment a
+  # Kustomization moves into an app namespace, which is the intended order.
+  container:
+    additionalArgs:
+      - --default-service-account=flux-reconciler
   priorityClassName: system-cluster-critical
   tolerations:
     - key: "node-role.kubernetes.io/control-plane"
