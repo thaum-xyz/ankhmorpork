@@ -5,6 +5,8 @@ resources:
   - public/release.yaml
   - private/release.yaml
   - repository.yaml
+  - clusterrole-aggregate-view.yaml
+  - clusterrole-aggregate-edit.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:

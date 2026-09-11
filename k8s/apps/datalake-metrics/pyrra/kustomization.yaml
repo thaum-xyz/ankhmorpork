@@ -5,6 +5,8 @@ namespace: datalake-metrics
 resources:
   - repository.yaml
   - release.yaml
+  - clusterrole-aggregate-view.yaml
+  - clusterrole-aggregate-edit.yaml
 # Qualified so a future values generator in the parent cannot collide.
 configMapGenerator:
   - name: values-pyrra

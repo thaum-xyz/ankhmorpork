@@ -1,5 +1,19 @@
 # Config reference: https://github.com/cloudnative-pg/charts/tree/main
 
+rbac:
+  # Ships two ClusterRoles labelled for aggregation into the built-in view/edit/
+  # admin, so a namespace grant reaches the app's own database rather than
+  # stopping at the workloads in front of it. Without it, `edit` in a namespace
+  # cannot even read the Cluster the app runs on.
+  #
+  # The chart's edit role covers every kind in the group, `delete clusters`
+  # included -- which takes the PVCs with it through ownerReferences. That is
+  # not a new capability: `edit` already grants delete on
+  # persistentvolumeclaims in the namespace, so the same data is already one
+  # command away. Preferred over a hand-written narrower role because it tracks
+  # the CRD set across chart upgrades.
+  aggregateClusterRoles: true
+
 additionalArgs:
 - "--metrics-bind-address=0.0.0.0:8080"
 

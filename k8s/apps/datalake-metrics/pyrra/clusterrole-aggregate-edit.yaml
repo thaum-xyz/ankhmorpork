@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pyrra-crd-edit
+  labels:
+    # edit, and through the label edit itself carries, admin.
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+  annotations:
+    kubernetes.io/description: >-
+      Write access to ServiceLevelObjectives for the built-in edit and admin
+      roles. The most-authored CRD in this repository, and the one a tenant most
+      needs to own: an SLO is a statement about their own application's
+      behaviour, and the PrometheusRules it generates are what page someone.
+rules:
+  - apiGroups:
+      - pyrra.dev
+    resources:
+      - servicelevelobjectives
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update

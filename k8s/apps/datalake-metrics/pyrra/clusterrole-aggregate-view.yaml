@@ -1,0 +1,25 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pyrra-crd-view
+  labels:
+    # The built-in roles chain through labels on each other -- `view` carries
+    # aggregate-to-edit and `edit` carries aggregate-to-admin -- so a role
+    # labelled for view alone still reaches all three tiers.
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+  annotations:
+    kubernetes.io/description: >-
+      Read access to ServiceLevelObjectives for the built-in view/edit/admin
+      roles, so a namespace grant can see the app's own SLO. The pyrra chart
+      ships no aggregation roles of its own -- unlike cloudnative-pg and
+      kube-prometheus-stack, which do it behind a values flag -- so this is
+      written by hand and lives with the controller whose CRD it covers.
+rules:
+  - apiGroups:
+      - pyrra.dev
+    resources:
+      - servicelevelobjectives
+    verbs:
+      - get
+      - list
+      - watch
