@@ -14,7 +14,7 @@ env:
   # Zensical is alpha (0.0.x) and ships every few days, so this is pinned rather
   # than floating. A customManager in .github/renovate.json bumps it here and in
   # the Makefile together; without that entry this line would simply freeze.
-  zensical-version: 0.0.59
+  zensical-version: 0.0.60
 
 permissions:
   contents: read
