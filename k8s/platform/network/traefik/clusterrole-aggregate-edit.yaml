@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: traefik-crd-edit
+  labels:
+    # edit, and through the label edit itself carries, admin.
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+  annotations:
+    kubernetes.io/description: >-
+      Write access to Traefik Middlewares for the built-in edit and admin roles.
+
+      Middlewares only. Routing in this cluster is plain Ingress objects with
+      annotations -- already covered by `edit` -- and the one Traefik CRD any
+      application authors is a Middleware, in k8s/apps/paperless. IngressRoute
+      and the transport objects stay read-only: nothing here authors one, and a
+      tenant who needs one is doing something worth reviewing.
+rules:
+  - apiGroups:
+      - traefik.io
+    resources:
+      - middlewares
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update

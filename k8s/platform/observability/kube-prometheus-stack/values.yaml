@@ -3,6 +3,22 @@
 crds:
   enabled: false
 
+global:
+  rbac:
+    # Ships two ClusterRoles labelled for aggregation into the built-in
+    # view/edit/admin, covering monitoring.coreos.com. Without it a namespace
+    # grant cannot touch the app's own ServiceMonitor or PrometheusRule -- which
+    # is most of what an app in this repo is made of, 19 PrometheusRules and 12
+    # ServiceMonitors across k8s/.
+    #
+    # The edit role covers the whole API group, so it also lets a tenant author
+    # a Prometheus or an Alertmanager in their own namespace. Accepted: that is
+    # upstream's own definition of user-facing, and the blast radius is one
+    # namespace's resource budget. AlertmanagerConfig writes are inert today
+    # because datalake-alerts/main sets no alertmanagerConfigSelector -- if one
+    # is ever added, tenant-authored routing becomes live, so revisit this then.
+    createAggregateClusterRoles: true
+
 # The Prometheus and Alertmanager CRs are hand-written so their specs stay under
 # our control: k8s/apps/datalake-metrics and k8s/apps/datalake-alerts.
 prometheus:

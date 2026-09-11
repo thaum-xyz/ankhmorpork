@@ -1,0 +1,41 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: traefik-crd-view
+  labels:
+    # The built-in roles chain through labels on each other -- `view` carries
+    # aggregate-to-edit and `edit` carries aggregate-to-admin -- so a role
+    # labelled for view alone still reaches all three tiers.
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+  annotations:
+    kubernetes.io/description: >-
+      Read access to the Traefik CRDs for the built-in view/edit/admin roles.
+
+      Written by hand rather than with the chart's `rbac.aggregateTo`, which
+      does something different and much wider than its name suggests: it
+      aggregates Traefik's *own controller* ClusterRole into the user-facing
+      roles, which drags cluster-wide read on secrets, nodes, namespaces,
+      services and configmaps along with it. `view` deliberately excludes
+      secrets, and this cluster has a cluster-wide `view` binding, so that flag
+      would hand every viewer read access to every Secret in the cluster.
+
+      One ClusterRole shared by both Traefik instances, which is why it sits
+      here rather than under public/ or private/.
+rules:
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - middlewares
+      - middlewaretcps
+      - serverstransports
+      - serverstransporttcps
+      - tlsoptions
+      - tlsstores
+      - traefikservices
+    verbs:
+      - get
+      - list
+      - watch
