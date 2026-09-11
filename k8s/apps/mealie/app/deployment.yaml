@@ -68,7 +68,7 @@ spec:
         - name: OIDC_ADMIN_GROUP
           value: admin
         - name: OIDC_USER_GROUP
-          value: mealie
+          value: app:mealie
         - name: DB_ENGINE
           value: postgres
         - name: POSTGRES_SERVER
