@@ -31,3 +31,21 @@ rules:
     resourceNames:
       - edit
       - view
+  # The chart's core role grants create/update/patch/delete on rolebindings but
+  # no read verbs, and generation reads before it writes -- it looks for an
+  # existing object to decide between create and update, and synchronize needs
+  # to see drift. Without these, every generate fails with
+  #   permission denied: rolebindings ... is forbidden: ... cannot get resource
+  #   "rolebindings" ... in the namespace "<ns>"
+  # inside a background UpdateRequest, where nothing surfaces it at admission.
+  #
+  # This widens no ceiling: the controller can already write RoleBindings, and
+  # `bind` above still caps which ClusterRole any of them may reference.
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - rolebindings
+    verbs:
+      - get
+      - list
+      - watch
