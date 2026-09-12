@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cloudnative-pg
   name: controller-manager-metrics-monitor
-  namespace: cnpg-system
+  namespace: platform-storage
 spec:
   selector:
     matchLabels:
