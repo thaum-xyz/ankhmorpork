@@ -1,0 +1,43 @@
+# Config reference: https://github.com/versity/versitygw/blob/main/chart/values.yaml
+#
+# Backup target for the fleet's postgres clusters. Replaces the versitygw that
+# ran in cnpg-system; that one is deliberately left running and untouched while
+# its data is copied across on the NAS, so for a while there are two gateways and
+# only this one is empty.
+
+# Without this the release name would render as cnpg-versity-gw-versitygw: the
+# chart only collapses the repetition when the release name contains the chart
+# name, and "versity-gw" is not "versitygw". The Service name is the endpoint
+# eleven postgres clusters point at, so it is worth spelling out.
+fullnameOverride: cnpg-versity-gw
+
+# Pinned. The chart defaults to :latest.
+image:
+  tag: "v1.7.0"
+
+auth:
+  existingSecret: cnpg-versity-gw-credentials
+
+gateway:
+  backend:
+    type: posix
+    args: "/mnt/data"
+    # Object metadata as ordinary files rather than xattrs, which is what lets
+    # this sit on an NFSv3 share.
+    sidecarDir: "/mnt/metadata"
+
+# Eleven clusters at 3d-30d retention. nfs.csi.k8s.io does not enforce the
+# request, so this is a label rather than a reservation.
+persistence:
+  enabled: true
+  create: true
+  size: 100Gi
+  storageClassName: unifi-nas
+  accessMode: ReadWriteMany
+
+resources:
+  limits:
+    memory: 1Gi
+  requests:
+    cpu: 50m
+    memory: 128Mi

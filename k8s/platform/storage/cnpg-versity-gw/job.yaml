@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cnpg-versity-gw-bootstrap-bucket
+spec:
+  # barman-cloud will not create the bucket, and a missing one surfaces as a
+  # failed backup rather than anything naming the cause. Harmless if the copied
+  # data already contains it -- `mb --ignore-existing` is a no-op then.
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: mc
+          image: minio/mc:latest
+          env:
+            - name: BUCKET_NAME
+              value: cnpg
+            - name: VGW_ENDPOINT
+              value: http://cnpg-versity-gw:7070
+            - name: ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cnpg-versity-gw-credentials
+                  key: rootAccessKeyId
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cnpg-versity-gw-credentials
+                  key: rootSecretAccessKey
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
+          command: ["/bin/sh", "-lc"]
+          args:
+            - |
+              mc alias set vgw "$VGW_ENDPOINT" "$ACCESS_KEY" "$SECRET_KEY" --api S3v4
+              mc mb --ignore-existing vgw/$BUCKET_NAME
