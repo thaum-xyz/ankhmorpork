@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-network
+  annotations:
+    kubernetes.io/description: >-
+      Ingress and egress: cloudflared, external-dns. traefik belongs here too
+      and has not moved yet -- its Services hold pinned VIPs that only one
+      Service can claim at a time, so it needs an ordered cutover rather than a
+      merge.
+
+      cilium is deliberately not here and never will be. It is the CNI, so it
+      has to be reachable before anything else in kube-system;
+      validate-platform-namespaces.py records that exemption.
+
+      Shared by several components, which is why the object lives here and not
+      in any one of their directories. With one component per namespace the
+      owner was obvious; with several it would be arbitrary, and the loser of
+      that choice gets deleted out from under the others the first time its
+      Kustomization is pruned.
+    # Never garbage-collect this Namespace. Pruning is inventory-based, so
+    # dropping it from a Kustomization's inventory would delete the namespace
+    # and everything inside it.
+    kustomize.toolkit.fluxcd.io/prune: disabled

@@ -11,7 +11,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: k8s-sigs-external-dns
-        namespace: external-dns
+        namespace: platform-network
       interval: 5m
   interval: 5m
   timeout: 2m
