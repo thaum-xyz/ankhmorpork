@@ -1,5 +1,18 @@
 # Reference documentation: https://artifacthub.io/packages/helm/cert-manager/cert-manager
 
+# Where a ClusterIssuer's secretRefs resolve -- its ACME account key, and the
+# Cloudflare token for the DNS01 solver. Cluster-scoped issuers have no
+# namespace of their own, so cert-manager reads these from one fixed namespace.
+#
+# Stated explicitly because the default is "whatever namespace the release is
+# in". That default is invisible in git and silently correct until the day the
+# release moves, at which point cert-manager looks in the new namespace, finds
+# no account key, and registers a BRAND NEW ACME account rather than failing --
+# burning a Let's Encrypt account-creation slot and orphaning the old one. The
+# move to platform-security is exactly that day; pinning it means the next one
+# cannot repeat it.
+clusterResourceNamespace: platform-security
+
 # Equivalent to the deprecated installCRDs: true.
 crds:
   enabled: true
