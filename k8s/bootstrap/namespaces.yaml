@@ -15,8 +15,12 @@ metadata:
       `oidc:k8s:group:<group>` -- so leaving them in an app's own directory
       would let a tenant who can merge there edit their own grant.
 
-      Platform Namespaces stay with their components: already applied by a
-      cluster-admin identity, no group labels, nothing to gain.
+      Platform Namespaces followed when they stopped being one-per-component.
+      A `platform-<domain>` Namespace is shared, so keeping it in any one
+      component's directory would make that component's `prune` the whole
+      domain's blast radius. The original reasons not to move them -- applied by
+      a cluster-admin identity anyway, no group labels to protect -- were
+      reasons it did not matter, not reasons against.
 spec:
   interval: 15m0s
   # Deliberately no kustomization.yaml in the target directory. There is

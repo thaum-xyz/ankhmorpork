@@ -9,6 +9,9 @@ spec:
   prune: false
   dependsOn:
   - name: prometheus-operator-crds
+  # Shared platform-<domain> Namespaces live in ./k8s/namespaces, so they are no
+  # longer created by the first component that happens to reconcile into them.
+  - name: namespaces
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

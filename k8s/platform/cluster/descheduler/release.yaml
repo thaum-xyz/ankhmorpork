@@ -11,7 +11,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: descheduler
-        namespace: descheduler
+        namespace: platform-cluster
       interval: 5m
   interval: 5m
   timeout: 20m
