@@ -12,10 +12,12 @@ schedule against objects that already exist.
 | Policy | Applies to | Effect | Shipped by |
 | --- | --- | --- | --- |
 | [`cleanup-cnpg-backups`](#cleanup-cnpg-backups) | `backups` | **Delete on schedule `17 3 * * *`** | `cnpg-system` |
+| [`generate-flux-reconciler`](#generate-flux-reconciler) | `namespaces` | **Generate** | `kyverno-policies` |
 | [`generate-group-rolebindings`](#generate-group-rolebindings) | `namespaces` | **Generate** | `kyverno-policies` |
 | [`mutate-configmap-autoreload`](#mutate-configmap-autoreload) | `deployments`, `statefulsets` | **Mutate** | `kyverno-policies` |
 | [`mutate-nfs-pvc-alert-exclusion`](#mutate-nfs-pvc-alert-exclusion) | `persistentvolumeclaims` | **Mutate** | `csi-nfs` |
 | [`require-resource-requests`](#require-resource-requests) | `pods` | **Warn** | `kyverno-policies` |
+| [`validate-flux-role-labels`](#validate-flux-role-labels) | `namespaces` | **Deny** | `kyverno-policies` |
 | [`validate-group-labels`](#validate-group-labels) | `namespaces` | **Deny** | `kyverno-policies` |
 | [`validate-helm-chart-version`](#validate-helm-chart-version) | `helmreleases` | **Deny** | `kyverno-policies` |
 | [`validate-ingress-contract`](#validate-ingress-contract) | `ingresses` | **Deny** | `kyverno-policies` |
@@ -39,6 +41,18 @@ Deletes only objects matching all of:
 - `scheduled-backup`
 - `terminal-phase`
 - `older-than-retention-window`
+
+## `generate-flux-reconciler`
+
+| | |
+| --- | --- |
+| **Kind** | `GeneratingPolicy` |
+| **Applies to** | `namespaces` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Generate** |
+| **Only when** | `object.metadata.?labels.orValue({}).exists(k, k == "flux.rbac.thaum.xyz/role")` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/generate-flux-reconciler.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/generate-flux-reconciler.yaml) |
 
 ## `generate-group-rolebindings`
 
@@ -93,6 +107,23 @@ Deletes only objects matching all of:
 Rules enforced:
 
 - All regular and init containers should set CPU and memory requests.
+
+## `validate-flux-role-labels`
+
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `namespaces` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Deny** |
+| **failurePolicy** | `Fail` |
+| **Only when** | `object.metadata.?labels.orValue({}).exists(k, k == "flux.rbac.thaum.xyz/role")` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/validate-flux-role-labels.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-flux-role-labels.yaml) |
+
+Rules enforced:
+
+- A flux.rbac.thaum.xyz/role label must name a ClusterRole the Kyverno background controller is allowed to bind -- currently only "flux-tenant-reconciler". It grants that role to this namespace's flux-reconciler ServiceAccount through a RoleBinding, so it can never confer anything cluster-scoped. A namespace whose Flux objects install cluster-scoped resources belongs in k8s/reconcilers/ instead.
 
 ## `validate-group-labels`
 

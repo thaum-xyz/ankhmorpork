@@ -31,6 +31,41 @@ rules:
     resourceNames:
       - edit
       - view
+      # generate-flux-reconciler binds this to each tenant namespace's
+      # flux-reconciler ServiceAccount. It is `*` on `*`, which through a
+      # RoleBinding is namespace-admin -- so this DOES move the ceiling above
+      # `edit`, and knowingly.
+      #
+      # What it does not move is the cluster-scoped ceiling, which is the one
+      # that matters: no `clusterrolebindings` verb appears anywhere in this
+      # role, so the background controller cannot create a cluster-scoped
+      # binding to this or to anything else, whatever a policy asks for. That
+      # is why namespaces needing cluster-admin are hand-written in
+      # k8s/reconcilers/ rather than generated.
+      #
+      # validate-flux-role-labels rejects any other value at admission, so this
+      # list and that policy have to be changed together -- a name allowed
+      # there but missing here fails inside a background UpdateRequest, where
+      # nothing surfaces it.
+      - flux-tenant-reconciler
+  # generate-flux-reconciler creates the ServiceAccount as well as its binding.
+  # Creating a ServiceAccount confers nothing on its own -- a fresh one holds no
+  # rights -- so this grants no privilege by itself; what the SA may do is
+  # decided by the `bind` list above. Read verbs for the same reason
+  # rolebindings need them: generation reads before it writes, and synchronize
+  # needs to see drift.
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
   # The chart's core role grants create/update/patch/delete on rolebindings but
   # no read verbs, and generation reads before it writes -- it looks for an
   # existing object to decide between create and update, and synchronize needs

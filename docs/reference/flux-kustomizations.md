@@ -8,7 +8,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | | |
 | --- | --- |
-| **`prune: false`** | `prometheus-operator-crds`, `apps`, `platform`, `namespaces`, `cilium`, `flux-system`, `piraeus-datastore`, `topolvm`, `traefik` |
+| **`prune: false`** | `prometheus-operator-crds`, `apps`, `platform`, `namespaces`, `cilium`, `flux-system`, `piraeus-datastore`, `reconcilers`, `topolvm`, `traefik` |
 | **`wait: true`** | `prometheus-operator-crds`, `kyverno` |
 | **Declare `dependsOn`** | `apps`, `platform`, `cnpg-system`, `csi-nfs`, `kyverno-policies`, `piraeus-datastore`, `homer-services` |
 | **Suspended in git** | none |
@@ -47,6 +47,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `node-problem-detector` | [`k8s/platform/cluster/node-problem-detector`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/node-problem-detector) | `30m0s` | yes | no | — |
 | `oidc-rbac` | [`k8s/platform/security/oidc-rbac`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/oidc-rbac) | `15m0s` | yes | no | — |
 | `piraeus-datastore` | [`k8s/platform/storage/piraeus-datastore`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/piraeus-datastore) | `30m0s` | **no** | no | `topolvm`, `kyverno` |
+| `reconcilers` | [`k8s/reconcilers`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/reconcilers) | `15m0s` | **no** | no | — |
 | `smartctl-exporter` | [`k8s/platform/storage/smartctl-exporter`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/smartctl-exporter) | `15m0s` | yes | no | — |
 | `system-kured` | [`k8s/platform/cluster/system-kured`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/system-kured) | `60m0s` | yes | no | — |
 | `topolvm` | [`k8s/platform/storage/topolvm-system`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/topolvm-system) | `30m0s` | **no** | no | — |

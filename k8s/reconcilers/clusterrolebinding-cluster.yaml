@@ -1,0 +1,81 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-reconciler-cluster
+  annotations:
+    kubernetes.io/description: >-
+      The reconciler identities that must be cluster-admin, because the Helm
+      release in their namespace owns cluster-scoped objects -- ClusterRoles,
+      CRDs, webhook configurations, StorageClasses. Measured from what each
+      release actually owns, not assumed.
+
+      This list is the privilege register for Flux reconciliation. A namespace
+      belongs here only if a namespace-scoped binding genuinely cannot apply
+      what it ships; everything else gets a RoleBinding to
+      flux-tenant-reconciler instead. None of these namespaces grants a human
+      any role, so the SA is no wider than the people who can already reach it.
+subjects:
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: cert-manager
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: cloudflared
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: cnpg-system
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: csi-nfs
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: datalake-logs
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: datalake-metrics
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: descheduler
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: external-dns
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: external-secrets
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: grafana
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: homer
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: kube-system
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: node-feature-discovery
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: node-problem-detector
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: platform-observability
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: platform-security
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: platform-storage
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: system-kured
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: topolvm-system
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: traefik
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
