@@ -308,13 +308,20 @@ def apps(kustomizations):
 
     rows = []
     for app in sorted(by_app):
-        ns, ingresses = None, []
+        ns, object_ns, ingresses = None, None, []
         for f in sorted(by_app[app]):
             for d in load_all(f):
                 if d.get("kind") == "Namespace" and not ns:
                     ns = d.get("metadata", {}).get("name")
                 if d.get("namespace") and not ns:
                     ns = d["namespace"]
+                # Last resort, for an app with neither a Namespace object nor a
+                # kustomization.yaml to carry `namespace:` -- dlna-local spells
+                # it out on every manifest instead. Kept out of the precedence
+                # above: a kustomization's `namespace:` overrides whatever an
+                # individual object says, so it has to win.
+                if not object_ns:
+                    object_ns = (d.get("metadata") or {}).get("namespace")
                 if d.get("kind") == "Ingress":
                     cls = d.get("spec", {}).get("ingressClassName", "?")
                     for rule in d.get("spec", {}).get("rules", []) or []:
@@ -330,7 +337,9 @@ def apps(kustomizations):
             }
         )
         readme = ROOT / "k8s" / "apps" / app / "README.md"
-        rows.append((app, ns, owners, sorted(set(ingresses)), readme if readme.exists() else None))
+        rows.append(
+            (app, ns or object_ns, owners, sorted(set(ingresses)), readme if readme.exists() else None)
+        )
     return rows
 
 
