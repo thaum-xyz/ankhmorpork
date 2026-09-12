@@ -12,7 +12,7 @@ and why the interval matters, see
 | | |
 | --- | --- |
 | **Intervals in use** | `5m` |
-| **Charts used more than once** | `cnpg-database` ×13, `versitygw` ×3, `traefik` ×2 |
+| **Charts used more than once** | `cnpg-database` ×13, `versitygw` ×2, `traefik` ×2 |
 
 | Release | Namespace | Chart | Source | Interval | Values from | Component |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -20,9 +20,6 @@ and why the interval matters, see
 | [`postgres`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/ai-gateway/db/release.yaml) | `ai-gateway` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres` | `ai-gateway` |
 | [`postgres`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/atuin/postgres/release.yaml) | `atuin` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres` | `atuin` |
 | [`changedetection`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/changedetection/app/release.yaml) | `changedetection` | `changedetection` | `https://charts.alekc.dev` | `5m` | ConfigMap `values-changedetection` | `changedetection` |
-| [`barman`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-system/barman/release.yaml) | `cnpg-system` | `plugin-barman-cloud` | `https://cloudnative-pg.github.io/charts` | `5m` | ConfigMap `values-barman` | `cnpg-system` |
-| [`cnpg`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-system/operator/release.yaml) | `cnpg-system` | `cloudnative-pg` | `https://cloudnative-pg.github.io/charts` | `5m` | ConfigMap `values-cnpg` | `cnpg-system` |
-| [`versitygw`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-system/versity/release.yaml) | `cnpg-system` | `versitygw` | `oci://ghcr.io/versity/versitygw/charts` | `5m` | ConfigMap `values-versitygw` | `cnpg-system` |
 | [`loki`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/datalake-logs/release.yaml) | `datalake-logs` | `loki` | `https://grafana-community.github.io/helm-charts` | `5m` | ConfigMap `values-loki` | `datalake-logs` |
 | [`versitygw`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/datalake-logs/versity/release.yaml) | `datalake-logs` | `versitygw` | `oci://ghcr.io/versity/versitygw/charts` | `5m` | ConfigMap `values-versitygw` | `datalake-logs` |
 | [`pyrra`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/datalake-metrics/pyrra/release.yaml) | `datalake-metrics` | `pyrra` | `https://pyrra-dev.github.io/helm-charts` | `5m` | ConfigMap `values-pyrra` | `datalake-metrics` |
@@ -50,6 +47,8 @@ and why the interval matters, see
 | [`cert-manager`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/cert-manager/controllers/release.yaml) | `platform-security` | `cert-manager` | `https://charts.jetstack.io` | `5m` | ConfigMap `values-cert-manager` | `cert-manager` |
 | [`external-secrets`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/external-secrets/controllers/release.yaml) | `platform-security` | `external-secrets` | `https://charts.external-secrets.io` | `5m` | ConfigMap `values-external-secrets` | `external-secrets` |
 | [`kyverno`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/controllers/release.yaml) | `platform-security` | `kyverno` | `https://kyverno.github.io/kyverno/` | `5m` | ConfigMap `values-kyverno` | `kyverno` |
+| [`barman`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-system/barman/release.yaml) | `platform-storage` | `plugin-barman-cloud` | `https://cloudnative-pg.github.io/charts` | `5m` | ConfigMap `values-barman` | `cnpg-system` |
+| [`cnpg`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-system/operator/release.yaml) | `platform-storage` | `cloudnative-pg` | `https://cloudnative-pg.github.io/charts` | `5m` | ConfigMap `values-cnpg` | `cnpg-system` |
 | [`cnpg-versity-gw`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-versity-gw/release.yaml) | `platform-storage` | `versitygw` | `oci://ghcr.io/versity/versitygw/charts` | `5m` | ConfigMap `values-cnpg-versity-gw` | `cnpg-versity-gw` |
 | [`csi-nfs`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/csi-nfs/release.yaml) | `platform-storage` | `csi-driver-nfs` | `https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts` | `5m` | ConfigMap `values-csi-nfs` | `csi-nfs` |
 | [`diskprep`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/topolvm-system/diskprep/release.yaml) | `platform-storage` | `lvm-diskprep` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-diskprep` | `topolvm` |
