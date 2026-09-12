@@ -1,0 +1,25 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cnpg-versity-gw
+  namespace: flux-system
+  annotations:
+    kubernetes.io/description: >-
+      The S3 gateway the fleet's postgres backups are written to.
+
+      Its own Kustomization rather than a directory under cnpg-system, because
+      it outlives that namespace: this one stands up empty in platform-storage
+      while the old gateway keeps serving from cnpg-system, and the two exist
+      side by side until the data has been copied across on the NAS and the
+      clusters have been repointed.
+spec:
+  interval: 15m0s
+  path: ./k8s/platform/storage/cnpg-versity-gw
+  prune: true
+  wait: true
+  timeout: 10m
+  dependsOn:
+    - name: kyverno
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

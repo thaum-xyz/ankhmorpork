@@ -12,7 +12,7 @@ and why the interval matters, see
 | | |
 | --- | --- |
 | **Intervals in use** | `5m` |
-| **Charts used more than once** | `cnpg-database` ×13, `versitygw` ×2, `traefik` ×2 |
+| **Charts used more than once** | `cnpg-database` ×13, `versitygw` ×3, `traefik` ×2 |
 
 | Release | Namespace | Chart | Source | Interval | Values from | Component |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -50,6 +50,7 @@ and why the interval matters, see
 | [`cert-manager`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/cert-manager/controllers/release.yaml) | `platform-security` | `cert-manager` | `https://charts.jetstack.io` | `5m` | ConfigMap `values-cert-manager` | `cert-manager` |
 | [`external-secrets`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/external-secrets/controllers/release.yaml) | `platform-security` | `external-secrets` | `https://charts.external-secrets.io` | `5m` | ConfigMap `values-external-secrets` | `external-secrets` |
 | [`kyverno`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/controllers/release.yaml) | `platform-security` | `kyverno` | `https://kyverno.github.io/kyverno/` | `5m` | ConfigMap `values-kyverno` | `kyverno` |
+| [`cnpg-versity-gw`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-versity-gw/release.yaml) | `platform-storage` | `versitygw` | `oci://ghcr.io/versity/versitygw/charts` | `5m` | ConfigMap `values-cnpg-versity-gw` | `cnpg-versity-gw` |
 | [`csi-nfs`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/csi-nfs/release.yaml) | `platform-storage` | `csi-driver-nfs` | `https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts` | `5m` | ConfigMap `values-csi-nfs` | `csi-nfs` |
 | [`diskprep`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/topolvm-system/diskprep/release.yaml) | `platform-storage` | `lvm-diskprep` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-diskprep` | `topolvm` |
 | [`k8up`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/k8up/release.yaml) | `platform-storage` | `k8up` | `https://k8up-io.github.io/k8up` | `5m` | ConfigMap `values-k8up` | `k8up` |
