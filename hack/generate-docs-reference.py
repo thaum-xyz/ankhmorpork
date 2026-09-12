@@ -210,12 +210,12 @@ def write_flux_kustomizations(rows):
     deps = [r["name"] for r in rows if r["depends_on"]]
     suspended = [r["name"] for r in rows if r["suspend"]]
 
+    # Deliberately no total or per-layer count. Being generated would keep one
+    # accurate, but a count is still a fact the reader does not need -- the
+    # per-layer tables below list every Kustomization by name. The rows that
+    # remain name the EXCEPTIONS, which is what a reader actually comes here to
+    # look up and what no amount of scrolling the tables makes obvious.
     out.append("\n| | |\n| --- | --- |\n")
-    out.append(
-        f"| **Total** | {len(rows)} — "
-        + ", ".join(f"{len(by_layer.get(l, []))} {l}" for l in ("bootstrap", "platform", "apps"))
-        + " |\n"
-    )
     out.append(f"| **`prune: false`** | {code_list(no_prune, 'none')} |\n")
     out.append(f"| **`wait: true`** | {code_list(waits, 'none')} |\n")
     out.append(f"| **Declare `dependsOn`** | {code_list(deps, 'none')} |\n")
@@ -573,8 +573,9 @@ def write_helm_releases(rows):
         charts.setdefault(r["chart"], []).append(r["name"])
     intervals = sorted({str(r["interval"]) for r in rows})
 
+    # No total, for the reason in flux_kustomizations_page: the table below
+    # names every release, and a count is not what a reader comes here for.
     out.append("\n| | |\n| --- | --- |\n")
-    out.append(f"| **Total** | {len(rows)} releases, {len(charts)} distinct charts |\n")
     out.append(f"| **Intervals in use** | {code_list(intervals)} |\n")
     multi = {c: n for c, n in charts.items() if len(n) > 1}
     if multi:

@@ -11,7 +11,6 @@ and why the interval matters, see
 
 | | |
 | --- | --- |
-| **Total** | 49 releases, 35 distinct charts |
 | **Intervals in use** | `5m` |
 | **Charts used more than once** | `cnpg-database` ×13, `versitygw` ×2, `traefik` ×2 |
 
