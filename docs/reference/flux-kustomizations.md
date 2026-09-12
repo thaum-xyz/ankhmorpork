@@ -32,7 +32,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `cilium` | [`k8s/platform/network/cilium`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network/cilium) | `15m0s` | **no** | no | — |
 | `cloudflared` | [`k8s/platform/network/cloudflared`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network/cloudflared) | `15m0s` | yes | no | — |
 | `cnpg-system` | [`k8s/platform/storage/cnpg-system`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/cnpg-system) | `15m0s` | yes | no | `kyverno` |
-| `cnpg-versity-gw` | [`k8s/platform/storage/cnpg-versity-gw`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/cnpg-versity-gw) | `15m0s` | yes | **yes** (10m) | `kyverno` |
+| `cnpg-versity-gw` | [`k8s/platform/storage/cnpg-versity-gw`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/cnpg-versity-gw) | `15m0s` | yes | **yes** (10m) | `csi-nfs` |
 | `csi-nfs` | [`k8s/platform/storage/csi-nfs`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/csi-nfs) | `15m0s` | yes | no | `kyverno` |
 | `descheduler` | [`k8s/platform/cluster/descheduler`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/descheduler) | `15m0s` | yes | no | — |
 | `device-plugins` | [`k8s/platform/cluster/device-plugins`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/device-plugins) | `15m0s` | yes | no | — |
