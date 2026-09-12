@@ -19,6 +19,15 @@ spec:
   wait: true
   timeout: 10m
   dependsOn:
+    # csi-nfs for both halves of this claim. It provisions unifi-nas, and it also
+    # ships mutate-nfs-pvc-alert-exclusion -- the policy that labels unifi-nas
+    # claims excluded_from_alerts, whose own comment names this chart as the
+    # reason it exists rather than manifest labels.
+    - name: csi-nfs
+    # And kyverno to enforce it. That policy is failurePolicy: Fail on PVC
+    # CREATE, so with the webhook unavailable the claim is rejected outright --
+    # not created unlabelled. Listed even though csi-nfs already depends on it,
+    # the way piraeus-datastore names topolvm and kyverno together.
     - name: kyverno
   sourceRef:
     kind: GitRepository
