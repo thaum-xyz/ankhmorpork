@@ -69,7 +69,7 @@ Instead, remote clients come in over Tailscale. Every node already runs
 entries in `ADVERTISE_IP` are handed to clients, which try them in turn:
 
 - `https://vod.krupa.net.pl:443/` — through the private traefik at
-  `192.168.50.130`. This is the path that always works: private-traefik runs a
+  `192.168.50.130`. This is the path that always works: traefik-private runs a
   pod on **both** beelinks, so whichever one holds the primary subnet route
   satisfies its `externalTrafficPolicy: Local`, and traefik then reaches Plex
   in-cluster wherever it is. Needs Tailscale split DNS for `krupa.net.pl`

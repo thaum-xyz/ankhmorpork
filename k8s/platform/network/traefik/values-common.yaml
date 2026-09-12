@@ -61,6 +61,12 @@ metrics:
     service:
       enabled: true
     serviceMonitor:
+      # The chart defaults this to false, so honorLabels below was the only
+      # thing set here and nothing was ever scraped: the metrics Service
+      # existed, served, and had no reader. A value under a disabled feature
+      # reads like configuration and does nothing, which is why this went
+      # unnoticed -- there is no error to see, only an absence.
+      enabled: true
       honorLabels: true
 
 accessLog:

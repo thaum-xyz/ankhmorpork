@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: public
+  name: traefik-public
   namespace: platform-network
 spec:
   chart:
@@ -33,4 +33,4 @@ spec:
     - kind: ConfigMap
       name: values-traefik-common
     - kind: ConfigMap
-      name: values-public
+      name: values-traefik-public

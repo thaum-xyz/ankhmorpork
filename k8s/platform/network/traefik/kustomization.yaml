@@ -9,19 +9,20 @@ resources:
   - clusterrole-aggregate-edit.yaml
 generatorOptions:
   disableNameSuffixHash: true
+# All three are prefixed with the component, not just the release name. The
+# releases are called `public` and `private`, which said enough when this had a
+# namespace to itself; in platform-network, beside cloudflared and external-dns,
+# a ConfigMap called `values-public` names nothing. `values-common` was worse
+# still -- common to what? A generic name in a shared namespace is the shape of
+# the alloy/kube-prometheus-stack collision that validate-configmap-ownership
+# exists to catch.
 configMapGenerator:
-  - name: values-public
+  - name: values-traefik-public
     files:
       - values.yaml=public/values.yaml
-  - name: values-private
+  - name: values-traefik-private
     files:
       - values.yaml=private/values.yaml
-  # Not `values-common`. The other two match their release names, which is the
-  # convention; this one is shared by both instances and so had a generic name.
-  # platform-network holds cloudflared and external-dns as well now, and a
-  # ConfigMap called "values-common" in a shared namespace is the exact shape of
-  # the alloy/kube-prometheus-stack collision that validate-configmap-ownership
-  # exists to catch.
   - name: values-traefik-common
     files:
       - values.yaml=values-common.yaml
