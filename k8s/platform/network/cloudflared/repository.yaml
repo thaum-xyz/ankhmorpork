@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: strrl
-  namespace: cloudflared
+  namespace: platform-network
 spec:
   interval: 5m
   url: https://helm.strrl.dev

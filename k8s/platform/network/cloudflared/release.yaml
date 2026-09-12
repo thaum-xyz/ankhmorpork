@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cloudflared
-  namespace: cloudflared
+  namespace: platform-network
 spec:
   chart:
     spec:
@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: strrl
-        namespace: cloudflared
+        namespace: platform-network
       interval: 5m
   interval: 5m
   timeout: 20m
