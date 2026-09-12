@@ -8,3 +8,4 @@ resources:
   - mutate-configmap-autoreload.yaml
   - validate-group-labels.yaml
   - generate-group-rolebindings.yaml
+  - validate-reconciler-sa-usage.yaml
