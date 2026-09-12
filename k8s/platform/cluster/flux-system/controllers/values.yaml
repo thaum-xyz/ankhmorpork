@@ -1,6 +1,16 @@
 # Reference documentation: https://github.com/fluxcd-community/helm-charts/tree/main/charts/flux2
 
 helmController:
+  # Confine a HelmRelease to chart sources and dependsOn targets in its own
+  # namespace. Verified inert: no HelmRelease references either across one.
+  #
+  # --default-service-account is deliberately absent. Unlike kustomize-
+  # controller, where every Kustomization lives in flux-system, the SA would be
+  # resolved in each HelmRelease's own namespace -- 31 of them, none holding a
+  # flux-reconciler yet. It goes on once they do.
+  container:
+    additionalArgs:
+      - --no-cross-namespace-refs=true
   priorityClassName: system-cluster-critical
   tolerations:
     - key: node-role.kubernetes.io/control-plane
@@ -16,25 +26,46 @@ helmController:
             operator: Exists
 
 kustomizeController:
-  # Impersonate flux-system's flux-reconciler ServiceAccount for every
-  # Kustomization that does not set spec.serviceAccountName, rather than
-  # applying as the controller's own cluster-admin identity.
+  # Flux's multi-tenancy lockdown, minus the one flag that does not apply here.
+  # https://fluxcd.io/flux/installation/configuration/multitenancy/
   #
-  # Passed here rather than through `multitenancy.enabled`, which is the
-  # chart's switch for this flag but emits `--no-cross-namespace-refs=true`
-  # alongside it. That one forbids `sourceRef.namespace: flux-system`, which is
-  # how a Kustomization in an app namespace shares the single GitRepository --
-  # turning it on would mean a GitRepository per namespace. Impersonation
-  # already denies a tenant pointing spec.path at another component, so the
-  # cross-namespace flag buys nothing here.
+  # --default-service-account: impersonate flux-system's flux-reconciler for
+  #   every Kustomization that does not set spec.serviceAccountName, rather
+  #   than applying as the controller's own cluster-admin identity. The SA is
+  #   resolved in each Kustomization's OWN namespace, so this is inert while
+  #   all of them live in flux-system -- the name resolves to the SA in
+  #   reconciler/, which is cluster-admin. It stops being inert the moment a
+  #   Kustomization moves into an app namespace, which is the intended order.
   #
-  # The SA is resolved in each Kustomization's OWN namespace, so this is inert
-  # while all of them live in flux-system: the name resolves to the SA in
-  # reconciler/, which is cluster-admin. It stops being inert the moment a
-  # Kustomization moves into an app namespace, which is the intended order.
+  #   Upstream uses `default` here. A named SA instead, because `default` is
+  #   what a Pod gets when it names none: granting it reconcile rights would
+  #   hand namespace-admin, token already mounted, to every such Pod -- 30 of
+  #   them across 15 namespaces when this was measured. See reconciler/.
+  #
+  # --no-cross-namespace-refs: a Flux object may only reference sources,
+  #   dependsOn targets and notification providers in its own namespace. Each
+  #   namespace that gains a Kustomization therefore gains its own
+  #   GitRepository -- which is already how every HelmRelease here works, and
+  #   costs nothing extra since the repo is public and needs no credential.
+  #
+  # --no-remote-bases: a kustomization.yaml may not pull a base from a URL, so
+  #   only what the Flux source carries can reach the cluster.
+  #
+  # Both of the latter were verified to break nothing before being set: zero
+  # cross-namespace sourceRefs, zero cross-namespace dependsOn, and no remote
+  # bases anywhere in k8s/.
+  #
+  # Set through additionalArgs rather than the chart's `multitenancy.enabled`,
+  # which would be the natural switch for all three. It also puts
+  # --default-service-account on helm-controller, where it is NOT inert: that
+  # SA is resolved in each HelmRelease's own namespace, and the 48 HelmReleases
+  # are spread over 31 namespaces, none of which has the SA yet. Switch to it
+  # once they do.
   container:
     additionalArgs:
       - --default-service-account=flux-reconciler
+      - --no-cross-namespace-refs=true
+      - --no-remote-bases=true
   priorityClassName: system-cluster-critical
   tolerations:
     - key: "node-role.kubernetes.io/control-plane"
@@ -65,6 +96,13 @@ sourceController:
             operator: Exists
 
 notificationController:
+  # An Alert may only reference a Provider in its own namespace, and a Receiver
+  # only resources in its own. One notification object exists today, in
+  # flux-system, so this changes nothing now and stops a tenant subscribing to
+  # another namespace's events later.
+  container:
+    additionalArgs:
+      - --no-cross-namespace-refs=true
   webhookReceiver:
     ingress:
       ingressClassName: cloudflare
