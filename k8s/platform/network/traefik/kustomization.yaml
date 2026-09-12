@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: traefik
+namespace: platform-network
 resources:
   - public/release.yaml
   - private/release.yaml
@@ -16,6 +16,12 @@ configMapGenerator:
   - name: values-private
     files:
       - values.yaml=private/values.yaml
-  - name: values-common
+  # Not `values-common`. The other two match their release names, which is the
+  # convention; this one is shared by both instances and so had a generic name.
+  # platform-network holds cloudflared and external-dns as well now, and a
+  # ConfigMap called "values-common" in a shared namespace is the exact shape of
+  # the alloy/kube-prometheus-stack collision that validate-configmap-ownership
+  # exists to catch.
+  - name: values-traefik-common
     files:
       - values.yaml=values-common.yaml
