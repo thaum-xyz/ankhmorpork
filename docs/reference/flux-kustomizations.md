@@ -19,7 +19,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | --- | --- | --- | --- | --- | --- |
 | `apps` | [`k8s/flux/apps`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/flux/apps) | `15m0s` | **no** | no | `platform`, `namespaces` |
 | `namespaces` | [`k8s/namespaces`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/namespaces) | `15m0s` | **no** | no | — |
-| `platform` | [`k8s/flux/platform`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/flux/platform) | `15m0s` | **no** | no | `prometheus-operator-crds` |
+| `platform` | [`k8s/flux/platform`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/flux/platform) | `15m0s` | **no** | no | `prometheus-operator-crds`, `namespaces` |
 | `prometheus-operator-crds` | [`k8s/platform/observability/prometheus-operator-crds`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability/prometheus-operator-crds) | `15m0s` | **no** | **yes** (10m) | — |
 
 ## Platform
