@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: topolvm
-  namespace: topolvm-system
+  namespace: platform-storage
 spec:
   interval: 5m
   url: https://topolvm.github.io/topolvm

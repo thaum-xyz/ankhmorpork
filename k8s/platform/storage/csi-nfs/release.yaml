@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: csi-nfs
-  namespace: csi-nfs
+  namespace: platform-storage
 spec:
   chart:
     spec:
@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: csi-driver-nfs
-        namespace: csi-nfs
+        namespace: platform-storage
       interval: 5m
   interval: 5m
   timeout: 20m
