@@ -11,17 +11,28 @@ That structure is three layers deep, and the shape is not arbitrary.
 ## The three layers
 
 ```
-k8s/bootstrap/     applied once by hand: the GitRepository and the umbrellas
-  └── platform     the cluster's machinery
-        └── apps   the workloads
+k8s/bootstrap/        applied once by hand: the GitRepository and the umbrellas
+  ├── namespaces      the namespaces apps are deployed into
+  └── platform        the cluster's machinery
+        └── apps      the workloads
 ```
 
 The current membership of each layer, with every interval, prune and wait
 setting, is in [Flux Kustomizations](../reference/flux-kustomizations.md).
 
 **`k8s/bootstrap/`** is the seed: a `GitRepository` pointing at this repo, and
-three umbrella `Kustomization`s. It is the only thing ever applied manually, and
-it exists solely so that everything after it can be applied by Flux.
+the umbrella `Kustomization`s. It is the only thing ever applied manually, and
+it exists solely so that everything after it can be applied by Flux — which
+also means a change to a file in it does nothing until someone runs
+`kubectl apply -k k8s/bootstrap`.
+
+One of its umbrellas, `namespaces`, creates the namespace every app is deployed
+into, from `k8s/namespaces/`. They sit here rather than with the app for two
+reasons: a Namespace is cluster-scoped, so an app reconciling under a
+namespace-scoped ServiceAccount could not apply its own; and a namespace's
+`group.rbac.thaum.xyz/<group>` labels are an access grant, which must not live in
+a directory its own tenant can change. Platform namespaces stay with their
+components, which are applied by a cluster-admin identity anyway.
 
 **`platform`** is what a workload assumes is already there — CNI, storage drivers,
 ingress controllers, cert-manager, admission control, the observability
@@ -81,10 +92,12 @@ makes deleting a directory delete the objects, and what makes the tutorial's
 cleanup step work. The ones that opt out are listed on the
 [reference page](../reference/flux-kustomizations.md), and they divide into two kinds.
 
-**The three umbrellas** (`platform`, `apps`, `prometheus-operator-crds`) do not
-prune because a transient failure to render one of them would otherwise be read as
-"these components are gone" and cascade into deleting every component in the
-layer.
+**The umbrellas** (`platform`, `apps`, `prometheus-operator-crds`, `namespaces`)
+do not prune because a transient failure to render one of them would otherwise be
+read as "these components are gone" and cascade into deleting every component in
+the layer. For `namespaces` the stake is higher still: deleting a Namespace takes
+everything inside it, so removing one is deliberately two acts — drop the file,
+then delete the object.
 
 **Five platform components** — `cilium`, `flux-system`, `topolvm`,
 `piraeus-datastore`, `traefik` — do not prune because pruning them destroys
