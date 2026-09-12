@@ -4,25 +4,38 @@ metadata:
   name: cnpg-versity-gw-bootstrap-bucket
 spec:
   # barman-cloud will not create the bucket, and a missing one surfaces as a
-  # failed backup rather than anything naming the cause. Harmless if the copied
-  # data already contains it -- `mb --ignore-existing` is a no-op then.
+  # failed backup rather than anything naming the cause.
   template:
     spec:
       restartPolicy: OnFailure
       containers:
-        - name: mc
-          image: minio/mc:latest
+        - name: rclone
+          # Not minio/mc: MinIO withdrew their images from Docker Hub, so
+          # docker.io/minio/mc now 404s -- which reaches the kubelet as an
+          # authorization failure and reads like a credentials problem.
+          image: rclone/rclone:1.75.1
+          # rclone builds its whole config from RCLONE_CONFIG_<REMOTE>_* in the
+          # environment, so there is no config file, no shell wrapper, and no
+          # `|| true` swallowing real errors: this is the entrypoint with two
+          # arguments, and a non-zero exit is a genuine failure.
+          args: ["mkdir", "vgw:cnpg"]
           env:
-            - name: BUCKET_NAME
-              value: cnpg
-            - name: VGW_ENDPOINT
+            - name: RCLONE_CONFIG_VGW_TYPE
+              value: s3
+            - name: RCLONE_CONFIG_VGW_PROVIDER
+              value: Other
+            - name: RCLONE_CONFIG_VGW_ENDPOINT
               value: http://cnpg-versity-gw:7070
-            - name: ACCESS_KEY
+            # Not used for routing -- the endpoint above decides that -- but the
+            # SigV4 signature is computed over a region, so it cannot be empty.
+            - name: RCLONE_CONFIG_VGW_REGION
+              value: us-east-1
+            - name: RCLONE_CONFIG_VGW_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   name: cnpg-versity-gw-credentials
                   key: rootAccessKeyId
-            - name: SECRET_KEY
+            - name: RCLONE_CONFIG_VGW_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: cnpg-versity-gw-credentials
@@ -33,8 +46,3 @@ spec:
               memory: 32Mi
             limits:
               memory: 64Mi
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              mc alias set vgw "$VGW_ENDPOINT" "$ACCESS_KEY" "$SECRET_KEY" --api S3v4
-              mc mb --ignore-existing vgw/$BUCKET_NAME
