@@ -43,7 +43,6 @@ spec:
             timeoutSeconds: 10
           resources:
             limits:
-              cpu: 750m
               memory: 700Mi
             requests:
               cpu: 200m
@@ -94,7 +93,6 @@ spec:
             periodSeconds: 10
           resources:
             limits:
-              cpu: 50m
               memory: 100Mi
             requests:
               cpu: 1m
@@ -186,7 +184,6 @@ spec:
           name: render-config
           resources:
             limits:
-              cpu: 100m
               memory: 64Mi
             requests:
               cpu: 10m

@@ -76,7 +76,6 @@ spec:
             timeoutSeconds: 10
           resources:
             limits:
-              cpu: "1"
               memory: 1Gi
             requests:
               cpu: 50m
@@ -125,7 +124,6 @@ spec:
           name: seed-settings
           resources:
             limits:
-              cpu: 50m
               memory: 32Mi
             requests:
               cpu: 10m

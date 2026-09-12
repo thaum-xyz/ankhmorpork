@@ -82,7 +82,6 @@ spec:
             timeoutSeconds: 5
           resources:
             limits:
-              cpu: "4"
               gpu.intel.com/i915: "1"
               memory: 8Gi
             requests:

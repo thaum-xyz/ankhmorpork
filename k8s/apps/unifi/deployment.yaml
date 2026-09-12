@@ -33,7 +33,6 @@ spec:
               protocol: TCP
           resources:
             limits:
-              cpu: 100m
               # Raised from 100Mi: from v3.2.0 unpoller refreshes in the
               # background every 60s and holds the result, rather than hitting
               # the controller per scrape, so it now keeps a copy of the whole

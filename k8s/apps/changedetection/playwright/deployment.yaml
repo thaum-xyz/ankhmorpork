@@ -31,4 +31,3 @@ spec:
             memory: 64Mi
           limits:
             memory: "1000Mi"
-            cpu: "1"

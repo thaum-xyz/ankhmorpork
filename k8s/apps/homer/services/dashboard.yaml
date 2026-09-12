@@ -11,6 +11,15 @@ metadata:
   namespace: homer
 spec:
   replicas: 2
+  # Spelled out only to drop the CPU limit from the operator's defaults, which
+  # are otherwise what these values are. The config-sync sidecar keeps its 50m:
+  # the CRD exposes resources for the Homer container alone.
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
   ingressSelector:
     matchLabels:
       homer.rajsingh.info/enabled: "true"

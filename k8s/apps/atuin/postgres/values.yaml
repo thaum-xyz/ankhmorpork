@@ -14,7 +14,6 @@ cluster:
     size: 7Gi
   resources:
     limits:
-      cpu: 400m
       memory: 420Mi
     requests:
       cpu: 130m

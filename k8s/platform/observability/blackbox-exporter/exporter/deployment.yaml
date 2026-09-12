@@ -48,7 +48,6 @@ spec:
               name: http
           resources:
             limits:
-              cpu: 200m
               memory: 42Mi
             requests:
               cpu: 30m
@@ -73,7 +72,6 @@ spec:
           name: module-configmap-reloader
           resources:
             limits:
-              cpu: 200m
               memory: 42Mi
             requests:
               cpu: 30m
@@ -104,7 +102,6 @@ spec:
               name: https
           resources:
             limits:
-              cpu: 200m
               memory: 42Mi
             requests:
               cpu: 30m
