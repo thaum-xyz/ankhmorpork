@@ -2,7 +2,6 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: cloudflare-auth
-  namespace: cert-manager
 spec:
   data:
   - remoteRef:
