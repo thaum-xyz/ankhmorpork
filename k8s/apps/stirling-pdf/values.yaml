@@ -124,7 +124,6 @@ deployment:
           cpu: 10m
           memory: 32Mi
         limits:
-          cpu: 200m
           memory: 128Mi
 
 # The chart defaults to initialDelaySeconds 5 with failureThreshold 3 on a

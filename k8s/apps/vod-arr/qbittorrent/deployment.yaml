@@ -87,7 +87,6 @@ spec:
             timeoutSeconds: 10
           resources:
             limits:
-              cpu: "2"
               memory: 2Gi
             requests:
               cpu: 100m
@@ -119,7 +118,6 @@ spec:
               name: metrics
           resources:
             limits:
-              cpu: 50m
               memory: 128Mi
             requests:
               cpu: 1m
@@ -197,7 +195,6 @@ spec:
           name: seed-config
           resources:
             limits:
-              cpu: 50m
               memory: 32Mi
             requests:
               cpu: 10m

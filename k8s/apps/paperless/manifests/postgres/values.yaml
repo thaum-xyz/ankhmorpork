@@ -6,10 +6,7 @@ cluster:
   primaryUpdateMethod: switchover
   storage:
     size: 30Gi
-  # A cpu limit and no memory limit, matching the live spec.
   resources:
-    limits:
-      cpu: 200m
     requests:
       cpu: 100m
       memory: 400Mi

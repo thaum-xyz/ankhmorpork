@@ -53,6 +53,12 @@ cluster:
   name: ankhmorpork
 cni:
   uninstall: false
+  resources:
+    limits:
+      # The install-cni-binaries initContainer, the one container in this chart
+      # that ships a limit. cpu: null, not an omitted key -- Helm deep-merges,
+      # so dropping the line leaves the chart's own 1 core in place.
+      cpu: null
 ipam:
   mode: cluster-pool
   operator:

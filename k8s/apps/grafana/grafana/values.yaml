@@ -51,7 +51,6 @@ resources:
     cpu: 80m
     memory: 512Mi
   limits:
-    cpu: 800m
     memory: 4096Mi
 
 service:
@@ -69,7 +68,6 @@ sidecar:
       cpu: 6m
       memory: 192Mi
     limits:
-      cpu: 50m
       memory: 384Mi
   alerts:
     enabled: false

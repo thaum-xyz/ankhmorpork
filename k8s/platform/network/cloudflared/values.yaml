@@ -6,6 +6,13 @@ cloudflare:
 #  accountId: "<cloudflare-account-id>"
   tunnelName: "ankhmorpork-tunnel"
 
+# The controller's own resources, as opposed to the connector's below. cpu:
+# null, not an omitted key: Helm deep-merges, so dropping the line leaves the
+# chart's own 100m limit in place.
+resources:
+  limits:
+    cpu: null
+
 ingressClass:
   name: cloudflare
 

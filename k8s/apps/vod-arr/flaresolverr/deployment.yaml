@@ -45,7 +45,6 @@ spec:
           # solver leaks browser processes until something reaps it.
           resources:
             limits:
-              cpu: "1"
               memory: 1Gi
             requests:
               cpu: 50m

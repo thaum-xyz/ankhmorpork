@@ -55,7 +55,6 @@ spec:
               name: recyclarr
               resources:
                 limits:
-                  cpu: 500m
                   memory: 300Mi
                 requests:
                   cpu: 10m

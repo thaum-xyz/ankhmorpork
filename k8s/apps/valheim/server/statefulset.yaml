@@ -55,7 +55,6 @@ spec:
           protocol: UDP
         resources:
           limits:
-            cpu: 2
             memory: 8Gi
           requests:
             cpu: 200m
@@ -80,7 +79,6 @@ spec:
           protocol: TCP
         resources:
           limits:
-            cpu: 250m
             memory: 80Mi
           requests:
             cpu: 2m

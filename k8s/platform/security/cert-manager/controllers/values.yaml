@@ -13,7 +13,6 @@ prometheus:
 
 resources:
   limits:
-    cpu: 50m
     memory: 150Mi
   requests:
     cpu: 3m
@@ -35,7 +34,6 @@ affinity:
 webhook:
   resources:
     limits:
-      cpu: 10m
       memory: 64Mi
     requests:
       cpu: 3m
@@ -56,7 +54,6 @@ webhook:
 cainjector:
   resources:
     limits:
-      cpu: 15m
       memory: 550Mi
     requests:
       cpu: 5m

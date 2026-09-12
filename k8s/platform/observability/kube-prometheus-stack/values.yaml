@@ -370,7 +370,6 @@ kube-state-metrics:
       cpu: 2m
       memory: 34Mi
     limits:
-      cpu: 200m
       memory: 180Mi
 
 prometheus-node-exporter:
@@ -398,5 +397,4 @@ prometheus-node-exporter:
       cpu: 2m
       memory: 20Mi
     limits:
-      cpu: 150m
       memory: 180Mi

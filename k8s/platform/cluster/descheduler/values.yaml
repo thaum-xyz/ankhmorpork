@@ -8,6 +8,9 @@ resources:
     cpu: 10m
     memory: 64Mi
   limits:
+    # cpu: null, not an omitted key. Helm deep-merges, so dropping the line
+    # leaves the chart's own 500m limit in place.
+    cpu: null
     memory: 256Mi
 
 service:

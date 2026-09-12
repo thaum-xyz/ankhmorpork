@@ -5,7 +5,6 @@ resources: &smartctlResources
     cpu: 5m
     memory: 24Mi
   limits:
-    cpu: 100m
     memory: 64Mi
 
 tolerations: &smartctlTolerations
