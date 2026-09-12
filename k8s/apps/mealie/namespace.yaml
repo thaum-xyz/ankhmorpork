@@ -2,6 +2,11 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: mealie
+  annotations:
+    # Never garbage-collect this Namespace. Pruning is inventory-based, so
+    # dropping it from a Kustomization's inventory would delete the namespace
+    # and everything inside it.
+    kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
     # Generates a RoleBinding giving oidc:k8s:group:appadmin the `edit`
     # ClusterRole here, via the generate-group-rolebindings GeneratingPolicy.
