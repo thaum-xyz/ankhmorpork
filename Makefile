@@ -21,6 +21,10 @@ validate-flux:  ## Check that Flux Kustomization paths exist
 validate-configmaps:  ## Check no two Kustomizations render the same ConfigMap
 	python3 hack/validate-configmap-ownership.py
 
+.PHONY: validate-platform-namespaces
+validate-platform-namespaces:  ## Check platform components render into their domain namespace
+	python3 hack/validate-platform-namespaces.py
+
 .PHONY: lint-shell
 lint-shell:  ## Run shellcheck over every tracked shell script
 	git ls-files '*.sh' | xargs shellcheck
