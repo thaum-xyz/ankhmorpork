@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: public
-  namespace: traefik
+  namespace: platform-network
 spec:
   chart:
     spec:
@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: traefik
-        namespace: traefik
+        namespace: platform-network
       interval: 5m
   interval: 5m
   timeout: 20m
@@ -31,6 +31,6 @@ spec:
     mode: warn
   valuesFrom:
     - kind: ConfigMap
-      name: values-common
+      name: values-traefik-common
     - kind: ConfigMap
       name: values-public
