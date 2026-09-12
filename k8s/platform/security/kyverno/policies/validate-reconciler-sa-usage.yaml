@@ -1,0 +1,96 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
+  # component's namespace on it in the rendered output; the API server ignores
+  # the field for cluster-scoped resources.
+  name: validate-reconciler-sa-usage
+spec:
+  # `flux-reconciler` is the name kustomize-controller impersonates for any
+  # Kustomization that does not set spec.serviceAccountName
+  # (--default-service-account). It is a reconciliation identity, never a
+  # workload identity, and it is privileged by construction -- in flux-system
+  # it is cluster-admin. A Pod that names it gets a token for it.
+  #
+  # Nothing legitimately runs as this SA. Impersonation is an API-server
+  # mechanism: the controller asks to act AS the SA, it never mounts a token,
+  # and the controller's own Pods run as `kustomize-controller`. So denying the
+  # name outright costs nothing and removes the most likely way it leaks --
+  # `serviceAccountName: flux-reconciler` copy-pasted into a Deployment,
+  # handing that workload cluster-admin with no error and no symptom.
+  #
+  # THIS GUARDS WORKLOADS, NOT TENANTS -- a distinction worth keeping straight,
+  # because the two have different reachability.
+  #
+  # It cannot bound a human who holds `edit` on the namespace. `ClusterRole/edit`
+  # carries `impersonate` on serviceaccounts (upstream editRules(), and `admin`
+  # aggregates it), so `kubectl --as=system:serviceaccount:<ns>:flux-reconciler`
+  # reaches the SA while creating nothing. No admission controller can intercept
+  # that, and the request that arrives is indistinguishable from Flux's own --
+  # being that identity is exactly what Flux does. The same goes for the other
+  # admission-visible token routes, a `kubernetes.io/service-account-token`
+  # Secret and a `serviceaccounts/token` TokenRequest: denying them here would
+  # add rules that bound nobody.
+  #
+  # Nor is any of that worth chasing. A tenant who controls the git path Flux
+  # reconciles can commit a Pod that reads the token and ships it out, so the
+  # reconciler's rights in a namespace ARE the tenant's rights there -- true of
+  # Flux's own tenancy model too, which assumes tenants have no API access at
+  # all. What bounds a tenant is the namespace edge: a RoleBinding rather than a
+  # ClusterRoleBinding, --no-cross-namespace-refs, and Pod Security Admission.
+  #
+  # A workload is the other case. A container runs as this SA only because a
+  # manifest said so, which makes the realistic cause a mistake rather than an
+  # attack -- and in flux-system that mistake is a cluster-admin workload with
+  # no error and no symptom. That is what the rule below is for.
+  # See thaum-xyz/ankhmorpork#1436.
+  #
+  # WHY THIS LIVES HERE rather than with flux-system, where csi-nfs,
+  # piraeus-datastore and cnpg-system each keep their own policy:
+  #
+  # `flux-reconciler` is a reserved name in EVERY namespace, not an object the
+  # flux-system component owns -- a cluster-wide convention like
+  # validate-group-labels, rather than validate-roaming-volume-size guarding the
+  # one StorageClass piraeus ships. Its other half belongs here too: the
+  # GeneratingPolicy that mints the per-namespace SA and RoleBinding sits beside
+  # generate-group-rolebindings. One mechanism mints the identity, the other
+  # keeps workloads off it.
+  #
+  # Moving it would also cost more than it looks. The SA and its
+  # ClusterRoleBinding cannot leave the flux-system component: they must be
+  # created by the same Kustomization that sets --default-service-account, or a
+  # cold bootstrap deadlocks -- the controllers restart wanting an identity that
+  # only a reconcile could create. So the policy would arrive there needing
+  # `dependsOn: kyverno` on flux-system, coupling the GitOps engine to the
+  # policy engine on the one Kustomization deliberately marked prune: false.
+  evaluation:
+    background:
+      enabled: false
+  failurePolicy: Fail
+  validationActions:
+    - Deny
+  matchConstraints:
+    resourceRules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          # spec.serviceAccountName is immutable on a Pod, so CREATE is the
+          # only way in.
+          - CREATE
+        resources:
+          - pods
+  validations:
+    # Both spellings: `serviceAccount` is the deprecated alias for
+    # `serviceAccountName`. The API server defaults one from the other before
+    # admission runs, so checking either would do -- checking both means the
+    # rule does not rest on that defaulting staying where it is.
+    - expression: >-
+        object.spec.?serviceAccountName.orValue("") != "flux-reconciler" &&
+        object.spec.?serviceAccount.orValue("") != "flux-reconciler"
+      message: >-
+        The flux-reconciler ServiceAccount is the identity Flux impersonates to
+        reconcile this namespace, not one a workload may run as; it is
+        privileged by construction. Give the Pod its own ServiceAccount and
+        grant that what it needs.

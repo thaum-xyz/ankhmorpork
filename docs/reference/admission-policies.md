@@ -21,6 +21,7 @@ schedule against objects that already exist.
 | [`validate-ingress-contract`](#validate-ingress-contract) | `ingresses` | **Deny** | `kyverno-policies` |
 | [`validate-nfs-k8up-annotations`](#validate-nfs-k8up-annotations) | `persistentvolumeclaims`, `persistentvolumes` | **Warn** | `csi-nfs` |
 | [`validate-pdb-drain-safety`](#validate-pdb-drain-safety) | `poddisruptionbudgets` | **Warn** | `kyverno-policies` |
+| [`validate-reconciler-sa-usage`](#validate-reconciler-sa-usage) | `pods` | **Deny** | `kyverno-policies` |
 | [`validate-roaming-volume-size`](#validate-roaming-volume-size) | `persistentvolumeclaims` | **Deny** | `piraeus-datastore` |
 
 ## `cleanup-cnpg-backups`
@@ -182,6 +183,22 @@ Rules enforced:
 - maxUnavailable must permit at least one voluntary disruption.
 - unhealthyPodEvictionPolicy must be AlwaysAllow so an unhealthy Pod does not indefinitely block a node drain.
 - PodDisruptionBudget selectors must not be empty because policy/v1 empty selectors match every Pod in the namespace.
+
+## `validate-reconciler-sa-usage`
+
+| | |
+| --- | --- |
+| **Kind** | `ValidatingPolicy` |
+| **Applies to** | `pods` |
+| **On** | `CREATE` |
+| **Effect** | **Deny** |
+| **failurePolicy** | `Fail` |
+| **Shipped by** | `kyverno-policies` |
+| **Source** | [`k8s/platform/security/kyverno/policies/validate-reconciler-sa-usage.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-reconciler-sa-usage.yaml) |
+
+Rules enforced:
+
+- The flux-reconciler ServiceAccount is the identity Flux impersonates to reconcile this namespace, not one a workload may run as; it is privileged by construction. Give the Pod its own ServiceAccount and grant that what it needs.
 
 ## `validate-roaming-volume-size`
 
