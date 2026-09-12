@@ -14,17 +14,6 @@ features:
   backgroundScan:
     enabled: false
 
-# The CRD migration Job, which runs on every chart upgrade. cpu: null, not an
-# omitted key -- Helm deep-merges, so dropping the line leaves the chart's own
-# 100m in place. The controllers below clear the whole limits map instead; these
-# keep the chart's memory limit, which a Job -- the one thing here that runs
-# unattended -- is worth having.
-crds:
-  migration:
-    podResources:
-      limits:
-        cpu: null
-
 # The pre-delete hooks that tear the webhooks down on uninstall, and the
 # helm-test Pods. Neither runs in normal operation; they are here so that
 # "does anything still carry a CPU limit?" has one answer.
