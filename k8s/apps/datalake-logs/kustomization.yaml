@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: datalake-logs
 resources:
   - repository.yaml
-  - namespace.yaml
   - release.yaml
   - grafana-datasource-cm.yaml
   - versity/

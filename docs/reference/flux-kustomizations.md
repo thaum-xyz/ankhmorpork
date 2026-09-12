@@ -8,8 +8,8 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | | |
 | --- | --- |
-| **Total** | 51 — 3 bootstrap, 26 platform, 22 apps |
-| **`prune: false`** | `prometheus-operator-crds`, `apps`, `platform`, `cilium`, `flux-system`, `piraeus-datastore`, `topolvm`, `traefik` |
+| **Total** | 52 — 4 bootstrap, 26 platform, 22 apps |
+| **`prune: false`** | `prometheus-operator-crds`, `apps`, `platform`, `namespaces`, `cilium`, `flux-system`, `piraeus-datastore`, `topolvm`, `traefik` |
 | **`wait: true`** | `prometheus-operator-crds`, `kyverno` |
 | **Declare `dependsOn`** | `apps`, `platform`, `cnpg-system`, `csi-nfs`, `kyverno-policies`, `piraeus-datastore`, `homer-services` |
 | **Suspended in git** | none |
@@ -18,7 +18,8 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | Kustomization | Path | Interval | Prune | Wait | Depends on |
 | --- | --- | --- | --- | --- | --- |
-| `apps` | [`k8s/flux/apps`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/flux/apps) | `15m0s` | **no** | no | `platform` |
+| `apps` | [`k8s/flux/apps`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/flux/apps) | `15m0s` | **no** | no | `platform`, `namespaces` |
+| `namespaces` | [`k8s/namespaces`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/namespaces) | `15m0s` | **no** | no | — |
 | `platform` | [`k8s/flux/platform`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/flux/platform) | `15m0s` | **no** | no | `prometheus-operator-crds` |
 | `prometheus-operator-crds` | [`k8s/platform/observability/prometheus-operator-crds`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability/prometheus-operator-crds) | `15m0s` | **no** | **yes** (10m) | — |
 

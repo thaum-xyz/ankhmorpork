@@ -4,5 +4,6 @@ namespace: flux-system
 resources:
   - github-repo.yaml
   - crds-prometheus-operator.yaml
+  - namespaces.yaml
   - group-platform.yaml
   - group-apps.yaml

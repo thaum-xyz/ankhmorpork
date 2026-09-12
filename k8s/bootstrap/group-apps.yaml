@@ -9,6 +9,9 @@ spec:
   prune: false
   dependsOn:
   - name: platform
+  # App Namespaces are no longer created by the apps themselves, so they have
+  # to exist before any app Kustomization applies into them.
+  - name: namespaces
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

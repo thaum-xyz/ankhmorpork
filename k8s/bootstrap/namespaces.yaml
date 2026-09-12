@@ -1,0 +1,34 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: namespaces
+  namespace: flux-system
+  annotations:
+    kubernetes.io/description: >-
+      Every app Namespace, one object per file in ./k8s/namespaces.
+
+      They live outside k8s/apps/<app>/ because a Namespace is a cluster-admin
+      object twice over. It is cluster-scoped, so an app Kustomization that
+      reconciles as a namespace-scoped ServiceAccount cannot apply one at all.
+      And its `group.rbac.thaum.xyz/<group>` labels ARE the access grant --
+      generate-group-rolebindings turns each into a RoleBinding for
+      `oidc:k8s:group:<group>` -- so leaving them in an app's own directory
+      would let a tenant who can merge there edit their own grant.
+
+      Platform Namespaces stay with their components: already applied by a
+      cluster-admin identity, no group labels, nothing to gain.
+spec:
+  interval: 15m0s
+  # Deliberately no kustomization.yaml in the target directory. There is
+  # nothing to transform, and without one Flux applies every manifest it finds:
+  # a Namespace added as a file cannot be silently skipped for want of a
+  # `resources:` entry. For the directory that holds the access grants, being
+  # unable to omit one by accident is worth more than a rendered build.
+  path: ./k8s/namespaces
+  # NOTE: deleting a Namespace cascades to everything inside it, so removal is
+  # deliberately not a one-line diff. Take a namespace out of git, then delete
+  # the object explicitly.
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork
