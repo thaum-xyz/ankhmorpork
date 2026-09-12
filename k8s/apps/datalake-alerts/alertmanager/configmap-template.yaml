@@ -46,13 +46,31 @@ data:
           responders:
           - name: 'Main'
             type: team
+    # timeout bounds a single POST. Without it the only deadline is the
+    # notification pipeline's, which is max(group_interval, 10s) + 15s per peer
+    # position -- 2m to 2m30s on the Watchdog route below. One socket that hangs
+    # therefore eats the entire budget and RetryStage never gets a second
+    # attempt, which is how #1445 lost Watchdog pings: on the night of
+    # 2026-09-11 about one POST in five to hc-ping.com hung for the full ~110s
+    # while the ones between them completed in under a second.
+    #
+    # 10s leaves room for roughly six further attempts inside the same budget.
+    # Failure counters are not the cost of that: notifications_total and
+    # notifications_failed_total count *pipelines*, once each, and only
+    # notification_requests_total counts attempts -- so a retry that succeeds
+    # leaves AlertmanagerFailedToSendAlerts untouched.
     - name: 'healthchecks.io'
       webhook_configs:
         - send_resolved: false
+          timeout: 10s
           url: {{ .healthchecks_url }}  {{/* This is a reference to a secret stored in doppler */}}
+    # Same reasoning, with a larger value: this one waits on the GitHub API
+    # through github-receiver, which takes 1.5-4s in normal operation. Its route
+    # has the default 5m group_interval, so 30s still leaves ~10 attempts.
     - name: 'github'
       webhook_configs:
         - send_resolved: true
+          timeout: 30s
           url: "http://github-receiver:8080/v1/webhook?owner=thaum-xyz&repo=ankhmorpork"
     - name: "null"
     # Waking hours, local. Referenced by the opsgenie route below.

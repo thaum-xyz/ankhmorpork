@@ -57,8 +57,13 @@ spec:
             - containerPort: 8080
               name: http
           resources:
+            # No CPU limit. A limit is a CFS quota, so 10m meant 1ms of CPU per
+            # 100ms period and every burst -- a /metrics scrape, a webhook POST --
+            # ran out of it: 57% of periods were throttled while the container
+            # averaged 0.7m, a fourteenth of the limit it never got near. The
+            # request is what reserves capacity; the limit only chopped the
+            # bursts that matter and left a permanently firing CPUThrottlingHigh.
             limits:
-              cpu: 10m
               memory: 50Mi
             requests:
               cpu: 2m
