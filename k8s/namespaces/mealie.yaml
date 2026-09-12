@@ -17,3 +17,9 @@ metadata:
     # members and be selected under the kubectl client's Allowed User Groups, or
     # the login fails before RBAC is consulted.
     group.rbac.thaum.xyz/appadmin: edit
+    # Generates the flux-reconciler ServiceAccount and a RoleBinding giving it
+    # this ClusterRole here, via the generate-flux-reconciler GeneratingPolicy.
+    # A RoleBinding, so Flux is confined to this namespace: everything the app
+    # installs is namespaced. A chart that grows a cluster-scoped object will
+    # fail to apply rather than quietly gaining the right to create one.
+    flux.rbac.thaum.xyz/role: flux-tenant-reconciler

@@ -1,0 +1,62 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
+  # component's namespace on it in the rendered output; the API server ignores
+  # the field for cluster-scoped resources.
+  name: validate-flux-role-labels
+spec:
+  # generate-flux-reconciler turns a `flux.rbac.thaum.xyz/role` label into a
+  # RoleBinding to the ClusterRole its value names. Two ways that goes wrong
+  # quietly, both made loud here:
+  #
+  #   - a ClusterRole the background controller may not `bind`. RBAC's
+  #     escalation check rejects it inside a background UpdateRequest -- no
+  #     admission error, no binding, and a HelmRelease that simply stops
+  #     reconciling with a Forbidden nobody is watching for. Every name allowed
+  #     here must also appear in the `bind` resourceNames of
+  #     clusterrole-background-controller.yaml; adding one without the other
+  #     produces exactly that silent failure.
+  #   - an empty value, which would bind a ClusterRole named "" rather than
+  #     nothing.
+  #
+  # `cluster-admin` is deliberately NOT allowed, and would not work if it were:
+  # the background controller holds no `clusterrolebindings` rights at all, and
+  # a RoleBinding to cluster-admin would confer only its namespaced rules while
+  # reading as though it granted the cluster. Namespaces needing cluster-admin
+  # are hand-written in k8s/reconcilers/.
+  #
+  # Scoped to namespaces that actually carry the label, so it can never block
+  # creating an ordinary namespace.
+  evaluation:
+    background:
+      enabled: false
+  failurePolicy: Fail
+  validationActions:
+    - Deny
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - namespaces
+  matchConditions:
+    # Inlined rather than reusing a variable: matchConditions are evaluated
+    # before `variables` and cannot reference them.
+    - name: has-a-reconciler-label
+      expression: >-
+        object.metadata.?labels.orValue({}).exists(k, k == "flux.rbac.thaum.xyz/role")
+  validations:
+    - expression: >-
+        object.metadata.labels["flux.rbac.thaum.xyz/role"] in
+        ["flux-tenant-reconciler"]
+      message: >-
+        A flux.rbac.thaum.xyz/role label must name a ClusterRole the Kyverno
+        background controller is allowed to bind -- currently only
+        "flux-tenant-reconciler". It grants that role to this namespace's
+        flux-reconciler ServiceAccount through a RoleBinding, so it can never
+        confer anything cluster-scoped. A namespace whose Flux objects install
+        cluster-scoped resources belongs in k8s/reconcilers/ instead.

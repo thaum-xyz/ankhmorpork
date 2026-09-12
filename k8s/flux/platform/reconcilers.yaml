@@ -1,0 +1,28 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: reconcilers
+  namespace: flux-system
+  annotations:
+    kubernetes.io/description: >-
+      The per-namespace flux-reconciler ServiceAccounts that helm-controller and
+      kustomize-controller impersonate, and the bindings that decide how far
+      each one reaches.
+
+      One directory rather than one file per component, because taken together
+      these objects are the privilege register for Flux reconciliation: which
+      namespaces reconcile as cluster-admin, and which are confined to
+      themselves. That is worth being able to read in one place.
+spec:
+  interval: 15m0s
+  # No kustomization.yaml in the target, for the same reason k8s/namespaces has
+  # none: every manifest in the directory is applied, so a ServiceAccount added
+  # as a file cannot be silently skipped for want of a `resources:` entry.
+  path: ./k8s/reconcilers
+  # Deleting a reconciler identity stops its namespace reconciling, and the
+  # symptom is a HelmRelease that simply stops updating. Removal stays
+  # deliberate: drop the file, then delete the object.
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

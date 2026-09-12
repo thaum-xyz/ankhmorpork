@@ -1,0 +1,39 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: flux-tenant-reconciler
+  annotations:
+    kubernetes.io/description: >-
+      What Flux may do inside one app namespace. A ClusterRole only as a
+      definition, so the same rules can be reused; it is the RoleBinding in each
+      namespace that scopes it.
+
+      NEVER BIND THIS WITH A ClusterRoleBinding. `*` on `*` in a RoleBinding is
+      namespace-admin, which is the intent; the same rules in a
+      ClusterRoleBinding are cluster-admin, which is not. There is no field here
+      that would stop that -- the confinement lives entirely in the kind of
+      binding used, so the rolebinding-<ns>.yaml files beside this one are the
+      security boundary, not this object.
+rules:
+  # Everything, bounded by the RoleBinding to a single namespace -- so in
+  # practice every NAMESPACED resource in that one namespace, and nothing
+  # cluster-scoped, since a RoleBinding cannot confer that however the rule is
+  # written.
+  #
+  # Wide on purpose, for two reasons.
+  #
+  # Enumerating instead would mean deriving each app's rules from the custom
+  # resources it happens to use -- postgresql.cnpg.io for a database, pyrra.dev
+  # for an SLO, monitoring.coreos.com for its rules -- and re-deriving them
+  # every time an app grows a kind. The failure is silent until a release
+  # cannot apply.
+  #
+  # And it would not buy a boundary. RBAC's escalation check lets this SA create
+  # a Role only for rights it already holds, so narrowing it narrows what a
+  # tenant's own manifests can do -- not what a tenant can do. Anyone who
+  # controls the git path Flux reconciles can commit a Pod that reads this SA's
+  # token, which is why Flux's own tenancy model assumes tenants hold no API
+  # access at all. The boundary that does hold is the namespace edge.
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
