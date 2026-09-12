@@ -1,5 +1,23 @@
 # Config reference: https://github.com/external-secrets/external-secrets/blob/main/deploy/charts/external-secrets/values.yaml
 
+# This chart ships its CRDs as ordinary templates -- there is no chart-root
+# crds/ directory -- so `helm uninstall` DELETES them, and deleting a CRD
+# deletes every custom resource of that kind. Every ExternalSecret here runs
+# creationPolicy: Owner, so the generated Secret carries an ownerReference back
+# to it: the CRD going away garbage-collects all 74 of them, which is every
+# Postgres credential in the cluster and cert-manager's DNS token with them.
+#
+# `keep` makes Helm leave the CRDs alone on uninstall. It has to reach them
+# through the chart -- annotating the live objects with `kubectl annotate` does
+# not survive the next apply.
+#
+# This is a guard, not a preference. Do not drop it because a release looks
+# stable; the cost only shows up during an uninstall, which is exactly when
+# nobody wants to discover it.
+crds:
+  annotations:
+    helm.sh/resource-policy: keep
+
 serviceMonitor:
   enabled: true
   honorLabels: true
