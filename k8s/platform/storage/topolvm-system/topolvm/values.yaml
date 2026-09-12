@@ -1,5 +1,27 @@
 # Config reference: https://github.com/topolvm/topolvm/blob/main/charts/topolvm/values.yaml
 
+# The chart ships logicalvolumes.topolvm.io as a template, not from a chart-root
+# crds/ directory, so `helm uninstall` deletes it -- and deleting a CRD deletes
+# every custom resource of that kind.
+#
+# There are 34 LogicalVolumes here and they are not bookkeeping: each one is an
+# actual LVM logical volume backing an lvm-thin PV. Between them they hold every
+# Postgres cluster in the fleet and both Prometheus replicas. Each carries a
+# topolvm.io/logicalvolume finalizer that only the controller being uninstalled
+# can clear, so the CRD going away either wedges them all in Terminating or, if
+# the controller drains the queue first, removes the underlying volumes. Unlike
+# secrets, none of that can be re-synced from anywhere -- it is restore-from-
+# backup territory.
+#
+# `keep` makes Helm leave the CRD alone on uninstall. The chart documents this
+# exact annotation as the reason crd.annotations exists.
+#
+# This is a guard, not a preference. Its cost only shows up during an uninstall,
+# which is precisely when it is too late to add.
+crd:
+  annotations:
+    helm.sh/resource-policy: keep
+
 scheduler:
   enabled: false
 
