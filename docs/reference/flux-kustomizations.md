@@ -8,7 +8,6 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | | |
 | --- | --- |
-| **Total** | 52 — 4 bootstrap, 26 platform, 22 apps |
 | **`prune: false`** | `prometheus-operator-crds`, `apps`, `platform`, `namespaces`, `cilium`, `flux-system`, `piraeus-datastore`, `topolvm`, `traefik` |
 | **`wait: true`** | `prometheus-operator-crds`, `kyverno` |
 | **Declare `dependsOn`** | `apps`, `platform`, `cnpg-system`, `csi-nfs`, `kyverno-policies`, `piraeus-datastore`, `homer-services` |
