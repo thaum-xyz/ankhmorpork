@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: thaum-charts
-  namespace: topolvm-system
+  namespace: platform-storage
 spec:
   type: oci
   interval: 5m
