@@ -14,7 +14,11 @@ metadata:
 spec:
   interval: 15m0s
   path: ./k8s/platform/storage/cnpg-versity-gw
-  prune: true
+  # Tombstone: platform-storage reconciles this path now. Suspended and
+  # non-pruning so that deleting the live object leaves its inventory --
+  # pruning is inventory-based, and this one still holds every object.
+  prune: false
+  suspend: true
   wait: true
   timeout: 10m
   dependsOn:

@@ -6,7 +6,11 @@ metadata:
 spec:
   interval: 30m0s
   path: ./k8s/platform/storage/piraeus-datastore
+  # Tombstone: platform-storage reconciles this path now. Suspended and
+  # non-pruning so that deleting the live object leaves its inventory --
+  # pruning is inventory-based, and this one still holds every object.
   prune: false
+  suspend: true
   dependsOn:
     - name: topolvm
     # The roaming size policy ships with this component, so the Kyverno CRDs
