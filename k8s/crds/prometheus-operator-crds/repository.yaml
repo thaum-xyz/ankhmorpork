@@ -1,0 +1,17 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: prometheus-community-crds
+  annotations:
+    kubernetes.io/description: >-
+      The same upstream as kube-prometheus-stack's prometheus-community, under a
+      name only this layer uses. Both objects would otherwise be one object in
+      platform-observability with two Kustomizations applying it, each reclaiming
+      the ownership labels from the other on every reconcile.
+
+      Sharing kube-prometheus-stack's copy instead would be worse: the crds layer
+      applies before the platform layer exists, so it cannot read a source that a
+      platform component ships.
+spec:
+  interval: 5m
+  url: https://prometheus-community.github.io/helm-charts

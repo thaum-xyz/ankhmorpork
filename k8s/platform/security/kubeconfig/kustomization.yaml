@@ -1,8 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-# The namespace itself is created by the kyverno component, the same way
-# platform-observability is created by prometheus-operator-crds and used by
-# everything else in that namespace.
+# The namespace itself lives in k8s/namespaces/ rather than with any one
+# component: platform-security is shared, so no single occupant owns it.
 namespace: platform-security
 resources:
   - deployment.yaml
