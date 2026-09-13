@@ -2,6 +2,11 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: piraeus-operator
+  annotations:
+    # Never prune this object. Pruning a HelmRelease uninstalls the release
+    # behind it, and this operator is what reconciles the LINSTOR cluster that
+    # serves every roaming PV.
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   chart:
     spec:

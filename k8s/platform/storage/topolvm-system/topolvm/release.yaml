@@ -4,6 +4,13 @@ kind: HelmRelease
 metadata:
   name: topolvm
   namespace: platform-storage
+  annotations:
+    # Never prune this object. Pruning a HelmRelease uninstalls the release
+    # behind it, and this one is the CSI driver backing every lvm-thin PV on
+    # the cluster. The chart's own CRDs carry helm.sh/resource-policy: keep,
+    # so the LogicalVolumes would survive an uninstall with nothing able to
+    # act on them.
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   chart:
     spec:

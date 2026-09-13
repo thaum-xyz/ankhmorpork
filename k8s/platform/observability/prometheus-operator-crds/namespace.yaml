@@ -4,3 +4,8 @@ metadata:
   # Owned here because this component is first in the dependency graph; every
   # other platform-observability component targets it.
   name: platform-observability
+  annotations:
+    # Never garbage-collect this Namespace. Pruning is inventory-based, so
+    # dropping it from a Kustomization's inventory would delete the namespace
+    # and everything inside it.
+    kustomize.toolkit.fluxcd.io/prune: disabled

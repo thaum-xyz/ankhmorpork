@@ -4,6 +4,12 @@ kind: HelmRelease
 metadata:
   name: traefik-private
   namespace: platform-network
+  annotations:
+    # Never prune this object. Pruning a HelmRelease uninstalls the release
+    # behind it, which here means every private Ingress stops resolving to a
+    # backend -- and the two traefik releases share IngressClasses, so the
+    # uninstall takes them from the other one too.
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   chart:
     spec:
