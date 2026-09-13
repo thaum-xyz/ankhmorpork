@@ -95,8 +95,10 @@ wait, reconcile explicitly:
 ```bash
 flux reconcile source git ankhmorpork
 # Twice: the first pass stamps the pre-update version, the second picks up the new one.
-flux -n flux-system reconcile kustomization <component>
-flux -n flux-system reconcile kustomization <component>
+# An app: its own Kustomization, in flux-system. A platform component: the
+# platform-<domain> Kustomization, in the platform-<domain> namespace.
+flux -n <kustomization namespace> reconcile kustomization <kustomization>
+flux -n <kustomization namespace> reconcile kustomization <kustomization>
 ```
 
 ## Limits

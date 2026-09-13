@@ -189,7 +189,7 @@ Cluster is [k3s](https://k3s.io/) provisioned on bare-metal hosts with latest LT
 
 ### GitOps
 
-[Flux](https://github.com/fluxcd/flux2) bootstraps from `k8s/bootstrap/`, loads component definitions from `k8s/flux/platform/` and `k8s/flux/apps/`, and reconciles the manifests in `k8s/platform/` and `k8s/apps/`.
+[Flux](https://github.com/fluxcd/flux2) bootstraps from `k8s/bootstrap/`, which applies the CRDs in `k8s/crds/`, the namespaces in `k8s/namespaces/` and two umbrellas. One reconciles the manifests in `k8s/platform/`, a Kustomization per `platform-<domain>` namespace; the other loads an app definition per file from `k8s/flux/apps/` and reconciles `k8s/apps/`.
 
 ## 🌐 DNS
 

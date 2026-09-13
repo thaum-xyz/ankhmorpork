@@ -8,10 +8,10 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | | |
 | --- | --- |
-| **`prune: false`** | `crds`, `apps`, `platform`, `namespaces`, `alloy`, `blackbox-exporter`, `cert-manager`, `cilium`, `cloudflared`, `cnpg-system`, `cnpg-versity-gw`, `csi-nfs`, `descheduler`, `device-plugins`, `external-dns`, `external-secrets`, `flux-system`, `k8up`, `kube-prometheus-stack`, `kubeconfig`, `kyverno-policies`, `kyverno`, `node-feature-discovery`, `node-problem-detector`, `oidc-rbac`, `piraeus-datastore`, `smartctl-exporter`, `system-kured`, `topolvm`, `traefik`, `uptimerobot` |
-| **`wait: true`** | `crds`, `cnpg-versity-gw`, `kyverno` |
-| **Declare `dependsOn`** | `apps`, `platform`, `cnpg-system`, `cnpg-versity-gw`, `csi-nfs`, `kyverno-policies`, `piraeus-datastore`, `homer-services` |
-| **Suspended in git** | `alloy`, `blackbox-exporter`, `cert-manager`, `cilium`, `cloudflared`, `cnpg-system`, `cnpg-versity-gw`, `csi-nfs`, `descheduler`, `device-plugins`, `external-dns`, `external-secrets`, `k8up`, `kube-prometheus-stack`, `kubeconfig`, `kyverno-policies`, `kyverno`, `node-feature-discovery`, `node-problem-detector`, `oidc-rbac`, `piraeus-datastore`, `smartctl-exporter`, `system-kured`, `topolvm`, `traefik`, `uptimerobot` |
+| **`prune: false`** | `crds`, `apps`, `platform`, `namespaces`, `flux-system` |
+| **`wait: true`** | `crds` |
+| **Declare `dependsOn`** | `apps`, `platform`, `homer-services` |
+| **Suspended in git** | none |
 
 ## Bootstrap — applied once by hand
 
@@ -26,38 +26,12 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | Kustomization | Path | Interval | Prune | Wait | Depends on |
 | --- | --- | --- | --- | --- | --- |
-| `alloy` | [`k8s/platform/observability/alloy`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability/alloy) | `15m0s` | **no** | no | — |
-| `blackbox-exporter` | [`k8s/platform/observability/blackbox-exporter`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability/blackbox-exporter) | `15m0s` | **no** | no | — |
-| `cert-manager` | [`k8s/platform/security/cert-manager`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/cert-manager) | `15m0s` | **no** | no | — |
-| `cilium` | [`k8s/platform/network/cilium`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network/cilium) | `15m0s` | **no** | no | — |
-| `cloudflared` | [`k8s/platform/network/cloudflared`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network/cloudflared) | `15m0s` | **no** | no | — |
-| `cnpg-system` | [`k8s/platform/storage/cnpg-system`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/cnpg-system) | `15m0s` | **no** | no | `kyverno` |
-| `cnpg-versity-gw` | [`k8s/platform/storage/cnpg-versity-gw`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/cnpg-versity-gw) | `15m0s` | **no** | **yes** (10m) | `csi-nfs` |
-| `csi-nfs` | [`k8s/platform/storage/csi-nfs`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/csi-nfs) | `15m0s` | **no** | no | `kyverno` |
-| `descheduler` | [`k8s/platform/cluster/descheduler`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/descheduler) | `15m0s` | **no** | no | — |
-| `device-plugins` | [`k8s/platform/cluster/device-plugins`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/device-plugins) | `15m0s` | **no** | no | — |
-| `external-dns` | [`k8s/platform/network/external-dns`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network/external-dns) | `15m0s` | **no** | no | — |
-| `external-secrets` | [`k8s/platform/security/external-secrets`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/external-secrets) | `15m0s` | **no** | no | — |
 | `flux-system` | [`k8s/platform/cluster/flux-system`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/flux-system) | `15m0s` | **no** | no | — |
-| `k8up` | [`k8s/platform/storage/k8up`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/k8up) | `15m0s` | **no** | no | — |
-| `kube-prometheus-stack` | [`k8s/platform/observability/kube-prometheus-stack`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability/kube-prometheus-stack) | `15m0s` | **no** | no | — |
-| `kubeconfig` | [`k8s/platform/security/kubeconfig`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kubeconfig) | `15m0s` | **no** | no | — |
-| `kyverno` | [`k8s/platform/security/kyverno`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kyverno) | `15m0s` | **no** | **yes** (15m) | — |
-| `kyverno-policies` | [`k8s/platform/security/kyverno/policies`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/kyverno/policies) | `15m0s` | **no** | no | `kyverno` |
-| `node-feature-discovery` | [`k8s/platform/cluster/node-feature-discovery`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/node-feature-discovery) | `15m0s` | **no** | no | — |
-| `node-problem-detector` | [`k8s/platform/cluster/node-problem-detector`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/node-problem-detector) | `30m0s` | **no** | no | — |
-| `oidc-rbac` | [`k8s/platform/security/oidc-rbac`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security/oidc-rbac) | `15m0s` | **no** | no | — |
-| `piraeus-datastore` | [`k8s/platform/storage/piraeus-datastore`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/piraeus-datastore) | `30m0s` | **no** | no | `topolvm`, `kyverno` |
 | `platform-cluster` | [`k8s/platform/cluster`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster) | `15m0s` | yes | no | — |
 | `platform-network` | [`k8s/platform/network`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network) | `15m0s` | yes | no | — |
 | `platform-observability` | [`k8s/platform/observability`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability) | `15m0s` | yes | no | — |
 | `platform-security` | [`k8s/platform/security`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security) | `15m0s` | yes | no | — |
 | `platform-storage` | [`k8s/platform/storage`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage) | `15m0s` | yes | no | — |
-| `smartctl-exporter` | [`k8s/platform/storage/smartctl-exporter`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/smartctl-exporter) | `15m0s` | **no** | no | — |
-| `system-kured` | [`k8s/platform/cluster/system-kured`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster/system-kured) | `60m0s` | **no** | no | — |
-| `topolvm` | [`k8s/platform/storage/topolvm-system`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/storage/topolvm-system) | `30m0s` | **no** | no | — |
-| `traefik` | [`k8s/platform/network/traefik`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network/traefik) | `30m0s` | **no** | no | — |
-| `uptimerobot` | [`k8s/platform/observability/uptimerobot`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability/uptimerobot) | `15m0s` | **no** | no | — |
 
 ## Apps
 

@@ -11,18 +11,18 @@ schedule against objects that already exist.
 
 | Policy | Applies to | Effect | Shipped by |
 | --- | --- | --- | --- |
-| [`cleanup-cnpg-backups`](#cleanup-cnpg-backups) | `backups` | **Delete on schedule `17 3 * * *`** | `cnpg-system` |
-| [`generate-group-rolebindings`](#generate-group-rolebindings) | `namespaces` | **Generate** | `kyverno-policies` |
-| [`mutate-configmap-autoreload`](#mutate-configmap-autoreload) | `deployments`, `statefulsets` | **Mutate** | `kyverno-policies` |
-| [`mutate-nfs-pvc-alert-exclusion`](#mutate-nfs-pvc-alert-exclusion) | `persistentvolumeclaims` | **Mutate** | `csi-nfs` |
-| [`require-resource-requests`](#require-resource-requests) | `pods` | **Warn** | `kyverno-policies` |
-| [`validate-group-labels`](#validate-group-labels) | `namespaces` | **Deny** | `kyverno-policies` |
-| [`validate-helm-chart-version`](#validate-helm-chart-version) | `helmreleases` | **Deny** | `kyverno-policies` |
-| [`validate-ingress-contract`](#validate-ingress-contract) | `ingresses` | **Deny** | `kyverno-policies` |
-| [`validate-nfs-k8up-annotations`](#validate-nfs-k8up-annotations) | `persistentvolumeclaims`, `persistentvolumes` | **Warn** | `csi-nfs` |
-| [`validate-pdb-drain-safety`](#validate-pdb-drain-safety) | `poddisruptionbudgets` | **Warn** | `kyverno-policies` |
-| [`validate-reconciler-sa-usage`](#validate-reconciler-sa-usage) | `pods` | **Deny** | `kyverno-policies` |
-| [`validate-roaming-volume-size`](#validate-roaming-volume-size) | `persistentvolumeclaims` | **Deny** | `piraeus-datastore` |
+| [`cleanup-cnpg-backups`](#cleanup-cnpg-backups) | `backups` | **Delete on schedule `17 3 * * *`** | `platform-storage` |
+| [`generate-group-rolebindings`](#generate-group-rolebindings) | `namespaces` | **Generate** | `platform-security` |
+| [`mutate-configmap-autoreload`](#mutate-configmap-autoreload) | `deployments`, `statefulsets` | **Mutate** | `platform-security` |
+| [`mutate-nfs-pvc-alert-exclusion`](#mutate-nfs-pvc-alert-exclusion) | `persistentvolumeclaims` | **Mutate** | `platform-storage` |
+| [`require-resource-requests`](#require-resource-requests) | `pods` | **Warn** | `platform-security` |
+| [`validate-group-labels`](#validate-group-labels) | `namespaces` | **Deny** | `platform-security` |
+| [`validate-helm-chart-version`](#validate-helm-chart-version) | `helmreleases` | **Deny** | `platform-security` |
+| [`validate-ingress-contract`](#validate-ingress-contract) | `ingresses` | **Deny** | `platform-security` |
+| [`validate-nfs-k8up-annotations`](#validate-nfs-k8up-annotations) | `persistentvolumeclaims`, `persistentvolumes` | **Warn** | `platform-storage` |
+| [`validate-pdb-drain-safety`](#validate-pdb-drain-safety) | `poddisruptionbudgets` | **Warn** | `platform-security` |
+| [`validate-reconciler-sa-usage`](#validate-reconciler-sa-usage) | `pods` | **Deny** | `platform-security` |
+| [`validate-roaming-volume-size`](#validate-roaming-volume-size) | `persistentvolumeclaims` | **Deny** | `platform-storage` |
 
 ## `cleanup-cnpg-backups`
 
@@ -31,7 +31,7 @@ schedule against objects that already exist.
 | **Kind** | `DeletingPolicy` |
 | **Applies to** | `backups` |
 | **Effect** | **Delete on schedule `17 3 * * *`** |
-| **Shipped by** | `cnpg-system` |
+| **Shipped by** | `platform-storage` |
 | **Source** | [`k8s/platform/storage/cnpg-system/policies/cleanup-backups.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/cnpg-system/policies/cleanup-backups.yaml) |
 
 Deletes only objects matching all of:
@@ -49,7 +49,7 @@ Deletes only objects matching all of:
 | **On** | `CREATE`, `UPDATE` |
 | **Effect** | **Generate** |
 | **Only when** | `object.metadata.?labels.orValue({}).exists(k, k.startsWith("group.rbac.thaum.xyz/"))` |
-| **Shipped by** | `kyverno-policies` |
+| **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/generate-group-rolebindings.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/generate-group-rolebindings.yaml) |
 
 ## `mutate-configmap-autoreload`
@@ -62,7 +62,7 @@ Deletes only objects matching all of:
 | **Effect** | **Mutate** |
 | **failurePolicy** | `Ignore` — a policy error skips the rule silently |
 | **Only when** | `has(object.metadata.annotations) && object.metadata.annotations.exists(k, k == "autoreloader.thaum.xyz/configmap")` |
-| **Shipped by** | `kyverno-policies` |
+| **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/mutate-configmap-autoreload.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/mutate-configmap-autoreload.yaml) |
 
 ## `mutate-nfs-pvc-alert-exclusion`
@@ -75,7 +75,7 @@ Deletes only objects matching all of:
 | **Effect** | **Mutate** |
 | **failurePolicy** | `Fail` |
 | **Only when** | `object.spec.?storageClassName.orValue("") == "unifi-nas"` |
-| **Shipped by** | `csi-nfs` |
+| **Shipped by** | `platform-storage` |
 | **Source** | [`k8s/platform/storage/csi-nfs/mutatingpolicy.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/csi-nfs/mutatingpolicy.yaml) |
 
 ## `require-resource-requests`
@@ -87,7 +87,7 @@ Deletes only objects matching all of:
 | **On** | `CREATE` |
 | **Effect** | **Warn** |
 | **failurePolicy** | `Fail` |
-| **Shipped by** | `kyverno-policies` |
+| **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/require-resource-requests.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/require-resource-requests.yaml) |
 
 Rules enforced:
@@ -104,7 +104,7 @@ Rules enforced:
 | **Effect** | **Deny** |
 | **failurePolicy** | `Fail` |
 | **Only when** | `object.metadata.?labels.orValue({}).exists(k, k.startsWith("group.rbac.thaum.xyz/"))` |
-| **Shipped by** | `kyverno-policies` |
+| **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/validate-group-labels.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-group-labels.yaml) |
 
 Rules enforced:
@@ -120,7 +120,7 @@ Rules enforced:
 | **On** | `CREATE`, `UPDATE` |
 | **Effect** | **Deny** |
 | **failurePolicy** | `Fail` |
-| **Shipped by** | `kyverno-policies` |
+| **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/validate-helm-chart-version.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-helm-chart-version.yaml) |
 
 Rules enforced:
@@ -136,7 +136,7 @@ Rules enforced:
 | **On** | `CREATE`, `UPDATE` |
 | **Effect** | **Deny** |
 | **failurePolicy** | `Fail` |
-| **Shipped by** | `kyverno-policies` |
+| **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/validate-ingress-contract.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-ingress-contract.yaml) |
 
 Rules enforced:
@@ -157,7 +157,7 @@ Rules enforced:
 | **Effect** | **Warn** |
 | **failurePolicy** | `Ignore` — a policy error skips the rule silently |
 | **Only when** | `object.spec.?storageClassName.orValue("") == "unifi-nas"` |
-| **Shipped by** | `csi-nfs` |
+| **Shipped by** | `platform-storage` |
 | **Source** | [`k8s/platform/storage/csi-nfs/validatingpolicy.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/csi-nfs/validatingpolicy.yaml) |
 
 Rules enforced:
@@ -174,7 +174,7 @@ Rules enforced:
 | **Effect** | **Warn** |
 | **failurePolicy** | `Fail` |
 | **Only when** | `!object.metadata.?ownerReferences.orValue([]).exists( owner, owner.kind == "Cluster" && owner.apiVersion.startsWith("postgresql.cnpg.io/") )` |
-| **Shipped by** | `kyverno-policies` |
+| **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/validate-pdb-drain-safety.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-pdb-drain-safety.yaml) |
 
 Rules enforced:
@@ -193,7 +193,7 @@ Rules enforced:
 | **On** | `CREATE` |
 | **Effect** | **Deny** |
 | **failurePolicy** | `Fail` |
-| **Shipped by** | `kyverno-policies` |
+| **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/validate-reconciler-sa-usage.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/validate-reconciler-sa-usage.yaml) |
 
 Rules enforced:
@@ -210,7 +210,7 @@ Rules enforced:
 | **Effect** | **Deny** |
 | **failurePolicy** | `Fail` |
 | **Only when** | `object.spec.?storageClassName.orValue("") == "piraeus-r2-roaming"` |
-| **Shipped by** | `piraeus-datastore` |
+| **Shipped by** | `platform-storage` |
 | **Source** | [`k8s/platform/storage/piraeus-datastore/validatingpolicy.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/piraeus-datastore/validatingpolicy.yaml) |
 
 Rules enforced:

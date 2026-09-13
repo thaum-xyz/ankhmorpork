@@ -2,7 +2,10 @@
 
 Flux-managed k3s homelab. `k8s/bootstrap/` creates the umbrella Flux resources,
 `k8s/platform/` contains infrastructure, and `k8s/apps/` contains workloads.
-Component Flux Kustomizations live in `k8s/flux/platform/` and `k8s/flux/apps/`.
+An app gets its own Flux Kustomization in `k8s/flux/apps/`. A platform component
+does not: it is a directory listed in `k8s/platform/<domain>/kustomization.yaml`,
+reconciled by the `platform-<domain>` Kustomization, which lives in the
+`platform-<domain>` namespace rather than in `flux-system`.
 
 Changing anything Flux applies: see the `app-deployment` skill in
 `.claude/skills/`. It covers proving the render, the rollout order and the traps
@@ -51,9 +54,7 @@ put the object or artifact type first rather than the component name.
 
 ## Suspended components
 
-The component Kustomizations under `k8s/flux/platform/` are suspended in Git as
-tombstones: `platform-<domain>` reconciles their paths now, and each file goes
-once its live object is deleted. Check both the
+No Flux Kustomizations are declared suspended in Git. Check both the
 repository and live Flux state before changing suspension because live state can
 temporarily diverge during maintenance.
 
