@@ -5,8 +5,17 @@ metadata:
   namespace: flux-system
   annotations:
     kubernetes.io/description: >-
-      Every Namespace this repo creates except flux-system's, one object per
-      file in ./k8s/namespaces.
+      Every Namespace this repo creates except flux-system's, plus what each
+      `platform-<domain>` needs before it can reconcile itself.
+
+      An app Namespace is one object in one file. A `platform-<domain>` is a
+      directory, holding three objects beside the Namespace: the GitRepository
+      its Kustomization reads, the `flux-reconciler` ServiceAccount that
+      Kustomization impersonates, and that SA's ClusterRoleBinding. All three
+      have to exist BEFORE a Kustomization is created in the namespace, and a
+      Kustomization can create neither the source it reads nor the identity it
+      applies as -- so they are prerequisites of a domain rather than part of it,
+      and they belong to whatever creates the namespace.
 
       They live outside k8s/apps/<app>/ because a Namespace is a cluster-admin
       object twice over. It is cluster-scoped, so an app Kustomization that
@@ -25,10 +34,14 @@ metadata:
 spec:
   interval: 15m0s
   # Deliberately no kustomization.yaml in the target directory. There is
-  # nothing to transform, and without one Flux applies every manifest it finds:
+  # nothing to transform, and without one Flux applies every manifest it finds --
+  # recursively, so a platform-<domain>/ subdirectory is picked up the same way:
   # a Namespace added as a file cannot be silently skipped for want of a
   # `resources:` entry. For the directory that holds the access grants, being
   # unable to omit one by accident is worth more than a rendered build.
+  #
+  # It also means nothing here may carry a generated name or rely on a namespace
+  # transformer; every namespaced object states its own `metadata.namespace`.
   path: ./k8s/namespaces
   # NOTE: deleting a Namespace cascades to everything inside it, so removal is
   # deliberately not a one-line diff. Take a namespace out of git, then delete

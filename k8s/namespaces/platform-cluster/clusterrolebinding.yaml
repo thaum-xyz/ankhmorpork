@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-reconciler-platform-cluster
+  annotations:
+    kubernetes.io/description: >-
+      cluster-admin, and not yet anything narrower. This domain reconciles
+      cluster-scoped objects -- StorageClasses aside, this domain still creates NodeFeatureRules, ClusterRoles and the flux2 release itself -- and binding a ClusterRole at all
+      needs escalate or bind, so a Role confined to the namespace could not apply
+      it.
+
+      What the split buys today is one identity per domain instead of one
+      cluster-admin for the whole platform. The rights are the same; the name in
+      an audit log is not, and narrowing one domain stops meaning narrowing all
+      five at once. That narrowing is thaum-xyz/ankhmorpork#1436, not this.
+subjects:
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: platform-cluster
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
