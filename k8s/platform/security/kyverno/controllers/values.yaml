@@ -1,25 +1,25 @@
 # Config reference: https://github.com/kyverno/kyverno/blob/main/charts/kyverno/values.yaml
 
-# The chart has no `crds/` directory -- all 22 CRDs are ordinary templates, so
-# they carry Helm ownership and a rollback or an uninstall deletes them. That
-# takes every ClusterPolicy in policies/ and every pending UpdateRequest with
-# them, and `install.remediation.retries` makes an uninstall reachable from a
-# failed upgrade rather than only from a deliberate teardown.
+# This release still installs and upgrades the CRDs in kyverno.io,
+# reports.kyverno.io and wgpolicyk8s.io -- the ones no chart publishes on their
+# own -- so they stay in lockstep with the controllers that serve them.
 #
-# `keep` makes Helm leave the CRDs alone. It has to reach them through the
-# chart -- `kubectl annotate` does not survive the next apply.
+# It does NOT install the eleven in policies.kyverno.io. Those are established
+# by the crds layer from upstream's kyverno-api chart, because this repo
+# declares policies in platform-security AND platform-storage and a domain
+# Kustomization cannot depend on one in another namespace. `crds.install` is a
+# single switch over both CRD subcharts, so the split is made in
+# release.yaml's postRenderer rather than here.
 #
-# Two blocks, not one. `crds.annotations` reaches only the 11 CRDs from the
-# bundled `crds` subchart; the 11 in `policies.kyverno.io` come from the
-# external `kyverno-api` subchart, which reads its own key. Setting just the
-# first leaves half the CRDs unguarded and looks done.
+# The chart has no `crds/` directory: the CRDs it does still ship are ordinary
+# templates, so they carry Helm ownership and a rollback or an uninstall
+# deletes them, taking every resource of those kinds. `keep` makes Helm leave
+# them alone, and it has to reach them through the chart -- `kubectl annotate`
+# does not survive the next apply.
 #
 # This is a guard, not a preference. Do not drop it because the release looks
 # stable; the cost only shows up during an uninstall.
 crds:
-  annotations:
-    helm.sh/resource-policy: keep
-kyverno-api:
   annotations:
     helm.sh/resource-policy: keep
 
