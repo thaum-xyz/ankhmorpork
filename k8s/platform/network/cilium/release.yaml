@@ -3,6 +3,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cilium
+  annotations:
+    # Never prune this object. Pruning a HelmRelease uninstalls the release
+    # behind it, and this release is the CNI -- the cluster loses its network
+    # and nothing schedules. Guarding the object rather than the Kustomization
+    # lets the domain keep prune: true for everything around it.
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   # The object lives in platform-network with the rest of the domain; the CNI
   # itself cannot, so the release is still installed into kube-system.

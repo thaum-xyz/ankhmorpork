@@ -3,6 +3,14 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: flux2
+  annotations:
+    # Never prune this object. Pruning a HelmRelease uninstalls the release
+    # behind it, and this release is Flux itself: all 11 CRDs are templates of
+    # this chart, so the uninstall deletes every Kustomization and HelmRelease
+    # in the cluster on its way out. flux-system is prune: false today and
+    # this restates that guard on the one object where it is load-bearing,
+    # so the Kustomization's blanket setting can be narrowed later.
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   chart:
     spec:

@@ -2,6 +2,11 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: linstor-cluster
+  annotations:
+    # Never prune this object. Pruning a HelmRelease uninstalls the release
+    # behind it, and this release IS the LINSTOR cluster -- the satellites and
+    # the controller that serve every roaming PV.
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   dependsOn:
     - name: piraeus-operator

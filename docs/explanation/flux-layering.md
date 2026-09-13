@@ -104,10 +104,13 @@ then delete the object.
 something unrecoverable: cluster networking, Flux itself, the PVs holding every
 volume, or the ingress path to everything.
 
-Only `flux-system` records the reason in a comment. The other four share an
-obvious property, but that is inference from what they are, not something the
-repository states — worth knowing before assuming any of them can safely be
-switched back.
+Within those five the object that actually carries the risk is the `HelmRelease`,
+because pruning one *uninstalls* the release behind it. Each now carries
+`kustomize.toolkit.fluxcd.io/prune: disabled` with its own consequence spelled
+out beside it, so the guard sits on the object it protects instead of on a
+component-wide switch that also protects the HelmRepository and values ConfigMap
+next to it — the orphans that had to be cleared by hand after the traefik and
+topolvm moves.
 
 All five also generate values ConfigMaps, which is one of the reasons those are
 given stable names rather than hashed ones: with nothing pruning, a hashed name
