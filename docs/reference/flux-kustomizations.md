@@ -8,10 +8,10 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | | |
 | --- | --- |
-| **`prune: false`** | `crds`, `apps`, `platform`, `namespaces`, `mealie` |
+| **`prune: false`** | `crds`, `apps`, `platform`, `namespaces` |
 | **`wait: true`** | `crds` |
 | **Declare `dependsOn`** | `apps`, `platform`, `homer-services` |
-| **Suspended in git** | `mealie` |
+| **Suspended in git** | none |
 
 ## Bootstrap — applied once by hand
 
@@ -47,7 +47,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `homer` | [`k8s/apps/homer/app`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/homer/app) | `15m0s` | yes | no | — |
 | `homer-services` | [`k8s/apps/homer/services`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/homer/services) | `15m0s` | yes | no | `homer` |
 | `karakeep` | [`k8s/apps/karakeep`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/karakeep) | `60m0s` | yes | no | — |
-| `mealie` | [`k8s/apps/mealie`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/mealie) | `15m0s` | **no** | no | — |
+| `mealie` | [`k8s/apps/mealie`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/mealie) | `15m0s` | yes | no | — |
 | `mended-drum` | [`k8s/apps/mended-drum`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/mended-drum) | `15m0s` | yes | no | — |
 | `paperless` | [`k8s/apps/paperless/manifests`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/paperless/manifests) | `60m0s` | yes | no | — |
 | `photos` | [`k8s/apps/photos`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/photos) | `15m0s` | yes | no | — |

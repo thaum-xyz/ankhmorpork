@@ -2,32 +2,28 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: mealie
-  namespace: flux-system
+  namespace: mealie
   annotations:
     kubernetes.io/description: >-
-      Suspended and non-pruning on purpose, and only until the next commit: this
-      object is being retired so the same Kustomization can be recreated in the
-      `mealie` namespace, where it reconciles as that namespace's own
-      flux-reconciler instead of flux-system's cluster-admin one.
+      The first app Kustomization to live in its own namespace rather than in
+      flux-system, which is the whole point of it: kustomize-controller resolves
+      --default-service-account in the OBJECT's namespace, so this reconciles as
+      mealie's own flux-reconciler instead of flux-system's cluster-admin one.
 
-      Moving it is a delete-and-create, not an edit, and the `apps` umbrella is
-      prune: false -- so removing this file would leave the object here running,
-      reconciling the same path as its replacement and fighting it over all 13
-      objects through server-side apply. Suspending first stops that.
+      What that buys is a ceiling. That ServiceAccount is bound with a
+      RoleBinding, so this Kustomization can apply anything namespaced in mealie
+      and nothing anywhere else -- no ClusterRoles, no Namespaces, no reading
+      another namespace's Secrets. Repointing spec.path at another component
+      would not widen it; the apply would simply be denied.
 
-      `prune: false` is the other half, and the dangerous one to skip. This
-      object's inventory IS mealie's 13 objects; deleting it while pruning was
-      enabled would garbage-collect the app the replacement had just adopted.
-      With pruning off, the delete removes only this object.
-
-      Sequence: merge this, confirm the live object reads suspend=true
-      prune=false, then merge the move, then
-      `kubectl -n flux-system delete kustomization mealie`.
+      sourceRef names the GitRepository in this namespace, not flux-system's:
+      --no-cross-namespace-refs=true forbids the latter. That source is created
+      beside the Namespace in k8s/namespaces/mealie/, because a Kustomization can
+      create neither the source it reads nor the identity it applies as.
 spec:
   interval: 15m0s
   path: ./k8s/apps/mealie
-  prune: false
-  suspend: true
+  prune: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
