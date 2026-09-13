@@ -91,14 +91,23 @@ for manifest in run("git", "ls-files", "k8s/flux/platform/*", "k8s/bootstrap/*")
         if line.startswith("k8s/platform/"):
             paths.add(line)
 
+# A domain-wide Kustomization -- k8s/platform/<domain>, three segments -- names no
+# single expected namespace, so it used to be skipped. Once one Kustomization
+# covers a whole domain that skip is every component, and the check passes having
+# examined nothing. Expand it into the components its entrypoint lists instead.
+components = set()
+for path in sorted(paths):
+    if len(path.split("/")) >= 4:
+        components.add(path)
+        continue
+    listed = run("yq", "-r", ".resources[]",
+                 f"{path}/kustomization.yaml").split()
+    components.update(f"{path}/{r.rstrip('/')}" for r in listed)
+
 problems = []
 checked = 0
-for path in sorted(paths):
+for path in sorted(components):
     parts = path.split("/")
-    if len(parts) < 4:
-        # k8s/platform/<domain>/<component>; anything shallower is a domain-wide
-        # Kustomization, which has no single expected namespace.
-        continue
     domain = parts[2]
     component = "/".join(parts[:4])
     domain_ns = f"platform-{domain}"
@@ -154,6 +163,13 @@ for path in sorted(paths):
 
 print(f"  platform components checked: {checked}"
       f" ({len(EXEMPT_TARGET)} exempt target, {len(ALSO_ALLOWED)} spanning two)")
+
+# A check that examined nothing is not a passing check. This one went quiet once
+# before, when the per-component Kustomizations it read the component list from
+# were replaced by five domain-wide ones.
+if not checked:
+    print("  NO COMPONENTS EXAMINED -- the component list is being built wrong")
+    sys.exit(1)
 
 if problems:
     print("  RENDERED OUTSIDE THEIR DOMAIN NAMESPACE:")

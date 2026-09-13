@@ -20,12 +20,14 @@ k8s/apps/<app>/          one Kubernetes object per file, type-based names
 k8s/flux/apps/<app>.yaml Kustomization, namespace flux-system, path ./k8s/apps/<app>
 ```
 
+A platform component has no Kustomization of its own. It is a directory listed in
+`k8s/platform/<domain>/kustomization.yaml`, reconciled by the `platform-<domain>`
+Kustomization, which lives in the `platform-<domain>` namespace -- so reconciling
+one means naming the domain, not the component.
+
 Group distinct components into subdirectories with type-based names inside them
 (`operator/release.yaml`, `gui/deployment.yaml`). Every app kustomization declares
 its own `namespace:` — keep that, it is what stops objects landing in `default`.
-
-Platform components live under `k8s/platform/` with their Kustomization in
-`k8s/flux/platform/`.
 
 Worked end-to-end example, including the reconcile and the cleanup:
 `docs/tutorial/index.md`.
@@ -108,7 +110,9 @@ Order matters, and getting it wrong reports success while changing nothing:
 
 ```bash
 flux reconcile source git ankhmorpork
-flux -n flux-system reconcile kustomization <component>   # regenerates the ConfigMap
+# regenerates the ConfigMap -- an app's own Kustomization lives in flux-system,
+# a platform component's is platform-<domain>, in the namespace of that name
+flux -n <ks-namespace> reconcile kustomization <kustomization>
 flux -n <ns> reconcile helmrelease <release>              # now sees new values
 ```
 

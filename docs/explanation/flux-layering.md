@@ -12,8 +12,9 @@ That structure is three layers deep, and the shape is not arbitrary.
 
 ```
 k8s/bootstrap/        applied once by hand: the GitRepository and the umbrellas
-  ├── namespaces      the namespaces apps are deployed into
-  └── platform        the cluster's machinery
+  ├── crds            the kinds every layer above it needs
+  ├── namespaces      every namespace, plus what each platform domain needs first
+  └── platform        the cluster's machinery, one Kustomization per domain
         └── apps      the workloads
 ```
 
@@ -59,19 +60,29 @@ before there is a CSI driver to answer.
 
 ## Why the Kustomizations live apart from the manifests
 
-Each component appears in two places: its manifests under `k8s/platform/…` or
-`k8s/apps/…`, and a Flux `Kustomization` under `k8s/flux/platform/` or
-`k8s/flux/apps/` that points at them.
+An app appears in two places: its manifests under `k8s/apps/<app>/`, and a Flux
+`Kustomization` under `k8s/flux/apps/` that points at them.
 
-The indirection looks redundant until you notice what the umbrella
-Kustomizations actually apply: `path: ./k8s/flux/apps` — a **directory of
-Kustomizations**, not of workloads. Adding an app means dropping one file into
-that directory; the umbrella picks it up on its next reconcile and no existing
-file changes.
+The indirection looks redundant until you notice what the umbrella actually
+applies: `path: ./k8s/flux/apps` — a **directory of Kustomizations**, not of
+workloads. Adding an app means dropping one file into that directory; the
+umbrella picks it up on its next reconcile and no existing file changes. It also
+separates *how* a component is reconciled — its interval, its dependencies,
+whether it prunes — from *what* the component is. Those change for different
+reasons.
 
-It also means the thing that decides *how* a component is reconciled — its
-interval, its dependencies, whether it prunes — is separate from *what* the
-component is. Those change for different reasons.
+The platform is arranged the other way round, and the difference is deliberate.
+A platform component has no Kustomization of its own; it is a directory named in
+its domain's `k8s/platform/<domain>/kustomization.yaml`, and one Kustomization
+reconciles the whole domain. The unit an app needs is isolation — one app failing
+must not reach another. The unit the platform needs is a **namespace**: that is
+what the reconciler identity, the group RoleBindings and a prune's blast radius
+are all keyed to, and one Kustomization per namespace is what makes those the
+same question rather than three that can drift apart.
+
+Those domain Kustomizations do not live in `flux-system`. Each is in the
+namespace it reconciles, reading the `GitRepository` there and applying as that
+namespace's `flux-reconciler`.
 
 ## Ordering, where it genuinely matters
 
@@ -81,12 +92,27 @@ are the umbrellas themselves. Everything else is order-independent by constructi
 the exceptions are all cases where an object cannot be *accepted* by the API server
 until something else exists:
 
-| Component | Waits for | Why |
+| Object | Waits for | Why |
 | --- | --- | --- |
 | `platform` | `crds` | nearly everything ships a ServiceMonitor or PrometheusRule |
-| `kyverno-policies`, `cnpg-system`, `csi-nfs` | `kyverno` | policies need their CRDs; the others are validated by them |
-| `piraeus-datastore` | `topolvm`, `kyverno` | its storage pool *is* a topolvm thin pool |
+| `apps` | `platform`, `namespaces` | nothing claims a volume before there is a driver |
 | `homer-services` | `homer` | it adds entries to a dashboard that must exist |
+| HelmRelease `piraeus-operator` | HelmRelease `topolvm` | its storage pool *is* a topolvm thin pool |
+| HelmRelease `cnpg-versity-gw` | HelmRelease `csi-nfs` | its claim is `unifi-nas`, and a policy rejects the PVC until the class exists |
+
+The last two are between HelmReleases rather than Kustomizations because the
+domains cannot depend on each other: `--no-cross-namespace-refs` lets a Flux
+object name a `dependsOn` target only in its own namespace, and each domain is in
+a different one. Ordering *between* domains has to come from the layer above
+them, which is what `platform dependsOn crds` is.
+
+One ordering constraint has no expression at all. `csi-nfs`, `piraeus-datastore`
+and `cnpg-system` ship `policies.kyverno.io` objects whose CRDs come from the
+kyverno chart in another domain, and the kyverno repository publishes no
+CRD-only chart to hoist into `k8s/crds/`. On a cold bootstrap those objects fail
+to apply and are retried each interval until kyverno installs; everything else in
+the domain applies in the same pass, because Flux collects per-object errors
+rather than abandoning the set.
 
 `crds` is declared in `k8s/bootstrap/` and applies `k8s/crds/`, rather than being
 a component of `platform`, precisely because `platform` depends on it — a layer
@@ -115,18 +141,23 @@ the layer. For `namespaces` the stake is higher still: deleting a Namespace take
 everything inside it, so removing one is deliberately two acts — drop the file,
 then delete the object.
 
-**Five platform components** — `cilium`, `flux-system`, `topolvm`,
-`piraeus-datastore`, `traefik` — do not prune because pruning them destroys
-something unrecoverable: cluster networking, Flux itself, the PVs holding every
-volume, or the ingress path to everything.
+**`flux-system`** does not prune because pruning it deletes Flux: all 11 CRDs are
+templates of that chart, and deleting a CRD deletes every custom resource of that
+kind.
 
-Within those five the object that actually carries the risk is the `HelmRelease`,
-because pruning one *uninstalls* the release behind it. Each now carries
-`kustomize.toolkit.fluxcd.io/prune: disabled` with its own consequence spelled
-out beside it, so the guard sits on the object it protects instead of on a
-component-wide switch that also protects the HelmRepository and values ConfigMap
-next to it — the orphans that had to be cleared by hand after the traefik and
-topolvm moves.
+Everything else prunes, including all five platform domains. What used to be a
+component-wide `prune: false` on the handful whose loss is unrecoverable —
+cluster networking, the drivers behind every volume, the ingress path to
+everything — is now `kustomize.toolkit.fluxcd.io/prune: disabled` on the
+individual objects that carry the risk. Those are the `HelmRelease`s, because
+pruning one *uninstalls* the release behind it, and each says what its own loss
+would cost.
+
+That is narrower in both directions. A component-wide switch also protected the
+HelmRepository and values ConfigMap sitting beside the release — the orphans that
+had to be cleared out by hand after the traefik and topolvm namespace moves — and
+it protected them anonymously, leaving the next reader to infer from what the
+component is why it was exempt.
 
 All five also generate values ConfigMaps, which is one of the reasons those are
 given stable names rather than hashed ones: with nothing pruning, a hashed name
@@ -147,7 +178,8 @@ it. The source has to be refreshed first:
 
 ```bash
 flux reconcile source git ankhmorpork
-flux -n flux-system reconcile kustomization <component>
+flux -n flux-system reconcile kustomization <app>            # an app
+flux -n platform-<domain> reconcile kustomization platform-<domain>
 ```
 
 For a component whose values come from a `configMapGenerator`, there is a third
