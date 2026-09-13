@@ -48,14 +48,14 @@ EXEMPT_TARGET = {
 # domain namespace OR in the one named here, and nowhere else.
 #
 # Not the same as "unmoved". flux's controllers DO run in platform-cluster; what
-# stays behind is the flux-system namespace object, the flux-reconciler identity
-# that every Kustomization impersonates, and the Receiver with the token it
-# reads. Those are held there by references that are namespace-local, not by
-# inertia, and they leave when the Kustomizations do.
+# stays behind is the flux-system namespace object and the flux-reconciler
+# identity that every Kustomization impersonates. Those are held there by
+# references that are namespace-local, not by inertia, and they leave when the
+# Kustomizations do.
 ALSO_ALLOWED = {
     "k8s/platform/cluster/flux-system":
-        ("flux-system", "the reconciler identity and the Receiver's token are "
-                        "resolved in their own namespace, so they stay with the "
+        ("flux-system", "the reconciler identity is resolved in the "
+                        "Kustomization's own namespace, so it stays with the "
                         "Kustomizations until those move too"),
 }
 

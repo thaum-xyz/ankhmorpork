@@ -118,27 +118,20 @@ sourceController:
 
 notificationController:
   # An Alert may only reference a Provider in its own namespace, and a Receiver
-  # only resources in its own. One notification object exists today, in
-  # flux-system, so this changes nothing now and stops a tenant subscribing to
-  # another namespace's events later.
+  # only resources in its own. No notification object exists here at all now, so
+  # this is inert, and it stops a tenant subscribing to another namespace's
+  # events later.
   container:
     additionalArgs:
       - --no-cross-namespace-refs=true
-  webhookReceiver:
-    ingress:
-      ingressClassName: cloudflare
-      #annotations:
-      #  cert-manager.io/cluster-issuer: letsencrypt-prod
-      create: true
-      hosts:
-        - host: flux.thaum.xyz
-          paths:
-            - path: /
-              pathType: ImplementationSpecific
-      #tls:
-      #  - secretName: flux-tls
-      #    hosts:
-      #      - flux.thaum.xyz
+  # No webhookReceiver, which is why flux.thaum.xyz is gone. It served one
+  # Receiver, pointed at the one GitRepository in flux-system -- and a Receiver
+  # may only name resources in its OWN namespace. Each platform-<domain> gets its
+  # own GitRepository when its Kustomization moves there, so the webhook would
+  # have covered one source out of six; making it cover all of them means a
+  # Receiver, a GitHub webhook and a token per namespace. What that buys is the
+  # difference between an immediate reconcile and the 60s poll every
+  # GitRepository already does, which is not worth five copies of a credential.
 
 imageAutomationController:
   create: false
