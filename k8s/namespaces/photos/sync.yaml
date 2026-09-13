@@ -1,0 +1,26 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: photos
+  namespace: photos
+  annotations:
+    kubernetes.io/description: >-
+      Reconciles this app as photos's own flux-reconciler, not flux-system's
+      cluster-admin one: kustomize-controller resolves --default-service-account
+      in the OBJECT's namespace, so where this object lives is what decides how
+      much it may do.
+
+      Unlike most apps, that identity is widened to cluster-admin by the
+      ClusterRoleBinding beside this file, because what this Kustomization
+      applies includes PersistentVolumes and those are cluster-scoped. Read that
+      object to know what this one can reach.
+
+      sourceRef names the source in this namespace; --no-cross-namespace-refs
+      forbids flux-system's.
+spec:
+  interval: 15m0s
+  path: ./k8s/apps/photos
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

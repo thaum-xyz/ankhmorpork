@@ -155,14 +155,14 @@ def flux_kustomizations():
     The apps layer spans two directories. An app whose Kustomization has moved
     into its own namespace keeps it beside that namespace, in
     k8s/namespaces/<app>/sync.yaml, so the platform-owned objects for one app sit
-    together; the rest are still in k8s/flux/apps. Scanning only the latter would
-    silently drop every moved app from this page.
+    together. Scanning only k8s/flux would have silently dropped every app from
+    this page when they moved.
     """
     rows = []
     for layer, prefixes in (
         ("bootstrap", ("k8s/bootstrap",)),
         ("platform", ("k8s/flux/platform",)),
-        ("apps", ("k8s/flux/apps", "k8s/namespaces")),
+        ("apps", ("k8s/namespaces",)),
     ):
         files = sorted(f for prefix in prefixes for f in yaml_files(prefix))
         for f in files:

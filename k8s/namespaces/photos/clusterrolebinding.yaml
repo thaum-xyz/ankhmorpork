@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-reconciler-photos
+  annotations:
+    kubernetes.io/description: >-
+      cluster-admin, because this namespace reconciles the two PersistentVolumes its Kustomization applies -- and a
+      PersistentVolume is cluster-scoped, so no RoleBinding can confer it at any
+      width of role.
+
+      The namespace still carries flux.rbac.thaum.xyz/role, so
+      generate-flux-reconciler gives it the ServiceAccount and the
+      namespace-scoped RoleBinding every app gets. This widens that same
+      identity; rights are additive. Keeping the baseline means narrowing later
+      is a deletion rather than a rewrite -- drop this object and the namespace
+      falls back to confined instead of to nothing.
+
+      Narrowing it is thaum-xyz/ankhmorpork#1436, not this. The route is to move
+      what is cluster-scoped out of the app's own directory, after which the
+      RoleBinding alone is enough.
+subjects:
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: photos
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
