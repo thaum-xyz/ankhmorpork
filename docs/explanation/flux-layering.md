@@ -39,6 +39,14 @@ that component's `prune` the whole domain's blast radius. `flux-system` is the
 only Namespace this repo creates elsewhere, because it has to exist before
 anything reconciles.
 
+Each `platform-<domain>` is a directory rather than a file, because the Namespace
+is not the only thing that has to be there first. A `Kustomization` reconciling
+in that namespace reads a `GitRepository` in it — `--no-cross-namespace-refs`
+allows nothing else — and applies as the `flux-reconciler` ServiceAccount there,
+which `--default-service-account` resolves in the Kustomization's own namespace.
+Neither can be created by the Kustomization that needs them, so both are
+prerequisites of the domain rather than members of it.
+
 **`platform`** is what a workload assumes is already there — CNI, storage drivers,
 ingress controllers, cert-manager, admission control, the observability
 collectors. Breaking something here breaks things that do not mention it.
