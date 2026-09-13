@@ -3,10 +3,31 @@ kind: Kustomization
 metadata:
   name: mealie
   namespace: flux-system
+  annotations:
+    kubernetes.io/description: >-
+      Suspended and non-pruning on purpose, and only until the next commit: this
+      object is being retired so the same Kustomization can be recreated in the
+      `mealie` namespace, where it reconciles as that namespace's own
+      flux-reconciler instead of flux-system's cluster-admin one.
+
+      Moving it is a delete-and-create, not an edit, and the `apps` umbrella is
+      prune: false -- so removing this file would leave the object here running,
+      reconciling the same path as its replacement and fighting it over all 13
+      objects through server-side apply. Suspending first stops that.
+
+      `prune: false` is the other half, and the dangerous one to skip. This
+      object's inventory IS mealie's 13 objects; deleting it while pruning was
+      enabled would garbage-collect the app the replacement had just adopted.
+      With pruning off, the delete removes only this object.
+
+      Sequence: merge this, confirm the live object reads suspend=true
+      prune=false, then merge the move, then
+      `kubectl -n flux-system delete kustomization mealie`.
 spec:
   interval: 15m0s
   path: ./k8s/apps/mealie
-  prune: true
+  prune: false
+  suspend: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
