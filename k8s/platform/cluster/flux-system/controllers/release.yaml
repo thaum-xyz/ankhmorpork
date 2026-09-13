@@ -3,14 +3,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: flux2
-  annotations:
-    # Never prune this object. Pruning a HelmRelease uninstalls the release
-    # behind it, and this release is Flux itself: all 11 CRDs are templates of
-    # this chart, so the uninstall deletes every Kustomization and HelmRelease
-    # in the cluster on its way out. flux-system is prune: false today and
-    # this restates that guard on the one object where it is load-bearing,
-    # so the Kustomization's blanket setting can be narrowed later.
-    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   chart:
     spec:
@@ -34,6 +26,27 @@ spec:
     timeout: 10m
     disableWait: false
     crds: CreateReplace
+  uninstall:
+    # This object is not guarded against pruning, which for every other
+    # load-bearing HelmRelease here means kustomize.toolkit.fluxcd.io/prune:
+    # disabled. Deleting the CR is survivable instead: `orphan` uninstalls the
+    # RELEASE -- the record Helm keeps -- and leaves every object it created
+    # running. The controllers keep reconciling, so the cluster does not stop
+    # while someone puts the manifest back, and a reinstall adopts the objects
+    # again because they still carry this release's meta.helm.sh annotations.
+    #
+    # Separating the two is what makes Flux safe to govern from platform-cluster
+    # at all: the blast radius of a mistake in that domain is now a missing
+    # release record rather than a cluster with no GitOps engine. The CRDs are
+    # belt and braces on top -- crds.annotations sets helm.sh/resource-policy:
+    # keep, so they survive an uninstall by either route, and with them every
+    # Kustomization and HelmRelease in the cluster.
+    #
+    # The cost is real and worth stating: after a deliberate uninstall the
+    # orphans keep meta.helm.sh/release-namespace, which is exactly what blocks
+    # installing the same chart into a different namespace. Moving this release
+    # again means deleting them by hand first.
+    deletionPropagation: orphan
   valuesFrom:
     - kind: ConfigMap
       name: values-flux2
