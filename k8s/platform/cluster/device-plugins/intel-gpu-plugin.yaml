@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: intel-gpu-plugin
-  namespace: kube-system
+  namespace: platform-cluster
   labels:
     app: intel-gpu-plugin
 spec:
