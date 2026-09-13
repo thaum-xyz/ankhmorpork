@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Every component the platform-network Kustomization reconciles.
+#
+# cilium is here like any other: its Flux objects live in platform-network, and
+# only the release it installs targets kube-system. The three pins that make
+# that safe are on the HelmRelease, and validate-platform-namespaces asserts
+# them.
+#
+# No `namespace:` at this level -- one here would rewrite cilium's
+# targetNamespace pins and stamp a namespace onto the IngressClasses and Cilium
+# cluster-scoped objects the domain ships. Each component declares its own.
+resources:
+  - cilium/
+  - cloudflared/
+  - external-dns/
+  - traefik/

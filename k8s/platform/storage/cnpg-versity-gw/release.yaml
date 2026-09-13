@@ -3,6 +3,12 @@ kind: HelmRelease
 metadata:
   name: cnpg-versity-gw
 spec:
+  # Its claim is unifi-nas, so the provisioner has to exist before the chart's
+  # PVC is admitted -- csi-nfs also ships mutate-nfs-pvc-alert-exclusion, which
+  # is failurePolicy: Fail on PVC CREATE for that storage class. This was a
+  # Kustomization-level dependsOn while each component had its own.
+  dependsOn:
+    - name: csi-nfs
   chart:
     spec:
       chart: versitygw
