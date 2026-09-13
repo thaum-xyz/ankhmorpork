@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-security
+  annotations:
+    kubernetes.io/description: >-
+      Admission control, certificates and secret delivery: kyverno, cert-manager,
+      external-secrets, kubeconfig, oidc-rbac.
+
+      Shared by several components, which is why the object lives here and not in
+      any one of their directories. It sat in kyverno/ while kyverno was the only
+      occupant; with five the owner would be arbitrary, and the loser of that
+      choice gets deleted out from under the others the first time its
+      Kustomization is pruned -- kyverno's is prune: true, so this was the one
+      platform Namespace a single inventory change could still have taken.
+    # Never garbage-collect this Namespace. Pruning is inventory-based, so
+    # dropping it from a Kustomization's inventory would delete the namespace
+    # and everything inside it.
+    kustomize.toolkit.fluxcd.io/prune: disabled

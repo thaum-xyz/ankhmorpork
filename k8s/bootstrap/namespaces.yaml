@@ -5,7 +5,8 @@ metadata:
   namespace: flux-system
   annotations:
     kubernetes.io/description: >-
-      Every app Namespace, one object per file in ./k8s/namespaces.
+      Every Namespace this repo creates except flux-system's, one object per
+      file in ./k8s/namespaces.
 
       They live outside k8s/apps/<app>/ because a Namespace is a cluster-admin
       object twice over. It is cluster-scoped, so an app Kustomization that
