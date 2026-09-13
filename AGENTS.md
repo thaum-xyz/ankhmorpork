@@ -64,9 +64,14 @@ put the object or artifact type first rather than the component name.
 
 ## Suspended components
 
-No Flux Kustomizations are declared suspended in Git. Check both the
-repository and live Flux state before changing suspension because live state can
-temporarily diverge during maintenance.
+Sixteen app Kustomizations are declared suspended in Git, transitionally: they
+are being retired so the same objects can be recreated in their apps' own
+namespaces, and suspending stops each outgoing object fighting its replacement.
+None should outlive that move — the annotation on each carries the reason.
+
+Nothing else is suspended. Check both the repository and live Flux state before
+changing suspension because live state can temporarily diverge during
+maintenance.
 
 ## Postgres (CloudNativePG)
 
