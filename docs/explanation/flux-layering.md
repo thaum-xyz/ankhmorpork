@@ -31,8 +31,13 @@ into, from `k8s/namespaces/`. They sit here rather than with the app for two
 reasons: a Namespace is cluster-scoped, so an app reconciling under a
 namespace-scoped ServiceAccount could not apply its own; and a namespace's
 `group.rbac.thaum.xyz/<group>` labels are an access grant, which must not live in
-a directory its own tenant can change. Platform namespaces stay with their
-components, which are applied by a cluster-admin identity anyway.
+a directory its own tenant can change.
+
+The `platform-<domain>` namespaces sit there too, for a third reason: each is
+shared by several components, so keeping it in any one of their directories makes
+that component's `prune` the whole domain's blast radius. `flux-system` is the
+only Namespace this repo creates elsewhere, because it has to exist before
+anything reconciles.
 
 **`platform`** is what a workload assumes is already there — CNI, storage drivers,
 ingress controllers, cert-manager, admission control, the observability
