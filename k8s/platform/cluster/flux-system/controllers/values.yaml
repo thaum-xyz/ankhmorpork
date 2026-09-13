@@ -1,5 +1,26 @@
 # Reference documentation: https://github.com/fluxcd-community/helm-charts/tree/main/charts/flux2
 
+# All 11 Flux CRDs are templates of this chart and carry its ownership metadata,
+# so `helm uninstall flux2` deletes them -- and deleting a CRD deletes every
+# custom resource of that kind. That is every Kustomization, HelmRelease,
+# GitRepository, HelmRepository, Receiver and Alert in the cluster: 53
+# Kustomizations and 31 HelmReleases as this was written.
+#
+# Worse than the count. Deleting a HelmRelease is what makes helm-controller
+# uninstall the release behind it, so a teardown racing a still-running
+# controller can take real workloads with it -- postgres, traefik, cilium -- on
+# its way out.
+#
+# `keep` makes Helm leave the CRDs alone, which leaves every CR alone with them.
+# The chart documents this annotation as the reason crds.annotations exists.
+#
+# This is what makes moving the controllers out of flux-system survivable at
+# all: that move is an uninstall and a reinstall, because Flux cannot relocate
+# its own release. Do not remove this to tidy up.
+crds:
+  annotations:
+    helm.sh/resource-policy: keep
+
 helmController:
   # Confine a HelmRelease to chart sources and dependsOn targets in its own
   # namespace. Verified inert: no HelmRelease references either across one.
