@@ -2,20 +2,29 @@
 
 Flux-managed k3s homelab. `k8s/bootstrap/` creates the umbrella Flux resources,
 `k8s/platform/` contains infrastructure, and `k8s/apps/` contains workloads.
-An app gets its own Flux Kustomization in `k8s/flux/apps/`. A platform component
-does not: it is a directory listed in `k8s/platform/<domain>/kustomization.yaml`,
-reconciled by the `platform-<domain>` Kustomization, which lives in the
-`platform-<domain>` namespace rather than in `flux-system`.
+**Two directories per app, split by who owns them.** `k8s/namespaces/<app>/` is
+platform-owned and holds everything needed to stand the namespace up — the
+`Namespace`, the `GitRepository`, the `sync.yaml` that reconciles the app, and a
+`ServiceAccount` plus `ClusterRoleBinding` where those are hand-written rather
+than generated. `k8s/apps/<app>/` is what `sync.yaml` reconciles, and is the
+tenant's. That directory line is the review boundary.
 
-Which namespace an app's Kustomization object declares is what decides how much
-it may do: kustomize-controller resolves `--default-service-account` in the
-object's own namespace, so one in `flux-system` reconciles as cluster-admin and
-one in its app's namespace is confined to that namespace. `mealie` is the first
-moved; the rest still sit in `flux-system`. Moving one needs a `GitRepository`
-and a `flux-reconciler` ServiceAccount in the target namespace first — see
-`k8s/namespaces/mealie/` — and the move itself is a delete-and-create, so the
-outgoing object must be suspended and set `prune: false` in an earlier commit or
-it garbage-collects the app.
+A platform component works the same way one level up: it is a directory listed
+in `k8s/platform/<domain>/kustomization.yaml`, reconciled by the
+`platform-<domain>` Kustomization in `k8s/flux/platform/`.
+
+**Which namespace a Kustomization object declares is what decides how much it may
+do**, because kustomize-controller resolves `--default-service-account` in the
+object's own namespace. One in `flux-system` reconciles as cluster-admin; one in
+its app's namespace is confined there. Five apps still sit in `k8s/flux/apps/`
+for that reason — `dlna-local`, `paperless`, `photos`, `plex` and `vod-arr` ship
+`PersistentVolumes`, which are cluster-scoped and so cannot be applied by a
+confined reconciler until those are hoisted.
+
+Moving one needs a `GitRepository` and a `flux-reconciler` ServiceAccount in the
+target namespace first, and the move itself is a delete-and-create — so the
+outgoing object must be suspended **and** set `prune: false` in an earlier
+commit, or deleting it garbage-collects the app it just handed over.
 
 Changing anything Flux applies: see the `app-deployment` skill in
 `.claude/skills/`. It covers proving the render, the rollout order and the traps
@@ -64,14 +73,9 @@ put the object or artifact type first rather than the component name.
 
 ## Suspended components
 
-Sixteen app Kustomizations are declared suspended in Git, transitionally: they
-are being retired so the same objects can be recreated in their apps' own
-namespaces, and suspending stops each outgoing object fighting its replacement.
-None should outlive that move — the annotation on each carries the reason.
-
-Nothing else is suspended. Check both the repository and live Flux state before
-changing suspension because live state can temporarily diverge during
-maintenance.
+No Flux Kustomizations are declared suspended in Git. Check both the
+repository and live Flux state before changing suspension because live state can
+temporarily diverge during maintenance.
 
 ## Postgres (CloudNativePG)
 
