@@ -36,9 +36,13 @@ a directory its own tenant can change.
 
 The `platform-<domain>` namespaces sit there too, for a third reason: each is
 shared by several components, so keeping it in any one of their directories makes
-that component's `prune` the whole domain's blast radius. `flux-system` is the
-only Namespace this repo creates elsewhere, because it has to exist before
-anything reconciles.
+that component's `prune` the whole domain's blast radius.
+
+`platform-cluster` is the one whose directory there is also built by hand. It
+holds the umbrellas, so it cannot be created by `namespaces` — that is one of
+them — and `k8s/bootstrap/` applies the same directory before any Kustomization
+exists. The other Namespace created outside `k8s/namespaces/` is `flux-system`,
+by the component that still ships it, and it exists only until the apps move.
 
 Each `platform-<domain>` is a directory rather than a file, because the Namespace
 is not the only thing that has to be there first. A `Kustomization` reconciling
@@ -82,7 +86,10 @@ same question rather than three that can drift apart.
 
 Those domain Kustomizations do not live in `flux-system`. Each is in the
 namespace it reconciles, reading the `GitRepository` there and applying as that
-namespace's `flux-reconciler`.
+namespace's `flux-reconciler`. Nor do the umbrellas: they reconcile from
+`platform-cluster`, which makes that namespace the seed the rest of the cluster
+is built from, and leaves `flux-system` holding nothing but the app
+Kustomizations and what they read.
 
 ## Ordering, where it genuinely matters
 
@@ -141,11 +148,12 @@ the layer. For `namespaces` the stake is higher still: deleting a Namespace take
 everything inside it, so removing one is deliberately two acts — drop the file,
 then delete the object.
 
-**`flux-system`** does not prune because pruning it deletes Flux: all 11 CRDs are
-templates of that chart, and deleting a CRD deletes every custom resource of that
-kind.
-
-Everything else prunes, including all five platform domains. What used to be a
+Everything else prunes, including all five platform domains — and including
+Flux's own manifests, which `platform-cluster` reconciles like any other
+component. What makes that survivable is not a `prune: false` but the two
+mechanisms below, which is the same trade one level down: the guard sits on the
+object that carries the risk rather than on a switch covering everything near
+it. What used to be a
 component-wide `prune: false` on the handful whose loss is unrecoverable —
 cluster networking, the drivers behind every volume, the ingress path to
 everything — is now `kustomize.toolkit.fluxcd.io/prune: disabled` on the
@@ -180,6 +188,7 @@ it. The source has to be refreshed first:
 flux reconcile source git ankhmorpork
 flux -n flux-system reconcile kustomization <app>            # an app
 flux -n platform-<domain> reconcile kustomization platform-<domain>
+flux -n platform-cluster reconcile kustomization platform    # an umbrella
 ```
 
 For a component whose values come from a `configMapGenerator`, there is a third

@@ -2,7 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: namespaces
-  namespace: flux-system
+  namespace: platform-cluster
   annotations:
     kubernetes.io/description: >-
       Every Namespace this repo creates except flux-system's, plus what each

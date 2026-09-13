@@ -53,10 +53,12 @@ EXEMPT_TARGET = {
 # stay for as long as anything reconciles out of flux-system, which the platform
 # domains no longer do but the apps still all do.
 #
-# This component is also the one platform component with no domain Kustomization
-# of its own, and for the same reason: it creates the release and the identity
-# every other Kustomization depends on, so reconciling it through a domain whose
-# source and identity it is itself responsible for would be circular.
+# This component is reconciled by platform-cluster like any other, which is a
+# deliberate reversal: it creates the release and the identity that domain runs
+# on, so the arrangement is circular by construction. It is survivable because
+# flux2 orphans its objects on uninstall and the three that cannot -- the
+# Namespace, the ServiceAccount and its ClusterRoleBinding -- are guarded
+# against pruning individually. See k8s/platform/cluster/kustomization.yaml.
 ALSO_ALLOWED = {
     "k8s/platform/cluster/flux-system":
         ("flux-system", "it creates the reconciler identity that everything "

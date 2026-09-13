@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# The only directory under k8s/namespaces/ with a kustomization.yaml, because it
+# is the only one something outside Flux has to build: k8s/bootstrap/ applies
+# these by hand before any Kustomization exists to reconcile them. Referencing a
+# directory is what kustomize can do, and it needs this file to do it.
+#
+# The parent directory still has none, so an app Namespace dropped in there
+# cannot be silently skipped for want of a `resources:` entry. Here the set is
+# fixed -- a namespace, the source its Kustomizations read, and the identity they
+# apply as -- and being listed in one place both readers agree on is worth more.
+#
+# No `namespace:` transformer: the Namespace and the ClusterRoleBinding are
+# cluster-scoped, and the other two say where they go.
+resources:
+  - namespace.yaml
+  - gitrepository.yaml
+  - serviceaccount.yaml
+  - clusterrolebinding.yaml

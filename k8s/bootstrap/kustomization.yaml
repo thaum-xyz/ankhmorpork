@@ -1,7 +1,18 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: flux-system
+# Deliberately no `namespace:` transformer. This layer spans two namespaces now
+# -- the umbrellas reconcile from platform-cluster, while the GitRepository the
+# app Kustomizations read stays in flux-system until they move -- and a
+# transformer here would silently drag one into the other. Every object states
+# its own; anything added without one lands in `default`.
 resources:
+  # Everything platform-cluster needs before a Kustomization can run in it: the
+  # Namespace, the GitRepository that Kustomization reads and the identity it
+  # applies as. Applied by hand here AND reconciled by `namespaces` afterwards,
+  # because the umbrellas live in this namespace and `namespaces` is one of
+  # them -- it cannot create the namespace it runs in. Defined once, in
+  # k8s/namespaces/, so there is still one home for the fact.
+  - ../namespaces/platform-cluster
   - github-repo.yaml
   - crds.yaml
   - namespaces.yaml

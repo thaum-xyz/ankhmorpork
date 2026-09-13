@@ -214,7 +214,7 @@ happen now, reconcile in this order:
 
 ```bash
 flux reconcile source git ankhmorpork
-flux -n flux-system reconcile kustomization apps
+flux -n platform-cluster reconcile kustomization apps
 flux -n flux-system reconcile kustomization whoami
 ```
 
@@ -288,7 +288,7 @@ After merging:
 
 ```bash
 flux reconcile source git ankhmorpork
-flux -n flux-system reconcile kustomization apps
+flux -n platform-cluster reconcile kustomization apps
 kubectl get namespace whoami
 ```
 
