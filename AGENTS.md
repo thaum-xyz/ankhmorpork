@@ -7,6 +7,16 @@ does not: it is a directory listed in `k8s/platform/<domain>/kustomization.yaml`
 reconciled by the `platform-<domain>` Kustomization, which lives in the
 `platform-<domain>` namespace rather than in `flux-system`.
 
+Which namespace an app's Kustomization object declares is what decides how much
+it may do: kustomize-controller resolves `--default-service-account` in the
+object's own namespace, so one in `flux-system` reconciles as cluster-admin and
+one in its app's namespace is confined to that namespace. `mealie` is the first
+moved; the rest still sit in `flux-system`. Moving one needs a `GitRepository`
+and a `flux-reconciler` ServiceAccount in the target namespace first — see
+`k8s/namespaces/mealie/` — and the move itself is a delete-and-create, so the
+outgoing object must be suspended and set `prune: false` in an earlier commit or
+it garbage-collects the app.
+
 Changing anything Flux applies: see the `app-deployment` skill in
 `.claude/skills/`. It covers proving the render, the rollout order and the traps
 that have bitten. Editing `docs/`: see the `docs-authoring` skill there — which
@@ -54,14 +64,9 @@ put the object or artifact type first rather than the component name.
 
 ## Suspended components
 
-`mealie` is declared suspended in Git, transitionally: it is being retired so the
-same Kustomization can be recreated in the `mealie` namespace, and suspending it
-stops the outgoing object fighting its replacement over the same objects. It
-should not outlive that move — the annotation on it carries the sequence.
-
-Nothing else is suspended. Check both the repository and live Flux state before
-changing suspension because live state can temporarily diverge during
-maintenance.
+No Flux Kustomizations are declared suspended in Git. Check both the
+repository and live Flux state before changing suspension because live state can
+temporarily diverge during maintenance.
 
 ## Postgres (CloudNativePG)
 
