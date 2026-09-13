@@ -4,12 +4,16 @@ metadata:
   name: flux-reconciler
   annotations:
     kubernetes.io/description: >-
-      cluster-admin, deliberately: this SA reconciles flux-system, which owns
-      every component Kustomization, the CRDs and the cluster-scoped RBAC.
-      Narrowing it would not bound anything -- flux-system is the control
-      plane, not a tenant. The boundary this change buys appears one namespace
-      at a time, as each app's Kustomization moves into its own namespace with
-      an SA scoped to that app.
+      cluster-admin, deliberately: this SA reconciles flux-system, which holds
+      the umbrellas, the CRD and namespace layers, and every app Kustomization.
+      Narrowing it would not bound anything -- flux-system is the control plane,
+      not a tenant.
+
+      The platform no longer reconciles through it. Each platform-<domain>
+      Kustomization lives in its own namespace with its own flux-reconciler, so
+      what is left here is the layer above them plus the apps. The boundary keeps
+      appearing one namespace at a time, as each app's Kustomization moves into
+      its own with an SA scoped to that app.
 subjects:
   - kind: ServiceAccount
     name: flux-reconciler
