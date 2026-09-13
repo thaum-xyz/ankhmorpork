@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: plex
+  annotations:
+    # Never garbage-collect this Namespace. Pruning is inventory-based, so
+    # dropping it from a Kustomization's inventory would delete the namespace
+    # and everything inside it.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+  labels:
+    # Generates the flux-reconciler ServiceAccount and a RoleBinding giving it
+    # this ClusterRole here, via the generate-flux-reconciler GeneratingPolicy.
+    #
+    # `cluster-admin` names the RULES, not the reach. A RoleBinding confers only
+    # the namespaced half of them and only inside this namespace, so this is
+    # namespace-admin here and nothing at all anywhere else.
+    flux.rbac.thaum.xyz/role: cluster-admin

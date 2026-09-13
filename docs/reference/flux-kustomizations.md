@@ -8,10 +8,10 @@ see [how Flux is layered](../explanation/flux-layering.md).
 
 | | |
 | --- | --- |
-| **`prune: false`** | `crds`, `apps`, `platform`, `namespaces` |
+| **`prune: false`** | `crds`, `apps`, `platform`, `namespaces`, `dlna-local`, `paperless`, `photos`, `plex`, `vod-arr` |
 | **`wait: true`** | `crds` |
 | **Declare `dependsOn`** | `apps`, `platform`, `homer-services` |
-| **Suspended in git** | none |
+| **Suspended in git** | `dlna-local`, `paperless`, `photos`, `plex`, `vod-arr` |
 
 ## Bootstrap — applied once by hand
 
@@ -42,19 +42,19 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `datalake-alerts` | [`k8s/apps/datalake-alerts`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/datalake-alerts) | `5m0s` | yes | no | — |
 | `datalake-logs` | [`k8s/apps/datalake-logs`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/datalake-logs) | `5m0s` | yes | no | — |
 | `datalake-metrics` | [`k8s/apps/datalake-metrics`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/datalake-metrics) | `5m0s` | yes | no | — |
-| `dlna-local` | [`k8s/apps/dlna-local`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/dlna-local) | `15m0s` | yes | no | — |
+| `dlna-local` | [`k8s/apps/dlna-local`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/dlna-local) | `15m0s` | **no** | no | — |
 | `grafana` | [`k8s/apps/grafana`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/grafana) | `15m0s` | yes | no | — |
 | `homer` | [`k8s/apps/homer/app`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/homer/app) | `15m0s` | yes | no | — |
 | `homer-services` | [`k8s/apps/homer/services`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/homer/services) | `15m0s` | yes | no | `homer` |
 | `karakeep` | [`k8s/apps/karakeep`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/karakeep) | `60m0s` | yes | no | — |
 | `mealie` | [`k8s/apps/mealie`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/mealie) | `15m0s` | yes | no | — |
 | `mended-drum` | [`k8s/apps/mended-drum`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/mended-drum) | `15m0s` | yes | no | — |
-| `paperless` | [`k8s/apps/paperless/manifests`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/paperless/manifests) | `60m0s` | yes | no | — |
-| `photos` | [`k8s/apps/photos`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/photos) | `15m0s` | yes | no | — |
-| `plex` | [`k8s/apps/plex`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/plex) | `15m0s` | yes | no | — |
+| `paperless` | [`k8s/apps/paperless/manifests`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/paperless/manifests) | `60m0s` | **no** | no | — |
+| `photos` | [`k8s/apps/photos`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/photos) | `15m0s` | **no** | no | — |
+| `plex` | [`k8s/apps/plex`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/plex) | `15m0s` | **no** | no | — |
 | `pocket-id` | [`k8s/apps/pocket-id`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/pocket-id) | `15m0s` | yes | no | — |
 | `stirling-pdf` | [`k8s/apps/stirling-pdf`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/stirling-pdf) | `15m0s` | yes | no | — |
 | `unifi` | [`k8s/apps/unifi`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/unifi) | `120m0s` | yes | no | — |
 | `ups` | [`k8s/apps/ups`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/ups) | `15m0s` | yes | no | — |
 | `valheim` | [`k8s/apps/valheim`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/valheim) | `15m0s` | yes | no | — |
-| `vod-arr` | [`k8s/apps/vod-arr`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/vod-arr) | `60m0s` | yes | no | — |
+| `vod-arr` | [`k8s/apps/vod-arr`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/vod-arr) | `60m0s` | **no** | no | — |

@@ -1,6 +1,14 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations:
+    # Never garbage-collect this PersistentVolume. Pruning is inventory-based,
+    # so the moment it leaves this Kustomization's inventory -- which is exactly
+    # what hoisting it to k8s/namespaces/ does -- prune would delete it. The
+    # reclaim policy is Retain, so the data would survive; the PVC bound to it
+    # would not, and recovering means hand-clearing claimRef on a recreated PV
+    # while the app is down.
+    kustomize.toolkit.fluxcd.io/prune: disabled
   name: plex-tv
 spec:
   accessModes:
