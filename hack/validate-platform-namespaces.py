@@ -17,6 +17,13 @@
 # must reconcile before and without the rest of the platform. Each entry names
 # the namespace and why, because "it broke when I tried" and "it can never work"
 # need to be told apart by the next person to read this.
+#
+# device-plugins used to be listed here and was not entitled to be. Its reason
+# read "registration is node-local; conventionally a kube-system object" -- the
+# first half is the argument for moving it, and the second half is habit. It has
+# no ServiceAccount, no RBAC, and nothing outside it names its namespace; the
+# kubelet finds it through a host socket. An exemption has to say what breaks,
+# not where the object usually sits.
 
 import json
 import os
@@ -28,9 +35,6 @@ EXEMPT = {
     "k8s/platform/network/cilium":
         ("kube-system", "the CNI: nothing else schedules until it is up, and its "
                         "node agent is addressed by kube-system service accounts"),
-    "k8s/platform/cluster/device-plugins":
-        ("kube-system", "kubelet device-plugin registration is node-local; the "
-                        "plugin DaemonSet is conventionally a kube-system object"),
     "k8s/platform/cluster/flux-system":
         ("flux-system", "Flux must reconcile before and without the platform it "
                         "installs, including this check"),
