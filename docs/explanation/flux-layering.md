@@ -13,10 +13,13 @@ That structure is three layers deep, and the shape is not arbitrary.
 ```
 k8s/bootstrap/        applied once by hand: the GitRepository and the umbrellas
   ├── crds            the kinds every layer above it needs
-  ├── namespaces      every namespace, plus what each platform domain needs first
+  ├── namespaces      every namespace, and each app's Kustomization beside it
   └── platform        the cluster's machinery, one Kustomization per domain
-        └── apps      the workloads
 ```
+
+The workloads are not a fourth umbrella. Each app's Kustomization is created by
+`namespaces`, in the app's own namespace — see below for what that costs and
+what it buys.
 
 The current membership of each layer, with every interval, prune and wait
 setting, is in [Flux Kustomizations](../reference/flux-kustomizations.md).
@@ -42,7 +45,8 @@ that component's `prune` the whole domain's blast radius.
 holds the umbrellas, so it cannot be created by `namespaces` — that is one of
 them — and `k8s/bootstrap/` applies the same directory before any Kustomization
 exists. The other Namespace created outside `k8s/namespaces/` is `flux-system`,
-by the component that still ships it, and it exists only until the apps move.
+by the component that ships it; it now holds the controllers' own objects and
+nothing else.
 
 Each `platform-<domain>` is a directory rather than a file, because the Namespace
 is not the only thing that has to be there first. A `Kustomization` reconciling
@@ -56,24 +60,35 @@ prerequisites of the domain rather than members of it.
 ingress controllers, cert-manager, admission control, the observability
 collectors. Breaking something here breaks things that do not mention it.
 
-**`apps`** is the workloads. An app can fail entirely without taking anything else
-with it, which is the property the split exists to preserve.
-
-`apps` `dependsOn` `platform`, so on a cold start nothing tries to claim a volume
-before there is a CSI driver to answer.
+**The apps** are the workloads. An app can fail entirely without taking anything
+else with it, which is the property the split exists to preserve — and now that
+each reconciles under its own namespace's identity, one cannot reach another's
+objects even deliberately.
 
 ## Why the Kustomizations live apart from the manifests
 
-An app appears in two places: its manifests under `k8s/apps/<app>/`, and a Flux
-`Kustomization` under `k8s/flux/apps/` that points at them.
+An app appears in two places, and the split is by **who owns each**.
+`k8s/namespaces/<app>/` is platform-owned: the `Namespace`, the `GitRepository`
+that app's Kustomization reads, the `sync.yaml` that is that Kustomization, and
+a `ClusterRoleBinding` where the app needs one. `k8s/apps/<app>/` is what
+`sync.yaml` reconciles, and belongs to whoever owns the app.
 
-The indirection looks redundant until you notice what the umbrella actually
-applies: `path: ./k8s/flux/apps` — a **directory of Kustomizations**, not of
-workloads. Adding an app means dropping one file into that directory; the
-umbrella picks it up on its next reconcile and no existing file changes. It also
-separates *how* a component is reconciled — its interval, its dependencies,
-whether it prunes — from *what* the component is. Those change for different
-reasons.
+That line is the review boundary rather than a convention, because it is also
+the privilege boundary. A Kustomization reconciles as the `flux-reconciler` in
+**its own namespace**, so putting the object in the app's namespace is what
+confines it there — and putting the object itself somewhere the app's owner
+cannot edit is what stops them widening it.
+
+It also separates *how* a component is reconciled — its interval, its
+dependencies, whether it prunes — from *what* the component is. Those change for
+different reasons.
+
+There is no `apps` umbrella. Each app's Kustomization is created by
+`namespaces`, alongside the namespace it runs in. That costs an ordering edge:
+`apps` used to `dependsOn` `platform`, and `--no-cross-namespace-refs=true`
+forbids a Kustomization in an app namespace naming one in `platform-cluster`. On
+a cold start an app therefore fails until the platform component it needs
+exists, and retries. That is the price of the confinement the same flag buys.
 
 The platform is arranged the other way round, and the difference is deliberate.
 A platform component has no Kustomization of its own; it is a directory named in
@@ -88,8 +103,8 @@ Those domain Kustomizations do not live in `flux-system`. Each is in the
 namespace it reconciles, reading the `GitRepository` there and applying as that
 namespace's `flux-reconciler`. Nor do the umbrellas: they reconcile from
 `platform-cluster`, which makes that namespace the seed the rest of the cluster
-is built from, and leaves `flux-system` holding nothing but the app
-Kustomizations and what they read.
+is built from. `flux-system` is left holding only the controllers themselves —
+no Kustomization reconciles from it any more.
 
 ## Ordering, where it genuinely matters
 
@@ -102,7 +117,6 @@ until something else exists:
 | Object | Waits for | Why |
 | --- | --- | --- |
 | `platform` | `crds` | nearly everything ships a ServiceMonitor or PrometheusRule |
-| `apps` | `platform`, `namespaces` | nothing claims a volume before there is a driver |
 | `homer-services` | `homer` | it adds entries to a dashboard that must exist |
 | HelmRelease `piraeus-operator` | HelmRelease `topolvm` | its storage pool *is* a topolvm thin pool |
 | HelmRelease `cnpg-versity-gw` | HelmRelease `csi-nfs` | its claim is `unifi-nas`, and a policy rejects the PVC until the class exists |
@@ -141,7 +155,7 @@ makes deleting a directory delete the objects, and what makes the tutorial's
 cleanup step work. The ones that opt out are listed on the
 [reference page](../reference/flux-kustomizations.md), and they divide into two kinds.
 
-**The umbrellas** (`platform`, `apps`, `crds`, `namespaces`)
+**The umbrellas** (`platform`, `crds`, `namespaces`)
 do not prune because a transient failure to render one of them would otherwise be
 read as "these components are gone" and cascade into deleting every component in
 the layer. For `namespaces` the stake is higher still: deleting a Namespace takes

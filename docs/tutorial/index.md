@@ -44,23 +44,21 @@ git switch -c tutorial-whoami
 
 ## Step 1 — Write the manifests
 
-An app is a directory of manifests plus a Flux Kustomization pointing at it.
-Nothing registers it anywhere else; the directory *is* the app.
+An app is split by who owns each half. `k8s/apps/<app>/` holds what the app *is*,
+and is reconciled by a Kustomization confined to the app's own namespace.
+`k8s/namespaces/<app>/` holds what has to exist before that can happen — the
+Namespace, the source, the Kustomization itself — and is applied with
+cluster-admin. Step 2 builds the second; this one builds the first.
 
 ```bash
 mkdir -p k8s/apps/whoami
 ```
 
-One Kubernetes object per file, named after the object type. Create these four.
+One Kubernetes object per file, named after the object type. Create these three.
 
-`k8s/apps/whoami/namespace.yaml`:
-
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: whoami
-```
+Note what is *not* here: a `Namespace`. It is cluster-scoped, and the identity
+this directory is reconciled by is confined to one namespace — it could not
+apply one. That is step 2's job.
 
 `k8s/apps/whoami/deployment.yaml`:
 
@@ -143,7 +141,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: whoami
 resources:
-  - namespace.yaml
   - deployment.yaml
   - service.yaml
   - ingress.yaml
@@ -152,17 +149,53 @@ resources:
 That `namespace:` line is doing real work: it is what puts every object above into
 the `whoami` namespace without any of them saying so individually.
 
-## Step 2 — Tell Flux about it
+## Step 2 — Give it a namespace, a source and an identity
 
-Flux does not scan for new directories. Point it at the one you just made, in
-`k8s/flux/apps/whoami.yaml`:
+Flux does not scan for new directories, and a Kustomization can create neither
+the namespace it runs in nor the source it reads. Those are prerequisites, so
+they live together in `k8s/namespaces/whoami/`, which the cluster-admin
+`namespaces` Kustomization applies.
+
+```bash
+mkdir -p k8s/namespaces/whoami
+```
+
+`k8s/namespaces/whoami/namespace.yaml` — the label is what makes Kyverno generate
+the `flux-reconciler` ServiceAccount and its RoleBinding here:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: whoami
+  labels:
+    flux.rbac.thaum.xyz/role: cluster-admin
+```
+
+`k8s/namespaces/whoami/gitrepository.yaml` — `--no-cross-namespace-refs` means a
+Kustomization may only name a source in its own namespace:
+
+```yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: ankhmorpork
+  namespace: whoami
+spec:
+  interval: 60s
+  ref:
+    branch: master
+  url: https://github.com/thaum-xyz/ankhmorpork
+```
+
+`k8s/namespaces/whoami/sync.yaml` — the Kustomization, in the app's namespace:
 
 ```yaml
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: whoami
-  namespace: flux-system
+  namespace: whoami
 spec:
   interval: 15m0s
   path: ./k8s/apps/whoami
@@ -172,13 +205,17 @@ spec:
     name: ankhmorpork
 ```
 
+`namespace: whoami` on that last object is the important line. It is what makes
+this reconcile as `whoami`'s own ServiceAccount rather than a cluster-admin one,
+so the app can only ever touch its own namespace.
+
 `prune: true` means deleting the directory later deletes the objects too, which is
 what makes the cleanup step at the end work.
 
 ## Step 3 — Validate before pushing
 
 ```bash
-git add k8s/apps/whoami k8s/flux/apps/whoami.yaml
+git add k8s/apps/whoami k8s/namespaces/whoami
 make validate
 ```
 
@@ -213,15 +250,20 @@ Flux polls, so it will find this within a few minutes on its own. To watch it
 happen now, reconcile in this order:
 
 ```bash
-flux reconcile source git ankhmorpork
-flux -n platform-cluster reconcile kustomization apps
-flux -n flux-system reconcile kustomization whoami
+flux -n platform-cluster reconcile source git ankhmorpork
+flux -n platform-cluster reconcile kustomization namespaces
+flux -n whoami reconcile kustomization whoami
 ```
 
 The order matters. The first command pulls the new commit; without it the other
 two can act on a revision from before your merge and report success having done
-nothing. The second makes the `apps` group notice that a new Kustomization exists
-at all — your `whoami` Kustomization does not exist in the cluster until then.
+nothing. The second makes `namespaces` create the namespace, the source and the
+Kustomization — none of your `whoami` objects exist in the cluster until then.
+
+Note the `-n platform-cluster` on the source. Several `GitRepository` objects are
+named `ankhmorpork`, one per namespace that reconciles; the umbrellas read the one
+in `platform-cluster`. Refreshing a different one leaves them on a stale revision
+and still reports success.
 
 Now watch the pod arrive:
 
@@ -278,7 +320,7 @@ Delete both pieces and merge again:
 
 ```bash
 git switch -c tutorial-whoami-cleanup
-git rm -r k8s/apps/whoami k8s/flux/apps/whoami.yaml
+git rm -r k8s/apps/whoami k8s/namespaces/whoami
 git commit -m "whoami: remove tutorial app"
 git push -u origin tutorial-whoami-cleanup
 gh pr create --fill
@@ -287,14 +329,22 @@ gh pr create --fill
 After merging:
 
 ```bash
-flux reconcile source git ankhmorpork
-flux -n platform-cluster reconcile kustomization apps
+flux -n platform-cluster reconcile source git ankhmorpork
+flux -n platform-cluster reconcile kustomization namespaces
 kubectl get namespace whoami
 ```
 
-Once the `apps` Kustomization prunes it, that last command reports
-`NotFound`. The namespace, the pod, the certificate and the DNS record all go with
-it, because `prune: true` means Flux owns what it created.
+That last command should report `NotFound` — the pod, the certificate and the DNS
+record went with the namespace, because `prune: true` means Flux owns what it
+created.
+
+If the namespace lingers, that is expected rather than a failure: `namespaces` is
+`prune: false`, precisely so that deleting a directory can never cascade into
+deleting a namespace and everything in it. Removing one is deliberately two acts:
+
+```bash
+kubectl delete namespace whoami
+```
 
 ## What you just learned
 

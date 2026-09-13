@@ -16,9 +16,20 @@ An app is a directory of manifests plus a Flux Kustomization that points at it.
 
 ```
 k8s/apps/<app>/          one Kubernetes object per file, type-based names
-                         (deployment.yaml, pvc.yaml, namespace.yaml, pdb.yaml)
-k8s/flux/apps/<app>.yaml Kustomization, namespace flux-system, path ./k8s/apps/<app>
+                         (deployment.yaml, pvc.yaml, pdb.yaml) — everything
+                         NAMESPACED; tenant-owned
+k8s/namespaces/<app>/    namespace.yaml, gitrepository.yaml, sync.yaml (the
+                         Kustomization, in the app's namespace), and
+                         clusterrolebinding.yaml if the app needs cluster-admin
+                         — platform-owned
 ```
+
+Nothing cluster-scoped may live under `k8s/apps/<app>/`: that directory is
+reconciled as the app's own `flux-reconciler`, which a RoleBinding confines to
+the namespace. A Namespace or PersistentVolume there fails to apply. Put it in
+`k8s/namespaces/<app>/`, which the cluster-admin `namespaces` Kustomization
+applies — or, where the app's Kustomization must apply it itself, give that
+namespace a `clusterrolebinding.yaml` as `plex` and `vod-arr` have.
 
 A platform component has no Kustomization of its own. It is a directory listed in
 `k8s/platform/<domain>/kustomization.yaml`, reconciled by the `platform-<domain>`

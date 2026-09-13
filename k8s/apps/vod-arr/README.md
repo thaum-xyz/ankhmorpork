@@ -248,7 +248,7 @@ choices belong in `recyclarr/config.yaml`, not in the UI.
 
 ## Cutover from multimedia
 
-`k8s/flux/apps` has `prune: false`, so deleting the old files does not remove
+`k8s/namespaces` has `prune: false`, so deleting the old files does not remove
 anything from the cluster — see the app-removal order. The old and new stacks
 claim the same ingress hostnames, so the teardown has to happen first:
 

@@ -17,4 +17,3 @@ resources:
   - crds.yaml
   - namespaces.yaml
   - group-platform.yaml
-  - group-apps.yaml

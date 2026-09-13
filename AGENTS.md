@@ -16,10 +16,21 @@ in `k8s/platform/<domain>/kustomization.yaml`, reconciled by the
 **Which namespace a Kustomization object declares is what decides how much it may
 do**, because kustomize-controller resolves `--default-service-account` in the
 object's own namespace. One in `flux-system` reconciles as cluster-admin; one in
-its app's namespace is confined there. Five apps still sit in `k8s/flux/apps/`
-for that reason — `dlna-local`, `paperless`, `photos`, `plex` and `vod-arr` ship
-`PersistentVolumes`, which are cluster-scoped and so cannot be applied by a
-confined reconciler until those are hoisted.
+its app's namespace is confined there. Every app Kustomization now lives in its
+own namespace, and `k8s/flux/apps/` and the `apps` umbrella are gone.
+
+**Nothing cluster-scoped may live under `k8s/apps/<app>/`** — that directory is
+reconciled by the confined identity, so a `Namespace` or `PersistentVolume` there
+fails to apply. Either put it in `k8s/namespaces/<app>/`, which the cluster-admin
+`namespaces` Kustomization applies, or give that namespace a
+`clusterrolebinding.yaml` so its own reconciler may apply it. `dlna-local`,
+`paperless`, `photos`, `plex` and `vod-arr` take the second route, because their
+`PersistentVolumes` belong with the app rather than with the namespace.
+
+The cost of the confinement is cross-namespace `dependsOn`:
+`--no-cross-namespace-refs=true` forbids an app Kustomization naming
+`platform-cluster/platform`, so there is no longer an ordering edge from apps to
+platform. On a rebuild an app fails until what it needs exists, and retries.
 
 Moving one needs a `GitRepository` and a `flux-reconciler` ServiceAccount in the
 target namespace first, and the move itself is a delete-and-create — so the
