@@ -49,14 +49,19 @@ EXEMPT_TARGET = {
 #
 # Not the same as "unmoved". flux's controllers DO run in platform-cluster; what
 # stays behind is the flux-system namespace object and the flux-reconciler
-# identity that every Kustomization impersonates. Those are held there by
-# references that are namespace-local, not by inertia, and they leave when the
-# Kustomizations do.
+# identity that the umbrellas and every app Kustomization impersonate. Those two
+# stay for as long as anything reconciles out of flux-system, which the platform
+# domains no longer do but the apps still all do.
+#
+# This component is also the one platform component with no domain Kustomization
+# of its own, and for the same reason: it creates the release and the identity
+# every other Kustomization depends on, so reconciling it through a domain whose
+# source and identity it is itself responsible for would be circular.
 ALSO_ALLOWED = {
     "k8s/platform/cluster/flux-system":
-        ("flux-system", "the reconciler identity is resolved in the "
-                        "Kustomization's own namespace, so it stays with the "
-                        "Kustomizations until those move too"),
+        ("flux-system", "it creates the reconciler identity that everything "
+                        "still reconciling out of flux-system impersonates, and "
+                        "that identity is resolved in its own namespace"),
 }
 
 # Cluster-scoped kinds rendered anywhere under k8s/platform. kustomize stamps

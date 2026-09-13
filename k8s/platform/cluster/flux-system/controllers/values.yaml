@@ -25,10 +25,15 @@ helmController:
   # Confine a HelmRelease to chart sources and dependsOn targets in its own
   # namespace. Verified inert: no HelmRelease references either across one.
   #
-  # --default-service-account is deliberately absent. Unlike kustomize-
-  # controller, where every Kustomization lives in flux-system, the SA would be
-  # resolved in each HelmRelease's own namespace -- 31 of them, none holding a
-  # flux-reconciler yet. It goes on once they do.
+  # --default-service-account is deliberately absent. The SA is resolved in each
+  # HelmRelease's OWN namespace, and only the platform-<domain> namespaces hold a
+  # flux-reconciler; setting the flag now would strand every HelmRelease in an app
+  # namespace on an identity that does not exist. It goes on once they all do.
+  #
+  # Note what that means today: the Kustomization that applies a HelmRelease
+  # impersonates its namespace's reconciler, but the release helm-controller then
+  # installs is applied as the controller's own cluster-admin. Moving the
+  # Kustomizations narrowed the first path, not the second.
   container:
     additionalArgs:
       - --no-cross-namespace-refs=true
@@ -53,10 +58,12 @@ kustomizeController:
   # --default-service-account: impersonate flux-system's flux-reconciler for
   #   every Kustomization that does not set spec.serviceAccountName, rather
   #   than applying as the controller's own cluster-admin identity. The SA is
-  #   resolved in each Kustomization's OWN namespace, so this is inert while
-  #   all of them live in flux-system -- the name resolves to the SA in
-  #   reconciler/, which is cluster-admin. It stops being inert the moment a
-  #   Kustomization moves into an app namespace, which is the intended order.
+  #   resolved in each Kustomization's OWN namespace, so what it selects depends
+  #   on where the Kustomization lives. The five platform-<domain> Kustomizations
+  #   each resolve it to the SA in their own namespace; everything still in
+  #   flux-system -- the umbrellas and every app -- resolves it to reconciler/,
+  #   which is cluster-admin. Each app Kustomization that moves into its own
+  #   namespace narrows itself the same way the platform domains already did.
   #
   #   Upstream uses `default` here. A named SA instead, because `default` is
   #   what a Pod gets when it names none: granting it reconcile rights would
