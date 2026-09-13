@@ -30,6 +30,13 @@ metadata:
       be silently skipped for want of a `resources:` entry.
 spec:
   interval: 15m0s
+  # The releases here render into platform-<domain> namespaces, which this
+  # layer does not create and cannot: a Kustomization cannot create the
+  # namespace it reconciles into before it reconciles. Without this edge the
+  # layer still converges -- the namespaces land, the next retry succeeds -- but
+  # a bootstrap that has to fail twice to work is one nobody can read.
+  dependsOn:
+    - name: namespaces
   path: ./k8s/crds
   # NOTE: Prevent cascading deletion of every ServiceMonitor, PodMonitor and
   # PrometheusRule in the cluster.

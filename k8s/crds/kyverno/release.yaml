@@ -1,0 +1,48 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kyverno-api
+  annotations:
+    kubernetes.io/description: >-
+      The eleven policies.kyverno.io CRDs, which is every kyverno kind this repo
+      actually declares: the ValidatingPolicy, MutatingPolicy, GeneratingPolicy
+      and DeletingPolicy objects under k8s/platform/security/kyverno/policies
+      and k8s/platform/storage/.
+
+      They are here rather than in the kyverno release because those objects
+      live in two domains, and a domain Kustomization cannot depend on one in
+      another namespace. `platform dependsOn crds` is the only ordering edge
+      that reaches both.
+
+      Version is not Renovate's to move on its own. This chart is a dependency
+      of the kyverno chart, pinned by its Chart.lock, and the CRDs have to match
+      the controllers that serve them -- bump it when the kyverno chart's lock
+      moves, not before.
+spec:
+  chart:
+    spec:
+      chart: kyverno-api
+      version: "0.0.1-alpha.4"
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno-api
+      interval: 5m
+  interval: 5m
+  timeout: 10m
+  install:
+    timeout: 10m
+    # CreateReplace, not Create: Create would leave the older schemas in place.
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 10m
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  values:
+    # Deleting a CRD deletes every policy of that kind. This release is nothing
+    # but CRDs, so an uninstall with no guard is the whole admission-control
+    # configuration of the cluster.
+    annotations:
+      helm.sh/resource-policy: keep
