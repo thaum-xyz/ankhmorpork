@@ -1,5 +1,28 @@
 # Config reference: https://github.com/kyverno/kyverno/blob/main/charts/kyverno/values.yaml
 
+# The chart has no `crds/` directory -- all 22 CRDs are ordinary templates, so
+# they carry Helm ownership and a rollback or an uninstall deletes them. That
+# takes every ClusterPolicy in policies/ and every pending UpdateRequest with
+# them, and `install.remediation.retries` makes an uninstall reachable from a
+# failed upgrade rather than only from a deliberate teardown.
+#
+# `keep` makes Helm leave the CRDs alone. It has to reach them through the
+# chart -- `kubectl annotate` does not survive the next apply.
+#
+# Two blocks, not one. `crds.annotations` reaches only the 11 CRDs from the
+# bundled `crds` subchart; the 11 in `policies.kyverno.io` come from the
+# external `kyverno-api` subchart, which reads its own key. Setting just the
+# first leaves half the CRDs unguarded and looks done.
+#
+# This is a guard, not a preference. Do not drop it because the release looks
+# stable; the cost only shows up during an uninstall.
+crds:
+  annotations:
+    helm.sh/resource-policy: keep
+kyverno-api:
+  annotations:
+    helm.sh/resource-policy: keep
+
 # Admission reports require the reports controller. Enforcement still happens
 # synchronously and is observable through controller metrics and events.
 features:
