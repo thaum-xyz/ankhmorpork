@@ -54,9 +54,14 @@ put the object or artifact type first rather than the component name.
 
 ## Suspended components
 
-No Flux Kustomizations are declared suspended in Git. Check both the
-repository and live Flux state before changing suspension because live state can
-temporarily diverge during maintenance.
+`mealie` is declared suspended in Git, transitionally: it is being retired so the
+same Kustomization can be recreated in the `mealie` namespace, and suspending it
+stops the outgoing object fighting its replacement over the same objects. It
+should not outlive that move — the annotation on it carries the sequence.
+
+Nothing else is suspended. Check both the repository and live Flux state before
+changing suspension because live state can temporarily diverge during
+maintenance.
 
 ## Postgres (CloudNativePG)
 
