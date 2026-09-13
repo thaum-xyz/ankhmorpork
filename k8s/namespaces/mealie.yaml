@@ -17,3 +17,18 @@ metadata:
     # members and be selected under the kubectl client's Allowed User Groups, or
     # the login fails before RBAC is consulted.
     group.rbac.thaum.xyz/appadmin: edit
+    # Generates the flux-reconciler ServiceAccount and a RoleBinding giving it
+    # this ClusterRole here, via the generate-flux-reconciler GeneratingPolicy.
+    #
+    # `cluster-admin` names the RULES, not the reach. A RoleBinding confers only
+    # the namespaced half of them and only inside this namespace, so this is
+    # namespace-admin here and nothing at all anywhere else -- a RoleBinding
+    # cannot grant a cluster-scoped right whatever role it names. The binding
+    # kind is the entire boundary, which is why the policy generates
+    # RoleBindings and never ClusterRoleBindings.
+    #
+    # Everything this app installs is namespaced, measured from what its Helm
+    # releases own. A chart that grows a cluster-scoped object will fail to
+    # apply rather than quietly gaining the right to create one; that namespace
+    # moves to a hand-written ClusterRoleBinding instead.
+    flux.rbac.thaum.xyz/role: cluster-admin

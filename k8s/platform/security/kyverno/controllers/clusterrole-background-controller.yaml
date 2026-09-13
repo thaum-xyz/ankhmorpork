@@ -12,15 +12,24 @@ metadata:
     rbac.kyverno.io/aggregate-to-background-controller: "true"
   annotations:
     kubernetes.io/description: >-
-      Lets the background controller bind `edit` and `view`, which
-      generate-tenant-rolebinding needs. RBAC's escalation check rejects
-      creating a RoleBinding to a role the creator neither holds nor may `bind`,
-      and the chart grants the controller no `bind` at all.
+      Lets the background controller bind the roles the generating policies
+      need: `edit` and `view` for generate-group-rolebindings, `cluster-admin`
+      for generate-flux-reconciler. RBAC's escalation check rejects creating a
+      RoleBinding to a role the creator neither holds nor may `bind`, and the
+      chart grants the controller no `bind` at all.
 
-      `resourceNames` is the security boundary of the whole mechanism, not a
-      tidiness measure: with only these two names, no Kyverno policy -- however
-      written, and whatever a Namespace label says -- can generate a binding to
-      `admin` or `cluster-admin`. Widen this list and that ceiling moves.
+      `resourceNames` caps which roles a policy may reference, and each addition
+      raises that cap for every policy at once -- so add one only with the reason
+      written beside it.
+
+      But the ceiling that matters is not this list. It is the ABSENCE of any
+      `clusterrolebindings` verb in this role: every binding the controller can
+      create is a RoleBinding, and a RoleBinding confers only the namespaced
+      half of whatever role it names, in one namespace. So the worst a policy
+      can produce is namespace-admin somewhere -- true of `cluster-admin` here
+      exactly as it was of the bespoke role this replaced. Namespaces that need
+      a cluster-scoped identity are hand-written, and adding
+      `clusterrolebindings` here would collapse that distinction.
 rules:
   - apiGroups:
       - rbac.authorization.k8s.io
@@ -31,6 +40,46 @@ rules:
     resourceNames:
       - edit
       - view
+      # generate-flux-reconciler binds this to each tenant namespace's
+      # flux-reconciler ServiceAccount. This DOES move the ceiling above `edit`,
+      # and knowingly: a generated RoleBinding to it is namespace-admin.
+      #
+      # It does NOT put cluster-admin within the controller's reach, which is
+      # the thing worth protecting. No `clusterrolebindings` verb appears
+      # anywhere in this role, so every binding it can create is a RoleBinding,
+      # and a RoleBinding confers only the namespaced half of whatever role it
+      # names, in one namespace. Naming `cluster-admin` here therefore buys a
+      # policy no more than naming any `*` on `*` role would -- which is why a
+      # bespoke role was dropped rather than kept as a fig leaf.
+      #
+      # The corollary is the invariant to defend: adding `clusterrolebindings`
+      # to this role would turn this entry into real cluster-admin. Do not.
+      # Namespaces that genuinely need a cluster-scoped identity -- the platform
+      # domains, and the four apps whose charts install cluster-scoped objects --
+      # are hand-written in k8s/namespaces/<name>/ for exactly that reason.
+      #
+      # validate-flux-role-labels rejects any other value at admission, so this
+      # list and that policy have to change together: a name allowed there but
+      # missing here fails inside a background UpdateRequest, where nothing
+      # surfaces it.
+      - cluster-admin
+  # generate-flux-reconciler creates the ServiceAccount as well as its binding.
+  # Creating one confers nothing by itself -- a fresh ServiceAccount holds no
+  # rights -- so this grants no privilege; what the SA may do is decided entirely
+  # by the `bind` list above. Read verbs for the same reason rolebindings need
+  # them, below.
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
   # The chart's core role grants create/update/patch/delete on rolebindings but
   # no read verbs, and generation reads before it writes -- it looks for an
   # existing object to decide between create and update, and synchronize needs

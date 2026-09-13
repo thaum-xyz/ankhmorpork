@@ -1,0 +1,22 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-reconciler-datalake-logs
+  annotations:
+    kubernetes.io/description: >-
+      cluster-admin, because this namespace's Helm release owns the ClusterRole and ClusterRoleBinding the loki chart installs.
+      A RoleBinding cannot confer a cluster-scoped object at any width, so
+      generate-flux-reconciler deliberately does not cover this namespace and it
+      carries no flux.rbac.thaum.xyz/role label.
+
+      Narrowing it is thaum-xyz/ankhmorpork#1436, not this. The route is to hoist
+      what the chart installs cluster-wide into a cluster-admin lane, after which
+      the namespace can take the generated RoleBinding like any other app.
+subjects:
+  - kind: ServiceAccount
+    name: flux-reconciler
+    namespace: datalake-logs
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
