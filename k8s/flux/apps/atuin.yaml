@@ -3,10 +3,25 @@ kind: Kustomization
 metadata:
   name: atuin
   namespace: flux-system
+  annotations:
+    kubernetes.io/description: >-
+      Suspended and non-pruning until the next commit, which recreates this
+      Kustomization in its app's own namespace so it reconciles as that
+      namespace's flux-reconciler rather than flux-system's cluster-admin one.
+
+      Moving it is a delete-and-create, and the `apps` umbrella is prune: false,
+      so removing this file would leave the object here running -- reconciling
+      the same path as its replacement and fighting it over every object through
+      server-side apply. Suspending stops that.
+
+      `prune: false` is the other half, and the dangerous one to skip. This
+      object's inventory IS the app's objects; deleting it while pruning was
+      enabled would garbage-collect what the replacement had just adopted.
 spec:
   interval: 15m0s
   path: ./k8s/apps/atuin
-  prune: true
+  prune: false
+  suspend: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork
