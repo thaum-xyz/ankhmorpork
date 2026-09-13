@@ -25,18 +25,25 @@ helmController:
   # Confine a HelmRelease to chart sources and dependsOn targets in its own
   # namespace. Verified inert: no HelmRelease references either across one.
   #
-  # --default-service-account is deliberately absent. The SA is resolved in each
-  # HelmRelease's OWN namespace, and only the platform-<domain> namespaces hold a
-  # flux-reconciler; setting the flag now would strand every HelmRelease in an app
-  # namespace on an identity that does not exist. It goes on once they all do.
+  # --default-service-account closes the second path. Until it was set, the
+  # Kustomization that applies a HelmRelease impersonated its namespace's
+  # reconciler but the release helm-controller then installed was applied as the
+  # controller's own cluster-admin -- so anyone able to write a HelmRelease in
+  # any namespace could point it at a chart of their choosing and have Flux
+  # apply the result with full cluster rights. That was the last unimpersonated
+  # write path.
   #
-  # Note what that means today: the Kustomization that applies a HelmRelease
-  # impersonates its namespace's reconciler, but the release helm-controller then
-  # installs is applied as the controller's own cluster-admin. Moving the
-  # Kustomizations narrowed the first path, not the second.
+  # The SA is resolved in each HelmRelease's OWN namespace, so this needed all
+  # 19 namespaces holding one to have an identity first (#1453). Checked by
+  # impersonation rather than assumed, before the flag went on: every one of the
+  # 19 can create a Deployment in its namespace, and exactly the five platform
+  # domains plus the four apps whose charts install cluster-scoped objects can
+  # create a ClusterRole. The other ten answer "no", which is the boundary
+  # working.
   container:
     additionalArgs:
       - --no-cross-namespace-refs=true
+      - --default-service-account=flux-reconciler
   priorityClassName: system-cluster-critical
   tolerations:
     - key: node-role.kubernetes.io/control-plane
