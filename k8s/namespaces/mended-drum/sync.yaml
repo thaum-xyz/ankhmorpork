@@ -1,0 +1,29 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: mended-drum
+  namespace: mended-drum
+  annotations:
+    kubernetes.io/description: >-
+      Reconciles this app as mended-drum's own flux-reconciler, not flux-system's
+      cluster-admin one: kustomize-controller resolves --default-service-account
+      in the OBJECT's namespace, so where this object lives is what decides how
+      much it may do.
+
+      That ServiceAccount is bound with a RoleBinding, so this can apply
+      anything namespaced in mended-drum and nothing anywhere else. Repointing
+      spec.path at another component would not widen it -- the apply is simply
+      denied.
+
+      It sits beside the Namespace and the GitRepository because all three are
+      platform-owned, and that split is the review boundary: everything under
+      k8s/apps/mended-drum/ is the tenant's, everything here is not. sourceRef names
+      the source in this namespace; --no-cross-namespace-refs=true forbids
+      flux-system's.
+spec:
+  interval: 15m0s
+  path: ./k8s/apps/mended-drum
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

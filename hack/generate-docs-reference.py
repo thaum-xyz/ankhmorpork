@@ -150,15 +150,22 @@ def flux_kustomizations():
 
     Layer is decided by where the *Kustomization* file lives, which is how Flux
     itself layers them: k8s/bootstrap is applied by hand, and each umbrella
-    there points at a directory of Kustomizations under k8s/flux/.
+    there points at a directory of Kustomizations.
+
+    The apps layer spans two directories. An app whose Kustomization has moved
+    into its own namespace keeps it beside that namespace, in
+    k8s/namespaces/<app>/sync.yaml, so the platform-owned objects for one app sit
+    together; the rest are still in k8s/flux/apps. Scanning only the latter would
+    silently drop every moved app from this page.
     """
     rows = []
-    for layer, prefix in (
-        ("bootstrap", "k8s/bootstrap"),
-        ("platform", "k8s/flux/platform"),
-        ("apps", "k8s/flux/apps"),
+    for layer, prefixes in (
+        ("bootstrap", ("k8s/bootstrap",)),
+        ("platform", ("k8s/flux/platform",)),
+        ("apps", ("k8s/flux/apps", "k8s/namespaces")),
     ):
-        for f in sorted(yaml_files(prefix)):
+        files = sorted(f for prefix in prefixes for f in yaml_files(prefix))
+        for f in files:
             for d in load_all(f):
                 if d.get("kind") != "Kustomization":
                     continue
