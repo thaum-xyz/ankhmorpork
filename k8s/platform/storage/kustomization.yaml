@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Every component the platform-storage Kustomization reconciles.
+#
+# Three components here ship policies.kyverno.io objects -- csi-nfs,
+# piraeus-datastore and cnpg-system -- whose CRDs come from the kyverno chart in
+# platform-security. Those used to be Kustomization-level `dependsOn: kyverno`
+# edges; a Kustomization may only depend on one in its own namespace, and there
+# is no CRD-only kyverno chart to hoist into k8s/crds/, so on a cold bootstrap
+# those objects fail to apply and are retried each interval until kyverno
+# installs. Everything else in the domain applies in the same pass -- Flux
+# collects per-object errors rather than abandoning the set.
+#
+# Ordering that does still matter is expressed between HelmReleases, which may
+# depend on one another inside a namespace: piraeus-operator waits for topolvm,
+# cnpg-versity-gw for csi-nfs, linstor-cluster for piraeus-operator.
+#
+# No `namespace:` at this level. Each component declares its own.
+resources:
+  - cnpg-system/
+  - cnpg-versity-gw/
+  - csi-nfs/
+  - k8up/
+  - piraeus-datastore/
+  - smartctl-exporter/
+  - topolvm-system/

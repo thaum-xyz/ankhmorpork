@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Every component the platform-observability Kustomization reconciles:
+# collectors and exporters only. The stores they feed are apps, in their own
+# namespaces.
+#
+# The prometheus-operator CRDs are not here. They are a layer below the whole
+# platform -- `platform` dependsOn `crds` -- and their manifests moved to
+# k8s/crds/ so that everything under k8s/platform/<domain>/ belongs to that
+# domain without exception.
+#
+# No `namespace:` at this level. Each component declares its own.
+resources:
+  - alloy/
+  - blackbox-exporter/
+  - kube-prometheus-stack/
+  - uptimerobot/

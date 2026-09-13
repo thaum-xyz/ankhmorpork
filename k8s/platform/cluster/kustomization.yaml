@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Every component the platform-cluster Kustomization reconciles.
+#
+# Listed explicitly rather than globbed, so that dropping a component out of the
+# domain and deleting its manifests are two separate acts -- the same reason
+# k8s/namespaces/ takes the opposite approach, where being unable to omit a
+# Namespace by accident is worth more.
+#
+# flux-system is deliberately absent. It keeps its own Kustomization in
+# flux-system because it creates the flux2 release and the reconciler identity
+# that every other Kustomization impersonates; reconciling it through a domain
+# whose source and identity it is itself responsible for would make recovery
+# from a bad controller upgrade circular.
+#
+# No `namespace:` at this level. Each component declares its own, and a
+# transformer here would also stamp one onto every cluster-scoped object the
+# domain ships.
+resources:
+  - descheduler/
+  - device-plugins/
+  - node-feature-discovery/
+  - node-problem-detector/
+  - system-kured/

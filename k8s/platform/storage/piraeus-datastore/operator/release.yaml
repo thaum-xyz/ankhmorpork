@@ -8,6 +8,13 @@ metadata:
     # serves every roaming PV.
     kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
+  # The storage pool this operator manages IS a topolvm thin pool, so the CSI
+  # driver has to be up first. This was a Kustomization-level dependsOn while
+  # each component had its own; inside one platform-storage Kustomization the
+  # ordering has to be between the releases, which helm-controller allows
+  # because both are in this namespace.
+  dependsOn:
+    - name: topolvm
   chart:
     spec:
       chart: piraeus
