@@ -51,7 +51,9 @@ put the object or artifact type first rather than the component name.
 
 ## Suspended components
 
-No Flux Kustomizations are currently declared suspended in Git. Check both the
+The component Kustomizations under `k8s/flux/platform/` are suspended in Git as
+tombstones: `platform-<domain>` reconciles their paths now, and each file goes
+once its live object is deleted. Check both the
 repository and live Flux state before changing suspension because live state can
 temporarily diverge during maintenance.
 

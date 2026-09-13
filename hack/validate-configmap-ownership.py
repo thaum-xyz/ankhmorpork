@@ -8,6 +8,12 @@
 # This bit once: alloy and kube-prometheus-stack both generated a ConfigMap
 # called "values" after alloy moved into platform-observability, and the
 # kube-prometheus-stack HelmRelease spent a day being handed alloy's config.
+#
+# Suspended Kustomizations are skipped. The failure this catches is two
+# reconcilers writing the same object, and a suspended one writes nothing, so
+# counting it would report a clash that cannot happen. It also makes the check
+# usable during a handover, where the object being retired and the one adopting
+# it necessarily render the same ConfigMaps until the first is deleted.
 
 import collections
 import json
@@ -30,7 +36,8 @@ manifests = run("git", "ls-files", "k8s/flux/*", "k8s/bootstrap/*").split()
 paths = set()
 for manifest in manifests:
     for line in run("yq", "-r",
-                    'select(.kind == "Kustomization") | .spec.path',
+                    'select(.kind == "Kustomization" and .spec.suspend != true)'
+                    ' | .spec.path',
                     manifest).splitlines():
         line = line.strip()
         if line and line != "null":

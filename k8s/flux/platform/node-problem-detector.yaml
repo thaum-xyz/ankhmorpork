@@ -6,7 +6,11 @@ metadata:
 spec:
   interval: 30m0s
   path: ./k8s/platform/cluster/node-problem-detector
-  prune: true
+  # Tombstone: platform-cluster reconciles this path now. Suspended and
+  # non-pruning so that deleting the live object leaves its inventory --
+  # pruning is inventory-based, and this one still holds every object.
+  prune: false
+  suspend: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

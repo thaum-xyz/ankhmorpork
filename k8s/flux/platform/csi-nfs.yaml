@@ -9,7 +9,11 @@ spec:
     - name: kyverno
   interval: 15m0s
   path: ./k8s/platform/storage/csi-nfs
-  prune: true
+  # Tombstone: platform-storage reconciles this path now. Suspended and
+  # non-pruning so that deleting the live object leaves its inventory --
+  # pruning is inventory-based, and this one still holds every object.
+  prune: false
+  suspend: true
   sourceRef:
     kind: GitRepository
     name: ankhmorpork

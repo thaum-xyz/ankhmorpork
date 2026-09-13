@@ -1,0 +1,33 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: platform-cluster
+  namespace: platform-cluster
+  annotations:
+    kubernetes.io/description: >-
+      Node and cluster lifecycle: everything listed in k8s/platform/cluster/kustomization.yaml.
+
+      The object lives in platform-cluster rather than flux-system so that the
+      namespace is the unit the reconciler identity is keyed to, not just the
+      one the workloads land in. It reads the GitRepository in this namespace
+      and applies as this namespace's flux-reconciler, both of which
+      --no-cross-namespace-refs and --default-service-account resolve here and
+      nowhere else; both are created by the `namespaces` Kustomization, because
+      this one cannot create the source it reads or the identity it uses.
+
+      No dependsOn, and none is possible: a Kustomization may only depend on one
+      in its own namespace, and the five domains are in five. What ordering the
+      platform needs comes from the layer above -- `platform` dependsOn `crds`,
+      so no domain object is created until the CRDs are established -- and from
+      HelmRelease.spec.dependsOn within a namespace.
+spec:
+  interval: 15m0s
+  path: ./k8s/platform/cluster
+  # Objects that must survive a prune say so themselves, with
+  # kustomize.toolkit.fluxcd.io/prune: disabled. That is finer than the
+  # component-wide prune: false it replaces, which also protected the
+  # HelmRepository and values ConfigMap beside the release.
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork
