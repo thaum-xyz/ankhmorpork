@@ -30,11 +30,23 @@ import os
 import subprocess
 import sys
 
-# Where a component may land instead of its domain namespace, and why.
-EXEMPT = {
+# A component whose WORKLOAD cannot leave its namespace, but whose Flux objects
+# have been consolidated into the domain namespace anyway. The HelmRelease sits
+# in platform-<domain> and carries targetNamespace; only that target is exempt,
+# and the HelmRepository and values ConfigMap beside it are checked normally.
+#
+# This is the split worth keeping: the interesting fact is where the workload
+# runs, so the check follows targetNamespace rather than being satisfied by the
+# custom resource having moved.
+EXEMPT_TARGET = {
     "k8s/platform/network/cilium":
         ("kube-system", "the CNI: nothing else schedules until it is up, and its "
                         "node agent is addressed by kube-system service accounts"),
+}
+
+# A component not consolidated at all -- every object it renders, Flux plumbing
+# included, still lives in the namespace named here.
+EXEMPT_COMPONENT = {
     "k8s/platform/cluster/flux-system":
         ("flux-system", "Flux must reconcile before and without the platform it "
                         "installs, including this check"),
@@ -81,7 +93,9 @@ for path in sorted(paths):
         # Kustomization, which has no single expected namespace.
         continue
     domain = parts[2]
-    expected, reason = EXEMPT.get("/".join(parts[:4]), (f"platform-{domain}", None))
+    component = "/".join(parts[:4])
+    domain_ns = f"platform-{domain}"
+    expected = EXEMPT_COMPONENT.get(component, (domain_ns, None))[0]
 
     rendered = run("kustomize", "build", path)
     if not rendered.strip():
@@ -97,17 +111,47 @@ for path in sorted(paths):
             continue
         meta = doc.get("metadata") or {}
         found = meta.get("namespace")
+        name = meta.get("name")
+        kind = doc.get("kind")
+
+        spec = doc.get("spec") or {}
+        target = spec.get("targetNamespace")
+
+        # A HelmRelease that sets targetNamespace and nothing else is a trap.
+        # storageNamespace defaults to the HelmRelease's own namespace and
+        # releaseName to "[TargetNamespace-]Name", so a release that was moved
+        # this way and later loses either pin does not fail -- Helm simply stops
+        # recognising the existing release and installs a second copy beside it.
+        # For cilium that is a second CNI. Renders clean, passes kubeconform,
+        # and is only visible in `helm list`, so it is asserted here.
+        if kind == "HelmRelease" and target:
+            for field in ("storageNamespace", "releaseName"):
+                if not spec.get(field):
+                    problems.append((path, f"{field} to be set (targetNamespace is)",
+                                     "unset", kind, name))
+
+        if kind == "HelmRelease" and component in EXEMPT_TARGET and target:
+            # Two separate assertions: the object belongs in the domain
+            # namespace like any other, and its target is the exempted one.
+            allowed = EXEMPT_TARGET[component][0]
+            if found != domain_ns:
+                problems.append((path, domain_ns, found, kind, name))
+            if target != allowed:
+                problems.append((path, allowed, target,
+                                 kind + " targetNamespace", name))
+            continue
+
         if found != expected:
-            problems.append((path, expected, found, doc.get("kind"), meta.get("name")))
+            problems.append((path, expected, found, kind, name))
 
 print(f"  platform components checked: {checked}"
-      f" ({len(EXEMPT)} exempt by name)")
+      f" ({len(EXEMPT_TARGET)} exempt target, {len(EXEMPT_COMPONENT)} exempt component)")
 
 if problems:
     print("  RENDERED OUTSIDE THEIR DOMAIN NAMESPACE:")
     for path, expected, found, kind, name in problems:
         print(f"    {path}: {kind}/{name} in {found}, expected {expected}")
-    print("  Move it, or add it to EXEMPT in this file with the reason it cannot.")
+    print("  Move it, or add it to EXEMPT_TARGET / EXEMPT_COMPONENT here with the\n  reason it cannot.")
     sys.exit(1)
 
 print("  every platform component renders into its domain namespace")

@@ -4,6 +4,26 @@ kind: HelmRelease
 metadata:
   name: cilium
 spec:
+  # The object lives in platform-network with the rest of the domain; the CNI
+  # itself cannot, so the release is still installed into kube-system.
+  targetNamespace: kube-system
+  # Both of these look redundant beside targetNamespace and are not. Each
+  # defaults to something derived from THIS object, and letting either default
+  # makes Helm see a different release and install a second copy of the CNI
+  # beside the running one:
+  #
+  #   storageNamespace defaults to the HelmRelease's own namespace, so without
+  #   it the release record moves to platform-network and the one in kube-system
+  #   is orphaned.
+  #
+  #   releaseName defaults to "[TargetNamespace-]Name", so without it the
+  #   release is renamed kube-system-cilium.
+  #
+  # Pinned to what is already live -- `helm -n kube-system list` shows cilium --
+  # so helm-controller finds the existing release and upgrades it. Do not remove
+  # them because they look like noise.
+  storageNamespace: kube-system
+  releaseName: cilium
   chart:
     spec:
       chart: cilium
@@ -11,7 +31,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: cilium
-        namespace: kube-system
+        namespace: platform-network
       interval: 5m
   interval: 5m
   timeout: 20m
