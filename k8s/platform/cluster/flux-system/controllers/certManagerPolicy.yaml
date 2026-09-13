@@ -5,7 +5,6 @@ metadata:
     app.kubernetes.io/instance: flux-system
     app.kubernetes.io/part-of: flux
   name: allow-cert-manager
-  namespace: flux-system
 spec:
   ingress:
     - from:
