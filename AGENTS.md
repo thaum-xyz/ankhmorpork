@@ -77,9 +77,10 @@ Alertmanager disabled), blackbox-exporter, uptimerobot. The stores get their own
 namespaces: `datalake-metrics` (Prometheus, Pyrra), `datalake-logs` (Loki),
 `datalake-alerts` (Alertmanager, github-receiver), `grafana`.
 
-Operator CRDs come from the `prometheus-operator-crds` HelmRelease, whose
-Kustomization sits in `k8s/bootstrap/` because nearly every component ships a
-ServiceMonitor or PrometheusRule. The platform group dependsOn it.
+Operator CRDs come from the `prometheus-operator-crds` HelmRelease in `k8s/crds/`,
+applied by the `crds` Kustomization declared in `k8s/bootstrap/` because nearly
+every component ships a ServiceMonitor or PrometheusRule. The platform group
+dependsOn it. The objects still render into `platform-observability`.
 
 Rules live with whatever produces or remediates their signal, the way k8up,
 cnpg and ups rules already do.

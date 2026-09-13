@@ -101,8 +101,9 @@ watch Kubernetes rather than any component here.
 
 ## CRDs are the one thing that cannot be layered
 
-`prometheus-operator-crds` is a separate Kustomization in `k8s/bootstrap/`, not in
-`platform`, and `platform` `dependsOn` it.
+The `crds` Kustomization is a layer of its own — declared in `k8s/bootstrap/`,
+applying `k8s/crds/` — rather than a component of `platform`, and `platform`
+`dependsOn` it.
 
 That is not an aesthetic choice. Nearly every component in the cluster ships a
 `ServiceMonitor`, `PodMonitor` or `PrometheusRule`, so those CRDs must be

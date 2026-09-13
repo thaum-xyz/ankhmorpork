@@ -83,16 +83,19 @@ until something else exists:
 
 | Component | Waits for | Why |
 | --- | --- | --- |
-| `platform` | `prometheus-operator-crds` | nearly everything ships a ServiceMonitor or PrometheusRule |
+| `platform` | `crds` | nearly everything ships a ServiceMonitor or PrometheusRule |
 | `kyverno-policies`, `cnpg-system`, `csi-nfs` | `kyverno` | policies need their CRDs; the others are validated by them |
 | `piraeus-datastore` | `topolvm`, `kyverno` | its storage pool *is* a topolvm thin pool |
 | `homer-services` | `homer` | it adds entries to a dashboard that must exist |
 
-`prometheus-operator-crds` sits in `k8s/bootstrap/` rather than in `platform`
-precisely because `platform` depends on it — a layer cannot depend on one of its
-own members.
+`crds` is declared in `k8s/bootstrap/` and applies `k8s/crds/`, rather than being
+a component of `platform`, precisely because `platform` depends on it — a layer
+cannot depend on one of its own members. Its manifests sit outside `k8s/platform/`
+for a second reason: everything under `k8s/platform/<domain>/` belongs to that
+domain's Kustomization, and a directory there owned by another layer is a rule
+with an exception.
 
-`prometheus-operator-crds` and `kyverno` are the only two with `wait: true`, and
+`crds` and `kyverno` are the only two with `wait: true`, and
 for the same reason: a dependency that is merely *applied* is not yet *usable*. A
 CRD has to be established before an object of that kind will be accepted, and
 admission control that is applied but not yet enforcing lets anything reconciled
@@ -105,7 +108,7 @@ makes deleting a directory delete the objects, and what makes the tutorial's
 cleanup step work. The ones that opt out are listed on the
 [reference page](../reference/flux-kustomizations.md), and they divide into two kinds.
 
-**The umbrellas** (`platform`, `apps`, `prometheus-operator-crds`, `namespaces`)
+**The umbrellas** (`platform`, `apps`, `crds`, `namespaces`)
 do not prune because a transient failure to render one of them would otherwise be
 read as "these components are gone" and cascade into deleting every component in
 the layer. For `namespaces` the stake is higher still: deleting a Namespace takes

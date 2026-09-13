@@ -1,0 +1,36 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crds
+  namespace: flux-system
+  annotations:
+    kubernetes.io/description: >-
+      Custom resource definitions every layer above depends on, from
+      ./k8s/crds. `platform` dependsOn this, so nothing in a domain is applied
+      until the kinds it ships exist.
+
+      It is a layer rather than a platform component because a layer cannot
+      depend on one of its own members. The manifests live outside k8s/platform/
+      for the same reason: everything under k8s/platform/<domain>/ belongs to
+      that domain's Kustomization, and a directory there owned by something else
+      is a rule with an exception the next reader has to know about.
+
+      The objects still render into platform-observability. Moving them would be
+      a Helm uninstall and reinstall, and this release's entire content is the
+      monitoring.coreos.com CRDs -- deleting a CRD deletes every custom resource
+      of that kind.
+
+      Ordering is also why there is no kustomization.yaml in ./k8s/crds: Flux
+      applies every manifest it finds there, recursively, so a CRD chart cannot
+      be silently skipped for want of a `resources:` entry.
+spec:
+  interval: 15m0s
+  path: ./k8s/crds
+  # NOTE: Prevent cascading deletion of every ServiceMonitor, PodMonitor and
+  # PrometheusRule in the cluster.
+  prune: false
+  wait: true
+  timeout: 10m
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

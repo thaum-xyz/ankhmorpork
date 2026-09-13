@@ -9,7 +9,7 @@ spec:
       version: "31.0.1"
       sourceRef:
         kind: HelmRepository
-        name: prometheus-community
+        name: prometheus-community-crds
       interval: 5m
   interval: 5m
   timeout: 10m

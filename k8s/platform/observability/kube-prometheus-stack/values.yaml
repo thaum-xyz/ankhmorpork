@@ -1,5 +1,5 @@
-# Schemas come from the prometheus-operator-crds HelmRelease, which the bootstrap
-# layer applies before this one.
+# Schemas come from the prometheus-operator-crds HelmRelease in k8s/crds/, which
+# the `crds` layer applies before this one.
 crds:
   enabled: false
 
