@@ -116,8 +116,10 @@ would leave an orphan behind on every edit. See
 
 ## What reconciliation actually costs
 
-The `GitRepository` polls every 60 seconds, and a GitHub webhook `Receiver`
-triggers it on push, so a merge normally lands in seconds rather than a minute.
+The `GitRepository` polls every 60 seconds, so a merge lands within a minute.
+There is no webhook: a `Receiver` may only name resources in its own namespace,
+so one in `flux-system` could never trigger the sources that belong to the other
+namespaces.
 
 The trap is that reconciling in the wrong order reports success while doing
 nothing. `flux reconcile kustomization <name>` acts on whatever revision the
