@@ -111,7 +111,7 @@ spec:
             - run
             - /etc/alloy/config.alloy
             - --storage.path=/var/lib/alloy
-          image: docker.io/grafana/alloy:v1.19.0
+          image: docker.io/grafana/alloy:v1.19.1
           name: alloy
           resources:
             limits:
