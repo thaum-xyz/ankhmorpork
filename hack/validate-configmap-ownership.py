@@ -29,16 +29,27 @@ def run(*cmd, stdin=None):
 
 os.chdir(run("git", "rev-parse", "--show-toplevel").strip())
 
-# git-tracked files only, so a Kustomization that has not been staged yet is
-# invisible here in the same way it is invisible to the other validators. Flux
-# Kustomizations live in k8s/bootstrap/ (the layers and the platform domains)
-# and beside each app's Namespace in k8s/namespaces/<app>/.
-manifests = run("git", "ls-files", "k8s/bootstrap/*", "k8s/namespaces/*").split()
+# Every Flux Kustomization manifest tracked in git, found by the API version it
+# declares rather than by where it sits. Globbing directories is what made this
+# check go quiet: it read k8s/flux/*, and when that tree was deleted and the app
+# Kustomizations moved to k8s/namespaces/<app>/sync.yaml it went on passing over
+# most of what it used to cover. Re-globbing the new directories fixes today and
+# breaks the next time; this repo has moved that layout three times in a
+# fortnight.
+def flux_kustomization_manifests():
+    tracked = run("git", "ls-files", "k8s/*.yaml", "k8s/**/*.yaml").split()
+    return [f for f in tracked
+            if "kustomize.toolkit.fluxcd.io/v1" in pathlib.Path(f).read_text()]
 
+
+# git-tracked files only, so a Kustomization that has not been staged yet is
+# invisible here in the same way it is invisible to the other validators.
 paths = set()
-for manifest in manifests:
+for manifest in flux_kustomization_manifests():
     for line in run("yq", "-r",
-                    'select(.kind == "Kustomization" and .spec.suspend != true)'
+                    'select(.kind == "Kustomization"'
+                    ' and (.apiVersion | test("^kustomize.toolkit.fluxcd.io/"))'
+                    ' and .spec.suspend != true)'
                     ' | .spec.path',
                     manifest).splitlines():
         line = line.strip()
@@ -62,7 +73,15 @@ for path in sorted(paths):
         meta = doc.get("metadata") or {}
         owner[(meta.get("namespace"), meta.get("name"))].add(path)
 
-print(f"  distinct ConfigMaps across all Kustomizations: {len(owner)}")
+print(f"  distinct ConfigMaps across all Kustomizations: {len(owner)}"
+      f", from {len(paths)} Kustomization paths")
+
+# A check that examined nothing is not a passing check, and this one's last
+# failure was exactly that: silent, and only visible as a count nobody was
+# reading.
+if not paths:
+    print("  NO KUSTOMIZATIONS FOUND -- discovery is broken")
+    sys.exit(1)
 
 clashes = {k: v for k, v in owner.items() if len(v) > 1}
 if clashes:
