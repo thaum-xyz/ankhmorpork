@@ -10,9 +10,11 @@ metadata:
       and k8s/platform/storage/.
 
       They are here rather than in the kyverno release because those objects
-      live in two domains, and a domain Kustomization cannot depend on one in
-      another namespace. `platform dependsOn crds` is the only ordering edge
-      that reaches both.
+      live in two domains, and neither can declare that it waits for a chart
+      installed by the other -- --no-cross-namespace-refs allows a dependsOn
+      only within a namespace. Nothing makes that ordering certain; what this
+      changes is what a cold start retries against, a CRD-only release with no
+      dependencies of its own rather than the whole kyverno stack.
 
       Version is not Renovate's to move on its own, and renovate.json disables
       it by name: this chart is the kyverno chart's own dependency, and CRDs
