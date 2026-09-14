@@ -125,10 +125,10 @@ namespaces: `datalake-metrics` (Prometheus, Pyrra), `datalake-logs` (Loki),
 
 Operator CRDs come from the `prometheus-operator-crds` HelmRelease in `k8s/crds/`,
 applied by the `crds` Kustomization declared in `k8s/bootstrap/` because nearly
-every component ships a ServiceMonitor or PrometheusRule. Nothing dependsOn it —
-the domains are in their own namespaces and `--no-cross-namespace-refs` forbids
-the edge — so a component whose CRDs are missing fails and retries. The objects
-still render into `platform-observability`.
+every component ships a ServiceMonitor or PrometheusRule. Only `platform-cluster`
+dependsOn it, being the one domain in the same namespace; `--no-cross-namespace-refs`
+forbids the other four, so a component whose CRDs are missing fails and retries.
+The objects still render into `platform-observability`.
 
 Rules live with whatever produces or remediates their signal, the way k8up,
 cnpg and ups rules already do.

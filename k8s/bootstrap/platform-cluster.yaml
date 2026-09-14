@@ -10,6 +10,24 @@ metadata:
       Reconciles in its own namespace, as that namespace's flux-reconciler;
       ordering between domains is in docs/explanation/flux-layering.md.
 spec:
+  # The only domain that can declare this, because `crds` is the one layer object
+  # sharing its namespace -- --no-cross-namespace-refs forbids the other four
+  # from naming it, so this is an asymmetry to leave alone rather than a pattern
+  # to spread.
+  #
+  # What it buys is the two PrometheusRules here, which on a cold start would
+  # otherwise fail until monitoring.coreos.com was established and be retried on
+  # the interval. It does NOT order the NodeFeatureRules: their CRDs come from
+  # the node-feature-discovery chart this same Kustomization installs, so they
+  # retry either way.
+  #
+  # What it costs: `crds` carries wait: true, so this domain now reconciles
+  # nothing at all while the CRD release is unhealthy -- and this domain is
+  # where flux2 lives. Already-running controllers keep working; what stops is
+  # applying changes to them. Suspend this object's dependsOn before debugging
+  # a stuck `crds`.
+  dependsOn:
+    - name: crds
   interval: 15m0s
   path: ./k8s/platform/cluster
   # Objects that must survive a prune carry kustomize.toolkit.fluxcd.io/prune: disabled.

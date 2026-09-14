@@ -6,11 +6,12 @@ metadata:
   annotations:
     kubernetes.io/description: >-
       Custom resource definitions every layer above depends on, from
-      ./k8s/crds. Nothing declares a dependsOn on it: the platform-<domain>
-      Kustomizations sit in other namespaces, where --no-cross-namespace-refs
-      forbids the edge, so a domain applied before a kind is established fails
-      that object and retries on its interval. `wait: true` is what makes Ready
-      here mean the kinds are usable.
+      ./k8s/crds. Only platform-cluster declares a dependsOn on it, because it
+      is the one domain sharing this namespace; --no-cross-namespace-refs
+      forbids the other four from naming it, so a domain applied before a kind
+      is established fails that object and retries on its interval. `wait: true`
+      is what makes Ready here mean the kinds are usable, and therefore what
+      makes that one edge worth having.
 
       It is a layer rather than a platform component because more than one
       domain uses what it ships and no domain can be ordered after another. The
