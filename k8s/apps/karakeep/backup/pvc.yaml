@@ -1,3 +1,5 @@
+# This namespace's restic repository: docs/explanation/app-backups.md.
+# excluded_from_alerts is stamped by mutate-nfs-pvc-alert-exclusion; do not add it.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -6,13 +8,6 @@ metadata:
     app.kubernetes.io/component: backup
     app.kubernetes.io/name: karakeep
 spec:
-  # This namespace's restic repository. Repositories stay per-namespace even
-  # though the password is shared: a corrupted one then costs a single
-  # namespace, restic check stays cheap, and concurrent backups never contend
-  # for the same repository lock over an NFSv3 mount with nolock.
-  #
-  # excluded_from_alerts is stamped by kyverno's mutate-nfs-pvc-alert-exclusion
-  # for every unifi-nas claim. Do not add it here.
   accessModes:
     - ReadWriteMany
   resources:

@@ -10,43 +10,19 @@ metadata:
 
       An app's directory holds its Namespace, the Kustomization that reconciles
       it and, where the app applies something cluster-scoped, a
-      ClusterRoleBinding; the GitRepository that Kustomization reads and the
-      `flux-reconciler` it applies as are generated from the Namespace's label.
-      A `platform-<domain>` directory holds those two as files beside the
-      Namespace, because they are on the bootstrap path. Either way they have to
-      exist BEFORE a Kustomization is created in the namespace -- it can create
-      neither the source it reads nor the identity it applies as -- so they
-      belong to whatever creates the namespace.
-
-      They live outside k8s/apps/<app>/ because a Namespace is a cluster-admin
-      object twice over. It is cluster-scoped, so an app Kustomization that
-      reconciles as a namespace-scoped ServiceAccount cannot apply one at all.
-      And its `group.rbac.thaum.xyz/<group>` labels ARE the access grant --
-      generate-group-rolebindings turns each into a RoleBinding for
-      `oidc:k8s:group:<group>` -- so leaving them in an app's own directory
-      would let a tenant who can merge there edit their own grant.
-
-      Platform Namespaces followed when they stopped being one-per-component.
-      A `platform-<domain>` Namespace is shared, so keeping it in any one
-      component's directory would make that component's `prune` the whole
-      domain's blast radius. The original reasons not to move them -- applied by
-      a cluster-admin identity anyway, no group labels to protect -- were
-      reasons it did not matter, not reasons against.
+      ClusterRoleBinding; its GitRepository and flux-reconciler are generated
+      from the Namespace's label. A `platform-<domain>` directory holds those
+      two as files, because they are on the bootstrap path. Why the directory
+      sits outside k8s/apps/<app>/, and why it is laid out the way it is:
+      docs/explanation/flux-layering.md.
 spec:
   interval: 15m0s
-  # Deliberately no kustomization.yaml in the target directory. There is
-  # nothing to transform, and without one Flux applies every manifest it finds --
-  # recursively, so a platform-<domain>/ subdirectory is picked up the same way:
-  # a Namespace added as a file cannot be silently skipped for want of a
-  # `resources:` entry. For the directory that holds the access grants, being
-  # unable to omit one by accident is worth more than a rendered build.
-  #
-  # It also means nothing here may carry a generated name or rely on a namespace
-  # transformer; every namespaced object states its own `metadata.namespace`.
+  # No kustomization.yaml in the target directory: Flux then applies every
+  # manifest it finds, so a Namespace cannot be silently skipped for want of a
+  # `resources:` entry, and every namespaced object states its own namespace.
   path: ./k8s/namespaces
-  # NOTE: deleting a Namespace cascades to everything inside it, so removal is
-  # deliberately not a one-line diff. Take a namespace out of git, then delete
-  # the object explicitly.
+  # Deleting a Namespace cascades to everything inside it, so removal is two
+  # acts: take it out of git, then delete the object.
   prune: false
   sourceRef:
     kind: GitRepository

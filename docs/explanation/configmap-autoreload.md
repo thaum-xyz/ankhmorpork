@@ -55,10 +55,10 @@ the Deployments that use it"* is a **mutate-existing** rule, because an admissio
 webhook can only mutate **the object being admitted** — and here the admitted
 object is the ConfigMap, not the Deployment.
 
-Mutate-existing is executed by Kyverno's background controller, which is
-[deliberately disabled](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/controllers/values.yaml)
-in this cluster. Enabled anyway, such a rule parks UpdateRequests in Pending
-forever — a failure already recorded on `mutate-nfs-pvc-alert-exclusion`.
+Mutate-existing is executed by Kyverno's background controller, which was
+disabled when this was written and has since been enabled for the generating
+policies. That removes the original objection but not the shape: the inverted
+trigger below needs neither the controller nor any new RBAC, so it stayed.
 
 ### Invert the trigger
 

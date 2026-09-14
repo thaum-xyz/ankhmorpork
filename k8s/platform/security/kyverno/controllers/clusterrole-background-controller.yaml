@@ -3,35 +3,24 @@ kind: ClusterRole
 metadata:
   name: kyverno:background-controller:tenant-rbac
   labels:
-    # kyverno:background-controller is an aggregated role; this is the
-    # documented extension point, and the admission and cleanup controllers use
-    # the same pattern. Extending it here rather than through
-    # backgroundController.rbac.clusterRole.extraResources in the chart values
-    # keeps a privilege grant reviewable as an RBAC object instead of buried in
-    # a Helm values file.
+    # kyverno:background-controller is an aggregated role and this is its
+    # documented extension point. An RBAC object here is a reviewable grant; the
+    # chart's extraResources value would bury the same grant in Helm values.
     rbac.kyverno.io/aggregate-to-background-controller: "true"
   annotations:
     kubernetes.io/description: >-
       Lets the background controller bind the roles the generating policies
-      need: `edit` and `view` for generate-group-rolebindings, `cluster-admin`
-      for generate-flux-reconciler. RBAC's escalation check rejects creating a
-      RoleBinding to a role the creator neither holds nor may `bind`, and the
-      chart grants the controller no `bind` at all. It also lets it write the
-      two kinds those policies generate that are not bindings, ServiceAccounts
-      and GitRepositories.
+      need -- `edit` and `view` for generate-group-rolebindings, `cluster-admin`
+      for generate-flux-reconciler -- and write the kinds those policies generate
+      that are not bindings. RBAC's escalation check rejects a RoleBinding to a
+      role the creator neither holds nor may `bind`, and the chart grants no
+      `bind` at all; `resourceNames` caps what any policy may reference.
 
-      `resourceNames` caps which roles a policy may reference, and each addition
-      raises that cap for every policy at once -- so add one only with the reason
-      written beside it.
-
-      But the ceiling that matters is not this list. It is the ABSENCE of any
-      `clusterrolebindings` verb in this role: every binding the controller can
-      create is a RoleBinding, and a RoleBinding confers only the namespaced
-      half of whatever role it names, in one namespace. So the worst a policy
-      can produce is namespace-admin somewhere -- true of `cluster-admin` here
-      exactly as it was of the bespoke role this replaced. Namespaces that need
-      a cluster-scoped identity are hand-written, and adding
-      `clusterrolebindings` here would collapse that distinction.
+      The ceiling that matters is the ABSENCE of any `clusterrolebindings` verb
+      here: every binding the controller can create is a RoleBinding, which
+      confers only the namespaced half of a role in one namespace, so the worst
+      a policy can produce is namespace-admin somewhere. Adding that verb would
+      turn the `cluster-admin` entry into real cluster-admin. Do not.
 rules:
   - apiGroups:
       - rbac.authorization.k8s.io
@@ -42,34 +31,15 @@ rules:
     resourceNames:
       - edit
       - view
-      # generate-flux-reconciler binds this to each tenant namespace's
-      # flux-reconciler ServiceAccount. This DOES move the ceiling above `edit`,
-      # and knowingly: a generated RoleBinding to it is namespace-admin.
-      #
-      # It does NOT put cluster-admin within the controller's reach, which is
-      # the thing worth protecting. No `clusterrolebindings` verb appears
-      # anywhere in this role, so every binding it can create is a RoleBinding,
-      # and a RoleBinding confers only the namespaced half of whatever role it
-      # names, in one namespace. Naming `cluster-admin` here therefore buys a
-      # policy no more than naming any `*` on `*` role would -- which is why a
-      # bespoke role was dropped rather than kept as a fig leaf.
-      #
-      # The corollary is the invariant to defend: adding `clusterrolebindings`
-      # to this role would turn this entry into real cluster-admin. Do not.
-      # Namespaces that genuinely need a cluster-scoped identity -- the platform
-      # domains, and the four apps whose charts install cluster-scoped objects --
-      # are hand-written in k8s/namespaces/<name>/ for exactly that reason.
-      #
-      # validate-flux-role-labels rejects any other value at admission, so this
-      # list and that policy have to change together: a name allowed there but
-      # missing here fails inside a background UpdateRequest, where nothing
-      # surfaces it.
+      # generate-flux-reconciler binds this to each labelled namespace's
+      # flux-reconciler. Knowingly above `edit`: a RoleBinding to it is
+      # namespace-admin, and no wider, for the reason in the description.
+      # validate-flux-role-labels allows exactly this list, so the two change
+      # together: a name allowed there but missing here fails inside a
+      # background UpdateRequest, where nothing surfaces it.
       - cluster-admin
-  # generate-flux-reconciler creates the ServiceAccount as well as its binding.
-  # Creating one confers nothing by itself -- a fresh ServiceAccount holds no
-  # rights -- so this grants no privilege; what the SA may do is decided entirely
-  # by the `bind` list above. Read verbs for the same reason rolebindings need
-  # them, below.
+  # Creating a ServiceAccount confers nothing; what it may do is decided by the
+  # `bind` list above. Read verbs for the same reason rolebindings need them.
   - apiGroups:
       - ""
     resources:
@@ -82,13 +52,10 @@ rules:
       - update
       - patch
       - delete
-  # generate-flux-reconciler also creates the GitRepository each labelled
-  # namespace's Kustomizations read. Wider than a ServiceAccount, and knowingly:
-  # a source decides what a Kustomization applies, so a policy that rewrote
-  # spec.url would have every labelled namespace's reconciler apply whatever it
-  # points at -- namespace-admin in each, nothing across, the same reach the
-  # `bind` list above already concedes. The ceiling on both is who may write
-  # policies.
+  # A source decides what a Kustomization applies, so a policy rewriting spec.url
+  # would have every labelled namespace's reconciler apply whatever it points at
+  # -- namespace-admin in each, nothing across, the reach the `bind` list already
+  # concedes. The ceiling on both is who may write policies.
   - apiGroups:
       - source.toolkit.fluxcd.io
     resources:
@@ -101,16 +68,11 @@ rules:
       - update
       - patch
       - delete
-  # The chart's core role grants create/update/patch/delete on rolebindings but
-  # no read verbs, and generation reads before it writes -- it looks for an
-  # existing object to decide between create and update, and synchronize needs
-  # to see drift. Without these, every generate fails with
-  #   permission denied: rolebindings ... is forbidden: ... cannot get resource
-  #   "rolebindings" ... in the namespace "<ns>"
-  # inside a background UpdateRequest, where nothing surfaces it at admission.
-  #
-  # This widens no ceiling: the controller can already write RoleBindings, and
-  # `bind` above still caps which ClusterRole any of them may reference.
+  # The chart grants write verbs on rolebindings but no read verbs, and
+  # generation reads before it writes -- to choose create or update, and for
+  # synchronize to see drift. Without these every generate fails with a
+  # "cannot get resource rolebindings" Forbidden inside a background
+  # UpdateRequest, where nothing surfaces it at admission.
   - apiGroups:
       - rbac.authorization.k8s.io
     resources:

@@ -17,16 +17,9 @@ spec:
   #   - an empty value, which would bind a ClusterRole named "" rather than
   #     nothing.
   #
-  # `cluster-admin` is the only value today, and it does not mean what it looks
-  # like: the policy generates a RoleBinding, which confers only the namespaced
-  # half of those rules and only in that namespace. A bespoke `*` on `*` role
-  # was tried here first and bought nothing -- bound the same way it granted the
-  # same thing, so the second name only obscured that the binding kind is the
-  # whole boundary.
-  #
-  # A namespace whose Flux objects install cluster-scoped resources cannot be
-  # served by this at all, at any value. Those are hand-written in
-  # k8s/namespaces/<name>/ with a ClusterRoleBinding.
+  # What `cluster-admin` does and does not mean through a RoleBinding, and why a
+  # namespace that installs cluster-scoped objects needs a ClusterRoleBinding as
+  # well: docs/reference/annotations.md, under flux.rbac.thaum.xyz/role.
   #
   # Scoped to namespaces that actually carry the label, so it can never block
   # creating an ordinary namespace.
