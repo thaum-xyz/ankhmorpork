@@ -14,7 +14,8 @@ That structure is three layers deep, and the shape is not arbitrary.
 k8s/bootstrap/        applied once by hand: the GitRepository and the umbrellas
   ├── crds            the kinds every layer above it needs
   ├── namespaces      every namespace, and each app's Kustomization beside it
-  └── platform        the cluster's machinery, one Kustomization per domain
+  └── platform-<domain>  the cluster's machinery, one Kustomization per domain,
+                        each in the namespace it reconciles
 ```
 
 The workloads are not a fourth umbrella. Each app's Kustomization is created by
@@ -133,15 +134,13 @@ no Kustomization reconciles from it any more.
 
 ## Ordering, where it genuinely matters
 
-Only a handful of Kustomizations declare `dependsOn` — the
-[reference page](../reference/flux-kustomizations.md) lists them — and two of those
-are the umbrellas themselves. Everything else is order-independent by construction;
-the exceptions are all cases where an object cannot be *accepted* by the API server
-until something else exists:
+Almost nothing declares `dependsOn` — the
+[reference page](../reference/flux-kustomizations.md) lists what does. Everything
+else is order-independent by construction; the exceptions are all cases where an
+object cannot be *accepted* by the API server until something else exists:
 
 | Object | Waits for | Why |
 | --- | --- | --- |
-| `platform` | `crds` | nearly everything ships a ServiceMonitor or PrometheusRule |
 | `homer-services` | `homer` | it adds entries to a dashboard that must exist |
 | HelmRelease `piraeus-operator` | HelmRelease `topolvm` | its storage pool *is* a topolvm thin pool |
 | HelmRelease `cnpg-versity-gw` | HelmRelease `csi-nfs` | its claim is `unifi-nas`, and a policy rejects the PVC until the class exists |
@@ -149,23 +148,25 @@ until something else exists:
 The last two are between HelmReleases rather than Kustomizations because the
 domains cannot depend on each other: `--no-cross-namespace-refs` lets a Flux
 object name a `dependsOn` target only in its own namespace, and each domain is in
-a different one. Ordering *between* domains has to come from the layer above
-them, which is what `platform dependsOn crds` is.
+a different one. Nor can a domain wait for `crds`, for the same reason. Ordering
+between domains, and between a domain and the kinds it needs, is therefore not
+declared anywhere. On a cold start an object whose kind has not been established
+fails to apply and is retried on its Kustomization's interval, while everything
+else in the domain applies in the same pass, because Flux collects per-object
+errors rather than abandoning the set.
 
-One ordering constraint has no expression at all. `csi-nfs`, `piraeus-datastore`
-and `cnpg-system` ship `policies.kyverno.io` objects whose CRDs come from the
-kyverno chart in another domain, and the kyverno repository publishes no
-CRD-only chart to hoist into `k8s/crds/`. On a cold bootstrap those objects fail
-to apply and are retried each interval until kyverno installs; everything else in
-the domain applies in the same pass, because Flux collects per-object errors
-rather than abandoning the set.
+The kyverno policies are the sharpest case of that. `csi-nfs`,
+`piraeus-datastore` and `cnpg-system` ship `policies.kyverno.io` objects whose
+CRDs come from the kyverno chart in another domain, and the kyverno repository
+publishes no CRD-only chart to hoist into `k8s/crds/`, so those objects retry
+until kyverno installs.
 
 `crds` is declared in `k8s/bootstrap/` and applies `k8s/crds/`, rather than being
-a component of `platform`, precisely because `platform` depends on it — a layer
-cannot depend on one of its own members. Its manifests sit outside `k8s/platform/`
-for a second reason: everything under `k8s/platform/<domain>/` belongs to that
-domain's Kustomization, and a directory there owned by another layer is a rule
-with an exception.
+a component of one domain, because more than one domain uses what it ships and
+no domain can be ordered after another. Its manifests sit outside
+`k8s/platform/` for a second reason: everything under `k8s/platform/<domain>/`
+belongs to that domain's Kustomization, and a directory there owned by another
+layer is a rule with an exception.
 
 `crds` and `kyverno` are the only two with `wait: true`, and
 for the same reason: a dependency that is merely *applied* is not yet *usable*. A
@@ -180,10 +181,9 @@ makes deleting a directory delete the objects, and what makes the tutorial's
 cleanup step work. The ones that opt out are listed on the
 [reference page](../reference/flux-kustomizations.md), and they divide into two kinds.
 
-**The umbrellas** (`platform`, `crds`, `namespaces`)
-do not prune because a transient failure to render one of them would otherwise be
-read as "these components are gone" and cascade into deleting every component in
-the layer. For `namespaces` the stake is higher still: deleting a Namespace takes
+**The layers** (`crds`, `namespaces`) do not prune because a transient failure to
+render one of them would otherwise be read as "these components are gone" and
+cascade into deleting everything in the layer. For `namespaces` the stake is higher still: deleting a Namespace takes
 everything inside it, so removing one is deliberately two acts — drop the file,
 then delete the object.
 
@@ -227,7 +227,7 @@ it. The source has to be refreshed first:
 flux reconcile source git ankhmorpork
 flux -n <app> reconcile kustomization <app>                  # an app, in its own namespace
 flux -n platform-<domain> reconcile kustomization platform-<domain>
-flux -n platform-cluster reconcile kustomization platform    # an umbrella
+flux -n platform-cluster reconcile kustomization crds        # a layer: crds or namespaces
 ```
 
 For a component whose values come from a `configMapGenerator`, there is a third

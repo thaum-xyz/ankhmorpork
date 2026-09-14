@@ -30,8 +30,10 @@ def run(*cmd, stdin=None):
 os.chdir(run("git", "rev-parse", "--show-toplevel").strip())
 
 # git-tracked files only, so a Kustomization that has not been staged yet is
-# invisible here in the same way it is invisible to the other validators.
-manifests = run("git", "ls-files", "k8s/flux/*", "k8s/bootstrap/*").split()
+# invisible here in the same way it is invisible to the other validators. Flux
+# Kustomizations live in k8s/bootstrap/ (the layers and the platform domains)
+# and beside each app's Namespace in k8s/namespaces/<app>/.
+manifests = run("git", "ls-files", "k8s/bootstrap/*", "k8s/namespaces/*").split()
 
 paths = set()
 for manifest in manifests:

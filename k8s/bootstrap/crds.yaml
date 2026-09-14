@@ -6,14 +6,18 @@ metadata:
   annotations:
     kubernetes.io/description: >-
       Custom resource definitions every layer above depends on, from
-      ./k8s/crds. `platform` dependsOn this, so nothing in a domain is applied
-      until the kinds it ships exist.
+      ./k8s/crds. Nothing declares a dependsOn on it: the platform-<domain>
+      Kustomizations sit in other namespaces, where --no-cross-namespace-refs
+      forbids the edge, so a domain applied before a kind is established fails
+      that object and retries on its interval. `wait: true` is what makes Ready
+      here mean the kinds are usable.
 
-      It is a layer rather than a platform component because a layer cannot
-      depend on one of its own members. The manifests live outside k8s/platform/
-      for the same reason: everything under k8s/platform/<domain>/ belongs to
-      that domain's Kustomization, and a directory there owned by something else
-      is a rule with an exception the next reader has to know about.
+      It is a layer rather than a platform component because more than one
+      domain uses what it ships and no domain can be ordered after another. The
+      manifests live outside k8s/platform/ for the same reason: everything under
+      k8s/platform/<domain>/ belongs to that domain's Kustomization, and a
+      directory there owned by something else is a rule with an exception the
+      next reader has to know about.
 
       The objects still render into platform-observability. Moving them would be
       a Helm uninstall and reinstall, and this release's entire content is the

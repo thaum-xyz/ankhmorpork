@@ -90,7 +90,7 @@ os.chdir(run("git", "rev-parse", "--show-toplevel").strip())
 # git-tracked only, matching the other validators: a component that has not been
 # staged is invisible here exactly as it is to `make validate`.
 paths = set()
-for manifest in run("git", "ls-files", "k8s/flux/platform/*", "k8s/bootstrap/*").split():
+for manifest in run("git", "ls-files", "k8s/bootstrap/*").split():
     for line in run("yq", "-r",
                     'select(.kind == "Kustomization") | .spec.path',
                     manifest).splitlines():
