@@ -16,3 +16,13 @@ metadata:
     # dropping it from a Kustomization's inventory would delete the namespace
     # and everything inside it.
     kustomize.toolkit.fluxcd.io/prune: disabled
+  labels:
+    # Pod Security Admission, deliberately `privileged` rather than `baseline`:
+    # kured and node-problem-detector run privileged with
+    # hostPID to reboot and inspect the node; nfd, the GPU plugin and the module
+    # signing labeler read the host filesystem.
+    #
+    # Set explicitly even though it matches the cluster default, so that the
+    # exemption is a reviewable line rather than an absence, and so nobody
+    # tightens it without reading why.
+    pod-security.kubernetes.io/enforce: privileged

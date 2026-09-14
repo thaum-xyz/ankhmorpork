@@ -15,3 +15,11 @@ metadata:
     # the namespaced half of them and only inside this namespace, so this is
     # namespace-admin here and nothing at all anywhere else.
     flux.rbac.thaum.xyz/role: cluster-admin
+    # Pod Security Admission, deliberately `privileged` rather than `baseline`:
+    # minidlna needs hostNetwork: SSDP discovery is broadcast-based
+    # and does not survive a pod network.
+    #
+    # Set explicitly even though it matches the cluster default, so that the
+    # exemption is a reviewable line rather than an absence, and so nobody
+    # tightens it without reading why.
+    pod-security.kubernetes.io/enforce: privileged
