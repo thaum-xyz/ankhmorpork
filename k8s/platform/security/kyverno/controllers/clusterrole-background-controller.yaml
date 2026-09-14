@@ -82,12 +82,13 @@ rules:
       - update
       - patch
       - delete
-  # generate-flux-source creates the GitRepository each labelled namespace's
-  # Kustomizations read. Wider than a ServiceAccount, and knowingly: a source
-  # decides what a Kustomization applies, so a policy that rewrote spec.url
-  # would have every labelled namespace's reconciler apply whatever it points
-  # at -- namespace-admin in each, nothing across, the same reach the `bind`
-  # list above already concedes. The ceiling on both is who may write policies.
+  # generate-flux-reconciler also creates the GitRepository each labelled
+  # namespace's Kustomizations read. Wider than a ServiceAccount, and knowingly:
+  # a source decides what a Kustomization applies, so a policy that rewrote
+  # spec.url would have every labelled namespace's reconciler apply whatever it
+  # points at -- namespace-admin in each, nothing across, the same reach the
+  # `bind` list above already concedes. The ceiling on both is who may write
+  # policies.
   - apiGroups:
       - source.toolkit.fluxcd.io
     resources:

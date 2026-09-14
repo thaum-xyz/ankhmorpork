@@ -14,4 +14,3 @@ resources:
   - validate-reconciler-sa-usage.yaml
   - validate-flux-role-labels.yaml
   - generate-flux-reconciler.yaml
-  - generate-flux-source.yaml

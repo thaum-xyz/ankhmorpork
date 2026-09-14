@@ -44,7 +44,7 @@ policy matched.
 | **Type** | Label |
 | **Set on** | `Namespace` |
 | **Value** | A ClusterRole name; every app namespace carries `cluster-admin` |
-| **Read by** | `generate-flux-reconciler` and `generate-flux-source` (Kyverno `GeneratingPolicy`) |
+| **Read by** | `generate-flux-reconciler` (Kyverno `GeneratingPolicy`) |
 | **Effect** | Generates the `flux-reconciler` ServiceAccount there, a **RoleBinding** giving it that ClusterRole, and the `GitRepository` its Kustomizations read |
 
 The value names the *rules*, not the reach. A RoleBinding confers only the

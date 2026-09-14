@@ -8,9 +8,8 @@ platform-owned and holds what has to exist before the app can reconcile — the
 `ClusterRoleBinding` where the app needs one. The `GitRepository` that
 Kustomization reads and the `flux-reconciler` identity it applies as are not
 files: Kyverno generates both from the Namespace's `flux.rbac.thaum.xyz/role`
-label (`generate-flux-source`, `generate-flux-reconciler`). `k8s/apps/<app>/` is
-what `sync.yaml` reconciles, and is the tenant's. That directory line is the
-review boundary.
+label, through `generate-flux-reconciler`. `k8s/apps/<app>/` is what `sync.yaml`
+reconciles, and is the tenant's. That directory line is the review boundary.
 
 A platform component works the same way one level up: it is a directory listed
 in `k8s/platform/<domain>/kustomization.yaml`, reconciled by the
