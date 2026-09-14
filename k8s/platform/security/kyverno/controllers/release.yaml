@@ -28,3 +28,26 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values-kyverno
+  # The eleven policies.kyverno.io CRDs are the crds layer's, installed there
+  # from upstream's kyverno-api chart so that both domains declaring kyverno
+  # policies are ordered behind them. This release still renders them -- the
+  # chart gates its `crds` and `kyverno-api` subcharts on one `crds.install`
+  # switch, with no way to disable half -- so they are dropped from the
+  # manifest here instead. Two Helm releases cannot own the same object; if
+  # this patch ever stops matching, the kyverno release fails to upgrade with
+  # `invalid ownership metadata` rather than quietly taking them over.
+  #
+  # The name is a regex over the whole group, so a CRD upstream adds to it
+  # arrives via kyverno-api without a change here.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: CustomResourceDefinition
+              name: ".*\\.policies\\.kyverno\\.io"
+            patch: |
+              $patch: delete
+              apiVersion: apiextensions.k8s.io/v1
+              kind: CustomResourceDefinition
+              metadata:
+                name: placeholder

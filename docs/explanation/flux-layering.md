@@ -142,6 +142,7 @@ object cannot be *accepted* by the API server until something else exists:
 | Object | Waits for | Why |
 | --- | --- | --- |
 | `platform-cluster` | `crds` | its PrometheusRules need `monitoring.coreos.com` established |
+| `crds` | `namespaces` | its own releases render into `platform-<domain>` |
 | `homer-services` | `homer` | it adds entries to a dashboard that must exist |
 | HelmRelease `piraeus-operator` | HelmRelease `topolvm` | its storage pool *is* a topolvm thin pool |
 | HelmRelease `linstor-cluster` | HelmRelease `piraeus-operator` | the operator reconciles the cluster |
@@ -165,11 +166,25 @@ established fails to apply and is retried on its Kustomization's interval, while
 everything else in the domain applies in the same pass, because Flux collects
 per-object errors rather than abandoning the set.
 
-The kyverno policies are the sharpest case of that. `csi-nfs`,
-`piraeus-datastore` and `cnpg-system` ship `policies.kyverno.io` objects whose
-CRDs come from the kyverno chart in another domain, and the kyverno repository
-publishes no CRD-only chart to hoist into `k8s/crds/`, so those objects retry
-until kyverno installs.
+The kyverno policies were the sharpest case of that, and are the reason
+kyverno's CRDs are not installed by the kyverno chart. `csi-nfs`,
+`piraeus-datastore` and `cnpg-system` ship `policies.kyverno.io` objects, and so
+does platform-security. `k8s/crds/kyverno` establishes those kinds from
+upstream's separate `kyverno-api` chart -- the same chart the kyverno chart
+pulls in as a dependency, so the CRDs are the ones the controllers expect.
+
+Four of the five domains still cannot declare that they wait for it, so this
+buys convergence rather than ordering: what a cold start retries against is a
+CRD-only release with no dependencies of its own, instead of the whole kyverno
+stack with its controllers and webhooks.
+
+The kyverno chart gates that subchart and its own on a single `crds.install`,
+with no way to disable half, so the kyverno release drops those eleven CRDs from
+its manifest with a `$patch: delete` post-renderer instead. Everything outside
+`policies.kyverno.io` it still installs and upgrades itself: those kinds are
+used by no other domain, so nothing needs them earlier, and leaving them with
+the chart keeps them in lockstep with the controllers that serve them without a
+vendored copy to go stale.
 
 `crds` is declared in `k8s/bootstrap/` and applies `k8s/crds/`, rather than being
 a component of one domain, because more than one domain uses what it ships and
@@ -178,11 +193,9 @@ no domain can be ordered after another. Its manifests sit outside
 belongs to that domain's Kustomization, and a directory there owned by another
 layer is a rule with an exception.
 
-`crds` and `kyverno` are the only two with `wait: true`, and
-for the same reason: a dependency that is merely *applied* is not yet *usable*. A
-CRD has to be established before an object of that kind will be accepted, and
-admission control that is applied but not yet enforcing lets anything reconciled
-into the gap slip past the policies unchecked.
+`crds` is the only Kustomization with `wait: true`: a dependency that is merely
+*applied* is not yet *usable*, and a CRD has to be established before an object
+of that kind will be accepted.
 
 ## Pruning, and the exceptions
 
