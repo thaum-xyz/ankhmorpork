@@ -10,7 +10,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | --- | --- |
 | **`prune: false`** | `crds`, `namespaces` |
 | **`wait: true`** | `crds` |
-| **Declare `dependsOn`** | `homer-services` |
+| **Declare `dependsOn`** | `platform-cluster`, `homer-services` |
 | **Suspended in git** | none |
 
 ## Bootstrap — applied once by hand
@@ -19,7 +19,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | --- | --- | --- | --- | --- | --- |
 | `crds` | [`k8s/crds`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/crds) | `15m0s` | **no** | **yes** (10m) | — |
 | `namespaces` | [`k8s/namespaces`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/namespaces) | `15m0s` | **no** | no | — |
-| `platform-cluster` | [`k8s/platform/cluster`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster) | `15m0s` | yes | no | — |
+| `platform-cluster` | [`k8s/platform/cluster`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/cluster) | `15m0s` | yes | no | `crds` |
 | `platform-network` | [`k8s/platform/network`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/network) | `15m0s` | yes | no | — |
 | `platform-observability` | [`k8s/platform/observability`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/observability) | `15m0s` | yes | no | — |
 | `platform-security` | [`k8s/platform/security`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/platform/security) | `15m0s` | yes | no | — |

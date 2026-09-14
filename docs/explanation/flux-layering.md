@@ -141,20 +141,29 @@ object cannot be *accepted* by the API server until something else exists:
 
 | Object | Waits for | Why |
 | --- | --- | --- |
+| `platform-cluster` | `crds` | its PrometheusRules need `monitoring.coreos.com` established |
 | `homer-services` | `homer` | it adds entries to a dashboard that must exist |
 | HelmRelease `piraeus-operator` | HelmRelease `topolvm` | its storage pool *is* a topolvm thin pool |
 | HelmRelease `linstor-cluster` | HelmRelease `piraeus-operator` | the operator reconciles the cluster |
 | HelmRelease `cnpg-versity-gw` | HelmRelease `csi-nfs` | its claim is `unifi-nas`, and a policy rejects the PVC until the class exists |
 
-The last two are between HelmReleases rather than Kustomizations because the
+Three of those are between HelmReleases rather than Kustomizations because the
 domains cannot depend on each other: `--no-cross-namespace-refs` lets a Flux
 object name a `dependsOn` target only in its own namespace, and each domain is in
-a different one. Nor can a domain wait for `crds`, for the same reason. Ordering
-between domains, and between a domain and the kinds it needs, is therefore not
-declared anywhere. On a cold start an object whose kind has not been established
-fails to apply and is retried on its Kustomization's interval, while everything
-else in the domain applies in the same pass, because Flux collects per-object
-errors rather than abandoning the set.
+a different one.
+
+The same rule is why only `platform-cluster` waits for `crds`. It is the one
+domain sharing a namespace with that layer, so it is the one that *can* — the
+edge is an accident of where the object lives rather than a statement that its
+kinds matter more. Read it as an asymmetry to leave alone, not a pattern to
+spread; it also buys less than it looks, because the `NodeFeatureRule`s in that
+same domain need CRDs from a chart the domain installs itself.
+
+For the other four, ordering against the kinds they need is not declared
+anywhere, because it cannot be. On a cold start an object whose kind has not been
+established fails to apply and is retried on its Kustomization's interval, while
+everything else in the domain applies in the same pass, because Flux collects
+per-object errors rather than abandoning the set.
 
 The kyverno policies are the sharpest case of that. `csi-nfs`,
 `piraeus-datastore` and `cnpg-system` ship `policies.kyverno.io` objects whose
