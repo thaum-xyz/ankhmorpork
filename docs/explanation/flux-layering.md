@@ -143,6 +143,7 @@ object cannot be *accepted* by the API server until something else exists:
 | --- | --- | --- |
 | `homer-services` | `homer` | it adds entries to a dashboard that must exist |
 | HelmRelease `piraeus-operator` | HelmRelease `topolvm` | its storage pool *is* a topolvm thin pool |
+| HelmRelease `linstor-cluster` | HelmRelease `piraeus-operator` | the operator reconciles the cluster |
 | HelmRelease `cnpg-versity-gw` | HelmRelease `csi-nfs` | its claim is `unifi-nas`, and a policy rejects the PVC until the class exists |
 
 The last two are between HelmReleases rather than Kustomizations because the

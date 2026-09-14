@@ -13,26 +13,36 @@ reconciles, and is the tenant's. That directory line is the review boundary.
 
 A platform component works the same way one level up: it is a directory listed
 in `k8s/platform/<domain>/kustomization.yaml`, reconciled by the
-`platform-<domain>` Kustomization in `k8s/flux/platform/`.
+`platform-<domain>` Kustomization declared in `k8s/bootstrap/` and living in the
+`platform-<domain>` namespace.
 
 **Which namespace a Kustomization object declares is what decides how much it may
 do**, because kustomize-controller resolves `--default-service-account` in the
-object's own namespace. One in `flux-system` reconciles as cluster-admin; one in
-its app's namespace is confined there. Every app Kustomization now lives in its
-own namespace, and `k8s/flux/apps/` and the `apps` umbrella are gone.
+object's own namespace. One in its app's namespace is confined there; one in a
+namespace whose `flux-reconciler` also holds a `ClusterRoleBinding` is not. Every
+app Kustomization now lives in its own namespace — `k8s/flux/`, the `apps` and
+`platform` umbrellas and the `flux-system` namespace itself are all gone.
 
 **Nothing cluster-scoped may live under `k8s/apps/<app>/`** — that directory is
 reconciled by the confined identity, so a `Namespace` or `PersistentVolume` there
 fails to apply. Either put it in `k8s/namespaces/<app>/`, which the cluster-admin
 `namespaces` Kustomization applies, or give that namespace a
-`clusterrolebinding.yaml` so its own reconciler may apply it. `dlna-local`,
-`paperless`, `photos`, `plex` and `vod-arr` take the second route, because their
-`PersistentVolumes` belong with the app rather than with the namespace.
+`clusterrolebinding.yaml` so its own reconciler may apply it.
+
+Nine namespaces take the second route, and the distinction matters when reading
+one: that binding widens the reconciler back to cluster-admin, so the namespace
+is confined by nothing. `dlna-local`, `paperless`, `photos`, `plex` and `vod-arr`
+because their `PersistentVolumes` belong with the app rather than with the
+namespace; `datalake-logs`, `datalake-metrics`, `grafana` and `homer` because
+their charts install a `ClusterRole`, `ClusterRoleBinding` or CRD, and no
+RoleBinding can confer a cluster-scoped object at any width of role. Each object
+states its own reason.
 
 The cost of the confinement is cross-namespace `dependsOn`:
-`--no-cross-namespace-refs=true` forbids an app Kustomization naming
-`platform-cluster/platform`, so there is no longer an ordering edge from apps to
-platform. On a rebuild an app fails until what it needs exists, and retries.
+`--no-cross-namespace-refs=true` forbids an app Kustomization naming a
+`platform-<domain>` one, so there is no ordering edge from apps to platform, nor
+between the domains. On a rebuild an app fails until what it needs exists, and
+retries.
 
 Moving one needs the target Namespace to carry `flux.rbac.thaum.xyz/role` first,
 so that its `GitRepository` and `flux-reconciler` exist, and the move itself is
@@ -87,14 +97,9 @@ put the object or artifact type first rather than the component name.
 
 ## Suspended components
 
-The last five app Kustomizations are declared suspended in Git, transitionally:
-they are being retired so the same objects can be recreated in their apps' own
-namespaces. None should outlive that move — the annotation on each carries the
-reason.
-
-Nothing else is suspended. Check both the repository and live Flux state before
-changing suspension because live state can temporarily diverge during
-maintenance.
+No Flux Kustomizations are declared suspended in Git. Check both the repository
+and live Flux state before changing suspension, because live state can
+temporarily diverge during maintenance.
 
 ## Postgres (CloudNativePG)
 
@@ -120,8 +125,10 @@ namespaces: `datalake-metrics` (Prometheus, Pyrra), `datalake-logs` (Loki),
 
 Operator CRDs come from the `prometheus-operator-crds` HelmRelease in `k8s/crds/`,
 applied by the `crds` Kustomization declared in `k8s/bootstrap/` because nearly
-every component ships a ServiceMonitor or PrometheusRule. The platform group
-dependsOn it. The objects still render into `platform-observability`.
+every component ships a ServiceMonitor or PrometheusRule. Nothing dependsOn it —
+the domains are in their own namespaces and `--no-cross-namespace-refs` forbids
+the edge — so a component whose CRDs are missing fails and retries. The objects
+still render into `platform-observability`.
 
 Rules live with whatever produces or remediates their signal, the way k8up,
 cnpg and ups rules already do.
