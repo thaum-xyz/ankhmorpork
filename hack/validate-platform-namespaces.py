@@ -12,11 +12,11 @@
 # check is what stops the two drifting apart silently -- a component whose
 # kustomization keeps the old `namespace:` renders and validates perfectly.
 #
-# ESCAPE HATCH: EXEMPT below. Some components genuinely cannot move -- cilium
-# is the CNI and has to be reachable before anything else in kube-system, flux
-# must reconcile before and without the rest of the platform. Each entry names
-# the namespace and why, because "it broke when I tried" and "it can never work"
-# need to be told apart by the next person to read this.
+# ESCAPE HATCH: EXEMPT_TARGET below, and it is the only one. It names components
+# whose WORKLOAD cannot leave the namespace it targets -- cilium is the CNI and
+# has to be reachable before anything else in kube-system -- not components that
+# have not moved yet. The entry says why, because "it broke when I tried" and
+# "it can never work" need to be told apart by the next person to read this.
 #
 # device-plugins used to be listed here and was not entitled to be. Its reason
 # read "registration is node-local; conventionally a kube-system object" -- the
@@ -27,6 +27,7 @@
 
 import json
 import os
+import pathlib
 import subprocess
 import sys
 
@@ -44,27 +45,12 @@ EXEMPT_TARGET = {
                         "node agent is addressed by kube-system service accounts"),
 }
 
-# A component that legitimately spans two namespaces: its objects may be in the
-# domain namespace OR in the one named here, and nowhere else.
-#
-# Not the same as "unmoved". flux's controllers DO run in platform-cluster; what
-# stays behind is the flux-system namespace object and the flux-reconciler
-# identity that the umbrellas and every app Kustomization impersonate. Those two
-# stay for as long as anything reconciles out of flux-system, which the platform
-# domains no longer do but the apps still all do.
-#
-# This component is reconciled by platform-cluster like any other, which is a
-# deliberate reversal: it creates the release and the identity that domain runs
-# on, so the arrangement is circular by construction. It is survivable because
-# flux2 orphans its objects on uninstall and the three that cannot -- the
-# Namespace, the ServiceAccount and its ClusterRoleBinding -- are guarded
-# against pruning individually. See k8s/platform/cluster/kustomization.yaml.
-ALSO_ALLOWED = {
-    "k8s/platform/cluster/flux-system":
-        ("flux-system", "it creates the reconciler identity that everything "
-                        "still reconciling out of flux-system impersonates, and "
-                        "that identity is resolved in its own namespace"),
-}
+# There is deliberately no second escape hatch for a component that renders into
+# two namespaces. The one that did was k8s/platform/cluster/flux-system, which
+# shipped the flux-system Namespace and the identity everything in it
+# impersonated; that namespace was retired when the last app Kustomization moved
+# into its own, and nothing has spanned two since. A component that needs to is
+# not an exception to record -- it is a component in the wrong place.
 
 # Cluster-scoped kinds rendered anywhere under k8s/platform. kustomize stamps
 # the kustomization's `namespace:` onto these too -- it cannot know the scope of
@@ -87,12 +73,26 @@ def run(*cmd, stdin=None):
 
 os.chdir(run("git", "rev-parse", "--show-toplevel").strip())
 
+# Every Flux Kustomization manifest tracked in git, found by the API version it
+# declares rather than by where it sits. Globbing directories is what made this
+# check go quiet: it read k8s/flux/*, and when that tree was deleted and the app
+# Kustomizations moved to k8s/namespaces/<app>/sync.yaml it went on passing over
+# most of what it used to cover. Re-globbing the new directories fixes today and
+# breaks the next time; this repo has moved that layout three times in a
+# fortnight.
+def flux_kustomization_manifests():
+    tracked = run("git", "ls-files", "k8s/*.yaml", "k8s/**/*.yaml").split()
+    return [f for f in tracked
+            if "kustomize.toolkit.fluxcd.io/v1" in pathlib.Path(f).read_text()]
+
 # git-tracked only, matching the other validators: a component that has not been
 # staged is invisible here exactly as it is to `make validate`.
 paths = set()
-for manifest in run("git", "ls-files", "k8s/bootstrap/*").split():
+for manifest in flux_kustomization_manifests():
     for line in run("yq", "-r",
-                    'select(.kind == "Kustomization") | .spec.path',
+                    'select(.kind == "Kustomization"'
+                    ' and (.apiVersion | test("^kustomize.toolkit.fluxcd.io/")))'
+                    ' | .spec.path',
                     manifest).splitlines():
         line = line.strip().removeprefix("./")
         if line.startswith("k8s/platform/"):
@@ -118,7 +118,6 @@ for path in sorted(components):
     domain = parts[2]
     component = "/".join(parts[:4])
     domain_ns = f"platform-{domain}"
-    also = ALSO_ALLOWED.get(component, (None, None))[0]
 
     rendered = run("kustomize", "build", path)
     if not rendered.strip():
@@ -164,12 +163,11 @@ for path in sorted(components):
                                  kind + " targetNamespace", name))
             continue
 
-        if found != domain_ns and found != also:
-            wanted = domain_ns if also is None else f"{domain_ns} or {also}"
-            problems.append((path, wanted, found, kind, name))
+        if found != domain_ns:
+            problems.append((path, domain_ns, found, kind, name))
 
 print(f"  platform components checked: {checked}"
-      f" ({len(EXEMPT_TARGET)} exempt target, {len(ALSO_ALLOWED)} spanning two)")
+      f" ({len(EXEMPT_TARGET)} exempt target)")
 
 # A check that examined nothing is not a passing check. This one went quiet once
 # before, when the per-component Kustomizations it read the component list from
@@ -182,7 +180,7 @@ if problems:
     print("  RENDERED OUTSIDE THEIR DOMAIN NAMESPACE:")
     for path, expected, found, kind, name in problems:
         print(f"    {path}: {kind}/{name} in {found}, expected {expected}")
-    print("  Move it, or add it to EXEMPT_TARGET / ALSO_ALLOWED here with the\n  reason it cannot move.")
+    print("  Move it, or add it to EXEMPT_TARGET here with the reason its\n  workload cannot leave the namespace it targets.")
     sys.exit(1)
 
 print("  every platform component renders into its domain namespace")
