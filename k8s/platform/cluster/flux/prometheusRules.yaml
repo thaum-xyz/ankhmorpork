@@ -2,12 +2,11 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
-    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/instance: flux
     app.kubernetes.io/part-of: flux
     prometheus: k8s
     role: alert-rules
   name: flux
-  namespace: flux-system
 spec:
   groups:
     - name: GitOpsToolkit

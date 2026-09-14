@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/description: >-
       Volume provisioning and backup: everything listed in k8s/platform/storage/kustomization.yaml.
 
-      The object lives in platform-storage rather than flux-system so that the
+      The object lives in platform-storage rather than a single shared namespace so that the
       namespace is the unit the reconciler identity is keyed to, not just the
       one the workloads land in. It reads the GitRepository in this namespace
       and applies as this namespace's flux-reconciler, both of which

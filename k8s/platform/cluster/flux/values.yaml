@@ -62,15 +62,14 @@ kustomizeController:
   # Flux's multi-tenancy lockdown, minus the one flag that does not apply here.
   # https://fluxcd.io/flux/installation/configuration/multitenancy/
   #
-  # --default-service-account: impersonate flux-system's flux-reconciler for
-  #   every Kustomization that does not set spec.serviceAccountName, rather
+  # --default-service-account: impersonate a `flux-reconciler` ServiceAccount
+  #   for every Kustomization that does not set spec.serviceAccountName, rather
   #   than applying as the controller's own cluster-admin identity. The SA is
-  #   resolved in each Kustomization's OWN namespace, so what it selects depends
-  #   on where the Kustomization lives. The five platform-<domain> Kustomizations
-  #   each resolve it to the SA in their own namespace; everything still in
-  #   flux-system -- the umbrellas and every app -- resolves it to reconciler/,
-  #   which is cluster-admin. Each app Kustomization that moves into its own
-  #   namespace narrows itself the same way the platform domains already did.
+  #   resolved in each Kustomization's OWN namespace, so where the object lives
+  #   is what decides how much it may do -- and every Kustomization now lives in
+  #   the namespace it reconciles. The platform domains and the four apps whose
+  #   charts install cluster-scoped objects hold a ClusterRoleBinding; the rest
+  #   are confined by a RoleBinding to their own namespace.
   #
   #   Upstream uses `default` here. A named SA instead, because `default` is
   #   what a Pod gets when it names none: granting it reconcile rights would

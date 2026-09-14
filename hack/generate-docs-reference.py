@@ -148,20 +148,22 @@ def write_block(path, name, body):
 def flux_kustomizations():
     """Every Flux Kustomization, with the layer it belongs to.
 
-    Layer is decided by where the *Kustomization* file lives, which is how Flux
-    itself layers them: k8s/bootstrap is applied by hand, and each umbrella
-    there points at a directory of Kustomizations.
-
-    The apps layer spans two directories. An app whose Kustomization has moved
-    into its own namespace keeps it beside that namespace, in
+    Layer is decided by where the *Kustomization* file lives, and there are only
+    two places left. k8s/bootstrap holds what is applied by hand: the CRDs, the
+    namespaces, and one Kustomization per platform domain. Everything else is an
+    app, and an app's Kustomization lives beside its Namespace in
     k8s/namespaces/<app>/sync.yaml, so the platform-owned objects for one app sit
-    together. Scanning only k8s/flux would have silently dropped every app from
-    this page when they moved.
+    together.
+
+    k8s/flux/ is gone. It held a directory of app Kustomizations and another of
+    platform ones, both reconciled by umbrellas; each moved into the namespace it
+    reconciles, and the umbrellas went with them. A prefix here that no longer
+    exists drops its whole layer from this page silently, so check this function
+    whenever Kustomizations move.
     """
     rows = []
     for layer, prefixes in (
         ("bootstrap", ("k8s/bootstrap",)),
-        ("platform", ("k8s/flux/platform",)),
         ("apps", ("k8s/namespaces",)),
     ):
         files = sorted(f for prefix in prefixes for f in yaml_files(prefix))
@@ -230,7 +232,6 @@ def write_flux_kustomizations(rows):
 
     for layer, title in (
         ("bootstrap", "Bootstrap — applied once by hand"),
-        ("platform", "Platform"),
         ("apps", "Apps"),
     ):
         out.append(f"\n## {title}\n\n")

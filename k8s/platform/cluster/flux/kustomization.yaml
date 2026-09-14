@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Flux reconciling Flux. Everything here lands in platform-cluster, where the
+# controllers run and where the umbrellas reconcile from.
+#
+# There is no flux-system any more. It held the Namespace, the reconciler
+# identity the Kustomizations impersonated, and a GitRepository -- and once every
+# Kustomization moved into the namespace it reconciles, nothing referred to any
+# of them. The identity least of all: it was bound to cluster-admin and no object
+# was left for it to apply.
+#
+# The circularity that namespace used to break is still real. This component is
+# reconciled by an umbrella that reads platform-cluster's GitRepository and
+# applies as its flux-reconciler, both of which the release below keeps running.
+# What makes it survivable is `uninstall.deletionPropagation: orphan` on the
+# HelmRelease: pruning it uninstalls the release record and leaves the
+# controllers up, so a mistake here costs a record rather than the engine.
+namespace: platform-cluster
+resources:
+  - repository.yaml
+  - release.yaml
+  - prometheusRules.yaml
+  - certManagerPolicy.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+configMapGenerator:
+  - name: values-flux2
+    files:
+      - values.yaml=values.yaml
