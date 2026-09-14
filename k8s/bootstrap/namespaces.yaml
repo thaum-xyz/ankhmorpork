@@ -5,7 +5,7 @@ metadata:
   namespace: platform-cluster
   annotations:
     kubernetes.io/description: >-
-      Every Namespace this repo creates except flux-system's, plus what each
+      Every Namespace this repo creates, plus what each
       `platform-<domain>` needs before it can reconcile itself.
 
       An app Namespace is one object in one file. A `platform-<domain>` is a

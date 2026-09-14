@@ -7,34 +7,30 @@ kind: Kustomization
 # k8s/namespaces/ takes the opposite approach, where being unable to omit a
 # Namespace by accident is worth more.
 #
-# flux-system is one of these, and that is a deliberate reversal. It used to
-# keep its own Kustomization on the argument that reconciling Flux through a
-# domain whose source and identity Flux itself creates is circular. The
-# circularity is real and has not gone away -- the umbrellas now reconcile from
-# this namespace too, reading its GitRepository and applying as its
-# flux-reconciler, all of which the flux2 release below makes possible.
+# `flux` is one of these, and that is a deliberate reversal. It used to keep its
+# own Kustomization, on the argument that reconciling Flux through a domain whose
+# source and identity Flux itself creates is circular. The circularity is real
+# and has not gone away -- the umbrellas reconcile from this namespace, reading
+# its GitRepository and applying as its flux-reconciler, all of which the flux2
+# release makes possible.
 #
 # What changed is the consequence. flux2 sets
 # uninstall.deletionPropagation: orphan, so pruning its HelmRelease uninstalls
-# the release record and leaves the controllers running; the Namespace, the
-# reconciler ServiceAccount and its ClusterRoleBinding each carry
-# kustomize.toolkit.fluxcd.io/prune: disabled. A mistake in this domain
-# therefore costs a release record rather than the GitOps engine, and recovery
-# is a manifest and a reconcile rather than a rebuild.
+# the release record and leaves the controllers running. A mistake in this domain
+# therefore costs a release record rather than the GitOps engine, and recovery is
+# a manifest and a reconcile rather than a rebuild.
 #
-# What it costs: flux-system no longer reconciles from a source and identity
-# independent of this domain's. Break platform-cluster's flux-reconciler and
-# Flux's own Kustomization stops with everything else, where before it had its
-# own footing. The price of getting rid of the flux-system namespace.
+# What it costs: Flux no longer reconciles from a source and identity independent
+# of this domain's. Break platform-cluster's flux-reconciler and Flux's own
+# Kustomization stops with everything else, where before flux-system gave it its
+# own footing. That was the price of retiring that namespace, and it is paid.
 #
-# No `namespace:` at this level. Each component declares its own -- flux-system
-# needs that, since it spans platform-cluster and flux-system -- and a
-# transformer here would also stamp one onto every cluster-scoped object the
-# domain ships.
+# No `namespace:` at this level: a transformer here would stamp one onto every
+# cluster-scoped object the domain ships. Each component declares its own.
 resources:
   - descheduler/
   - device-plugins/
-  - flux-system/
+  - flux/
   - node-feature-discovery/
   - node-problem-detector/
   - system-kured/

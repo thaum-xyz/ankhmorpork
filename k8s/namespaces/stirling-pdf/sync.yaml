@@ -5,8 +5,8 @@ metadata:
   namespace: stirling-pdf
   annotations:
     kubernetes.io/description: >-
-      Reconciles this app as stirling-pdf's own flux-reconciler, not flux-system's
-      cluster-admin one: kustomize-controller resolves --default-service-account
+      Reconciles this app as stirling-pdf's own flux-reconciler, rather than a
+      cluster-admin one. kustomize-controller resolves --default-service-account
       in the OBJECT's namespace, so where this object lives is what decides how
       much it may do.
 
