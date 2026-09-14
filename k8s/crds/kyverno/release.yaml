@@ -14,10 +14,11 @@ metadata:
       another namespace. `platform dependsOn crds` is the only ordering edge
       that reaches both.
 
-      Version is not Renovate's to move on its own. This chart is a dependency
-      of the kyverno chart, pinned by its Chart.lock, and the CRDs have to match
-      the controllers that serve them -- bump it when the kyverno chart's lock
-      moves, not before.
+      Version is not Renovate's to move on its own, and renovate.json disables
+      it by name: this chart is the kyverno chart's own dependency, and CRDs
+      that outrun the controllers serving them fail quietly. Bump it with the
+      kyverno chart; `make validate-kyverno-crd-pin` fails when the two
+      diverge.
 spec:
   chart:
     spec:

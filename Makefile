@@ -25,6 +25,10 @@ validate-configmaps:  ## Check no two Kustomizations render the same ConfigMap
 validate-platform-namespaces:  ## Check platform components render into their domain namespace
 	python3 hack/validate-platform-namespaces.py
 
+.PHONY: validate-kyverno-crd-pin
+validate-kyverno-crd-pin:  ## Check the kyverno-api pin matches the kyverno chart
+	./hack/validate-kyverno-crd-pin.sh
+
 .PHONY: lint-shell
 lint-shell:  ## Run shellcheck over every tracked shell script
 	git ls-files '*.sh' | xargs shellcheck
