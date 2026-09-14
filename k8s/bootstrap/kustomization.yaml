@@ -16,4 +16,8 @@ resources:
   - github-repo.yaml
   - crds.yaml
   - namespaces.yaml
-  - group-platform.yaml
+  - platform-cluster.yaml
+  - platform-network.yaml
+  - platform-observability.yaml
+  - platform-security.yaml
+  - platform-storage.yaml
