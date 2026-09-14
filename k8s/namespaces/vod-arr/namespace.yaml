@@ -23,3 +23,11 @@ metadata:
     # apply rather than quietly gaining the right to create one; that namespace
     # moves to a hand-written ClusterRoleBinding instead.
     flux.rbac.thaum.xyz/role: cluster-admin
+    # Pod Security Admission, deliberately `privileged` rather than `baseline`:
+    # qbittorrent takes NET_ADMIN and hostPath for its VPN sidecar's
+    # tunnel device.
+    #
+    # Set explicitly even though it matches the cluster default, so that the
+    # exemption is a reviewable line rather than an absence, and so nobody
+    # tightens it without reading why.
+    pod-security.kubernetes.io/enforce: privileged
