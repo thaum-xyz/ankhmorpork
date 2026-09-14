@@ -19,6 +19,7 @@ Blocks written into otherwise hand-written pages, between
 `<!-- generated:NAME -->` and `<!-- /generated:NAME -->` markers:
 
   docs/reference/ingress.md   ingress-classes, cluster-issuers, external-dns
+  docs/explanation/app-backups.md   backup-timetable
 
 Chart *versions* are deliberately not written anywhere here. Renovate bumps them
 in the manifests several times a week, and a generated page that carried them
@@ -604,6 +605,69 @@ def write_helm_releases(rows):
     (DOCS / "helm-releases.md").write_text("".join(out))
 
 
+# --- Backup timetable (block in explanation/app-backups.md) -------------------
+
+
+def _clock(cron):
+    """(sort key, "HH:MM") for a 5- or 6-field cron; the night window sorts across
+    midnight, so anything before noon counts as the next day."""
+    parts = str(cron).split()
+    try:
+        minute, hour = (int(parts[1]), int(parts[2])) if len(parts) == 6 else (int(parts[0]), int(parts[1]))
+    except (IndexError, ValueError):
+        return (9999, str(cron))
+    return ((hour + 24 if hour < 12 else hour) * 60 + minute, f"{hour:02d}:{minute:02d}")
+
+
+def backup_timetable():
+    """One row per scheduled backup writer: K8up Schedules, cnpg-database backup
+    schedules from their values files, and any CronJob with backup in its name."""
+    rows, cache = [], {}
+    for f in sorted(yaml_files("k8s")):
+        for d in load_all(f):
+            kind, api = d.get("kind"), str(d.get("apiVersion", ""))
+            spec = d.get("spec") or {}
+            ns = (d.get("metadata") or {}).get("namespace") or component_namespace(f, cache)
+            if kind == "Schedule" and api.startswith("k8up.io"):
+                ret = (spec.get("prune") or {}).get("retention") or {}
+                rows.append((
+                    (spec.get("backup") or {}).get("schedule"), ns, "K8up `Schedule`",
+                    (spec.get("check") or {}).get("schedule"), (spec.get("prune") or {}).get("schedule"),
+                    ", ".join(f"{v} {k.removeprefix('keep').lower()}" for k, v in ret.items()), f,
+                ))
+            elif kind == "CronJob" and "backup" in d["metadata"]["name"]:
+                rows.append((spec.get("schedule"), ns, f"CronJob `{d['metadata']['name']}`", None, None, "", f))
+            elif not is_k8s_object(d) and (d.get("backup") or {}).get("schedule"):
+                chart, release_file = sibling_chart(f)
+                if chart != "cnpg-database":
+                    continue
+                release = "postgres"
+                if release_file:
+                    for r in load_all(release_file):
+                        if r.get("kind") == "HelmRelease":
+                            release = r.get("spec", {}).get("releaseName") or r["metadata"]["name"]
+                            ns = ns or r["metadata"].get("namespace")
+                rows.append((
+                    d["backup"]["schedule"], ns, f"CloudNativePG `{release}`", None, None,
+                    (d["backup"].get("objectStore") or {}).get("retentionPolicy", ""), f,
+                ))
+    rows.sort(key=lambda r: _clock(r[0])[0])
+    return rows
+
+
+def write_backup_timetable():
+    rows = backup_timetable()
+    out = ["| When | Namespace | What | Check | Prune | Retention |", "| --- | --- | --- | --- | --- | --- |"]
+    for cron, ns, what, check, prune, retention, f in rows:
+        when = _clock(cron)[1]
+        out.append(
+            f"| [{when}]({REPO}/blob/master/{rel(f)}) | `{ns or '—'}` | {what} | "
+            f"{code_list([check]) if check else '—'} | {code_list([prune]) if prune else '—'} | {retention or '—'} |"
+        )
+    write_block(ROOT / "docs" / "explanation" / "app-backups.md", "backup-timetable", "\n".join(out))
+    return len(rows)
+
+
 # --- Ingress: classes, issuers, external-dns (blocks in ingress.md) ----------
 
 
@@ -765,10 +829,12 @@ def main():
     hr = helm_releases(ks)
     write_helm_releases(hr)
     n_classes, n_issuers = write_ingress_blocks()
+    n_backups = write_backup_timetable()
     print(
         f"wrote flux-kustomizations.md ({len(ks)}), apps.md ({len(app_rows)}), "
         f"admission-policies.md ({len(pol)}), helm-releases.md ({len(hr)}), "
-        f"ingress.md blocks ({n_classes} classes, {n_issuers} issuers)"
+        f"ingress.md blocks ({n_classes} classes, {n_issuers} issuers), "
+        f"app-backups.md timetable ({n_backups} writers)"
     )
 
 

@@ -73,6 +73,7 @@ nav = [
     { "The Postgres fleet upgrade" = "explanation/postgres-fleet-upgrade.md" },
     { "How a node reboot is gated" = "explanation/node-reboots.md" },
     { "Why a database failover interrupts an app" = "explanation/database-failover.md" },
+    { "How app backups are shaped" = "explanation/app-backups.md" },
   ] },
 ]
 

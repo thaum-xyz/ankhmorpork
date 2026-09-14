@@ -68,6 +68,17 @@ set the label at all: Namespaces are cluster-scoped, and `edit` and `admin` get
 get/list/watch on them and nothing more, so a tenant cannot label their way into
 a wider reconciler.
 
+Nothing may *run* as it. `validate-reconciler-sa-usage` denies any Pod that
+names the ServiceAccount: impersonation mounts no token and the controllers'
+own Pods run as themselves, so the only way a workload ends up with it is a
+copy-pasted `serviceAccountName`, which would hand that workload the
+reconciler's rights with no error and no symptom. That rule bounds workloads,
+not people. `edit` carries `impersonate` on ServiceAccounts, so a tenant with
+`edit` can act as the reconciler anyway, and one who controls the reconciled
+git path can ship its token out. What bounds a tenant is the namespace edge — a
+RoleBinding rather than a ClusterRoleBinding, `--no-cross-namespace-refs`, and
+Pod Security Admission.
+
 ### `group.rbac.thaum.xyz/<group>`
 
 | | |

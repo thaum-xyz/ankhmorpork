@@ -37,3 +37,6 @@ is only in commit messages, per-app READMEs and
 - [Why a database failover interrupts an app](database-failover.md) — the
   no-endpoint moment every `-rw` Service passes through, and why a pooler does
   not cover it
+- [How app backups are shaped](app-backups.md) — one restic repository per
+  namespace, root, fixed times, and the timetable everything has to fit before
+  the NAS ships its copy off-site
