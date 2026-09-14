@@ -2,7 +2,7 @@ SHELL:=/bin/bash
 
 # Kept in sync with .github/workflows/docs.yml by the zensical customManager
 # in .github/renovate.json, which matches both spellings.
-ZENSICAL_VERSION:=0.0.60
+ZENSICAL_VERSION:=0.0.61
 
 
 .PHONY: help
