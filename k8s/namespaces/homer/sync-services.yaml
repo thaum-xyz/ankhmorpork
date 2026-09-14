@@ -1,7 +1,3 @@
-# Separate from the homer Kustomization because the HomerServices CRD arrives
-# with the chart. Flux dry-runs every resource before applying any of them, so
-# keeping the CR alongside the HelmRelease blocked the very install that would
-# have registered its kind.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -9,21 +5,15 @@ metadata:
   namespace: homer
   annotations:
     kubernetes.io/description: >-
-      Reconciles this app as homer's own flux-reconciler, not flux-system's
-      cluster-admin one: kustomize-controller resolves --default-service-account
-      in the OBJECT's namespace, so where this object lives is what decides how
-      much it may do.
+      Separate from the homer Kustomization because the HomerServices CRD
+      arrives with the chart: Flux dry-runs every resource before applying any
+      of them, so a CR beside the HelmRelease blocked the very install that
+      would have registered its kind.
 
-      That ServiceAccount is bound with a RoleBinding, so this can apply
-      anything namespaced in homer and nothing anywhere else. Repointing
-      spec.path at another component would not widen it -- the apply is simply
-      denied.
-
-      It sits beside the Namespace and the GitRepository because all three are
-      platform-owned, and that split is the review boundary: everything under
-      k8s/apps/homer/ is the tenant's, everything here is not. sourceRef names
-      the source in this namespace; --no-cross-namespace-refs=true forbids
-      flux-system's.
+      Reconciles ./k8s/apps/homer/services as homer's own flux-reconciler, which
+      the ClusterRoleBinding beside this file widens to cluster-admin; read that
+      object to know what this one can reach. Platform-owned; what it reconciles
+      is the tenant's.
 spec:
   interval: 15m0s
   path: ./k8s/apps/homer/services

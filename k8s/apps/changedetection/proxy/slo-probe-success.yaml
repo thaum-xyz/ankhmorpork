@@ -3,26 +3,19 @@ kind: ServiceLevelObjective
 metadata:
   name: changedetection-probe-success
 spec:
-  # Availability as a person experiences it: the blackbox probe, end to end
-  # through DNS, TLS, the ingress and the oauth2-proxy. Kept beside the Ingress
-  # and the proxy that carry the probe configuration, since the three have to
-  # move together -- the probe only reaches changedetection because
-  # --skip-auth-route exempts the path this measures.
-  #
-  # Matches on the host rather than the full probe URL, so changing
-  # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
-  # SLO behind it.
+  # Probes through the oauth2-proxy as well as DNS, TLS and the ingress. Kept
+  # beside the Ingress and the proxy that carry the probe configuration, since
+  # the three have to move together -- the probe only reaches changedetection
+  # because --skip-auth-route exempts the path this measures.
   #
   # changedetection exports no metrics of its own and has no endpoint that
   # reports its own health, so this probe is its only availability signal -- and
   # it is a reachability check, not a statement about whether watches are
   # actually being fetched.
   #
-  # target is still a PLACEHOLDER. The probe started on 2026-09-07 08:02 UTC,
-  # so it has no full 7d window until 2026-09-14 08:02 UTC. Everything
-  # readable was set on 2026-09-10 (#1379).
-  #
-  # Provisionally 99.831% over its first 3 days.
+  # target is a PLACEHOLDER (#1379): the probe started on 2026-09-07 08:02 UTC,
+  # so its first full 7d window closes 2026-09-14 08:02 UTC. Provisionally
+  # 99.831% over the first 3 days.
   description: >-
     Fraction of successful blackbox probes against change.krupa.net.pl.
   alerting:

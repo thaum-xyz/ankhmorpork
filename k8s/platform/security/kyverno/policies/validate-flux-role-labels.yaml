@@ -1,9 +1,6 @@
 apiVersion: policies.kyverno.io/v1
 kind: ValidatingPolicy
 metadata:
-  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
-  # component's namespace on it in the rendered output; the API server ignores
-  # the field for cluster-scoped resources.
   name: validate-flux-role-labels
 spec:
   # generate-flux-reconciler turns a `flux.rbac.thaum.xyz/role` label into a

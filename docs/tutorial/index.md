@@ -161,31 +161,20 @@ mkdir -p k8s/namespaces/whoami
 ```
 
 `k8s/namespaces/whoami/namespace.yaml` — the label is what makes Kyverno generate
-the `flux-reconciler` ServiceAccount and its RoleBinding here:
+the `flux-reconciler` ServiceAccount and its RoleBinding here, and the
+`GitRepository` the Kustomization below reads. A RoleBinding, so `cluster-admin`
+means namespace-admin in `whoami` and nothing anywhere else:
 
 ```yaml
 apiVersion: v1
 kind: Namespace
 metadata:
   name: whoami
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
     flux.rbac.thaum.xyz/role: cluster-admin
-```
-
-`k8s/namespaces/whoami/gitrepository.yaml` — `--no-cross-namespace-refs` means a
-Kustomization may only name a source in its own namespace:
-
-```yaml
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: GitRepository
-metadata:
-  name: ankhmorpork
-  namespace: whoami
-spec:
-  interval: 60s
-  ref:
-    branch: master
-  url: https://github.com/thaum-xyz/ankhmorpork
+    pod-security.kubernetes.io/enforce: baseline
 ```
 
 `k8s/namespaces/whoami/sync.yaml` — the Kustomization, in the app's namespace:
@@ -207,10 +196,14 @@ spec:
 
 `namespace: whoami` on that last object is the important line. It is what makes
 this reconcile as `whoami`'s own ServiceAccount rather than a cluster-admin one,
-so the app can only ever touch its own namespace.
+so the app can only ever touch its own namespace. `sourceRef` names a
+`GitRepository` you did not write: `--no-cross-namespace-refs` means a
+Kustomization may only name a source in its own namespace, so Kyverno generates
+one there from the label above.
 
 `prune: true` means deleting the directory later deletes the objects too, which is
-what makes the cleanup step at the end work.
+what makes the cleanup step at the end work. The Namespace itself opts out of
+pruning, so that no restructure can ever delete it with everything inside.
 
 ## Step 3 — Validate before pushing
 

@@ -4,25 +4,11 @@ metadata:
   name: platform-observability
   annotations:
     kubernetes.io/description: >-
-      Collectors and exporters only: alloy, kube-prometheus-stack, blackbox-exporter,
-      uptimerobot. The stores they feed have their own namespaces -- datalake-metrics,
-      datalake-logs, datalake-alerts, grafana.
-
-      Shared by several components, which is why the object lives here and not in
-      any one of their directories. It sat with prometheus-operator-crds because
-      that component is first in the dependency graph, which made it the earliest
-      owner rather than the right one.
-    # Never garbage-collect this Namespace. Pruning is inventory-based, so
-    # dropping it from a Kustomization's inventory would delete the namespace
-    # and everything inside it.
+      Collectors and exporters only; the stores they feed have their own
+      namespaces. Holds the components listed in
+      k8s/platform/observability/kustomization.yaml.
     kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
-    # Pod Security Admission, deliberately `privileged` rather than `baseline`:
-    # node-exporter needs hostNetwork and hostPID to
-    # report on the node rather than its own pod, and alloy reads the host log
-    # directories.
-    #
-    # Set explicitly even though it matches the cluster default, so that the
-    # exemption is a reviewable line rather than an absence, and so nobody
-    # tightens it without reading why.
+    # node-exporter needs hostNetwork and hostPID to report on the node rather
+    # than its own pod, and alloy reads the host log directories.
     pod-security.kubernetes.io/enforce: privileged

@@ -20,9 +20,6 @@ resources:
     memory: 128Mi
 
 persistence:
-  # piraeus-r2-roaming rather than piraeus-r2: allowRemoteVolumeAccess lets the
-  # Pod start on any node and attach diskless instead of waiting for one holding
-  # a replica, which matters when kured reboots nodes.
   storageClass: "piraeus-r2-roaming"
   size: 1Gi
   # RWX was never required here. Piraeus offers none, and the chart runs one

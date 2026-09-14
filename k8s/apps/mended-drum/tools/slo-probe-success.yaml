@@ -3,15 +3,6 @@ kind: ServiceLevelObjective
 metadata:
   name: mended-drum-tools-probe-success
 spec:
-  # Availability as a person experiences it: the blackbox probe, end to end
-  # through DNS, TLS and the ingress. Split out of the shared
-  # blackbox-probe-success so this service owns the objective that describes it,
-  # the same reason its Ingress is not kept in traefik's namespace.
-  #
-  # Matches on the host rather than the full probe URL, so changing
-  # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
-  # SLO behind it.
-  #
   # target from the 7d window 2026-09-03..09-10 (#1379): 99.99504% achieved,
   # one failed sample in the week, 1.0% of a 99.5% budget. Paired with homer as
   # the two probes clean enough to carry the tighter target.

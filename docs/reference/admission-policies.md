@@ -13,6 +13,7 @@ schedule against objects that already exist.
 | --- | --- | --- | --- |
 | [`cleanup-cnpg-backups`](#cleanup-cnpg-backups) | `backups` | **Delete on schedule `17 3 * * *`** | `platform-storage` |
 | [`generate-flux-reconciler`](#generate-flux-reconciler) | `namespaces` | **Generate** | `platform-security` |
+| [`generate-flux-source`](#generate-flux-source) | `namespaces` | **Generate** | `platform-security` |
 | [`generate-group-rolebindings`](#generate-group-rolebindings) | `namespaces` | **Generate** | `platform-security` |
 | [`mutate-configmap-autoreload`](#mutate-configmap-autoreload) | `deployments`, `statefulsets` | **Mutate** | `platform-security` |
 | [`mutate-nfs-pvc-alert-exclusion`](#mutate-nfs-pvc-alert-exclusion) | `persistentvolumeclaims` | **Mutate** | `platform-storage` |
@@ -53,6 +54,18 @@ Deletes only objects matching all of:
 | **Only when** | `object.metadata.?labels.orValue({}).exists(k, k == "flux.rbac.thaum.xyz/role")` |
 | **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/generate-flux-reconciler.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/generate-flux-reconciler.yaml) |
+
+## `generate-flux-source`
+
+| | |
+| --- | --- |
+| **Kind** | `GeneratingPolicy` |
+| **Applies to** | `namespaces` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Generate** |
+| **Only when** | `object.metadata.?labels.orValue({}).exists(k, k == "flux.rbac.thaum.xyz/role")` |
+| **Shipped by** | `platform-security` |
+| **Source** | [`k8s/platform/security/kyverno/policies/generate-flux-source.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/generate-flux-source.yaml) |
 
 ## `generate-group-rolebindings`
 

@@ -3,28 +3,7 @@ kind: Namespace
 metadata:
   name: plex
   annotations:
-    # Never garbage-collect this Namespace. Pruning is inventory-based, so
-    # dropping it from a Kustomization's inventory would delete the namespace
-    # and everything inside it.
     kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
-    # Generates the flux-reconciler ServiceAccount and a RoleBinding giving it
-    # this ClusterRole here, via the generate-flux-reconciler GeneratingPolicy.
-    #
-    # `cluster-admin` names the RULES, not the reach. A RoleBinding confers only
-    # the namespaced half of them and only inside this namespace, so this is
-    # namespace-admin here and nothing at all anywhere else.
     flux.rbac.thaum.xyz/role: cluster-admin
-    # Pod Security Admission. `baseline` is the tier that closes the route out of
-    # a namespace: it forbids privileged containers, hostPath volumes and the
-    # host network, PID and IPC namespaces -- which together are how a pod
-    # reaches the node and, through the node's credentials, the cluster. Without
-    # it a namespace role is bounded only by RBAC, and RBAC does not describe
-    # what a container can reach once it is on a host.
-    #
-    # Not `restricted`, which additionally wants runAsNonRoot, a seccomp profile
-    # and every capability dropped. Most images here would fail it today, and
-    # enforcement failures surface on the ReplicaSet rather than at apply, so a
-    # tier nothing meets stops rollouts quietly. `baseline` is met already,
-    # measured from every pod template rather than from running pods.
     pod-security.kubernetes.io/enforce: baseline

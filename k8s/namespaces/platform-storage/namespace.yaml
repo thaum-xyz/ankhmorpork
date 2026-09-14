@@ -4,22 +4,12 @@ metadata:
   name: platform-storage
   annotations:
     kubernetes.io/description: >-
-      Volume provisioning and backup: piraeus-datastore, topolvm, csi-nfs, k8up,
-      cnpg-system, cnpg-versity-gw, smartctl-exporter.
-
-      Shared by several components, which is why the object lives here and not in
-      any one of their directories. With one component per namespace the owner
-      was obvious; with seven it would be arbitrary, and the loser of that choice
-      gets deleted out from under the others the first time its Kustomization is
-      pruned.
-    # Never garbage-collect this Namespace. Pruning is inventory-based, so
-    # dropping it from a Kustomization's inventory would delete the namespace
-    # and everything inside it.
+      Volume provisioning and backup. Holds the components listed in
+      k8s/platform/storage/kustomization.yaml.
     kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
-    # CSI drivers and the LINSTOR satellites mount host paths and run privileged;
-    # the enforce label is what lets them schedule at all. It travelled here with
-    # the Namespace and is not decoration -- dropping it stops storage.
+    # CSI drivers and the LINSTOR satellites mount host paths and run
+    # privileged; this label is what lets them schedule at all.
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/audit: privileged
     pod-security.kubernetes.io/warn: privileged

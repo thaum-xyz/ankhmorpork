@@ -3,11 +3,14 @@
 Flux-managed k3s homelab. `k8s/bootstrap/` creates the umbrella Flux resources,
 `k8s/platform/` contains infrastructure, and `k8s/apps/` contains workloads.
 **Two directories per app, split by who owns them.** `k8s/namespaces/<app>/` is
-platform-owned and holds everything needed to stand the namespace up — the
-`Namespace`, the `GitRepository`, the `sync.yaml` that reconciles the app, and a
-`ServiceAccount` plus `ClusterRoleBinding` where those are hand-written rather
-than generated. `k8s/apps/<app>/` is what `sync.yaml` reconciles, and is the
-tenant's. That directory line is the review boundary.
+platform-owned and holds what has to exist before the app can reconcile — the
+`Namespace`, the `sync.yaml` that is its Kustomization, and a
+`ClusterRoleBinding` where the app needs one. The `GitRepository` that
+Kustomization reads and the `flux-reconciler` identity it applies as are not
+files: Kyverno generates both from the Namespace's `flux.rbac.thaum.xyz/role`
+label (`generate-flux-source`, `generate-flux-reconciler`). `k8s/apps/<app>/` is
+what `sync.yaml` reconciles, and is the tenant's. That directory line is the
+review boundary.
 
 A platform component works the same way one level up: it is a directory listed
 in `k8s/platform/<domain>/kustomization.yaml`, reconciled by the
@@ -32,8 +35,9 @@ The cost of the confinement is cross-namespace `dependsOn`:
 `platform-cluster/platform`, so there is no longer an ordering edge from apps to
 platform. On a rebuild an app fails until what it needs exists, and retries.
 
-Moving one needs a `GitRepository` and a `flux-reconciler` ServiceAccount in the
-target namespace first, and the move itself is a delete-and-create — so the
+Moving one needs the target Namespace to carry `flux.rbac.thaum.xyz/role` first,
+so that its `GitRepository` and `flux-reconciler` exist, and the move itself is
+a delete-and-create — so the
 outgoing object must be suspended **and** set `prune: false` in an earlier
 commit, or deleting it garbage-collects the app it just handed over.
 

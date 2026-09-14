@@ -18,10 +18,11 @@ An app is a directory of manifests plus a Flux Kustomization that points at it.
 k8s/apps/<app>/          one Kubernetes object per file, type-based names
                          (deployment.yaml, pvc.yaml, pdb.yaml) — everything
                          NAMESPACED; tenant-owned
-k8s/namespaces/<app>/    namespace.yaml, gitrepository.yaml, sync.yaml (the
-                         Kustomization, in the app's namespace), and
-                         clusterrolebinding.yaml if the app needs cluster-admin
-                         — platform-owned
+k8s/namespaces/<app>/    namespace.yaml (its flux.rbac.thaum.xyz/role label makes
+                         Kyverno generate the GitRepository and the
+                         flux-reconciler identity), sync.yaml (the Kustomization,
+                         in the app's namespace), and clusterrolebinding.yaml if
+                         the app needs cluster-admin — platform-owned
 ```
 
 Nothing cluster-scoped may live under `k8s/apps/<app>/`: that directory is
@@ -121,8 +122,8 @@ Order matters, and getting it wrong reports success while changing nothing:
 
 ```bash
 flux reconcile source git ankhmorpork
-# regenerates the ConfigMap -- an app's own Kustomization lives in flux-system,
-# a platform component's is platform-<domain>, in the namespace of that name
+# regenerates the ConfigMap -- an app's Kustomization lives in the app's own
+# namespace, a platform component's is platform-<domain>, in that namespace
 flux -n <ks-namespace> reconcile kustomization <kustomization>
 flux -n <ns> reconcile helmrelease <release>              # now sees new values
 ```

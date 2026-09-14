@@ -5,18 +5,10 @@ metadata:
   namespace: plex
   annotations:
     kubernetes.io/description: >-
-      Reconciles this app as plex's own flux-reconciler, rather than a
-      cluster-admin one. kustomize-controller resolves --default-service-account
-      in the OBJECT's namespace, so where this object lives is what decides how
-      much it may do.
-
-      Unlike most apps, that identity is widened to cluster-admin by the
-      ClusterRoleBinding beside this file, because what this Kustomization
-      applies includes PersistentVolumes and those are cluster-scoped. Read that
-      object to know what this one can reach.
-
-      sourceRef names the source in this namespace; --no-cross-namespace-refs
-      forbids flux-system's.
+      Reconciles ./k8s/apps/plex as plex's own flux-reconciler, which the
+      ClusterRoleBinding beside this file widens to cluster-admin; read that
+      object to know what this one can reach. Platform-owned; what it reconciles
+      is the tenant's.
 spec:
   interval: 15m0s
   path: ./k8s/apps/plex

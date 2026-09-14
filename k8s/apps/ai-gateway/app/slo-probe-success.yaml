@@ -3,22 +3,15 @@ kind: ServiceLevelObjective
 metadata:
   name: ai-gateway-probe-success
 spec:
-  # Availability as a person experiences it: the blackbox probe, end to end
-  # through DNS, TLS and the ingress. The first availability signal this service
-  # has ever had -- before #1337 all 308 metric families in the namespace came
-  # from cadvisor, kube-state-metrics or the CNPG database, and described the
-  # container and its Postgres rather than whether the gateway answers.
+  # The first availability signal this service has ever had: before #1337 all
+  # 308 metric families in the namespace came from cadvisor, kube-state-metrics
+  # or the CNPG database, and described the container and its Postgres rather
+  # than whether the gateway answers.
   #
-  # Matches on the host rather than the full probe URL, so changing
-  # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
-  # SLO behind it.
-  #
-  # target is still a PLACEHOLDER, and unlike the other probe SLOs it is not
-  # even carried over from the shared objective -- ai-gateway was never in it.
-  # The probe started on 2026-09-07 08:57 UTC, so it has no full 7d window
-  # until 2026-09-14 08:57 UTC. Everything readable was set on 2026-09-10.
-  #
-  # Provisionally 99.904% over its first 3 days.
+  # target is a PLACEHOLDER (#1379), not even carried over from the shared
+  # objective -- ai-gateway was never in it. The probe started on 2026-09-07
+  # 08:57 UTC, so its first full 7d window closes 2026-09-14 08:57 UTC.
+  # Provisionally 99.904% over the first 3 days.
   description: >-
     Fraction of successful blackbox probes against ai-gateway.krupa.net.pl.
   alerting:

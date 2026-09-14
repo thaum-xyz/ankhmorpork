@@ -1,9 +1,6 @@
 apiVersion: policies.kyverno.io/v1
 kind: MutatingPolicy
 metadata:
-  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
-  # component's namespace on it in the rendered output; the API server ignores
-  # the field for cluster-scoped resources.
   name: mutate-configmap-autoreload
 spec:
   # A Pod mounting a ConfigMap sees file changes -- kubelet syncs the volume --

@@ -7,26 +7,17 @@ metadata:
     kubernetes.io/description: >-
       Admission control, certificates and secret delivery: everything listed in k8s/platform/security/kustomization.yaml.
 
-      The object lives in platform-security rather than a single shared namespace so that the
-      namespace is the unit the reconciler identity is keyed to, not just the
-      one the workloads land in. It reads the GitRepository in this namespace
-      and applies as this namespace's flux-reconciler, both of which
-      --no-cross-namespace-refs and --default-service-account resolve here and
-      nowhere else; both are created by the `namespaces` Kustomization, because
-      this one cannot create the source it reads or the identity it uses.
-
-      No dependsOn, and none is possible: a Kustomization may only depend on one
-      in its own namespace, and the five domains are in five. What ordering the
-      platform needs comes from the layer above -- `platform` dependsOn `crds`,
-      so no domain object is created until the CRDs are established -- and from
-      HelmRelease.spec.dependsOn within a namespace.
+      Lives in the namespace it reconciles, reading the GitRepository there and
+      applying as its flux-reconciler; both resolve in the object's own
+      namespace and nowhere else, and no dependsOn across namespaces is
+      possible. Ordering comes from `platform dependsOn crds` above and from
+      HelmRelease.spec.dependsOn within the namespace; see
+      docs/explanation/flux-layering.md.
 spec:
   interval: 15m0s
   path: ./k8s/platform/security
   # Objects that must survive a prune say so themselves, with
-  # kustomize.toolkit.fluxcd.io/prune: disabled. That is finer than the
-  # component-wide prune: false it replaces, which also protected the
-  # HelmRepository and values ConfigMap beside the release.
+  # kustomize.toolkit.fluxcd.io/prune: disabled.
   prune: true
   sourceRef:
     kind: GitRepository

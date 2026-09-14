@@ -4,15 +4,13 @@ metadata:
   name: flux-reconciler-homer
   annotations:
     kubernetes.io/description: >-
-      cluster-admin, because this namespace's Helm release owns the CustomResourceDefinition, ClusterRole and ClusterRoleBinding the homer-operator chart installs.
-      A RoleBinding cannot confer a cluster-scoped object at any width.
-      The namespace still carries flux.rbac.thaum.xyz/role, so it gets the
-      generated ServiceAccount and namespace-scoped RoleBinding like any other
-      app; this widens that same identity, and rights are additive.
-
-      Narrowing it is thaum-xyz/ankhmorpork#1436, not this. The route is to hoist
-      what the chart installs cluster-wide into a cluster-admin lane, after which
-      the namespace can take the generated RoleBinding like any other app.
+      cluster-admin, because this namespace reconciles the
+      CustomResourceDefinition, ClusterRole and ClusterRoleBinding the
+      homer-operator chart installs, and no RoleBinding can confer a
+      cluster-scoped object at any width of role. It widens the flux-reconciler
+      that generate-flux-reconciler already binds here; rights are additive, so
+      dropping this object narrows the namespace back to confined rather than to
+      nothing. Narrowing it for good is thaum-xyz/ankhmorpork#1436.
 subjects:
   - kind: ServiceAccount
     name: flux-reconciler

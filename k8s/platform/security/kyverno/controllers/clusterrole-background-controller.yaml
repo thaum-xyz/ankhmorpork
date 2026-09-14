@@ -16,7 +16,9 @@ metadata:
       need: `edit` and `view` for generate-group-rolebindings, `cluster-admin`
       for generate-flux-reconciler. RBAC's escalation check rejects creating a
       RoleBinding to a role the creator neither holds nor may `bind`, and the
-      chart grants the controller no `bind` at all.
+      chart grants the controller no `bind` at all. It also lets it write the
+      two kinds those policies generate that are not bindings, ServiceAccounts
+      and GitRepositories.
 
       `resourceNames` caps which roles a policy may reference, and each addition
       raises that cap for every policy at once -- so add one only with the reason
@@ -72,6 +74,24 @@ rules:
       - ""
     resources:
       - serviceaccounts
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  # generate-flux-source creates the GitRepository each labelled namespace's
+  # Kustomizations read. Wider than a ServiceAccount, and knowingly: a source
+  # decides what a Kustomization applies, so a policy that rewrote spec.url
+  # would have every labelled namespace's reconciler apply whatever it points
+  # at -- namespace-admin in each, nothing across, the same reach the `bind`
+  # list above already concedes. The ceiling on both is who may write policies.
+  - apiGroups:
+      - source.toolkit.fluxcd.io
+    resources:
+      - gitrepositories
     verbs:
       - get
       - list

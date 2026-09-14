@@ -37,6 +37,60 @@ For a process that reads its configuration once at startup. See
 value is overwritten on the next apply. Its presence is how you confirm the
 policy matched.
 
+### `flux.rbac.thaum.xyz/role`
+
+| | |
+| --- | --- |
+| **Type** | Label |
+| **Set on** | `Namespace` |
+| **Value** | A ClusterRole name; every app namespace carries `cluster-admin` |
+| **Read by** | `generate-flux-reconciler` and `generate-flux-source` (Kyverno `GeneratingPolicy`) |
+| **Effect** | Generates the `flux-reconciler` ServiceAccount there, a **RoleBinding** giving it that ClusterRole, and the `GitRepository` its Kustomizations read |
+
+The value names the *rules*, not the reach. A RoleBinding confers only the
+namespaced half of a ClusterRole and only inside its own namespace, so
+`cluster-admin` here is namespace-admin in that namespace and nothing anywhere
+else. The binding kind is the whole boundary, which is why the policy never
+generates a ClusterRoleBinding: that would need the background controller to
+hold `bind` on `cluster-admin`, after which any policy could mint it from a
+label.
+
+A namespace whose Kustomization applies something cluster-scoped — a
+PersistentVolume, a chart's ClusterRole — cannot be served by a RoleBinding at
+any width. It keeps this label and adds a hand-written ClusterRoleBinding on top,
+in `k8s/namespaces/<app>/`; rights are additive, so dropping that binding narrows
+the namespace back to confined rather than to nothing.
+
+The `platform-<domain>` namespaces carry no label. Their `flux-reconciler` and
+`GitRepository` are files, because they are on the bootstrap path — see
+[how Flux is layered](../explanation/flux-layering.md). Only a cluster-admin can
+set the label at all: Namespaces are cluster-scoped, and `edit` and `admin` get
+get/list/watch on them and nothing more, so a tenant cannot label their way into
+a wider reconciler.
+
+### `group.rbac.thaum.xyz/<group>`
+
+| | |
+| --- | --- |
+| **Type** | Label, one per group |
+| **Set on** | `Namespace` |
+| **Value** | `edit` or `view`; `validate-group-labels` rejects anything else |
+| **Read by** | `generate-group-rolebindings` (Kyverno `GeneratingPolicy`) |
+| **Effect** | Generates a RoleBinding giving `oidc:k8s:group:<group>` that ClusterRole in that namespace |
+
+The group is in the key and the tier in the value, so several groups can hold
+different levels in one namespace. The `k8s:group:` prefix is derived and never
+taken from the label: pocket-id groups are shared across every OIDC client, so a
+bare group name could select an application's own SSO group. The group has to
+exist in pocket-id with its members and be allowed for the kubectl client, or the
+login fails before RBAC is consulted — see
+[log in with kubectl](../how-to/log-in-with-kubectl.md).
+
+`synchronize` is on: removing the label removes the binding, and an edit to the
+binding is reverted. The ceiling is RBAC rather than the policy — the background
+controller may `bind` only `edit` and `view`, so no label can produce a binding
+to `admin` or `cluster-admin` whatever it asks for.
+
 ### `ingress.thaum.xyz/probe`
 
 | | |
@@ -45,10 +99,17 @@ policy matched.
 | **Set on** | `Ingress` |
 | **Value** | `enabled` — the only value the selector matches |
 | **Read by** | the `ingress` `Probe` (blackbox-exporter) |
-| **Effect** | blackbox probes the host, and the target joins `blackbox-probe-success` |
+| **Effect** | blackbox probes the host, and the app's `slo-probe-success.yaml` measures it |
 
 Pairs with `ingress.thaum.xyz/probe-uri`; a label without the annotation probes
 the bare host, which is rarely what you want.
+
+Each probed app owns a Pyrra `ServiceLevelObjective` beside its Ingress,
+`slo-probe-success.yaml`: availability as a person experiences it, end to end
+through DNS, TLS and the ingress. Its indicator matches on the host rather
+than the full probe URL, so changing `probe-uri` retunes the check without
+emptying the SLO behind it. The target, and the measurement it was read from,
+stay in the file because they differ per app.
 
 !!! warning "On the Ingress that declares TLS"
 
@@ -111,6 +172,50 @@ switchover late, with nothing to show for it. See
 ## Upstream keys, local contract
 
 Keys owned by other projects, where what they mean *here* is a local decision.
+
+### `pod-security.kubernetes.io/enforce`
+
+| | |
+| --- | --- |
+| **Type** | Label |
+| **Set on** | `Namespace` |
+| **Value** | `baseline` on every app namespace; `privileged` where the Namespace manifest says why |
+| **Read by** | Pod Security Admission, built into the API server |
+| **Effect** | A Pod that violates the tier is rejected when its controller creates it |
+
+`baseline` is the tier that closes the route out of a namespace: it forbids
+privileged containers, hostPath volumes and the host network, PID and IPC
+namespaces, which together are how a pod reaches the node and, through the
+node's credentials, the cluster. Without it a namespace role is bounded only by
+RBAC, and RBAC does not describe what a container can reach once it is on a
+host.
+
+Not `restricted`, which also wants `runAsNonRoot`, a seccomp profile and every
+capability dropped. Most images here would fail it, and enforcement failures
+surface on the ReplicaSet rather than at apply, so a tier nothing meets stops
+rollouts quietly.
+
+`privileged` matches the cluster default and is set explicitly anyway, so that
+the exemption is a reviewable line with a reason next to it rather than an
+absence. `audit` and `warn` are left unset except in `platform-storage`, which
+carries all three.
+
+### `kustomize.toolkit.fluxcd.io/prune: disabled`
+
+| | |
+| --- | --- |
+| **Type** | Annotation |
+| **Set on** | every `Namespace`, every `PersistentVolume`, and the HelmReleases whose loss would take the cluster down |
+| **Read by** | kustomize-controller |
+| **Effect** | The object survives being dropped from its Kustomization's inventory |
+
+Pruning is inventory-based: anything that drops an object from the inventory —
+a rename, a file moved between directories, a restructure — deletes it. For a
+Namespace that deletes everything inside it. For a PersistentVolume with
+`Retain`, the data survives but the PVC bound to it does not, and recovery means
+hand-clearing `claimRef` on a recreated PV while the app is down. Which
+HelmReleases carry it, and why, is in
+[how Flux is layered](../explanation/flux-layering.md#pruning-and-the-exceptions).
 
 ### `k8up.io/backup`
 

@@ -1,9 +1,6 @@
 apiVersion: policies.kyverno.io/v1
 kind: GeneratingPolicy
 metadata:
-  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
-  # component's namespace on it in the rendered output; the API server ignores
-  # the field for cluster-scoped resources.
   name: generate-flux-reconciler
 spec:
   # Self-service reconciler identities. A Namespace names the ClusterRole Flux
@@ -15,6 +12,8 @@ spec:
   # and this generates the `flux-reconciler` ServiceAccount that
   # kustomize-controller and helm-controller impersonate there
   # (--default-service-account), plus a RoleBinding giving it that ClusterRole.
+  # The GitRepository the Kustomizations there read comes from the same label,
+  # via generate-flux-source.
   #
   # ONLY RoleBindings. A namespace whose Flux objects install cluster-scoped
   # resources -- ClusterRoles, CRDs, webhook configurations, StorageClasses --

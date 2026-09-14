@@ -5,21 +5,10 @@ metadata:
   namespace: grafana
   annotations:
     kubernetes.io/description: >-
-      Reconciles this app as grafana's own flux-reconciler, rather than a
-      cluster-admin one. kustomize-controller resolves --default-service-account
-      in the OBJECT's namespace, so where this object lives is what decides how
-      much it may do.
-
-      That ServiceAccount is bound with a RoleBinding, so this can apply
-      anything namespaced in grafana and nothing anywhere else. Repointing
-      spec.path at another component would not widen it -- the apply is simply
-      denied.
-
-      It sits beside the Namespace and the GitRepository because all three are
-      platform-owned, and that split is the review boundary: everything under
-      k8s/apps/grafana/ is the tenant's, everything here is not. sourceRef names
-      the source in this namespace; --no-cross-namespace-refs=true forbids
-      flux-system's.
+      Reconciles ./k8s/apps/grafana as grafana's own flux-reconciler, which the
+      ClusterRoleBinding beside this file widens to cluster-admin; read that
+      object to know what this one can reach. Platform-owned; what it reconciles
+      is the tenant's.
 spec:
   interval: 15m0s
   path: ./k8s/apps/grafana

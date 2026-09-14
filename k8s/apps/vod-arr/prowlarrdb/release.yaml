@@ -3,8 +3,6 @@ kind: HelmRelease
 metadata:
   name: postgres-prowlarr
 spec:
-  # Pinned: resource names derive from the release name, and postgres-prowlarr-rw is
-  # hardcoded by this app's consumers.
   releaseName: postgres-prowlarr
   chart:
     spec:
@@ -17,8 +15,7 @@ spec:
   interval: 5m
   timeout: 10m
   install:
-    # Helm's waiter cannot judge a CNPG Cluster, and install remediation would
-    # uninstall the release -- deleting the Cluster and its PVCs.
+    # No remediation: an uninstall deletes the Cluster and its PVCs.
     disableWait: true
   upgrade:
     disableWait: true
@@ -26,7 +23,6 @@ spec:
       retries: 0
   uninstall:
     deletionPropagation: orphan
-  # warn, not enabled: enabled would fight CNPG's own defaulted fields forever.
   driftDetection:
     mode: warn
   valuesFrom:

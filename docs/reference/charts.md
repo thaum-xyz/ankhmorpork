@@ -34,6 +34,19 @@ Published to `oci://ghcr.io/thaum-xyz/helm-charts`, source in
 [v-cnpg]: https://github.com/thaum-xyz/helm-charts/tree/main/charts/cnpg-database
 [v-lvm]: https://github.com/thaum-xyz/helm-charts/tree/main/charts/lvm-diskprep
 
+### How a `cnpg-database` release is declared
+
+Every release of it carries the same settings, and each guards against a
+specific loss:
+
+| Setting | Why |
+| --- | --- |
+| `releaseName` pinned to the object's name | the chart's fullname is the bare release name, and `<release>-rw` is hardcoded by the app that reads it |
+| `install.disableWait`, `upgrade.disableWait`, `upgrade.remediation.retries: 0`, no `install.remediation` | Helm's waiter cannot judge a CNPG `Cluster`, and a remediation's strategy is *uninstall*, which deletes the `Cluster` and, through `ownerReferences`, its PVCs |
+| `uninstall.deletionPropagation: orphan` | the same loss, on a deliberate uninstall |
+| `driftDetection.mode: warn` | `enabled` would fight the fields CNPG defaults on its own objects forever |
+| values in `values-<release>` via `configMapGenerator` | as every release here; see [why Helm values live in a file](../explanation/helm-values.md) |
+
 ## Images
 
 Published to `ghcr.io/thaum-xyz/containers/<name>`, source in

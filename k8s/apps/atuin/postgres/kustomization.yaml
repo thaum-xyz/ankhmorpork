@@ -7,9 +7,6 @@ configMapGenerator:
   - name: values-postgres
     files:
       - values.yaml=values.yaml
-# Stable ConfigMap name: helm-controller tracks values through
-# status.lastAttemptedConfigDigest, so the hash suffix is not needed to detect
-# changes, and without it there is no name for nameReference to rewrite -- which
-# is what kustomizeconfig.yaml exists for elsewhere in this repo.
+# Stable name; see docs/explanation/helm-values.md.
 generatorOptions:
   disableNameSuffixHash: true

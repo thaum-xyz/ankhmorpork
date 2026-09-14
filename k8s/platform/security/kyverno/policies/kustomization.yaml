@@ -1,5 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+# Every policy here is cluster-scoped. kustomize cannot know that for a CRD kind
+# and stamps the component's namespace on them in the rendered output; the API
+# server ignores the field for cluster-scoped resources.
 resources:
   - require-resource-requests.yaml
   - validate-pdb-drain-safety.yaml
@@ -11,3 +14,4 @@ resources:
   - validate-reconciler-sa-usage.yaml
   - validate-flux-role-labels.yaml
   - generate-flux-reconciler.yaml
+  - generate-flux-source.yaml

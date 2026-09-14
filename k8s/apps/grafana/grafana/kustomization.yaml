@@ -12,9 +12,6 @@ configMapGenerator:
   - name: values-grafana
     files:
       - values.yaml=values.yaml
-# Stable ConfigMap name: helm-controller tracks values through
-# status.lastAttemptedConfigDigest, so the hash suffix is not needed, and
-# without it there is no generated name for nameReference to rewrite -- which is
-# all kustomizeconfig.yaml did.
+# Stable name; see docs/explanation/helm-values.md.
 generatorOptions:
   disableNameSuffixHash: true

@@ -3,14 +3,6 @@ kind: ServiceLevelObjective
 metadata:
   name: photos-probe-success
 spec:
-  # Availability as a person experiences it: the blackbox probe, end to end
-  # through DNS, TLS and the ingress. Split out of the shared
-  # blackbox-probe-success so this service owns the objective that describes it,
-  # the same reason its Ingress is not kept in traefik's namespace.
-  #
-  # Matches on the host rather than the full probe URL, so changing
-  # ingress.thaum.xyz/probe-uri retunes the check without silently emptying the
-  # SLO behind it.
   # immich exports 565 metric families and not one measures the request path,
   # so the probe is the only availability signal it has.
   #

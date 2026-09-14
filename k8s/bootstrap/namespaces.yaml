@@ -8,14 +8,15 @@ metadata:
       Every Namespace this repo creates, plus what each
       `platform-<domain>` needs before it can reconcile itself.
 
-      An app Namespace is one object in one file. A `platform-<domain>` is a
-      directory, holding three objects beside the Namespace: the GitRepository
-      its Kustomization reads, the `flux-reconciler` ServiceAccount that
-      Kustomization impersonates, and that SA's ClusterRoleBinding. All three
-      have to exist BEFORE a Kustomization is created in the namespace, and a
-      Kustomization can create neither the source it reads nor the identity it
-      applies as -- so they are prerequisites of a domain rather than part of it,
-      and they belong to whatever creates the namespace.
+      An app's directory holds its Namespace, the Kustomization that reconciles
+      it and, where the app applies something cluster-scoped, a
+      ClusterRoleBinding; the GitRepository that Kustomization reads and the
+      `flux-reconciler` it applies as are generated from the Namespace's label.
+      A `platform-<domain>` directory holds those two as files beside the
+      Namespace, because they are on the bootstrap path. Either way they have to
+      exist BEFORE a Kustomization is created in the namespace -- it can create
+      neither the source it reads nor the identity it applies as -- so they
+      belong to whatever creates the namespace.
 
       They live outside k8s/apps/<app>/ because a Namespace is a cluster-admin
       object twice over. It is cluster-scoped, so an app Kustomization that

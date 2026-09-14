@@ -1,9 +1,6 @@
 apiVersion: policies.kyverno.io/v1
 kind: GeneratingPolicy
 metadata:
-  # Cluster-scoped. kustomize cannot know that for a CRD kind and stamps the
-  # component's namespace on it in the rendered output; the API server ignores
-  # the field for cluster-scoped resources.
   name: generate-group-rolebindings
 spec:
   # Self-service namespace provisioning. A Namespace declares who may touch it
