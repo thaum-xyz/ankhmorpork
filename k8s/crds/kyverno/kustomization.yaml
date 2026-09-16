@@ -7,9 +7,3 @@ namespace: platform-security
 resources:
   - repository.yaml
   - release.yaml
-generatorOptions:
-  disableNameSuffixHash: true
-configMapGenerator:
-  - name: values-kyverno-api
-    files:
-      - values.yaml=values.yaml

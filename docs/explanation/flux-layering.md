@@ -170,9 +170,16 @@ on `retryInterval` and defaults to `interval`.
 The kyverno policies were the sharpest case of that, and are the reason
 kyverno's CRDs are not installed by the kyverno chart. `csi-nfs`,
 `piraeus-datastore` and `cnpg-system` ship `policies.kyverno.io` objects, and so
-does platform-security. `k8s/crds/kyverno` establishes those kinds from
-upstream's separate `kyverno-api` chart -- the same chart the kyverno chart
-pulls in as a dependency, so the CRDs are the ones the controllers expect.
+does platform-security. `k8s/crds/kyverno` establishes those kinds through
+`kyverno-policy-crds`, a chart in thaum-xyz/helm-charts whose only content is
+upstream's separate `kyverno-api` chart as a dependency -- the same chart the
+kyverno chart pulls in, so the CRDs are the ones the controllers expect.
+
+The wrapper is there because `kyverno-api` cannot be a release by itself. Helm
+stores a release's own templates and its rendered manifest in one Secret; for
+that chart both are the same eleven CRDs, and gzipped together they exceed what
+a Secret may hold. A dependency's templates are not stored, so behind the
+wrapper the CRDs are kept once, as they are inside the kyverno release.
 
 Four of the five domains still cannot declare that they wait for it, so this
 buys convergence rather than ordering: what a cold start retries against is a

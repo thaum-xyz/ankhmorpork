@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: kyverno-api
+  name: kyverno-policy-crds
   annotations:
     kubernetes.io/description: >-
       The eleven policies.kyverno.io CRDs, which is every kyverno kind this repo
@@ -16,25 +16,40 @@ metadata:
       changes is what a cold start retries against, a CRD-only release with no
       dependencies of its own rather than the whole kyverno stack.
 
-      Version is not Renovate's to move on its own, and renovate.json disables
-      it by name: this chart is the kyverno chart's own dependency, and CRDs
-      that outrun the controllers serving them fail quietly. Bump it with the
-      kyverno chart; `make validate-kyverno-crd-pin` fails when the two
-      diverge.
+      The chart is kyverno-policy-crds from thaum-xyz/helm-charts, a wrapper
+      whose only content is upstream's kyverno-api chart as a dependency. By
+      itself kyverno-api cannot be a release: Helm stores a release's own
+      templates and its rendered manifest, both would be the same eleven CRDs,
+      and gzipped they exceed what a Secret may hold. A dependency's templates
+      are not stored, so behind the wrapper they are kept once, as they are
+      inside the kyverno release.
+
+      The wrapper's version is the kyverno-api version it wraps, so the pin
+      below reads as the CRD version. Renovate bumps it like any chart;
+      `make validate-kyverno-crd-pin` fails the PR when the kyverno-api the
+      wrapper carries is not the one the kyverno chart depends on -- CRDs that
+      outrun the controllers serving them fail quietly -- so the two move
+      together or not at all.
 spec:
   chart:
     spec:
-      chart: kyverno-api
+      chart: kyverno-policy-crds
+      # The wrapper's version is the kyverno-api version it wraps, so this pin
+      # reads as the CRD version and moves with it.
       version: "0.0.1-alpha.4"
       sourceRef:
         kind: HelmRepository
-        name: kyverno-api
+        name: thaum-charts-crds
       interval: 5m
   interval: 5m
   timeout: 10m
   # No `crds:` policy on either action: the chart ships its CRDs as ordinary
   # templates rather than in a crds/ directory, so Helm upgrades them like any
   # other object and Flux's CRD policy has nothing to act on.
+  #
+  # No values either: the chart's defaults already put
+  # helm.sh/resource-policy: keep on every CRD -- deleting a CRD deletes every
+  # policy of that kind -- and there is nothing else to set.
   install:
     timeout: 10m
     # Adoption stays on, which is Helm 4's default under helm-controller. The
@@ -52,6 +67,3 @@ spec:
     disableTakeOwnership: true
     remediation:
       retries: 3
-  valuesFrom:
-    - kind: ConfigMap
-      name: values-kyverno-api

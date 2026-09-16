@@ -238,13 +238,6 @@
       "minimumReleaseAge": "10 days"
     },
     {
-      "description": "kyverno-api is not an independent dependency: it is the kyverno chart's own, split into the crds layer so that what a cold start retries against is a CRD-only release. make validate-kyverno-crd-pin fails when the two diverge, so this exists to stop Renovate opening the PR that trips it. Bump it with the kyverno chart.",
-      "matchDepNames": [
-        "kyverno-api"
-      ],
-      "enabled": false
-    },
-    {
       "description": "Zensical is alpha (0.0.x) and can change rendering between patch releases. The docs build gates it, but a green build does not prove the site still looks right, so it lands as its own PR and is never automerged.",
       "matchDepNames": [
         "zensical"
