@@ -19,23 +19,29 @@ spec:
     disableWait: false
     crds: CreateReplace
     createNamespace: true
+    # helm-controller runs Helm 4, which adopts objects another release owns
+    # unless told not to. Off on both actions, so that rendering a CRD the crds
+    # layer owns fails with `invalid ownership metadata` instead of quietly
+    # taking it; the postRenderer below is what keeps that from happening.
+    disableTakeOwnership: true
     remediation:
       retries: 3
   upgrade:
     timeout: 10m
     disableWait: false
     crds: CreateReplace
+    disableTakeOwnership: true
   valuesFrom:
     - kind: ConfigMap
       name: values-kyverno
   # The eleven policies.kyverno.io CRDs are the crds layer's, installed there
-  # from upstream's kyverno-api chart so that both domains declaring kyverno
-  # policies are ordered behind them. This release still renders them -- the
-  # chart gates its `crds` and `kyverno-api` subcharts on one `crds.install`
-  # switch, with no way to disable half -- so they are dropped from the
-  # manifest here instead. Two Helm releases cannot own the same object; if
-  # this patch ever stops matching, the kyverno release fails to upgrade with
-  # `invalid ownership metadata` rather than quietly taking them over.
+  # from upstream's kyverno-api chart so that what a cold start retries against
+  # is a CRD-only release rather than this whole stack. This release still
+  # renders them -- the chart gates its `crds` and `kyverno-api` subcharts on
+  # one `crds.install` switch, with no way to disable half -- so they are
+  # dropped from the manifest here instead. If this patch ever stops matching,
+  # the release renders CRDs another release owns, and `disableTakeOwnership`
+  # above turns that into a loud upgrade failure rather than a silent takeover.
   #
   # The name is a regex over the whole group, so a CRD upstream adds to it
   # arrives via kyverno-api without a change here.
