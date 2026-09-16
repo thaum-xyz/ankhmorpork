@@ -47,9 +47,9 @@ jobs:
       # remembered and starts being enforced.
       - run: make validate-platform-namespaces
 
-  # kyverno's CRDs are split across two Flux objects -- the policies.kyverno.io
-  # group in k8s/crds/, the rest in the kyverno release -- and nothing in either
-  # file says they are one upstream release that has to move together.
+  # The policies.kyverno.io CRDs come from the crds layer and the controllers
+  # from the kyverno release, and the controllers must never get ahead of the
+  # CRDs they were built against. Nothing in either file says so; this does.
   kyverno-crd-pin:
     runs-on: ubuntu-latest
     steps:
