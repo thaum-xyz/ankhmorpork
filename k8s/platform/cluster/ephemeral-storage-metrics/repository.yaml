@@ -1,0 +1,10 @@
+# Chart lives only on gh-pages; ghcr.io/jmcgrath207 publishes the image but no
+# OCI chart, so this is an HTTP HelmRepository rather than the OCI kind most of
+# this repo uses.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: ephemeral-storage-metrics
+spec:
+  interval: 5m
+  url: https://jmcgrath207.github.io/k8s-ephemeral-storage-metrics/chart
