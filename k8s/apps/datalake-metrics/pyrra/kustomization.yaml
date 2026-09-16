@@ -12,5 +12,3 @@ configMapGenerator:
   - name: values-pyrra
     files:
       - values.yaml=values.yaml
-generatorOptions:
-  disableNameSuffixHash: true

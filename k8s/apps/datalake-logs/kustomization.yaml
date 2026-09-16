@@ -10,6 +10,9 @@ configMapGenerator:
   - name: values-loki
     files:
       - values.yaml=values.yaml
-# Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.
-generatorOptions:
-  disableNameSuffixHash: true
+# Hashes every generated values ConfigMap and rewrites the HelmRelease
+# valuesFrom entry that names it, so a values edit changes the release spec and
+# helm-controller upgrades on the event instead of noticing on its next
+# interval. See k8s/kustomize/helmrelease-values/nameref.yaml.
+components:
+  - ../../kustomize/helmrelease-values

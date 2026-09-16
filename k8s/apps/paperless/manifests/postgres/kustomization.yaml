@@ -10,6 +10,3 @@ configMapGenerator:
   - name: values-postgres
     files:
       - values.yaml=values.yaml
-# Stable name; see docs/explanation/helm-values.md.
-generatorOptions:
-  disableNameSuffixHash: true

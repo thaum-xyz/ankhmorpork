@@ -7,5 +7,3 @@ configMapGenerator:
   - name: values-postgres
     files:
       - values.yaml=values.yaml
-generatorOptions:
-  disableNameSuffixHash: true

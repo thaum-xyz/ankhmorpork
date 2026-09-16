@@ -13,5 +13,3 @@ configMapGenerator:
   - name: values-versitygw
     files:
       - values.yaml=values.yaml
-generatorOptions:
-  disableNameSuffixHash: true
