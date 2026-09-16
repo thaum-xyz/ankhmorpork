@@ -17,7 +17,10 @@ spec:
       mediumBurn: info
       slowBurn: none
       longTermBurn: none
-      absent: warning
+      # kubelet only creates the errors counter on the first CRI failure, so it
+      # is absent on a healthy cluster until one happens (~5/day here). A real
+      # kubelet outage is caught by KubeletInstanceUnreachable and KubeletDown.
+      absent: none
   indicator:
     ratio:
       errors:
