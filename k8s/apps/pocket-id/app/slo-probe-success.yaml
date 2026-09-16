@@ -3,12 +3,13 @@ kind: ServiceLevelObjective
 metadata:
   name: pocket-id-probe-success
 spec:
-  # SSO, so a failure here is a failure of every OIDC service. Pairs with
-  # pocket-id-availability.
+  # SSO, so a failure here is a failure of every OIDC service, and since the
+  # ratio objectives on its own metrics are gone it is the only signal it has.
   #
-  # target is a PLACEHOLDER (#1379): the probe endpoint changed on 2026-09-06
-  # 06:51 UTC, so the first 7d window measuring one endpoint throughout closes
-  # 2026-09-13 06:51 UTC. Provisionally 99.912% over the first 3 days.
+  # target from the 7d window 2026-09-09..09-16 (#1379): 99.88096% achieved,
+  # 24 failed samples in 5 bursts, worst 7m00s, 11.9% of a 99% budget.
+  # 7m00s burst is the cluster-wide event of 2026-09-12; see
+  # k8s/apps/homer/app/slo-probe-success.yaml.
   description: >-
     Fraction of successful blackbox probes against login.krupa.net.pl.
   alerting:
@@ -23,5 +24,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://login\\.krupa\\.net\\.pl(/.*)?"}
-  target: "95.0"
+  target: "99"
   window: 7d

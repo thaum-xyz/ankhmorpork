@@ -8,10 +8,10 @@ spec:
   # or the CNPG database, and described the container and its Postgres rather
   # than whether the gateway answers.
   #
-  # target is a PLACEHOLDER (#1379), not even carried over from the shared
-  # objective -- ai-gateway was never in it. The probe started on 2026-09-07
-  # 08:57 UTC, so its first full 7d window closes 2026-09-14 08:57 UTC.
-  # Provisionally 99.904% over the first 3 days.
+  # target from the 7d window 2026-09-09..09-16 (#1379): 99.91568% achieved,
+  # 17 failed samples in 2 bursts, worst 7m00s, 8.4% of a 99% budget.
+  # 7m00s burst is the cluster-wide event of 2026-09-12; see
+  # k8s/apps/homer/app/slo-probe-success.yaml.
   description: >-
     Fraction of successful blackbox probes against ai-gateway.krupa.net.pl.
   alerting:
@@ -26,5 +26,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://ai-gateway\\.krupa\\.net\\.pl(/.*)?"}
-  target: "95.0"
+  target: "99"
   window: 7d

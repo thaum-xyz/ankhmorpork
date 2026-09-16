@@ -5,10 +5,49 @@ metadata:
 spec:
   # The dashboard everything else is reached from.
   #
-  # target from the 7d window 2026-09-03..09-10 (#1379), the first full window
-  # in which this probe measured one endpoint throughout: 100% achieved, not a
-  # single failed sample. 99.5 rather than tighter because at 30s samples a
-  # 99.9 target pages on one failed scrape; 99.5 needs 1m30s.
+  # target from the 7d window 2026-09-09..09-16 (#1379): 99.91072% achieved, 18
+  # failed samples in 3 bursts, worst 7m00s, 8.9% of a 99% budget.
+  #
+  # This file is where the two cluster-wide events in that window are written
+  # down, because every other probe objective inherits them and none of them
+  # says anything about the service it names:
+  #
+  #   2026-09-12 14:09:00-14:16:00Z, 7m00s, all 17 endpoints this cluster
+  #   serves and neither of the two it does not. All four traefik-public and
+  #   traefik-private pods were created at 14:15:30, so the ingress was
+  #   replaced rather than rolled -- the Flux Kustomization consolidation
+  #   (3285dfea, 8119f27a) moved ownership and the deployments went with it.
+  #   No infrastructure alert fired for any of it.
+  #
+  #   2026-09-11 00:37:00-00:38:30Z, 1m30s, all 19 endpoints including
+  #   registry.avsystem.com and zmc.krupa.net.pl. probe_dns_lookup_time_seconds
+  #   hit the 20s timeout, so this was cluster DNS and not 19 simultaneous
+  #   outages.
+  #
+  # Those 7 minutes are why no probe objective here can be tighter than 99.
+  # A 99.9%/7d budget is 10m04s and every cluster-served probe spent 8m00s to
+  # 14m30s down this week; one ingress replacement exhausts it outright.
+  #
+  # 99.5 also survives on budget -- 50m24s, 16-29% used -- so the choice
+  # between it and 99 is about where the fast tier starts paging, not about
+  # the budget. Both legs must exceed 14 x (1 - target) and hold for the rule's
+  # `for: 1m`, which at a 30s probe interval means two consecutive evaluations:
+  #
+  #   99.5   burnrate15m > 0.070, i.e. 3 of 30 samples   ~4 failed in a row, 2m
+  #   99     burnrate15m > 0.140, i.e. 5 of 30 samples   ~6 failed in a row, 3m
+  #
+  # The `for` is load-bearing and easy to miscount without. On 09-11 both of
+  # homer's legs crossed the 99.5 threshold, but only at 00:38:30 and only for
+  # that one evaluation, so nothing fired. A 1m30s blip does not page at either
+  # target; a 2m one pages at 99.5 alone.
+  #
+  # 99 is the choice because the shortest single-service bursts in this window
+  # run to 3m00s (vod, seek, recipes) and 3m30s (registry) -- short enough that
+  # a 2m floor would page for each of them, in a cluster where nobody is on
+  # call and the thing has usually recovered by the time anyone looks.
+  #
+  # 99.5 was the target here until this window, on the grounds that the
+  # previous one had not a single failed sample. It had one; this one has 18.
   description: >-
     Fraction of successful blackbox probes against ankhmorpork.thaum.xyz.
   alerting:
@@ -23,5 +62,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://ankhmorpork\\.thaum\\.xyz(/.*)?"}
-  target: "99.5"
+  target: "99"
   window: 7d

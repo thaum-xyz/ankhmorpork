@@ -3,12 +3,10 @@ kind: ServiceLevelObjective
 metadata:
   name: atuin-probe-success
 spec:
-  # Pairs with atuin-availability, which measures the sync API rather than
-  # reachability.
-  #
-  # target is a PLACEHOLDER (#1379): the probe endpoint changed on 2026-09-06
-  # 14:17 UTC, so the first 7d window measuring one endpoint throughout closes
-  # 2026-09-13 14:17 UTC. Provisionally 99.974% over the first 3 days.
+  # target from the 7d window 2026-09-09..09-16 (#1379): 99.91072% achieved,
+  # 18 failed samples in 3 bursts, worst 7m00s, 8.9% of a 99% budget.
+  # 7m00s burst is the cluster-wide event of 2026-09-12; see
+  # k8s/apps/homer/app/slo-probe-success.yaml.
   description: >-
     Fraction of successful blackbox probes against atuin.thaum.xyz.
   alerting:
@@ -23,5 +21,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://atuin\\.thaum\\.xyz(/.*)?"}
-  target: "95.0"
+  target: "99"
   window: 7d
