@@ -14,7 +14,7 @@ env:
   kustomize-version: v5.8.1
   yq-version: v4.53.6
   shellcheck-version: v0.11.0
-  helm-version: v4.0.1
+  helm-version: v4.3.0
 
 jobs:
   manifests:
