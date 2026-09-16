@@ -10,6 +10,8 @@ metadata:
       Reconciles in its own namespace, as that namespace's flux-reconciler;
       ordering between domains is in docs/explanation/flux-layering.md.
 spec:
+  dependsOn:
+    - name: crds
   interval: 15m0s
   path: ./k8s/platform/network
   # Objects that must survive a prune carry kustomize.toolkit.fluxcd.io/prune: disabled.
