@@ -93,10 +93,11 @@ ConfigMap change and seeing new Pods —
 wait, reconcile explicitly:
 
 ```bash
-flux reconcile source git ankhmorpork
-# Twice: the first pass stamps the pre-update version, the second picks up the new one.
-# An app: its own Kustomization, in flux-system. A platform component: the
+# Every namespace has its own source; refresh the one beside the Kustomization.
+# An app: its own Kustomization, in its own namespace. A platform component: the
 # platform-<domain> Kustomization, in the platform-<domain> namespace.
+flux -n <kustomization namespace> reconcile source git ankhmorpork
+# Twice: the first pass stamps the pre-update version, the second picks up the new one.
 flux -n <kustomization namespace> reconcile kustomization <kustomization>
 flux -n <kustomization namespace> reconcile kustomization <kustomization>
 ```

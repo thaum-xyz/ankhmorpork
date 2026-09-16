@@ -121,7 +121,9 @@ Secret (pocket-id, cloudflared).
 Order matters, and getting it wrong reports success while changing nothing:
 
 ```bash
-flux reconcile source git ankhmorpork
+# every namespace has its own GitRepository; refresh the one beside the
+# Kustomization -- the CLI defaults to a flux-system that no longer exists
+flux -n <ks-namespace> reconcile source git ankhmorpork
 # regenerates the ConfigMap -- an app's Kustomization lives in the app's own
 # namespace, a platform component's is platform-<domain>, in that namespace
 flux -n <ks-namespace> reconcile kustomization <kustomization>
@@ -191,7 +193,7 @@ Carry across exactly:
   Empty-valued vars the chart set are still part of the contract; drop them in a
   later commit once the app is known not to distinguish unset from empty.
 
-Recovery, if the objects do get deleted: `flux -n flux-system reconcile
+Recovery, if the objects do get deleted: `flux -n <ks-namespace> reconcile
 kustomization <name>` recreates them, and is safe once the HelmRelease is gone
 because nothing is left to uninstall. There is no `--force` flag on that command.
 

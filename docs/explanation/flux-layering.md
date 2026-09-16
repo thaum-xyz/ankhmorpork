@@ -61,9 +61,9 @@ with everything in it. What each label on a Namespace means is in
 `platform-cluster` is the one whose directory there is also built by hand. It
 holds the umbrellas, so it cannot be created by `namespaces` — that is one of
 them — and `k8s/bootstrap/` applies the same directory before any Kustomization
-exists. The other Namespace created outside `k8s/namespaces/` is `flux-system`,
-by the component that ships it; it now holds the controllers' own objects and
-nothing else.
+exists. Every Namespace is in `k8s/namespaces/`, including that one; there is no
+longer a `flux-system`, and the controllers run in `platform-cluster` like any
+other component.
 
 Each `platform-<domain>` is a directory rather than a file, because the Namespace
 is not the only thing that has to be there first. A `Kustomization` reconciling
@@ -125,12 +125,11 @@ what the reconciler identity, the group RoleBindings and a prune's blast radius
 are all keyed to, and one Kustomization per namespace is what makes those the
 same question rather than three that can drift apart.
 
-Those domain Kustomizations do not live in `flux-system`. Each is in the
-namespace it reconciles, reading the `GitRepository` there and applying as that
-namespace's `flux-reconciler`. Nor do the umbrellas: they reconcile from
-`platform-cluster`, which makes that namespace the seed the rest of the cluster
-is built from. `flux-system` is left holding only the controllers themselves —
-no Kustomization reconciles from it any more.
+Each domain Kustomization is in the namespace it reconciles, reading the
+`GitRepository` there and applying as that namespace's `flux-reconciler`. The
+umbrellas reconcile from `platform-cluster`, which makes that namespace the seed
+the rest of the cluster is built from — and where the controllers themselves run,
+installed by the `flux` component like any other release.
 
 ## Ordering, where it genuinely matters
 
@@ -244,21 +243,29 @@ would leave an orphan behind on every edit. See
 
 ## What reconciliation actually costs
 
-The `GitRepository` polls every 60 seconds, so a merge lands within a minute.
-There is no webhook: a `Receiver` may only name resources in its own namespace,
-so one in `flux-system` could never trigger the sources that belong to the other
-namespaces.
+Every namespace has its own `GitRepository`, each polling the same repository
+every 60 seconds, so a merge lands within a minute. That is the cost of
+`--no-cross-namespace-refs`: a Kustomization may read only a source beside it.
+There is no webhook either, for the same reason — a `Receiver` may only name
+resources in its own namespace, so one of them could refresh one namespace and
+no other.
 
 The trap is that reconciling in the wrong order reports success while doing
 nothing. `flux reconcile kustomization <name>` acts on whatever revision the
 source currently holds — which, minutes after a merge, may still be the one before
-it. The source has to be refreshed first:
+it. The source has to be refreshed first, and it is the source **in that
+Kustomization's own namespace**; the CLI defaults to a `flux-system` that no
+longer exists, so every command takes `-n`:
 
 ```bash
-flux reconcile source git ankhmorpork
-flux -n <app> reconcile kustomization <app>                  # an app, in its own namespace
+flux -n <app> reconcile source git ankhmorpork               # an app, in its own namespace
+flux -n <app> reconcile kustomization <app>
+
+flux -n platform-<domain> reconcile source git ankhmorpork   # a platform domain
 flux -n platform-<domain> reconcile kustomization platform-<domain>
-flux -n platform-cluster reconcile kustomization crds        # a layer: crds or namespaces
+
+flux -n platform-cluster reconcile source git ankhmorpork    # a layer: crds or namespaces
+flux -n platform-cluster reconcile kustomization crds
 ```
 
 For a component whose values come from a `configMapGenerator`, there is a third
@@ -270,3 +277,8 @@ mechanism and the trade; the step is:
 ```bash
 flux -n <namespace> reconcile helmrelease <release>
 ```
+
+An app's Kustomization is itself applied by `namespaces`, so a change to
+`sync.yaml` needs that layer reconciled before the app's own reconcile can see
+it. A change to `k8s/bootstrap/` needs neither: nothing reconciles that
+directory, and it takes effect only when someone applies it by hand.
