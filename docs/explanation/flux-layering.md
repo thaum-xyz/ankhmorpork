@@ -170,22 +170,30 @@ on `retryInterval` and defaults to `interval`.
 The kyverno policies were the sharpest case of that, and are the reason
 kyverno's CRDs are not installed by the kyverno chart. `csi-nfs`,
 `piraeus-datastore` and `cnpg-system` ship `policies.kyverno.io` objects, and so
-does platform-security. `k8s/crds/kyverno` establishes those kinds from
-upstream's separate `kyverno-api` chart -- the same chart the kyverno chart
-pulls in as a dependency, so the CRDs are the ones the controllers expect.
+does platform-security. `k8s/crds/kyverno` establishes those kinds from plain
+manifests that `hack/vendor-kyverno-crds.sh` renders from upstream's separate
+`kyverno-api` chart, at the version the kyverno chart depends on -- so the CRDs
+are the ones the controllers expect, and `make validate-kyverno-crds` fails the
+moment a kyverno bump moves that dependency without a re-render.
+
+They are files rather than a HelmRelease because a standalone `kyverno-api`
+release cannot be stored. Helm keeps a release's own templates and its rendered
+manifest in one Secret; for this chart both are the same eleven CRDs, and
+gzipped together they exceed what a Secret may hold. As a dependency of the
+kyverno chart the same CRDs are stored once, as manifest only, which is why that
+release fits.
 
 Four of the five domains still cannot declare that they wait for it, so this
 buys convergence rather than ordering: what a cold start retries against is a
-CRD-only release with no dependencies of its own, instead of the whole kyverno
-stack with its controllers and webhooks.
+set of CRD manifests with no dependencies of their own, instead of the whole
+kyverno stack with its controllers and webhooks.
 
 The kyverno chart gates that subchart and its own on a single `crds.install`,
 with no way to disable half, so the kyverno release drops those eleven CRDs from
 its manifest with a `$patch: delete` post-renderer instead. Everything outside
 `policies.kyverno.io` it still installs and upgrades itself: those kinds are
 used by no other domain, so nothing needs them earlier, and leaving them with
-the chart keeps them in lockstep with the controllers that serve them without a
-vendored copy to go stale.
+the chart keeps them in lockstep with the controllers that serve them.
 
 `crds` is declared in `k8s/bootstrap/` and applies `k8s/crds/`, rather than being
 a component of one domain, because more than one domain uses what it ships and

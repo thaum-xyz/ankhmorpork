@@ -47,10 +47,11 @@ jobs:
       # remembered and starts being enforced.
       - run: make validate-platform-namespaces
 
-  # kyverno's CRDs are split across two Flux objects -- the policies.kyverno.io
-  # group in k8s/crds/, the rest in the kyverno release -- and nothing in either
-  # file says they are one upstream release that has to move together.
-  kyverno-crd-pin:
+  # The policies.kyverno.io CRDs are vendored into k8s/crds/kyverno from the
+  # kyverno-api chart, at the version the kyverno chart depends on. A kyverno
+  # bump that moves that dependency has to land with a re-render, and nothing
+  # else says so.
+  kyverno-crds:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -61,7 +62,7 @@ jobs:
       - uses: azure/setup-helm@v4
         with:
           version: '${{ env.helm-version }}'
-      - run: make validate-kyverno-crd-pin
+      - run: make validate-kyverno-crds
 
   # The action finds shell files by extension and by shebang, so it covers
   # anything `make lint-shell` would and then some.

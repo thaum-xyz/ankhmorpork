@@ -25,9 +25,19 @@ validate-configmaps:  ## Check no two Kustomizations render the same ConfigMap
 validate-platform-namespaces:  ## Check platform components render into their domain namespace
 	python3 hack/validate-platform-namespaces.py
 
-.PHONY: validate-kyverno-crd-pin
-validate-kyverno-crd-pin:  ## Check the kyverno-api pin matches the kyverno chart
-	./hack/validate-kyverno-crd-pin.sh
+.PHONY: vendor-kyverno-crds
+vendor-kyverno-crds:  ## Re-render the policies.kyverno.io CRDs from the chart kyverno depends on
+	./hack/vendor-kyverno-crds.sh
+
+.PHONY: validate-kyverno-crds
+validate-kyverno-crds: vendor-kyverno-crds  ## Fail if the vendored kyverno CRDs are stale
+	@out="$$(git status --porcelain -- k8s/crds/kyverno)"; \
+	if [ -n "$$out" ]; then \
+		echo "$$out"; \
+		echo; \
+		echo "Vendored kyverno CRDs are out of date. Run 'make vendor-kyverno-crds' and commit."; \
+		exit 1; \
+	fi
 
 .PHONY: lint-shell
 lint-shell:  ## Run shellcheck over every tracked shell script

@@ -4,8 +4,8 @@
 # reports.kyverno.io and wgpolicyk8s.io -- the ones no chart publishes on their
 # own -- so they stay in lockstep with the controllers that serve them.
 #
-# It does NOT install the eleven in policies.kyverno.io. Those are established
-# by the crds layer from upstream's kyverno-api chart, because this repo
+# It does NOT install the eleven in policies.kyverno.io. Those are vendored
+# into the crds layer from upstream's kyverno-api chart, because this repo
 # declares policies in platform-security AND platform-storage and a domain
 # Kustomization cannot depend on one in another namespace. `crds.install` is a
 # single switch over both CRD subcharts, so the split is made in
