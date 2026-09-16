@@ -30,6 +30,7 @@ kind: Kustomization
 resources:
   - descheduler/
   - device-plugins/
+  - ephemeral-storage-metrics/
   - flux/
   - node-feature-discovery/
   - node-problem-detector/

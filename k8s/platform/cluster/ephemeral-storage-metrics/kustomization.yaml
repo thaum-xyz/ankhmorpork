@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: platform-cluster
+resources:
+  - repository.yaml
+  - release.yaml
+configMapGenerator:
+  - name: values-ephemeral-storage-metrics
+    files:
+      - values.yaml=values.yaml
+# Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.
+generatorOptions:
+  disableNameSuffixHash: true

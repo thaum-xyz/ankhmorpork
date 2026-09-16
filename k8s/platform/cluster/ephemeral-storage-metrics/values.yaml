@@ -1,0 +1,105 @@
+# Config reference: https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/blob/master/chart/values.yaml
+#
+# Fills the one storage gap nothing else here covers: which pod is consuming
+# ephemeral storage. kubelet's cAdvisor endpoint does not collect per-container
+# disk metrics -- container_fs_usage_bytes has zero series on this cluster,
+# while the blkio-derived container_fs_reads/writes_bytes_total survive -- and
+# the numbers live only in the kubelet Summary API, which nothing scrapes.
+# kubelet_volume_stats_* answers the same question for PVCs, and node-exporter
+# answers it for whole filesystems; between them sits emptyDir and the container
+# writable layer, and that is what this exporter reads.
+#
+# Gathering only. No alerting rules, here or below: the goal is to learn what
+# the emptyDirs actually use, so sizeLimit can be set from measurement and the
+# small ones moved to medium: Memory.
+
+deploy_type: Deployment
+
+# One poll per scrape. The chart derives the ServiceMonitor interval from this
+# key, and Prometheus scrapes globally at 30s, so the chart default of 15
+# queries every node's Summary API twice per sample that is kept.
+interval: 30
+
+metrics:
+  # Kept: the per-workload view that is the whole point.
+  ephemeral_storage_pod_usage: true
+  ephemeral_storage_container_rootfs_usage: true
+  ephemeral_storage_container_logs_usage: true
+  ephemeral_storage_container_volume_usage: true
+  # Emitted only for an emptyDir that declares sizeLimit, which is how this
+  # becomes self-checking: a volume that shows up here has a limit to measure
+  # against, and one that does not is still a guess.
+  ephemeral_storage_container_volume_limit_percentage: true
+
+  # Off: node_filesystem_* already owns node-level fill, and owns it better.
+  # These three read the Summary API's nodefs, which is `/` -- the filesystem at
+  # 8-29% used. The one under pressure is /var/lib/rancher (imagefs, 75-82%),
+  # which this exporter has no concept of at all.
+  ephemeral_storage_node_available: false
+  ephemeral_storage_node_capacity: false
+  ephemeral_storage_node_percentage: false
+
+  # Off: no container in this cluster declares limits.ephemeral-storage, and
+  # with no limit the exporter does not skip the metric -- it substitutes the
+  # node's used percentage and labels it source="node"
+  # (pkg/pod/metrics.go, containerLimitsPercentage). That is 310 series all
+  # carrying one of four node-level numbers, under a name that reads per
+  # container. Turn this on with the first real ephemeral-storage limit.
+  ephemeral_storage_container_limit_percentage: false
+
+  # Off: nine metric names, six of them per container, ~2.5k series answering a
+  # question nobody has asked here. Inode exhaustion has never been the failure;
+  # bytes have.
+  ephemeral_storage_inodes: false
+
+prometheus:
+  enable: true
+  # The four shipped alerts cannot fire on this cluster. Both container rules
+  # select ephemeral_storage_container_limit_percentage{source="container"},
+  # which only exists where a limit is declared, and the two volume rules need
+  # emptyDir sizeLimit, which most volumes here lack. Revisit once the limits
+  # this exporter is meant to inform actually exist.
+  rules:
+    enable: false
+
+serviceMonitor:
+  enable: true
+  # The exporter names the measured workload pod_name/pod_namespace/node_name/
+  # container while the scrape target labels name the exporter itself. Nothing
+  # else in this cluster is queried that way, so normalise onto
+  # namespace/pod/node/container, overwriting the exporter's own identity --
+  # job and instance still carry it. `regex: (.+)` makes each rule a no-op when
+  # its source label is absent rather than blanking the target.
+  #
+  # `container` is the one name both sides use, so Prometheus has already
+  # renamed the payload's copy to exported_container by the time metric
+  # relabeling runs. Drop the target's copy first, then promote the measured
+  # one; ephemeral_storage_pod_usage has no container and is left without the
+  # label rather than pointing at the exporter. This assumes the operator keeps
+  # adding a `container` target label -- it does for every ServiceMonitor here,
+  # and the check after rollout is that no series is left labelled
+  # container="k8s-ephemeral-storage-metrics".
+  metricRelabelings:
+    - sourceLabels: [pod_namespace]
+      regex: (.+)
+      targetLabel: namespace
+    - sourceLabels: [pod_name]
+      regex: (.+)
+      targetLabel: pod
+    - sourceLabels: [node_name]
+      regex: (.+)
+      targetLabel: node
+    - action: labeldrop
+      regex: container
+    - sourceLabels: [exported_container]
+      regex: (.+)
+      targetLabel: container
+    - action: labeldrop
+      regex: pod_name|pod_namespace|node_name|exported_container
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    memory: 192Mi
