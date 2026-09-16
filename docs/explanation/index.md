@@ -40,3 +40,6 @@ is only in commit messages, per-app READMEs and
 - [How app backups are shaped](app-backups.md) — one restic repository per
   namespace, root, fixed times, and the timetable everything has to fit before
   the NAS ships its copy off-site
+- [What a database release waits for](helm-release-waiting.md) — teaching Helm's
+  waiter to judge a CloudNativePG cluster, and the three things the expression
+  deliberately leaves out
