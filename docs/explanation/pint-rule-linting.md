@@ -10,10 +10,12 @@ which is why the alert built on it compares **sets** rather than counting.
 This is the whole reason it earns its keep.
 
 CI lints the `PrometheusRule` objects committed to this repository. That misses
-every rule that arrives inside a Helm chart — the `CNPG*` alerts across eleven
-database releases, Loki's, Piraeus's, and every rule kube-prometheus-stack's
-mixins generate. When this was set up the gap was **353 rules loaded against 89
-in git**.
+every rule that arrives inside a Helm chart — the `CNPG*` alerts across every
+database release in
+[Helm releases](../reference/helm-releases.md), Loki's, Piraeus's, and every rule
+kube-prometheus-stack's mixins generate. **Most of what Prometheus loads is
+therefore invisible to CI**, by an order of magnitude and widening: each new
+chart brings its own rules, and none of them lands in git.
 
 So pint also runs in-cluster, as its own Deployment in `datalake-metrics`, with a
 `k8s-sidecar` mirroring every ConfigMap the prometheus-operator generates into a
