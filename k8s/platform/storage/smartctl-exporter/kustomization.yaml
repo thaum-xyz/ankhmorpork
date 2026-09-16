@@ -10,5 +10,3 @@ configMapGenerator:
   - name: values-smartctl-exporter
     files:
       - values.yaml=values.yaml
-generatorOptions:
-  disableNameSuffixHash: true

@@ -4,8 +4,6 @@ namespace: platform-storage
 resources:
   - repository.yaml
   - release.yaml
-generatorOptions:
-  disableNameSuffixHash: true
 configMapGenerator:
   - name: values-diskprep
     files:

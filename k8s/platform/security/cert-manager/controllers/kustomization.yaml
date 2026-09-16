@@ -5,8 +5,6 @@ resources:
   - repository.yaml
   - release.yaml
   - prometheusrule.yaml
-generatorOptions:
-  disableNameSuffixHash: true
 configMapGenerator:
   - name: values-cert-manager
     files:

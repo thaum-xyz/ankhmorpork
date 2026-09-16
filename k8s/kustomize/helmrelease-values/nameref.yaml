@@ -1,0 +1,20 @@
+# Teaches kustomize that a HelmRelease's valuesFrom entries name a ConfigMap, so
+# the generated values ConfigMap can carry its content hash and the reference to
+# it is rewritten to match.
+#
+# Built-in name references cover core kinds only. Without this the generator
+# would have to be pinned to a stable name -- and then a values edit changes the
+# ConfigMap's contents while the HelmRelease spec stays byte-identical, which is
+# an upgrade helm-controller has no event for. It notices on its next interval,
+# via status.lastAttemptedConfigDigest, so the change looks like a failed deploy
+# for up to that long.
+#
+# kind: Secret is deliberately absent. Those valuesFrom entries are rendered by
+# an ExternalSecret rather than generated here, so their names are fixed and
+# nothing would match them.
+nameReference:
+  - kind: ConfigMap
+    version: v1
+    fieldSpecs:
+      - path: spec/valuesFrom/name
+        kind: HelmRelease

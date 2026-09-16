@@ -5,8 +5,6 @@ resources:
   - repository.yaml
   - release.yaml
   - prometheusrules.yaml
-generatorOptions:
-  disableNameSuffixHash: true
 configMapGenerator:
   - name: values-topolvm
     files:

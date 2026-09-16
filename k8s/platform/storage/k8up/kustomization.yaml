@@ -12,5 +12,3 @@ configMapGenerator:
   - name: values-k8up
     files:
       - values.yaml=values.yaml
-generatorOptions:
-  disableNameSuffixHash: true

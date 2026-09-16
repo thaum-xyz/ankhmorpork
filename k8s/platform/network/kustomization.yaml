@@ -15,3 +15,9 @@ resources:
   - cloudflared/
   - external-dns/
   - traefik/
+# Hashes every generated values ConfigMap and rewrites the HelmRelease
+# valuesFrom entry that names it, so a values edit changes the release spec and
+# helm-controller upgrades on the event instead of noticing on its next
+# interval. See k8s/kustomize/helmrelease-values/nameref.yaml.
+components:
+  - ../../kustomize/helmrelease-values

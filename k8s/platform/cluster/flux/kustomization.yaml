@@ -21,8 +21,6 @@ resources:
   - release.yaml
   - prometheusRules.yaml
   - certManagerPolicy.yaml
-generatorOptions:
-  disableNameSuffixHash: true
 configMapGenerator:
   - name: values-flux2
     files:

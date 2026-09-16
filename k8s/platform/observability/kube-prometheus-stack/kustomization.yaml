@@ -14,12 +14,9 @@ resources:
   - slo-kubelet-request-errors.yaml
   - slo-kubelet-runtime-errors.yaml
   - slo-prometheus-operator-http-errors.yaml
+# Qualified because every component in this namespace would otherwise generate a
+# ConfigMap called "values" and silently overwrite the others.
 configMapGenerator:
   - name: values-kube-prometheus-stack
     files:
       - values.yaml=values.yaml
-# Stable name so valuesFrom can reference it directly; no nameReference rewrite
-# needed. Qualified because every component in this namespace would otherwise
-# generate a ConfigMap called "values" and silently overwrite the others.
-generatorOptions:
-  disableNameSuffixHash: true

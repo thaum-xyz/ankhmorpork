@@ -10,6 +10,3 @@ configMapGenerator:
   - name: values-csi-nfs
     files:
       - values.yaml=values.yaml
-# Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.
-generatorOptions:
-  disableNameSuffixHash: true

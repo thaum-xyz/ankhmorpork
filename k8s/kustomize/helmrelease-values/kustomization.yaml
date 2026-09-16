@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+# A Component rather than a bare `configurations:` entry so the file can be
+# shared. kustomize refuses a configurations path outside the build root under
+# the default load restrictor -- Flux runs without it and would allow the file,
+# but `make validate` and `kubectl apply -k` do not, and a build that only works
+# in-cluster is one nobody can check before merging. A component is referenced as
+# a directory, which is not restricted.
+configurations:
+  - nameref.yaml

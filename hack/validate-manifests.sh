@@ -109,7 +109,10 @@ else
   targets=$(
     {
       flux_paths
-      find k8s -name kustomization.yaml -exec dirname {} \;
+      # `kind: Component` is a fragment, not a build target -- kustomize refuses
+      # to build one on its own. It is validated through every root that uses it.
+      find k8s -name kustomization.yaml -exec grep -L '^kind: Component$' {} + \
+        | sed 's|/kustomization.yaml$||'
     } | sort -u
   )
 fi

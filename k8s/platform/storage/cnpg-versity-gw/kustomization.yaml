@@ -6,8 +6,6 @@ resources:
   - release.yaml
   - credentials-secret.yaml
   - job.yaml
-generatorOptions:
-  disableNameSuffixHash: true
 configMapGenerator:
   - name: values-cnpg-versity-gw
     files:

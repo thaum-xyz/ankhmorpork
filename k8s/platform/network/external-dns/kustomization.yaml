@@ -9,6 +9,3 @@ configMapGenerator:
   - name: values-external-dns
     files:
       - values.yaml=values.yaml
-# Stable name; see docs/explanation/helm-values.md.
-generatorOptions:
-  disableNameSuffixHash: true

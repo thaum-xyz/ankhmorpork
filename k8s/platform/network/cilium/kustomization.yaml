@@ -5,8 +5,6 @@ resources:
   - repository.yaml
   - release.yaml
   - additional/
-generatorOptions:
-  disableNameSuffixHash: true
 configMapGenerator:
   - name: values-cilium
     files:

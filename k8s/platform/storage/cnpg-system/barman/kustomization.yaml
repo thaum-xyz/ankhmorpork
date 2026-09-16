@@ -7,5 +7,3 @@ configMapGenerator:
   - name: values-barman
     files:
       - values.yaml=values.yaml
-generatorOptions:
-  disableNameSuffixHash: true
