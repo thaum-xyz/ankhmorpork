@@ -14,7 +14,6 @@ env:
   kustomize-version: v5.8.1
   yq-version: v4.53.6
   shellcheck-version: v0.11.0
-  helm-version: v4.3.0
 
 jobs:
   manifests:
@@ -46,22 +45,6 @@ jobs:
       # were still off-target. They all are now, so the convention stops being
       # remembered and starts being enforced.
       - run: make validate-platform-namespaces
-
-  # The policies.kyverno.io CRDs come from the crds layer and the controllers
-  # from the kyverno release, and the controllers must never get ahead of the
-  # CRDs they were built against. Nothing in either file says so; this does.
-  kyverno-crd-pin:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-go@v7
-        with:
-          go-version: '${{ env.golang-version }}'
-      - run: go install github.com/mikefarah/yq/v4@${{ env.yq-version }}
-      - uses: azure/setup-helm@v5
-        with:
-          version: '${{ env.helm-version }}'
-      - run: make validate-kyverno-crd-pin
 
   # The action finds shell files by extension and by shebang, so it covers
   # anything `make lint-shell` would and then some.

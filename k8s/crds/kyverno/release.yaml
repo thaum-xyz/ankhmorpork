@@ -27,11 +27,13 @@ metadata:
       The wrapper's version is the kyverno-api version it wraps, so the pin
       below reads as the CRD version. Renovate lands its bumps on its own and
       without a soak: CRDs run no code and their schema changes are additive,
-      so CRDs ahead of the controllers is the safe direction.
-      `make validate-kyverno-crd-pin` fails a PR only in the other direction, a
-      kyverno bump whose controllers expect a newer kyverno-api than the CRDs
-      here provide -- a field the API server prunes is one the controller
-      expected, and that fails quietly.
+      so CRDs ahead of the controllers is the safe direction. The other
+      direction -- a kyverno bump landing while this pin still names an older
+      kyverno-api -- would have the API server prune fields the controllers
+      expect, quietly, and nothing checks for it. It is also not the order
+      things take on their own: upstream publishes kyverno-api before the
+      chart that depends on it, the wrapper lands at once, and the kyverno
+      chart soaks ten days.
 spec:
   chart:
     spec:

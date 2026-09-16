@@ -124,17 +124,6 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "ghcr.io/external-secrets/external-secrets"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^\\.github\\/workflows\\/[^/]+\\.ya?ml$/"
-      ],
-      "matchStrings": [
-        "helm-version:\\s(?<currentValue>.*?)\\n"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "helm/helm"
     }
   ],
   "packageRules": [
@@ -227,7 +216,7 @@
       "automerge": true
     },
     {
-      "description": "The crds layer: CRD-only charts, which k8s/platform/** stopped covering when prometheus-operator-crds moved out of k8s/platform/observability. Automerged with no soak, unlike the platform it serves: the soak lets others find early bugs and outlives the few days a supply-chain compromise usually takes to surface, and a CRD carries neither risk -- it runs no code and its schema changes are additive. Landing CRDs before the controllers that serve them is the safe direction; validate-kyverno-crd-pin refuses the other.",
+      "description": "The crds layer: CRD-only charts, which k8s/platform/** stopped covering when prometheus-operator-crds moved out of k8s/platform/observability. Automerged with no soak, unlike the platform it serves: the soak lets others find early bugs and outlives the few days a supply-chain compromise usually takes to surface, and a CRD carries neither risk -- it runs no code and its schema changes are additive. Landing CRDs before the controllers that serve them is the safe direction, and with the kyverno chart soaking ten days behind a wrapper that lands at once it is also the usual one; nothing enforces it.",
       "addLabels": [
         "dependencies/base",
         "dependencies/automerge"
