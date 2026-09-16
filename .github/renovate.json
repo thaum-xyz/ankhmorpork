@@ -227,15 +227,16 @@
       "automerge": true
     },
     {
-      "description": "The crds layer, which k8s/platform/** stopped covering when it moved out of k8s/platform/observability. Everything above it depends on the kinds it establishes, so it soaks like core infrastructure rather than automerging like the platform it serves.",
+      "description": "The crds layer: CRD-only charts, which k8s/platform/** stopped covering when prometheus-operator-crds moved out of k8s/platform/observability. Automerged with no soak, unlike the platform it serves: the soak lets others find early bugs and outlives the few days a supply-chain compromise usually takes to surface, and a CRD carries neither risk -- it runs no code and its schema changes are additive. Landing CRDs before the controllers that serve them is the safe direction; validate-kyverno-crd-pin refuses the other.",
       "addLabels": [
-        "dependencies/core"
+        "dependencies/base",
+        "dependencies/automerge"
       ],
       "groupName": "crds layer",
       "matchFileNames": [
         "k8s/crds/**"
       ],
-      "minimumReleaseAge": "10 days"
+      "automerge": true
     },
     {
       "description": "Zensical is alpha (0.0.x) and can change rendering between patch releases. The docs build gates it, but a green build does not prove the site still looks right, so it lands as its own PR and is never automerged.",
