@@ -167,7 +167,7 @@
       "groupName": "core infrastructure",
       "matchFileNames": [
         "k8s/bootstrap/**",
-        "k8s/platform/cluster/flux-system/**",
+        "k8s/platform/cluster/flux/**",
         "k8s/platform/security/cert-manager/**",
         "k8s/platform/security/external-secrets/**"
       ],
@@ -181,7 +181,7 @@
       "groupName": "hosting infrastructure",
       "matchFileNames": [
         "k8s/platform/**",
-        "!k8s/platform/cluster/flux-system/**",
+        "!k8s/platform/cluster/flux/**",
         "!k8s/platform/security/cert-manager/**",
         "!k8s/platform/security/external-secrets/**"
       ],
@@ -238,7 +238,7 @@
       "minimumReleaseAge": "10 days"
     },
     {
-      "description": "kyverno-api is not an independent dependency: it is the kyverno chart's own, split into the crds layer so both domains declaring a policy are ordered behind it. make validate-kyverno-crd-pin fails when the two diverge, so this exists to stop Renovate opening the PR that trips it. Bump it with the kyverno chart.",
+      "description": "kyverno-api is not an independent dependency: it is the kyverno chart's own, split into the crds layer so that what a cold start retries against is a CRD-only release. make validate-kyverno-crd-pin fails when the two diverge, so this exists to stop Renovate opening the PR that trips it. Bump it with the kyverno chart.",
       "matchDepNames": [
         "kyverno-api"
       ],

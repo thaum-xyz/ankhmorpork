@@ -4,9 +4,9 @@
 # version the kyverno chart depends on.
 #
 # The two are one upstream release split across two Flux objects: k8s/crds/
-# installs the policies.kyverno.io CRDs so both domains that declare a kyverno
-# policy are ordered behind them, and the kyverno release drops those same CRDs
-# from its own manifest with a post-renderer. Nothing in either file records
+# installs the policies.kyverno.io CRDs so that a cold start retries against a
+# CRD-only release, and the kyverno release drops those same CRDs from its own
+# manifest with a post-renderer. Nothing in either file records
 # that they have to move together, and the failure is quiet -- controllers
 # serving one schema while the API server advertises another.
 #
