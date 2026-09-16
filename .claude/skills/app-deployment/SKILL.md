@@ -96,10 +96,23 @@ For ingress specifically: `docs/how-to/expose-an-app.md`.
 
 Values go in `values.yaml`, fed through a `configMapGenerator` and `valuesFrom` —
 never inline in `spec.values`, because Renovate's `helm-values` manager cannot see
-inside a HelmRelease. Set `disableNameSuffixHash: true` and name the generator
-`values-<ReleaseName>`, matching the release it feeds.
+inside a HelmRelease. Set `disableNameSuffixHash: true`, name the generator
+`values-<ReleaseName>` to match the release it feeds, and label it so
+helm-controller watches it:
 
-Why, and what the stable name costs: `docs/explanation/helm-values.md`.
+```yaml
+generatorOptions:
+  disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
+```
+
+Without the label the ConfigMap's contents change while its name does not, so
+the HelmRelease spec never moves and the upgrade waits for the next interval —
+which looks exactly like a failed deploy. Only label generators a HelmRelease
+actually reads.
+
+Why: `docs/explanation/helm-values.md`.
 
 ## Validate before pushing
 
