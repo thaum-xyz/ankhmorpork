@@ -74,6 +74,12 @@ Values live in `values.yaml`, fed in via `configMapGenerator` and `valuesFrom` â
 not inline in `spec.values`. Renovate's `helm-values` manager reads `values.yaml`
 but cannot see inside a HelmRelease.
 
+The generated ConfigMap keeps its content hash, and the `valuesFrom` entry naming
+it is rewritten by the `k8s/kustomize/helmrelease-values` component, which every
+Flux Kustomization root with such a release pulls in. That hash is what makes a
+values-only edit upgrade the release on the same apply, so a new root must name
+the component.
+
 ## Scripts in `hack/`
 
 Bash by default: a script that runs tools in sequence and checks exit codes is a

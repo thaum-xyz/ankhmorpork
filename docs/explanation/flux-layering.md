@@ -236,10 +236,10 @@ had to be cleared out by hand after the traefik and topolvm namespace moves — 
 it protected them anonymously, leaving the next reader to infer from what the
 component is why it was exempt.
 
-All five also generate values ConfigMaps, which is one of the reasons those are
-given stable names rather than hashed ones: with nothing pruning, a hashed name
-would leave an orphan behind on every edit. See
-[why Helm values live in a file](helm-values.md).
+That everything prunes is also what lets the values ConfigMaps carry a content
+hash, which is what makes a values edit reach the release immediately instead of
+on the next interval. Under `prune: false` the old one would be left behind on
+every edit. See [why Helm values live in a file](helm-values.md).
 
 ## What reconciliation actually costs
 
@@ -268,17 +268,35 @@ flux -n platform-cluster reconcile source git ankhmorpork    # a layer: crds or 
 flux -n platform-cluster reconcile kustomization crds
 ```
 
-For a component whose values come from a `configMapGenerator`, there is a third
-step, and it is not optional: a values edit changes the ConfigMap's contents but
-not its name, so nothing in the HelmRelease spec moves and helm-controller has no
-event to act on. [Why Helm values live in a file](helm-values.md) has the
-mechanism and the trade; the step is:
+`--with-source` does both in one command, and is the shorter way to say the
+same thing:
 
 ```bash
-flux -n <namespace> reconcile helmrelease <release>
+flux -n <namespace> reconcile kustomization <name> --with-source
 ```
 
-An app's Kustomization is itself applied by `namespaces`, so a change to
-`sync.yaml` needs that layer reconciled before the app's own reconcile can see
-it. A change to `k8s/bootstrap/` needs neither: nothing reconciles that
-directory, and it takes effect only when someone applies it by hand.
+There used to be a third step here for any component whose values came from a
+`configMapGenerator` — the ConfigMap's contents changed while its name did not,
+so the HelmRelease spec never moved and helm-controller had no event. Those
+ConfigMaps now carry a content hash, so the release upgrades on the same apply;
+[why Helm values live in a file](helm-values.md) has the mechanism.
+
+## What still reconciles green without your change in it
+
+Two cases survive, and neither is a failure the status will show.
+
+An app's Kustomization is applied by `namespaces`, not by itself. A change to
+`sync.yaml` — its interval, its path, its `dependsOn` — is picked up when that
+layer next runs, so reconciling the app reports success against the spec it
+already had. Reconcile `namespaces` first.
+
+A change to `k8s/bootstrap/` is not reconciled at all. Nothing watches that
+directory; it takes effect when someone runs `kubectl apply -k k8s/bootstrap`,
+and until then every umbrella keeps reconciling happily on the spec it was
+created with.
+
+The same shape catches objects Kyverno generates — a namespace's
+`flux-reconciler`, its RoleBinding, its `GitRepository`. They are in no
+Kustomization's inventory, so editing one is reverted rather than applied, and
+`generate-flux-reconciler` recreates it from the Namespace's label. Edit the
+label, or the policy; see [annotations and labels](../reference/annotations.md).

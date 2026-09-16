@@ -11,8 +11,6 @@ configMapGenerator:
   - name: values-myapp
     files:
       - values.yaml=values.yaml
-generatorOptions:
-  disableNameSuffixHash: true
 ```
 
 ```yaml
@@ -21,6 +19,16 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: values-myapp
+```
+
+The generated ConfigMap carries a content hash — `values-myapp-7f9c2b4h8d` — and
+the `valuesFrom` entry above is rewritten to match. That rewrite is not
+automatic: it comes from a component every Flux Kustomization root pulls in.
+
+```yaml
+# the root's kustomization.yaml
+components:
+  - ../../kustomize/helmrelease-values
 ```
 
 Inline `spec.values` would be shorter and one file fewer. There are no releases
@@ -53,49 +61,58 @@ would report it as stale — it would simply sit there, looking deliberate. In a
 So the file is not a style preference — it is what puts these values under the
 same automation as everything else.
 
-## The name has to be stable, and that has a cost
+## The hash is what makes the upgrade happen
 
-`disableNameSuffixHash: true` gives the ConfigMap a fixed name instead of
-`values-myapp-7f9c2b4h8d`. Without it, `valuesFrom.name` would have to reference a
-name that changes on every edit.
+A values change alters the ConfigMap's *contents*. If the name does not change
+with them, nothing in the HelmRelease spec changes either — and helm-controller
+has no event to act on. It compares `status.lastAttemptedConfigDigest` on its
+next interval and upgrades then, so a correct change spends up to a full interval
+looking like a failed deploy, and the way to stop waiting was to reconcile the
+release by hand.
 
-The consequence is the awkward part. A values change alters the ConfigMap's
-*contents* but not its name — so nothing in the HelmRelease spec changes, and
-helm-controller sees no event to act on. It notices only via
-`status.lastAttemptedConfigDigest` on its next interval.
+The hash removes that. A values edit changes the ConfigMap's name, the rewritten
+`valuesFrom` changes the HelmRelease spec, and helm-controller upgrades on the
+event. There is no separate step to remember and nothing to wait for.
 
-Two things follow from that, and both are deliberate:
+This is a reversal. Both reasons the name used to be pinned have expired:
 
-- **Every HelmRelease is kept at `interval: 5m`**, with no exceptions — the
-  *Interval* column in [Helm releases](../reference/helm-releases.md) should show
-  one value. That interval is the ceiling on
-  how long a values-only change can sit looking like a failed deploy. A quiet chart
-  is not a reason to raise it: the interval costs a Helm dry-run diff, not an
-  upgrade. (`spec.chart.spec.interval` is a different knob — that one polls the
-  chart source and can stay high.)
-- **A values-only change needs its release reconciled explicitly.** See
-  [how Flux is layered](flux-layering.md) for the ordering that goes with it.
+- **Orphan accumulation.** Under `prune: false` a hashed name left a ConfigMap
+  behind on every edit, permanently. Nothing is in that state now — `crds` and
+  `namespaces` are the only Kustomizations that do not prune, and neither
+  generates values. See [how Flux is layered](flux-layering.md).
+- **`valuesFrom` could not follow a changing name.** Kustomize rewrites name
+  references only for kinds it knows, and a HelmRelease is not one. A
+  `nameReference` teaches it the field, and one declared at a Flux Kustomization
+  root applies to hashes generated in any component below it — so the config is
+  written once, in `k8s/kustomize/helmrelease-values`, and each root names it.
 
-The hash suffix would trigger the upgrade immediately, at the cost of a new
-ConfigMap on every edit. Stable names are the trade; reconciling the release is
-the price.
+It is a Component rather than a bare `configurations:` entry for a build reason:
+kustomize refuses a configurations *file* outside the build root under the
+default load restrictor. Flux runs without that restrictor and would accept it,
+but `make validate` and `kubectl apply -k` would not, and a build that only works
+in-cluster cannot be checked before merging. A component is referenced as a
+directory, which is not restricted.
 
-### What stable names buy beyond that
+**Every HelmRelease is still kept at `interval: 5m`**, with no exceptions — the
+*Interval* column in [Helm releases](../reference/helm-releases.md) should show
+one value. It no longer sets how long a values change waits, which was its old
+justification; what it still does is bound drift. A quiet chart is not a reason
+to raise it: the interval costs a Helm dry-run diff, not an upgrade.
+(`spec.chart.spec.interval` is a different knob — that one polls the chart source
+and can stay high.)
 
-Under `prune: true` an orphaned `values-myapp-7f9c2b4h8d` is garbage-collected on
-the next reconcile, so a hash would cost churn rather than accumulation — every
-Kustomization that generates a values ConfigMap prunes, and the two that do not
-are layers that generate none. See
-[how Flux is layered](flux-layering.md) for which those are.
+### What it costs
 
-What the stable name still buys is that the set of values ConfigMaps in a
-namespace is exactly the set declared in git. `traefik` holds three —
-`values-traefik-common`, `values-traefik-public`, `values-traefik-private` — and
-that is what `kubectl get cm` shows, not three plus a sediment of every edit
-since the component was created. In a shared namespace that matters more than
-the churn did: `platform-network` holds those three beside `values-cilium`,
-`values-cloudflared` and `values-external-dns`, and a reader can tell at a glance
-that each belongs to something.
+`kubectl get cm` no longer prints the name as written in git. That was the real
+benefit of pinning: the set of values ConfigMaps in a namespace read as exactly
+the set declared, which matters most in a shared namespace like
+`platform-network`, where traefik's three sit beside `values-cilium`,
+`values-cloudflared` and `values-external-dns`. They still do, each with ten
+characters of hash on the end.
+
+Pruning keeps that honest — the old ConfigMap is garbage-collected in the same
+apply that creates the new one, so what is in the namespace is still what git
+declares, not a sediment of every edit.
 
 ## Why `values-<ReleaseName>`
 
@@ -103,6 +120,10 @@ The generator is named after the release it feeds, not after the component. A ba
 `values` collides the moment a namespace gains a second release, and namespaces
 here routinely have several — `values-postgres-sonarr` and `values-postgres-radarr`
 sit side by side.
+
+The hash is appended to that, so the convention is unchanged and so is what it
+prevents: a second release in the same namespace still cannot collide with the
+first, whatever their contents hash to.
 
 Every release follows it. It is settled convention rather than preference,
 arrived at after collisions.
@@ -119,6 +140,11 @@ Secrets take the same path with `kind: Secret` instead. Three releases do this �
 `values.yaml` key from Doppler. The credentials never enter git, and the release
 does not need to know where they came from.
 
+Those names are not hashed and are not rewritten: the Secret is rendered by an
+ExternalSecret rather than generated here, so kustomize never sees its contents.
+The `nameReference` deliberately covers `kind: ConfigMap` only — a rule matching
+Secrets would find nothing to match against.
+
 ## Two traps this shape does not remove
 
 **Helm deep-merges maps.** `{}` does not clear a chart default; only an explicit
@@ -131,15 +157,25 @@ defaults. Expect this after every chart major. Read intent off the *rendered*
 output — `helm template`, or the live ConfigMap — never off the values file:
 
 ```bash
-kubectl -n <ns> get cm values-<release> -o jsonpath='{.data.values\.yaml}' | grep <key>
+kubectl -n <ns> get cm "$(kubectl -n <ns> get helmrelease <release> \
+  -o jsonpath='{.spec.valuesFrom[-1:].name}')" -o jsonpath='{.data.values\.yaml}'
 ```
 
-That is also the check worth running before reconciling a release: it confirms the
-ConfigMap actually changed, rather than assuming the Kustomization regenerated it.
+Reading the name off the release rather than typing it is the point: it is the
+ConfigMap actually in effect, hash and all, so the output cannot be a file the
+release stopped reading.
 
-## The one generator that keeps its hash
+## The generators that keep a stable name
 
-`plex` generates an `alloy-config` ConfigMap without `disableNameSuffixHash`. That
-is not an oversight — it feeds a Deployment rather than a HelmRelease, and there
-the changing name is the point: it is what rolls the Pod when the config changes.
-The stable-name argument applies to values files, not to every generator.
+None of them feeds a HelmRelease: the k8up backup scripts in `karakeep`,
+`mended-drum` and `vod-arr/cleanuparr`, and `recyclarr`'s config. They set
+`disableNameSuffixHash` per generator rather than for the whole kustomization.
+
+The reason is the mirror of the one above. A backup script is read at exec time
+from the mounted ConfigMap, so an edit reaches the next run without the Pod
+restarting — hashing it would roll the workload for a change that did not need
+it. Where rolling the Pod *is* the point, the hash stays: `plex` generates its
+`alloy-config` hashed for exactly that reason.
+
+So the question is never "values or not" but what should happen when the contents
+change. A HelmRelease needs an upgrade, and only a new name causes one.

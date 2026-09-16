@@ -96,10 +96,25 @@ For ingress specifically: `docs/how-to/expose-an-app.md`.
 
 Values go in `values.yaml`, fed through a `configMapGenerator` and `valuesFrom` —
 never inline in `spec.values`, because Renovate's `helm-values` manager cannot see
-inside a HelmRelease. Set `disableNameSuffixHash: true` and name the generator
-`values-<ReleaseName>`, matching the release it feeds.
+inside a HelmRelease. Name the generator `values-<ReleaseName>`, matching the
+release it feeds, and leave the name unpinned: the content hash is what makes
+helm-controller upgrade on the edit instead of up to an interval later.
 
-Why, and what the stable name costs: `docs/explanation/helm-values.md`.
+The `valuesFrom` rewrite that depends on comes from a component, so a **new Flux
+Kustomization root** needs it or the release will reference a ConfigMap that does
+not exist:
+
+```yaml
+components:
+  - <relative path>/kustomize/helmrelease-values
+```
+
+A root with no HelmRelease reading a generated ConfigMap does not need it. A
+generator feeding something else — a backup script read at exec time — keeps its
+stable name through per-generator `options`, since hashing it would roll the
+workload for nothing.
+
+Why: `docs/explanation/helm-values.md`.
 
 ## Validate before pushing
 
