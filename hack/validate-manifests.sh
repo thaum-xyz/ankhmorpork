@@ -9,8 +9,9 @@
 #     and the result validated, which also catches broken patches and
 #     references,
 #   - a directory without one has its manifests validated in place, because
-#     Flux applies every yaml it finds there (base/flux-apps and several
-#     apps/*/manifests work this way).
+#     Flux applies every yaml it finds there -- except under a subdirectory that
+#     carries its own kustomization.yaml, which Flux adds as a single resource
+#     and this script validates as a target of its own.
 #
 # Usage: ./hack/validate-manifests.sh [dir...]
 # With no arguments every live Flux Kustomization path and every kustomization
@@ -148,7 +149,29 @@ while IFS= read -r dir; do
       failed="$failed $dir"
     fi
   else
-    if ! out=$(validate "$dir" 2>&1); then
+    # Mirror Flux's scan: a subdirectory with its own kustomization.yaml is one
+    # resource to Flux and one target to this loop, so its files are skipped
+    # here. Otherwise a values.yaml its configMapGenerator consumes is checked
+    # as though it were an object.
+    tracked=$(git ls-files "$dir/*.yaml" "$dir/*.yml")
+    if [ -z "$tracked" ]; then
+      echo "::error::$dir has no tracked manifests"
+      failed="$failed $dir"
+      continue
+    fi
+    files=$(echo "$tracked" | while IFS= read -r f; do
+      d="$(dirname "$f")"
+      while [ "$d" != "$dir" ] && [ ! -f "$d/kustomization.yaml" ]; do
+        d="$(dirname "$d")"
+      done
+      [ "$d" = "$dir" ] && echo "$f"
+    done)
+    if [ -z "$files" ]; then
+      echo "$dir: every manifest belongs to a kustomization of its own, validated as its own target."
+      continue
+    fi
+    # shellcheck disable=SC2086  # one tracked path per word, none with spaces
+    if ! out=$(validate $files 2>&1); then
       echo "::error::schema validation failed for $dir"
       # shellcheck disable=SC2001  # indenting every line needs a regex anchor
       echo "$out" | sed 's/^/    /'
