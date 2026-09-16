@@ -35,8 +35,9 @@ spec:
     - kind: ConfigMap
       name: values-kyverno
   # The eleven policies.kyverno.io CRDs are the crds layer's, installed there
-  # from upstream's kyverno-api chart so that what a cold start retries against
-  # is a CRD-only release rather than this whole stack. This release still
+  # through the kyverno-policy-crds wrapper around upstream's kyverno-api chart
+  # so that what a cold start retries against is a CRD-only release rather than
+  # this whole stack. This release still
   # renders them -- the chart gates its `crds` and `kyverno-api` subcharts on
   # one `crds.install` switch, with no way to disable half -- so they are
   # dropped from the manifest here instead. If this patch ever stops matching,
@@ -44,7 +45,7 @@ spec:
   # above turns that into a loud upgrade failure rather than a silent takeover.
   #
   # The name is a regex over the whole group, so a CRD upstream adds to it
-  # arrives via kyverno-api without a change here.
+  # arrives with the wrapper's next kyverno-api bump, without a change here.
   postRenderers:
     - kustomize:
         patches:

@@ -1,13 +1,15 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: kyverno-api
+  name: thaum-charts-crds
   annotations:
     kubernetes.io/description: >-
-      Upstream's separate repository for the kyverno API chart, which is not the
-      one the kyverno chart itself comes from -- that is
-      https://kyverno.github.io/kyverno/, in platform-security beside the
-      release. Two URLs, two objects, no name to collide over.
+      The registry every cnpg-database consumer names thaum-charts, under a name
+      only this layer uses: the crds Kustomization applies into
+      platform-security beside that domain's own Kustomization, and two
+      Kustomizations applying one object would each reclaim the ownership
+      labels from the other on every reconcile.
 spec:
+  type: oci
   interval: 5m
-  url: https://kyverno.github.io/api
+  url: oci://ghcr.io/thaum-xyz/helm-charts
