@@ -6,9 +6,10 @@ metadata:
   # declares its own, as ingress.yaml does.
   namespace: paperless
 spec:
-  # target is a PLACEHOLDER (#1379): the probe endpoint changed on 2026-09-06
-  # 13:43 UTC, so the first 7d window measuring one endpoint throughout closes
-  # 2026-09-13 13:43 UTC. Provisionally 99.807% over the first 3 days.
+  # target from the 7d window 2026-09-09..09-16 (#1379): 99.89088% achieved,
+  # 22 failed samples in 4 bursts, worst 7m00s, 10.9% of a 99% budget.
+  # 7m00s burst is the cluster-wide event of 2026-09-12; see
+  # k8s/apps/homer/app/slo-probe-success.yaml.
   description: >-
     Fraction of successful blackbox probes against papers.krupa.net.pl.
   alerting:
@@ -23,5 +24,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://papers\\.krupa\\.net\\.pl(/.*)?"}
-  target: "95.0"
+  target: "99"
   window: 7d

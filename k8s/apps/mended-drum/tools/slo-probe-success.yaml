@@ -3,9 +3,14 @@ kind: ServiceLevelObjective
 metadata:
   name: mended-drum-tools-probe-success
 spec:
-  # target from the 7d window 2026-09-03..09-10 (#1379): 99.99504% achieved,
-  # one failed sample in the week, 1.0% of a 99.5% budget. Paired with homer as
-  # the two probes clean enough to carry the tighter target.
+  # target from the 7d window 2026-09-09..09-16 (#1379): 99.90576% achieved, 19
+  # failed samples in 4 bursts, worst 7m00s, 9.4% of a 99% budget.
+  # 7m00s burst is the cluster-wide event of 2026-09-12; see
+  # k8s/apps/homer/app/slo-probe-success.yaml.
+  #
+  # 99.5 until this window, on the grounds that the previous one held a single
+  # failed sample. Dropped for the same reason homer was -- see there for why
+  # the fast tier's paging floor decided it rather than the budget.
   description: >-
     Fraction of successful blackbox probes against drum-tools.krupa.net.pl.
   alerting:
@@ -20,5 +25,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://drum\\-tools\\.krupa\\.net\\.pl(/.*)?"}
-  target: "99.5"
+  target: "99"
   window: 7d
