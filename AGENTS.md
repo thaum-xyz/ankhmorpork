@@ -74,6 +74,12 @@ Values live in `values.yaml`, fed in via `configMapGenerator` and `valuesFrom` â
 not inline in `spec.values`. Renovate's `helm-values` manager reads `values.yaml`
 but cannot see inside a HelmRelease.
 
+The generator keeps a stable name and carries
+`reconcile.fluxcd.io/watch: Enabled`, set through `generatorOptions.labels`.
+helm-controller watches labelled ConfigMaps referenced in `valuesFrom`, so a
+values-only edit upgrades the release on the write instead of on its next
+interval. A generator no HelmRelease reads does not get the label.
+
 ## Scripts in `hack/`
 
 Bash by default: a script that runs tools in sequence and checks exit codes is a

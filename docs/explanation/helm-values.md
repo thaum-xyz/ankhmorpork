@@ -13,6 +13,8 @@ configMapGenerator:
       - values.yaml=values.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 ```
 
 ```yaml
@@ -53,32 +55,38 @@ would report it as stale — it would simply sit there, looking deliberate. In a
 So the file is not a style preference — it is what puts these values under the
 same automation as everything else.
 
-## The name has to be stable, and that has a cost
+## The name is stable, and the label is what pays for that
 
 `disableNameSuffixHash: true` gives the ConfigMap a fixed name instead of
-`values-myapp-7f9c2b4h8d`. Without it, `valuesFrom.name` would have to reference a
-name that changes on every edit.
+`values-myapp-7f9c2b4h8d`, so `valuesFrom.name` can reference it directly and
+`kubectl get cm` prints what git declares.
 
-The consequence is the awkward part. A values change alters the ConfigMap's
-*contents* but not its name — so nothing in the HelmRelease spec changes, and
-helm-controller sees no event to act on. It notices only via
-`status.lastAttemptedConfigDigest` on its next interval.
+On its own that would cost something real. A values change alters the
+ConfigMap's *contents* but not its name, so nothing in the HelmRelease spec
+changes and helm-controller has no event to act on — it would compare
+`status.lastAttemptedConfigDigest` on its next interval and upgrade then, up to
+five minutes after a correct change, which looks exactly like a failed deploy.
 
-Two things follow from that, and both are deliberate:
+`reconcile.fluxcd.io/watch: Enabled` is what removes that. helm-controller
+watches labelled ConfigMaps and Secrets referenced in `valuesFrom` and
+reconciles when their contents change, so the upgrade happens on the edit. On
+this cluster the reconcile lands about 300ms after the write.
 
-- **Every HelmRelease is kept at `interval: 5m`**, with no exceptions — the
-  *Interval* column in [Helm releases](../reference/helm-releases.md) should show
-  one value. That interval is the ceiling on
-  how long a values-only change can sit looking like a failed deploy. A quiet chart
-  is not a reason to raise it: the interval costs a Helm dry-run diff, not an
-  upgrade. (`spec.chart.spec.interval` is a different knob — that one polls the
-  chart source and can stay high.)
-- **A values-only change needs its release reconciled explicitly.** See
-  [how Flux is layered](flux-layering.md) for the ordering that goes with it.
+It needs no controller flag: the `--disable-config-watchers` feature gate is off
+by default and `--watch-configs-label-selector` defaults to that exact label.
+The alternative is `--watch-configs-label-selector=owner!=helm`, which watches
+every referenced object without labelling any of them — and makes
+helm-controller cache every ConfigMap and Secret in the cluster. That is the
+same trade [rolling a workload when its ConfigMap changes](configmap-autoreload.md#why-not-secrets)
+refuses for Kyverno, and it is refused here for the same reason.
 
-The hash suffix would trigger the upgrade immediately, at the cost of a new
-ConfigMap on every edit. Stable names are the trade; reconciling the release is
-the price.
+**Every HelmRelease is kept at `interval: 5m`**, with no exceptions — the
+*Interval* column in [Helm releases](../reference/helm-releases.md) should show
+one value. That interval no longer sets how long a values change waits, which
+was its original justification; what it still does is bound drift. A quiet chart
+is not a reason to raise it: the interval costs a Helm dry-run diff, not an
+upgrade. (`spec.chart.spec.interval` is a different knob — that one polls the
+chart source and can stay high.)
 
 ### What stable names buy beyond that
 
@@ -134,12 +142,23 @@ output — `helm template`, or the live ConfigMap — never off the values file:
 kubectl -n <ns> get cm values-<release> -o jsonpath='{.data.values\.yaml}' | grep <key>
 ```
 
-That is also the check worth running before reconciling a release: it confirms the
-ConfigMap actually changed, rather than assuming the Kustomization regenerated it.
+That is also the check worth running when a release did not pick something up:
+it confirms the ConfigMap holds what you meant, rather than assuming the
+Kustomization regenerated it.
 
-## The one generator that keeps its hash
+## The generators that are neither stable nor labelled
 
-`plex` generates an `alloy-config` ConfigMap without `disableNameSuffixHash`. That
-is not an oversight — it feeds a Deployment rather than a HelmRelease, and there
-the changing name is the point: it is what rolls the Pod when the config changes.
-The stable-name argument applies to values files, not to every generator.
+`plex` generates an `alloy-config` ConfigMap without `disableNameSuffixHash`, and
+that is not an oversight — it feeds a Deployment rather than a HelmRelease, and
+there the changing name is the point: it is what rolls the Pod.
+
+The k8up backup scripts in `karakeep`, `mended-drum` and `vod-arr/cleanuparr`
+and `recyclarr`'s config sit at the third corner: stable, and unlabelled. No
+HelmRelease reads them, so a watch would fire for nothing, and each is read at
+exec time from the mounted ConfigMap, so an edit reaches the next run with
+nothing restarting.
+
+The question is never "values or not" but what has to happen when the contents
+change. A mounted file read at exec time needs nothing. A Pod that reads its
+config at startup needs a new ConfigMap name. A HelmRelease needs an upgrade,
+and the label is what asks for one.
