@@ -18,9 +18,16 @@ spec:
     # No remediation: an uninstall deletes the Cluster and its PVCs.
     disableWait: true
   upgrade:
-    disableWait: true
+    # Waits, and judges the Cluster through healthCheckExprs below. retries: 0
+    # stands: remediation would roll a database back.
     remediation:
       retries: 0
+  # Ready only, and no `failed` expression -- both would misread a rolling
+  # update. Why: docs/explanation/helm-release-waiting.md
+  healthCheckExprs:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      current: status.conditions.exists(e, e.type == 'Ready' && e.status == 'True')
   uninstall:
     deletionPropagation: orphan
   driftDetection:
