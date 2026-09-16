@@ -162,9 +162,10 @@ same domain need CRDs from a chart the domain installs itself.
 
 For the other four, ordering against the kinds they need is not declared
 anywhere, because it cannot be. On a cold start an object whose kind has not been
-established fails to apply and is retried on its Kustomization's interval, while
-everything else in the domain applies in the same pass, because Flux collects
-per-object errors rather than abandoning the set.
+established fails its dry-run, and so does the pass it is part of: Flux applies a
+Kustomization in stages and abandons a stage on its first error rather than
+collecting them per object, so the whole domain waits for the retry, which runs
+on `retryInterval` and defaults to `interval`.
 
 The kyverno policies were the sharpest case of that, and are the reason
 kyverno's CRDs are not installed by the kyverno chart. `csi-nfs`,
