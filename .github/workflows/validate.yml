@@ -58,7 +58,7 @@ jobs:
         with:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/mikefarah/yq/v4@${{ env.yq-version }}
-      - uses: azure/setup-helm@v4
+      - uses: azure/setup-helm@v5
         with:
           version: '${{ env.helm-version }}'
       - run: make validate-kyverno-crd-pin
