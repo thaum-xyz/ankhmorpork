@@ -12,3 +12,5 @@ configMapGenerator:
 # Stable name; see docs/explanation/helm-values.md.
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled

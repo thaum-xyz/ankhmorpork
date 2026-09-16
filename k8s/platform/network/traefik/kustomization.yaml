@@ -9,6 +9,8 @@ resources:
   - clusterrole-aggregate-edit.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 # All three are prefixed with the component, not just the release name. The
 # releases are called `public` and `private`, which said enough when this had a
 # namespace to itself; in platform-network, beside cloudflared and external-dns,

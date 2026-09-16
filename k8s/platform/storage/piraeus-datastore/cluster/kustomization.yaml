@@ -5,6 +5,8 @@ resources:
   - release.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 configMapGenerator:
   - name: values-linstor-cluster
     files:

@@ -7,6 +7,8 @@ resources:
   - prometheusrule.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 configMapGenerator:
   - name: values-cert-manager
     files:

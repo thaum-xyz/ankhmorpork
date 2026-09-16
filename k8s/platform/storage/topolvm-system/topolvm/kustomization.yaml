@@ -7,6 +7,8 @@ resources:
   - prometheusrules.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 configMapGenerator:
   - name: values-topolvm
     files:
