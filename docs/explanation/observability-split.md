@@ -87,7 +87,7 @@ There is no central rules directory. 19 `PrometheusRule` files sit in **18
 different directories**, next to whatever emits or remediates the thing they alert
 on:
 `topolvm` and `piraeus-datastore` in storage, `cert-manager` in security,
-`system-kured` and `flux-system` in cluster, `sonarr`/`radarr`/`prowlarr` inside
+`system-kured` and `flux` in cluster, `sonarr`/`radarr`/`prowlarr` inside
 `vod-arr`, `ups` in its own app.
 
 The reasoning is the same as everywhere else on this site: a rule is invalidated

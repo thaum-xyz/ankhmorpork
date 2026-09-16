@@ -80,23 +80,22 @@ The hash suffix would trigger the upgrade immediately, at the cost of a new
 ConfigMap on every edit. Stable names are the trade; reconciling the release is
 the price.
 
-### And where nothing prunes, that cost is permanent
+### What stable names buy beyond that
 
 Under `prune: true` an orphaned `values-myapp-7f9c2b4h8d` is garbage-collected on
-the next reconcile, so the hash costs churn but not accumulation.
+the next reconcile, so a hash would cost churn rather than accumulation — every
+Kustomization that generates a values ConfigMap prunes, and the two that do not
+are layers that generate none. See
+[how Flux is layered](flux-layering.md) for which those are.
 
-The Kustomizations that do not prune include five platform components
-that generate values ConfigMaps — `cilium`, `flux-system`, `topolvm`,
-`piraeus-datastore` and `traefik`. See
-[how Flux is layered](flux-layering.md) for why those five are exempt. There,
-nothing would ever remove the old ConfigMap: every values edit would leave one
-behind, permanently, in exactly the components whose namespaces are hardest to
-reason about when something is wrong.
-
-Stable names mean the set of values ConfigMaps in a namespace is exactly the set
-declared in git. `traefik` holds three — `values-common`, `values-public`,
-`values-private` — and that is what `kubectl get cm` shows, not three plus a
-sediment of every edit since the component was created.
+What the stable name still buys is that the set of values ConfigMaps in a
+namespace is exactly the set declared in git. `traefik` holds three —
+`values-traefik-common`, `values-traefik-public`, `values-traefik-private` — and
+that is what `kubectl get cm` shows, not three plus a sediment of every edit
+since the component was created. In a shared namespace that matters more than
+the churn did: `platform-network` holds those three beside `values-cilium`,
+`values-cloudflared` and `values-external-dns`, and a reader can tell at a glance
+that each belongs to something.
 
 ## Why `values-<ReleaseName>`
 
@@ -111,9 +110,9 @@ arrived at after collisions.
 ## Layering, and secrets
 
 `valuesFrom` is a list, and later entries win. Traefik uses that: both instances
-read `values-common` first and then their own file, so the shared configuration
-lives once and each instance only records its differences — its ingress class and
-its LoadBalancer IP.
+read `values-traefik-common` first and then their own file, so the shared
+configuration lives once and each instance only records its differences — its
+ingress class and its LoadBalancer IP.
 
 Secrets take the same path with `kind: Secret` instead. Three releases do this —
 `cloudflared` and `pocket-id` twice — with an ExternalSecret rendering a

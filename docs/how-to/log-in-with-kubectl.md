@@ -118,8 +118,10 @@ are absent from both roles.
 !!! warning "In a Flux-managed cluster this is not "manage the app""
 
     Flux applies with server-side apply and force, so an edit to anything it
-    owns is reverted on the next reconcile, and the `Kustomization` that governs
-    the app lives in `flux-system` rather than the app's namespace. What the
+    owns is reverted on the next reconcile. That includes the `Kustomization`
+    governing the app: it lives in the app's namespace and `edit` does cover it,
+    but the `namespaces` layer applies it from a directory the tenant cannot
+    change, so an edit there holds only until that layer next runs. What the
     grant really provides is the operational surface: logs, `exec`,
     `port-forward`, deleting a pod to restart it, scaling for a minute. Durable
     change still goes through a pull request.
