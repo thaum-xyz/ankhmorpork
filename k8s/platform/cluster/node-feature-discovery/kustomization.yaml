@@ -12,3 +12,5 @@ configMapGenerator:
 # Stable name so valuesFrom can reference it directly; no nameReference rewrite needed.
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled

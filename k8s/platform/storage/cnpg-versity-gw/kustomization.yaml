@@ -8,6 +8,8 @@ resources:
   - job.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 configMapGenerator:
   - name: values-cnpg-versity-gw
     files:

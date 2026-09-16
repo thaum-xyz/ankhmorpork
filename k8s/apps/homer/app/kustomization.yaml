@@ -9,6 +9,8 @@ resources:
   - slo-probe-success.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 configMapGenerator:
   - name: values-homer-operator
     files:

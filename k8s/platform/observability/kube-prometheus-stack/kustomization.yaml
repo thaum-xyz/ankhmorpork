@@ -23,3 +23,5 @@ configMapGenerator:
 # generate a ConfigMap called "values" and silently overwrite the others.
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled

@@ -7,6 +7,8 @@ resources:
   - clusterrole-background-controller.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 configMapGenerator:
   - name: values-kyverno
     files:
