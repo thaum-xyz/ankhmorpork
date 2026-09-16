@@ -1,0 +1,10 @@
+# Config reference: `helm show values kyverno-api --repo https://kyverno.github.io/api`
+#
+# Deleting a CRD deletes every policy of that kind, and this release is nothing
+# but CRDs, so an uninstall with no guard is the whole admission-control
+# configuration of the cluster. `keep` makes Helm leave them alone. It has to
+# reach them through the chart -- `kubectl annotate` does not survive the next
+# apply -- and it is what let the eleven leave the kyverno release without
+# being deleted on the way out.
+annotations:
+  helm.sh/resource-policy: keep

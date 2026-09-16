@@ -32,20 +32,26 @@ spec:
       interval: 5m
   interval: 5m
   timeout: 10m
+  # No `crds:` policy on either action: the chart ships its CRDs as ordinary
+  # templates rather than in a crds/ directory, so Helm upgrades them like any
+  # other object and Flux's CRD policy has nothing to act on.
   install:
     timeout: 10m
-    # CreateReplace, not Create: Create would leave the older schemas in place.
-    crds: CreateReplace
+    # Adoption stays on, which is Helm 4's default under helm-controller. The
+    # eleven CRDs already exist, owned by the kyverno release until this one
+    # installs, and adoption is what moves them: ownership annotations
+    # rewritten, specs unchanged, no hand step. A reinstall after a failed one
+    # picks them up the same way.
     remediation:
       retries: 3
   upgrade:
     timeout: 10m
-    crds: CreateReplace
+    # Once owned, never re-adopted. If another release ever renders one of these
+    # CRDs, this upgrade fails loudly instead of trading ownership back and
+    # forth; the kyverno release carries the same guard on both actions.
+    disableTakeOwnership: true
     remediation:
       retries: 3
-  values:
-    # Deleting a CRD deletes every policy of that kind. This release is nothing
-    # but CRDs, so an uninstall with no guard is the whole admission-control
-    # configuration of the cluster.
-    annotations:
-      helm.sh/resource-policy: keep
+  valuesFrom:
+    - kind: ConfigMap
+      name: values-kyverno-api
