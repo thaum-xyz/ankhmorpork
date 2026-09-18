@@ -28,7 +28,7 @@ on:
 env:
   golang-version: 1.27.1
   yq-version: v4.53.6
-  esoctl-version: v2.10.0
+  esoctl-version: v2.11.0
 
 permissions:
   contents: read
