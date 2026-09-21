@@ -36,6 +36,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `datalake-logs` | [`k8s/apps/datalake-logs`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/datalake-logs) | `5m0s` | yes | no | — |
 | `datalake-metrics` | [`k8s/apps/datalake-metrics`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/datalake-metrics) | `5m0s` | yes | no | — |
 | `dlna-local` | [`k8s/apps/dlna-local`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/dlna-local) | `15m0s` | yes | no | — |
+| `esphome` | [`k8s/apps/esphome`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/esphome) | `15m0s` | yes | no | — |
 | `grafana` | [`k8s/apps/grafana`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/grafana) | `15m0s` | yes | no | — |
 | `homer` | [`k8s/apps/homer/app`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/homer/app) | `15m0s` | yes | no | — |
 | `homer-services` | [`k8s/apps/homer/services`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/homer/services) | `15m0s` | yes | no | `homer` |

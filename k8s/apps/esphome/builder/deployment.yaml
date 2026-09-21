@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: builder
+  labels:
+    app.kubernetes.io/name: esphome
+    app.kubernetes.io/component: builder
+spec:
+  replicas: 1
+  # builder-data is ReadWriteOnce, so a rolling update deadlocks: the
+  # replacement is scheduled before the old pod releases the volume. Recreate
+  # takes the old pod down first.
+  strategy:
+    type: Recreate
+  # Exactly these two labels: a Deployment's selector is immutable, so anything
+  # else here would need the object deleted and recreated rather than updated.
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: esphome
+      app.kubernetes.io/component: builder
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: esphome
+        app.kubernetes.io/component: builder
+    spec:
+      # Lends CPU and nothing else; it has no business holding an API token.
+      automountServiceAccountToken: false
+      affinity:
+        nodeAffinity:
+          # A compile is the only thing this pod does, and the two chassis
+          # differ four-fold in cores (docs/reference/hardware.md). Nothing
+          # labels a node with its core count, but the Alder Lake-N iGPU is
+          # only on the beelinks -- the same proxy plex uses. Preferred, not
+          # required: a slow build beats no build when both are draining.
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: gpu.intel.com/device-id.0300-46a3.present
+                    operator: In
+                    values:
+                      - "true"
+      containers:
+        - name: builder
+          # The standard esphome image bundles the Device Builder; its
+          # entrypoint turns a leading `dashboard` into `esphome-device-builder`
+          # and passes the rest through, so this is
+          # `esphome-device-builder --remote-build-only /config`.
+          # --remote-build-only requires an explicit config directory.
+          image: ghcr.io/esphome/esphome:2026.9.0
+          args:
+            - dashboard
+            - --remote-build-only
+            - /config
+          ports:
+            # The Noise peer-link listener; the only port a headless server
+            # binds. There is no dashboard, so no 6052.
+            - name: peer-link
+              containerPort: 6055
+              protocol: TCP
+          volumeMounts:
+            # The entrypoint places the PlatformIO cache and the native
+            # ESP-IDF toolchains under /config/.esphome when no /cache is
+            # mounted, so one volume holds identity, pairing and every
+            # rebuildable artefact.
+            - name: data
+              mountPath: /config
+          # TCP, not HTTP: headless mode serves no HTTP site, so the image's
+          # own /version healthcheck has nothing to hit. The listener is bound
+          # before the pairing banner prints, so a fresh server with nobody
+          # paired yet still passes.
+          startupProbe:
+            tcpSocket:
+              port: peer-link
+            periodSeconds: 5
+            failureThreshold: 12
+          readinessProbe:
+            tcpSocket:
+              port: peer-link
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: peer-link
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            # ESP-IDF fans a build out to every core it sees, and it sees the
+            # node's. A compile at that width peaks at a few GiB, so this
+            # caps a runaway job rather than a healthy one: the limit fails
+            # the build, not the node.
+            limits:
+              memory: 8Gi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: builder-data
