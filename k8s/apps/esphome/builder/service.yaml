@@ -1,0 +1,32 @@
+# A LoadBalancer VIP rather than an Ingress: the peer link is a Noise-encrypted
+# WebSocket on its own TCP port, not HTTPS, and the sending dashboard dials it
+# by hostname and port. external-dns publishes the fqdn-template name for a
+# LoadBalancer Service with no host, so this answers on
+# builder.esphome.ankhmorpork.thaum.xyz -- a name Tailscale's split DNS already
+# routes to the house resolver.
+#
+# externalTrafficPolicy is Cluster deliberately. Remote dashboards come in over
+# the tailnet, so their packets arrive on whichever beelink holds the primary
+# subnet route; with Local that node only answers while the pod happens to be
+# on it. See k8s/apps/plex/README.md, "Traffic policy", for the measurement.
+# The peer link authenticates with Noise keys, not source addresses, so losing
+# the real client IP costs nothing here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: builder
+  labels:
+    app.kubernetes.io/name: esphome
+    app.kubernetes.io/component: builder
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.50.136
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: peer-link
+      port: 6055
+      protocol: TCP
+      targetPort: peer-link
+  selector:
+    app.kubernetes.io/name: esphome
+    app.kubernetes.io/component: builder

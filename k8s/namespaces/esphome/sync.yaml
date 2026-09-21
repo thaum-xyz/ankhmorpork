@@ -1,0 +1,18 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: esphome
+  namespace: esphome
+  annotations:
+    kubernetes.io/description: >-
+      Reconciles ./k8s/apps/esphome as esphome's own flux-reconciler, which a
+      RoleBinding confines to this namespace -- the object's namespace is what
+      decides how much it may do. Platform-owned; what it reconciles is the
+      tenant's.
+spec:
+  interval: 15m0s
+  path: ./k8s/apps/esphome
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: ankhmorpork

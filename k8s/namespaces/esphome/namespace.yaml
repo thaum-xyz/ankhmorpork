@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: esphome
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+  labels:
+    flux.rbac.thaum.xyz/role: cluster-admin
+    # baseline, not restricted: the esphome image runs as root and the
+    # PlatformIO / ESP-IDF toolchains it installs into the volume assume it.
+    pod-security.kubernetes.io/enforce: baseline

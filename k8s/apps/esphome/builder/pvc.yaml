@@ -1,0 +1,26 @@
+# Everything the headless server keeps, in one place: its peer-link identity
+# and the single approved pairing (a few KiB, and the only part that is not
+# rebuildable -- losing them means pairing again), plus the PlatformIO
+# packages, the native ESP-IDF toolchains and the per-device build
+# directories, which are gigabytes and re-download on demand.
+#
+# No k8up.io/backup annotation on purpose: a restore would save a two-minute
+# re-pair at the cost of snapshotting toolchains that the next build fetches
+# anyway.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: builder-data
+  labels:
+    app.kubernetes.io/name: esphome
+    app.kubernetes.io/component: builder
+spec:
+  # Under the class's 32Gi cap. One ESP-IDF toolchain set is a few GiB and
+  # ESPHome installs one per IDF version the paired configs pin; the rest is
+  # build directories at a few hundred MiB per device.
+  storageClassName: piraeus-r2-roaming
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
