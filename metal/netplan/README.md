@@ -126,6 +126,25 @@ When UniFi site-to-site takes over: `sudo tailscale set --accept-routes=false`
 on both, then delete `/etc/netplan/61-tailscale-local-subnets.yaml` and
 `netplan apply`, in that order.
 
+### tailscaled ports: 41641 on beelink01, 41642 on beelink02
+
+Both nodes sit behind the same two NATs, and neither can take an inbound port
+forward (see `k8s/apps/plex/README.md`). On the shared default port only one of
+them keeps a predictable external port. The other fell back to DERP: beelink02
+reached Banacha's HA via `DERP(waw)` while beelink01 went direct.
+
+beelink02 runs on its own port, set by hand on 2026-09-27:
+
+```bash
+echo 'PORT="41642"' | sudo tee -a /etc/default/tailscaled   # edit an existing PORT= line instead
+sudo systemctl restart tailscaled
+tailscale ping -c 5 <peer>        # "via <ip>:<port>", not "via DERP(...)"
+```
+
+Afterwards beelink02 → HA went direct in 29 ms. This only matters when
+beelink02 holds the primary route, e.g. while beelink01 reboots under kured.
+Otherwise Banacha's backups and scans would take the relay.
+
 ## Deferred: filter the VLAN20 interface
 
 Not implemented — noted for later. Today the host's wildcard-bound ports (SSH,
