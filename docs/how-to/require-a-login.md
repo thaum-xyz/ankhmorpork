@@ -61,7 +61,7 @@ Prefer the sidecar. It removes any way to reach the app without passing the prox
 ```yaml
 containers:
   - name: oauth2-proxy
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.3
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.4
     args:
       - --provider=oidc
       - --oidc-issuer-url=https://login.krupa.net.pl
