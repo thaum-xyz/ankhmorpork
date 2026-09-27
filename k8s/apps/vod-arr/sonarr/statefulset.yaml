@@ -29,7 +29,7 @@ spec:
         - env:
             - name: TZ
               value: Europe/Berlin
-          image: ghcr.io/home-operations/sonarr:4.0.19
+          image: ghcr.io/home-operations/sonarr:4.0.20
           imagePullPolicy: IfNotPresent
           name: sonarr
           ports:

@@ -28,7 +28,7 @@ spec:
               # Was bitnami/kubectl, unpinned -- Bitnami retired their public
               # image catalogue, so that tag is a liability. This is the
               # upstream Kubernetes build, pinned to the cluster's minor.
-              image: registry.k8s.io/kubectl:v1.34.10
+              image: registry.k8s.io/kubectl:v1.37.1
               command:
                 - kubectl
                 - rollout

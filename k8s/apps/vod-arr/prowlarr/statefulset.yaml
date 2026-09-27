@@ -29,7 +29,7 @@ spec:
         - env:
             - name: TZ
               value: Europe/Berlin
-          image: ghcr.io/home-operations/prowlarr:2.6.2
+          image: ghcr.io/home-operations/prowlarr:2.6.5
           imagePullPolicy: IfNotPresent
           name: prowlarr
           ports:
