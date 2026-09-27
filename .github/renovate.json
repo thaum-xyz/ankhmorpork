@@ -238,6 +238,13 @@
       ],
       "automerge": false,
       "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "GHCR, Quay and registry.k8s.io return no release timestamps, and since Renovate 42 a version without one never passes minimumReleaseAge, so every soak above held those images forever -- silently, as the Docker Hub members of the same group kept merging. Treat a missing timestamp as past the soak: those images update with no soak at all, while Docker Hub tags (tag_last_pushed) still soak as configured.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "minimumReleaseAgeBehaviour": "timestamp-optional"
     }
   ],
   "kubernetes": {
