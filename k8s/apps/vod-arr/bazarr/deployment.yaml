@@ -53,7 +53,7 @@ spec:
                 secretKeyRef:
                   name: postgres-bazarr-user
                   key: password
-          image: ghcr.io/home-operations/bazarr:1.6.0
+          image: ghcr.io/home-operations/bazarr:1.6.2
           imagePullPolicy: IfNotPresent
           name: bazarr
           ports:

@@ -23,7 +23,7 @@ spec:
       serviceAccountName: atuin
       containers:
         - name: atuin
-          image: ghcr.io/atuinsh/atuin:18.18.1
+          image: ghcr.io/atuinsh/atuin:18.23.0
           # v18.12.0 split the binaries: the image ships only atuin-server,
           # whose usage is `atuin-server start`. The chart hardcoded
           # ["server", "start"] and had to be patched; here it is just the arg.

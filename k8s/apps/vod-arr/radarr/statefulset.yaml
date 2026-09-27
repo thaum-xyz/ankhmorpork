@@ -29,7 +29,7 @@ spec:
         - env:
             - name: TZ
               value: Europe/Berlin
-          image: ghcr.io/home-operations/radarr:6.4.2
+          image: ghcr.io/home-operations/radarr:6.4.4
           imagePullPolicy: IfNotPresent
           name: radarr
           ports:

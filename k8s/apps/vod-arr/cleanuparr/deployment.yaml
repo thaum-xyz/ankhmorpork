@@ -45,7 +45,7 @@ spec:
               value: "1000"
             - name: PGID
               value: "1000"
-          image: ghcr.io/cleanuparr/cleanuparr:2.10.5
+          image: ghcr.io/cleanuparr/cleanuparr:2.10.8
           imagePullPolicy: IfNotPresent
           name: cleanuparr
           ports:

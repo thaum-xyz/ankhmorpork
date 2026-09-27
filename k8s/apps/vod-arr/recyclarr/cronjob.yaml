@@ -51,7 +51,7 @@ spec:
                       key: apiKey
                       name: radarr-api-key
                       optional: true
-              image: ghcr.io/recyclarr/recyclarr:8.7.1
+              image: ghcr.io/recyclarr/recyclarr:8.7.2
               name: recyclarr
               resources:
                 limits:

@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: open-webui
-          image: ghcr.io/open-webui/open-webui:v0.9.6
+          image: ghcr.io/open-webui/open-webui:v0.11.4
           env:
             - name: WEBUI_NAME
               value: Mended Drum

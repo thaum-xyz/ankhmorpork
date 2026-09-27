@@ -27,7 +27,7 @@ spec:
         # turned off, logins here break, and OIDC_REQUIRES_EMAIL_VERIFICATION
         # false is the escape hatch -- at the cost of trusting an unverified,
         # self-asserted address to match an existing account.
-        image: ghcr.io/mealie-recipes/mealie:v3.22.0
+        image: ghcr.io/mealie-recipes/mealie:v3.28.0
         env:
         - name: ALLOW_SIGNUP
           value: 'false'
