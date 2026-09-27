@@ -62,6 +62,70 @@ VLAN20. Expect one stale-ARP failure before the first connection succeeds.
 Note `net.ipv4.ip_forward=1` on every k8s node, so a multi-homed node is a
 latent router between the two segments — it sits beside the UDM, not behind it.
 
+## beelinks: local subnets ahead of Tailscale's table 52
+
+`/etc/netplan/61-tailscale-local-subnets.yaml` on beelink01 and beelink02, from
+`beelinks-61-tailscale-local-subnets.yaml`. It must be in place **before**
+`--accept-routes` is turned on. Both are set by hand; `30_tailscale.yml` does
+not touch either, and Ansible is on its way out.
+
+`--accept-routes` is there so that replies to another site's LAN go back over
+the tunnel. Banacha's `192.168.110.0/24` reaches the UNAS through HA's subnet
+router; this is a stopgap until UniFi site-to-site replaces it.
+
+Both beelinks advertise `192.168.40.0/24` and `192.168.50.0/24`; only one holds
+the primary route. With `--accept-routes`, the other one installs its partner's
+copy into table 52, and `5270: from all lookup 52` sits ahead of
+`32766: from all lookup main`. Tested on beelink02 (standby) on 2026-09-27:
+table 52 held both subnets within 5 s, so the node sent its own LAN and the NAS
+(`192.168.40.10`) through the tunnel until rolled back with
+`tailscale set --accept-routes=false`. The primary can move, so both nodes need
+the fix.
+
+The two rules at priority 5260 send these subnets to the main table first.
+Routes from other sites (e.g. Banacha's `192.168.110.0/24`) still come from
+table 52. They are netplan `routing-policy` rather than `ip rule add`, because
+systemd-networkd deletes rules it does not own when it reconfigures a link.
+
+The subnets must match `tailscale_advertise_routes` in
+`group_vars/tailscale_subnet_router.yml`.
+
+### Applying
+
+```bash
+sudo install -m 0600 beelinks-61-tailscale-local-subnets.yaml /etc/netplan/61-tailscale-local-subnets.yaml
+sudo netplan get bonds.bond0          # routing-policy merged into the cloud-init bond
+sudo netplan generate                 # fails on a bad merge before anything changes
+sudo systemd-run --on-active=3 --unit=netplan-tailscale-rules-apply /usr/sbin/netplan apply
+```
+
+`netplan apply` can reconfigure `bond0` for a moment. On beelink01 that is a
+control-plane node, so apply there when a short API/etcd blip is acceptable.
+
+Only once `ip rule show | grep 5260` lists both rules:
+
+```bash
+sudo tailscale set --accept-routes
+```
+
+beelink02 (worker) first, then beelink01. Undo with
+`sudo tailscale set --accept-routes=false`.
+
+### Checking
+
+```bash
+ip rule show | grep 5260                 # two "to 192.168.x.0/24 lookup main" rules
+ip route get 192.168.40.10               # dev bond0, not tailscale0
+ip route get 192.168.110.10              # dev tailscale0, once --accept-routes is on
+tailscale debug prefs | jq .RouteAll     # true
+```
+
+### Removing
+
+When UniFi site-to-site takes over: `sudo tailscale set --accept-routes=false`
+on both, then delete `/etc/netplan/61-tailscale-local-subnets.yaml` and
+`netplan apply`, in that order.
+
 ## Deferred: filter the VLAN20 interface
 
 Not implemented — noted for later. Today the host's wildcard-bound ports (SSH,

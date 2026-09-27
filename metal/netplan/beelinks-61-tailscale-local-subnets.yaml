@@ -1,0 +1,15 @@
+# Install to /etc/netplan/61-tailscale-local-subnets.yaml on beelink01 and
+# beelink02 (chmod 0600) by hand, before --accept-routes; see README.md.
+# Keeps this site's own subnets on the main table, ahead of Tailscale's table 52.
+# Must match tailscale_advertise_routes in group_vars/tailscale_subnet_router.yml.
+network:
+  version: 2
+  bonds:
+    bond0:
+      routing-policy:
+        - to: 192.168.40.0/24
+          table: 254
+          priority: 5260
+        - to: 192.168.50.0/24
+          table: 254
+          priority: 5260
