@@ -154,7 +154,7 @@ spec:
           # Upstream Kubernetes build, pinned to the cluster's minor, as in
           # k8s/apps/valheim/restarter/cronjob.yaml. Distroless, hence the split
           # from the shell above.
-          image: registry.k8s.io/kubectl:v1.34.10
+          image: registry.k8s.io/kubectl:v1.37.1
           command:
             - kubectl
             - apply

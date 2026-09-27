@@ -25,7 +25,7 @@ spec:
         - args:
             - --config.file
             - /etc/json_exporter/config.yml
-          image: quay.io/prometheuscommunity/json-exporter:v0.5.0
+          image: quay.io/prometheuscommunity/json-exporter:v0.8.0
           name: uptimerobot
           ports:
             - containerPort: 7979

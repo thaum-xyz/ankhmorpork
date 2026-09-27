@@ -31,7 +31,7 @@ provider:
   webhook:
     image:
       repository: ghcr.io/home-operations/external-dns-unifi-webhook
-      tag: "0.10.9"
+      tag: "0.10.12"
     resources:
       requests:
         cpu: 10m
