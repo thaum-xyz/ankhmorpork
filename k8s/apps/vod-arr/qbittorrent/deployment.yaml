@@ -73,7 +73,7 @@ spec:
         - env:
             - name: TZ
               value: Europe/Berlin
-          image: ghcr.io/home-operations/qbittorrent:5.2.3
+          image: ghcr.io/home-operations/qbittorrent:5.2.4
           imagePullPolicy: IfNotPresent
           name: qbittorrent
           ports:
