@@ -48,7 +48,7 @@ spec:
           # and passes the rest through, so this is
           # `esphome-device-builder --remote-build-only /config`.
           # --remote-build-only requires an explicit config directory.
-          image: ghcr.io/esphome/esphome:2026.9.0
+          image: ghcr.io/esphome/esphome:2026.9.1
           args:
             - dashboard
             - --remote-build-only
