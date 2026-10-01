@@ -11,7 +11,7 @@ on:
 env:
   golang-version: 1.27.1
   kubeconform-version: v0.8.0
-  kustomize-version: v5.8.1
+  kustomize-version: v5.8.2
   yq-version: v4.54.1
   shellcheck-version: v0.11.0
 
