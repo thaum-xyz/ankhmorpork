@@ -45,7 +45,7 @@ service:
 deployment:
   sidecarContainers:
     oauth2:
-      image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.4
+      image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5
       ports:
         - name: oauth2
           containerPort: 4180
