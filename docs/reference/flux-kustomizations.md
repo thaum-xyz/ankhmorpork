@@ -43,6 +43,7 @@ see [how Flux is layered](../explanation/flux-layering.md).
 | `karakeep` | [`k8s/apps/karakeep`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/karakeep) | `60m0s` | yes | no | — |
 | `mealie` | [`k8s/apps/mealie`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/mealie) | `15m0s` | yes | no | — |
 | `mended-drum` | [`k8s/apps/mended-drum`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/mended-drum) | `15m0s` | yes | no | — |
+| `nanny-ogg` | [`k8s/apps/nanny-ogg`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/nanny-ogg) | `15m0s` | yes | no | — |
 | `paperless` | [`k8s/apps/paperless/manifests`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/paperless/manifests) | `60m0s` | yes | no | — |
 | `photos` | [`k8s/apps/photos`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/photos) | `15m0s` | yes | no | — |
 | `plex` | [`k8s/apps/plex`](https://github.com/thaum-xyz/ankhmorpork/tree/master/k8s/apps/plex) | `15m0s` | yes | no | — |
