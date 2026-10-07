@@ -88,7 +88,7 @@ spec:
               name: rules
       containers:
         - name: pint
-          image: ghcr.io/cloudflare/pint:0.88.0
+          image: ghcr.io/cloudflare/pint:0.89.0
           # The image declares CMD and no ENTRYPOINT, so args on their own
           # replace the binary path rather than appending to it.
           command:
