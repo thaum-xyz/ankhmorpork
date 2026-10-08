@@ -40,7 +40,7 @@ spec:
         - name: rules-sync
           # Native sidecar: starts before pint and terminates after it.
           restartPolicy: Always
-          image: quay.io/kiwigrid/k8s-sidecar:2.11.2
+          image: quay.io/kiwigrid/k8s-sidecar:2.13.3
           env:
             - name: METHOD
               value: WATCH
