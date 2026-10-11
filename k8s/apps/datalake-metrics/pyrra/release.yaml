@@ -6,7 +6,7 @@ spec:
   chart:
     spec:
       chart: pyrra
-      version: "1.13.0"
+      version: "1.13.1"
       sourceRef:
         kind: HelmRepository
         name: pyrra

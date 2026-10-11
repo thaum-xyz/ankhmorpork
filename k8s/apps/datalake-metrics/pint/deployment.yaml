@@ -40,7 +40,7 @@ spec:
         - name: rules-sync
           # Native sidecar: starts before pint and terminates after it.
           restartPolicy: Always
-          image: quay.io/kiwigrid/k8s-sidecar:2.13.3
+          image: quay.io/kiwigrid/k8s-sidecar:2.14.1
           env:
             - name: METHOD
               value: WATCH
@@ -88,7 +88,7 @@ spec:
               name: rules
       containers:
         - name: pint
-          image: ghcr.io/cloudflare/pint:0.89.0
+          image: ghcr.io/cloudflare/pint:0.89.2
           # The image declares CMD and no ENTRYPOINT, so args on their own
           # replace the binary path rather than appending to it.
           command:
