@@ -27,6 +27,6 @@ spec:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/part-of: valheim
   #type: NodePort
-  externalTrafficPolicy: Local
+  externalTrafficPolicy: Cluster
   type: LoadBalancer
   loadBalancerIP: 192.168.50.131
