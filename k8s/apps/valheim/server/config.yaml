@@ -14,7 +14,7 @@ data:
   WORLD_NAME: "Pingwiny"
   SERVER_PORT: "2456"
   SERVER_PUBLIC: "false"
-  SERVER_PASS: "babeczka"
+  SERVER_PASS: "szyszka49"
   # No -preset/-modifier: the world already stores its own (default preset,
   # raids "more"), and launch flags would override them.
   SERVER_ARGS: ""
