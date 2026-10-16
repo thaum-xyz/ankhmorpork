@@ -27,6 +27,8 @@ spec:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/part-of: valheim
   #type: NodePort
-  externalTrafficPolicy: Local
+  # Cluster, not Local: tailnet clients enter on the primary Tailscale subnet
+  # router, which drops the VIP when the only pod runs elsewhere. See plex README.
+  externalTrafficPolicy: Cluster
   type: LoadBalancer
   loadBalancerIP: 192.168.50.131
