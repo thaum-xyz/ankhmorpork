@@ -9,10 +9,12 @@ metadata:
     app.kubernetes.io/part-of: valheim
 data:
   SERVER_NAME: "MISTery"
-  WORLD_NAME: "ashlands-test"
+  # Valheim 1.0 world folder, seeded by hand into
+  # data-valheim-0:/gamefiles/worlds_local/Pingwiny/ from a Steam Cloud save.
+  WORLD_NAME: "Pingwiny"
   SERVER_PORT: "2456"
   SERVER_PUBLIC: "false"
   SERVER_PASS: "babeczka"
-  #SERVER_ARGS: "-preset hard -modifier raids more"
-  SERVER_ARGS: "-preset easy -modifier raids more"
-  STEAMCMD_ARGS: "-beta public-test -betapassword yesimadebackups"
+  # No -preset/-modifier: the world already stores its own (default preset,
+  # raids "more"), and launch flags would override them.
+  SERVER_ARGS: ""
