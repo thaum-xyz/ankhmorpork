@@ -46,7 +46,7 @@ spec:
           envFrom:
             - secretRef:
                 name: github-receiver-credentials
-          image: ghcr.io/pfnet-research/alertmanager-to-github:v0.3.1
+          image: ghcr.io/pfnet-research/alertmanager-to-github:v0.3.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
