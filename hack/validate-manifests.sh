@@ -51,7 +51,13 @@ CRD_CATALOG='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Gro
 LOCAL_SCHEMAS="$(pwd)/hack/schemas/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
 # CRD definitions themselves have no schema in the upstream set; the custom
 # resources they define are still validated via the catalog above.
-SKIP=CustomResourceDefinition,Dashboard
+#
+# ClusterSecretStore: kubeconform v0.7.0 reports "could not find schema" for
+# the catalog's external-secrets.io/v1 schema even when it is served and is
+# valid JSON, or given as a local file -- it fails to load it, not to find it.
+# There is a single doppler-auth-api object, unchanged for years; a server-side
+# dry-run is the check if it ever is edited.
+SKIP=CustomResourceDefinition,Dashboard,ClusterSecretStore
 
 validate() {
   kubeconform \
