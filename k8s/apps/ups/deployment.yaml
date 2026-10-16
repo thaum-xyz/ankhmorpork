@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: telegraf
-          image: docker.io/library/telegraf:1.40.0-alpine
+          image: docker.io/library/telegraf:1.40.1-alpine
           args:
             - --config
             - /etc/telegraf/telegraf.conf
