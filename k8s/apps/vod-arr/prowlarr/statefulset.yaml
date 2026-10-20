@@ -183,7 +183,7 @@ spec:
                   key: apiKey
                   name: prowlarr-api-key
                   optional: true
-          image: mikefarah/yq:4.53.6
+          image: mikefarah/yq:4.54.1
           name: render-config
           resources:
             limits:
