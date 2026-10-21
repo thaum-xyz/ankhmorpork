@@ -13,7 +13,7 @@ spec:
           # Not minio/mc: MinIO withdrew their images from Docker Hub, so
           # docker.io/minio/mc now 404s -- which reaches the kubelet as an
           # authorization failure and reads like a credentials problem.
-          image: rclone/rclone:1.75.1
+          image: rclone/rclone:1.75.2
           # rclone builds its whole config from RCLONE_CONFIG_<REMOTE>_* in the
           # environment, so there is no config file, no shell wrapper, and no
           # `|| true` swallowing real errors: this is the entrypoint with two
