@@ -25,6 +25,9 @@ spec:
   #     routes and inhibitions here match on `warning`
   #   - every alert has a `summary`, which .pint.hcl requires
   #   - an alert with a runbook carries its `runbook_url`
+  #   - three expressions are corrected, each explained where it is: the two
+  #     error-rate rules and drbdResourceResyncWithoutProgress. The chart's
+  #     versions fired when they should not, or could not fire at all.
   #
   # Nothing brings the chart's later changes here. When linstor-cluster is
   # bumped, diff its templates/monitoring.yaml against the version above and
@@ -69,7 +72,13 @@ spec:
               LINSTOR Satellite "{{ $labels.hostname }}" reports {{ $value }} errors in the last 15 minutes.
               Use "linstor error-reports list --nodes {{ $labels.hostname }} --since 15minutes" to see them.
             summary: LINSTOR satellite is reporting errors
-          expr: increase(linstor_error_reports_count{module="SATELLITE"}[15m]) > 0
+          # delta(), where the chart has increase(). The metric is a gauge:
+          # the number of error reports LINSTOR holds, which drops when old
+          # reports are cleared. increase() reads a drop as a counter reset
+          # and counts whatever is left as new, so clearing reports raised
+          # the alert. delta() goes negative instead and stays quiet. While
+          # the count only grows the two agree.
+          expr: delta(linstor_error_reports_count{module="SATELLITE"}[15m]) > 0
           labels:
             severity: warning
         - alert: linstorControllerErrorRate
@@ -78,7 +87,8 @@ spec:
               LINSTOR Controller reports {{ $value }} errors in the last 15 minutes.
               Use "linstor error-reports list --since 15minutes" to see them.
             summary: LINSTOR controller is reporting errors
-          expr: increase(linstor_error_reports_count{module="CONTROLLER"}[15m]) > 0
+          # See linstorSatelliteErrorRate.
+          expr: delta(linstor_error_reports_count{module="CONTROLLER"}[15m]) > 0
           labels:
             severity: warning
         - alert: linstorSatelliteNotOnline
@@ -172,7 +182,34 @@ spec:
               DRBD resource "{{ $labels.name }}" on "{{ $labels.node }}" has been in Inconsistent without resync progress for 5 minutes.
               This may indicate there is no connection to UpToDate data, or a stuck resync.
             summary: DRBD resync is not progressing
-          expr: drbd_device_state{drbd_device_state="Inconsistent"} and delta(drbd_peerdevice_outofsync_bytes[5m]) >= 0
+          # The chart's expression could not fire. It joined the two metrics
+          # with a bare `and`, which needs every label to match, and they
+          # never do: one side carries drbd_device_state and minor, the other
+          # conn_name and peer_node_id. pint, checking against Prometheus,
+          # called it an impossible binary operation.
+          #
+          # Three things had to change, not one:
+          #   - `on (name, node, volume)`, which is what identifies a device
+          #     on both sides.
+          #   - `> 0`. drbd-reactor exports every state as its own series, 0
+          #     or 1, so the bare selector matches every device there is.
+          #   - `unless ... < 0` rather than `and ... >= 0`. A device has a
+          #     link to each peer, and the one to the diskless tiebreaker
+          #     never has anything out of sync: its delta is always 0, which
+          #     satisfies `>= 0` for a resync in full flight. The question is
+          #     whether any link is shrinking, so the rule fires unless one is.
+          #
+          # `for` is the chart's own, from a later version, and it is needed.
+          # A resync starts with a jump from nothing out of sync to everything,
+          # so for its first five minutes the delta is positive however fast
+          # it runs; measured on 2026-10-12, a resync that finished in under a
+          # minute showed +910 MB. After five minutes the window no longer
+          # reaches back past the jump.
+          expr: |
+            (drbd_device_state{drbd_device_state="Inconsistent"} > 0)
+            unless on (name, node, volume)
+            (delta(drbd_peerdevice_outofsync_bytes[5m]) < 0)
+          for: 5m
           labels:
             severity: warning
         - alert: drbdResourceWithNoUpToDateReplicas
