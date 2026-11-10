@@ -10,7 +10,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: anza-labs
-        namespace: pocket-id
       version: "2.2.1"
       interval: 5m
   interval: 5m
