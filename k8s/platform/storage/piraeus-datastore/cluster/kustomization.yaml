@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - repository.yaml
   - release.yaml
+  - prometheusrule.yaml
 generatorOptions:
   disableNameSuffixHash: true
   labels:
