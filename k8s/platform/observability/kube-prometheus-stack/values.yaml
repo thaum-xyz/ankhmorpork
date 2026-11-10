@@ -415,12 +415,25 @@ kube-state-metrics:
           - source.toolkit.fluxcd.io
         resources: ["*"]
         verbs: ["list", "watch"]
+  # The limit was 180Mi, and that sat on top of the exporter's own peak. It
+  # runs at about 116Mi, but a start or a relist loads every object at once:
+  # on 2026-11-10 it went from 116Mi to the limit inside one 10s sample,
+  # stopped answering /livez and was restarted by the probe. Not by the OOM
+  # killer -- container_oom_events_total never moved -- so it showed as exit
+  # code 2 rather than OOMKilled. The two starts that followed reached 179Mi
+  # (killed) and 175Mi (survived). 15 restarts in 30 days, and eight of the
+  # nine containers seen in the last 7 peaked at 174Mi or more.
+  #
+  # The true peak is unknown, because every sample so far was clipped at the
+  # old limit. 360Mi is twice that limit, not a measurement: read
+  # max_over_time(container_memory_working_set_bytes[7d]) after a restart and
+  # bring it down to fit. The request follows the steady state.
   resources:
     requests:
       cpu: 2m
-      memory: 34Mi
+      memory: 120Mi
     limits:
-      memory: 180Mi
+      memory: 360Mi
 
 prometheus-node-exporter:
   # Replaces the chart default wholesale: k3s keeps containerd under /run/k3s.
