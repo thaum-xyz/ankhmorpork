@@ -233,7 +233,7 @@ HelmReleases carry it, and why, is in
 | | |
 | --- | --- |
 | **Type** | Annotation |
-| **Set on** | the bootstrap `Job` in `k8s/platform/storage/cnpg-versity-gw/` |
+| **Set on** | the bucket-bootstrap `Job`s in `k8s/platform/storage/cnpg-versity-gw/` and `k8s/apps/datalake-logs/versity/` |
 | **Read by** | kustomize-controller |
 | **Effect** | A change that cannot be made in place deletes the object and creates it again, instead of failing the dry-run |
 
