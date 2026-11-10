@@ -7,6 +7,5 @@ resources:
   - deployment.yaml
   - service.yaml
   - podmonitor.yaml
-  - networkpolicy.yaml
   - prometheusrule.yaml
   - slo-external-probe-success.yaml
