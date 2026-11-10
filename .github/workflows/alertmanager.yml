@@ -26,7 +26,7 @@ on:
       - '.github/workflows/alertmanager.yml'
 
 env:
-  golang-version: 1.27.3
+  golang-version: 1.27.4
   yq-version: v4.54.3
   esoctl-version: v2.15.0
 
