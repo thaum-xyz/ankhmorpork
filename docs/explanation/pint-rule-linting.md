@@ -38,7 +38,7 @@ Six alerts that could not fire, each for a different reason:
 | `HighlyAvailableWorkloadIncorrectlySpread` | errored on *every* evaluation — a pod with two PVCs made the join ambiguous |
 | `ReconciliationFailure` | `gotk_reconcile_condition` was removed from Flux; 19 other `gotk_*` families still existed, so the scrape looked healthy |
 | `etcdHighNumberOfFailedGRPCRequests` | killed by our own `keep etcd_.*` relabeling, which dropped etcd's own gRPC metrics |
-| `K8upJobFailed` | joined on `kube_job_labels`, which has no series at all |
+| `K8upJobFailed` | joined on `kube_job_labels`, which had no series at all |
 | `K8upBackupStale` | the same join |
 
 The last two are the reason the accepted-findings set is kept narrow. Backups are
@@ -69,6 +69,21 @@ reported. Both are cases where the metric exists and only a label value is
 missing, so a typo would still surface — under the third wording, *"didn't have
 any series for"*, which is **never** accepted. That is the wording
 `K8upJobFailed` was reported under.
+
+The fourth wording, *"no series with the … label"*, is accepted for one rule.
+`KubeJobNotCompleted` ends in an opt-out on
+`kube_job_labels{label_excluded_from_alerts="true"}`, and kube-state-metrics adds
+a `label_*` label only to objects that carry the key — so for as long as no Job
+opts out, the label is missing from every series. A misspelt label name reads the
+same way, which is why this is one exception and not a class. The spelling is
+checked against claims, where the same
+[`excluded_from_alerts`](../reference/annotations.md#excluded_from_alerts) key
+does match.
+
+That rule was first reported under the third wording. A chart upgrade added the
+clause, `jobs` was not in kube-state-metrics' labels allowlist, and the opt-out
+could not have worked for anyone who used it. The exception rests on that
+allowlist entry: without it the same block would hide the third wording.
 
 ## Why the alert compares sets
 
