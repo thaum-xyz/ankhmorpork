@@ -7,7 +7,7 @@
 # default so Renovate can see the image; a bare tag is invisible to it.
 image:
   repository: ghcr.io/versity/versitygw
-  tag: "v1.7.0"
+  tag: "v1.11.0"
 
 auth:
   existingSecret: versitygw-credentials
