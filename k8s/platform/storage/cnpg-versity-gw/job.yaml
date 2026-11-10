@@ -2,6 +2,16 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: cnpg-versity-gw-bootstrap-bucket
+  annotations:
+    # A Job's pod template is immutable, so any edit to it -- Renovate bumping
+    # the image is enough -- fails the dry-run, and one failed dry-run abandons
+    # the whole platform-storage pass (#1638). With this, kustomize-controller
+    # deletes the Job and creates it again instead. That runs it again, which
+    # is safe: `rclone mkdir` on a bucket that exists does nothing.
+    #
+    # Not ttlSecondsAfterFinished: Flux recreates whatever is missing on every
+    # pass, so a Job that removes itself runs once per interval, for ever.
+    kustomize.toolkit.fluxcd.io/force: enabled
 spec:
   # barman-cloud will not create the bucket, and a missing one surfaces as a
   # failed backup rather than anything naming the cause.

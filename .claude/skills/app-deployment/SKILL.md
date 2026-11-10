@@ -219,6 +219,12 @@ because nothing is left to uninstall. There is no `--force` flag on that command
   they carry their own copy — but **existing volumes keep the old settings**. NFS
   PVs can be patched in place (`/spec/mountOptions`) and take effect on remount;
   DRBD needs `linstor resource-definition drbd-options ... <pv>` per volume.
+- **A `Job`'s pod template is immutable**, so the first image bump fails its
+  dry-run and the Kustomization applies nothing else in its path until someone
+  deletes the Job. This held back three weeks of `platform-storage` (#1638).
+  Give a Job that a Kustomization applies directly
+  `kustomize.toolkit.fluxcd.io/force: enabled` — see
+  `docs/reference/annotations.md` — and make it safe to run twice.
 - **Never pin a Pod with `nodeName`.** It bypasses the scheduler, so nothing writes
   `volume.kubernetes.io/selected-node` on the PVC, the provisioner never fires, and
   any `WaitForFirstConsumer` class (`lvm-thin`, both piraeus classes) deadlocks Pending

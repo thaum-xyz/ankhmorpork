@@ -228,6 +228,25 @@ hand-clearing `claimRef` on a recreated PV while the app is down. Which
 HelmReleases carry it, and why, is in
 [how Flux is layered](../explanation/flux-layering.md#pruning-and-the-exceptions).
 
+### `kustomize.toolkit.fluxcd.io/force: enabled`
+
+| | |
+| --- | --- |
+| **Type** | Annotation |
+| **Set on** | the bootstrap `Job` in `k8s/platform/storage/cnpg-versity-gw/` |
+| **Read by** | kustomize-controller |
+| **Effect** | A change that cannot be made in place deletes the object and creates it again, instead of failing the dry-run |
+
+A Job's pod template is immutable, so the first edit to one — an image bump is
+enough — fails its dry-run, and
+[a pass stops at its first error](../explanation/flux-layering.md#ordering-where-it-genuinely-matters).
+With the annotation the Job is replaced and runs again, so it belongs only on a
+Job that is safe to repeat. `ttlSecondsAfterFinished` is not a substitute: Flux
+creates whatever is missing on every pass, so a Job that removes itself runs
+once per interval.
+
+Never on anything that holds data. Replacing a PVC deletes the volume.
+
 ### `k8up.io/backup`
 
 | | |
