@@ -10,8 +10,10 @@
 # eleven postgres clusters point at, so it is worth spelling out.
 fullnameOverride: cnpg-versity-gw
 
-# Pinned. The chart defaults to :latest.
+# Pinned. The chart defaults to :latest. The repository repeats the chart
+# default so Renovate can see the image; a bare tag is invisible to it.
 image:
+  repository: ghcr.io/versity/versitygw
   tag: "v1.7.0"
 
 auth:
