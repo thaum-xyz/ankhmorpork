@@ -12,12 +12,22 @@ k8up:
         secretKeyRef:
           name: k8up-repo
           key: password
+    # Despite the names, K8up applies the two limits below among the Jobs that
+    # share a repository string, not across the cluster, and a local backend's
+    # string is its mountPath. They hold fleet-wide only because every Schedule
+    # mounts its repository at /repo. Read docs/explanation/app-backups.md
+    # before giving a namespace a path of its own.
+    #
     # ~100 MiB/s over a single 1GbE link to the UNAS, and nconnect=4 does not
     # lift it. More parallel jobs only contend. See bench/storage-2026-09.
     - name: BACKUP_GLOBAL_CONCURRENT_BACKUP_JOBS_LIMIT
       value: "2"
     # A restic repository is only consistent at rest, and prune rewrites pack
     # files. Never let two prunes run at once against the same NFS export.
+    #
+    # The shared /repo is what enforces that, not this value. The prune
+    # controller in K8up v2.16.1 never reads it: a prune starts only when no
+    # other Job has its repository string. Kept as the statement of intent.
     - name: BACKUP_GLOBAL_CONCURRENT_PRUNE_JOBS_LIMIT
       value: "1"
 
