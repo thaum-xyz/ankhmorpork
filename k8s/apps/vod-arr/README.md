@@ -182,13 +182,43 @@ sets the Postgres connection, turns the built-in login **off**
 (`AuthenticationMethod: External` — the private ingress is the trust boundary,
 and a password nobody has is how the old namespace became unauditable), pins
 `LogLevel` to `info`, turns usage analytics **off** (`AnalyticsEnabled: False`),
-and pins the API key from Doppler when the entry exists.
+names the hosts the app answers to (`AllowedHosts`), and pins the API key from
+Doppler when the entry exists.
 
 Analytics is the one of those that was never in `config.xml` to begin with. The
 apps default it to on and read it without persisting it, so the element has to
 be written for the telemetry to stop -- an absent key is not an off one. That is
 the difference from `LogLevel`, which was in the file and had drifted to `debug`
 from the UI.
+
+`AllowedHosts` is there because the login is off. Left empty, the apps answer
+for any `Host` header, and report it through a health check
+(`AllowedHostsCheck`) that kept `radarrUnhealthy` and `prowlarrUnhealthy` firing
+from the day radarr 6.4.3 and prowlarr 2.6.3 brought it (#1574, #1573). Sonarr
+stayed quiet only because the value had been typed into its UI, which put it on
+the claim and nowhere else; prowlarr has no claim to keep it on.
+
+Each list is the ingress host, the bare Service name and `localhost` — the
+names the callers send:
+
+| Caller                                        | Reaches the app as                         |
+| --------------------------------------------- | ------------------------------------------ |
+| Traefik, `private` class                      | `<app>.ankhmorpork.thaum.xyz`              |
+| prowlarr, to sync indexers into sonarr/radarr | `http://sonarr:8989`, `http://radarr:7878` |
+| sonarr and radarr, searching through prowlarr | `http://prowlarr:9696/<id>/`               |
+| bazarr, seerr, recyclarr, cleanuparr          | `http://sonarr:8989`, `http://radarr:7878` |
+| exportarr sidecar                             | `http://localhost:<port>`                  |
+| kubelet probes                                | `tcpSocket`, so no `Host` at all           |
+
+Any other name is answered with a 400, `radarr.vod-arr` and the Pod IP
+included. So a caller from another namespace has to be added to the list
+before it is pointed at the app, and the probes have to stay `tcpSocket` or
+send a `Host` header of their own. A refusal is logged at Info, which makes
+this the query for a caller the list missed:
+
+```logql
+{namespace="vod-arr"} |= "does not match an allowed host"
+```
 
 It was called `postgres-setup` while Postgres was all it did.
 

@@ -147,6 +147,18 @@ spec:
               # every start and exportarr loses that race, so the port the two
               # containers have to agree on is declared rather than defaulted.
               yq -i '(.Config.Port = "9696")' /config/config.xml
+              # With the login off, an empty AllowedHosts makes the app answer for any
+              # Host header -- the opening DNS rebinding needs -- and since 2.6.3 it
+              # says so through a health check that keeps prowlarrUnhealthy firing.
+              # The UI could never have held this: there is no claim, so the file is
+              # new every start. The list is every name a caller sends: the ingress
+              # host; the Service name, which sonarr and radarr carry in the URL of
+              # every indexer synced to them; and localhost for exportarr. Everything
+              # else gets a 400, prowlarr.vod-arr and the Pod IP included, so a caller
+              # from another namespace has to be added here first, and an httpGet
+              # probe would have to set its own Host header. The tcpSocket probes
+              # send none.
+              yq -i '(.Config.AllowedHosts = "prowlarr.ankhmorpork.thaum.xyz,prowlarr,localhost")' /config/config.xml
               # Prowlarr, Bazarr and Recyclarr all address this app by API key, so the key has
               # to be declared rather than generated. Absent secret leaves whatever exists.
               if [ -n "${API_KEY:-}" ]; then

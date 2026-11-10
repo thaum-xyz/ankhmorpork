@@ -144,6 +144,16 @@ spec:
               # persists it, so usage telemetry ships to the *arr project until the
               # element is written. Booleans in this file are capitalised.
               yq -i '(.Config.AnalyticsEnabled = "False")' /config/config.xml
+              # With the login off, an empty AllowedHosts makes the app answer for any
+              # Host header -- the opening DNS rebinding needs -- and since 6.4.3 it
+              # says so through a health check that keeps radarrUnhealthy firing. The
+              # list is every name a caller sends: the ingress host; the Service name,
+              # which is how prowlarr, bazarr, seerr, recyclarr and cleanuparr are all
+              # configured; and localhost for exportarr. Everything else gets a 400,
+              # radarr.vod-arr and the Pod IP included, so a caller from another
+              # namespace has to be added here first, and an httpGet probe would have
+              # to set its own Host header. The tcpSocket probes send none.
+              yq -i '(.Config.AllowedHosts = "radarr.ankhmorpork.thaum.xyz,radarr,localhost")' /config/config.xml
               # Prowlarr, Bazarr and Recyclarr all address this app by API key, so the key has
               # to be declared rather than generated. Absent secret leaves whatever exists.
               if [ -n "${API_KEY:-}" ]; then
