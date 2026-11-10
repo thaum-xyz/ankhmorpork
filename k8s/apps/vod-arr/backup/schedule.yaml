@@ -19,18 +19,21 @@ spec:
     runAsGroup: 0
   backup:
     schedule: "15 22 * * *"
+    activeDeadlineSeconds: 3600
     volumes:
       - name: backup-repo
         persistentVolumeClaim:
           claimName: backup-repo
   check:
     schedule: "45 6 * * 0"
+    activeDeadlineSeconds: 3600
     volumes:
       - name: backup-repo
         persistentVolumeClaim:
           claimName: backup-repo
   prune:
     schedule: "15 8 * * 0"
+    activeDeadlineSeconds: 3600
     retention:
       keepDaily: 14
       keepWeekly: 8
