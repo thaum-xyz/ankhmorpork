@@ -2,6 +2,17 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: bootstrap-bucket
+  annotations:
+    # A Job's pod template is immutable, so any edit to it -- Renovate bumping
+    # the image is enough -- fails the dry-run, and one failed dry-run abandons
+    # the whole datalake-logs pass, Loki included; #1638 was this on
+    # platform-storage. With this, kustomize-controller deletes the Job and
+    # creates it again instead. That runs it again, which is safe: `rclone
+    # mkdir` on a bucket that exists does nothing.
+    #
+    # Not ttlSecondsAfterFinished: Flux recreates whatever is missing on every
+    # pass, so a Job that removes itself runs once per interval, for ever.
+    kustomize.toolkit.fluxcd.io/force: enabled
 spec:
   # Loki will not create its own bucket, and a missing one surfaces as opaque
   # write failures rather than anything naming the actual problem.
@@ -9,25 +20,40 @@ spec:
     spec:
       restartPolicy: OnFailure
       containers:
-        - name: mc
-          image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+        - name: rclone
+          # Not minio/mc: MinIO withdrew their images from Docker Hub, so
+          # docker.io/minio/mc now 404s -- which reaches the kubelet as an
+          # authorization failure and reads like a credentials problem.
+          image: rclone/rclone:1.75.2
+          # rclone builds its whole config from RCLONE_CONFIG_<REMOTE>_* in the
+          # environment, so there is no config file and no shell wrapper: this
+          # is the entrypoint with two arguments, and a non-zero exit is a
+          # genuine failure.
+          args: ["mkdir", "vgw:loki"]
           env:
-            - name: BUCKET_NAME
-              value: loki
-            - name: VGW_ENDPOINT
+            - name: RCLONE_CONFIG_VGW_TYPE
+              value: s3
+            - name: RCLONE_CONFIG_VGW_PROVIDER
+              value: Other
+            - name: RCLONE_CONFIG_VGW_ENDPOINT
               value: http://versitygw:7070
-            - name: ACCESS_KEY
+            # Not used for routing -- the endpoint above decides that -- but the
+            # SigV4 signature is computed over a region, so it cannot be empty.
+            - name: RCLONE_CONFIG_VGW_REGION
+              value: us-east-1
+            - name: RCLONE_CONFIG_VGW_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   name: versitygw-credentials
                   key: rootAccessKeyId
-            - name: SECRET_KEY
+            - name: RCLONE_CONFIG_VGW_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: versitygw-credentials
                   key: rootSecretAccessKey
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              mc alias set vgw "$VGW_ENDPOINT" "$ACCESS_KEY" "$SECRET_KEY" --api S3v4
-              mc mb --ignore-existing vgw/$BUCKET_NAME
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
