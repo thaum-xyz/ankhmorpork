@@ -55,6 +55,8 @@ Alertmanager's configuration, and change without the page.
 `make docs-lint` fails on a `runbook_url` that points at this site with no page
 behind it, and warns about a runbook no alert links to.
 
+- [drbdResourceWithNoUpToDateReplicas](runbooks/drbdResourceWithNoUpToDateReplicas.md)
+  — a piraeus volume has no replica DRBD will serve from, and cannot be mounted
 - [FluxCDReconciliationFailure](runbooks/FluxCDReconciliationFailure.md) — a
   Kustomization, HelmRelease or source has stopped reconciling
 - [KuredRebootRequired](runbooks/KuredRebootRequired.md) — a node has wanted a

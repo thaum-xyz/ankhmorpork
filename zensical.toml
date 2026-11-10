@@ -49,6 +49,7 @@ nav = [
     { "Roll a workload on ConfigMap change" = "how-to/reload-on-configmap-change.md" },
     { "Silence alerts for maintenance" = "how-to/silence-alerts-for-maintenance.md" },
     { "Runbooks" = [
+      { "drbdResourceWithNoUpToDateReplicas" = "how-to/runbooks/drbdResourceWithNoUpToDateReplicas.md" },
       { "FluxCDReconciliationFailure" = "how-to/runbooks/FluxCDReconciliationFailure.md" },
       { "KuredRebootRequired" = "how-to/runbooks/KuredRebootRequired.md" },
     ] },
