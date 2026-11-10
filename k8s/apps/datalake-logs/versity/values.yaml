@@ -12,6 +12,24 @@ image:
 auth:
   existingSecret: versitygw-credentials
 
+# No fsGroup; the chart defaults to 1000. nfs.csi.k8s.io declares
+# fsGroupPolicy: File, so with one set kubelet walks the whole volume changing
+# group and mode before the container may start. Measured 2026-11-10: a million
+# files and fourteen minutes, against a ten-minute Helm timeout, so no upgrade
+# could finish (#1709) -- and a plain pod restart costs Loki its object store
+# for as long. The file count grows with retention.
+#
+# The walk buys nothing here. The UNAS refuses chown: everything on the share
+# stays 977:988, what the gateway writes as uid 1000 included, and the group
+# the container runs as is already 1000. That is also why
+# fsGroupChangePolicy: OnRootMismatch is no way out -- the root never reads as
+# gid 1000, so the mismatch is permanent and the walk runs every time.
+#
+# null rather than {}: Helm deep-merges maps, so only an explicit null removes
+# a chart default. seccompProfile stays as the chart sets it.
+podSecurityContext:
+  fsGroup: null
+
 gateway:
   backend:
     type: posix
