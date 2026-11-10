@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: blackbox-exporter
+  name: blackbox-exporter
+spec:
+  # The exporter's own metrics, read off the port it listens on, with no
+  # credential. Until 2026-11 they sat behind a kube-rbac-proxy sidecar on 9115
+  # that demanded Prometheus's token -- the shape kube-prometheus generated in
+  # 2021 -- while the same /metrics answered anyone on this port, which the
+  # Service has to publish for the Probes. The lock guarded nothing.
+  #
+  # A PodMonitor because the Service is there for the Probes, which need a name
+  # to call, and has no port that means "metrics".
+  #
+  # Without jobLabel the job would become
+  # platform-observability/blackbox-exporter. This keeps it blackbox-exporter.
+  jobLabel: app.kubernetes.io/name
+  podMetricsEndpoints:
+    - interval: 120s
+      port: http
+      scrapeTimeout: 120s
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: blackbox-exporter
+      app.kubernetes.io/part-of: kube-prometheus

@@ -3,12 +3,10 @@ kind: Kustomization
 namespace: platform-observability
 resources:
   - serviceaccount.yaml
-  - clusterrole.yaml
-  - clusterrolebinding.yaml
   - configmap.yaml
   - deployment.yaml
   - service.yaml
-  - servicemonitor.yaml
+  - podmonitor.yaml
   - networkpolicy.yaml
   - prometheusrule.yaml
   - slo-external-probe-success.yaml
