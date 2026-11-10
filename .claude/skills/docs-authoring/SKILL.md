@@ -1,6 +1,6 @@
 ---
 name: docs-authoring
-description: Write or edit pages under docs/ in thaum-xyz/ankhmorpork (published at docs.thaum.xyz). Use when adding a page, moving content between sections, documenting a new component, storage class, policy or convention, updating a how-to after a manifest change, or when asked whether something should be documented and where. Covers which Diátaxis section a page belongs in, what must be generated rather than typed, the prose patterns that have gone stale before, and the lint and build commands to run before pushing.
+description: Write or edit pages under docs/ in thaum-xyz/ankhmorpork (published at docs.thaum.xyz). Use when adding a page, moving content between sections, documenting a new component, storage class, policy or convention, updating a how-to after a manifest change, writing the runbook for an alert or renaming an alert that has one, or when asked whether something should be documented and where. Covers which Diátaxis section a page belongs in, what must be generated rather than typed, the prose patterns that have gone stale before, and the lint and build commands to run before pushing.
 ---
 
 # Writing documentation
@@ -25,6 +25,7 @@ One home per fact. Every other page links to it.
 | annotation and label contracts | `docs/reference/annotations.md` | link |
 | the reconcile order and why it matters | `docs/explanation/flux-layering.md` | one sentence + link |
 | per-app quirks | `k8s/apps/<app>/README.md` | link |
+| what to do when an alert fires | `docs/how-to/runbooks/<AlertName>.md` | the alert's `runbook_url`, and a link |
 | traps an agent hits mid-change | `.claude/skills/app-deployment/SKILL.md` | link |
 
 If a fact has no home yet, give it one before quoting it twice.
@@ -38,6 +39,7 @@ Decide by what the reader is *doing*, not what the page is about. Each section's
 | --- | --- | --- |
 | learning, first time, no decisions | `tutorial/` | one path, every choice made for them, ends with cleanup |
 | mid-task, knows the goal | `how-to/` | numbered steps, one command block each, "it depends" allowed |
+| holding a firing alert | `how-to/runbooks/` | one page per alert, named after it, four fixed sections — the contract is under *Runbooks* in `docs/how-to/index.md` |
 | looking something up | `reference/` | tables and definition lists, no verbs of persuasion |
 | away from the keyboard, asking why | `explanation/` | may argue, compare, admit uncertainty |
 
@@ -58,6 +60,7 @@ most of them.
 | a path to something outside the repo | no reader can follow it | say it is outside the repo, or bring the method in |
 | a link to a page that does not exist yet | a broken promise | write the page or drop the link |
 | a namespace, policy or class **name** typed from memory | the lint checks these against manifests | run `make docs-lint` |
+| an alert renamed or removed while its runbook keeps the old name | the `runbook_url` goes dead, or the page is left with nothing linking to it | rename or delete the page in the PR that changes the rule; `make docs-lint` fails on the first and warns on the second |
 
 Dates are fine on measurements and on records of things that happened. They
 are not fine as a substitute for keeping a claim current.
