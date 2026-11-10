@@ -124,6 +124,27 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "ghcr.io/external-secrets/external-secrets"
+    },
+    {
+      "customType": "regex",
+      "description": "A version no manager parses -- an operator CR's `version`, a Traefik plugin -- declared by a `# renovate:` comment on the line above it.",
+      "managerFilePatterns": [
+        "/^k8s/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+) depName=(?<depName>\\S+)(?: extractVersion=(?<extractVersion>\\S+))?\\n[^\\n]*?[:\\s](?<currentValue>v?\\d[\\w.+-]*)[\"']?[ \\t]*\\n"
+      ]
+    },
+    {
+      "customType": "regex",
+      "description": "CloudNativePG operand images. The cnpg-database chart takes one as `cluster.imageName`, a single string under a key the helm-values manager does not read as an image.",
+      "managerFilePatterns": [
+        "/^k8s/.+/values\\.yaml$/"
+      ],
+      "matchStrings": [
+        "imageName: (?<depName>[a-z0-9.-]+(?:/[a-z0-9._-]+)+):(?<currentValue>[0-9][A-Za-z0-9._-]*)"
+      ],
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -238,6 +259,26 @@
       ],
       "automerge": false,
       "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Postgres operand images move within their major. A minor is a rolling restart; a new major in `imageName` makes CloudNativePG run an offline in-place pg_upgrade, which is planned and never arrives as a version bump.",
+      "matchPackageNames": [
+        "ghcr.io/cloudnative-pg/postgresql",
+        "ghcr.io/tensorchord/cloudnative-vectorchord"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "immich's database image is tagged <postgres>-<vectorchord>, which docker versioning reads as a Postgres version with a fixed suffix, so it never finds a newer one. Read all five numbers instead. A bump can carry a VectorChord release immich does not support yet, so it lands as its own PR and is never automerged.",
+      "matchPackageNames": [
+        "ghcr.io/tensorchord/cloudnative-vectorchord"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)-(?<patch>\\d+)\\.(?<build>\\d+)\\.(?<revision>\\d+)$",
+      "groupName": "immich database",
+      "automerge": false
     },
     {
       "description": "GHCR, Quay and registry.k8s.io return no release timestamps, and since Renovate 42 a version without one never passes minimumReleaseAge, so every soak above held those images forever -- silently, as the Docker Hub members of the same group kept merging. Treat a missing timestamp as past the soak: those images update with no soak at all, while Docker Hub tags (tag_last_pushed) still soak as configured.",

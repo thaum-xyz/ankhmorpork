@@ -120,6 +120,14 @@ in, so a release naming a namespace its repository file omits is skipped as
 for three months. The proof is the release appearing under `flux` in the
 Dependency Dashboard issue.
 
+Renovate reads an image from `values.yaml` only as `repository` beside `tag`
+under a key ending in `image`, so repeat the chart's default repository when
+pinning a tag. A version anywhere else — an operator CR's `version`, a plugin —
+is tracked once the line above it reads
+`# renovate: datasource=<datasource> depName=<name>`; the Prometheus CR shows
+the form. `cluster.imageName` in a cnpg-database `values.yaml` needs neither:
+its own manager in `.github/renovate.json` reads it.
+
 Why: `docs/explanation/helm-values.md`.
 
 ## Validate before pushing
