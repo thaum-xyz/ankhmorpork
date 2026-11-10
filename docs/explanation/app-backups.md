@@ -15,6 +15,7 @@ Which claims in the namespace are backed up is decided per claim, by the
 | --- | --- | --- |
 | One restic repository per namespace | a `backup-repo` claim on `unifi-nas` in each namespace | a corrupted repository costs one namespace; `restic check` stays cheap; and two backups never contend for one repository lock over an NFSv3 mount with `nolock` |
 | Plain restic files on the NAS, not S3 | `backend.local` on that claim, no versitygw | versitygw's posix backend would write the same files to the same export; going direct means a restore needs restic and an NFS mount, with no cluster running |
+| Every repository mounted at the same path | `backend.local.mountPath: /repo` in every namespace | K8up identifies a repository by its backend string, which for a local backend is the mount path, and it applies its limits among the Jobs that share one. The same path everywhere is what makes two backups at a time and one prune at a time hold across the fleet. A namespace given a path of its own would get its own allowance of both, and its prune could overlap another's. The price is that a check or prune running in one namespace holds back every other, which the one-hour deadline below bounds |
 | One repository password for the fleet | no `repoPasswordSecretRef` | the operator supplies `RESTIC_PASSWORD` from `BACKUP_GLOBALREPOPASSWORD`, set once in the k8up component; a per-Schedule reference would override it for that namespace alone |
 | Backup Pods run as root | `podSecurityContext` uid and gid `0` | csi-nfs creates each subdirectory `0775` owned by `977:988` and the UNAS refuses `chown`, so `fsGroup` cannot fix it and a non-root Pod cannot write its own repository, as measured on a live claim with a uid 1000 Pod. A backup agent also has to read every file it is pointed at, whoever owns it |
 | Fixed times, a quarter of an hour apart | `backup.schedule` per namespace, never `@daily-random` | a restic repository is only consistent at rest, so the off-site copy of the export needs a known quiet window: everything finishes before 01:30 UTC, when the UNAS ships its shares off-site, and sits clear of the Postgres backups and paperless's own export in the table below |
@@ -25,8 +26,11 @@ Which claims in the namespace are backed up is decided per claim, by the
 
 The fleet-wide settings sit with the operator in
 [`k8s/platform/storage/k8up/values.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/storage/k8up/values.yaml):
-the shared password, the limit of two concurrent backup jobs the 1GbE link to
-the UNAS imposes, and the one-prune-at-a-time rule.
+the shared password and the limit of two concurrent backup jobs the 1GbE link to
+the UNAS imposes. That limit and the one-prune-at-a-time rule reach across
+namespaces only through the shared mount path above. K8up does not read the
+prune limit set in that file: it starts a prune when no other Job shares its
+repository string.
 
 ## The timetable
 
