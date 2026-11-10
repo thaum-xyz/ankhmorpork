@@ -22,11 +22,11 @@ spec:
             runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/K8upJobFailed
             summary: A K8up job failed
           # Identifies K8up's Jobs by the CR that owns them rather than by
-          # kube_job_labels, which carries no series at all: kube-state-metrics
-          # only emits kube_<resource>_labels for resources named in
-          # --metric-labels-allowlist, and ours lists only
-          # persistentvolumeclaims. The previous version of this rule joined on
-          # it and could never fire (#1288).
+          # kube_job_labels, which carries none of K8up's labels: kube-state-metrics
+          # only copies the label keys named in --metric-labels-allowlist, and
+          # for jobs ours names excluded_from_alerts alone. The previous version
+          # of this rule joined on it, at a time when jobs was not listed and the
+          # metric had no series at all, and could never fire (#1288).
           #
           # kube_job_owner has no API group, so the owner_kind match is on bare
           # kind names. cnpg also defines a Backup kind, but it creates no Jobs,
