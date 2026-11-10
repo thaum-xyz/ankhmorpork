@@ -263,8 +263,17 @@ kube-state-metrics:
   # `unless ... kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}`
   # -- an exclusion that can never match. Allowlisting the one label turns that
   # clause back on without the cardinality cost of `*`.
+  #
+  # jobs is the same gap, opened by an upgrade instead of found in an audit. The
+  # move from chart 89 to 92 gave KubeJobNotCompleted the same ending,
+  # `unless ... kube_job_labels{label_excluded_from_alerts="true"}`, and
+  # kube-state-metrics exposes no labels metric for a resource that is not named
+  # here. The clause arrived dead: the alert went on firing for every Job past
+  # twelve hours, as it always had, and labelling one could not have excused it
+  # (#1457). One series per Job, with the label on those that set it.
   metricLabelsAllowlist:
     - persistentvolumeclaims=[excluded_from_alerts]
+    - jobs=[excluded_from_alerts]
   # kube-state-metrics serves its own telemetry on a second port, and the chart
   # leaves that port off the Service by default. Four mixin alerts key off it --
   # KubeStateMetricsListErrors, KubeStateMetricsWatchErrors,

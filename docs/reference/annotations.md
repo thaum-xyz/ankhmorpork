@@ -274,19 +274,24 @@ warns on any `k8up.io/*` key that reaches one.
 | | |
 | --- | --- |
 | **Type** | Label |
-| **Set on** | `PersistentVolumeClaim` |
+| **Set on** | `PersistentVolumeClaim`, `Job` |
 | **Value** | `"true"` |
-| **Read by** | `KubePersistentVolumeFillingUp` and its Inodes and critical variants |
-| **Effect** | Suppresses fill-level alerts for that claim |
+| **Read by** | `KubePersistentVolumeFillingUp` and its Inodes and critical variants; `KubeJobNotCompleted` |
+| **Effect** | Suppresses fill-level alerts for that claim, or `KubeJobNotCompleted` for that Job |
 
 Applied automatically to `unifi-nas` claims by the `mutate-nfs-pvc-alert-exclusion`
 Kyverno policy — that driver puts every claim in a subdirectory of one share, so
 all of them report the share's fill level as their own. Also set by hand on
 claims where the number is real but uninteresting.
 
+On a Job it is set by hand, where running long is the Job's normal behaviour. A
+CronJob passes it down through `spec.jobTemplate.metadata.labels`; the CronJob's
+own labels do not reach the Jobs it creates.
+
 Reaches Prometheus only because `persistentvolumeclaims=[excluded_from_alerts]`
-is in kube-state-metrics' `metricLabelsAllowlist`; KSM emits no `kube_*_labels`
-series for anything not listed there.
+and `jobs=[excluded_from_alerts]` are in kube-state-metrics'
+`metricLabelsAllowlist`; KSM emits no `kube_*_labels` series for anything not
+listed there.
 
 ### `prometheus-name`
 
