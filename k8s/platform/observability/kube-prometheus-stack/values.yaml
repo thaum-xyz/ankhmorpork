@@ -415,19 +415,23 @@ kube-state-metrics:
           - source.toolkit.fluxcd.io
         resources: ["*"]
         verbs: ["list", "watch"]
-  # The limit was 180Mi, and that sat on top of the exporter's own peak. It
-  # runs at about 116Mi, but a start or a relist loads every object at once:
-  # on 2026-11-10 it went from 116Mi to the limit inside one 10s sample,
-  # stopped answering /livez and was restarted by the probe. Not by the OOM
-  # killer -- container_oom_events_total never moved -- so it showed as exit
-  # code 2 rather than OOMKilled. The two starts that followed reached 179Mi
-  # (killed) and 175Mi (survived). 15 restarts in 30 days, and eight of the
-  # nine containers seen in the last 7 peaked at 174Mi or more.
+  # The limit was 180Mi, and that sat 8Mi under the exporter's own peak. It
+  # runs at 107-116Mi, but a start or a relist loads every object at once, and
+  # at the limit the kernel's OOM killer took it: 14 times on master01 between
+  # 2026-10-17 and 2026-11-10, "Memory cgroup out of memory" in the kernel log
+  # with usage at the 184320kB limit, OOMKilled and exit 137 in the pod's own
+  # status. Those kills were every NodeProblemOOMKilling that node raised
+  # (#1540).
   #
-  # The true peak is unknown, because every sample so far was clipped at the
-  # old limit. 360Mi is twice that limit, not a measurement: read
-  # max_over_time(container_memory_working_set_bytes[7d]) after a restart and
-  # bring it down to fit. The request follows the steady state.
+  # container_oom_events_total says nothing either way: it reads 0 for every
+  # container on this cluster, the ones the kernel killed included. What names
+  # a victim is node-problem-detector's log, which quotes the kernel line, and
+  # kube_pod_container_status_last_terminated_reason until the pod is replaced.
+  #
+  # 360Mi went in as twice the old limit, before a peak could be measured: every
+  # sample until then was clipped at 180Mi. The first start under it reached
+  # 188Mi (container_memory_max_usage_bytes), so it is 1.9x the measured peak.
+  # The request follows the steady state.
   resources:
     requests:
       cpu: 2m
