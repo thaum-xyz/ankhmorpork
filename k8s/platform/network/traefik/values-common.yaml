@@ -77,4 +77,5 @@ experimental:
   plugins:
     oidc:
       moduleName: github.com/sevensolutions/traefik-oidc-auth
+      # renovate: datasource=github-releases depName=sevensolutions/traefik-oidc-auth
       version: v0.17.0

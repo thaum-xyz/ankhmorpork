@@ -112,4 +112,5 @@ spec:
             storage: 100Gi
         storageClassName: lvm-thin
   # Image is derived from version; pinning both is how they drifted apart.
+  # renovate: datasource=github-releases depName=prometheus/prometheus extractVersion=^v(?<version>.+)$
   version: 3.14.0
