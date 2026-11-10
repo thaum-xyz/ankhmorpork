@@ -11,7 +11,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: alekc-charts
-        namespace: changedetection
       interval: 5m
   interval: 5m
   timeout: 2m

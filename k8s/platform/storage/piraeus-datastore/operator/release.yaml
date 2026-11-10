@@ -22,7 +22,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: piraeus-operator
-        namespace: platform-storage
       interval: 5m
   interval: 5m
   timeout: 10m

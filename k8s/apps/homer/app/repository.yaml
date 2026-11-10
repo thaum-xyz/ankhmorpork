@@ -2,6 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: homer-operator
+  namespace: homer
 spec:
   type: oci
   interval: 5m

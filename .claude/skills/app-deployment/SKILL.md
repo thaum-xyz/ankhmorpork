@@ -112,6 +112,14 @@ the HelmRelease spec never moves and the upgrade waits for the next interval —
 which looks exactly like a failed deploy. Only label generators a HelmRelease
 actually reads.
 
+Write the chart's `sourceRef` as `kind` and `name` alone, beside a
+`repository.yaml` with no `metadata.namespace` — or state the namespace on both.
+Renovate pairs the two by those fields as written, before kustomize fills either
+in, so a release naming a namespace its repository file omits is skipped as
+`unknown-registry` and its chart is never bumped. Seventeen sat unseen that way
+for three months. The proof is the release appearing under `flux` in the
+Dependency Dashboard issue.
+
 Why: `docs/explanation/helm-values.md`.
 
 ## Validate before pushing
