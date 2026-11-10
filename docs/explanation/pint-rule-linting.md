@@ -110,6 +110,15 @@ It accepts one limitation: a rule that breaks a *different* way keeps the same
 to an intermittent metric is exactly that, and staying quiet is right — the rule
 did not newly break.
 
+The alert is short-lived by construction. The baseline is offset by an hour, so
+it catches up an hour after a finding appears and the alert resolves, fixed or
+not. The 24h is how far back the baseline looks, not how long the alert fires: a
+finding that goes away and comes back within a day is not new again.
+
+**Resolving is therefore not a signal.** The finding is still in `pint_problem`,
+and the issue the alert opened stays open, because the GitHub receiver does not
+close issues for resolved alerts. Close it when the finding is gone or accepted.
+
 ## Judge it by which findings changed
 
 The count moves for reasons that are nobody's fault. It rose when k8up arrived
