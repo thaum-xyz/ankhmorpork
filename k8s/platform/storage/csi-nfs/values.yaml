@@ -7,6 +7,25 @@ node:
   livenessProbe:
     healthPort: 29651
 
+# kubelet leaves ownership alone on these volumes. The chart defaults to File,
+# under which a pod with an fsGroup has every file of its volume chown'd and
+# chmod'd before any container starts, on every start: fourteen minutes for the
+# million files behind Loki on 2026-11-10, longer than a Helm timeout (#1709).
+# fsGroupChangePolicy: OnRootMismatch does not shorten it, because the root of
+# a volume here never matches.
+#
+# Nothing is lost. The UNAS squashes every client to 977:988 -- root on a node
+# reads a 0600 file a uid 1000 pod wrote, measured the same day -- so mode bits
+# deny nothing on the server; and it refuses chown, so the group the walk asks
+# for never lands. A program that judges access from stat() rather than by
+# trying sees itself as "other" with the walk or without it.
+#
+# None rather than enableFSGroupPolicy: false. That leaves the field to the API
+# default, ReadWriteOnceWithFSType, which still walks an RWO volume that names
+# an fsType.
+feature:
+  fsGroupPolicy: None
+
 storageClass:
   create: true
   name: unifi-nas

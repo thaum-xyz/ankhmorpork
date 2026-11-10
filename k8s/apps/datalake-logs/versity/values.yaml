@@ -12,12 +12,17 @@ image:
 auth:
   existingSecret: versitygw-credentials
 
-# No fsGroup; the chart defaults to 1000. nfs.csi.k8s.io declares
-# fsGroupPolicy: File, so with one set kubelet walks the whole volume changing
-# group and mode before the container may start. Measured 2026-11-10: a million
+# No fsGroup; the chart defaults to 1000. Where the driver's fsGroupPolicy is
+# File, as nfs.csi.k8s.io's was, kubelet walks the whole volume changing group
+# and mode before the container may start. Measured 2026-11-10: a million
 # files and fourteen minutes, against a ten-minute Helm timeout, so no upgrade
 # could finish (#1709) -- and a plain pod restart costs Loki its object store
 # for as long. The file count grows with retention.
+#
+# csi-nfs now sets fsGroupPolicy: None for every volume, so this says the same
+# thing twice. It stays because that is one chart value, and a value at a path
+# a later chart stops reading is silently inert; here the price of losing it
+# is the outage above.
 #
 # The walk buys nothing here. The UNAS refuses chown: everything on the share
 # stays 977:988, what the gateway writes as uid 1000 included, and the group
