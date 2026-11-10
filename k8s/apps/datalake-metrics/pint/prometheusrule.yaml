@@ -30,9 +30,18 @@ spec:
         # and instance -- so a pint rollout alone would mark every finding new.
         #
         # `for` must stay well under the offset. The baseline catches up an hour
-        # after a finding appears, so a longer `for` would never fire. 24h is
-        # deliberate: a new finding is news for a day, after which the worklist
-        # owns it and this resolves, closing its issue with a dated record.
+        # after a finding appears, so a longer `for` would never fire -- and
+        # that is also where this ends, about 45 minutes after it started. On
+        # 2026-11-10 a finding appeared at 15:44; this fired at 15:59 and
+        # resolved at 16:43 with nothing fixed.
+        #
+        # So resolving says nothing about the finding, which is still in
+        # pint_problem. Nor does it close the issue this opened: github-receiver
+        # runs with --auto-close-resolved-issues=false. Close the issue when the
+        # finding is gone or accepted, not when the alert is.
+        #
+        # 24h is how far back the baseline looks, not how long this fires: a
+        # finding that goes away and comes back within a day is not news again.
         #
         # If pint is down for more than 25h the baseline window is empty and
         # everything reads as new. PintNotReporting fires long before that.
