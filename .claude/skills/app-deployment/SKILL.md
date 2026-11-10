@@ -224,7 +224,8 @@ because nothing is left to uninstall. There is no `--force` flag on that command
   deletes the Job. This held back three weeks of `platform-storage` (#1638).
   Give a Job that a Kustomization applies directly
   `kustomize.toolkit.fluxcd.io/force: enabled` — see
-  `docs/reference/annotations.md` — and make it safe to run twice.
+  `docs/reference/annotations.md` — and make it safe to run twice. `make
+  validate` fails on one without it.
 - **Never pin a Pod with `nodeName`.** It bypasses the scheduler, so nothing writes
   `volume.kubernetes.io/selected-node` on the PVC, the provisioner never fires, and
   any `WaitForFirstConsumer` class (`lvm-thin`, both piraeus classes) deadlocks Pending

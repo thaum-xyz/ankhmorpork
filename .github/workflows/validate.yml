@@ -25,6 +25,11 @@ jobs:
           go-version: '${{ env.golang-version }}'
       - run: go install github.com/yannh/kubeconform/cmd/kubeconform@${{ env.kubeconform-version }}
       - run: go install sigs.k8s.io/kustomize/kustomize/v5@${{ env.kustomize-version }}
+      # The script reads Flux paths and looks for unannotated Jobs through yq.
+      # The runner image ships one, but the Job check fails the run if yq does,
+      # so it gets the pinned version the other job uses rather than whichever
+      # the image carries that week.
+      - run: go install github.com/mikefarah/yq/v4@${{ env.yq-version }}
       - run: ./hack/validate-manifests.sh
 
   flux-paths:

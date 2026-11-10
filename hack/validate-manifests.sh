@@ -95,6 +95,41 @@ check_deprecated_apis() {
   echo "No deprecated Flux API versions."
 }
 
+# A Job's pod template is immutable, so the first edit to one that Flux applies
+# directly -- Renovate bumping its image is enough -- fails the dry-run, and a
+# pass that fails a dry-run applies nothing at all: #1638 held platform-storage
+# back for three weeks that way. With this annotation kustomize-controller
+# deletes the Job and creates it again instead, so a Job without it is a trap
+# set for whoever edits it next. The contract is in docs/reference/annotations.md.
+FORCE_ANNOTATION='kustomize.toolkit.fluxcd.io/force'
+
+# Only an object that is itself a Job counts, which is what leaves the rest
+# alone without a list of exemptions: a CronJob's jobTemplate is mutable and is
+# a field rather than an object, and a Job that a Helm chart creates never
+# reaches a kustomize render -- nor kustomize-controller, which is the only
+# thing that reads the annotation.
+#
+# Prints an ::error per Job, naming the file it was read from, and returns 1 if
+# there were any. yq failing is a failure too, not a pass: a check that could
+# not read its input has checked nothing.
+check_job_force() {
+  local hits
+  if ! hits=$(key="$FORCE_ANNOTATION" yq -N '
+      select(.apiVersion == "batch/v1" and .kind == "Job")
+      | select(.metadata.annotations[strenv(key)] != "enabled")
+      | filename + "\t" + ([.metadata.namespace, .metadata.name] | map(select(. != null)) | join("/"))
+    ' "$@"); then
+    echo "::error::yq failed, so no Job was checked for $FORCE_ANNOTATION"
+    return 1
+  fi
+  [ -z "$hits" ] && return 0
+  echo "$hits" | while IFS=$'\t' read -r f job; do
+    echo "::error file=$f::Job $job lacks the annotation $FORCE_ANNOTATION: enabled -- see docs/reference/annotations.md"
+    echo "    A Job's pod template is immutable: without the annotation its first edit fails the dry-run and the Kustomization applies nothing."
+  done
+  return 1
+}
+
 flux_paths() {
   local query='select(.kind == "Kustomization" and (.apiVersion | test("^kustomize.toolkit.fluxcd.io/"))) | .spec.path'
   while IFS= read -r f; do
@@ -154,6 +189,14 @@ while IFS= read -r dir; do
       echo "$out" | sed "s|$WORK_DIR/rendered.yaml|$dir|" | sed 's/^/    /'
       failed="$failed $dir"
     fi
+    # On the render rather than the files, so a Job is judged as Flux will apply
+    # it: an annotation that a patch adds counts, and one that a patch strips
+    # does not.
+    if ! out=$(check_job_force "$WORK_DIR/rendered.yaml" 2>&1); then
+      # shellcheck disable=SC2001  # ${out//a/b} splits on the "/" in a path under macOS's bash 3.2
+      echo "$out" | sed "s|$WORK_DIR/rendered.yaml|$dir/kustomization.yaml|"
+      failed="$failed $dir"
+    fi
   else
     # Mirror Flux's scan: a subdirectory with its own kustomization.yaml is one
     # resource to Flux and one target to this loop, so its files are skipped
@@ -183,13 +226,19 @@ while IFS= read -r dir; do
       echo "$out" | sed 's/^/    /'
       failed="$failed $dir"
     fi
+    # shellcheck disable=SC2086  # as above
+    if ! out=$(check_job_force $files 2>&1); then
+      echo "$out"
+      failed="$failed $dir"
+    fi
   fi
 done <<< "$targets"
 
 if [ -n "$failed" ]; then
   echo
   echo "FAILED:"
-  for d in $failed; do echo "  - $d"; done
+  # A target that fails both its schemas and the Job check is listed once.
+  for d in $failed; do echo "  - $d"; done | awk '!seen[$0]++'
   exit 1
 fi
 

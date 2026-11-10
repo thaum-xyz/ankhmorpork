@@ -243,7 +243,8 @@ enough — fails its dry-run, and
 With the annotation the Job is replaced and runs again, so it belongs only on a
 Job that is safe to repeat. `ttlSecondsAfterFinished` is not a substitute: Flux
 creates whatever is missing on every pass, so a Job that removes itself runs
-once per interval.
+once per interval. `make validate` fails on a `Job` that a kustomization
+renders without the annotation.
 
 Never on anything that holds data. Replacing a PVC deletes the volume.
 
