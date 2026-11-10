@@ -3,8 +3,12 @@
 kind: Deployment
 
 # The chart's newest release (3.1.0, Feb 2026) still pins appVersion 2.5.1, so the
-# app is pinned here instead of waiting for the chart to catch up.
+# app is pinned here instead of waiting for the chart to catch up. The registry
+# and repository repeat the chart defaults so Renovate can see the image; a bare
+# tag is invisible to it.
 image:
+  registry: docker.stirlingpdf.com
+  repository: stirlingtools/stirling-pdf
   tag: "2.14.2"
 
 resources:
