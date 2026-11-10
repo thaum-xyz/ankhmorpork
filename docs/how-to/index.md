@@ -48,6 +48,10 @@ Every runbook has the same four sections, in this order:
 | Diagnosis | numbered steps with a command each, ending in a cause |
 | Mitigation | the fix for each cause |
 
+A runbook describes the condition and what to do about it, and leaves out how
+its alert is delivered. Severity and routing are set in the rule and in
+Alertmanager's configuration, and change without the page.
+
 `make docs-lint` fails on a `runbook_url` that points at this site with no page
 behind it, and warns about a runbook no alert links to.
 

@@ -26,6 +26,11 @@ spec:
         # stays shut -- a chronic drbd alert, an unreachable Prometheus -- shows
         # up as a node whose reboot never happens. kured 1.23.0 exposes no
         # metric for a blocked reboot, so nothing else will say so.
+        #
+        # warning, not info. info routes to the null receiver, and a backstop
+        # that tells nobody is not one: at info this fired on all four nodes
+        # from mid-October 2026, the gate held shut by two drbd alerts, and
+        # three weeks later it had opened no issue.
         - alert: KuredRebootRequired
           annotations:
             description: Node {{ $labels.node }} has been waiting for a kured reboot for over a week, which spans several reboot windows.
@@ -34,4 +39,4 @@ spec:
           expr: kured_reboot_required > 0
           for: 7d
           labels:
-            severity: info
+            severity: warning

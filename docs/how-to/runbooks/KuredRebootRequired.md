@@ -6,10 +6,6 @@ A node has wanted a reboot for over a week. kured reboots nodes by itself inside
 its reboot window, so this is not a request to reboot one: it says something has
 kept kured from doing so across several windows. The `node` label names the node.
 
-The alert is `severity: info`, which Alertmanager routes to the `null` receiver.
-It opens no issue and pages nobody; it shows in the Alertmanager UI and in
-Prometheus, and nowhere else.
-
 ## Impact
 
 The node runs the kernel and libraries it booted with. Fixes that unattended
