@@ -4,6 +4,10 @@ namespace: platform-observability
 resources:
   - repository.yaml
   - release.yaml
+  - serviceaccount-control-plane-scraper.yaml
+  - secret-control-plane-scraper-token.yaml
+  - clusterrole-control-plane-scraper.yaml
+  - clusterrolebinding-control-plane-scraper.yaml
   - prometheusrule-nodes.yaml
   - prometheusrule-workloads.yaml
   - slo-apiserver-read-list-latency.yaml
