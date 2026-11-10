@@ -101,8 +101,16 @@ defaultRules:
     kubeSchedulerRecording: false
     windows: false
     # The group holds one recording rule,
-    # node_namespace_pod_container:container_memory_swap, and cAdvisor emits
-    # container_memory_swap only with swap accounting on. Swap is off.
+    # node_namespace_pod_container:container_memory_swap. Swap is off on every
+    # node, so cAdvisor reports the metric as a constant 0 and the record would
+    # only copy zeros.
+    #
+    # Until chart 90 the kubelet ServiceMonitor dropped container_memory_swap
+    # at scrape, which is why it looked absent. It no longer does: 684 series
+    # across the four nodes, all 0 on 2026-11-10, are ingested now -- 0.15% of
+    # the 457k in the head. Dropping them again means restating the whole of
+    # kubelet.serviceMonitor.cAdvisorMetricRelabelings, eight entries that
+    # would then stop following the chart.
     k8sContainerMemorySwap: false
 
     # KubeAPIErrorBudgetBurn and the burnrate records that feed it. The five
@@ -128,6 +136,42 @@ kubeScheduler:
 kubeProxy:
   enabled: false
 
+# Chart 90 took bearerTokenFile and tlsConfig.caFile out of the control-plane
+# ServiceMonitors. The token now comes from a Secret named in `authorization`
+# and the CA from the kube-root-ca.crt ConfigMap. The default Secret is the one
+# the chart creates beside its own Prometheus, which is disabled here, so a
+# component left on the default fails the render -- which held this release on
+# 89.2.4 from 2026-09-17 (#1535).
+#
+# A ServiceMonitor can only name a Secret in its own namespace, and the
+# Prometheus that scrapes these runs in datalake-metrics, so its own token
+# cannot be the credential. control-plane-scraper is a ServiceAccount in this
+# namespace that may read kubelet and apiserver metrics and nothing else; its
+# four manifests sit beside this file.
+#
+# Each component gets what its endpoint demands, measured without credentials
+# on 2026-11-10:
+#
+#   kubelet    :10250  401   needs the token
+#   apiserver  :6443   401   needs the token
+#   etcd       :2381   200   plain HTTP, authenticates nobody
+#   coredns    :9153   200   plain HTTP, authenticates nobody
+#
+# The old default sent Prometheus's own token to all four, so etcd and coredns
+# were handed a bearer token in clear text for nothing. Helm deep-merges maps,
+# so only an explicit null removes the chart's default from those two.
+kubeApiServer:
+  serviceMonitor:
+    authorization:
+      type: Bearer
+      credentials:
+        name: control-plane-scraper-token
+        key: token
+
+coreDns:
+  serviceMonitor:
+    authorization: null
+
 # k3s serves etcd metrics on 2381 (etcd-expose-metrics in metal/group_vars/k3s.yml).
 kubeEtcd:
   enabled: true
@@ -136,6 +180,7 @@ kubeEtcd:
     - 192.168.50.32
     - 192.168.50.35
   serviceMonitor:
+    authorization: null
     # k3s runs apiserver, scheduler, controller-manager and kubelet in one
     # process behind a single merged registry, so scraping the etcd port also
     # returns everyone else's metrics: 3812 of the 5746 series on this job were
@@ -169,6 +214,11 @@ kubeEtcd:
 
 kubelet:
   serviceMonitor:
+    authorization:
+      type: Bearer
+      credentials:
+        name: control-plane-scraper-token
+        key: token
     metricRelabelings:
       # Chart default, repeated because setting this key replaces it wholesale.
       - action: drop
