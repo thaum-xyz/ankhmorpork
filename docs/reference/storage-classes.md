@@ -36,6 +36,7 @@ Every class here flushes an acknowledged write to the device.
 | `piraeus-r2-roaming` | PVCs capped at **32 GiB**; larger are denied at admission |
 | `unifi-nas` | `nfsvers=3` with `nolock` — no byte-range locking, so nothing SQLite-backed |
 | `unifi-nas` | PVCs are labelled `excluded_from_alerts=true` automatically; expected, not drift |
+| `unifi-nas` | every client is squashed to `977:988` and `chown` is refused — `fsGroup` cannot take effect, and the driver's `fsGroupPolicy: None` stops kubelet trying; a program that reads ownership from `stat()` sees itself as "other" |
 | `lvm-thin`, `piraeus-r2*` | `WaitForFirstConsumer` — a Pod pinned with `nodeName` leaves the PVC `Pending` forever |
 | all | `parameters`, `mountOptions`, `provisioner`, `reclaimPolicy` and `volumeBindingMode` are immutable |
 
