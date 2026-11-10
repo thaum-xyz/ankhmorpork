@@ -71,3 +71,8 @@ jobs:
         with:
           python-version: 3.x
       - run: make docs-reference-check
+      # An alert's runbook_url is checked against docs/ by the same lint the docs
+      # workflow runs. It is repeated here for the same reason as the step above:
+      # a PR that only edits a PrometheusRule never reaches that workflow, and
+      # could point an alert at a page that does not exist.
+      - run: make docs-lint
