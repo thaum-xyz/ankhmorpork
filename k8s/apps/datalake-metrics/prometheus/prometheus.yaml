@@ -35,6 +35,24 @@ spec:
         name: alertmanager-main
         namespace: datalake-alerts
         port: web
+  # A ServiceMonitor may not read a file off this pod. Without this, whoever
+  # can write one -- every namespace's reconciler can, in its own namespace --
+  # could set bearerTokenFile to the ServiceAccount token path, point the
+  # monitor at an endpoint of their own, and be sent prometheus-k8s's token,
+  # which may list pods, services, endpoints, nodes and ingresses everywhere.
+  #
+  # The operator rejects a ServiceMonitor whose endpoint sets bearerTokenFile,
+  # or caFile, certFile or keyFile under tlsConfig. It drops the whole object,
+  # so the targets vanish rather than go down; the reason is a Warning event on
+  # the ServiceMonitor. A credential goes in a Secret beside the monitor
+  # instead, named by `authorization.credentials`, and a CA by `tlsConfig.ca`.
+  #
+  # Turned on once nothing depended on it: on 2026-11-10 none of the 46 live
+  # ServiceMonitors set any of the four fields. The last to use them were the
+  # kube-prometheus-stack control-plane monitors (#1699) and blackbox-exporter
+  # (#1707).
+  arbitraryFSAccessThroughSMs:
+    deny: true
   enableFeatures:
     - memory-snapshot-on-shutdown
   externalLabels:
