@@ -193,10 +193,21 @@
         "k8s/platform/**",
         "!k8s/platform/cluster/flux/**",
         "!k8s/platform/security/cert-manager/**",
-        "!k8s/platform/security/external-secrets/**"
+        "!k8s/platform/security/external-secrets/**",
+        "!k8s/platform/security/kyverno/controllers/**"
       ],
       "minimumReleaseAge": "10 days",
       "automerge": true
+    },
+    {
+      "description": "kyverno: its chart index rewrites every version's `created` on each publish, release candidates included, so a soak measured from it restarts before it can pass -- 3.9.2 shipped on 2026-10-20 and was still held three weeks later. The OCI copy of the chart carries no date at all. With nothing to soak against it gets no soak, its own PR, and a person to merge it: an admission controller is the last thing to automerge on the day it is released.",
+      "addLabels": [
+        "dependencies/base"
+      ],
+      "groupName": "kyverno",
+      "matchFileNames": [
+        "k8s/platform/security/kyverno/controllers/**"
+      ]
     },
     {
       "addLabels": [
@@ -237,7 +248,7 @@
       "automerge": true
     },
     {
-      "description": "The crds layer: CRD-only charts, which k8s/platform/** stopped covering when prometheus-operator-crds moved out of k8s/platform/observability. Automerged with no soak, unlike the platform it serves: the soak lets others find early bugs and outlives the few days a supply-chain compromise usually takes to surface, and a CRD carries neither risk -- it runs no code and its schema changes are additive. Landing CRDs before the controllers that serve them is the safe direction, and with the kyverno chart soaking ten days behind a wrapper that lands at once it is also the usual one; nothing enforces it.",
+      "description": "The crds layer: CRD-only charts, which k8s/platform/** stopped covering when prometheus-operator-crds moved out of k8s/platform/observability. Automerged with no soak, unlike the platform it serves: the soak lets others find early bugs and outlives the few days a supply-chain compromise usually takes to surface, and a CRD carries neither risk -- it runs no code and its schema changes are additive. Landing CRDs before the controllers that serve them is the safe direction, and with the kyverno chart waiting on a person behind a wrapper that lands at once it is also the usual one; nothing enforces it.",
       "addLabels": [
         "dependencies/base",
         "dependencies/automerge"
