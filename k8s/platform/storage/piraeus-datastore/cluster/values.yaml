@@ -134,11 +134,10 @@ linstorCluster:
                     requests:
                       cpu: 10m
                       memory: 48Mi
-                - name: csi-health-monitor
-                  resources:
-                    requests:
-                      cpu: 10m
-                      memory: 32Mi
+                # No csi-health-monitor: operator 2.12 dropped that sidecar.
+                # A strategic-merge entry for a container the operator no
+                # longer renders does not patch nothing -- it adds a container
+                # with no image, and the Deployment is rejected.
     - target:
         kind: DaemonSet
         name: linstor-csi-node
