@@ -1,0 +1,187 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/name: piraeus-datastore
+  # Not `piraeus-datastore`, which is the name of the chart's own copy.
+  # release.yaml deletes that copy from the release, and Helm removes what
+  # leaves a release by name -- so an object of the same name would be deleted
+  # moments after it was applied.
+  name: piraeus-datastore-rules
+spec:
+  # The LINSTOR and DRBD alerts, taken from templates/monitoring.yaml of the
+  # linstor-cluster chart at 1.2.0 and kept here instead of patched there.
+  #
+  # The chart has one switch for the rules, the scrape configs and the
+  # dashboard together, so the rules could only be changed by patching the
+  # rendered object -- and a rule in a PrometheusRule can only be addressed by
+  # its position. That reached eleven patches on fourteen alerts, none of which
+  # would have failed had the chart moved a rule (#1421). pint could not see
+  # the rules either, because they existed only after Helm rendered.
+  #
+  # What differs from the chart's copy:
+  #   - `for: 10m` on three rules, explained on the first of them
+  #   - severity is spelled `warning`, where 1.2.0 says `warn`: Alertmanager's
+  #     routes and inhibitions here match on `warning`
+  #   - every alert has a `summary`, which .pint.hcl requires
+  #   - an alert with a runbook carries its `runbook_url`
+  #
+  # Nothing brings the chart's later changes here. When linstor-cluster is
+  # bumped, diff its templates/monitoring.yaml against the version above and
+  # carry over what applies.
+  #
+  # kured's reboot gate matches these by name: `drbd.+` in
+  # k8s/platform/cluster/system-kured/values.yaml. Renaming a drbd alert opens
+  # the gate without anything failing.
+  groups:
+    - name: linstor.rules
+      rules:
+        - alert: linstorControllerOffline
+          annotations:
+            description: |
+              LINSTOR Controller is not reachable.
+            summary: LINSTOR controller is unreachable
+          expr: up{job="linstor-controller"} == 0
+          # The chart ships this rule, linstorSatelliteNotOnline and
+          # drbdReactorOffline with no `for` at all, so a single failed scrape
+          # pages Opsgenie at P2. A kured reboot does exactly that: on
+          # 2026-09-09 beelink01 (07:11) and beelink02 (08:16) each produced
+          # drbdReactorOffline and linstorSatelliteNotOnline, 30-75s apiece.
+          #
+          # 10m is >3x the worst transient measured over the preceding 30 days
+          # -- every firing of all three in that window was a reboot or a pod
+          # restart, and the longest ran 180s (master02, 2026-09-07 09:05).
+          #
+          # This costs no coverage on a node that stays down. Both satellite
+          # rules key on `up{job="platform-storage/linstor-satellite"}`, and a
+          # node that is gone takes its target out of service discovery -- the
+          # series goes absent rather than reporting 0, so neither alert can
+          # fire for a full outage either. KubeNodeNotReady/KubeNodeUnreachable
+          # is what covers that. What still pages is the case these rules are
+          # for: a satellite or drbd-reactor that is scrapable and broken,
+          # holding the condition continuously.
+          for: 10m
+          labels:
+            severity: critical
+        - alert: linstorSatelliteErrorRate
+          annotations:
+            description: |
+              LINSTOR Satellite "{{ $labels.hostname }}" reports {{ $value }} errors in the last 15 minutes.
+              Use "linstor error-reports list --nodes {{ $labels.hostname }} --since 15minutes" to see them.
+            summary: LINSTOR satellite is reporting errors
+          expr: increase(linstor_error_reports_count{module="SATELLITE"}[15m]) > 0
+          labels:
+            severity: warning
+        - alert: linstorControllerErrorRate
+          annotations:
+            description: |
+              LINSTOR Controller reports {{ $value }} errors in the last 15 minutes.
+              Use "linstor error-reports list --since 15minutes" to see them.
+            summary: LINSTOR controller is reporting errors
+          expr: increase(linstor_error_reports_count{module="CONTROLLER"}[15m]) > 0
+          labels:
+            severity: warning
+        - alert: linstorSatelliteNotOnline
+          annotations:
+            description: |
+              LINSTOR Satellite "{{ $labels.node }}" is not ONLINE.
+              Check that the Satellite is running and reachable from the LINSTOR Controller.
+            summary: LINSTOR satellite is not online
+          expr: linstor_node_state{nodetype="SATELLITE"} != 2 and on (node) up{job="platform-storage/linstor-satellite"}
+          # See linstorControllerOffline.
+          for: 10m
+          labels:
+            severity: critical
+        - alert: linstorStoragePoolErrors
+          annotations:
+            description: |
+              Storage pool "{{ $labels.storage_pool }}" on node "{{ $labels.node }}" ({{ $labels.driver }}={{ $labels.backing_pool }}) is reporting errors.
+            summary: LINSTOR storage pool is reporting errors
+          expr: linstor_storage_pool_error_count > 0
+          labels:
+            severity: critical
+        - alert: linstorStoragePoolAtCapacity
+          annotations:
+            description: |
+              Storage pool "{{ $labels.storage_pool }}" on node "{{ $labels.node }}" ({{ $labels.driver }}={{ $labels.backing_pool }}) has less than 20% free space available.
+            summary: LINSTOR storage pool is nearly full
+          expr: ( linstor_storage_pool_capacity_free_bytes / linstor_storage_pool_capacity_total_bytes ) < 0.20
+          labels:
+            severity: warning
+    - name: drbd.rules
+      rules:
+        - alert: drbdReactorOffline
+          annotations:
+            description: |
+              DRBD Reactor on "{{ $labels.node }}" is not reachable.
+            summary: drbd-reactor is unreachable
+          expr: up{job="platform-storage/linstor-satellite"} == 0
+          # See linstorControllerOffline.
+          for: 10m
+          labels:
+            severity: critical
+        - alert: drbdConnectionNotConnected
+          annotations:
+            description: |
+              DRBD Resource "{{ $labels.name }}" on "{{ $labels.node }}" is not connected to "{{ $labels.conn_name }}": {{ $labels.drbd_connection_state }}.
+            summary: DRBD connection is down
+          expr: drbd_connection_state{drbd_connection_state!="Connected"} > 0
+          for: 1m
+          labels:
+            severity: warning
+        - alert: drbdDeviceNotUpToDate
+          annotations:
+            description: |
+              DRBD device "{{ $labels.name }}" on "{{ $labels.node }}" has unexpected device state "{{ $labels.drbd_device_state }}".
+            summary: DRBD replica is not up to date
+          expr: drbd_device_state{drbd_device_state!~"UpToDate|Diskless|Inconsistent"} > 0
+          for: 1m
+          labels:
+            severity: warning
+        - alert: drbdDeviceUnintentionalDiskless
+          annotations:
+            description: |
+              DRBD device "{{ $labels.name }}" on "{{ $labels.node }}" is unintenionally diskless.
+              This usually indicates IO errors reported on the backing device. Check the kernel log.
+            summary: DRBD replica lost its backing device
+          expr: drbd_device_unintentionaldiskless > 0
+          labels:
+            severity: warning
+        - alert: drbdDeviceWithoutQuorum
+          annotations:
+            description: |
+              DRBD device "{{ $labels.name }}" on "{{ $labels.node }}" has no quorum.
+              This usually indicates connectivity issues.
+            summary: DRBD replica has no quorum
+          expr: drbd_device_quorum == 0
+          for: 1m
+          labels:
+            severity: warning
+        - alert: drbdResourceSuspended
+          annotations:
+            description: |
+              DRBD resource "{{ $labels.name }}" on "{{ $labels.node }}" has been suspended for 1m.
+            summary: DRBD resource has suspended I/O
+          expr: drbd_resource_suspended > 0
+          for: 1m
+          labels:
+            severity: warning
+        - alert: drbdResourceResyncWithoutProgress
+          annotations:
+            description: |
+              DRBD resource "{{ $labels.name }}" on "{{ $labels.node }}" has been in Inconsistent without resync progress for 5 minutes.
+              This may indicate there is no connection to UpToDate data, or a stuck resync.
+            summary: DRBD resync is not progressing
+          expr: drbd_device_state{drbd_device_state="Inconsistent"} and delta(drbd_peerdevice_outofsync_bytes[5m]) >= 0
+          labels:
+            severity: warning
+        - alert: drbdResourceWithNoUpToDateReplicas
+          annotations:
+            description: |
+              DRBD resource "{{ $labels.name }}" has no UpToDate replicas.
+            runbook_url: https://docs.thaum.xyz/how-to/runbooks/drbdResourceWithNoUpToDateReplicas/
+            summary: DRBD resource has no usable replica
+          expr: sum by (name) (drbd_device_state{drbd_device_state="UpToDate"}) == 0
+          for: 1m
+          labels:
+            severity: critical
