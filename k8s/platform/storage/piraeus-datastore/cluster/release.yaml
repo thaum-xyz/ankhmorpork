@@ -96,6 +96,22 @@ spec:
               - op: add
                 path: /spec/groups/1/rules/0/for
                 value: 10m
+          # The chart ships no runbook_url, and this alert has a runbook. A rule
+          # can only be addressed by position, so the `test` fails the patch --
+          # and with it the upgrade -- if the chart ever moves the rule, instead
+          # of pointing whichever alert took its place at the wrong page.
+          - target:
+              group: monitoring.coreos.com
+              version: v1
+              kind: PrometheusRule
+              name: piraeus-datastore
+            patch: |-
+              - op: test
+                path: /spec/groups/1/rules/7/alert
+                value: drbdResourceWithNoUpToDateReplicas
+              - op: add
+                path: /spec/groups/1/rules/7/annotations/runbook_url
+                value: https://docs.thaum.xyz/how-to/runbooks/drbdResourceWithNoUpToDateReplicas/
           # allowedTopologies has to be patched in: the chart's storageclass.yaml
           # renders name, annotations, labels, provisioner, reclaimPolicy,
           # volumeBindingMode, allowVolumeExpansion and parameters, and nothing
