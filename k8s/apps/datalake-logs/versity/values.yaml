@@ -3,8 +3,10 @@
 # S3 backend for Loki, sitting next to it. Replaces Backblaze B2, so log chunks
 # no longer leave the network.
 
-# Pinned. The chart defaults to :latest.
+# Pinned. The chart defaults to :latest. The repository repeats the chart
+# default so Renovate can see the image; a bare tag is invisible to it.
 image:
+  repository: ghcr.io/versity/versitygw
   tag: "v1.7.0"
 
 auth:
