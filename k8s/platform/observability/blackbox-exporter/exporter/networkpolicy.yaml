@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: blackbox-exporter
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 0.25.0
+  name: blackbox-exporter
+spec:
+  # Nothing enforces this today: Cilium runs with policyEnforcementMode: never
+  # and k3s's own controller is disabled. It is written to be right on the day
+  # that changes, and until then it is untested -- the selectors were checked
+  # against the live pods, the traffic was not.
+  #
+  # Egress stays open: probing arbitrary hosts is the exporter's job.
+  egress:
+    - {}
+  # One caller, the Prometheus in datalake-metrics. It scrapes /metrics through
+  # the PodMonitor and calls /probe for the three Probes through the Service,
+  # and both arrive on 19115. The reloader sidecar reaches the same port over
+  # localhost, which no policy sees.
+  #
+  # namespaceSelector and podSelector share ONE `from` entry, so both must
+  # match. As two entries they would be alternatives: every pod in
+  # datalake-metrics, plus every pod labelled prometheus anywhere. The policy
+  # before this had the podSelector alone, which means "in this namespace" --
+  # where no Prometheus has run since 2026-09-01, so enforcing it would have
+  # cut off the scrape and every Probe.
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: datalake-metrics
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
+      ports:
+        - port: 19115
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: blackbox-exporter
+      app.kubernetes.io/part-of: kube-prometheus
+  policyTypes:
+    - Egress
+    - Ingress
