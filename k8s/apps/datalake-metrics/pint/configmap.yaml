@@ -95,6 +95,10 @@ data:
     # rule that is not on this list, and still be caught. Findings of that third
     # kind are deliberately left reported. One of them turned out to be a dead
     # alert.
+    #
+    # The fourth wording, "has the metric but there are no series with the
+    # ... label", is accepted for one rule, KubeJobNotCompleted, in a block of
+    # its own below.
 
     # The label value only exists when something is wrong: status="429",
     # key="node.kubernetes.io/unreachable", access_mode="ReadOnlyMany",
@@ -112,6 +116,35 @@ data:
     rule {
       match {
         name = "CertManagerHittingRateLimits|KubeNodeUnreachable|KubePersistentVolume.*FillingUp|KubeStateMetricsWatchErrors|MultipleContainersOOMKilled|TaskFailureRatioTooHigh"
+      }
+      disable = ["promql/series"]
+    }
+
+    # The rule ends with
+    # `unless ... kube_job_labels{label_excluded_from_alerts="true"}`, an opt-out
+    # for Jobs that are meant to run past twelve hours, and no Job opts out.
+    # kube-state-metrics puts a label_* label only on the series of an object
+    # that carries the key, so the label is missing from every series instead of
+    # present with another value, and pint words it as a label that does not
+    # exist: "has the metric but there are no series with the
+    # `label_excluded_from_alerts` label".
+    #
+    # A misspelt label name reads exactly the same, which is why this wording is
+    # accepted for the one rule and not as a class. This name is not misspelt:
+    # KubePersistentVolumeFillingUp selects the same key on
+    # kube_persistentvolumeclaim_labels, where claims do carry it and it matches.
+    #
+    # The metric exists only because jobs=[excluded_from_alerts] is in
+    # kube-state-metrics' metricLabelsAllowlist. Before that entry the finding
+    # here was "didn't have any series for" (#1457), and this block would hide
+    # that wording too -- so the two go together, and dropping the entry means
+    # dropping this. It also stops being needed once any Job carries the label.
+    #
+    # No family to match: checked across every loaded rule, KubeJobNotCompleted
+    # is the only reader of kube_job_labels.
+    rule {
+      match {
+        name = "KubeJobNotCompleted"
       }
       disable = ["promql/series"]
     }
@@ -169,8 +202,8 @@ data:
     #   kube_job_failed                           KubeJobFailed, K8upJobFailed
     #
     # K8upJobFailed joined this list by being rewritten, not by being missed:
-    # #1291 moved it off kube_job_labels -- which has no series at all, and is
-    # why it could never fire -- onto kube_job_failed and kube_job_owner. It now
+    # #1291 moved it off kube_job_labels -- which had no series at all then, and
+    # is why it could never fire -- onto kube_job_failed and kube_job_owner. It now
     # reports the same "only sometimes present" wording as KubeJobFailed, for
     # the same reason: the metric exists only while a failed Job does, with an
     # average life span of 1d15h. Re-check co-readers after a rule is rewritten,
