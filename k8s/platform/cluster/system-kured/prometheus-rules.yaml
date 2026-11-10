@@ -29,7 +29,7 @@ spec:
         - alert: KuredRebootRequired
           annotations:
             description: Node {{ $labels.node }} has been waiting for a kured reboot for over a week, which spans several reboot windows.
-            runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/RebootRequired
+            runbook_url: https://docs.thaum.xyz/how-to/runbooks/KuredRebootRequired/
             summary: Reboot is required to finish package upgrade
           expr: kured_reboot_required > 0
           for: 7d

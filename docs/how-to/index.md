@@ -15,8 +15,8 @@ Admission test:
 - [ ] It is specific to *this* cluster. If upstream documentation already covers
       it, link out instead of restating it.
 
-Runbooks are how-to documents written for someone at 2am, and belong in this
-section once migrated.
+A runbook is a how-to written for someone at 2am. It has its own shape and its
+own directory — see [Runbooks](#runbooks).
 
 ## Available now
 
@@ -32,10 +32,35 @@ section once migrated.
 - [Silence alerts for maintenance](silence-alerts-for-maintenance.md) — and the
   one matcher that must never match
 
+## Runbooks
+
+A runbook is entered from a firing alert, not from a goal. One page per alert,
+in `docs/how-to/runbooks/`, named exactly after the alert, so the alert's
+`runbook_url` follows from its name:
+`https://docs.thaum.xyz/how-to/runbooks/<AlertName>/`.
+
+Every runbook has the same four sections, in this order:
+
+| Section | Answers |
+| --- | --- |
+| Meaning | what is true when the alert fires, and which labels identify the object |
+| Impact | what is broken or at risk, and how that changes with time |
+| Diagnosis | numbered steps with a command each, ending in a cause |
+| Mitigation | the fix for each cause |
+
+`make docs-lint` fails on a `runbook_url` that points at this site with no page
+behind it, and warns about a runbook no alert links to.
+
+- [FluxCDReconciliationFailure](runbooks/FluxCDReconciliationFailure.md) — a
+  Kustomization, HelmRelease or source has stopped reconciling
+- [KuredRebootRequired](runbooks/KuredRebootRequired.md) — a node has wanted a
+  reboot for over a week and kured has not managed one
+
 ## Not written yet
 
 Open documentation work is tracked as
 [issues labelled `documentation`](https://github.com/thaum-xyz/ankhmorpork/issues?q=is%3Aissue+is%3Aopen+label%3Adocumentation).
-Two runbooks are served from [runbooks.thaum.xyz](https://runbooks.thaum.xyz/), a
-site whose repository was last touched in 2021; bringing them here is
-[#1364](https://github.com/thaum-xyz/ankhmorpork/issues/1364).
+Most alerts that carry a `runbook_url` point at
+[runbooks.thaum.xyz](https://runbooks.thaum.xyz/), a site whose repository was
+last touched in 2021 and which has no page for many of them; replacing those is
+[#1287](https://github.com/thaum-xyz/ankhmorpork/issues/1287).
