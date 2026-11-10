@@ -254,6 +254,12 @@ because nothing is left to uninstall. There is no `--force` flag on that command
   own log shows a clean 200. Confirm via `/api/v1/targets` (`health`, `lastError`).
   Exporters on a separate listener need the port declared as a container port
   before a PodMonitor can select it by name.
+- **A monitor's credential comes from a Secret beside it**, named by
+  `authorization.credentials`, and a CA by `tlsConfig.ca`. A ServiceMonitor that
+  sets `bearerTokenFile`, or `caFile`, `certFile` or `keyFile` under `tlsConfig`,
+  is dropped whole by the operator: its targets go missing rather than `down`,
+  and the reason is a Warning event on the object.
+  `k8s/apps/datalake-metrics/prometheus/prometheus.yaml` says why.
 - **No script under `hack/` needs a non-stdlib import** — any `python3` works.
   YAML is read through `yq`, which the validators already require.
 
