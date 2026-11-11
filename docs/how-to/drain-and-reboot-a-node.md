@@ -34,17 +34,28 @@ has to be done by hand for that.
 
 1. **Check that the cluster can lose a node.** Every node is `Ready` and none
    is `SchedulingDisabled`; every Postgres cluster reads
-   `Cluster in healthy state` with all its instances ready.
+   `Cluster in healthy state` with all its instances ready; no
+   [K8up](../explanation/app-backups.md) job is running, so the second
+   command lists nothing.
 
     ```bash
     kubectl get nodes && kubectl get clusters.postgresql.cnpg.io -A
+    kubectl get jobs -A -l k8upjob=true --field-selector=status.successful!=1
     ```
 
-2. **Check that no piraeus volume is short of a replica.** The list must be
-   empty, whichever node you are rebooting.
+2. **Check that every piraeus replica is in sync.** The command must return at
+   once, whichever node you are rebooting. `DRBDDegraded` is a Node condition
+   that
+   [node-problem-detector](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/cluster/node-problem-detector/values.yaml)
+   sets from DRBD's own metrics; it is `True` while any replica on the node is
+   not `UpToDate`, is disconnected from a peer, or has blocks out of sync with
+   one — the last of which `linstor resource list --faulty` does not show. A
+   node that stays `True` holds a replica to
+   [replace](runbooks/drbdResourceWithNoUpToDateReplicas.md#replacing-the-older-replica)
+   before any node is rebooted.
 
     ```bash
-    kubectl -n platform-storage exec deploy/linstor-controller -- linstor resource list --faulty
+    kubectl wait node --all --for=condition=DRBDDegraded=false --timeout=10s
     ```
 
 3. **[Silence the node's alerts](silence-alerts-for-maintenance.md)** for an
@@ -70,15 +81,16 @@ has to be done by hand for that.
     kubectl get node <node> --watch
     ```
 
-7. **On a node that holds piraeus replicas, wait for them to resync.** The
-   list must be empty again before anything else happens. A replica that stays
-   `Outdated` is
+7. **Wait for the piraeus replicas to resync.** The condition is `True` on
+   this node and on every peer it is syncing from, and the command returns
+   when all of them are done. If it times out, a replica that stays `Outdated`
+   is
    [drbdResourceWithNoUpToDateReplicas](runbooks/drbdResourceWithNoUpToDateReplicas.md)
    in the making; follow that page and promote nothing before its comparison
    step.
 
     ```bash
-    kubectl -n platform-storage exec deploy/linstor-controller -- linstor resource list --faulty
+    kubectl wait node --all --for=condition=DRBDDegraded=false --timeout=15m
     ```
 
 8. **Uncordon.** Do it as soon as the node is healthy: a node left cordoned
@@ -162,7 +174,11 @@ kubectl -n platform-cluster annotate ds kured weave.works/kured-node-lock-
     taint, and the operator moves primaries off tainted nodes. A node whose
     replicas all sit on tainted nodes then has nowhere to switch to, and its
     drain hangs. Drain outside the window, or remove the taint from the other
-    nodes first — kured puts it back at its next poll.
+    nodes first.
+
+    ```bash
+    kubectl taint node <other-node> thaum.xyz/kured-node-reboot-
+    ```
 
 ## Related
 
