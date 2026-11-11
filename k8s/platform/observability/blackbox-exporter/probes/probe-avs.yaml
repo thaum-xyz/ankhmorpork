@@ -16,7 +16,7 @@ spec:
   targets:
     staticConfig:
       labels:
-        environment: avs
+        cluster: avs
         module: http_2xx
       static:
         - https://registry.avsystem.com
