@@ -14,6 +14,26 @@ rbac:
   # the CRD set across chart upgrades.
   aggregateClusterRoles: true
 
+# Two, on different nodes. A drain evicts every Pod on the node at once, and
+# the operator is what switches the Postgres primaries off that node: with one
+# replica on the node being drained, the switchovers wait for it to be
+# rescheduled and started elsewhere. The standby already runs and only has to
+# take the leader lease. Both serve the admission webhooks; only the leader
+# reconciles.
+replicaCount: 2
+
+# DoNotSchedule, because two replicas on one node are no better than one. The
+# cordoned node still counts as a domain, so the evicted replica lands on a
+# third node rather than waiting for the drained one to come back.
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: kubernetes.io/hostname
+  whenUnsatisfiable: DoNotSchedule
+  labelSelector:
+    matchLabels:
+      app.kubernetes.io/name: cloudnative-pg
+      app.kubernetes.io/instance: cnpg
+
 additionalArgs:
 - "--metrics-bind-address=0.0.0.0:8080"
 
