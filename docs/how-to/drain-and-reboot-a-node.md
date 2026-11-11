@@ -69,11 +69,13 @@ has to be done by hand for that.
     ssh <node> sudo systemctl reboot
     ```
 
-6. **Wait for `Ready`.** If your kubeconfig names this node as its server,
+6. **Wait for the node to come back.** A reboot that takes under a minute
+   never shows `NotReady`, so wait for the kubelet's `Rebooted` event instead
+   of watching the status. If your kubeconfig names this node as its server,
    `kubectl` times out until the node is back.
 
     ```bash
-    kubectl get node <node> --watch
+    kubectl get events -n default --field-selector involvedObject.name=<node>,reason=Rebooted --watch
     ```
 
 7. **Wait until no node reports a problem.** Repeat the check from step 2
@@ -114,10 +116,11 @@ For the next node, start again from step 1. The primaries do not move back:
 nodes still waiting their turn, so the last node has the most switchovers to
 make.
 
-On 2026-11-11 the drain of `beelink01` returned in under a minute, and each
-Postgres cluster it moved was without a primary for under ten seconds. The
-piraeus replicas on `beelink01` and `beelink02` were back in sync about two
-minutes after each node was `Ready`. What takes longest is everything the drain
+On 2026-11-11 the drains of `beelink01` and `master02` each returned in under
+a minute, and each Postgres cluster they moved was without a primary for under
+ten seconds. `master02` was rebooted as soon as its drain returned: its kubelet
+was back 45 seconds later, without the node ever reading `NotReady`, and every
+node's conditions were healthy again three minutes after that. What takes longest is everything the drain
 rescheduled starting up elsewhere, which has no bearing on when the node can be
 rebooted.
 
