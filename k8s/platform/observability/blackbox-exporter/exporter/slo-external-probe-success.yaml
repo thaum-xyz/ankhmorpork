@@ -45,7 +45,15 @@ spec:
       absent: warning
   indicator:
     bool_gauge:
+      # environment is grouped on because the matchers below need it, not to
+      # split anything: each instance has exactly one. Pyrra copies the
+      # metric's matchers onto the burn-rate selectors of the alert, while the
+      # burn-rate records keep only the labels named here -- so with instance
+      # alone the alert asked for environment!="" of series that had no such
+      # label and could never fire (#1457). The per-app probe SLOs match on
+      # instance, which the records do keep, and so never had this.
       grouping:
+        - environment
         - instance
       metric: probe_success{environment!="ankhmorpork", environment!=""}
   target: "99"
