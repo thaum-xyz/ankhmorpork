@@ -9,7 +9,7 @@ kind: Deployment
 image:
   registry: docker.stirlingpdf.com
   repository: stirlingtools/stirling-pdf
-  tag: "2.14.2"
+  tag: "2.14.3"
 
 resources:
 
