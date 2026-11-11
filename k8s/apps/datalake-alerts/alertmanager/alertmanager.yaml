@@ -45,4 +45,4 @@ spec:
   # Derived image tag. Unlike Prometheus, the operator uses this verbatim for
   # alertmanager, so the v prefix is required.
   # renovate: datasource=github-releases depName=prometheus/alertmanager
-  version: v0.34.0
+  version: v0.34.1
