@@ -120,6 +120,29 @@ expires, so a reboot window fits fewer nodes than it has hours for. That is a
 choice, not a limit. Reboots happen on several days a week, and a node that waits
 until the next window has lost nothing.
 
+## What stays quiet while it happens
+
+A reboot is ordinary, so it should not open an issue. Two things keep it from
+doing so, and they work differently.
+
+Alerts whose signal a reboot disturbs for a known time wait that long. A DRBD
+peer is `Connecting` until the rebooted node's satellite is back, so the alert
+that files an issue for it waits longer than a reboot takes, while a quicker
+copy at `info` still closes kured's gate. Those reasons are written on each rule.
+
+Alerts about workloads cannot be handled that way, because how long they stay
+true is how long the drain takes. A Pod on node-local storage is not ready for
+exactly as long as its node is cordoned, and neither is its StatefulSet, its
+scrape target or the Kustomization waiting on it. `NodeMaintenance` is up while
+a node is cordoned and for ten minutes after, and Alertmanager holds those
+alerts back while it is.
+
+That is cluster-wide, because none of those alerts names the node it is about.
+A Pod failing on another node during a reboot is reported when the reboot is
+over, not when it starts failing. And it is bounded: a node cordoned for most of
+an hour is no longer being rebooted, `NodeMaintenance` ends, and whatever the
+cordon broke is sent.
+
 ## What this does not solve
 
 **The first node gets no head start.** The taint is applied only to nodes that

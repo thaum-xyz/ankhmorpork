@@ -171,6 +171,24 @@ data:
         target_matchers:
         - "alertname =~ KubePodNotReady|KubeContainerWaiting|KubePodCrashLooping|KubeDeploymentReplicasMismatch|KubeStatefulSetReplicasMismatch|KubeDaemonSetRolloutStuck|KubeDeploymentRolloutStuck"
         equal: ['cluster']
+      # A drain takes every Pod that cannot move down with the node, for as long
+      # as the cordon lasts. NodeMaintenance is up for that long and ten minutes
+      # more, and never past 55 minutes of cordon; it is defined beside
+      # NodeUnschedulable in kube-prometheus-stack/prometheusrule-workloads.yaml.
+      #
+      # No `node` in equal, because none of these carries the node it is about:
+      # they name a Pod, a workload, a job or a Kustomization. So this holds them
+      # back across the cluster, and a fault of the same kind on another node
+      # waits until the reboot is over. It is then still firing, and is sent.
+      #
+      # The list is what stood pending through the reboots of 2026-11-11, and
+      # only what a missing Pod explains. Storage, etcd and node alerts are not
+      # on it.
+      - source_matchers:
+        - "alertname = NodeMaintenance"
+        target_matchers:
+        - "alertname =~ KubePodNotReady|KubeDeploymentReplicasMismatch|KubeStatefulSetReplicasMismatch|TargetDown|FluxCDReconciliationFailure"
+        equal: ['cluster']
       # And a pod that cannot start is the reason its workload is short replicas,
       # so report the cause rather than both.
       - source_matchers:
