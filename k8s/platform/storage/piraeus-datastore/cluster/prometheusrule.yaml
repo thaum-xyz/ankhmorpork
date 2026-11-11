@@ -21,6 +21,8 @@ spec:
   #
   # What differs from the chart's copy:
   #   - `for: 10m` on three rules, explained on the first of them
+  #   - drbdConnectionNotConnected is two rules, `info` after 1m for kured
+  #     and `warning` after 10m for people, explained on the first
   #   - severity is spelled `warning`, where 1.2.0 says `warn`: Alertmanager's
   #     routes and inhibitions here match on `warning`
   #   - every alert has a `summary`, which .pint.hcl requires
@@ -136,7 +138,33 @@ spec:
               DRBD Resource "{{ $labels.name }}" on "{{ $labels.node }}" is not connected to "{{ $labels.conn_name }}": {{ $labels.drbd_connection_state }}.
             summary: DRBD connection is down
           expr: drbd_connection_state{drbd_connection_state!="Connected"} > 0
+          # Twice, under one name, because it has two readers that want
+          # different things.
+          #
+          # This one is kured's. A peer that is down shows up nowhere else in
+          # the gate for fifteen minutes -- KubeNodeNotReady waits that long --
+          # so this is what stops kured draining a second node while the first
+          # is still away, and it has to stay quick. `info` routes to the null
+          # receiver and opens no issue.
+          #
+          # The copy below is the one a person reads. A reboot takes the
+          # node's connections down on every peer until its satellite is back:
+          # 90s for beelink02 and beelink01 and 150s for master02 on
+          # 2026-11-11, each of which fired this at `for: 1m` and reopened
+          # #1549. The alert is raised by the peers and names the rebooted
+          # node only in conn_name, so a silence on node= or instance= does
+          # not cover it. 10m is four times the longest of those; a connection
+          # still down then is one the reboot did not explain.
           for: 1m
+          labels:
+            severity: info
+        - alert: drbdConnectionNotConnected
+          annotations:
+            description: |
+              DRBD Resource "{{ $labels.name }}" on "{{ $labels.node }}" has not been connected to "{{ $labels.conn_name }}" for 10 minutes: {{ $labels.drbd_connection_state }}.
+            summary: DRBD connection is down
+          expr: drbd_connection_state{drbd_connection_state!="Connected"} > 0
+          for: 10m
           labels:
             severity: warning
         - alert: drbdDeviceNotUpToDate
