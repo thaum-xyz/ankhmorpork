@@ -29,11 +29,22 @@ spec:
         # `filename` embeds the PrometheusRule's UID, and the scrape adds pod
         # and instance -- so a pint rollout alone would mark every finding new.
         #
-        # `for` must stay well under the offset. The baseline catches up an hour
-        # after a finding appears, so a longer `for` would never fire -- and
-        # that is also where this ends, about 45 minutes after it started. On
-        # 2026-11-10 a finding appeared at 15:44; this fired at 15:59 and
-        # resolved at 16:43 with nothing fixed.
+        # `for` is an hour because a node reboot produces findings that last
+        # less than one. pint reports a series as "only sometimes present"
+        # when two things hold: its selector matches nothing at the moment
+        # pint looks, and the series already has a gap somewhere in the last
+        # week. A reboot leaves the gap, and the next one empties the selector
+        # for as long as the pods it moved take to come back -- so each reboot
+        # after the first reported whatever was restarting. On 2026-11-11
+        # seven CNPG* rules, CeleryWorkerOffline, prowlarrDown and radarrDown
+        # were reported for 8 to 19 minutes after beelink01 and master02
+        # rebooted, and at `for: 15m` that reopened #1457. The longest a
+        # healthy cordon-to-uncordon has measured is 25 minutes, and a finding
+        # outlives its cause by up to one ten-minute lint.
+        #
+        # `for` must stay well under the offset. The baseline catches up two
+        # hours after a finding appears, so a longer `for` would never fire --
+        # and that is also where this ends, an hour after it started.
         #
         # So resolving says nothing about the finding, which is still in
         # pint_problem. Nor does it close the issue this opened: github-receiver
@@ -43,7 +54,7 @@ spec:
         # 24h is how far back the baseline looks, not how long this fires: a
         # finding that goes away and comes back within a day is not news again.
         #
-        # If pint is down for more than 25h the baseline window is empty and
+        # If pint is down for more than 26h the baseline window is empty and
         # everything reads as new. PintNotReporting fires long before that.
         - alert: PintNewRuleProblem
           annotations:
@@ -52,8 +63,8 @@ spec:
           expr: |
             count by (name, reporter) (pint_problem{job="pint"})
             unless
-            count by (name, reporter) (last_over_time(pint_problem{job="pint"}[24h] offset 1h))
-          for: 15m
+            count by (name, reporter) (last_over_time(pint_problem{job="pint"}[24h] offset 2h))
+          for: 1h
           labels:
             severity: warning
         # Zero problems and a dead linter look identical from the outside, so
