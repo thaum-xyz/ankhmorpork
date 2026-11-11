@@ -60,3 +60,33 @@ spec:
           for: 45m
           labels:
             severity: info
+        # A node that is being drained and rebooted, or was until ten minutes
+        # ago. It tells nobody anything: Alertmanager uses it to hold back the
+        # workload alerts a drain causes, through the inhibit rule that names
+        # it in k8s/apps/datalake-alerts/alertmanager/configmap-template.yaml.
+        # `info` routes to the null receiver. kured does not read it.
+        #
+        # A Pod on node-local storage has nowhere else to run, so it is not
+        # ready for exactly as long as its node is cordoned, and with it its
+        # StatefulSet, its scrape target and whatever Flux is waiting on. On
+        # 2026-11-11 those stood pending for 9 to 11.5 minutes of a ten-minute
+        # `for` and three fifteen-minute ones, across cordons of 6 and 11
+        # minutes. A healthy cycle has measured 25.
+        #
+        # The first half keeps this up for ten minutes after the uncordon,
+        # because the Pods come back after the node does. The second half ends
+        # it once the node has been cordoned for 55 minutes without a break:
+        # by then NodeUnschedulable has been firing for ten, the cordon is not
+        # a reboot, and what it broke should be heard. min, not max: a
+        # kube-state-metrics that restarted during the drain has only ever
+        # seen the node cordoned, and the series from before it has not.
+        - alert: NodeMaintenance
+          annotations:
+            description: Node {{ $labels.node }} is cordoned or was within the last ten minutes. Alerts about workloads that cannot run while it is away are held back until this clears.
+            summary: Node is being drained or rebooted.
+          expr: |
+            max by (node) (max_over_time(kube_node_spec_unschedulable[10m])) == 1
+            and
+            min by (node) (min_over_time(kube_node_spec_unschedulable[55m])) == 0
+          labels:
+            severity: info
