@@ -35,14 +35,7 @@ nodes follow as their own upgrades arrive.
     | `Error draining <node>: ...` | kured took the lock and cordoned the node, and the drain did not finish in time |
     | `Reboot not required` | nothing — the sentinel is gone and the alert is about to resolve |
 
-3. See how long the node has been waiting. kured stamps it the first time it
-   wants the reboot inside a window.
-
-    ```bash
-    kubectl get node <node> -o jsonpath='{.metadata.annotations.weave\.works/kured-most-recent-reboot-needed}'
-    ```
-
-4. For a held lock, see who holds it and since when. An empty answer means no
+3. For a held lock, see who holds it and since when. An empty answer means no
    lock is held.
 
     ```bash
