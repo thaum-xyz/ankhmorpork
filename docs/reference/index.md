@@ -32,6 +32,8 @@ Admission test:
   where its values come from *(generated)*
 - [Ingress and certificates](ingress.md) — the three classes, the two issuers,
   and what external-dns publishes
+- [Node conditions](node-conditions.md) — every condition a Node carries, who
+  sets it, and what `DRBDDegraded` counts
 - [Storage classes](storage-classes.md) — capabilities, access modes, node
   affinity and measured ceilings
 - [Annotations and labels](annotations.md) — keys this cluster gives meaning to,

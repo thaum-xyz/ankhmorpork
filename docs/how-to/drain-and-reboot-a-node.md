@@ -43,19 +43,14 @@ has to be done by hand for that.
     kubectl get jobs -A -l k8upjob=true --field-selector=status.successful!=1
     ```
 
-2. **Check that every piraeus replica is in sync.** The command must return at
-   once, whichever node you are rebooting. `DRBDDegraded` is a Node condition
-   that
-   [node-problem-detector](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/cluster/node-problem-detector/values.yaml)
-   sets from DRBD's own metrics; it is `True` while any replica on the node is
-   not `UpToDate`, is disconnected from a peer, or has blocks out of sync with
-   one — the last of which `linstor resource list --faulty` does not show. A
-   node that stays `True` holds a replica to
-   [replace](runbooks/drbdResourceWithNoUpToDateReplicas.md#replacing-the-older-replica)
-   before any node is rebooted.
+2. **Check that no node reports a problem.** The command prints every
+   [Node condition](../reference/node-conditions.md) that is not in its
+   healthy state, on any node, and must print nothing. Whatever it prints is
+   to be fixed before any node is rebooted; the reference page says what each
+   condition means and where to go.
 
     ```bash
-    kubectl wait node --all --for=condition=DRBDDegraded=false --timeout=10s
+    kubectl get nodes -o json | jq -r '.items[] | .metadata.name as $n | .status.conditions[] | select(.status != (if .type == "Ready" or .type == "EtcdIsVoter" then "True" else "False" end)) | "\($n)\t\(.type)\t\(.message)"'
     ```
 
 3. **[Silence the node's alerts](silence-alerts-for-maintenance.md)** for an
@@ -81,16 +76,16 @@ has to be done by hand for that.
     kubectl get node <node> --watch
     ```
 
-7. **Wait for the piraeus replicas to resync.** The condition is `True` on
-   this node and on every peer it is syncing from, and the command returns
-   when all of them are done. If it times out, a replica that stays `Outdated`
-   is
+7. **Wait until no node reports a problem.** Repeat the check from step 2
+   until it prints nothing. The rebooted node and the peers its piraeus
+   replicas sync from read `DRBDDegraded` for the first minutes; one that
+   still does after fifteen is
    [drbdResourceWithNoUpToDateReplicas](runbooks/drbdResourceWithNoUpToDateReplicas.md)
-   in the making; follow that page and promote nothing before its comparison
-   step.
+   in the making, so follow that page and promote nothing before its
+   comparison step.
 
     ```bash
-    kubectl wait node --all --for=condition=DRBDDegraded=false --timeout=15m
+    kubectl get nodes -o json | jq -r '.items[] | .metadata.name as $n | .status.conditions[] | select(.status != (if .type == "Ready" or .type == "EtcdIsVoter" then "True" else "False" end)) | "\($n)\t\(.type)\t\(.message)"'
     ```
 
 8. **Uncordon.** Do it as soon as the node is healthy: a node left cordoned

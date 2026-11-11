@@ -65,6 +65,7 @@ nav = [
     { "Charts and images" = "reference/charts.md" },
     { "Hardware" = "reference/hardware.md" },
     { "Ingress and certificates" = "reference/ingress.md" },
+    { "Node conditions" = "reference/node-conditions.md" },
     { "Storage classes" = "reference/storage-classes.md" },
     { "UPS Modbus register map" = "reference/ups-modbus-register-map.md" },
   ] },
