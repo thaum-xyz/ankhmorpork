@@ -13,6 +13,25 @@ spec:
   # /api/server/config for about 5 hours from 2026-09-06 21:19 before #1345
   # put it back. The endpoint measured now is the one measured for the other
   # 6.8 days, so the reading holds.
+  #
+  # 95 since 2026-11-11, down from 99, because of how immich fails rather than
+  # how often. From 2026-10-21 01:44 to 10-22 06:05Z the probe got a 500 on
+  # about every other request for 28 hours: 1688 failed samples, 50.7%
+  # achieved, the hourly failure rate never outside 44-57%. The other five
+  # weeks of retention hold 7 failed samples between them.
+  #
+  # At 99 the fast tier wants burnrate15m and burnrate1m above 0.14, and a
+  # service failing half the time crosses the 1m leg and falls back under it
+  # by the sample. It fired and resolved about 80 times in those 28 hours.
+  # At 95 the fast tier wants 0.70 on both, which a half-failure does not
+  # reach -- the condition held for 9 evaluations of 3390 -- and the 1h30m/8m
+  # tier at 0.35 held for 3025 of them. So the same incident is one alert that
+  # stays up instead of eighty that do not, and a full outage still reaches
+  # the fast tier after about 10m30s, 21 samples of 30.
+  #
+  # 95 is not a claim that the service is that bad: 14 hours down spends a
+  # 95% budget of 8h24m as surely as it spends 1h41m. 96 to 98 put the 15m
+  # threshold at 0.56 to 0.28, inside or under what a half-failure produces.
   description: >-
     Fraction of successful blackbox probes against photos.krupa.net.pl.
   alerting:
@@ -27,5 +46,5 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://photos\\.krupa\\.net\\.pl(/.*)?"}
-  target: "99"
+  target: "95"
   window: 7d
