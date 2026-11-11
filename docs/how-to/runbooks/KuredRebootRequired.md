@@ -63,13 +63,5 @@ nodes follow as their own upgrades arrive.
 
 For when kured itself is what is broken. It does not get a node past a shut
 gate safely: the same condition that blocks kured will block or break this
-drain.
-
-```bash
-kubectl drain <node> --ignore-daemonsets --delete-emptydir-data
-ssh <node> sudo systemctl reboot
-kubectl uncordon <node>
-```
-
-[Silence the node's alerts](../silence-alerts-for-maintenance.md) first, and
-wait for the node to report `Ready` before the uncordon.
+drain. The steps are in
+[Drain and reboot a node by hand](../drain-and-reboot-a-node.md).
