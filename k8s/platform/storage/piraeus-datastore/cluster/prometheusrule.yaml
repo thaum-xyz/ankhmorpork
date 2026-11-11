@@ -21,6 +21,7 @@ spec:
   #
   # What differs from the chart's copy:
   #   - `for: 10m` on three rules, explained on the first of them
+  #   - `for: 2m` on drbdDeviceUnintentionalDiskless, explained there
   #   - drbdConnectionNotConnected is two rules, `info` after 1m for kured
   #     and `warning` after 10m for people, explained on the first
   #   - severity is spelled `warning`, where 1.2.0 says `warn`: Alertmanager's
@@ -183,6 +184,12 @@ spec:
               This usually indicates IO errors reported on the backing device. Check the kernel log.
             summary: DRBD replica lost its backing device
           expr: drbd_device_unintentionaldiskless > 0
+          # The chart has no `for`. A satellite coming back from a reboot
+          # brings a resource up before it attaches the backing device, and
+          # for that moment the device is diskless without having been asked
+          # to be: two scrapes on master02 on 2026-11-11, 16:04:30 and
+          # 16:04:45. A device that lost its disk to I/O errors stays so.
+          for: 2m
           labels:
             severity: warning
         - alert: drbdDeviceWithoutQuorum
