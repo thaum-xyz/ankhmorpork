@@ -23,10 +23,10 @@ spec:
     name: ChangedetectionProbeBudgetBurn
     absentName: ChangedetectionProbeMetricAbsent
     severities:
-      fastBurn: info
-      mediumBurn: info
-      slowBurn: none
-      longTermBurn: none
+      fastBurn: critical
+      mediumBurn: critical
+      slowBurn: warning
+      longTermBurn: warning
       absent: warning
   indicator:
     bool_gauge:

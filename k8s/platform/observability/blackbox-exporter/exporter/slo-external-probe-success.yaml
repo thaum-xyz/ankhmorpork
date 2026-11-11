@@ -33,9 +33,9 @@ spec:
   #
   # Not set looser than the objective next door in the end -- the data does
   # not support pretending these endpoints are unreliable. The fact that
-  # nothing here can fix them belongs in the routing instead: when the burn
-  # severities come off info/none, this objective should not be the one that
-  # wakes somebody for a third party's outage.
+  # nothing here can fix them belongs in the routing instead: every tier is
+  # warning, where the other objectives page on the fast two. A third party's
+  # outage files an issue and wakes nobody.
   description: >-
     Fraction of successful blackbox probes against endpoints outside this
     cluster.
@@ -43,10 +43,10 @@ spec:
     name: ExternalProbeBudgetBurn
     absentName: ExternalProbeMetricAbsent
     severities:
-      fastBurn: info
-      mediumBurn: info
-      slowBurn: none
-      longTermBurn: none
+      fastBurn: warning
+      mediumBurn: warning
+      slowBurn: warning
+      longTermBurn: warning
       absent: warning
   indicator:
     bool_gauge:
