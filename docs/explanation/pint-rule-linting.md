@@ -58,8 +58,9 @@ Most remaining findings describe a quiet cluster, not a broken rule:
 - `KubeHpaMaxedOut` reports no series because there are no HorizontalPodAutoscalers.
 - `MultipleContainersOOMKilled` waits on `reason="OOMKilled"`, which appears when
   something is OOM-killed.
-- A Pyrra ratio SLO with no errors yet records nothing at all — `sum(rate(…{code=~"5.."}))`
-  over an empty selector returns *no series*, not zero.
+- A Pyrra ratio SLO with no errors to count records nothing at all — `sum(rate(…{code=~"5.."}))`
+  over an empty selector returns *no series*, not zero. An SLO returns to that
+  state whenever the process that counted its last error restarts.
 
 **Driving the count to zero would mean disabling alerts that work.** The findings
 are correct; the conditions they describe have not happened.
@@ -98,7 +99,7 @@ appeared underneath. A count-based alert would have seen a drop and said nothing
 ```promql
 count by (name, reporter) (pint_problem{job="pint"})
 unless
-count by (name, reporter) (last_over_time(pint_problem{job="pint"}[24h] offset 1h))
+count by (name, reporter) (last_over_time(pint_problem{job="pint"}[24h] offset 2h))
 ```
 
 Aggregating to `(name, reporter)` is required rather than tidy: `problem` embeds
@@ -110,8 +111,15 @@ It accepts one limitation: a rule that breaks a *different* way keeps the same
 to an intermittent metric is exactly that, and staying quiet is right — the rule
 did not newly break.
 
-The alert is short-lived by construction. The baseline is offset by an hour, so
-it catches up an hour after a finding appears and the alert resolves, fixed or
+A finding has to last an hour before the alert fires, because a node reboot
+produces findings that do not. pint words a series as "only sometimes present"
+when its selector matches nothing as pint looks and the series
+already has a gap in the last week. One reboot leaves the gap; the next empties
+the selector until the Pods it moved are back, and pint reports whatever was
+restarting. Those findings are gone within one drain and one lint.
+
+The alert is short-lived by construction. The baseline is offset by two hours, so
+it catches up two hours after a finding appears and the alert resolves, fixed or
 not. The 24h is how far back the baseline looks, not how long the alert fires: a
 finding that goes away and comes back within a day is not new again.
 
