@@ -159,6 +159,150 @@ settings:
         ]
       }
 
+    # DRBDDegraded: whether this node's DRBD replicas are all healthy, so that
+    # a drain can wait on the Node instead of on
+    # `linstor resource list --faulty` through an exec. True also covers a
+    # satellite that is not answering yet, which is how a node comes back from
+    # a reboot. Nothing alerts on it: the drbd* alerts in piraeus-datastore do.
+    #
+    # skip_initial_status, because a detector that has just started would
+    # otherwise publish False before the first run has looked.
+    #
+    # 30s because it is a wait target. A resync after a reboot ends about two
+    # minutes after the node is Ready, and the condition is at most one
+    # interval behind.
+    drbd-monitor.json: |
+      {
+        "plugin": "custom",
+        "pluginConfig": {
+          "invoke_interval": "30s",
+          "timeout": "20s",
+          "max_output_length": 200,
+          "concurrency": 1,
+          "enable_message_change_based_condition_update": true,
+          "skip_initial_status": true
+        },
+        "source": "drbd-monitor",
+        "metricsReporting": true,
+        "conditions": [
+          {
+            "type": "DRBDDegraded",
+            "reason": "DRBDNotDegraded",
+            "message": "every DRBD replica on this node is healthy, or it has none"
+          }
+        ],
+        "rules": [
+          {
+            "type": "permanent",
+            "condition": "DRBDDegraded",
+            "reason": "DRBDDegraded",
+            "path": "/custom-config/drbd-health.sh",
+            "timeout": "20s"
+          }
+        ]
+      }
+
+    # The chart mounts this ConfigMap with mode 0755, so a plugin can live
+    # beside the definition that runs it.
+    drbd-health.sh: |
+      #!/bin/bash
+      # Are this node's DRBD replicas healthy? Exit 0 says yes and 1 says no,
+      # with the reason on stdout; that is the contract of a custom plugin.
+      #
+      # Reads drbd-reactor's metrics from the linstor-satellite Pod, which is
+      # hostNetwork like this one. bash opens the socket itself: the image has
+      # neither curl nor wget.
+      #
+      #   drbd-health.sh          scrape 127.0.0.1:9942
+      #   drbd-health.sh <file>   read a saved HTTP response instead, for testing
+      set -u
+      export LC_ALL=C
+
+      # The satellite's own log, on the host's disk, so it is there after a
+      # reboot and before the satellite is. master01 has the directory and
+      # nothing in it.
+      marker=${DRBD_MARKER:-/var/log/linstor-satellite/linstor-Satellite.log}
+      if [[ ! -e $marker ]]; then
+        echo "no LINSTOR satellite has run on this node"
+        exit 0
+      fi
+
+      degraded() {
+        echo "$1"
+        exit 1
+      }
+
+      if [[ $# -gt 0 ]]; then
+        exec 3<"$1" || degraded "cannot read $1"
+      else
+        exec 3<>/dev/tcp/127.0.0.1/9942 || degraded "drbd-reactor is not listening on port 9942"
+        # One line and so one write. drbd-reactor reads once, answers and
+        # closes; bash writes each further line by itself, and one left
+        # unread turns the close into a reset that cuts the body short.
+        printf 'GET /metrics HTTP/1.0\r\n' >&3
+      fi 2>/dev/null
+
+      IFS= read -r -t 5 -u 3 line || degraded "drbd-reactor did not answer"
+      [[ $line == HTTP/1.?\ 200* ]] || degraded "drbd-reactor answered ${line%$'\r'}"
+
+      expected=
+      while IFS= read -r -t 5 -u 3 line; do
+        line=${line%$'\r'}
+        [[ -z $line ]] && break
+        [[ $line =~ ^[Cc]ontent-[Ll]ength:\ *([0-9]+)$ ]] && expected=${BASH_REMATCH[1]}
+      done
+
+      received=0 resources=0 devices=0
+      not_uptodate=0 lost_disk=0 no_quorum=0 not_connected=0 out_of_sync=0 suspended=0
+      state='="([A-Za-z]+)"\} ([^ ]+)$'
+      while IFS= read -r -t 5 -u 3 line; do
+        received=$((received + ${#line} + 1))
+        value=${line##* }
+        case $line in
+          'drbd_device_state{'*)
+            [[ $line =~ $state && ${BASH_REMATCH[2]} != 0 ]] || continue
+            devices=$((devices + 1))
+            [[ ${BASH_REMATCH[1]} == UpToDate || ${BASH_REMATCH[1]} == Diskless ]] || not_uptodate=$((not_uptodate + 1))
+            ;;
+          'drbd_connection_state{'*)
+            [[ $line =~ $state && ${BASH_REMATCH[2]} != 0 ]] || continue
+            [[ ${BASH_REMATCH[1]} == Connected ]] || not_connected=$((not_connected + 1))
+            ;;
+          'drbd_device_unintentionaldiskless{'*) [[ $value == 0 ]] || lost_disk=$((lost_disk + 1)) ;;
+          'drbd_device_quorum{'*) [[ $value == 0 ]] && no_quorum=$((no_quorum + 1)) ;;
+          'drbd_peerdevice_outofsync_bytes{'*) [[ $value == 0 ]] || out_of_sync=$((out_of_sync + 1)) ;;
+          'drbd_resource_suspended{'*) [[ $value == 0 ]] || suspended=$((suspended + 1)) ;;
+          'drbd_resource_resources '*) resources=$value ;;
+        esac
+      done
+
+      # A response cut short would read as fewer devices, all of them healthy.
+      if [[ -n $expected && $received -ne $expected ]]; then
+        degraded "drbd-reactor sent $received of $expected bytes"
+      fi
+      # Just after a reboot drbd-reactor is up before the satellite has brought
+      # any resource back. Every satellite here holds resources, so none is not
+      # a state to call healthy.
+      if [[ $resources == 0 || $devices -eq 0 ]]; then
+        degraded "drbd-reactor reports no DRBD resources"
+      fi
+
+      problems=()
+      ((not_uptodate)) && problems+=("$not_uptodate devices not UpToDate")
+      ((lost_disk)) && problems+=("$lost_disk devices lost their disk")
+      ((out_of_sync)) && problems+=("$out_of_sync peers out of sync")
+      ((not_connected)) && problems+=("$not_connected connections not Connected")
+      ((no_quorum)) && problems+=("$no_quorum devices without quorum")
+      ((suspended)) && problems+=("$suspended resources suspended")
+
+      if ((${#problems[@]})); then
+        printf -v message '%s, ' "${problems[@]}"
+        degraded "${message%, }"
+      fi
+
+      echo "$devices DRBD devices are UpToDate or Diskless, connected and in sync"
+      exit 0
+
   custom_plugin_monitors:
     # FrequentUnregisterNetDevice node condition, counted from journald.
     - /config/kernel-monitor-counter.json
@@ -166,6 +310,8 @@ settings:
     - /custom-config/k3s-monitor-counter.json
     # UnattendedUpgradeUnhealthy node condition; definition above.
     - /custom-config/apt-monitor.json
+    # DRBDDegraded node condition; definition above.
+    - /custom-config/drbd-monitor.json
     # ConntrackFull and DNSUnreachable events.
     - /config/network-problem-monitor.json
     # - /config/health-checker-containerd.json
