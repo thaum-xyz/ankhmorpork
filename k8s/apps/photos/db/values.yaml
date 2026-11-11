@@ -17,7 +17,15 @@ cluster:
   # postgres owns the extension so it cannot, and the workers crashloop with
   # "must be owner of extension vchord". Follow an image bump with:
   #   ALTER EXTENSION vchord UPDATE;
-  # run as postgres against the immich database.
+  #   REINDEX INDEX clip_index;
+  #   REINDEX INDEX face_index;
+  # run as postgres against the immich database, on the primary.
+  #
+  # The REINDEX is needed whenever vchord's on-disk index format changes, which
+  # so far is every minor and major release (0.3, 0.4, 0.5, 1.0, 1.1) and no
+  # patch release. Until then every smart search and face match fails with
+  # "bad version number; after upgrading VectorChord, please use REINDEX".
+  # Both indexes rebuild in about a second, so run it after any vchord bump.
   postgresql:
     shared_preload_libraries:
       - vchord.so
