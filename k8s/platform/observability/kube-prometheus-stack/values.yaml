@@ -35,6 +35,22 @@ grafana:
       annotations:
         grafana_folder: kube-prometheus
 
+# The chart's switch for changing `for` or `severity` on a mixin alert without
+# forking the rule.
+customRules:
+  # 15m, where the mixin says 5m. The expression is an average over 10m held
+  # under 85%, so it stays true for seven minutes longer than the outage it
+  # measures: anything past 90s fired at 5m. metrics-server is the only
+  # aggregated API here and k3s runs one replica of it, so a drain of its node
+  # is an outage for as long as the replacement takes to start. On 2026-11-11
+  # that was 2m15s in ContainerCreating on beelink02 while beelink01 drained,
+  # and the alert fired for five minutes after the API was back (#1742).
+  #
+  # At 15m it takes an outage of eight minutes, which no reschedule is. An
+  # APIService with no backend at all still fires, fifteen minutes in.
+  KubeAggregatedAPIDown:
+    for: 15m
+
 defaultRules:
   create: true
   # Two reasons an alert lands here: its metric cannot exist on this cluster, so
