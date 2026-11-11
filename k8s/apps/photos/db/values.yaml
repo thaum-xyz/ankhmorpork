@@ -3,7 +3,7 @@ owner: immich
 
 cluster:
   instances: 3
-  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:17.5-0.4.3
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:17.11-1.1.1
   primaryUpdateMethod: switchover
   storage:
     size: 20Gi
