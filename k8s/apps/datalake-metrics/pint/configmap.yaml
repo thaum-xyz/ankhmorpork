@@ -149,21 +149,36 @@ data:
       disable = ["promql/series"]
     }
 
-    # Pyrra ratio SLOs that have had no errors yet. sum(rate(...{code=~"5.."}))
+    # Pyrra ratio SLOs with no errors to count. sum(rate(...{code=~"5.."}))
     # over an empty selector returns no series rather than zero, so the
     # numerator is empty, the division is empty, and the burnrate record records
     # nothing. Each clears itself the first time the thing it measures fails.
     # SLOMetricAbsent already covers the input metric disappearing.
     #
+    # "No errors" is a state an SLO returns to, not only one it starts in. An
+    # error series belongs to the process that counted the error, so a restart
+    # takes it away until the next one. The coredns pods on 2026-11-11 lost
+    # rcode="SERVFAIL" as each node rebooted and had not answered one since
+    # four hours later; the third apiserver to restart that week took the last
+    # 5xx on a write with it.
+    #
     # `burnrate.+`, not the one window pint happened to name. Pyrra generates
-    # seven windows per SLO -- 5m, 30m, 1h, 2h, 6h, 1d, 4d for these three --
-    # all with the same empty numerator, so they are duplicates of each other
-    # and pint shows one. Matching that one just promotes the next window.
-    # apiserver_request:burnrate.+ is deliberately absent: the read SLO does
-    # produce series, so a break there should still be reported.
+    # seven windows per SLO -- 5m, 30m, 1h, 2h, 6h, 1d, 4d for these -- all
+    # with the same empty numerator, so they are duplicates of each other and
+    # pint shows one. Matching that one just promotes the next window.
+    #
+    # The alert goes with its records: it selects what they record, so it is
+    # empty whenever they are. CoreDNSBudgetBurn and
+    # PrometheusSDKubernetesBudgetBurn were reported for exactly that.
+    #
+    # apiserver_request:burnrate.+ is two SLOs under one record name, reads
+    # and writes, and pint's config can only match the name. It was left off
+    # this list so that a break in the read SLO would still be reported, and
+    # that is not lost: KubeAPIServerReadErrorBudgetBurn is not listed, selects
+    # the read records, and is reported if they go empty.
     rule {
       match {
-        name = "KubeAPIServerWriteErrorBudgetBurn|prometheus_http_requests:burnrate.+|prometheus_operator_kubernetes_client_http_requests:burnrate.+|prometheus_sd_kubernetes_http_request:burnrate.+"
+        name = "CoreDNSBudgetBurn|KubeAPIServerWriteErrorBudgetBurn|PrometheusSDKubernetesBudgetBurn|apiserver_request:burnrate.+|coredns_dns_responses:burnrate.+|prometheus_http_requests:burnrate.+|prometheus_operator_kubernetes_client_http_requests:burnrate.+|prometheus_sd_kubernetes_http_request:burnrate.+"
       }
       disable = ["promql/series"]
     }
