@@ -1,3 +1,26 @@
+# Two, on different nodes. The CloudNativePG operator calls this plugin on every
+# reconcile of a Cluster that uses it, and stops reconciling while it cannot --
+# so a drain that evicts the only replica also stalls the switchovers that drain
+# is waiting for. On 2026-10-12 that left three databases with no primary for 92
+# seconds instead of about ten.
+#
+# Needs plugin v0.16.0 or later: before it, only the leader served gRPC and a
+# second replica never listened. The chart keeps `strategy: Recreate`, so this
+# covers losing a Pod or a node, not a chart upgrade, which still stops both.
+replicaCount: 2
+
+# DoNotSchedule, because two replicas on one node are no better than one. The
+# cordoned node still counts as a domain, so the evicted replica lands on a
+# third node rather than waiting for the drained one to come back.
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: kubernetes.io/hostname
+  whenUnsatisfiable: DoNotSchedule
+  labelSelector:
+    matchLabels:
+      app.kubernetes.io/name: plugin-barman-cloud
+      app.kubernetes.io/instance: barman
+
 resources:
   requests:
     cpu: 10m
