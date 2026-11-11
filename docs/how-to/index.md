@@ -31,6 +31,8 @@ own directory — see [Runbooks](#runbooks).
 - [Roll a workload when its ConfigMap changes](reload-on-configmap-change.md)
 - [Silence alerts for maintenance](silence-alerts-for-maintenance.md) — and the
   one matcher that must never match
+- [Drain and reboot a node by hand](drain-and-reboot-a-node.md) — outside
+  kured's cycle, one node at a time
 
 ## Runbooks
 

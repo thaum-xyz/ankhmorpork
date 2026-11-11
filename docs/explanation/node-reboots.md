@@ -142,6 +142,8 @@ primaries onto nodes that are about to go down — is worse.
 
 ## Related
 
+- [Drain and reboot a node by hand](../how-to/drain-and-reboot-a-node.md) — the
+  same sequence without kured
 - [How Flux is layered](flux-layering.md) — reconciling these components in the
   wrong order reports success while using stale values
 - [Annotations and labels](../reference/annotations.md) — the taint's contract
