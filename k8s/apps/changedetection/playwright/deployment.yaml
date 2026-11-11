@@ -19,7 +19,7 @@ spec:
         # Upstream publishes no moving semver tag -- :latest is ahead of the
         # newest release tag -- so pin the digest to keep restarts reproducible
         # and give Renovate something to bump.
-        image: dgtlmoon/sockpuppetbrowser:latest@sha256:1d8f72d2ce2085faed4232e5ae1e65c02efe5b831a18e127829b267c260b4fb2
+        image: dgtlmoon/sockpuppetbrowser:latest@sha256:55b602098351ae41818be91c3eef27368311aefff6df9fa00e387ec8d0495a38
         ports:
           - containerPort: 3000
         env:
