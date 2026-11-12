@@ -81,7 +81,7 @@ xfs, and carry the same DRBD tuning. They differ only in where the Pod may run:
 | Pod may schedule on | the 2 replica holders | any linstor node |
 | Performance, steady state | identical | identical |
 | Landing on a node with no replica | cannot happen | **degraded** until LINSTOR replicates to it |
-| `auto-diskful` delay | — | **5 minutes**, then a local replica, surplus dropped |
+| `auto-diskful` delay | — | **5 minutes**, then a local replica; the old ones are kept, so a volume that has moved holds 3 |
 | Max PVC size | unbounded | **32 GiB**, denied above |
 
 How the "Pod may schedule on" row is enforced differs, and the difference bites.

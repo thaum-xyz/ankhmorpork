@@ -104,8 +104,9 @@ on in both *arrs, or `/downloads` grows without bound.
 `piraeus-r2-roaming`: two DRBD replicas, but the Pod is not pinned to them. It
 may schedule onto any satellite node and attach diskless, and
 `DrbdOptions/auto-diskful: 5` promotes an attachment that has been Primary for
-five minutes into a local replica while the controller drops the surplus one, so
-the data follows the Pod.
+five minutes into a local replica, so the data follows the Pod. The controller
+keeps the old replica too: see `properties` in
+`k8s/platform/storage/piraeus-datastore/cluster/values.yaml`.
 
 I/O is remote until that conversion completes, which is why the class is capped
 at 32Gi by the `validate-roaming-volume-size` policy. Every volume here is 2Gi.
