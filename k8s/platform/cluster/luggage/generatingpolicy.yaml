@@ -13,8 +13,9 @@ spec:
   #   labels:
   #     luggage.thaum.xyz/carry: "true"
   #
-  # Removing the label does not touch the workloads, so their DaemonSets stay
-  # until one of them is next updated; delete them by hand to stop sooner.
+  # A new label takes effect at the background controller's hourly scan, which
+  # re-runs generateExisting. Removing it does not touch the workloads, so their
+  # DaemonSets stay until one of them is next updated; delete them by hand.
   evaluation:
     generateExisting:
       enabled: true

@@ -172,8 +172,10 @@ tolerations, and follows the workload when its images change. Workloads with
 `imagePullSecrets` are skipped: the secret cannot follow them to
 `platform-cluster`.
 
-Removing the label does not touch the workloads, so their DaemonSets stay until
-one of them is next updated. Delete them by hand to stop sooner.
+Labelling a namespace does not touch its workloads either, so their DaemonSets
+appear at Kyverno's next background scan (hourly) or when a workload next
+changes. Removing the label does not touch the workloads, so their DaemonSets
+stay until one of them is next updated. Delete them by hand to stop sooner.
 
 ### `thaum.xyz/kured-node-reboot`
 

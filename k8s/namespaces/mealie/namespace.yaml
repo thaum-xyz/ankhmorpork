@@ -7,4 +7,5 @@ metadata:
   labels:
     flux.rbac.thaum.xyz/role: cluster-admin
     group.rbac.thaum.xyz/appadmin: edit
+    luggage.thaum.xyz/carry: "true"
     pod-security.kubernetes.io/enforce: baseline
