@@ -14,6 +14,7 @@ schedule against objects that already exist.
 | [`cleanup-cnpg-backups`](#cleanup-cnpg-backups) | `backups` | **Delete on schedule `17 3 * * *`** | `platform-storage` |
 | [`generate-flux-reconciler`](#generate-flux-reconciler) | `namespaces` | **Generate** | `platform-security` |
 | [`generate-group-rolebindings`](#generate-group-rolebindings) | `namespaces` | **Generate** | `platform-security` |
+| [`generate-luggage`](#generate-luggage) | `deployments`, `statefulsets` | **Generate** | `platform-cluster` |
 | [`mutate-configmap-autoreload`](#mutate-configmap-autoreload) | `deployments`, `statefulsets` | **Mutate** | `platform-security` |
 | [`mutate-nfs-pvc-alert-exclusion`](#mutate-nfs-pvc-alert-exclusion) | `persistentvolumeclaims` | **Mutate** | `platform-storage` |
 | [`require-resource-requests`](#require-resource-requests) | `pods` | **Warn** | `platform-security` |
@@ -65,6 +66,18 @@ Deletes only objects matching all of:
 | **Only when** | `object.metadata.?labels.orValue({}).exists(k, k.startsWith("group.rbac.thaum.xyz/"))` |
 | **Shipped by** | `platform-security` |
 | **Source** | [`k8s/platform/security/kyverno/policies/generate-group-rolebindings.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/security/kyverno/policies/generate-group-rolebindings.yaml) |
+
+## `generate-luggage`
+
+| | |
+| --- | --- |
+| **Kind** | `GeneratingPolicy` |
+| **Applies to** | `deployments`, `statefulsets` |
+| **On** | `CREATE`, `UPDATE` |
+| **Effect** | **Generate** |
+| **Only when** | `object.spec.?replicas.orValue(1) == 1`<br>`object.spec.template.spec.?imagePullSecrets.orValue([]).size() == 0` |
+| **Shipped by** | `platform-cluster` |
+| **Source** | [`k8s/platform/cluster/luggage/generatingpolicy.yaml`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/platform/cluster/luggage/generatingpolicy.yaml) |
 
 ## `mutate-configmap-autoreload`
 

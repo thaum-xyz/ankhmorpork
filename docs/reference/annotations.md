@@ -155,6 +155,26 @@ Prefer what the app's own readiness probe uses. Good examples in tree:
 Omitting the annotation is not a way to opt out — the relabeling then builds the
 bare host, silently. Remove the label instead.
 
+### `luggage.thaum.xyz/carry`
+
+| | |
+| --- | --- |
+| **Type** | Label |
+| **Set on** | `Namespace` |
+| **Value** | `"true"` — the only value the selector matches |
+| **Read by** | `generate-luggage` (Kyverno `GeneratingPolicy`, `k8s/platform/cluster/luggage/`) |
+| **Effect** | Each single-replica Deployment and StatefulSet there gets a DaemonSet `luggage-<namespace>-<name>` in `platform-cluster` that keeps its images pulled on every node it may run on |
+
+The DaemonSet runs a pause container that mounts each image as a read-only
+image volume, so nothing in the image executes and kubelet's garbage collection
+treats it as in use. It copies the workload's `nodeSelector`, node affinity and
+tolerations, and follows the workload when its images change. Workloads with
+`imagePullSecrets` are skipped: the secret cannot follow them to
+`platform-cluster`.
+
+Removing the label does not touch the workloads, so their DaemonSets stay until
+one of them is next updated. Delete them by hand to stop sooner.
+
 ### `thaum.xyz/kured-node-reboot`
 
 | | |
