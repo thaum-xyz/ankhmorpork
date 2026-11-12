@@ -189,16 +189,6 @@ data:
         target_matchers:
         - "alertname =~ KubePodNotReady|KubeDeploymentReplicasMismatch|KubeStatefulSetReplicasMismatch|TargetDown|FluxCDReconciliationFailure"
         equal: ['cluster']
-      # A single-replica app is down from eviction until its replacement is ready
-      # elsewhere: 1.5 to 3.5 minutes on 2026-11-12, mostly a cold image pull.
-      # The 15m burn tier fires on 2.1 minutes of failed probes; the 1h30m tier
-      # needs 6.3 and is not held back, so a longer outage still pages.
-      - source_matchers:
-        - "alertname = NodeMaintenance"
-        target_matchers:
-        - "alertname =~ .+ProbeBudgetBurn"
-        - "long = 15m"
-        equal: ['cluster']
       # And a pod that cannot start is the reason its workload is short replicas,
       # so report the cause rather than both.
       - source_matchers:
