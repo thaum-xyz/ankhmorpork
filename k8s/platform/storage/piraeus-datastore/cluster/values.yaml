@@ -43,6 +43,14 @@ linstorCluster:
 
   maxConcurrentEvacuations: 1
 
+  # Controller-wide, but only auto-diskful resources (piraeus-r2-roaming) ever
+  # clean up. A replica detached live stops counting as a quorum tiebreaker until
+  # it reconnects: on 2026-11-12 that suspended I/O on 8 volumes when the next
+  # node rebooted (#1548). Keeping it costs a third copy of a volume that moved.
+  properties:
+    - name: DrbdOptions/auto-diskful-allow-cleanup
+      value: "false"
+
   controller:
     enabled: true
   csiController:
@@ -303,7 +311,8 @@ storageClasses:
       property.linstor.csi.linbit.com/DrbdOptions/Net/max-buffers: "8000"
   # Same two replicas, but Pods are not pinned to them: a Pod may schedule onto
   # any satellite node and attach diskless, and auto-diskful then converts that
-  # attachment into a local replica and drops the surplus one. I/O is remote
+  # attachment into a local replica, keeping the old one (see `properties`
+  # above), so a volume that has moved holds three. I/O is remote
   # until the conversion completes, hence the size cap enforced by the
   # validate-roaming-volume-size policy.
   - name: piraeus-r2-roaming
