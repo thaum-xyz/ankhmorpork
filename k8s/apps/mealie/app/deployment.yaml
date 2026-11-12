@@ -4,6 +4,7 @@ metadata:
   name: mealie
   labels:
     app.kubernetes.io/name: mealie
+    luggage.thaum.xyz/carry: "true"
 spec:
   # data is ReadWriteOnce since it moved to piraeus, which offers no RWX. A
   # rolling update would start the replacement before the old Pod releases the

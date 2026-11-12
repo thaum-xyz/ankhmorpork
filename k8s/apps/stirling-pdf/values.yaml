@@ -47,6 +47,9 @@ service:
   targetPort: oauth2
 
 deployment:
+  # The Deployment's own labels: luggage keeps its images on every node.
+  labels:
+    luggage.thaum.xyz/carry: "true"
   sidecarContainers:
     oauth2:
       image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.6

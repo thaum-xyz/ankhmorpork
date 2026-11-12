@@ -160,10 +160,10 @@ bare host, silently. Remove the label instead.
 | | |
 | --- | --- |
 | **Type** | Label |
-| **Set on** | `Namespace` |
-| **Value** | `"true"` — the only value the selector matches |
+| **Set on** | `Deployment`, `StatefulSet` — the object's **own** `metadata`, not the Pod template |
+| **Value** | `"true"` — the only value matched |
 | **Read by** | `generate-luggage` (Kyverno `GeneratingPolicy`, `k8s/platform/cluster/luggage/`) |
-| **Effect** | Each single-replica Deployment and StatefulSet there gets a DaemonSet `luggage-<namespace>-<name>` in `platform-cluster` that keeps its images pulled on every node it may run on |
+| **Effect** | A DaemonSet `luggage-<namespace>-<name>` in `platform-cluster` keeps every image of the workload's Pod pulled on every node the workload may run on |
 
 The DaemonSet runs a pause container that mounts each image as a read-only
 image volume, so nothing in the image executes and kubelet's garbage collection
@@ -172,10 +172,11 @@ tolerations, and follows the workload when its images change. Workloads with
 `imagePullSecrets` are skipped: the secret cannot follow them to
 `platform-cluster`.
 
-Labelling a namespace does not touch its workloads either, so their DaemonSets
-appear at Kyverno's next background scan (hourly) or when a workload next
-changes. Removing the label does not touch the workloads, so their DaemonSets
-stay until one of them is next updated. Delete them by hand to stop sooner.
+Every node then holds every carried image, at several times its compressed
+size. Carry only workloads whose cold pull is what keeps them down after a
+drain; opting in whole namespaces put `master01` under DiskPressure on
+2026-11-12. A new label takes effect when the workload next changes or at
+Kyverno's hourly background scan.
 
 ### `thaum.xyz/kured-node-reboot`
 
