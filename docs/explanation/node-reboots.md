@@ -142,6 +142,13 @@ the replacement is ready on another node, a few minutes when the image has to
 be pulled there first. That is enough for the fastest probe burn tier and not
 for the next one, so only the fastest is held back.
 
+The pull is the part that can go. A version bump leaves the new image only on
+the node the app ran on, and a drain takes exactly that node away, so the first
+reschedule after each bump pulls from the internet. A namespace labelled
+[`luggage.thaum.xyz/carry`](../reference/annotations.md) has its single-replica
+apps' images kept on every node they may run on, and the outage shrinks to
+volume attach and startup.
+
 That is cluster-wide, because none of those alerts names the node it is about.
 A Pod failing on another node during a reboot is reported when the reboot is
 over, not when it starts failing. And it is bounded: a node cordoned for most of

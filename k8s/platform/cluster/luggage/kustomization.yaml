@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# The GeneratingPolicy is cluster-scoped; kustomize stamps the namespace on it
+# anyway and the API server ignores it.
+namespace: platform-cluster
+resources:
+  - role.yaml
+  - rolebinding.yaml
+  - generatingpolicy.yaml
