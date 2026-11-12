@@ -137,23 +137,22 @@ scrape target or the Kustomization waiting on it. `NodeMaintenance` is up while
 a node is cordoned and for ten minutes after, and Alertmanager holds those
 alerts back while it is.
 
-The same goes for an app with one replica: its probe fails from eviction until
-the replacement is ready on another node, a few minutes when the image has to
-be pulled there first. That is enough for the fastest probe burn tier and not
-for the next one, so only the fastest is held back.
-
-The pull is the part that can go. A version bump leaves the new image only on
-the node the app ran on, and a drain takes exactly that node away, so the first
-reschedule after each bump pulls from the internet. A namespace labelled
-[`luggage.thaum.xyz/carry`](../reference/annotations.md) has its single-replica
-apps' images kept on every node they may run on, and the outage shrinks to
-volume attach and startup.
-
 That is cluster-wide, because none of those alerts names the node it is about.
 A Pod failing on another node during a reboot is reported when the reboot is
 over, not when it starts failing. And it is bounded: a node cordoned for most of
 an hour is no longer being rebooted, `NodeMaintenance` ends, and whatever the
 cordon broke is sent.
+
+Probe burn alerts are not on that list. An app with one replica is unreachable
+from eviction until its replacement is ready on another node, and the fastest
+burn tier fires after about two minutes of that. What used to fill those
+minutes was the image pull: a version bump leaves the new image only on the
+node the app ran on, and a drain takes exactly that node away. A namespace
+labelled [`luggage.thaum.xyz/carry`](../reference/annotations.md) has its
+single-replica apps' images kept on every node they may run on, so the outage
+is volume attach and startup — 30 seconds to two minutes when `beelink01` was
+drained on 2026-11-12. An app that takes longer than the burn tier allows is slow to
+reschedule, and the alert says so.
 
 ## What this does not solve
 
