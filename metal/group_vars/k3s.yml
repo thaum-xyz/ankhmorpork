@@ -22,17 +22,12 @@ k3s_oidc_client_id: "f26be0a0-edc4-4e7e-b3ca-3e3852b3d011"
 k3s_etcd_s3_access_key: "{{ lookup('env', 'S3_ACCESS_KEY') }}"
 k3s_etcd_s3_secret_key: "{{ lookup('env', 'S3_SECRET_KEY') }}"
 
-#k3s_registries:
-#  mirrors:
-#    docker.io:
-#      endpoint:
-#        - "http://192.168.2.96:5000"
-#    ghcr.io:
-#      endpoint:
-#        - "http://192.168.2.96:5001"
-#    quay.io:
-#      endpoint:
-#        - "http://192.168.2.96:5002"
+# Every registry is served from peers first (k3s embedded registry, Spegel),
+# then upstream. Written on every node, agents included: a node without this
+# file neither pulls from peers nor shares its own images.
+k3s_registries:
+  mirrors:
+    "*":
 
 k3s_server_config:
   disable:
@@ -49,7 +44,9 @@ k3s_server_config:
   kube-scheduler-arg:
   - "bind-address=0.0.0.0"
   etcd-expose-metrics: "true"
-  #embedded-registry: "true" #TODO: check how it works with k8sServicePort: 6443 in cilium
+  # Servers only; it switches the mirror on for agents too. Needs TCP 5001 and
+  # 6443 between all nodes. Cilium reaches the apiserver on 127.0.0.1:6444.
+  embedded-registry: "true"
   tls-san:
   - "{{ k3s_master_ip }}"
 
