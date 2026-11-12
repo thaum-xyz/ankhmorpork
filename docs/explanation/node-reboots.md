@@ -137,6 +137,11 @@ scrape target or the Kustomization waiting on it. `NodeMaintenance` is up while
 a node is cordoned and for ten minutes after, and Alertmanager holds those
 alerts back while it is.
 
+The same goes for an app with one replica: its probe fails from eviction until
+the replacement is ready on another node, a few minutes when the image has to
+be pulled there first. That is enough for the fastest probe burn tier and not
+for the next one, so only the fastest is held back.
+
 That is cluster-wide, because none of those alerts names the node it is about.
 A Pod failing on another node during a reboot is reported when the reboot is
 over, not when it starts failing. And it is bounded: a node cordoned for most of
