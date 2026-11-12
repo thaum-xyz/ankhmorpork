@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: linstor-gui
+  # piraeus-server bundles the linstor-gui package; the controller serves it at /ui/.
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns01
 spec:
@@ -14,9 +15,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: linstor-gui
+                name: linstor-controller
                 port:
-                  name: http
+                  name: api
   tls:
     - hosts:
         - piraeus.ankhmorpork.thaum.xyz
