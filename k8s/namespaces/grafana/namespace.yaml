@@ -6,4 +6,5 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
     flux.rbac.thaum.xyz/role: cluster-admin
+    luggage.thaum.xyz/carry: "true"
     pod-security.kubernetes.io/enforce: baseline
