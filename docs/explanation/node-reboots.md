@@ -145,14 +145,13 @@ cordon broke is sent.
 
 Probe burn alerts are not on that list. An app with one replica is unreachable
 from eviction until its replacement is ready on another node, and the fastest
-burn tier fires after about two minutes of that. What used to fill those
-minutes was the image pull: a version bump leaves the new image only on the
-node the app ran on, and a drain takes exactly that node away. A namespace
-labelled [`luggage.thaum.xyz/carry`](../reference/annotations.md) has its
-single-replica apps' images kept on every node they may run on, so the outage
-is volume attach and startup — 30 seconds to two minutes when `beelink01` was
-drained on 2026-11-12. An app that takes longer than the burn tier allows is slow to
-reschedule, and the alert says so.
+burn tier fires after about two minutes of that. With its image already on the
+new node that took 30 seconds to two minutes when `beelink01` was drained on
+2026-11-12. The first reschedule after a version bump is longer: the new image
+is only on the node the app ran on, which the drain has just taken away, so it
+is pulled from the internet first, and that can page. A workload labelled
+[`luggage.thaum.xyz/carry`](../reference/annotations.md) has its images kept on
+every node it may run on, so it skips that pull.
 
 ## What this does not solve
 
