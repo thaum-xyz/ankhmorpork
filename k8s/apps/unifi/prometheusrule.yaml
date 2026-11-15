@@ -13,10 +13,10 @@ spec:
         # 100% through both outages, so the monitor percentages are no use here.
         # keep_firing_for covers what is still failing after the line returns;
         # Alertmanager holds those back while this fires.
-        - alert: WANDown
+        - alert: UnifiWANDown
           annotations:
             description: Gateway {{ $labels.name }} reports its primary WAN offline. Nothing outside this site can reach the cluster, and nothing in it can reach the internet.
-            runbook_url: https://docs.thaum.xyz/how-to/runbooks/WANDown/
+            runbook_url: https://docs.thaum.xyz/how-to/runbooks/UnifiWANDown/
             summary: Internet uplink is down
           expr: max by (name) (unpoller_device_wan_status{wan_networkgroup="WAN"}) == 0
           for: 1m
