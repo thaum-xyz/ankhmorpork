@@ -36,7 +36,7 @@
 #
 # assign_scores_to is load-bearing. Omitted, a custom format group scores "all
 # guide-backed profiles" only -- which is why Any previously had all 59 formats
-# sitting at score 0, so the [Unwanted] group (LQ, BR-DISK, x265 (HD), Bad Dual
+# sitting at score 0, so the [Unwanted] group (LQ, BR-DISK, AV1, Bad Dual
 # Groups) was synced but blocked nothing on the profile holding most of the
 # library. User-defined profiles have to be named explicitly.
 sonarr:
@@ -85,12 +85,6 @@ sonarr:
 
     custom_format_groups:
       add:
-        - trash_id: 158188097a58d7687dee647e04af0da3 # [Optional] Golden Rule HD
-          assign_scores_to:
-            - name: Any
-        - trash_id: e3f37512790f00d0e89e54fe5e790d1c # [Optional] Golden Rule UHD
-          assign_scores_to:
-            - name: Ultra
         - trash_id: 74aff4168620ed49dcc67e92b2c2a5b4 # [Optional] Language Profiles
           assign_scores_to:
             - name: Any
@@ -103,6 +97,26 @@ sonarr:
           assign_scores_to:
             - name: Any
             - name: Ultra
+
+    # x265 below 2160p is preferred over H.264 to save space: 100 outranks the
+    # streaming boosts and stays far from the -10000 of [Unwanted].
+    custom_formats:
+      - trash_ids:
+          - 47435ece6b99a0b477caf360e79ba0bb # x265 (HD)
+        assign_scores_to:
+          - name: Any
+            score: 100
+          - name: Ultra
+            score: 100
+      # Overlaps x265 (HD); pinned to 0 so the Golden Rule's -10000 does not
+      # linger in the profile.
+      - trash_ids:
+          - 9b64dff695c2115facf1b6ea59c9bd07 # x265 (no HDR/DV)
+        assign_scores_to:
+          - name: Any
+            score: 0
+          - name: Ultra
+            score: 0
 
 radarr:
   movies:
@@ -146,13 +160,24 @@ radarr:
 
     custom_format_groups:
       add:
-        - trash_id: f8bf8eab4617f12dfdbd16303d8da245 # [Optional] Golden Rule HD
-          assign_scores_to:
-            - name: Any
-        - trash_id: ff204bbcecdd487d1cefcefdbf0c278d # [Optional] Golden Rule UHD
-          assign_scores_to:
-            - name: Ultra
         - trash_id: a3ac6af01d78e4f21fcb75f601ac96df # [Unwanted] Unwanted Formats
           assign_scores_to:
             - name: Any
             - name: Ultra
+
+    # x265 below 2160p is preferred; see the sonarr block.
+    custom_formats:
+      - trash_ids:
+          - dc98083864ea246d05a42df0d05f81cc # x265 (HD)
+        assign_scores_to:
+          - name: Any
+            score: 100
+          - name: Ultra
+            score: 100
+      - trash_ids:
+          - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (no HDR/DV)
+        assign_scores_to:
+          - name: Any
+            score: 0
+          - name: Ultra
+            score: 0
