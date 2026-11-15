@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: homeassistant
+spec:
+  metricsPath: /api/prometheus
+  scrapeInterval: 150s
+  honorTimestamps: true
+  authorization:
+    credentials:
+      name: homeassistant-token
+      key: token
+  staticConfigs:
+    - targets:
+        - 192.168.20.4:8123
+      labels:
+        cluster: lancre
+        namespace: lancre

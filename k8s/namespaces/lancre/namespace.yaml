@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lancre
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+  labels:
+    flux.rbac.thaum.xyz/role: cluster-admin
+    # Scrape configuration only; no Pod runs here.
+    pod-security.kubernetes.io/enforce: restricted
