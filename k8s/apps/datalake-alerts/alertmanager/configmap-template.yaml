@@ -196,6 +196,13 @@ data:
         target_matchers:
         - "alertname =~ KubeDeploymentReplicasMismatch|KubeStatefulSetReplicasMismatch|KubeDeploymentRolloutStuck|KubeDaemonSetRolloutStuck"
         equal: ['namespace']
+      # Without an uplink Flux cannot fetch, sonarr loses its indexers and
+      # UptimeRobot sees nothing; on 2026-11-14 that queued 26 issues behind one
+      # outage.
+      - source_matchers:
+        - "alertname = WANDown"
+        target_matchers:
+        - "alertname =~ SiteExternallyDown|FluxCDReconciliationFailure|sonarrUnhealthy"
       - source_matchers:
         - "alertname = InfoInhibitor"
         target_matchers:

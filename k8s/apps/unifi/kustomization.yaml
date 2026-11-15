@@ -6,3 +6,4 @@ resources:
   - configuration.yaml
   - deployment.yaml
   - podmonitor.yaml
+  - prometheusrule.yaml

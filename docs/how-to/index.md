@@ -63,6 +63,8 @@ behind it, and warns about a runbook no alert links to.
   Kustomization, HelmRelease or source has stopped reconciling
 - [KuredRebootRequired](runbooks/KuredRebootRequired.md) — a node has wanted a
   reboot for over a week and kured has not managed one
+- [WANDown](runbooks/WANDown.md) — the site's internet uplink is down, so
+  nothing reaches the cluster from outside and nothing leaves it
 
 ## Not written yet
 

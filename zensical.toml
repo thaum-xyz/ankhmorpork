@@ -53,6 +53,7 @@ nav = [
       { "drbdResourceWithNoUpToDateReplicas" = "how-to/runbooks/drbdResourceWithNoUpToDateReplicas.md" },
       { "FluxCDReconciliationFailure" = "how-to/runbooks/FluxCDReconciliationFailure.md" },
       { "KuredRebootRequired" = "how-to/runbooks/KuredRebootRequired.md" },
+      { "WANDown" = "how-to/runbooks/WANDown.md" },
     ] },
   ] },
   { "Reference" = [

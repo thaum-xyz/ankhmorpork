@@ -11,12 +11,18 @@ spec:
       rules:
         - expr: (uptimerobot_monitor_status == 2)/2 OR clamp(uptimerobot_monitor_status,0,0)
           record: uptimerobot_monitor_normalized_status
+        # Only the outside path: a cluster host whose own probe also fails is
+        # already its probe SLO's alert. Joined on host because this Probe cuts
+        # instance to the host root while blackbox keeps the probe path.
         - alert: SiteExternallyDown
           annotations:
             description: Synthetic monitoring reports site {{ $labels.instance }} not to be up for 10m.
             runbook_url: https://runbooks.thaum.xyz/runbooks/thaum-xyz/SiteExternallyDown
             summary: Site is not available from external network
-          expr: uptimerobot_monitor_status == 9
+          expr: |
+            label_replace(uptimerobot_monitor_status == 9, "host", "$1", "instance", "https://([^/]+).*")
+            unless on (host)
+            label_replace(probe_success{cluster="ankhmorpork"} == 0, "host", "$1", "instance", "https://([^/]+).*")
           for: 10m
           labels:
             severity: warning
