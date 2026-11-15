@@ -200,7 +200,7 @@ data:
       # UptimeRobot sees nothing; on 2026-11-14 that queued 26 issues behind one
       # outage.
       - source_matchers:
-        - "alertname = WANDown"
+        - "alertname = UnifiWANDown"
         target_matchers:
         - "alertname =~ SiteExternallyDown|FluxCDReconciliationFailure|sonarrUnhealthy"
       - source_matchers:
