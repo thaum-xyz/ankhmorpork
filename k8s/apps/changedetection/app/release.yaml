@@ -13,6 +13,7 @@ spec:
         name: alekc-charts
       interval: 5m
   interval: 5m
+  maxHistory: 2
   timeout: 2m
   install:
     timeout: 10m

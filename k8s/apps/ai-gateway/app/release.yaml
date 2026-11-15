@@ -12,6 +12,7 @@ spec:
       version: "1.109.1"
       interval: 30m
   interval: 5m
+  maxHistory: 2
   timeout: 15m
   install:
     remediation:

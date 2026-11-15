@@ -12,6 +12,7 @@ spec:
         name: prometheus-community
       interval: 5m
   interval: 5m
+  maxHistory: 2
   install:
     remediation:
       retries: 3

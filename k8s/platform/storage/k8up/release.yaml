@@ -12,6 +12,7 @@ spec:
         name: k8up
       interval: 5m
   interval: 5m
+  maxHistory: 2
   install:
     # The chart ships the nine k8up.io CRDs under charts/k8up/crds/.
     crds: CreateReplace

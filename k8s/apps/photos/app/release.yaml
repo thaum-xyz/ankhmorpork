@@ -13,6 +13,7 @@ spec:
         name: immich
       interval: 5m
   interval: 5m
+  maxHistory: 2
   timeout: 10m
   install:
     timeout: 10m

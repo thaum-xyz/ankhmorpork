@@ -13,6 +13,7 @@ spec:
         name: thaum-charts
       interval: 5m
   interval: 5m
+  maxHistory: 2
   timeout: 10m
   install:
     # No remediation: an uninstall deletes the Cluster and its PVCs.
