@@ -20,15 +20,14 @@ happen to run here rather than in `platform` as this cluster's own machinery.
 
 Collectors are the opposite. `alloy` runs on every node *of this cluster* and
 scrapes *this cluster*; it belongs to ankhmorpork the way the CNI does. A second
-cluster — [uberwald][u] — would bring its own collectors, and they would be that
-cluster's platform layer, not this one's.
+cluster would bring its own collectors, and they would be that cluster's
+platform layer, not this one's.
 
 [lancre][l] is not a cluster but a few hosts on a VLAN this one can route to, so
 it has no collector: the store scrapes its exporters directly, through the
 `ScrapeConfig` objects in `k8s/apps/lancre`.
 
 [l]: https://github.com/thaum-xyz/lancre
-[u]: https://github.com/thaum-xyz/uberwald
 
 So the seam is not aesthetic. It is the line along which the other sources attach:
 their collectors *there*, pointing at the same stores *here*, with nothing in the
