@@ -23,3 +23,12 @@ spec:
           keep_firing_for: 30m
           labels:
             severity: warning
+        # A record of when the LTE backup carries traffic. info routes to the
+        # null receiver, so it shows in Alertmanager and ALERTS, never as an issue.
+        - alert: UnifiLTEFailoverActive
+          annotations:
+            description: LTE device {{ $labels.name }} is carrying this site's internet traffic because the primary WAN is down.
+            summary: Internet runs over the LTE backup
+          expr: max by (name) (unpoller_device_lte_failover) == 1
+          labels:
+            severity: info
