@@ -63,4 +63,5 @@ goes into a free quarter hour here, before the 01:30 UTC deadline.
 | [00:17](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/prowlarrdb/values.yaml) | `vod-arr` | CloudNativePG `postgres-prowlarr` | — | — | 7d |
 | [00:27](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/seerrdb/values.yaml) | `vod-arr` | CloudNativePG `postgres-seerr` | — | — | 7d |
 | [00:37](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/bazarrdb/values.yaml) | `vod-arr` | CloudNativePG `postgres-bazarr` | — | — | 7d |
+| [00:47](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/lancre/postgres/values.yaml) | `lancre` | CloudNativePG `postgres` | — | — | 14d |
 <!-- /generated:backup-timetable -->

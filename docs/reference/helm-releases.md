@@ -12,7 +12,7 @@ and why the interval matters, see
 | | |
 | --- | --- |
 | **Intervals in use** | `5m` |
-| **Charts used more than once** | `cnpg-database` ×13, `versitygw` ×2, `traefik` ×2 |
+| **Charts used more than once** | `cnpg-database` ×14, `versitygw` ×2, `traefik` ×2 |
 
 | Release | Namespace | Chart | Source | Interval | Values from | Component |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -26,6 +26,7 @@ and why the interval matters, see
 | [`grafana`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/grafana/grafana/release.yaml) | `grafana` | `grafana` | `https://grafana-community.github.io/helm-charts` | `5m` | ConfigMap `values-grafana` | `grafana` |
 | [`postgres`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/grafana/postgres/release.yaml) | `grafana` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres` | `grafana` |
 | [`homer-operator`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/homer/app/release.yaml) | `homer` | `homer-operator` | `oci://ghcr.io/rajsinghtech/homer-operator/charts` | `5m` | ConfigMap `values-homer-operator` | `homer` |
+| [`postgres`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/lancre/postgres/release.yaml) | `lancre` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres` | `lancre` |
 | [`postgres`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/mealie/db/release.yaml) | `mealie` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres` | `mealie` |
 | [`postgres`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/mended-drum/db/release.yaml) | `mended-drum` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres` | `mended-drum` |
 | [`postgres`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/paperless/manifests/postgres/release.yaml) | `paperless` | `cnpg-database` | `oci://ghcr.io/thaum-xyz/helm-charts` | `5m` | ConfigMap `values-postgres` | `paperless` |
