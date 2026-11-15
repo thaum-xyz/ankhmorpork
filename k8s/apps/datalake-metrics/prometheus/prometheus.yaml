@@ -77,18 +77,12 @@ spec:
     requests:
       cpu: 500m
       memory: 1800Mi
-  # 33d costs ~74.9GB per replica: measured 1.598 B/sample against 16449
-  # samples/s on 2026-09-03, so 2.27 GB/day. retentionSize sits deliberately
-  # above that, at roughly 35 days' worth, so the 33d time limit is what
-  # actually bounds the window and size is only a guard rail. They were the
-  # wrong way round before -- 35GB is 16.5 days at this rate, so the 33d was
-  # decorative and size would have started evicting around 2026-09-17.
-  #
-  # Re-measure after any large change in series count. #1267 removed 169k
-  # duplicate series and took this from 2.98 to 2.27 GB/day; sizing from the
-  # day before would have overshot by 30%.
-  retention: 33d
-  retentionSize: 75GB
+  # 63d costs ~109GB per replica: 1.15 B/sample at 17.0k samples/s is
+  # 1.7 GB/day (prometheus_tsdb_* on 2026-11-15, lancre jobs included).
+  # retentionSize is a guard rail at ~69 days' worth, so time is what bounds
+  # the window. Re-measure after any large change in series count.
+  retention: 63d
+  retentionSize: 110GB
   ruleNamespaceSelector: {}
   ruleSelector: {}
   scrapeConfigNamespaceSelector: {}
@@ -107,9 +101,9 @@ spec:
           requests:
             # 25% over retentionSize: compaction writes a merged block before
             # dropping its sources, and max block duration is 10% of retention
-            # (~3.3d, ~7.5GB here). Thin-provisioned, so the unused part costs
+            # (6.3d, ~10.7GB here). Thin-provisioned, so the unused part costs
             # nothing until written.
-            storage: 100Gi
+            storage: 140Gi
         storageClassName: lvm-thin
   # Image is derived from version; pinning both is how they drifted apart.
   # renovate: datasource=github-releases depName=prometheus/prometheus extractVersion=^v(?<version>.+)$
