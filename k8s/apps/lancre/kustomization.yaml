@@ -6,7 +6,6 @@ resources:
   - prometheusrule.yaml
   - scrapeconfig-circulation.yaml
   - scrapeconfig-cloudflared.yaml
-  - scrapeconfig-coredns.yaml
   - scrapeconfig-evok.yaml
   - scrapeconfig-homeassistant.yaml
   - scrapeconfig-node-exporter.yaml
