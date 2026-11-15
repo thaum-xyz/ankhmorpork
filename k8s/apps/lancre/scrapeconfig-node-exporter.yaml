@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: node-exporter
+spec:
+  staticConfigs:
+    - targets:
+        - 192.168.20.4:9100
+      labels:
+        cluster: lancre
+        namespace: lancre
+        node: home
+    - targets:
+        - 192.168.20.3:9100
+      labels:
+        cluster: lancre
+        namespace: lancre
+        node: hmi

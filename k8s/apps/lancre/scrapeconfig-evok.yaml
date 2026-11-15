@@ -1,0 +1,48 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: evok
+spec:
+  scrapeInterval: 1s
+  scrapeTimeout: 1s
+  staticConfigs:
+    - targets:
+        - 192.168.20.4:7979
+      labels:
+        cluster: lancre
+        namespace: lancre
+  # Names the 1-wire sensors. evok reports the full 16-character address, so
+  # each pattern ends in `.*`: relabel regexes are anchored at both ends.
+  metricRelabelings:
+    - sourceLabels: [circuit]
+      regex: 28FF89DB060000.*
+      targetLabel: circuit
+      replacement: climate-inside
+    - sourceLabels: [circuit]
+      regex: 287CECBF060000.*
+      targetLabel: circuit
+      replacement: climate-outside
+    - sourceLabels: [circuit]
+      regex: 28FF5AF5021502.*
+      targetLabel: circuit
+      replacement: heater-in
+    - sourceLabels: [circuit]
+      regex: 28FF4D15151501.*
+      targetLabel: circuit
+      replacement: heater-out
+    - sourceLabels: [circuit]
+      regex: 28FF4C30041503.*
+      targetLabel: circuit
+      replacement: tank
+    - sourceLabels: [circuit]
+      regex: 28FF1A18151501.*
+      targetLabel: circuit
+      replacement: solar-in
+    - sourceLabels: [circuit]
+      regex: 28FF0A91711502.*
+      targetLabel: circuit
+      replacement: solar-out
+    - sourceLabels: [circuit]
+      regex: 28FF5555501901.*
+      targetLabel: circuit
+      replacement: sauna

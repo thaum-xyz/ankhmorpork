@@ -26,6 +26,7 @@ keeps a README next to its manifests, the app name links to it.
 | `grafana` | `grafana` | `grafana` | `grafana.krupa.net.pl` (cloudflare)<br>`grafana.krupa.net.pl` (public, *values*) |
 | `homer` | `homer` | `homer`, `homer-services` | `ankhmorpork.thaum.xyz` (cloudflare)<br>`ankhmorpork.thaum.xyz` (public) |
 | `karakeep` | `karakeep` | `karakeep` | `keep.krupa.net.pl` (cloudflare)<br>`keep.krupa.net.pl` (public) |
+| `lancre` | `lancre` | `lancre` | — |
 | `mealie` | `mealie` | `mealie` | `recipes.krupa.net.pl` (cloudflare)<br>`recipes.krupa.net.pl` (public) |
 | `mended-drum` | `mended-drum` | `mended-drum` | `drum-tools.krupa.net.pl` (cloudflare)<br>`drum-tools.krupa.net.pl` (public)<br>`drum.krupa.net.pl` (cloudflare)<br>`drum.krupa.net.pl` (public) |
 | [`paperless`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/paperless/README.md) | `paperless` | `paperless` | `papers.krupa.net.pl` (cloudflare)<br>`papers.krupa.net.pl` (public) |
@@ -38,4 +39,4 @@ keeps a README next to its manifests, the app name links to it.
 | `valheim` | `valheim` | `valheim` | — |
 | [`vod-arr`](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/vod-arr/README.md) | `vod-arr` | `vod-arr` | `bazarr.ankhmorpork.thaum.xyz` (private)<br>`cleanuparr.ankhmorpork.thaum.xyz` (private)<br>`downloader.ankhmorpork.thaum.xyz` (private)<br>`prowlarr.ankhmorpork.thaum.xyz` (private)<br>`radarr.ankhmorpork.thaum.xyz` (private)<br>`seek.krupa.net.pl` (cloudflare)<br>`seek.krupa.net.pl` (public)<br>`sonarr.ankhmorpork.thaum.xyz` (private) |
 
-22 applications.
+23 applications.

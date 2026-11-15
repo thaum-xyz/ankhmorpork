@@ -20,8 +20,12 @@ happen to run here rather than in `platform` as this cluster's own machinery.
 
 Collectors are the opposite. `alloy` runs on every node *of this cluster* and
 scrapes *this cluster*; it belongs to ankhmorpork the way the CNI does. A second
-environment — [lancre][l] or [uberwald][u] — would bring its own collectors, and
-they would be that cluster's platform layer, not this one's.
+cluster — [uberwald][u] — would bring its own collectors, and they would be that
+cluster's platform layer, not this one's.
+
+[lancre][l] is not a cluster but a few hosts on a VLAN this one can route to, so
+it has no collector: the store scrapes its exporters directly, through the
+`ScrapeConfig` objects in `k8s/apps/lancre`.
 
 [l]: https://github.com/thaum-xyz/lancre
 [u]: https://github.com/thaum-xyz/uberwald
