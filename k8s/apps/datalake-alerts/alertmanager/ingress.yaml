@@ -24,8 +24,8 @@ metadata:
     # Ready.
     #
     # Nothing alerts on the result, by decision in #1340: no SLO, because nobody
-    # waits on this console, and SiteDown joins on an UptimeRobot monitor, which
-    # a LAN-only host cannot have. A series to look at, not a page.
+    # waits on this console, and UptimeRobot cannot reach a LAN-only host. A
+    # series to look at, not a page.
     ingress.thaum.xyz/probe: enabled
   name: alertmanager
 spec:

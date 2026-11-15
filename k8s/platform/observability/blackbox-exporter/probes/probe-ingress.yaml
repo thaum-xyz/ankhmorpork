@@ -32,9 +32,9 @@ spec:
             - __param_target
           targetLabel: instance
         # The other two Probes set cluster through staticConfig labels;
-        # ingress discovery has no equivalent, so it is set here. It is what the
-        # two probe SLOs split on: this cluster serves these, and merely watches
-        # everything else. A replace with no sourceLabels concatenates to the
+        # ingress discovery has no equivalent, so it is set here.
+        # SiteExternallyDown uses it to tell this cluster's hosts from the ones
+        # it only watches. A replace with no sourceLabels concatenates to the
         # empty string, which the default (.*) matches, so the label is set
         # unconditionally.
         - action: replace

@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: unifi-poller
+  name: unifi-poller
+spec:
+  groups:
+    - name: unifi.rules
+      rules:
+        # The gateway's own WAN state. Its ICMP monitor to 1.1.1.1 kept reading
+        # 100% through both outages, so the monitor percentages are no use here.
+        # keep_firing_for covers what is still failing after the line returns;
+        # Alertmanager holds those back while this fires.
+        - alert: WANDown
+          annotations:
+            description: Gateway {{ $labels.name }} reports its primary WAN offline. Nothing outside this site can reach the cluster, and nothing in it can reach the internet.
+            runbook_url: https://docs.thaum.xyz/how-to/runbooks/WANDown/
+            summary: Internet uplink is down
+          expr: max by (name) (unpoller_device_wan_status{wan_networkgroup="WAN"}) == 0
+          for: 1m
+          keep_firing_for: 30m
+          labels:
+            severity: warning
