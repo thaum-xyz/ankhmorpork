@@ -1,0 +1,46 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: igor
+spec:
+  groups:
+    - name: igor.rules
+      rules:
+        # igor latches relays and runs the failsafes; while it is down a
+        # relay left on stays on.
+        - alert: IgorDown
+          annotations:
+            description: igor on {{ $labels.instance }} has not answered a scrape for 5 minutes. Relays keep their last state and no failsafe runs until it is back.
+            summary: igor is not running
+          expr: up{job="scrapeConfig/lancre/igor"} == 0
+          for: 5m
+          labels:
+            severity: warning
+        # Only in active mode: in observe igor acts on nothing, and there is
+        # no heartbeat before Home Assistant is pointed at it.
+        - alert: IgorHomeAssistantSilent
+          annotations:
+            description: igor on {{ $labels.instance }} has had no heartbeat from Home Assistant for 10 minutes. The boiler valve and sauna relays are off and refuse to switch on; the other relays hold.
+            summary: Home Assistant is silent towards igor
+          expr: igor_ha_silent == 1 and on (instance) igor_build_info{mode="active"}
+          for: 10m
+          labels:
+            severity: warning
+        # Observe phase (lancre#13): igor must read what evok reads. info goes
+        # to the null receiver; these are records in ALERTS, removed with evok.
+        - alert: IgorRelayDisagreesWithEvok
+          annotations:
+            description: igor and evok have reported different states for relay {{ $labels.circuit }} for over a minute.
+            summary: igor and evok read a relay differently
+          expr: igor_relay_state_boolean != on (circuit) evok_relay_state_boolean
+          for: 1m
+          labels:
+            severity: info
+        - alert: IgorInputDisagreesWithEvok
+          annotations:
+            description: igor and evok have reported different states for digital input {{ $labels.circuit }} for over a minute.
+            summary: igor and evok read a digital input differently
+          expr: igor_digital_input_state_boolean != on (circuit) evok_digital_input_state_boolean
+          for: 1m
+          labels:
+            severity: info

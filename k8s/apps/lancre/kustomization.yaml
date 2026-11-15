@@ -5,8 +5,10 @@ resources:
   - postgres/
   - externalsecret.yaml
   - prometheusrule.yaml
+  - prometheusrule-igor.yaml
   - scrapeconfig-circulation.yaml
   - scrapeconfig-cloudflared.yaml
   - scrapeconfig-evok.yaml
   - scrapeconfig-homeassistant.yaml
+  - scrapeconfig-igor.yaml
   - scrapeconfig-node-exporter.yaml
