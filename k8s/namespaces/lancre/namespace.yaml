@@ -6,5 +6,5 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
     flux.rbac.thaum.xyz/role: cluster-admin
-    # Scrape configuration only; no Pod runs here.
-    pod-security.kubernetes.io/enforce: restricted
+    # As every namespace with a cnpg-database release.
+    pod-security.kubernetes.io/enforce: baseline

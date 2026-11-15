@@ -1,0 +1,30 @@
+# Home Assistant's recorder at lancre. Nothing uses it until the db_url switch
+# at the site visit (thaum-xyz/lancre#15).
+database: homeassistant
+owner: homeassistant
+
+cluster:
+  instances: 2
+  storage:
+    # purge_keep_days 30. SQLite held 600 MB for 8 days on 2026-11-15, so about
+    # 2.5 GB of history plus long-term statistics.
+    size: 10Gi
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+backup:
+  # Ends before 01:30 UTC, when the UNAS copies these backups offsite.
+  schedule: "0 47 0 * * *"
+  objectStore:
+    retentionPolicy: 14d
+    pathSuffix: lancre
+
+externalSecrets:
+  admin:
+    remoteKey: LANCRE_DB_ADMIN_PASS
+  user:
+    remoteKey: LANCRE_DB_PASS

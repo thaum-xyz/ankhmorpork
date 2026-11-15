@@ -1,0 +1,22 @@
+# Home Assistant runs on `home` (192.168.20.4), outside the cluster, so the
+# primary needs a VIP. external-dns publishes it as
+# postgres-lb.lancre.ankhmorpork.thaum.xyz. Cluster policy as for the other
+# VIPs: see k8s/apps/plex/README.md, "Traffic policy".
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-lb
+  labels:
+    app.kubernetes.io/name: postgres
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.50.137
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    cnpg.io/cluster: postgres
+    cnpg.io/instanceRole: primary
