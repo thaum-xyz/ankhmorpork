@@ -14,6 +14,7 @@ spec:
         namespace: homer
       interval: 15m
   interval: 5m
+  maxHistory: 2
   timeout: 10m
   install:
     crds: CreateReplace

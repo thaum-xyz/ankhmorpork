@@ -46,6 +46,7 @@ spec:
         name: thaum-charts-crds
       interval: 5m
   interval: 5m
+  maxHistory: 2
   timeout: 10m
   # No `crds:` policy on either action: the chart ships its CRDs as ordinary
   # templates rather than in a crds/ directory, so Helm upgrades them like any

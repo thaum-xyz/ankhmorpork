@@ -39,6 +39,7 @@ spec:
         name: cilium
       interval: 5m
   interval: 5m
+  maxHistory: 2
   timeout: 20m
   install:
     timeout: 20m
