@@ -26,21 +26,3 @@ spec:
           for: 10m
           labels:
             severity: warning
-        # Observe phase (lancre#13): igor must read what evok reads. info goes
-        # to the null receiver; these are records in ALERTS, removed with evok.
-        - alert: IgorRelayDisagreesWithEvok
-          annotations:
-            description: igor and evok have reported different states for relay {{ $labels.circuit }} for over a minute.
-            summary: igor and evok read a relay differently
-          expr: igor_relay_state_boolean != on (circuit) evok_relay_state_boolean
-          for: 1m
-          labels:
-            severity: info
-        - alert: IgorInputDisagreesWithEvok
-          annotations:
-            description: igor and evok have reported different states for digital input {{ $labels.circuit }} for over a minute.
-            summary: igor and evok read a digital input differently
-          expr: igor_digital_input_state_boolean != on (circuit) evok_digital_input_state_boolean
-          for: 1m
-          labels:
-            severity: info
