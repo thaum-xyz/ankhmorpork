@@ -2,6 +2,19 @@
 # Gives minidlna a foot in VLAN20 so SSDP reaches the TV; see README.md.
 network:
   version: 2
+  bonds:
+    bond0:
+      # Replies from VLAN50 addresses (LB VIPs, the node IP) to VLAN20 clients
+      # return through the UDM, not out the VLAN20 leg; see README.md.
+      routes:
+        - to: 192.168.20.0/24
+          via: 192.168.50.1
+          table: 20
+      routing-policy:
+        - from: 192.168.50.0/24
+          to: 192.168.20.0/24
+          table: 20
+          priority: 5240
   vlans:
     bond0.20:
       id: 20

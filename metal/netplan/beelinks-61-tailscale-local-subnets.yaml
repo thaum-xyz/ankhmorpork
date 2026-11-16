@@ -1,5 +1,6 @@
-# Install to /etc/netplan/61-tailscale-local-subnets.yaml on beelink01 and
-# beelink02 (chmod 0600) by hand, before --accept-routes; see README.md.
+# Drop-in for a rebuilt beelink: /etc/netplan/61-tailscale-local-subnets.yaml
+# (chmod 0600), before --accept-routes. The live nodes carry these rules inline
+# in 50-cloud-init.yaml; see README.md.
 # Keeps this site's own subnets on the main table, ahead of Tailscale's table 52.
 # Must match tailscale_advertise_routes in group_vars/tailscale_subnet_router.yml.
 network:
