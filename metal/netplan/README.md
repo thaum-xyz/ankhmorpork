@@ -62,12 +62,43 @@ VLAN20. Expect one stale-ARP failure before the first connection succeeds.
 Note `net.ipv4.ip_forward=1` on every k8s node, so a multi-homed node is a
 latent router between the two segments — it sits beside the UDM, not behind it.
 
+### VLAN50-sourced replies go back through the UDM
+
+The connected `192.168.20.0/24` route sends every reply to a VLAN20 client out
+`bond0.20`, including replies from LB VIPs. The UDM then sees one direction
+only and drops the rest of the flow. Measured 2026-11-15 from `192.168.20.4` to
+`192.168.50.137:5432`: SYN-ACKs arrived from beelink02's VLAN20 MAC and were
+retransmitted until the client timed out. Applied 2026-11-16: 10 of 10 Postgres
+handshakes from that host completed.
+
+The rule at priority 5240 sends anything sourced from `192.168.50.0/24` to
+table 20, whose only route is VLAN20 via the UDM. Traffic sourced from
+`192.168.20.37` (minidlna) and pod-sourced traffic keep the direct leg.
+
+```bash
+sudo install -m 0600 beelink02-60-vlan20.yaml /etc/netplan/60-vlan20.yaml
+sudo netplan generate
+sudo systemd-run --on-active=3 --unit=netplan-vlan20-apply /usr/sbin/netplan apply
+```
+
+```bash
+ip rule show | grep 5240                              # from 192.168.50.0/24 to 192.168.20.0/24 lookup 20
+ip route get 192.168.20.4 from 192.168.50.137 iif lo  # via 192.168.50.1 dev bond0
+ip route get 192.168.20.4                             # dev bond0.20 src 192.168.20.37
+```
+
+The real check is from a VLAN20 host: a connection to a VIP whose backend runs
+on beelink02 must get its SYN-ACK from the UDM's MAC and complete.
+
 ## beelinks: local subnets ahead of Tailscale's table 52
 
-`/etc/netplan/61-tailscale-local-subnets.yaml` on beelink01 and beelink02, from
-`beelinks-61-tailscale-local-subnets.yaml`. It must be in place **before**
-`--accept-routes` is turned on. Both are set by hand; `30_tailscale.yml` does
-not touch either, and Ansible is on its way out.
+Two `routing-policy` rules on `bond0`, on beelink01 and beelink02. On both
+nodes they sit inline in `/etc/netplan/50-cloud-init.yaml` (edited 2026-09-27,
+read back 2026-11-16); there is no separate drop-in.
+`beelinks-61-tailscale-local-subnets.yaml` holds the same rules as a drop-in for
+a rebuilt node. They must be in place **before** `--accept-routes` is turned on.
+Both are set by hand; `30_tailscale.yml` does not touch either, and Ansible is
+on its way out.
 
 `--accept-routes` is there so that replies to another site's LAN go back over
 the tunnel. Banacha's `192.168.110.0/24` reaches the UNAS through HA's subnet
@@ -91,6 +122,8 @@ The subnets must match `tailscale_advertise_routes` in
 `group_vars/tailscale_subnet_router.yml`.
 
 ### Applying
+
+On a node whose `50-cloud-init.yaml` lacks the rules:
 
 ```bash
 sudo install -m 0600 beelinks-61-tailscale-local-subnets.yaml /etc/netplan/61-tailscale-local-subnets.yaml
@@ -123,8 +156,9 @@ tailscale debug prefs | jq .RouteAll     # true
 ### Removing
 
 When UniFi site-to-site takes over: `sudo tailscale set --accept-routes=false`
-on both, then delete `/etc/netplan/61-tailscale-local-subnets.yaml` and
-`netplan apply`, in that order.
+on both, then remove the two priority-5260 rules from
+`/etc/netplan/50-cloud-init.yaml` (or delete the `61-` drop-in where one was
+installed) and `netplan apply`, in that order.
 
 ### tailscaled ports: 41641 on beelink01, 41642 on beelink02
 
