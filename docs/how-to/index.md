@@ -61,6 +61,10 @@ behind it, and warns about a runbook no alert links to.
   — a piraeus volume has no replica DRBD will serve from, and cannot be mounted
 - [FluxCDReconciliationFailure](runbooks/FluxCDReconciliationFailure.md) — a
   Kustomization, HelmRelease or source has stopped reconciling
+- [HomeAssistantBackupStale](runbooks/HomeAssistantBackupStale.md) — lancre's
+  newest Home Assistant backup, or its copy on the UNAS, is over 36 hours old
+- [HomeAssistantRecorderDisconnected](runbooks/HomeAssistantRecorderDisconnected.md)
+  — lancre's Home Assistant runs but writes no history to its Postgres
 - [KuredRebootRequired](runbooks/KuredRebootRequired.md) — a node has wanted a
   reboot for over a week and kured has not managed one
 - [UnifiWANDown](runbooks/UnifiWANDown.md) — the site's internet uplink is down, so
