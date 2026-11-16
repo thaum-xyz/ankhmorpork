@@ -63,6 +63,8 @@ behind it, and warns about a runbook no alert links to.
   Kustomization, HelmRelease or source has stopped reconciling
 - [HomeAssistantBackupStale](runbooks/HomeAssistantBackupStale.md) — lancre's
   newest Home Assistant backup, or its copy on the UNAS, is over 36 hours old
+- [HomeAssistantEnergySensorUnavailable](runbooks/HomeAssistantEnergySensorUnavailable.md)
+  — a sensor feeding lancre's energy dashboard has been unavailable for a day
 - [HomeAssistantRecorderDisconnected](runbooks/HomeAssistantRecorderDisconnected.md)
   — lancre's Home Assistant runs but writes no history to its Postgres
 - [KuredRebootRequired](runbooks/KuredRebootRequired.md) — a node has wanted a

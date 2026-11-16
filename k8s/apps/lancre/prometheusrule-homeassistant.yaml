@@ -35,3 +35,15 @@ spec:
           for: 30m
           labels:
             severity: warning
+        # Energy dashboard sources (Settings → Dashboards → Energy); keep the regex in sync.
+        # GNE sensors are unavailable ~10 h every night, so 24 h only trips on a real outage.
+        - alert: HomeAssistantEnergySensorUnavailable
+          annotations:
+            description: '{{ $labels.entity }} on {{ $labels.instance }} has been unavailable in Home Assistant for over 24 hours. The energy dashboard is missing its data; after 10 days its long-term statistics restart from zero.'
+            runbook_url: https://docs.thaum.xyz/how-to/runbooks/HomeAssistantEnergySensorUnavailable/
+            summary: A Home Assistant energy sensor is unavailable
+          expr: |
+            max_over_time(hass_entity_available{job="scrapeConfig/lancre/homeassistant", entity=~"sensor\\.(gne_pv_monitoring_.+_sensor_dailyenergy|inwerter_dzienna_produkcja|powermeter_total_active_(returned_)?energy)"}[24h]) == 0
+          for: 30m
+          labels:
+            severity: warning
