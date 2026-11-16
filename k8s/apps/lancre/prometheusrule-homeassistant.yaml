@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: homeassistant
+spec:
+  groups:
+    - name: homeassistant.rules
+      rules:
+        # The recorder gives up after 10 failed connects at start and never
+        # retries. A running recorder always holds one connection, so none
+        # for 15 minutes means it is off.
+        - alert: HomeAssistantRecorderDisconnected
+          annotations:
+            description: Home Assistant on {{ $labels.instance }} is up and holds no connection to its recorder database. History, logbook and energy statistics are not being written; heating is unaffected. Once the database answers, restart Home Assistant Core.
+            summary: Home Assistant is not recording
+          expr: |
+            up{job="scrapeConfig/lancre/homeassistant"} == 1
+            unless on (namespace)
+            sum by (namespace) (cnpg_backends_total{namespace="lancre", usename="homeassistant"}) > 0
+          for: 15m
+          labels:
+            severity: warning
