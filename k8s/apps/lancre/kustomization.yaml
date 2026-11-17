@@ -7,7 +7,6 @@ resources:
   - prometheusrule.yaml
   - prometheusrule-homeassistant.yaml
   - prometheusrule-igor.yaml
-  - scrapeconfig-circulation.yaml
   - scrapeconfig-cloudflared.yaml
   - scrapeconfig-evok.yaml
   - scrapeconfig-homeassistant.yaml
