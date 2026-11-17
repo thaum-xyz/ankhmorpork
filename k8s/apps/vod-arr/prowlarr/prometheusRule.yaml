@@ -46,7 +46,9 @@ spec:
           # IndexerLongTermStatusCheck was already excluded for the same reason;
           # prowlarrIndexersUnavailable below covers the case that is not
           # ordinary.
-          expr: max_over_time(prowlarr_system_health_issues{job="prowlarr",source!="UpdateCheck",source!="IndexerLongTermStatusCheck",source!="IndexerStatusCheck"}[1h]) == 1
+          # IndexerProxyStatusCheck tests FlareSolverr against prowlarr.servarr.com,
+          # not an indexer, so it fires on Servarr outages; a broken solver shows as failing indexers.
+          expr: max_over_time(prowlarr_system_health_issues{job="prowlarr",source!="UpdateCheck",source!="IndexerLongTermStatusCheck",source!="IndexerStatusCheck",source!="IndexerProxyStatusCheck"}[1h]) == 1
           for: 2h
           labels:
             severity: warning
