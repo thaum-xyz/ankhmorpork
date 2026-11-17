@@ -53,6 +53,7 @@ nav = [
       { "drbdResourceWithNoUpToDateReplicas" = "how-to/runbooks/drbdResourceWithNoUpToDateReplicas.md" },
       { "FluxCDReconciliationFailure" = "how-to/runbooks/FluxCDReconciliationFailure.md" },
       { "HomeAssistantBackupStale" = "how-to/runbooks/HomeAssistantBackupStale.md" },
+      { "HomeAssistantEnergySensorStale" = "how-to/runbooks/HomeAssistantEnergySensorStale.md" },
       { "HomeAssistantEnergySensorUnavailable" = "how-to/runbooks/HomeAssistantEnergySensorUnavailable.md" },
       { "HomeAssistantRecorderDisconnected" = "how-to/runbooks/HomeAssistantRecorderDisconnected.md" },
       { "KuredRebootRequired" = "how-to/runbooks/KuredRebootRequired.md" },

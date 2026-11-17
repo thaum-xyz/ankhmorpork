@@ -47,3 +47,17 @@ spec:
           for: 30m
           labels:
             severity: warning
+        # On a failed API call GNE serves its last answer, so sensors freeze while
+        # available. Huawei's yield stands in for daylight; dawn lag stays under 1h.
+        - alert: HomeAssistantEnergySensorStale
+          annotations:
+            description: 'No GNE micro-inverter sensor on {{ $labels.instance }} has changed for 2 hours while the Huawei inverter produced. The energy dashboard is recording frozen values.'
+            runbook_url: https://docs.thaum.xyz/how-to/runbooks/HomeAssistantEnergySensorStale/
+            summary: Home Assistant GNE energy sensors are frozen
+          expr: |
+            count by (job, namespace, instance) (changes(hass_sensor_energy_kwh{job="scrapeConfig/lancre/homeassistant", entity=~"sensor\\.gne_pv_monitoring_.+_sensor_dailyenergy"}[2h]) == 0)
+            and on (job, namespace, instance)
+            delta(hass_sensor_energy_kwh{job="scrapeConfig/lancre/homeassistant", entity="sensor.inwerter_dzienna_produkcja"}[2h]) > 0.2
+          for: 1h
+          labels:
+            severity: warning
