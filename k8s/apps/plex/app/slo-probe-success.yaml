@@ -19,5 +19,6 @@ spec:
   indicator:
     bool_gauge:
       metric: probe_success{instance=~"https://vod\\.krupa\\.net\\.pl(/.*)?"}
-  target: "99"
+  # 97: the fast tier needs 6m18s of failed probes, so one restart or image pull passes.
+  target: "97"
   window: 7d
