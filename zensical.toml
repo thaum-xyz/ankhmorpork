@@ -22,6 +22,11 @@ repo_name = "thaum-xyz/ankhmorpork"
 edit_uri = "edit/master/docs/"
 
 docs_dir = "docs"
+# Agent-facing files (skill config, ADRs): in docs/ but not on the site.
+exclude_docs = """
+agents/
+adr/
+"""
 extra_css = ["stylesheets/extra.css"]
 
 # Diataxis. The four sections are document *types*, not subjects: the same app
