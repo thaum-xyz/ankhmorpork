@@ -138,3 +138,17 @@ The objects still render into `platform-observability`.
 
 Rules live with whatever produces or remediates their signal, the way k8up,
 cnpg and ups rules already do.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues in `thaum-xyz/ankhmorpork`, through `gh`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five default role names, unmapped; `alert/*` labels belong to the alert flow. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
