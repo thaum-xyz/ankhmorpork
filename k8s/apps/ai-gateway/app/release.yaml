@@ -9,7 +9,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: litellm
-      version: "1.110.0"
+      version: "1.110.1"
       interval: 30m
   interval: 5m
   maxHistory: 2
