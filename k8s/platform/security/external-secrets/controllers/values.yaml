@@ -39,6 +39,7 @@ webhook:
 resources:
   requests:
     cpu: 9m
-    memory: 49Mi
+    memory: 64Mi
   limits:
-    memory: 80Mi
+    # At 80Mi the working set sat against the limit and the pod thrashed its node.
+    memory: 160Mi
