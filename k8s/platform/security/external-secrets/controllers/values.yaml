@@ -41,5 +41,5 @@ resources:
     cpu: 9m
     memory: 64Mi
   limits:
-    # At 80Mi the working set sat against the limit and the pod thrashed its node.
-    memory: 160Mi
+    # The binary alone is about 87Mi of page cache; below that the pod thrashes its node.
+    memory: 200Mi
