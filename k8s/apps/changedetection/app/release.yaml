@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: changedetection
-      version: "0.14.8"
+      version: "0.15.0"
       sourceRef:
         kind: HelmRepository
         name: alekc-charts

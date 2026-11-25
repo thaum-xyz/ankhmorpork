@@ -71,7 +71,7 @@ spec:
       - args:
         - --collector.disable-defaults
         - --collector.supervisord
-        image: quay.io/prometheus/node-exporter:v1.12.1
+        image: quay.io/prometheus/node-exporter:v1.13.1
         name: node-exporter
         ports:
         - containerPort: 9100
