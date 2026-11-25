@@ -23,16 +23,16 @@ spec:
     - alert: CertManagerCertExpirySoon
       annotations:
         dashboard_url: https://grafana.ankhmorpork.thaum.xyz/d/u6M5igpWk/cert-manager
-        description: The domain that this cert covers will be unavailable after {{ $value
-          | humanizeDuration }}. Clients using endpoints that this cert protects will
-          start to fail in {{ $value | humanizeDuration }}.
+        description: cert-manager should have renewed this certificate {{ $value
+          | humanizeDuration }} ago and has not. Clients using endpoints that it
+          protects will start to fail when it expires.
         runbook_url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/blob/master/RUNBOOK.md#CertManagerCertExpirySoon
-        summary: The cert `{{ $labels.name }}` is {{ $value | humanizeDuration }} from
-          expiry, it should have renewed over a week ago.
+        summary: The cert `{{ $labels.name }}` should have renewed over a week ago.
+      # Keyed on each certificate's own renewal time, so a short renewBefore does not fire it.
       expr: |
-        avg by (namespace, name) (
-          certmanager_certificate_expiration_timestamp_seconds - time()
-        ) < (21 * 24 * 3600) # 21 days in seconds
+        max by (namespace, name) (
+          time() - certmanager_certificate_renewal_timestamp_seconds
+        ) > (7 * 24 * 3600) # renewal is a week overdue
       for: 1h
       labels:
         severity: warning
