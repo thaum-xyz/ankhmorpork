@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nanny-ogg
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+  labels:
+    flux.rbac.thaum.xyz/role: cluster-admin
+    pod-security.kubernetes.io/enforce: baseline

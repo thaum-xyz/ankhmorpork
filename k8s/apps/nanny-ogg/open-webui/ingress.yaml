@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.thaum.xyz/probe-uri: /health
+    item.homer.rajsingh.info/name: "Nanny Ogg"
+    item.homer.rajsingh.info/subtitle: "Meal planner"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/npm/@loganmarchione/homelab-svg-assets@latest/assets/openai-white.svg"
+    item.homer.rajsingh.info/order: "45"
+    service.homer.rajsingh.info/name: "Ankh Cloud"
+    service.homer.rajsingh.info/icon: "fa fa-cloud"
+    service.homer.rajsingh.info/order: "30"
+  labels:
+    homer.rajsingh.info/enabled: "true"
+    ingress.thaum.xyz/probe: enabled
+    app.kubernetes.io/name: open-webui
+  name: open-webui
+spec:
+  ingressClassName: public
+  rules:
+    - host: nanny-ogg.krupa.net.pl
+      http:
+        paths:
+          - backend:
+              service:
+                name: open-webui
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - nanny-ogg.krupa.net.pl
+      secretName: open-webui-tls

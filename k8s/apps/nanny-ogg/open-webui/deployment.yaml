@@ -1,0 +1,93 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: open-webui
+  labels:
+    app.kubernetes.io/name: open-webui
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: open-webui
+  template:
+    metadata:
+      annotations:
+        # webui.db and the chroma vector store are live SQLite in WAL mode, and
+        # K8up reads the running filesystem, so the file-level copies of them
+        # can tear. This streams copies taken through SQLite's own API into the
+        # repository as one tar; that is what to restore from. The file-level
+        # copies stay as a fallback.
+        k8up.io/backupcommand: python3 /backup/dump.py
+        k8up.io/file-extension: .tar
+      labels:
+        app.kubernetes.io/name: open-webui
+    spec:
+      containers:
+        - name: open-webui
+          image: ghcr.io/open-webui/open-webui:v0.13.5
+          env:
+            - name: WEBUI_NAME
+              value: Nanny Ogg
+            - name: WEBUI_URL
+              value: https://nanny-ogg.krupa.net.pl
+            - name: ENABLE_OLLAMA_API
+              value: "false"
+            - name: ENABLE_EVALUATION_ARENA_MODELS
+              value: "false"
+            - name: OPENAI_API_BASE_URL
+              value: http://litellm.ai-gateway.svc:4000/v1
+            - name: ENABLE_LOGIN_FORM
+              value: "false"
+            - name: ENABLE_OAUTH_SIGNUP
+              value: "true"
+            - name: OAUTH_PROVIDER_NAME
+              value: PocketID
+            - name: OPENID_PROVIDER_URL
+              value: https://login.krupa.net.pl/.well-known/openid-configuration
+            - name: OPENID_REDIRECT_URI
+              value: https://nanny-ogg.krupa.net.pl/oauth/oidc/callback
+            - name: OAUTH_SCOPES
+              value: openid email profile groups
+          envFrom:
+            - secretRef:
+                name: open-webui-secrets
+            - secretRef:
+                name: open-webui-oidc
+          ports:
+            - name: http
+              containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /app/backend/data
+            - name: backup-script
+              mountPath: /backup
+              readOnly: true
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: open-webui-data
+        - name: backup-script
+          configMap:
+            name: backup-script
