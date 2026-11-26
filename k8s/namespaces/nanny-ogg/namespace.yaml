@@ -7,3 +7,4 @@ metadata:
   labels:
     flux.rbac.thaum.xyz/role: cluster-admin
     pod-security.kubernetes.io/enforce: baseline
+    group.rbac.thaum.xyz/nanny-ogg: edit
