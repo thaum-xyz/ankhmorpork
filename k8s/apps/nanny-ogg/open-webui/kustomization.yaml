@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - secret.yaml
+  - oidc-secret.yaml
+  - pvc.yaml
+  - service.yaml
+  - ingress.yaml
+  - ingress-cloudflare.yaml
+  - deployment.yaml
+  - slo-probe-success.yaml
+configMapGenerator:
+  # The dump script is a real file so it stays readable and lintable. Inlining
+  # it in the k8up.io/backupcommand annotation is not an option: K8up tokenises
+  # that string with qsplit, whose quotes neither nest nor escape.
+  - name: backup-script
+    files:
+      - scripts/dump.py
+generatorOptions:
+  # Stable name. The script is read at exec time from the mounted ConfigMap, so
+  # a change reaches the next backup without rolling the pod.
+  disableNameSuffixHash: true

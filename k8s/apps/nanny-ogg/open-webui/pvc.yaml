@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    # Opt in to K8up. The operator runs with skipWithoutAnnotation, so a claim
+    # without this is not backed up -- and nothing else in this namespace
+    # holds data (Mealie keeps the recipes and the plan).
+    k8up.io/backup: "true"
+    # cache/embedding and cache/whisper hold HuggingFace model blobs that
+    # open-webui re-downloads on demand; excluded as in mended-drum. The
+    # consistent SQLite dump comes from k8up.io/backupcommand on the Pod.
+    k8up.io/backup-restic-args: '["--exclude=/data/open-webui-data/cache/embedding", "--exclude=/data/open-webui-data/cache/whisper"]'
+  name: open-webui-data
+  labels:
+    app.kubernetes.io/name: open-webui
+spec:
+  # Chats and settings are small; the model caches under cache/ are what
+  # need the room, as in mended-drum.
+  storageClassName: piraeus-r2-roaming
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

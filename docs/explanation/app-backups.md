@@ -44,6 +44,7 @@ goes into a free quarter hour here, before the 01:30 UTC deadline.
      manifests it reads, not the table. -->
 | When | Namespace | What | Check | Prune | Retention |
 | --- | --- | --- | --- | --- | --- |
+| [21:00](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/nanny-ogg/backup/schedule.yaml) | `nanny-ogg` | K8up `Schedule` | `30 5 * * 0` | `0 7 * * 0` | 14 daily, 8 weekly, 6 monthly |
 | [21:15](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/mealie/backup/schedule.yaml) | `mealie` | K8up `Schedule` | `45 5 * * 0` | `15 7 * * 0` | 14 daily, 8 weekly, 6 monthly |
 | [21:30](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/changedetection/backup/schedule.yaml) | `changedetection` | K8up `Schedule` | `0 6 * * 0` | `30 7 * * 0` | 14 daily, 8 weekly, 6 monthly |
 | [21:45](https://github.com/thaum-xyz/ankhmorpork/blob/master/k8s/apps/karakeep/backup/schedule.yaml) | `karakeep` | K8up `Schedule` | `15 6 * * 0` | `45 7 * * 0` | 14 daily, 8 weekly, 6 monthly |

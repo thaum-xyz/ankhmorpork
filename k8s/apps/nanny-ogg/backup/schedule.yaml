@@ -1,0 +1,44 @@
+# Why the Schedule is shaped this way, and the timetable it has to fit:
+# docs/explanation/app-backups.md.
+apiVersion: k8up.io/v1
+kind: Schedule
+metadata:
+  name: backup
+  labels:
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/name: nanny-ogg
+spec:
+  backend:
+    local:
+      mountPath: /repo
+    volumeMounts:
+      - name: backup-repo
+        mountPath: /repo
+  podSecurityContext:
+    runAsUser: 0
+    runAsGroup: 0
+  backup:
+    schedule: "0 21 * * *"
+    activeDeadlineSeconds: 3600
+    volumes:
+      - name: backup-repo
+        persistentVolumeClaim:
+          claimName: backup-repo
+  check:
+    schedule: "30 5 * * 0"
+    activeDeadlineSeconds: 3600
+    volumes:
+      - name: backup-repo
+        persistentVolumeClaim:
+          claimName: backup-repo
+  prune:
+    schedule: "0 7 * * 0"
+    activeDeadlineSeconds: 3600
+    retention:
+      keepDaily: 14
+      keepWeekly: 8
+      keepMonthly: 6
+    volumes:
+      - name: backup-repo
+        persistentVolumeClaim:
+          claimName: backup-repo
