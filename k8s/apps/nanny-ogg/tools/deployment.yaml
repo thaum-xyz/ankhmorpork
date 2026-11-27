@@ -22,7 +22,7 @@ spec:
       containers:
         - name: tools
           # Source: https://github.com/odi-adrianna/nanny-ogg
-          image: ghcr.io/odi-adrianna/nanny-ogg:2026.48.1
+          image: ghcr.io/odi-adrianna/nanny-ogg:2026.48.2
           env:
             - name: MEALIE_BASE_URL
               value: http://mealie.mealie.svc:9000
