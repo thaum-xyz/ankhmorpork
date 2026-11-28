@@ -35,10 +35,12 @@ keep working.
       --data-urlencode 'query=sum by (pod, usename) (cnpg_backends_total{namespace="lancre"})'
     ```
 
-3. Check that the VIP answers from the site's side.
+3. Check that beelink02 still routes replies to lancre through the UDM.
+   Without rule 5240, handshakes from `home` to the VIP time out; see
+   [metal/netplan/README.md](https://github.com/thaum-xyz/ankhmorpork/blob/master/metal/netplan/README.md).
 
     ```bash
-    ssh ssh-home.krupa.net.pl 'nc -zv -w 5 postgres-lb.lancre.ankhmorpork.thaum.xyz 5432'
+    ssh beelink02 'ip rule show | grep 5240'
     ```
 
 4. Read the recorder's errors in the HA log (Settings → System → Logs, filter

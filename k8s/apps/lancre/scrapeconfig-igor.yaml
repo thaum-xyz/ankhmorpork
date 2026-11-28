@@ -3,9 +3,7 @@ kind: ScrapeConfig
 metadata:
   name: igor
 spec:
-  # Matches evok's interval so the two can be compared sample for sample.
-  scrapeInterval: 1s
-  scrapeTimeout: 1s
+  scrapeInterval: 15s
   staticConfigs:
     - targets:
         - 192.168.20.4:9101

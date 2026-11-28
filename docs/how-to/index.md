@@ -62,7 +62,7 @@ behind it, and warns about a runbook no alert links to.
 - [FluxCDReconciliationFailure](runbooks/FluxCDReconciliationFailure.md) — a
   Kustomization, HelmRelease or source has stopped reconciling
 - [HomeAssistantBackupStale](runbooks/HomeAssistantBackupStale.md) — lancre's
-  newest Home Assistant backup, or its copy on the UNAS, is over 36 hours old
+  newest complete Home Assistant backup, to the card and the UNAS, is over 36 hours old
 - [HomeAssistantEnergySensorStale](runbooks/HomeAssistantEnergySensorStale.md)
   — lancre's GNE micro-inverter sensors stopped changing in daylight
 - [HomeAssistantEnergySensorUnavailable](runbooks/HomeAssistantEnergySensorUnavailable.md)
