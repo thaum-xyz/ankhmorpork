@@ -21,16 +21,14 @@ spec:
           for: 15m
           labels:
             severity: warning
-        # hass-backup-copy on `home` stamps every successful run, new file or
-        # not, so HA's own last-backup sensor is watched too. Both peak near 25 h.
+        # HA stamps this only when every backup location (card and UNAS) took the
+        # upload. Daily schedule, so it peaks near 25 h.
         - alert: HomeAssistantBackupStale
           annotations:
-            description: '{{ $labels.job }} on {{ $labels.instance }} reports the last Home Assistant backup, or its nightly copy to the UNAS share hasszmc, as more than 36 hours old. A restore would lose everything since then.'
+            description: Home Assistant on {{ $labels.instance }} has had no successful automatic backup to all its locations (the card and the UNAS share) for more than 36 hours. A restore would lose everything since then.
             runbook_url: https://docs.thaum.xyz/how-to/runbooks/HomeAssistantBackupStale/
             summary: Home Assistant backups are stale
           expr: |
-            time() - hass_backup_copy_last_success_timestamp_seconds{job="scrapeConfig/lancre/node-exporter"} > 36 * 3600
-            or
             time() - hass_sensor_timestamp_seconds{job="scrapeConfig/lancre/homeassistant", entity="sensor.backup_last_successful_automatic_backup"} > 36 * 3600
           for: 30m
           labels:

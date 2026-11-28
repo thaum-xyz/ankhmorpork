@@ -23,15 +23,13 @@ production.
 
 ## Diagnosis
 
-1. Check that `home` resolves the GNE API.
-
-    ```bash
-    ssh ssh-home.krupa.net.pl 'getent hosts newapi.gnetek.com'
-    ```
-
-2. Read the GNE entries in the HA log (Settings → System → Logs, filter
+1. Read the GNE entries in the HA log (Settings → System → Logs, filter
    `gne_pv_monitoring`). Timeouts or connection errors on every update mean
    the API is unreachable from `home`.
+
+2. On the same page, switch the log to *DNS*, the resolver Home Assistant OS
+   runs for HA. `plugin/errors` lines for `newapi.gnetek.com` mean
+   `home` cannot resolve the API.
 
 3. Check the GNE monitoring portal. If it shows no fresh data either, the
    inverters or their gateway are offline.
@@ -40,6 +38,6 @@ production.
 
 | Cause | Fix |
 | --- | --- |
-| `home` cannot resolve or reach the API | Fix DNS or the uplink on `home`. The sensors update on the next poll. |
+| `home` cannot resolve or reach the API | Fix the uplink, or the DNS servers in Settings → System → Network on `home`. The sensors update on the next poll. |
 | The API answers but the sensors stay frozen | Reload the integration from Settings → Devices & services → GNE PV monitoring. |
 | The inverters or gateway are offline | Bring them back. Nothing to do in Home Assistant. |
